@@ -1,0 +1,263 @@
+
+function SocketLoadInit()
+{
+  eval $( __call_localityLocalName=SocketLoadInit __call_localityDisplayFunctionEntry=0 __call_locality ) ;  
+  echo -ne "\t**************************************************\nTest Number ${IntTestCase}\n\t\tTest name: ${StrTestName}\n\t**************************************************\n" > /dev/stderr  ; 
+ . /etc/init.d/fnct.d/fnct_lib ; sleep 2 ; clear ; sleep 1 ; ${ArrayArg[${intArrayArg}]}  ; 
+ (( ${IntTestCase}++ )) ;
+}
+
+function SocketLoadInit000()
+{
+  eval $( __call_localityLocalName=SocketLoadInit __call_localityDisplayFunctionEntry=1 __call_locality ) ;  
+  echo -ne "\t**************************************************\n\t\tTest Number ${IntTestCase}\n\t\tTest name: ${StrTestName}\n\t**************************************************\n" > /dev/stderr  ; 
+ . /etc/init.d/fnct.d/fnct_lib ; sleep 2 ; sleep 1 ; ${ArrayArg[${intArrayArg}]}  ; 
+ (( IntTestCase=${IntTestCase}+1 )) ;
+}
+
+function SocketLoadInit001()
+{
+  eval $( __call_localityLocalName=SocketLoadInit __call_localityDisplayFunctionEntry=1 __call_locality ) ;  
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=LibFunct FParamVarName=StrLibName FParamDefaultValue=/etc/init.d/fnct.d/fnct_lib __fnctCreateLocalityFuncParam ) ; 
+  echo -ne "\t\t\t**************************************************\n\t\t\t\tTest Number ${IntTestCase}\n\t\t\t\tTest name: ${StrTestName}\n\t\t\t**************************************************\n" > /dev/stderr  ; 
+  echo -ne "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-\t Function Lib\t -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-\n" > /dev/stderr  ;
+  . ${StrLibName} ; sleep 2 ; sleep 1 ; 
+  echo -ne "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-\t Function Lib\t -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-\n" > /dev/stderr  ;
+  __fnctCmdEval ${ArrayArg[${intArrayArg}]}  ; 
+  (( IntTestCase=${IntTestCase}+1 )) ;
+}
+
+SocketLoadInit002 () 
+{ 
+  eval $( __call_localityLocalName=SocketLoadInit __call_localityDisplayFunctionEntry=0 __call_locality );
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=LibFunct FParamVarName=StrLibName FParamDefaultValue=/etc/init.d/fnct.d/fnct_lib __fnctCreateLocalityFuncParam );
+  echo -ne "\t\t\t**************************************************\n\t\t\t\tTest Number ${IntTestCase}\n\t\t\t\tTest name: ${StrTestName}\n\t\t\t**************************************************\n" > /dev/stderr;
+  echo -ne "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-\t Function Lib\t -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-\n" > /dev/stderr;
+  . ${StrLibName};
+  sleep 2;
+  sleep 1;
+  echo -ne "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-\t Function Lib\t -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-\n" > /dev/stderr;
+  echo -ne "${StrFuncName} CmdLine : ${ArrayArg[${intArrayArg}]}\n" > /dev/stderr;
+  eval "${ArrayArg[${intArrayArg}]}";
+  (( IntTestCase=${IntTestCase}+1 ))
+}
+
+
+function SocketLoadInit003()
+{
+  eval $( __call_localityLocalName=SocketLoadInit __call_localityDisplayFunctionEntry=0 __call_locality ) ;  
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=LibFunct FParamVarName=StrLibName FParamDefaultValue=/etc/init.d/fnct.d/fnct_lib __fnctCreateLocalityFuncParam ) ; 
+  local ArrayValueTest=( StrLibName ) ;
+  local StrSpaceHeader=$( GetSpacerChar=Star GetSpacer 20 ) ;
+  local ArraySpacerType=( Tab CtrlR );
+  local ArraySpacerTemplate=( __TAB__ __CTRLR__ );
+  local StrNameShow="${StrFuncName}-FParamDisplayValue" ;
+  local ArrayEvaluated=( "__HEADER__ __NAME__ __HEADER__" "__HEADER____STAR____HEADER__" ) ; 
+  local ArrayEvaluatedLength=( 0 0 ) ;
+  local StrHeaderDisplayBegin="__CTRLR____CTRLR____TAB____EVALUATED____CTRLR__" ;
+  local StrHeaderDisplayEnd="__CTRLR____CTRLR____TAB____EVALUATED____CTRLR__"
+  local StrDisplayStartHeader="" ;
+  local ArrayStartHeader=( __ ) ;
+  ### Master roll-up func.
+    ### Will Loop Each One like function
+  local ArrayFunc=( StartAttributeHeader ParseHeader ParseName GetSpaceParse );
+    ### Will Loop Each One-Set of Array by Function
+    ### like StartAttributeHeader, will use ArrayStartHeader
+    ### like GetSpaceParse       , will use ArraySpacerType
+  local ArrayArray=( ArrayStartHeader "" "" ArraySpacerType );
+    ### Will Create a First Set of Parametric Variable for each function... 
+  local ArrayPreVarParam=( "Option" "Option" "Option" "Option" ) ;
+    ### Will Assign Value for each function...
+  local ArrayPreVarValue=( "None" "None" "None" "None" ) ;
+  function ParseHeader()
+  {
+    eval $( __call_localityLocalName=ParseHeader __call_localityDisplayFunctionEntry=0 __call_locality ) ;  
+    eval $( FParamFuncName=${StrFuncName} FParamSuffixName=${ArrayPreVarParam[${intArrayPreVarParam}]} FParamVarName=Str${ArrayPreVarParam[${intArrayPreVarParam}]} FParamDefaultValue=${ArrayPreVarValue[${intArrayPreVarValue}]}  __fnctCreateLocalityFuncParam ) ; 
+    
+  }
+  function ParseName()
+  {
+    eval $( __call_localityLocalName=ParseName __call_localityDisplayFunctionEntry=0 __call_locality ) ;  
+    eval $( FParamFuncName=${StrFuncName} FParamSuffixName=${ArrayPreVarParam[${intArrayPreVarParam}]} FParamVarName=Str${ArrayPreVarParam[${intArrayPreVarParam}]} FParamDefaultValue=${ArrayPreVarValue[${intArrayPreVarValue}]}  __fnctCreateLocalityFuncParam ) ; 
+    eval "StrContent=\${${ArrayArg[0]}}" ;
+    eval "${ArrayArg[0]/__NAME__/${StrContent}}"
+  }
+  function StartAttributeHeader()
+  {
+    eval $( __call_localityLocalName=StartAttributeHeader __call_localityDisplayFunctionEntry=0 __call_locality ) ;  
+    eval $( FParamFuncName=${StrFuncName} FParamSuffixName=${ArrayPreVarParam[${intArrayPreVarParam}]} FParamVarName=Str${ArrayPreVarParam[${intArrayPreVarParam}]} FParamDefaultValue=${ArrayPreVarValue[${intArrayPreVarValue}]}  __fnctCreateLocalityFuncParam ) ; 
+    eval "\${${ArrayArg}[0]}=${ArrayArg[1]}" ;
+  }
+  function GetSpaceParse()
+  {
+    eval $( __call_localityLocalName=GetSpaceParse __call_localityDisplayFunctionEntry=0 __call_locality ) ;  
+    eval $( FParamFuncName=${StrFuncName} FParamSuffixName=${ArrayPreVarParam[${intArrayPreVarParam}]} FParamVarName=Str${ArrayPreVarParam[${intArrayPreVarParam}]} FParamDefaultValue=${ArrayPreVarValue[${intArrayPreVarValue}]}  __fnctCreateLocalityFuncParam ) ; 
+    
+  }
+  function __fnctEval()
+  {
+    eval $( __call_localityLocalName=FEval __call_localityDisplayFunctionEntry=0 __call_locality ) ;  
+    eval $( __in_for "${ArrayArray[${intArrayArray}]}" "${ArrayFunc[${intArrayFunc}]} ${ArrayArg[1]}" ) ;
+  }
+  eval $( __in_for ArrayFunc __fnctEval StrDisplayStartHeader ) ;
+  
+  
+  echo -ne "\n\n\t__HEADER__ ${StrFuncName}-FParamDisplayValue __HEADER__\n" > /dev/stderr ; 
+  DisplayValueArrayName=ArrayValueTest FParamDisplayValue ;
+  echo -ne "\n\n\t*************************************************************************\n" > /dev/stderr ; 
+  echo -ne "\t\t\t**************************************************\n\t\t\t\tTest Number ${IntTestCase}\n\t\t\t\tTest name: ${StrTestName}\n\t\t\t**************************************************\n" > /dev/stderr  ; 
+  echo -ne "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-\t Function Lib\t -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-\n" > /dev/stderr  ;
+  . ${StrLibName} ; sleep 2 ; sleep 1 ; 
+  echo -ne "-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-\t Function Lib\t -*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-\n" > /dev/stderr  ;
+  echo -ne "${StrFuncName} CmdLine : ${ArrayArg[${intArrayArg}]}\n" > /dev/stderr  ;
+  eval "${ArrayArg[${intArrayArg}]}"  ; 
+  (( IntTestCase=${IntTestCase}+1 )) ;
+}
+
+
+function LTSFunction()
+{
+  eval $( __call_localityLocalName=TestUnit __call_localityDisplayFunctionEntry=0 __call_locality ) ;  
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=TestName           FParamVarName=StrTestName           FParamDefaultValue=None            __fnctCreateLocalityFuncParam ) ; 
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=SocketInit         FParamVarName=StrSocketForm         FParamDefaultValue=SocketLoadInit  __fnctCreateLocalityFuncParam ) ; 
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ArrayLoaderName    FParamVarName=StrArrayLoaderName    FParamDefaultValue=None            __fnctCreateLocalityFuncParam ) ; 
+  local ArrayValueTest=( StrTestName StrSocketForm StrArrayLoaderName ) ;
+  echo -ne "\n\n\t******************** ${StrFuncName}-FParamDisplayValue ********************\n" > /dev/stderr ; 
+  DisplayValueArrayName=ArrayValueTest FParamDisplayValue ;
+  echo -ne "\n\n\t*************************************************************************\n" > /dev/stderr ; 
+  
+  local IntTestCase=1 ; 
+  local StrMasterFuncName=${StrFuncName} ;
+  local ArrayLoader=();
+  
+  function __CallSocket()
+  {
+	  eval $( __call_localityLocalName=Caller __call_localityDisplayFunctionEntry=0 __call_locality ) ;  
+	  eval "${StrSocketForm} ${ArrayArg[@]}" ;
+  }
+  
+  function __GunLoader()
+  {
+	  eval $( __call_localityLocalName=GunLoader __call_localityDisplayFunctionEntry=0 __call_locality ) ;  
+	  if [ "${StrTestName}" == "None" ] ; then 
+        echo -ne "No test name defined, please uses ${StrMasterFuncName}TestName to set one Name-Function\n" > /dev/stderr ; 
+      else
+        eval "__CallSocket ${ArrayArg[1]} ${ArrayArg[0]}" ;
+      fi
+  }
+  
+  function __echo()
+  {
+    eval $( __call_localityLocalName=DisplayInfo __call_localityDisplayFunctionEntry=1 __call_locality ) ;  
+    echo -ne "Items: [ ${ArrayArg[0]} ]\n" > /dev/stderr ; 
+  }
+  
+  function __Charger()
+  {
+    eval $( __call_localityLocalName=Charger __call_localityDisplayFunctionEntry=0 __call_locality ) ;  
+    if [ "${StrArrayLoaderName}" == "None" ] ; then 
+      ArrayLoader[0]=""
+      ArrayLoader[1]="TestAddOption=Atest TestAddOption=BTest"
+      ArrayLoader[2]="TestAddOption=Atest TestAddOption=BTest TestAddOption=CTest"
+    else
+      eval "local IntLengthArray=\${#${StrArrayLoaderName}[@]}" ;
+      echo -ne "Using Array ${StrArrayLoaderName} for parameter storage\n" > /dev/stderr ; 
+      echo -ne "Array ${StrArrayLoaderName} holding ${IntLengthArray} item(s)\n" > /dev/stderr  ;
+      for(( intx=0;intx<=${IntLengthArray};intx++)); do 
+        eval "local StrItem=\${${StrArrayLoaderName}[${intx}]}" ; 
+        ArrayLoader[${intx}]="${StrItem}" ; 
+      done 
+    fi
+  }  
+  
+  clear ;
+  __Charger ;
+  echo -ne "\n\n\tArrayLoader Holding:\n\n" > /dev/stderr ;
+  
+  eval $( __in_for ArrayLoader __echo  ) ;
+  echo -ne "\n\n" > /dev/stderr  ;
+  eval $( __in_for ArrayLoader __GunLoader ${StrTestName} ) ;
+}
+
+
+function testArrayFParamFormation()    
+{ 
+	eval $( __call_localityLocalName=ArrayFParamFormation __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+	eval $( FParamFuncName=${StrFuncName} FParamSuffixName=AddOption FParamVarName=ArrayTest FParamDefaultValue=None __fnctCreateLocalityFuncParam ) ; 
+	eval $( FParamFuncName=${StrFuncName} FParamSuffixName=AddOption FParamVarName=ArrayTest FParamDefaultValue=None __fnctCreateLocalityFuncParam ) ; 
+	local ArrayValueTest=( StrProgName StrPreVarOption IntSpaceNum ) ;
+    echo -ne "\n\n\t******************** ${StrFuncName}-FParamDisplayValue ********************\n" > /dev/stderr ; 
+    DisplayValueArrayName=ArrayValueTest FParamDisplayValue ;
+    echo -ne "\n\n\t********************************************************************************\n" > /dev/stderr ; 
+	echo -ne "length of Array:ArrayTest : ${#ArrayTest[@]}}\n\tHold:[ ${ArrayTest[@]}]\n" ; 
+} 
+
+function testGetSpacer()
+{ 
+	eval $( __call_localityLocalName=SpacerTest __call_localityDisplayFunctionEntry=0 __call_locality ) ; 
+	eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ProgName FParamVarName=StrProgName FParamDefaultValue=GetSpacer __fnctCreateLocalityFuncParam ) ; 
+	eval $( FParamFuncName=${StrFuncName} FParamSuffixName=PreVarOption FParamVarName=StrPreVarOption FParamDefaultValue=Dot __fnctCreateLocalityFuncParam ) ; 
+    eval $( FParamFuncName=${StrFuncName} FParamSuffixName=SpaceNum FParamVarName=IntSpaceNum FParamDefaultValue=1 __fnctCreateLocalityFuncParam ) ; 
+	local ArrayValueTest=( StrProgName StrPreVarOption IntSpaceNum ) ;
+    echo -ne "\n\n\t******************** FParamDisplayValue ********************\n" > /dev/stderr ; 
+    DisplayValueArrayName=ArrayValueTest FParamDisplayValue ;
+    echo -ne "\n\n\t************************************************************\n" > /dev/stderr ; 
+    #echo -ne "Command Line :[ GetSpacerChar=${StrPreVarOption} ${StrProgName} ${IntSpaceNum} ] \n" > /dev/stderr ;
+    #eval "GetSpacerChar=${StrPreVarOption} ${StrProgName} ${IntSpaceNum}" ;
+} 
+
+function testArrayInFParamElement()
+{
+  ### This Test Check Possibility to Form an Array Within Param Declaration... Indeed Uses on Independent call-suffix
+  ### to sequentialize an Array, we suppose it may confuse not using all of element... Suggesting Adding an
+  ### Declarative Number alike Auto-IT, we can force creation of specific sized-array and prototyping
+  ### a range in the declaration of FParam may help accelerating declaration of information dependent-array-decl.
+  
+  eval $( __call_localityLocalName=ArrayFParam __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=EStructA FParamVarName=ArrayEvalT[0] FParamDefaultValue=False __fnctCreateLocalityFuncParam ) ; 
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=EStructB FParamVarName=ArrayEvalT[1] FParamDefaultValue=False __fnctCreateLocalityFuncParam ) ; 
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=EStructC FParamVarName=ArrayEvalT[2] FParamDefaultValue=True  __fnctCreateLocalityFuncParam ) ; 
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=EStructD FParamVarName=ArrayEvalT[3] FParamDefaultValue=False __fnctCreateLocalityFuncParam ) ; 
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=EStructE FParamVarName=ArrayEvalT[4] FParamDefaultValue=True  __fnctCreateLocalityFuncParam ) ; 
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=EStructF FParamVarName=ArrayEvalT[5] FParamDefaultValue=True  __fnctCreateLocalityFuncParam ) ; 
+  local ArrayDefVar=( ArrayEvalT[0] ArrayEvalT[1] ArrayEvalT[2] ArrayEvalT[3] ArrayEvalT[4] ArrayEvalT[5] );
+  eval $( DDVArrayName=ArrayDefVar __call_default_display_Var ) ;  
+  
+  echo -ne "\n\tArray ArrayEvalT:\n\t\t[${ArrayEvalT[@]}]\n" ;  
+}
+### Current Set of test:
+### . /etc/init.d/fnct.d/fnct_TestUnit ;
+### declare -a ArrayExtern ;
+### ArrayExtern[0]=" " ;
+### ArrayExtern[1]="TestAddOption=Dtest TestAddOption=ETest" ;
+### ArrayExtern[2]="TestAddOption=Ftest TestAddOption=GTest TestAddOption=HTest" ;
+### TestUnitArrayLoaderName=ArrayExtern TestUnitTestName=testArrayFParamFormation TestUnitSocketInit=SocketLoadInit002 LTSFunction 
+### 
+function test_Unit000()
+{
+    . /etc/init.d/fnct.d/fnct_TestUnit ;
+    local ArrayExtern ;
+    ArrayExtern[0]=" " ;
+    ArrayExtern[1]="TestAddOption=Dtest TestAddOption=ETest" ;
+    ArrayExtern[2]="TestAddOption=Ftest TestAddOption=GTest TestAddOption=HTest" ;
+    local ArrayTestPreParam=( TestUnitArrayLoaderName=ArrayExtern TestUnitTestName=testArrayFParamFormation TestUnitSocketInit=SocketLoadInit002 ) 
+    eval "${ArrayTestPreParam[@]} LTSFunction " ;
+}
+
+### Current Set of test: GetSpacer Test 
+### . /etc/init.d/fnct.d/fnct_TestUnit ; unset ArrayExtern ; declare -a ArrayExtern ; ArrayExtern[0]="SpacerTestProgName=GetSpacer SpacerTestSpaceNum=1 SpacerTestPreVarOption=Dollar" ; ArrayExtern[1]="SpacerTestProgName=GetSpacer SpacerTestSpaceNum=1 SpacerTestPreVarOption=LPThesis" ; ArrayExtern[2]="SpacerTestProgName=GetSpacer SpacerTestSpaceNum=1 SpacerTestPreVarOption=RPThesis" ; TestUnitArrayLoaderName=ArrayExtern TestUnitTestName=testGetSpacer TestUnitSocketInit=SocketLoadInit002 LTSFunction
+### 
+### 
+### 
+### 
+function test_Unit001()
+{
+ . /etc/init.d/fnct.d/fnct_TestUnit ; 
+ unset ArrayExtern ; 
+ local ArrayExtern ; 
+ ArrayExtern[0]="SpacerTestProgName=GetSpacer SpacerTestSpaceNum=1 SpacerTestPreVarOption=Dollar" ; 
+ ArrayExtern[1]="SpacerTestProgName=GetSpacer SpacerTestSpaceNum=1 SpacerTestPreVarOption=LPThesis" ; 
+ ArrayExtern[2]="SpacerTestProgName=GetSpacer SpacerTestSpaceNum=1 SpacerTestPreVarOption=RPThesis" ; 
+ local ArrayTestPreParam=( TestUnitArrayLoaderName=ArrayExtern TestUnitTestName=testGetSpacer TestUnitSocketInit=SocketLoadInit002 ) ;
+ eval "${ArrayTestPreParam[@]} LTSFunction" ;
+}

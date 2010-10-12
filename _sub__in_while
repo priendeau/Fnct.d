@@ -1,0 +1,19 @@
+function __in_while()
+{
+  eval $( __call_localityLocalName=WhileOpt __call_localityDisplayFunctionEntry=0 __call_locality ) ; 
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=VarName        FParamVarName=StrVarName      FParamDefaultValue=vartest      FParamInterpretVar=False __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=VarNameDef     FParamVarName=VarNameDef      FParamDefaultValue=0            FParamInterpretVar=False __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Operande       FParamVarName=StrOperande     FParamDefaultValue=le           FParamInterpretVar=False __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=TestValue      FParamVarName=TypeTest        FParamDefaultValue=0            FParamInterpretVar=False __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=FuncLoop       FParamVarName=StrFuncLoop     FParamDefaultValue=__SubUnit    FParamInterpretVar=False __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=FuncFinalize   FParamVarName=StrFuncFinalize FParamDefaultValue=None         FParamInterpretVar=False __fnctCreateLocalityFuncParam ) ;
+  
+  local Template=( "while" "[" "\${${StrVarName}:=${StrVarNameDef}}" "-${StrOperande}" "${TypeTest}" "]" ";" "do" "${StrFuncLoop}" ";" "done" "__FINALIZE__" ) ;
+  local ParseTpl=( ${Template[@]} ) ;
+  if [ "${StrFuncFinalize:=None}" == "None" ] ; then 
+    ParseTpl=${ParseTpl[@]//__FINALIZE__/} ;
+  else
+    ParseTpl=${ParseTpl[@]//__FINALIZE__/; ${StrFuncFinalize}} ;
+  fi
+  echo -ne "${ParseTpl[@]}" ; 
+}

@@ -1,0 +1,75 @@
+
+function __fnctCreateLocalityFuncParam()
+{
+  ### All Pre Declaration Variable are prefixed to : 
+  ### FParam
+  ### FParam${Suffix}=Value 
+  ### FParam${Suffix}=Value __fnctCreateLocalityFuncParam
+  ### ParamList :
+  ### FParamFuncName
+  ### FParamSuffixName
+  ### FParamVarName
+  ### FParamDefaultValue
+  ### FParamInterpretVar
+  ### FParamBase64
+  ### 
+  ### Note : To produce a valid command issued from this function it need evaluated-executive-parenthesis 
+  ### 'eval $( FParamFuncName=${StrFuncName} FParamSuffixName=__SUFFIX__ FParamVarName=__VARNAME__ 
+  ### FParamDefaultValue=__VALUE__ __fnctCreateLocalityFuncParam )'
+  ###
+  ### Typical uses : eval $( FParamFuncName= FParamSuffixName= FParamVarName= FParamDefaultValue= __fnctCreateLocalityFuncParam )
+  
+  eval $( __call_localityLocalName=FParam __call_localityDisplayFunctionEntry=0 __call_locality ) ; 
+  eval "local StrFuncNameOut=\${${StrFuncName}FuncName:=${StrFuncName}}" ; 
+  eval "local SuffixName=\${${StrFuncName}SuffixName:=Debug}" ; 
+  eval "local VarName=\${${StrFuncName}VarName:=IsItem}" ; 
+  eval "local IsInterpretVar=\${${StrFuncName}InterpretVar:=False}" ; 
+  eval "local DefaultValue=\${${StrFuncName}DefaultValue:=False}" ; 
+  eval "local IsBase64=\${${StrFuncName}Base64:=False}" ; 
+  if [ "${IsInterpretVar}" == "True" ] ; then 
+		#echo -ne "IsInterpretVar set to transfert variable between ${DefaultValue} and \${${DefaultValue}} \n" > /dev/stderr ; 
+		if [ ${IsBase64:=False} == "True" ] ; then 
+      eval "DefaultValue=\"\\\${${DefaultValue}}\"" ;
+      eval "DefaultValue=\"$( echo \"${DefaultValue}\" | base64 --wrap=0 -d )\"";
+    else
+      eval "DefaultValue=\"\\\${${DefaultValue}}\"" ;
+      eval "DefaultValue=\"\\\${${DefaultValue}}\"" ;
+    fi
+  else
+    if [ ${IsBase64:=False} == "True" ] ; then 
+      eval "DefaultValue=\"$( echo \"${DefaultValue}\" | base64 --wrap=0 -d )\"";
+    else
+      eval "DefaultValue=\"${DefaultValue}\"";
+    fi
+	fi
+  eval "local StrArrayHelperName=ArrayHelper${StrFuncNameOut}" ;
+  eval "local HelperIncrementInArray=\${${StrFuncNameOut}HelperIncrementInArray:=True}" ;
+  
+  eval "local IntNextItemAHelper=\${#${StrArrayHelperName}[@]}" ;
+  
+  ### ArrayDetection Test. 
+  ### It's unusual, but stacking information in Tree-Function disposition with same Prefix 
+  ### Handler can be used for many purposes... And Instead of overwriting the variable, it
+  ### simply add it to the end... The other advantage is using the same AddHelper and ListHelper
+  ### in Tree function. unlike DOM and SGML, they similary work in same fashion...
+  ### 
+  ### Note: 
+  ### There is an FParamHelperIncrementInArray which is set to True by default, having
+  ### consequence to add has many as __fnctCreateLocalityFuncParam is called with same 
+  ### FParamVarName, excepted we should work with adding in Helper in manner it's The
+  ### FParamSuffixName ':' IntLength pair is added instead, giving idea when the Array
+  ### reach it's state, before or after using __fnctCreateLocalityFuncParam... 
+  ### 
+  eval "local IntLength=\${#${VarName}[@]}" ;
+  if [ ${IntLength:=0} -eq 0 ] ; then 
+		echo -ne "eval \"local ${VarName}=\${${StrFuncNameOut}${SuffixName}:=$( echo ${DefaultValue} )}\"\n" ; 
+		echo -ne "eval \${StrFuncNameHelperAdd} ${SuffixName};" ;
+  else
+		eval "local NextItem=\${#${VarName}[@]}" ;
+		echo -ne "eval \"${VarName}[${NextItem}]=\${${StrFuncNameOut}${SuffixName}:=$( echo ${DefaultValue} )}\"\n" ; 
+		if [ "${HelperIncrementInArray:=True}" == "False" ] ; then
+			echo -ne "eval \${StrFuncNameHelperAdd} ${SuffixName}:${IntLength};" ;
+		fi 
+  fi
+  echo -ne "eval \${StrFuncNameHelperList};\n" ;
+}

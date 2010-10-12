@@ -1,0 +1,12 @@
+
+function GetPythonBoostLibName()
+{
+  eval $( __call_localityLocalName=GetPythonBoostLibName __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+  dpkg-listfiles $( dpkg --get-selections | egrep -i "boost" | awk 'BEGIN{}{printf("%s\n",$1);}END{}' | egrep -iv "\-dev" | tr '[:cntrl:]' ' ')| egrep -i "\.so" | awk 'BEGIN{}{split($1,ArrayLib,/\./);gsub(/\/usr\/lib\//,"",ArrayLib[1]);printf("'\''%s'\'',",ArrayLib[1])}END{}'
+}
+
+function GetPythonBoostLDFLAGS()
+{
+  eval $( __call_localityLocalName=GetPythonBoostLDFLAGS __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+  dpkg-listfiles $( dpkg --get-selections | egrep -i "boost" | awk 'BEGIN{}{printf("%s\n",$1);}END{}' | egrep -iv "\-dev" | tr '[:cntrl:]' ' ')| egrep -i "\.so" | awk 'BEGIN{}{printf("'\''-L %s'\'', ",$1)}END{}'
+}

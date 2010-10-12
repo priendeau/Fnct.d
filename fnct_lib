@@ -1,0 +1,3626 @@
+### #######################################################################################################
+### These are Common Bash-Object for FnctList _pre-Alpha-Init.d re-implementation of
+### services in Ubuntu/Debian/Fedora, which pass secessfully some handy-test in 3 years of developpement.
+### This will serve in generation of test and auto-creation of test, upcoming Breaker, a helper in Fuse
+### for deployment in many Arm-like, tiniscale and precious gadget un 5th generation os of in market of
+### pc-to-embedded Envirronement.
+###
+### While bash start to offer more than conventional Shell, memory start to be very affordable, many
+### Boot-loader start to offer socket for Bash-like comportement and will be soon be part os Posix
+### conformance in Command-line automation, and FnctList is a moderated Sub-API, a Wrapping in
+### automatisation of services and check-up services.
+###
+### By The design, it will offer safe-container and safe method of transfering information in management
+### of services and will be able to perform gain in check-up in stable envirronement by skipping check
+### in Read-only mode of certains loading... Like, If RO-File-system is older than creation date, it will
+### be able to query OS to add trigger to perform less operation and load information faster in subsequent
+### startup... Idem with services with less touched file configuration. It will be able also to increase
+### oeuvrability of uncommon option like Disk-To-Stream accesibility and Memory-To-Stream Uses, aka
+### Network-Booting, Network Memory Pool and Network Application Ground-up.
+###
+### Also , Methodology of implementation is strict and observe Object-oriented transcription in
+### transformation of many available Byte-coded of IDL re-interpretation in super-tiny scalling...
+###
+### Certains option will be implemented in second-stage of developpement, and
+### creating wrapper for un-accessible Gpl-services or fast-implementation prototyping,
+### switch for DTD extraction of Shell-Application program and XML Verbosis and XML object induction to
+### help developpement of functionnality implementation in fnct_list .
+###
+### #######################################################################################################
+
+### Declaration of Main Tools Set : __in_for
+### Where Life can not be easier managing script with this Array-Handler.
+###
+declare -i IntConfPathLength=${#ConfFnctDPath[@]} ;
+
+if [ ${IntConfPathLength:=0} -lt 1 ] ; then
+	declare -a ConfFnctDPath=( ${fnct_libPathConf:=/etc/init.d/fnct.d/ /scripts /media/8b3aee14-7b7f-4247-8fef-047c1c2760df/etc/init.d/fnct.d/} ) ;
+	unset IntConfPathLength ;
+fi
+
+### Declaration of Variable and Array Statement
+### ex: All Default Value, embeded information and recurrent information-list.
+###
+. ${ConfFnctDPath[0]}/fnct_var_decl
+
+### Declaration of external tools :
+### ex: Variable parser within command-line passing argument.
+###
+. ${ConfFnctDPath[0]}/fnct_parse_var_lib
+
+unset get_col
+get_col()
+{
+  eval $( __call_localityLocalName=GetCol __call_locality ) ;
+  
+  function AwkScriptGetColScript()
+  {
+    eval $( __call_localityLocalName=GetCol __call_locality ) ;
+    awk -vStartCol=${ARange[0]} -vEndCol=${ARange[1]} -f ${ArrayAwkScriptPath[0]}/get_col_script.awk  ;
+  }
+  
+  function AwkScriptGetColScriptVCol()
+  {
+    eval $( __call_localityLocalName=GetCol __call_locality ) ;
+    awk -vvcol=${VCol} -vskipline=${VSkipLine} -f ${ArrayAwkScriptPath[0]}/get_col_script_VCol.awk ; 
+  }
+  
+  function AwkScriptGetColScriptVColSingle()
+  {
+    eval $( __call_localityLocalName=GetCol __call_locality ) ;
+    awk -vvcol=${VCol} -vskipline=${VSkipLine} -f ${ArrayAwkScriptPath[0]}/get_col_script_VCol_Single.awk ;
+  }
+  
+  local VCol=${ArrayArg[0]} ;
+  local VSkipLine=${ArrayArg[1]} ;
+  VSkipLine=${VSkipLine:=0} ;
+  VCol=${VCol:=2} ;
+  local IntIsInRange=${IntIsInRange:=0} ;
+  if [ ${IntIsInRange:=0} -gt 0 ] ; then
+    local ARange=( ${ARange[@]} ) ;
+    #echo "Using Range, display Column from ${ARange[0]} to ${ARange[1]}" > /dev/stderr ;
+    AwkScriptGetColScript ; 
+  else
+    echo "Did not provide Range." > /dev/stderr ;
+    local IntVCol=( ${VCol/:/ } ) ;
+    #echo "Content of VCol:[${VCol}]" > /dev/stderr ;
+    local IntVColLen=${#IntVCol[@]} ;
+    if [ ${IntVColLen:=0} -gt 0 ] ; then
+     #echo "VCol Having Pair Item:[${VCol}]" > /dev/stderr ;
+     AwkScriptGetColScriptVCol ;
+    else
+     AwkScriptGetColScriptVColSingle ;
+    fi
+  fi
+
+}
+
+
+### Alias Equivalent, to replace actual __awk_get_column.
+###
+unset __awk_get_column ;
+__awk_get_column()
+{
+ eval $( __call_locality ) ;
+ local StrFuncName=( __awk_get_column )  ;
+ StrFuncName=( __awk_get_column ) ;
+ local CmdEval=( get_col ${ArrayArg[@]} ) ;
+ eval "${CmdEval[@]}" ;
+}
+
+unset __DeclDPKG_config;
+__DeclDPKG_config()
+{
+  local StrFuncName=( __DeclDPKG_config )  ;
+  declare -a ArrayPkgConfig=( $( pkg-config --list-all | get_col 1 0 ) ) ;
+}
+
+unset __Env_DPKG_config ;
+__Env_DPKG_config()
+{
+  local StrFuncName=( __Env_DPKG_config )  ;
+  declare -i UpdatePkgConfigInHibitEnv=${UpdatePkgConfigInHibitEnv:=0};
+  UpdatePkgConfigInHibitEnv=${UpdatePkgConfigInHibitEnv:=0} ;
+  local Message=( "DPKG Package Config Array-Index was enabled, UpdatePkgConfigInHibitEnv=0;" "DPKG Package Config Array-Index was inhibited, UpdatePkgConfigInHibitEnv=1;" )
+  if [ ${UpdatePkgConfigInHibitEnv:=0} -eq 0 ] ; then
+   echo "${Message[0]}" > /dev/stderr ;
+   eval $( __DeclDPKG_config ) ;
+   echo -ne "DPKG_config Holding:[ ${#ArrayPkgConfig[@]} ] item(s)." ;
+  else
+   echo "${Message[1]}" > /dev/stderr ;
+  fi
+}
+
+unset __DeclUUIDRandomPolicyEnv ;
+
+__DeclUUIDRandomPolicyEnv()
+{
+  local ArrayArg=( $* ) ;
+  local StrFuncName=( __DeclUUIDRandomPolicyEnv );
+  local UUIDPolicy=${UUIDRandomPolicyInHibitEnv} ;
+  local FileUUID=${ArrayArg[1]} ;
+  FileUUID=${FileUUID:=/proc/sys/kernel/random/uuid} ;
+  local ArrayMethod=( ) ;
+  ArrayMethod[0]="\"cat /proc/sys/kernel/random/uuid \"" ;
+  ArrayMethod[1]="\"uuidgen -r \"" ;
+  if [ -e ${FileUUID} ] ; then
+    echo "declare -a ArrayUUIDRandomPolicy=( ${ArrayMethod[${UUIDPolicy}]} );" ;
+  fi
+}
+
+unset __Env___UUIDRandomPolicyConfig
+__Env___UUIDRandomPolicyConfig()
+{
+ local StrFuncName=( __Env___UUIDRandomPolicyConfig )  ;
+ declare -i UUIDRandomPolicyInHibitEnv=${UUIDRandomPolicyInHibitEnv:=0} ;
+ local Message=( "UUID Kernel Policy was enabled, UUIDRandomPolicyInHibitEnv=0" "UUID Kernel Policy was inhibited, UUIDRandomPolicyInHibitEnv=1" ) ;
+ if [ ${UUIDRandomPolicyInHibitEnv:=0} -eq 0 ] ; then
+  echo "${Message[0]}" > /dev/stderr ;
+  echo "CmdLine:[ $( __DeclUUIDRandomPolicyEnv ) ]" > /dev/stderr ;
+  __DeclUUIDRandomPolicyEnv ;
+ else
+  echo "${Message[1]}" > /dev/stderr ;
+  echo "CmdLine:[ $( __DeclUUIDRandomPolicyEnv ) ]" > /dev/stderr ;
+  __DeclUUIDRandomPolicyEnv ;
+ fi
+
+}
+
+unset __DeclGoogleEnv;
+__DeclGoogleEnv()
+{
+  local StrFuncName=( __DeclGoogleEnv )  ;
+  eval $( __call_locality ) ;
+  local PythonType=${ArrayArg[0]} ;
+  PythonType=${PythonType:=2.6} ;
+  local PythonPath=${ArrayArg[1]} ;
+  PythonPath=${PythonPath:=/usr/lib} ;
+  TemplatePath="__PATH__/python__VERSION__" ;
+  TemplatePath=${TemplatePath/__PATH__/${PythonPath}} ;
+  TemplatePath=${TemplatePath/__VERSION__/${PythonType}} ;
+
+  echo "export GoogleEngineAppServer=\"${TemplatePath}/dist-packages/google_appengine/dev_appserver.py\";" ;
+  echo "export GoogleEngineRemoteApiShell=\"${TemplatePath}/dist-packages/google_appengine/remote_api_shell.py\";" ;
+  echo "export GoogleEngineBL=\"${TemplatePath}/dist-packages/google_appengine/bulkloader.py\";" ;
+  echo "export GoogleEngineBLC=\"${TemplatePath}/dist-packages/google_appengine/bulkload_client.py\";" ;
+  echo "export GoogleEngineAppCfg=\"${TemplatePath}/dist-packages/google_appengine/appcfg.py\";" ;
+  echo "declare -a ArrayGoogleEngine=( \${GoogleEngineAppServer} \${GoogleEngineRemoteApiShell} \${GoogleEngineBL} \${GoogleEngineBLC} \${GoogleEngineAppCfg} );" ;
+  echo "declare -i IntGooAppServer=0;" ;
+  echo "declare -i IntGooRemoteApiShell=1;" ;
+  echo "declare -i IntGooBl=2;" ;
+  echo "declare -i IntGooBLC=3;" ;
+  echo "declare -i IntGooAppCfg=4;" ;
+}
+
+unset __Env_GoogleConfig;
+__Env_GoogleConfig()
+{
+ local StrFuncName=( __Env_GoogleConfig )  ;
+ declare -i GoogleInHibitEnv=${GoogleInHibitEnv:=0};
+ GoogleInHibitEnv=${GoogleInHibitEnv:=0} ;
+ local Message=( "Google Declaration was enabled, GoogleInHibitEnv=0;" "Google Declaration was inhibited, GoogleInHibitEnv=1;" ) ;
+ if [ ${GoogleInHibitEnv:=0} -eq 0 ] ; then
+  echo "${Message[0]}" > /dev/stderr ;
+  eval $( __DeclGoogleEnv ) ;
+ else
+  echo "${Message[1]}" > /dev/stderr ;
+ fi
+
+}
+
+### Function : __functor_cmd_ArrayResult()
+### Function to execute a command and collect the information from stdout and add-it into A pre-declarative
+### Array.
+### Note : It's Important to understand this is a void corpus, and only the content of variable named
+###   Cmd64, need a specific Type, the base64-0, or encoded into base64 with 0 wrapping line, look
+###   for debian-package/ubuntu... named coreutils, or fedora coreutils too... base64 is mandatory to
+###   let it work ...
+###   An Helper os comming to install all other packages
+
+
+### Noted : eval $( __functor_cmd_ArrayResult ArrayName=<|ArrayContent|> [VarDecl=global/local] Cmd64=[Base64:f() or any other command with many args...]
+### Where VarDecl is not mandatory but will yield a local... and on faliure it trow a return 1...
+### On global form it create a "declare -a" typed Array...
+
+### Next Improvement : Adding the local Array with Function-wrapper for getters/setters.
+###like eval $( __functor_cmd_ArrayResult ArrayName=ArrayDPKG VarDecl=local Cmd64=$( echo "dpkg --get-selections" | base64 --wrap=0 )
+###
+### Will :
+### create a function like
+### ---- PROTOTYPE ----
+### function __functArrayDPKG()
+### {
+###   eval $( __InitFunc __functArrayDPKG ) ;
+###   function getter()
+###   {
+###     eval $( __InitFunc getter ) ;
+###     local ID=${ID:=@} ;
+###     echo "${ArrayDPKG[${ID:=@}]}" ;
+###   }
+###   function setter()
+###   {
+###     eval $( __InitFunc setter ) ;
+###     local ID=${ID:=@} ;
+###     ArrayDPKG[${#ArrayDPKG[${ID:=@}]}]=${Value:=_SETTER_}" ;
+###   }
+###   ${Member:=getter} ID=${ID:=@} Value=${Value:=_SETTER_} ;
+###  }
+###
+### ---- PROTOTYPE ----
+###
+###
+###
+###
+unset __functor_cmd_ArrayResult ;
+__functor_cmd_ArrayResult()
+{
+  eval $( __InitFunc __functor_cmd_ArrayResult ) ;
+  local StrFuncName=( __functor_cmd_ArrayResult ) ;
+  local StrCmdDefaultCommand=( ZWNobyBlY2hvICJUaGVyZSBJcyBObyBDb21tYW5kIFNlbmRlZCB0byBUaGUgSW50ZXJmYWNlLiIK ) ;
+  local StrArrayArgName=${ArrayName:=ArrayElement} ;
+  eval "local IntArrayIntInspect=\${#${StrArrayArgName:=ArrayDPKG}[@]}" ;
+  if [ ${IntArrayIntInspect:=0} -gt 0 ] ; then
+    echo "echo -ne \"Warning !, Function ${StrFuncName}\nReport Array:${StrArrayArgName} has already member inside the array.\n\tFunction will throw error.\n\n\"" ;
+    return 1 ;
+  else
+      local CmdEval=( $( echo "${Cmd64:=${StrCmdDefaultCommand}}" | base64 --wrap=0 -d ) )
+      local Array=( $( eval ${CmdEval[@]} ) ) ;
+      local ErrorStatement=$? ;
+      if [ ${ErrorStatement:=0} -eq 0 ] ; then
+        if [ ${VarDecl:=local} == "global" ] ; then
+            echo "declare -a ${StrArrayArgName}=( ${Array[@]} ) ;" ;
+        elif [ ${VarDecl:=local} == "local" ] ; then
+            echo "local ${StrArrayArgName}=( ${Array[@]} ) ;" ;
+        else
+            echo "local ${StrArrayArgName}=( ${Array[@]} ) ;" ;
+        fi
+      else
+       echo "echo -ne \"Function ${StrFuncName} Throw an error on Execution.\n\tCmd64 Decoded Inline function should be inspected.\n\""
+       return 1 ;
+     fi
+  fi
+}
+
+unset set_cpu_by_sys_device;
+set_cpu_by_sys_device()
+{
+  eval $( __call_locality ) ;
+  local StrFuncName=( set_cpu_by_sys_device ) ;
+  local ArrayCPU=( 0 1 ) ;
+  local ArrayCPURange=( min max ) ;
+  function AssignPerCPU()
+  {
+    eval $( __call_locality ) ;
+    local StrFuncName=( AssignPerCPU ${StrFuncName[0]} ) ;
+    function AssignPerRange()
+    {
+      eval $( __call_locality ) ;
+      local StrFuncName=( AssignPerRange ${StrFuncName[0]} ) ;
+      local CmdEval=( "echo" "${IntCpuFreq:=1900000}" ">" "/sys/devices/system/cpu/cpu${ArrayCPU[${intArrayCPU}]}/cpufreq/scaling_${ArrayCPURange[${intArrayCPURange}]}_freq" ) ;
+      if [ ${Debugset_cpu_by_sys_device:=0} -eq 1 ] ; then
+       echo -ne "CmdLine:[ ${CmdEval[@]} ]\n" > /dev/stderr ;
+      fi
+      eval "${CmdEval[@]}" ;
+    } ;
+    eval $( __in_for ArrayCPURange AssignPerRange ) ;
+  } ;
+  eval $( __in_for ArrayCPU AssignPerCPU ) ;
+  if [ ${ReportSpeedset_cpu_by_sys_device:=0} -eq 1 ] ; then
+     get_cpu_speed
+  fi
+}
+
+unset monitor_cpu_speed;
+monitor_cpu_speed()
+{
+  eval $( __DeclUUIDRandomPolicyEnv  ) ;
+  eval local QueryUUID=$( ${ArrayUUIDRandomPolicy[0]} ) ;
+  echo "All Information are stored inside ${QueryUUID}"
+  while [ 1 ] ; do
+   local ArraySpeedRep=( $( get_cpu_speed | get_col 4 ) ) ;
+   local ArrayDateTime=$( date +"${ArrayDateFormat[0]}" ) ;
+   echo "[${ArrayDateTime[@]}]:${ArraySpeedRep[@]}" >> ${QueryUUID} ;
+   sleep 1 ;
+  done
+}
+
+unset test_cpu_set_speed;
+test_cpu_set_speed()
+{
+  eval $( __call_locality )  ;
+  eval $( __DeclUUIDRandomPolicyEnv  ) ;
+  local StrFuncName=( test_cpu_set_speed ) ;
+  local StdOut="/dev/stdout" ;
+  local UUID="" ;
+  eval local QueryUUID=$( ${ArrayUUIDRandomPolicy[0]} ) ;
+  eval "if [ \${DumpTerm${StrFuncName[0]}StdErr:=0} -eq 1 ] ; then echo \"Dumping Information to /dev/stderr\" ; StdOut=/dev/stderr ; fi "  ;
+  eval "if [ \${DumpTerm${StrFuncName[0]}StdOut:=0} -eq 1 ] ; then echo \"Dumping Information to /dev/stdout\" ; StdOut=/dev/stdout ; fi "  ;
+  eval "local IntFileName${StrFuncName[0]}=\${#FileName${StrFuncName[0]}}; local IntFileName=\${IntFileName${StrFuncName[0]}:=0} ; if [ \${IntFileName${StrFuncName[0]}:=0} -gt 0 ] ; then echo \"Dumping Information to File \${FileName${StrFuncName[0]}} ; \" ; local StrFileName=\${FileName${StrFuncName[0]}}; fi "  ;
+  eval "if [ \${DumpTermFile${StrFuncName[0]}:=0} -eq 1 ] ; then echo \"Dumping Information to File\" ; StdOut=/dev/stdout ; fi "  ;
+  eval "if [ \${DisplayUUID${StrFuncName[0]}:=0} -eq 1 ] ; then  UUID=\"DISPLAY:${QueryUUID}: \" ; fi " ;
+
+  local FrequencyRangeList=( /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_frequencies ) ;
+  local ArraySetSpeed=( $( cat ${FrequencyRangeList[0]} ) ) ;
+  if [ ${IntFileName:=0} -gt 0 ] ; then
+     echo -ne "${UUID}Local Map frequency\n\tchart:[ ${ArraySetSpeed[@]} ]\n" >> ${StrFileName} ;
+  else
+     echo -ne "${UUID}Local Map frequency\n\tchart:[ ${ArraySetSpeed[@]} ]\n" >${StdOut} ;
+  fi
+
+  local IntRandCpuSpeed=0 ;
+  local IntSleepTime ;
+  while [ 1 ] ; do
+   IntRandCpuSpeed=$(( ${RANDOM} % $((${#ArraySetSpeed[@]})) )) ;
+   IntSleepTime=$((${RANDOM} % 10 ));
+   local IntNewSpeedSetting=${ArraySetSpeed[${IntRandCpuSpeed}]} ;
+   if [ ${IntFileName:=0} -gt 0 ] ; then
+     echo "${UUID}Setting Processor to ${IntNewSpeedSetting} Khz" >> ${StrFileName}  ;
+     echo "${UUID}Slepping ${IntSleepTime} seconds " >> ${StrFileName} ;
+   else
+     echo "${UUID}Setting Processor to ${IntNewSpeedSetting} Khz" >${StdOut} ;
+     echo "${UUID}Slepping ${IntSleepTime} seconds " >${StdOut} ;
+   fi
+   IntCpuFreq=${IntNewSpeedSetting} set_cpu_by_sys_device ;
+   sleep ${IntSleepTime} ;
+  done
+}
+
+unset set_cpu_max_frequency;
+set_cpu_max_frequency()
+{
+  eval $( __call_locality ) ;
+  local StrFuncName=( set_cpu_max_frequency );
+  function __fnct_set_cpu()
+  {
+    local StrFuncName=( ${StrFuncName[0]} ${StrFuncName[0]}.__fnct_set_cpu ) ;
+    eval $( __call_locality ) ;
+    local IntCpu=${ArrayArg[0]} ;
+    IntCpu=${IntCpu:=0} ;
+    local IntFreqSet=${ArrayArg[1]} ;
+    local IntBaseMultiplier=$(( 1000 * 100 )) ;
+    IntFreqSet=$(( ${IntFreqSet:=1900} * ${IntBaseMultiplier} )) ;
+    local StrGovernor=${ArrayArg[2]} ;
+    StrGovernor=${StrGovernor:=performance} ;
+    local CmdEval=( cpufreq-selector --cpu ${IntCpu:=0} --governor ${StrGovernor} --frequency ${IntFreqSet}  ) ;
+    if [ ${IsEnv_CpuFreqConfig:=0} -eq 0 ] ; then
+      echo -ne "\tFrom Function:${StrFuncName[$((${#StrFuncName[@]}-1))]}\n\tCmdLine:\n\t[${CmdEval[@]}]\n" > /dev/stderr ;
+    fi
+    eval "${CmdEval[@]}" ;
+  }
+  for ((IntCpu=0;IntCpu<=1; IntCpu++)) ; do
+    local CmdEval=( "__fnct_set_cpu" "${IntCpu}" "${ArrayArg[@]}" ) ;
+    if [ ${IsEnv_CpuFreqConfig:=0} -eq 0 ] ; then
+      echo -ne "From Function:${StrFuncName[$((${#StrFuncName[@]}-1))]}\nCmdLine:\n\t[ ${CmdEval[@]} ]\n" > /dev/stderr ;
+    fi
+    eval $( "${CmdEval[@]}"  ) ;
+  done
+}
+
+unset __Env_CpuFreqConfig;
+__Env_CpuFreqConfig()
+{
+ declare -i CpuFreqInHibitEnv=${CpuFreqInHibitEnv:=0};
+ local IsEnv_CpuFreqConfig=1 ;
+ CpuFreqInHibitEnv=${CpuFreqInHibitEnv:=0} ;
+ local StrFuncName=( __Env_CpuFreqConfig );
+
+ if [ ${CpuFreqInHibitEnv:=0} -eq 0 ] ; then
+  echo "Cpu Frequence Management was enabled, CpuFreqInHibitEnv=0;" > /dev/stderr ;
+  coproc set_cpu_max_frequency ;
+ else
+  echo "Cpu Frequence Management Declaration was inhibited, CpuFreqInHibitEnv=1;" > /dev/stderr ;
+ fi
+ unset IsEnv_CpuFreqConfig
+
+}
+
+unset __Env_CpuFreqSysConfig;
+__Env_CpuFreqSysConfig()
+{
+ declare -i CpuFreqInHibitEnv=${CpuFreqInHibitEnv:=0};
+ local IsEnv_CpuFreqConfig=1 ;
+ declare -i CpuFreqInHibitEnv=${CpuFreqInHibitEnv:=0} ;
+ local StrFuncName=( __Env_CpuFreqSysConfig );
+
+ if [ ${CpuFreqInHibitEnv:=0} -eq 0 ] ; then
+  echo "Cpu Frequence Management ( Thru /sys/devices/system/cpuN/ ) was enabled, CpuFreqInHibitEnv=0;" > /dev/stderr ;
+  coproc set_cpu_by_sys_device ;
+ else
+  echo "Cpu Frequence Management ( Thru /sys/devices/system/cpuN/ ) Declaration was inhibited, CpuFreqInHibitEnv=1;" > /dev/stderr ;
+ fi
+ unset IsEnv_CpuFreqConfig
+
+}
+
+###
+### This section should not move because element depending from their respective Variable
+### Declaration may not work if this one is declared before __in_for and after
+### Some function depending from their variable ( ex: DPKG config, Google Envirronement. )
+###
+unset __Variable_Load ;
+__Variable_Load()
+{
+  eval $( __call_locality ) ;
+  local StrFuncName=( __Variable_Load );
+  eval ${ArrayArg[0]} ;
+}
+declare ThisTestLoadVar=( $( eval $( __in_for ArrayVariableLoader __Variable_Load ) ) ) ;
+
+unset __unset ;
+__unset()
+{
+  eval $( __InitFunc __unset ) ;
+  local StrFuncName=( __unset );
+  function __functor_unset()
+  {
+    eval $( __InitFunc __functor_unset );
+    local CmdEval=( "unset" \"${ArrayArg[${IntDefaultItemValue}]}\" ) ;
+    eval "${CmdEval}" ;
+  }
+  eval $( __in_for ArrayArg __functor_unset ) ;
+}
+
+unset __CheckPathImplementation ;
+__CheckPathImplementation()
+{
+  eval $( __InitFunc __CheckPathImplementation ) ;
+  #local FileUUIDVoidTest=$( uuidgen -r ) ;
+  local DateGeneration=$( date +"${ArrayDateFormat[0]}" ) ;
+  local IntTestStream=${FSStreamTest:=${IntTestPath}}  ;
+  #echo "${DateGeneration}" > ${FileUUIDVoidTest} ;
+
+  function __functor_check_path()
+  {
+    local StrFuncName=( __functor_check_path );
+    eval $( __InitFunc __functor_check_path ) ;
+    local IntTestPath=$( ${ProgramName:=test} ${ProgramOption:=${ArrayTestFS[${IntTestStream}]}} ${FileName:=${FileUUIDVoidTest}} ) ;
+    echo "${IntTestPath}" ;
+  }
+  __functor_check_path ProgramName=${ProgramName} ProgramOption=${ProgramOption} FileName=${FileName} FSStreamTest=${FSStreamTest} ;
+}
+
+unset ArgBase64 ;
+ArgBase64()
+{
+ local StrFuncName=( ) ;
+ # eval $( __call_locality ) ;
+  #local StrFuncName=${StrFuncName}.base64 ;
+  #eval $( parse_newvar ${EFunctionTypeDecl} ${TypeDebugKey[${EParamNoDebugDecl}]} ${ArrayArg[@]} ) ;
+  eval $( __InitFunc ArgBase64 ) ;
+
+  if [ "${Stream:=encode}" == "encode" ] ; then
+    local StreamEncode=$( echo "${ArrayArg[@]}" | base64 --wrap=0 ) ;
+    echo "Base64Value=${StreamEncode}" ;
+  elif [ "${Stream:=encode}" == "decode" ] ; then
+   local Content=$( echo "${Base64Value}" | base64 -d --wrap=0 ) ;
+   echo "${Content}" ;
+  fi
+}
+
+unset __call_cmdeval;
+__call_cmdeval()
+{
+ #local StrFuncName=${StrFuncName:=RootNode}.__call_cmdeval ;
+ #eval $( __call_locality ) ;
+ local StrFuncName=( ) ;
+ eval $( __InitFunc __call_cmdeval ) ;
+ local TUUID=$( uuidgen -r ) ;
+ eval $( parse_newvar ${EFunctionTypeDecl} ${TypeDebugKey[${EParamNoDebugDecl}]} ${ArrayArg[@]} ) ;
+ if [ ! "${StrFuncName:=RootNode}" == "RootNode" ] ; then
+   echo "local CmdEval=" ;
+   echo "" ;
+ else
+   eval "declare -a ${StrFuncName}_${TUUID}=( ${CmdEval[@]} )" ;
+   echo "local CmdEval=" ;
+   echo "" ;
+ fi
+}
+
+unset GetSysCtlKeyValue;
+GetSysCtlKeyValue()
+{
+ eval $( __call_locality ) ;
+ local StrFuncName=GetSysCtlKeyValue
+ local StrFuncName=( ) ;
+ eval $( parse_newvar ${EFunctionTypeDecl} ${TypeDebugKey[${EParamNoDebugDecl}]} ${ArrayArg[@]} ) ;
+ eval $( __InitFunc GetSysCtlKeyValue ) ;
+ local StrSedExtrType=${ArraySedSysCtl[${SysCtlItem:=${IntSedNumFormatSedSysCtlValue}}]} ;
+ local StrKeyName=( ${KeyName:=${ArraySysCtlKeyName[@]}} ) ;
+ local IntKeyLength=${StrKeyName#} ;
+ function __functor_get_syskey()
+ {
+  #eval $( __call_locality ) ;
+  #local StrFuncName=${StrFuncName}.__functor_get_syskey ;
+  eval $( __InitFunc __functor_get_syskey ) ;
+  local CmdEval=( sysctl ${ArrayArg[${IntDefaultItemValue}]} "|" sed "\'${StrSedExtrType}\'" ) ;
+  eval "${CmdEval[@]}" ;
+ }
+
+ function __functor_test_length()
+ {
+   #eval $( __call_locality ) ;
+   #local StrFuncName=${StrFuncName}.__functor_test_length ;
+   local StrFuncName=( ) ;
+   eval $( __InitFunc __functor_test_length ) ;
+   local IntKeyLength=${#${ArrayArg[${IntDefaultItemValue}]}} ;
+
+   if [ ${IntKeyLength:=0} -ne 0 ] ; then
+     local CmdEval=( __functor_get_syskey ${ArrayArg[${IntDefaultItemValue}]} ) ;
+     eval "${CmdEval[@]}" ;
+   else
+    echo "Error ${ArrayArg[${IntDefaultItemValue}]} is empty or Array ArraySysCtlKeyName did not hold Any Value." ;
+    return 1
+   fi
+ }
+ eval $( __in_for StrKeyName __functor_test_length ) ;
+
+}
+
+__functor_find()
+{
+  eval $( __InitFunc __functor_find ) ;
+  local StrFuncName=( ) ;
+
+  local StrPathFind=${PathFind:=./} ;
+  local TypeSearchFormat=${TypeSearch:=f}
+  local TypeStreamSearch="__TAG__" ;
+  local StreamInformation=${QuerySearch:=*.*} ;
+  local TypeStreamPathDepth="" ;
+  local NbPathDepth=${NbPathDepth:=0} ;
+  local TypePrintf=${Printf:=0} ;
+  local TypeOutStream=${OutStream:=stdout} ;
+  local FormatOut="-__TAG__printf" ;
+
+  function StreamOutDeclaration()
+  {
+    eval $( __InitFunc StreamOutDeclaration ) ;
+    local StrFuncName=( ) ;
+    if [ "${TypeOutStream:=stdout}" == "stdout" ] ; then
+      echo "FormatOut=${FormatOut/__TAG__/} ;" ;
+    elif [ "${TypeOutStream:=stdout}" == "file" ] ; then
+      echo "FormatOut=${FormatOut/__TAG__/s} ;" ;
+    elif [ "${TypeOutStream:=stdout}" == "declaration" ] ; then
+      echo "FormatOut=${FormatOut/__TAG__/} ;" ;
+      echo "TypePrintf=1 ;" ;
+    else
+      echo "FormatOut=\"\"" ;
+    fi
+  }
+
+  eval $( StreamOutDeclaration TypeOutStream=${TypeOutStream} ) ;
+
+  if [ ${NbPathDepth:=0} -eq 0 ] ; then
+    TypeStreamPathDepth="" ;
+  elif [ ${NbPathDepth:=0} -gt 0 ] ; then
+    TypeStreamPathDepth="-maxdepth ${NbPathDepth}" ;
+  fi
+
+  if [ "${WithWildCard:=false}" == "true" ] ; then
+    TypeStreamSearch="*__TAG__*" ;
+  fi
+  TypeStreamSearch=${TypeStreamSearch/__TAG__/${StreamInformation}};
+
+  local CmdEval=( find ${StrPathFind} ${TypeStreamPathDepth} -type ${TypeSearchFormat} -iname \"${TypeStreamSearch}\" ${FormatOut} \"${ArrayFindPrintf[${TypePrintf}]}\"  ) ;
+  echo "CmdLine:[${CmdEval[@]}]" ;
+  eval "${CmdEval[@]}" ;
+}
+
+Path_file_display()
+{
+  eval $( __InitFunc Path_file_display ) ;
+  local ArrayFile=( $( find /home/maxiste/web_folder/canoe -type f -not -iname "*.html" -printf "%p " ) ) ;
+  local StrFuncName=( ) ;
+  function __display()
+  {
+    eval $( __InitFunc __display ) ;
+    local IntNumberDisplay=$(( ${intArrayFile} + 1 )) ;
+    local StrTemplate="__INT__ __FILE__" ;
+    local StrParsedSrteam=${StrTemplate/__FILE__/${ArrayArg[${IntDefaultItemValue}]}} ;
+    StrParsedSrteam=${StrParsedSrteam/__INT__/${IntNumberDisplay}} ;
+    echo "${StrParsedSrteam}" ;
+  }
+  eval $( __in_for ArrayFile __display ) ;
+}
+
+base_chunk_analysis()
+{
+  eval $( __InitFunc base_chunk ) ;
+  local StrFuncName=( ) ;
+  local StrItemCodec=${String64:=BVWl9-pE-S66JEpXRlQe127GfCqOVqacBw4eeyA6z6_mkA-C-NBABGAEgvoXfDzgAUOnbusEEYP3YqIHwA6AB07iU_wOyATJ0aGV5c2F5c29tZXRoaW5naW50ZXJyZXN0aW5nYXBwYXJlbnRsLmJsb2dzcG90LmNvbboBCjE2MHg2MDBfYXPIAQLaATpodHRwOi8vdGhleXNheXNvbWV0aGluZ2ludGVycmVzdGluZ2FwcGFyZW50bC5ibG9nc3BvdC5jb20vgAIBqAMBsAOSlaAGyAMF9QMIAACE} ;
+  local IntString64Size=${#StrItemCodec} ;
+  local IntHeadChunkSize=${ChunkSize:=64} ;
+  local IntChunkNumber=$(( ${IntString64Size} / ${IntHeadChunkSize} )) ;
+  local IntEndChunk=$(( ${IntString64Size}-( ${IntChunkNumber}*${IntHeadChunkSize} ) )) ;
+  unset TypeUUIDFileTemp ;
+  local TypeUUIDFileTemp=( $( uuidgen -r ) $( uuidgen -r ) ) ;
+  local IntNoKeyOut=0 ;
+  local IntFileDisplay=0 ;
+  local StartNewStream=0 ;
+
+  function get_segment()
+  {
+    eval $( __InitFunc get_segment ) ;
+    local StrFuncName=( ) ;
+    local StrElement=${Element} ;
+    local IntStart=${Start:=0} ;
+    local IntLength=${Length:=1} ;
+    echo "${StrElement:${IntStart}:${IntLength}}" ;
+  }
+
+  function get_info_chunk()
+  {
+    eval $( __InitFunc get_info_chunk ) ;
+    local StrFuncName=( ) ;
+    echo "Size of Key Tested: ${IntString64Size}" ;
+    echo "Number of Chunk of (${IntHeadChunkSize} bytes), ${IntChunkNumber}."  ;
+    echo "Last Chunk Size : ( ${IntEndChunk} bytes)." ;
+  }
+
+  function __InfoStreamChunk_File()
+  {
+   local StrFuncName=( ) ;
+    eval $( __InitFunc __InfoStreamChunk_File ) ;
+    if [ "${DisplayInfo:=none}" == "stdout" ] ; then
+      get_info_chunk ;
+    elif [ "${DisplayInfo:=none}" == "file" ] ; then
+      local StrFileNameOut=${StreamFileOut} ;
+      if [ -e ${StrFileNameOut} ] ; then
+        echo > ${StrFileNameOut} ;
+      fi
+      echo -ne "Key-Information will be written in file ${StrFileNameOut}\n\tUsing InfoKeyFileOut will change filename.\n" ;
+      get_info_chunk >> ${StrFileNameOut} ;
+    elif [ "${DisplayInfo:=none}" != "none" ] ; then
+       echo -ne "Wrong DisplayKey\n\tDisplayInfo=${DisplayInfo}.\n"  ;
+       return 1 ;
+    fi
+  }
+  __InfoStreamChunk_File StreamFileOut=${InfoKeyFileOut:=${TypeUUIDFileTemp[0]}} ;
+
+  function __StreamChunk_File()
+  {
+    local StrFuncName=( ) ;
+    eval $( __InitFunc __StreamChunk_File ) ;
+      if [ ${StartNewStream:=0} -eq 0 ] ; then
+        if [ -e ${KeyFileOut:=${TypeUUIDFileTemp[1]}} ] ; then
+          echo > ${KeyFileOut:=${TypeUUIDFileTemp[1]}} ;
+        fi
+      fi
+      echo "${ChunkSegment}" >> ${KeyFileOut:=${TypeUUIDFileTemp[1]}} ;
+  }
+
+  for (( intCx=0 ; intCx <= ${IntChunkNumber} ; intCx++ )) ; do
+    local StartCopySeg=$(( ${intCx}*${IntHeadChunkSize} )) ;
+    local ChunkSegment=$( get_segment Element=${StrItemCodec} Start=${StartCopySeg:=0} Length=${IntHeadChunkSize} ) ;
+    if [ "${DisplayKey:=stdout}" == "stdout" ] ; then
+      echo "${ChunkSegment}" ;
+    elif [ "${DisplayKey:=stdout}" == "file" ] ; then
+      __StreamChunk_File KeyFileOut=${KeyFileOut:=${TypeUUIDFileTemp[1]}} StartNewStream=${StartNewStream} ;
+      ((StartNewStream+=1)) ;
+      if [ ${IntFileDisplay:=0} -ne 1 ] ; then
+        IntFileDisplay=1 ;
+        echo -ne "Key-Chunk will be written in file ${KeyFileOut:=${TypeUUIDFileTemp[1]}}\n\tUsing KeyFileOut will change filename.\n" ;
+      fi
+    elif [ "${DisplayKey:=stdout}" == "none" ] ; then
+      if [ ${IntFileDisplay:=0} -ne 1 ] ; then
+        IntFileDisplay=1 ;
+        echo "No Key displayed on Screen..." ;
+      fi
+    elif [ ${DisplayKey:=stdout} != "stdout" ] ; then
+      echo -ne "Wrong DisplayKey\n\tDisplayKey=${KeyFileOut}.\n"  ;
+      return 1 ;
+    fi
+  done
+
+}
+
+__get_background_jobs()
+{
+  local ArrayArg=( $* ) ;
+  local IntJob=( $( jobs -p | tr '[:cntrl:]' ' ' ) ) ;
+  local StrFuncName=( ) ;
+  IntJob="${#IntJob[@]}" ;
+  local StrTaskType=${ArrayArg[${IntDefaultItemValue}]} ;
+  if [ "${StrTaskType:=number}" == "number" ] ; then
+    echo "${IntJob:=0}" ;
+   elif [ "${StrTaskType:=number}" == "id" ] ; then
+    if [ "${IntJob:=0}" -gt 0 ] ; then
+       echo "${IntJob[${ArrayArg[1]}]}" ;
+    fi
+   elif [ "${StrTaskType:=number}" == "kill" ] ; then
+    if [ "${IntJob:=0}" -gt 0 ] ; then
+       echo "kill -9 ${IntJob[${ArrayArg[1]}]}" ;
+    fi
+   fi
+}
+
+__init_time_var()
+{
+    local ArrayArg=( $* ) ;
+    local StrFuncName=( ) ;
+    local IntNbArg=${#ArrayArg[@]}
+    if [ ${IntNbArg:=0} -gt 1 ] ; then
+      echo "local ${ArrayArg[${IntDefaultItemValue}]}=$(( ${ArrayArg[1]}-${ArrayArg[2]} )) ;" ;
+    else
+      echo "local ${ArrayArg[${IntDefaultItemValue}]}=$( date +\"%s\" ) ;" ;
+    fi
+}
+
+__regression_test_parse_newvar()
+{
+  local ArrayArg=( $* ) ;
+
+  eval $( __init_time_var StartTime ) ;
+  while [ 1 ] ; do
+    . ${ConfFnctDPath[0]}/fnct_lib ;
+    function test_base()
+    {
+      eval $( __InitFunc test_base ) ;
+      echo "OK" ;
+    } ;
+    function start_test_base()
+    {
+      local ArrayArg=( $* ) ;
+      local NbJob=$(__get_background_jobs number ) ;
+      if [ ${NbJob} -eq 0 ] ; then
+        #coproc $( uuidgen -r ) test_base  ;
+        { test_base ; } &
+      else
+        eval $( __init_time_var EndTime ) ;
+        eval $( __init_time_var TotalTime EndTime StartTime ) ;
+        if [ ${TotalTime:=30} -gt 30 ] ; then
+           $( __get_background_jobs kill 0 ) ;
+        fi
+      fi ;
+    }
+  done ;
+}
+
+__start_resume()
+{
+  local ArrayArg=( $* ) ;
+  local StrFuncName=( ) ;
+  local StrFuncName=__start_resume
+  function resume_synthesis_level()
+  {
+    local ArrayArg=( $* );
+    local StrFuncName=${StrFuncName}.resume_synthesis_level ;
+    local StrNameResume="__NAME___resume.html" ;
+    local StrPathSave=${ArrayArg[2]} ;
+    if [ ! -d ${StrPathSave} ] ;
+      then mkdir -p ${StrPathSave} ;
+    fi ;
+    StrPathSave=${StrPathSave:=./} ;
+    StrNameResume=${StrNameResume/__NAME__/${ArrayArg[1]}} ;
+    local CmdEval=( "ots" "--ratio=${ArrayArg[${IntDefaultItemValue}]}" "${ArrayArg[1]}" "--html" "--out=${StrPathSave}/${StrNameResume}" ) ;
+    #{ gzip -9 ${StrPathSave}/${StrNameResume} 2>&1 > /dev/null }  &
+    echo -ne "From Function:${StrFuncName}\n\t\tCmdLine:[${CmdEval[@]}]\n" ;
+    eval "${CmdEval[@]}" ;
+    #sleep 5 ;
+  }
+  function call_resume_synthesis_level()
+  {
+    local ArrayArg=( $* );
+    local StrFuncName=${StrFuncName}.call_resume_synthesis_level ;
+    local CmdEval=( "resume_synthesis_level" "${intx}" "${ArrayArg[1]}" "resume_at_${intx}" ) ;
+    echo -ne "From Function:${StrFuncName}\n\tCmdLine:[${CmdEval[@]}]\n" ;
+    eval "${CmdEval[@]}" ;
+    #sleep 1 ;
+  }
+  eval $( __init_time_var StartTime ) ;
+  for (( intx=1 ; intx<=100 ; intx+=1 )) ; do
+    eval $( __in_for ArrayLicense call_resume_synthesis_level ${intx} )
+  done
+  eval $( __init_time_var EndTime ) ;
+  eval $( __init_time_var TotalTime EndTime StartTime ) ;
+  echo "Time to synthetisation : ${TotalTime} seconds." ;
+}
+
+EvalVar()
+{
+  local ArrayArg=( $* ) ;
+  local StrFuncName=( ) ;
+  function __functor_eval()
+  {
+    local ArrayArg=( $* ) ;
+    function __functor_sed()
+    {
+      local ArrayArg=( $* ) ;
+      #echo "Testing RegulaExpression:[ ${ArrayArg[1]} ]" ;
+      local StreamEvalReturn=$( echo -ne "${ArrayArg[${IntDefaultItemValue}]}" | sed ''${ArrayArg[1]}'' ) ;
+      if [ "${StreamEvalReturn}" != "${ArrayArg[${IntDefaultItemValue}]}" ] ; then
+        echo -ne "${StreamEvalReturn} " ;
+        return 0 ;
+      else
+        return 1 ;
+      fi ;
+    }
+    eval $( __in_for ArraySedVariableEval __functor_sed ${ArrayArg[${IntDefaultItemValue}]} )
+  }
+  eval $( __in_for ArrayArg __functor_eval ) ;
+}
+
+#declare -a ArrayPath=( $(find ./ -maxdepth 1 -type d -iname "resume_at_*" -printf "%f " ) ) ;
+
+__change_path()
+{
+  local ArrayArg=( $* ) ;
+  local StrFuncName=( ) ;
+  local strInPath=${ArrayArg[1]} ;
+  strOutPath=${ArrayArg[${IntDefaultItemValue}]} ;
+  local CmdEval=( mv strInPath strOutPath ) ;
+  echo
+  eval CmdEval=( $( EvalVar ${CmdEval[@]} ) ) ;
+  echo "${CmdEval[@]}" ;
+}
+
+#__awk_get_column()
+#{
+#  local ArrayMemberFunctionImplement=( __InitFunc );
+#	local ArrayMemberFunctionParameter=( __awk_get_column ) ;
+#	function __functor_load()
+#	{
+#		local ArrayArg=( $* ) ;
+#		eval "local StateVar=\${Type${ArrayArg[1]}State[0]}" ;
+#		if [ ${StateVar:=disable} == "enable" ] ; then
+#			eval $( ${ArrayArg[1]} ${ArrayArg[0]} ) ;
+#		else
+#			echo "local ArrayArg=( $* )" ;
+#		fi
+#	}
+#	eval $( __in_for ArrayMemberFunctionImplement __functor_load \${ArrayMemberFunctionParameter[\${intArrayMemberFunctionImplement}]} )
+
+
+##local IntColItem=${ArrayArg[${IntDefaultItemValue}]} ;
+#  if [ ${help:=none} == "var" ] ; then
+#    echo -ne "Int IntColItem\nString ParseToVar\nString<Path> AwkDefaultPostProcess\n" ;
+#    return 0;
+#  fi
+#  awk -vIntColExtract=${IntColItem:=1} -vParseToVar=${ArrayArg[1]:=''} -vInFuncName=${StrFuncName} -v${ArrayArg[2]:=WithCarrier=false} -f ${AwkDefaultPostProcess:=${ArrayAwkScriptPath[0]}/column-extraction.awk} ;
+#}
+
+#  function __functor_stdout()
+#  {
+#    eval $( __InitFunc __get_lib_symbols ) ;
+#    if [ ${ExportType:=stdout} == "base64" ] ; then
+#       base64 --wrap=0 ;
+#    elif [ ${ExportType=:stdout} == "stdout" ] ; then
+#      echo "" ;
+#    fi
+#  }
+#  function __functor_compress_stdout()
+#  {
+#    if [ ${ExportFormat:=text} == "text" ] ; then
+#      __functor_eval_stdout | __functor_stdout ExportType=${ExportType} ;
+#    elif [ ${ExportFormat:=text} == "bzip2" ] ; then
+#      __functor_eval_stdout | bzip2 -9c | __functor_stdout ExportType=${ExportType} ;
+#    elif [ ${ExportFormat:=text} == "lzma" ] ; then
+#      __functor_eval_stdout | lzma --compress --stdout -9  | __functor_stdout ExportType=${ExportType} ;
+#    fi
+#  }
+
+__get_lib_symbols()
+{
+  eval $( __InitFunc __get_lib_symbols ) ;
+  local StrFuncName=( ) ;
+  echo -ne "\n\n-------------------\n\tExtracted Symbols: ${ArrayArg[${IntArrayItemValue}]}\n\tArrayObjDumpOptionType:${IntOptionType}, List:[${ArrayObjDumpOptionType[${IntOptionType:=0}]}]\n-------------------\n\n" ;
+  local CmdEval=( ${Program:=objdump} ${ProgramOptions:=${ArrayObjDumpOptionType[${IntOptionType:=0}]} ${ArrayArg[${IntArrayItemValue}]}} ${ProgramQuery:=${ObjLibName:=/usr/lib/libots-1.so.0.5.0}} ) ;
+  eval "${CmdEval[@]}" ;
+  #function __functor_eval_stdout()
+  #{
+  #  local ArrayExportOption=( "ExportFormat=${ExportFormat}" "ExportType=${ExportType}" ) ;
+  #  local ArrayStdOutManagement=( "__functor_compress_stdout __TAG__" "__functor_stdout __TAG__" )
+  #  eval "${CmdEval[@]}" | ${ArrayStdOutManagement[0]/__TAG__/} ${ArrayExportOption[@]}   ;
+  #}
+  #__functor_eval_stdout ExportFormat=${ExportFormat:=text} ExportType=${ExportType=:stdout} ;
+  eval ${CmdEval[@]} ;
+
+}
+
+configure_test_cflags ()
+{
+    eval $( __InitFunc configure_test_cflags );
+    echo "IntArrayItemValue:${IntArrayItemValue}" ;
+    echo "FuncNameDesc: ${StrFuncName}" ;
+    echo "Isolating Value '${ArrayArg[${IntArrayItemValue}]}' from CFLAGS" ;
+    local UFLAGS=${CFLAGS/${ArrayArg[${IntArrayItemValue}]}/} ;
+    function __functor_cmd_build()
+    {
+      CmdEval=( ./configure --bindir=/usr/local/share/jack/bin CFLAGS=\"${UFLAGS}\");
+      eval ${CmdEval} 2>&1 > /dev/null ;
+      local IntErrorStatement=$?;
+      echo "local ${VarErrorReport:=IntErrorStatement}=${IntErrorStatement} ; " ;
+    }
+    __functor_cmd_build ;
+
+    if [ ${IntErrorStatement:=0} -eq 1 ]; then
+        echo -ne "Conflicts error with: \n\tCFLAGS:${UFLAGS}\n";
+    else
+        echo -ne "Compilation passed with\n\t\tCFLAGS=${UFLAGS}\n";
+    fi
+}
+
+### We have no choice to put the QueryDebugManager Here,
+### Some Important function inside QueryDebugManager depends of __in_for, __functor_cmd_ArrayResult,
+### __InitFunc, __prompt_var_extraction or __call_locality
+. ${ConfFnctDPath[0]}/fnct_QueryDebugManager
+
+
+__add_path ()
+{
+    local ArrayArg=($*);
+    local intpathid=0;
+    local StrFuncName=( ) ;
+    function __show ()
+    {
+        local ArrayArg=($*);
+        echo "${intpathid}:${ArrayArg[0]}"
+    };
+    if [ "${ArrayArg[0]:=add}" == "show" ]; then
+        eval $( __in_for ArrayPathHistory __show );
+    else
+        if [ "${ArrayArg[0]:=add}" == "change" ]; then
+            cd ${ArrayPathHistory[${ArrayArg[1]:=0}]};
+        else
+            if [ "${ArrayArg[0]:=add}" == "shift" ]; then
+                ArrayPathHistory=( ${ArrayPathHistory[@]:1:$((${#ArrayPathHistory[@]}-2))} ${ArrayPathHistory[0]} );
+            else
+                if [ "${ArrayArg[0]:=add}" == "pop" ]; then
+                    ArrayPathHistory=( ${ArrayPathHistory[@]:1:$((${#ArrayPathHistory[@]}-2))} );
+                else
+                    ArrayPathHistory[${#ArrayPathHistory[@]}]=$( pwd );
+                fi ;
+            fi ;
+        fi ;
+    fi
+}
+
+__query_google_finance()
+{
+  local ArrayArg=( $* ) ;
+  local StrFuncName=( ) ;
+  CmdEval=( wget "http://www.google.com/finance?q=lithium" --force-html --output-document=lithium.html --referer=__STR__ ) ;
+  function __specific_filter()
+  {
+    local ArrayArg=( $* ) ;
+    local StrKey=${ArrayArg[0]} ;
+    tr '[\t\ ;.]' '\n' | egrep -ic "__${StrKey:=INT}[0-9]{1,2}__" ;
+  }
+  function NumberSeedGenerator()
+  {
+    local ArrayArg=( $* ) ;
+    local IntMinNumberSeed=${ArrayArg[0]} ;
+    local NumberSeed ;
+    local IntLocalSeedCount ;
+    while [ ${IntLocalSeedCount:=0} -gt ${IntMinNumberSeed:=10} ] ; do
+      local NumberSeed=( $( pwgen -nA1 512 | sed ' s/[a-zA-Z]//g ; s/\([0-9]\)/\1 /g' ) ) ;
+      echo "Seeds:[${#NumberSeed[@]}][ ${NumberSeed[@]} ]" ;
+      IntLocalSeedCount=${#NumberSeed[@]} ;
+      echo -ne "NumberSeedGenerator Generated ${#IntLocalSeedCount[@]}, \n\tMinimum Allowance is ${IntMinNumberSeed}\n" ;
+    done
+    local ArrayName=${ArrayArg[1]} ;
+    declare -a NumberSeed=( ${NumberSeed[@]} ) ;
+  }
+  while [ 1 ] ; do
+    local StrRefferer="Mozilla/5.0 (X11; U; Linux x86_64; fr; rv:__INT1__.__INT2__.__INT3__.__INT4__) Gecko/__DATE__ Ubuntu/9.10 (karmic) Firefox/3.5.__INT5__ GTB__INT6__.__INT7_____UUID__" ;
+    local IntNbNumberInRefferer=$( echo "${StrRefferer}" | __specific_filter "INT" ) ;
+    local IntNbUUIDInRefferer=$( echo "${StrRefferer}" | __specific_filter "UUID" ) ;
+    local StrDate=$( eval date +'${ArrayDateFormat[2]}' ) ;
+    NumberSeedGenerator 20 ;
+    echo -ne "\n\tNumberSeedGenerator Generate[${#NumberSeedGenerator[@]}] items: ;\n\t\tlist[${NumberSeedGenerator[@]}]\n" ;
+    local UUID=$( uuidgen -r ) ;
+    StrRefferer=${StrRefferer[@]/__UUID__/${NumberSeed[${intx}]}} ;
+    StrRefferer=${StrRefferer[@]/__DATE__/${StrDate}} ;
+    for (( intx=0; intx <= ${IntNbNumberInRefferer:=1} ; intx++ )) ; do
+      local StrRegExpMatch="__INT__A____" ;
+      StrRegExpMatch=${StrRegExpMatch/__A__/$((intx+1))} ;
+      echo -ne "In Tag\n\t\tReplacing Tag:[${StrRegExpMatch}], ${NumberSeed[${intx}]}\n" ;
+      StrRefferer=$( echo "${StrRefferer}" | sed 's/'${StrRegExpMatch}'/'${NumberSeed[${intx}]}'/g' )  ;
+    done ;
+    echo "${CmdEval[@]/__STR__/\"${StrRefferer}\"}" ;
+    sleep 2 ;
+  done ;
+}
+
+get_sound_speed_by_temp()
+{
+  local ArrayArg=( $* ) ;
+  local StrFuncName=( ) ;
+  local StrCalc="ibase=10; obase=10 ; scale=6 ; xcoef=(331.3-322.1)/15 ; temp=((__TEMP__)*(xcoef))+331.3 ; print temp " ;
+  local StrCalcKelvin="ibase=10; obase=10 ; scale=6 ; temp=(273.15)+(__TEMP__) ; print temp " ;
+  local StrUnit="m·s-¹" ;
+  local TemplateOut="Speed of sound @__CURRTEMPC__ Celsius( __CURRTEMPK__ Kelvin ) \n\t__CONVERTED__ __UNIT__\n" ;
+  local CurrTemp=${ArrayArg[0]} ;
+  CurrTemp=${CurrTemp/,/.} ;
+  local ParsedCalc=${StrCalc/__TEMP__/${CurrTemp}} ;
+  local ParsedCalcKelvin=${StrCalcKelvin/__TEMP__/${CurrTemp}} ;
+  #echo "Template:[${StrCalc}], Parsed:[${ParsedCalc}]" ;
+  local ArrayKelvin=( $( echo "${ParsedCalcKelvin}" | bc -l ) ) ;
+  local ArrayTemp=( $( echo "${ParsedCalc}" | bc -l ) ) ;
+  TemplateOut=${TemplateOut/__UNIT__/${StrUnit}} ;
+  TemplateOut=${TemplateOut/__CURRTEMPC__/${ArrayArg[0]/./,}} ;
+  TemplateOut=${TemplateOut/__CURRTEMPK__/${ArrayKelvin[0]/./,}} ;
+  TemplateOut=${TemplateOut/__CONVERTED__/${ArrayTemp[0]/./,}} ;
+  #TemplateOut=${TemplateOut/____/} ;
+
+  echo -ne "${TemplateOut}" ;
+}
+
+
+__zenity()
+{
+  eval $( __call_locality ) ;
+  local CmdEval=( echo "/usr/bin/zenity \${ZenityDefaultInterface[${ArrayArg[0]}]} ${ArrayArg[@]:1}" ) ;
+  echo -ne "\n\tZenity Interface lauched:[ ${CmdEval[@]} ]\n\n" > /dev/stderr;
+  eval "${CmdEval[@]}" ;
+}
+
+__start_monitor_temp()
+{
+  eval $( __InitFunc __start_monitor_temp ) ;
+  local StrFuncName=( ) ;
+  local IntBuffSizeLimit=${SizeLimit:=5} ;
+  local IntBuffStore=0 ;
+  local IntPacketChunk=1 ;
+  local StrPacketDB=${StrFuncName}.${IntPacketChunk} ;
+  function __functor_backup()
+  {
+    echo "Buffer Reached ${IntBuffSizeLimit} " ;
+    local ArrayTemp=( "${ArrayTimeVoltage[@]}" ) ;
+    local UUIDFileGen=$( uuidgen -r );
+    local TimeIndex=( ${ArrayTemp[${#ArrayTemp[@]-1}]} ) ;
+    local TemplateFileStoring=${IntPacketChunk}.${TimeIndex[0]/USEC:/}.${UUIDFileGen} ;
+    echo "${ArrayTemp[@]}" | bzip2 -9c > ${TemplateFileStoring} ;
+    tar ${StrPacketDB} -A -f ${StrPacketDB} --add-file=${TemplateFileStoring} --index-file=${StrPacketDB}.index --preserve-order --remove-files ${StrPacketDB}.tar ;
+  }
+  while [ -e ${StrPacketDB} ] ; do
+    (( IntPacketChunk += 1 ))   ;
+    StrPacketDB=${StrFuncName}.${IntPacketChunk} ;
+  done
+  echo "New Db Name    : ${StrPacketDB}     " ;
+  echo "Packet Segment : ${IntBuffSizeLimit}" ;
+  while [ 1 ] ; do
+    ArrayTimeToVoltage[${#ArrayTimeToVoltage[@]}]=$( get_power_voltage | base64 --wrap=0 ) ;
+    echo -ne "..${#ArrayTimeToVoltage[@]}" ;
+    sleep 1 ;
+    (( IntBuffStore+=1 )) ;
+    if [ ${IntBuffStore} -eq ${IntBuffSizeLimit} ] ; then
+      echo "content of ArrayTimeToVoltage:[${ArrayTimeToVoltage[@]}]" ;
+      break ;
+      __functor_backup &
+      IntBuffStore=0;
+      echo -ne "\n" ;
+    fi
+  done
+}
+
+fnct_get_path_subdir()
+{
+  local ArrayArg=( $* ) ;
+  local StrFuncName=( ) ;
+  find "${ArrayArg[0]}" -maxdepth 1 -type d -printf "%d %p\n" | awk -f ${AwkDefaultPostProcess:=${ArrayAwkScriptPath[0]}}/path-node-extraction.awk ;
+}
+
+CreateResume()
+{
+  local ArrayArg=( $* ) ;
+  local StrFuncName=( ) ;
+
+  local Para=( ${str//./ . } ) ;
+
+  local IntDefaultReduce=${ArrayArg[0]} ;
+  unset Sentence ;
+  unset SentenceOTS ;
+  declare -a Sentence;
+  declare -a SentenceOTS;
+
+  local inty=0;
+  function __low_echo()
+  {
+    local ArrayArg=( $* ) ;
+    local StrFuncName=( ) ;
+    Sentence[${inty}]=$( echo "${Sentence[${inty}]} ${ArrayArg[0]}" | iconv -c --to-code=ISO8859-1 ) ;
+    if [ "${ArrayArg[0]}" == "." ] ;  then
+      (( inty = inty + 1)) ;
+    fi ;
+  } ;
+  function __to_ots()
+  {
+    local ArrayArg=( $* ) ;
+    local StrFuncName=( ) ;
+    local CmdLine=( SentenceOTS[${intSentence}]=$( echo ${Sentence[${intSentence}]} | ots --ratio=${ArrayArg[1]} ) ) ;
+    echo "CmdLine:[ ${CmdLine[@]} ]" ;
+    eval "${CmdLine[@]}" ;
+  } ;
+
+  eval $( __in_for Para __low_echo ) ;
+  eval $( __in_for Sentence __to_ots ${IntDefaultReduce:=20} ) ;
+}
+
+
+search_in_pkgconfig()
+{
+  update_pkg_config ;
+  local ArrayArg=( $* ) ;
+  local StrFuncName=( ) ;
+  local TagFormat=( =__TAG__ __TAG__ )  ;
+  local ArrayOption=( --libs --static  --libs-only-l --libs-only-other --libs-only-L --cflags      --cflags-only-I   --cflags-only-other --variable=__TAG__ ) ;
+  local QueryOption=( libs   libstatic libscompile   libsbinded        libsunbinded  compilerflags compilerincludes  compilerflagsother  queryvar           ) ;
+  function __minihelp()
+  {
+    local ArrayArg=( $* ) ;
+    local IntSizeOption=${#QueryOption[${intQueryOption}]} ;
+    if [ ${IntSizeOption:=8} -lt 8 ] ; then
+      local StrTabsize='\t\t\t' ;
+    elif [ ${IntSizeOption:=8} -lt 14 ] ; then
+      local StrTabsize='\t\t' ;
+    else
+      local StrTabsize='\t' ;
+    fi
+    echo -ne "${QueryOption[${intQueryOption}]}${StrTabsize}Will display pkg-config options: ${ArrayOption[${intQueryOption}]}\n" ;
+  }
+  function __query_pkg_config()
+  {
+    local ArrayArg=( $* ) ;
+    echo -ne "\n\n\tPackage Name: ${ArrayArg[1]}\n\tOption: ${ArrayOption[${ArrayArg[0]}]}\n" ;
+    local CmdEval=( pkg-config ${ArrayOption[${ArrayArg[0]}]} ${ArrayArg[1]} ) ;
+    echo -ne "\tCmdLine:[ ${CmdEval[@]} ]\n" ;
+    eval "${CmdEval[@]}" ;
+  }
+  function __functor_search_in_pkgconfig()
+  {
+    local ArrayArg=( $* ) ;
+    local IsSearch=$( echo "${ArrayArg[1]}" | egrep -ic "${ArrayArg[0]}"  ) ;
+    if [ ${IsSearch:=0} -gt 0 ] ; then
+      echo "${ArrayArg[1]}" ;
+    fi
+  }
+  if [ "${ArrayArg[0]}" == "help" ] ; then
+    echo -ne "Available Option :\n\nArgument 0:\nhelp\t\t\tThis Help\nquery\t\t\tFollowed by packages name\n"  ;
+    echo -ne "\nArgument 1:\t\tpart or package Name...\n\n"  ;
+    echo -ne "Argument 2:\n" ;
+    eval $( __in_for QueryOption __minihelp )
+    echo -ne "\n" ;
+  else
+   if [ "${ArrayArg[0]}" == "query" ] ; then
+    local ArrayTemp=( $( eval $( __in_for ArrayPkgConfig __functor_search_in_pkgconfig ${ArrayArg[1]} ) ) ) ;
+    echo "Extracted package:[ ${ArrayTemp[@]} ]" ;
+    local IsOptionValid=$( echo "${QueryOption[@]}" | egrep -ic "${ArrayArg[2]}"  ) ;
+    local IntOptionID=$( echo "${QueryOption[@]}" | awk -vOption="${ArrayArg[2]}" 'BEGIN{}{for(intx=1;intx<=NF;intx++){ if( $(intx) == Option ){ printf("%i",intx); } } }END{}' ) ;
+    if [ ${IsOptionValid:=0} -eq 1 ] ; then
+      echo "Option ${ArrayOption[${ArrayArg[0]}]} is used."
+      eval $( __in_for ArrayTemp __query_pkg_config ${IntOptionID} ) ;
+    else
+      echo "Option ${ArrayOption[${ArrayArg[0]}]} is invalid." ;
+    fi
+   fi
+  fi
+}
+
+create_hardwarelist()
+{
+  eval $( __call_localityDisplayFunctionEntry=1 __call_localityLocalName=CreateHardwareList __call_locality ) ;
+	#local ArrayArg=( $* ) ;
+
+  local ArrayMetaItem=( Hardware Path File ) ;
+  function CreateEval()
+  {
+    ### This __call_locality create an extension of CreateHardwareList which is not illegal
+    ### but beware of variable screwing. In This case we ensure creation of
+    ### CreateHardwareListHardware CreateHardwareListPath CreateHardwareListFile will be available
+    ### after.
+
+    eval $( __call_localityDisplayFunctionEntry=1 __call_localityLocalName=CreateHardwareList __call_locality ) ;
+    echo eval "local Str${ArrayArg[0]}Parse=\${${StrFuncName}${ArrayArg[0]}Item:=None}" ;
+  }
+  function CallCreateEval()
+  {
+      eval $( __call_localityDisplayFunctionEntry=1 __call_localityLocalName=CreateHardwareList __call_locality ) ;
+  }
+
+  function OrderedElement()
+  {
+   local StrElement=${ArrayArg[1]} ;
+   local StrOption=${ArrayArg[0]} ;
+  }
+  
+  function NoOptionElement()
+  {
+   local StrElement=${ArrayArg[0]} ;
+   local StrOption=none ;
+  }
+  
+  function ParseHardwareItem()
+  {
+    template=${template/__HARDWARE__/${StrElement}} ;
+  }
+  
+  #if [ ${#ArrayArg[@]:=1} -gt 1 ] ; then
+  #  eval $( EvalKeyFuncStartOnCond ne 0 RemoveCVSExtension RemoveCVSExtension ) ;
+  #  eval $( EvalKeyFuncStartOnCond ne 0 RemoveCVSExtension RemoveCVSExtension ) ;
+  #else
+
+  #fi
+
+ if [ ${#ArrayArg[@]:=1} -gt 1 ] ; then
+  local StrElement=${ArrayArg[1]} ;
+  local StrOption=${ArrayArg[0]} ;
+ else
+  local StrElement=${ArrayArg[0]} ;
+  local StrOption=none ;
+ fi
+	local ArrayOptionPass=( --short --log --debug --version --dump-db ) ;
+	local PathList=( /etc/hardware/hw_info/ __TAG__ ) ;
+	local template=( hwinfo --__HARDWARE__ __OPTION__ "\>" __PATH__/__FILE__ )
+	if [ ! -d ${PathList[0]} ] ; then
+		mkdir -p ${PathList[0]} ;
+	fi
+  eval $( EvalKeyFuncStartOnCond ne 0 HardwareItem ParseHardwareItem ) ;
+	template=${template/__HARDWARE__/${StrElement}} ;
+	template=${template/__PATH__/${PathList[0]}} ;
+	template=${template/__FILE__/${StrElement}.info} ;
+	function minitest()
+	{
+		local ArrayArg=( $* ) ;
+		if [ "${ArrayArg[1]}" == "${ArrayOptionPass[${intArrayOptionPass}]}" ] ; then
+			echo "${DefaultReturn:=1}" ;
+		fi
+	}
+	if [ ${#ArrayArg[@]:=1} -gt 1 ] ; then
+		local IsExtraOptionValid=( $( eval $( __in_for ArrayOptionPass minitest ${StrOption} ) ) );
+		IsExtraOptionValid=${IsExtraOptionValid[@]//0/ } ;
+	else
+		IsExtraOptionValid=0 ;
+	fi
+
+	if [ ${IsExtraOptionValid:=0} -eq 1 ] ; then
+		template=${template/__OPTION__/${StrOption}} ;
+	else
+		template=${template/__OPTION__/} ;
+	fi
+  eval "local template=( ${template[@]} ) " ;
+	echo "CmdLine:[${template[@]}]" ;
+}
+
+
+ __InitIpConfig()
+{
+ local ArrayArg=( $* ) ;
+ function Program()
+ {
+  local ArrayArg=( $* ) ;
+  ifconfig -a ;
+ }
+ function PostFilter()
+ {
+  ### This regular expression is reserved for IP Discovery in ipconfig call
+  ### Which is try to extract only the IP Address...
+  ###
+  local ArrayArg=( $* ) ;
+  egrep -i "[0-9\.]{3,4}{4}" ;
+ }
+ function RegionFilter()
+ {
+   local ArrayArg=( $* ) ;
+   sed 's/:/ /g ; s/^[\ \t]*//g ; s/[a-zA-Z]//g' ;
+ }
+ function WrapperProgram()
+ {
+   local ArrayArg=( $* ) ;
+   local CmdEval=( ${ArrayArg[0]} \| ${ArrayArg[1]} \| ${ArrayArg[2]} )
+   echo "CmdLine:[${CmdEval[@]}]" ;
+ }
+ declare -a ArrayIpConfig=( $( WrapperProgram  Program PostFilter RegionFilter  ) ) ;
+}
+
+__fnctInitType()
+{
+  local ArrayArg=( $* ) ;
+  local IntNbArg=${#ArrayArg[@]} ;
+  local IntParseEmbeded=$( echo ${ArrayInitType[${ArrayArg[0]}]} | egrep -ic "__[a-zA-Z0-9]+__" ) ;
+  if [ ${IntParseEmbeded:=0} -gt 0 ] ; then
+    if [ ${IntNbArg} -gt 1 ] ; then
+     echo "${ArrayInitType[${ArrayArg[0]}]//__${ArrayArg[1]}__/${ArrayArg[2]}}" ;
+    else
+      echo "echo \"Problems of pasing, no argument passed and TAG exist inside query.\";" ;
+      return 1 ;
+    fi
+  else
+    echo "${ArrayInitType[${ArrayArg[0]}]}" ;
+  fi
+}
+### Function : Init_SERVICE
+### Use of StrMember<StrLMember;StrRMember>
+### Will hold ( depending of Function Name) information like
+### 'Init' as Left Member( for StrLMember ) and
+### 'SERVICE' as Right Member ( for StrRMember ) and thereforth
+### will be Used to create evaluated-Array as Array_LMember_RMember
+### or inside this case, it will create Array_Init_SERVICE, holding
+### StartServices item...
+###
+###
+Init_SERVICE()
+{
+  local ArrayArg=( $* ) ;
+  local ArrayFunc=( Init_SERVICE __call_this_func __fnctInitType ) ;
+  local IntArraySubCall=1;
+  local IntAutoCmdType=$(( ${#ArrayFunc[@]} - 1 ));
+  local StrMember=( ${ArrayFunc[0]/_/ } ) ;
+  local StrLMember=${StrMember[0]} ;
+  local StrRMember=${StrMember[1]} ;
+  local StrArrayServiceName=Array_${StrLMember}_${StrRMember} ;
+  eval "echo -ne \"\tFunction:${ArrayFunc[0]}\n\t\tLeftMember\t: ${StrLMember}\n\t\tRightMember\t: ${StrRMember}\n\t\tArrayContent\t: [\${${StrArrayServiceName}[@]}]\n\"" ;
+
+  function __call_this_func()
+  {
+    local ArrayArg=( $* ) ;
+    local ArrayFunc=( __call_this_func __fnctInitType ) ;
+    local ArrayAutoParsingType=( Array intArray ) ;
+    local IntAutoParsingArray=0 ;
+    local IntAutoParsingInt=1 ;
+    local IntAutoCmdType=$(( ${#ArrayFunc[@]}-1 ));
+    local StrFixedType=${ArrayArg[0]} ;
+    eval local CmdEval=(  ${ArrayFunc[${IntAutoCmdType}]} ${StrFixedType} ${StrRMember} \${${ArrayAutoParsingType[${IntAutoParsingArray}]}_${StrLMember}_${StrRMember}[\${${ArrayAutoParsingType[${IntAutoParsingInt}]}_${StrLMember}_${StrRMember}}]} ) ;
+    echo -ne "\tFunction:${ArrayFunc[0]}\n\tCmdLine:[${CmdEval[@]}]\n" ;
+    eval "${CmdEval[@]}" ;
+  }
+  local CmdEval=( "eval \$(" "__in_for" "${StrArrayServiceName}" "${ArrayFunc[${IntArraySubCall}]}" "${ArrayArg[0]}" ")" ) ;
+  echo -ne "\tFunction:${ArrayFunc[0]}\n\tCmdLine:[${CmdEval[@]}]\n" ;
+  eval $( "${CmdEval[@]}" ) ;
+
+}
+
+start_javascript_server ()
+{
+    __InitIpConfig ;
+    local ArrayArg=( $* ) ;
+    local ArrayFunc=( start_javascript_server ) ;
+    local ArrayInitVar=( TypeStructChunk IntChunckSize StrFilename IntPortSend UUID PreFunc DateLaunch IntSize TypeShaSum ) ;
+    local Array_Init_SERVICE=( StartServices ) ;
+    eval "unset ${ArrayInitVar[@]}" ;
+    local UUID=$( eval $( __fnctInitType ${IntInitUniqueID} ) );
+    local PreFunc=__fnct__${UUID//-/} ;
+    function StartServices ()
+    {
+      local ArrayFunc=( StartServices ) ;
+      function ShowInformation()
+      {
+        local ArrayFunc=( ShowInformation ) ;
+        echo "Date          :${DateLaunch}"    ;
+        echo "FileName      :${ArrayArg[0]}"   ;
+        echo "File Identity :${TypeShaSum[0]}" ;
+        echo "File Size     :${IntSize[0]}"    ;
+        echo "Port Services :${ArrayArg[1]}"   ;
+      }
+      function __function_start()
+      {
+        local ArrayFunc=( __function_start ) ;
+        local DateLaunch=$( eval $( __fnctInitType ${IntInitDate} DATEFORMAT ${ArrayDateFormat[0]} ) ) ;
+        local IntSize=( $( eval $( __fnctInitType ${IntInitWordCountFileSize} FILE ${ArrayArg[0]} ) ) );
+        local TypeShaSum=( $( eval $( __fnctInitType ${IntInitShaSumID} FILE ${StrFilename} ) ) ) ;
+        ShowInformation ;
+        $( eval $( __fnctInitType ${IntInitCatId} FILE ${StrFilename} ) ) | nc ${ArrayIpConfig[0]} -l -p ${IntPortSend} ;
+      }
+      $( eval $( __fnctInitType ${IntInitWhile} SERVICE __function_start ) ) ;
+    }
+
+    local TypeStructChunk=( ${ArrayArg[0]/:/ } ) ;
+    local IntChunckSize=${#TypeStructChunk[@]};
+    local StrFilename;
+    local IntPortSend;
+    if [ ${IntChunkSize:=0} -gt 0 ]; then
+     echo "Structure Chunk Detected:" ;
+     StrFilename=${TypeStructChunk[0]};
+     IntPortSend=${TypeStructChunk[1]};
+    else
+     StrFilename=${ArrayArg[0]} ;
+     IntPortSend=${ArrayArg[1]} ;
+    fi
+    ### Default Initialisation in case of problems or no member declared.
+    StrFilename=${StrFilename:=/home/maxiste/javascript/mini_parse_tag.js} ;
+    IntPortSend=${IntPortSend:=8080} ;
+    #local CmdEval="function ${PreFunc}()    { local ArrayArg=( \$* ); while [ 1 ] ; do StartServices ${StrFilename} ${IntPortSend} ; done }" ;
+
+    #echo "Crafting Services: [${CmdEval}]";
+    #eval "${CmdEval[@]}" ;
+    #${PreFunc} &
+    if [ ! -e ${StrFilename} ] ; then
+     echo "File ${StrFilename} do not exist" ;
+    else
+     local CmdEval=( Init_SERVICE ${IntInitWhile} ) ;
+     echo -ne "\tFunction:${ArrayFunc[0]}\n\tCmdLine:[${CmdEval[@]}]\n" ;
+     eval "${CmdEval[@]}" ;
+    fi
+
+}
+
+get_safe_password()
+{
+  eval $( __call_localityLocalName=get_safe_password __call_locality ) ;
+  local StrFuncName=( get_safe_password ) ;
+  local TemplateDisplay=( "Iterate __INT__ time(s) to query a safe password" "Itération de __INT__ à la requête pour l'obtention d'un mot de passe sécurisé." "CmdLine:[ __STR__ ]" "\n\n\tPassword:[__STR__]\n\tSBand:[__STR1__]\n\tPasswd Length:[__STR2__]\n\tSHA1 Sum:[__STR3__]\n\n" );
+  local ProgramTemplate=( "pwgen -__OPTION__ __INT__ __REDIRECT__ __FILE__ "  ) ;
+  local DevStream=( /dev/stdout /dev/stderr ) ;
+  local ArrayPasswdType=( cnysB1 cnsB1 ) ;
+  local IntPasswdLength=${ArrayArg[0]} ;
+  IntPasswdLength=${IntPasswdLength:=32} ;
+  local IntPasswdType=${ArrayArg[1]};
+  IntPasswdType=${IntPasswdType:=0} ;
+  local IntMessageOnStream=1;
+  local IntDataOnStream=0;
+  local IntLangTemplate=0;
+  local IntdefaultMaxRandomIteration=${ArrayArg[2]};
+  IntdefaultMaxRandomIteration=${IntdefaultMaxRandomIteration:=1000} ;
+  #local StrCandidateRemove="${CandidateRemove:=\\\`\\\!\\\|\\\'\\\,\\\]\\\[\\\}\\\{\\\&\\\^\\\~\\\)\\\(\\\<\\\>\\\/\\\\\"\\\;\\\.}" ;
+  #local IntCandidateLength=${#CandidateRemove} ;
+
+  if [ ${IntCandidateLength:=0} -eq 0 ] ; then
+   local HexASCIIChartFilter=( 2a 2b 2c 2d 2e 2f 30 31 32 33 34 35 23 25 36 37 38 39 3a 3b 3c 3d 3e 3f 40 41 42 43 44 45 46 47 48 49 4a 4b 4c 4d 4e 4f 50 51 52 53 54 55 56 57 58 59 5a 5b 5c 5d 5e 5f 60 61 62 63 64 65 66 67 68 69 6a 6b 6c 6d 6e 6f 70 71 72 73 74 75 76 77 78 79 7a 7b 7c 7d 7e ) ;
+  else
+   local HexASCIIChartFilter=( ${CandidateRemove[@]} ) ;
+  fi
+
+
+  function get_random_based_number()
+  {
+    eval $( __call_locality ) ;
+    local StrFuncName=( get_random_based_number ${StrFuncName[$((${#StrFuncName[@]}-1))]} ) ;
+    local IntRecurrent=$(( ${RANDOM} % ${ArrayArg[0]} )) ;
+    echo "${IntRecurrent}" ;
+  }
+
+  function SendToSocketServer()
+  {
+   eval $( __call_locality ) ;
+   local IpServer=${SendToSocketServerIPSERVER:=192.168.1.106} ;
+   local ServerPortConnection=${SendToSocketServerSERVERFNCT:=2001} ;
+   #echo "Sending information on server:${IpServer}, port:${ServerPortConnection}" > /dev/stderr ;
+   nc -q1 -w1 ${IpServer} ${ServerPortConnection}  2&>1 > /dev/null ;
+  }
+
+  function FilterByHexConversion()
+  {
+    eval $( __call_localityLocalName=FilterByHexConversion  __call_locality ) ;
+    local StrFile=${ArrayArg[0]} ;
+    if [ -e ${StrFile} ] ; then
+     StreamPwd=$( cat ${StrFile} | eval hexdump ${HexdumpFormat[0]} )  ;
+     local IntStreamLength=${#StreamPwd} ;
+     local IntHexSplit=$(( ${IntStreamLength} / 2 ));
+     local ArrayResult=();
+     for (( intx=0 ; intx <= ${IntHexSplit}-1 ; intx++ )) ; do
+       local IntStart=$(( ${intx} * 2 )) ;
+       local IntEnd=${HexSplitValue:=2} ;
+       local HexValue=${StreamPwd:${IntStart}:${IntEnd}};
+       local IntHexInRange=$( echo "${HexASCIIChartFilter[@]}" | egrep --no-filename -ic "${HexValue}" ) ;
+       if [ ${IntHexInRange:=0} -gt 0 ] ; then
+         ArrayResult[${intx}]=$( echo -ne "\x${HexValue}" )   ;
+       fi
+     done ;
+     echo "${ArrayResult[@]}" | sed 's/\ //g' ;
+    else
+     echo "File ${StrFile} not found, return error-statement 1" > /dev/stderr ;
+     return 1;
+    fi
+  }
+
+  function GetHelpPasswordGen()
+  {
+   eval $( __call_locality ) ;
+   local IntNbArg=${#ArrayArg[@]};
+   if [ ${IntNbArg:=0} -lt 2 ] ; then
+     echo -ne "Function: ${StrFuncName[0]}\n" ;
+     echo -ne "\tHelp in Argument\n" ;
+     echo -ne "\t\n" ;
+     echo -ne "\tArg0: Password length [ between 2 and N ]\n" ;
+     echo -ne "\tArg1: Password Type ( from pwgen Layer : \n\t\t0:[pwgen -${ArrayPasswdType[0]} ${IntPasswdLength} ]\n\t\t1:[pwgen -${ArrayPasswdType[1]} ${IntPasswdLength} ]  )\n" ;
+     echo -ne "\tArg2: Password Recycling Factor \n\t(Actually looping N Times before providing a password. Default:(a Random Number based on ${IntdefaultMaxRandomIteration}) )\n" ;
+     echo -ne "\n\n\tAssigning Following variable Before program of specifiying ${StrFuncName} may alter following condition:\n"
+     echo -ne "\tCandidateRemove\n\t\t( preferably pre-declared ), will remove assigned char list\n" ;
+     echo -ne "\tIntDefaultPasswdInflation\n\t\tWill Change the Buffer Lenght before removing one out ${#StrCandidateRemove} Candidate Remove list (default=${IntDefaultPasswdInflation}).\n" ;
+     echo -ne "\tIntMaxDisplayDot\n\t\tWill change the default number of dot displayed over recurrent range specified... (Good for tiny screen).\n"
+     return 1 ;
+   fi
+   return 0 ;
+  }
+
+  local IntRecurrent=$( get_random_based_number ${IntdefaultMaxRandomIteration} ) ;
+
+  echo "${TemplateDisplay[${IntLangTemplate:=0}]/__INT__/${IntRecurrent}}" > ${DevStream[${IntMessageOnStream}]} ;
+  local StrStream ;
+  local intx=1 ;
+  local UUIDFile=$( uuidgen -r ) ;
+  local ProgramCallFromTemplate=${ProgramTemplate[@]};
+  ProgramCallFromTemplate=${ProgramCallFromTemplate/__OPTION__/${ArrayPasswdType[${IntPasswdType:=0}]}} ;
+  ProgramCallFromTemplate=${ProgramCallFromTemplate/__INT__/$(( ${IntPasswdLength} + ( ${IntPasswdLength} * ${IntDefaultPasswdInflation:=1,33} ) )) } ;
+  ProgramCallFromTemplate=${ProgramCallFromTemplate/__REDIRECT__/\>} ;
+  ProgramCallFromTemplate=${ProgramCallFromTemplate/__FILE__/${UUIDFile}} ;
+
+  GetHelpPasswordGen ${ArrayArg[@]} ;
+  local ErrorStatement=$? ;
+  local IntCount=1 ;
+  local IntDisplayLoopRecurrent=$(( ${IntRecurrent:=1} / ${IntMaxDisplayDot:=80} )) ;
+  if [ ${ErrorStatement:=0} -eq 0 ] ; then
+   while (( ${intx:=0} <= ${IntRecurrent} )) ; do
+     echo "Template:${ProgramCallFromTemplate[@]}" > /dev/stderr ;
+     local CmdEval=( "${ProgramCallFromTemplate[@]}" ) ;
+     #echo "${TemplateDisplay[2]/__STR__/${CmdEval[@]}}" ;
+     local IntMatchPasswdLength=1 ;
+     local BadMatch=0 ;
+     local UUIDSend=$( uuidgen -r ) ;
+     while [ ${IntMatchPasswdLength} -lt ${IntPasswdLength} ] ; do
+      eval "StrStream=$( ${CmdEval[@]} )" ;
+      #eval "StrStream=${StrStream//[${StrCandidateRemove}]/}" ;
+      echo "${StrStream}" > ${UUIDFile} ;
+      StrStream=$( FilterByHexConversion ${UUIDFile} ) ;
+      IntMatchPasswdLength=${#StrStream} ;
+      (( BadMatch++ )) ;
+      SendSocket=1 ;
+      while [ ${SendSocket} -eq 1 ] ; do
+       echo -ne "CmdLine:[${CmdEval}]\n" >> ${UUIDSend}
+       echo -ne "Rejected[${BadMatch}] : ${StrStream}, length:[${#StrStream}]\n\x1A" >> ${UUIDSend} ;
+       cat ${UUIDSend} | SendToSocketServer ;
+       SendSocket=$? ;
+      done
+      rm -f ${UUIDSend} ;
+      #if [ $(( ${intx:=0} % $(( ${IntDisplayLoopRecurrent} * 2 )) )) -eq 0 ] ; then
+      #  echo -ne "${IntPasswdLength} : ${IntMatchPasswdLength}\n" > ${DevStream[${IntMessageOnStream}]} ;
+      #fi
+     done
+     if [ ${IntMatchPasswdLength} -gt ${IntPasswdLength} ]  ; then
+      (( intx++ )) ;
+      if [ ${intx:=0} -gt 0 ] ; then
+        if [ $(( ${intx:=1} % ${IntDisplayLoopRecurrent:=1} )) -eq 0 ] ; then
+          echo -ne "." > ${DevStream[${IntMessageOnStream}]} ;
+        fi
+      fi
+     fi
+   done ;
+   if [ $(( ${RANDOM} % 1 )) -eq 1 ] ; then
+     echo -ne "\nGet Lower Band: \n" ;
+     local SBand="-:0:${IntPasswdLength}"
+     StrStream=${StrStream:0:IntPasswdLength} ;
+   else
+     local IntUpperBand=$((${#StrStream}-${IntPasswdLength})) ;
+     local SBand="-:${IntUpperBand}:${#StrStream}"
+     StrStream=${StrStream:${IntUpperBand}:${#StrStream}} ;
+   fi
+
+   local Sha1Sum=( $( echo "${StrStream}"  | sha1sum --binary) ) ;
+   local DisplayOut=${TemplateDisplay[3]/__STR__/${StrStream}} ;
+   DisplayOut=${DisplayOut/__STR1__/${SBand}} ;
+   DisplayOut=${DisplayOut/__STR2__/${#StrStream}} ;
+   DisplayOut=${DisplayOut/__STR3__/${Sha1Sum[0]}} ;
+   echo -ne "${DisplayOut}" > ${DevStream[${IntDataOnStream}]} ;
+  else
+   echo -ne "\n\tQuit Help\n" ;
+  fi
+}
+
+PythonPackage()
+{
+  local ArrayArg=( $* ) ;
+  local ArrayPipEventTrigger=( "Successfully installed" "Requirement already satisfied" ) ;
+  local ArrayPipEventCondition=( "pip install __PACKAGE__ " "pip install --upgrade __PACKAGE__ " ) ;
+  local OnTrueExit=1;
+  local OnFalseExit=1;
+  local ArrayPipEventContitionStatement=( ${OnTrueExit} ${OnTrueExit} ) ;
+
+  local ArrayBase=( ${ArrayArg[0]/_// } ) ;
+  declare EvalStatementMaster=( "if" "[" "\${IntAnswer:=0}" "-eq" "0" "]" ";" "then" "IntAnswer=\$(" "__0" "|"  "__1" ")" ";" "if" "[" "\${IntAnswer:=0}" "-eq" "__2" "]" ";" "return 1" ";" "fi" ";" "fi" ) ;
+
+  function PipInstallQueue()
+  {
+    local ArrayArg=( $* ) ;
+    local IterPos=${intArrayPipEventContitionStatement} ;
+    local ArrayFormatProcess=( ${ArrayPipEventCondition[${IterPos}]/__PACKAGE__/${ArrayBase[${intArrayBase}]}} ${ArrayPipEventTrigger[${IterPos}]} ${ArrayPipEventContitionStatement[${IterPos}]} )
+    declare IntAnswer=0 ;
+    declare -a Template=( ${EvalStatementMaster[@]} ) ;
+    function __ProcesControl()
+    {
+
+      function __0()
+      {
+        echo "${ArrayFormatProcess[${intArrayFormatProcess}]}" ;
+      }
+      function __1()
+      {
+        echo "egrep -ic ${ArrayFormatProcess[${intArrayFormatProcess}]}" ;
+      }
+      function __2()
+      {
+        echo "${ArrayFormatProcess[${intArrayFormatProcess}]}" ;
+      }
+      Template=( ${Template[@]//__TAG__/__${intArrayFormatProcess} | __TAG__} ) ;
+    }
+    eval $( __in_for __ProcesControl ArrayFormatProcess )
+    local IterFuncPos=${intArrayPipEventContitionStatement} ;
+    local CmdEval=( ${Template[@]//__${IterFuncPos}/$( __${IterFuncPos} )} ) ;
+    echo "CmdLine:[${CmdEval[@]}]" ;
+    eval "${CmdEval[@]}" ;
+  }
+  eval $( __in_for ArrayPipEventContitionStatement PipInstallQueue )
+
+  function PythonPackageInstallerPipe()
+  {
+    local ArrayArg=( $* ) ;
+
+    function CatchEvent()
+    {
+      local ArrayArg=( $* ) ;
+      local IsTriggered=$( echo "${TriggerStatement[${intTriggerStatement}]}" | egrep -ic "${ArrayArg[0]}" )  ;
+      if [ ${IsTriggered:=0} -gt 0 ] ; then
+        echo "" ;
+      fi
+    }
+
+    function Trigger()
+    {
+      local ArrayArg=( $* ) ;
+      local TriggerStatement=( $( pip install ${ArrayPythonPackage[${intArrayPythonPackage}]} ) ) ;
+      local ErrorStatement=$? ;
+      if [ ${ErrorStatement:=0} -eq 1  ] ; then
+        echo -ne "\n\n\tError Installing thru PIP.\n\tModule:${ArrayArg[0]}\n\n" ;
+      else
+         eval $( __in_for TriggerStatement CatchEvent )
+      fi
+
+    }
+    eval $( __in_for ArrayPipEventTrigger Trigger ) ;
+
+  } ;
+  declare -a ArrayPythonPackage=( ${ArrayArg[@]} ) ;
+  eval $( __in_for ArrayPythonPackage PythonPackageInstallerPipe ) ;
+} ;
+
+InspectBase64Item()
+{
+  local ArrayArg=( $* ) ;
+  function sub_match()
+  {
+    local ArrayArg=( $* );
+    echo "${ArrayArg[0]}" | base64 --wrap=0 -d 1&>2 /dev/null ;
+    ErrorStatement=$? ;
+    if [ ${ErrorStatement:=0} -eq 1 ] ; then
+       echo "Segment [ ${ArrayArg[0]} ] is not Base64 encoded" ;
+    else
+      echo "Segment [ ${ArrayArg[0]} ] is Base64 encoded" ;
+      local BaseStream=( $( echo "${ArrayArg[0]}" | base64 --wrap=0 -d ) ) ;
+      echo -ne "\n\tContent:[${BaseStream[@]}]\n" ;
+    fi ;
+  } ;
+
+  echo -ne "\nItem:[ ${ArrayArg[0]} ], being analysed.\n\n" ;
+  local ArrayBase=( ${ArrayArg[0]/_// } ) ;
+  eval $( __in_for ArrayBase sub_match ) ;
+}
+
+
+make_dolfin()
+{
+  local ArrayArg=( $* ) ;
+  local PathInstall=${PathInstall:=/usr/local/src/ubuntu/build/DOLFIN} ;
+  PathInstall[1]=${PathInstall[0]}/.sconf_temp ;
+  cd ${PathInstall} ;
+  rm -rf ${PathInstall[1]} ;
+  local ArrayPythonPath=( /usr/lib/python${PythonVer:=2.6}/dist-packages /usr/local/lib/python${PythonVer:=2.6}/dist-packages ) ;
+  function Create_PathModuleList()
+  {
+   local ArrayArg=( $* ) ;
+   find ${ArrayArg[0]} -maxdepth 1 -type d -printf "--include-dir=%p " ;
+  }
+  function GeneratePythonModuleList()
+  {
+    eval $( __in_for ArrayPythonPath Create_PathModuleList ) ;
+  }
+
+
+  declare -a CmdEval=( scons configure --max-drift=${MaxDrift:=5} ${ArgOption[0]:=--random} ${ArgOption[1]:=--cache-force} --stack-size=${StackSize:=16} $( GeneratePythonModuleList ) )
+  echo "CmdLine:[${CmdEval[@]}]" > /dev/stderr ;
+  eval "echo \"${CmdEval[@]}\""  ;
+}
+
+FindFromArrayPath()
+{
+  local ArrayArg=( $* ) ;
+  function __find_pragma()
+  {
+    local ArrayArg=( $* ) ;
+    local CmdEval=( find "\"${ArrayArg[1]}\"" -type f -name "\"*${ArrayArg[0]}*\"" -printf "\"%p;\"" ) ;
+    echo "CmdLine:[ ${CmdEval[@]} ]" > /dev/stderr ;
+    local CmdResult= $( eval "${CmdEval[@]}" ) ;
+  } ;
+  local CmdResult=$( eval $( eval __in_for ${ArrayArg[0]} __find_pragma "${ArrayArg[1]}" ) ) ;
+  eval "declare -a ${ArrayArg[0]}_Result=( ${CmdResult[@]} )" ;
+  eval echo "All Information are writed on Array ${ArrayArg[0]}_Result. Holdind[\${#${ArrayArg[0]}_Result[@]}]" ;
+} ;
+
+__CodeEval()
+{
+  eval $( __call_locality ) ;
+  echo "echo -ne \"\tFrom Function(${StrFuncName[0]})\"" ;
+  echo "echo -ne \"\tCmdLine:[ ${CmdEval[@]} ]\n\""  ;
+  echo "eval \"${CmdEval[@]}\""  ;
+}
+
+PostEval()
+{
+ eval $( __call_locality ) ;
+ local ArrayCmdEval=${ArrayArg[1]} ;
+ ArrayCmdEval=${ArrayCmdEval:=CmdEval} ;
+ local FunctionCall=${ArrayArg[0]};
+ FunctionCall=${FunctionCall:=this};
+ eval $( __CodeEval ${FunctionCall} ${ArrayCmdEval} ) ;
+}
+
+
+get_package_info()
+{
+ eval $( __call_locality ) ;
+ local StrFuncName=( get_package ) ;
+
+ function SearchPackage()
+ {
+   local StrFuncName=( SearchPackage ${StrFuncName} ) ;
+   eval $( __call_locality ) ;
+   local CmdEval=( apt-file search "${ArrayArg[0]}" "|" awk -F: 'BEGIN{}{printf("%s", $1)}END{}' ) ;
+   eval $( PostEval )  ;
+ }
+
+ function GetPackageContentInfo()
+ {
+   local StrFuncName=( GetPackageContentInfo ${StrFuncName} ) ;
+   eval $( __call_locality ) ;
+   local CmdEval=( dpkg-query --listfiles ${ArrayArg[0]} "|" bzip2 -9c "|" base64 --wrap=0 )  ;
+   eval $( PostEval )  ;
+ }
+
+ local PackageName=$( SearchPackage ${ArrayArg[1]} ) ;
+ local PackageContent=$( GetPackageContentInfo ${PackageName} ) ;
+ eval "${ArrayArg[0]}[\${${#ArrayArg[0]}[@]}]=\"${ArrayArg[1]}:${PackageName}\":BZ2{${PackageContent}}" ;
+} ;
+
+
+__call_ArraySVGLib()
+{
+  function CreateArray()
+  {
+    function CreateDecl()
+    {
+     echo "declare -a ArraySVGLib=( __TAG__ ) " ;
+    }
+    function CreateProgStream()
+    {
+      echo "find /usr/lib -iname "\"*svg*.so\"" -printf "\"%p \"" " ;
+    }
+    local CmdEval=( $( CreateDecl ) ) ;
+    CmdEval=${CmdEval[@]//__TAG__/$(CreateProgStream)} ;
+    eval $( PostEval )  ;
+  }
+  function CallArgument()
+  {
+    echo "ArraySVGLib get_package_info ArraySVGInfo" ;
+  }
+  CreateArray ;
+  local CmdEval=( __for $( CallArgument ) ) ;
+  eval $( PostEval )  ;
+}
+
+Base64DecodeAlgo()
+{
+  eval $( __call_locality ) ;
+  local StrFuncName=( Base64DecodeAlgo ) ;
+  base64 --wrap=0 -d ;
+}
+
+
+get_hex_from_base64()
+{
+  local StrFuncName=( get_hex_from_base64 ) ;
+  eval $( __call_locality ) ;
+  function FromHexToDec()
+  {
+    eval $( __call_locality ) ;
+    local StrFuncName=( FromHexToDec ) ;
+    echo "Hex-LE: ${ArrayArg[0]}, Dec: 10#$((ArrayArg[0]))"
+  }  ;
+  function HexDumpInt64kChunk()
+  {
+    eval $( __call_locality ) ;
+    local StrFuncName=( HexDumpInt64kChunk ) ;
+    local IntTemplate=${ArrayArg[0]} ;
+    IntTemplate=${IntTemplate:=1} ;
+    local Template=( "'s/^[0-9a-fA-F]{7}//g;s/[\t\ ]+//g'" "'s/^[0-9a-fA-F]{7}//g'" ) ;
+    local CmdEval=( "hexdump -x" "\|" "sed -r" "${Template[${IntTemplate}]}" ) ;
+    echo -ne "\tCmdLine:[${CmdEval[@]}]" ;
+    eval "${CmdEval[@]}" ;
+  }
+  local StreamUnBase=$( echo "${ArrayArg[0]}" | Base64DecodeAlgo  ) ;
+  local ErrorState=$? ;
+  if [ ${ErrorState:=0} ] ; then
+    local ArrayHex=( $( echo "${StreamUnBase}" | HexDumpInt64kChunk  ) ) ;
+    eval $( __in_for ArrayHex FromHexToDec ) ;
+  else
+    echo "Not compatible Base64 Hex-Stream, please re-submit a valid base64 Chunk." ;
+  fi
+}
+
+DeclCVS_ubuntu()
+{
+  eval $( __call_locality ) ;
+  local ArrayTypeDecl=( "declare " "local " ) ;
+  local IntTypeDecl=${ArrayArg[0]} ;
+  IntTypeDecl=${IntTypeDecl:=0} ;
+  local StrTypeDecl=${ArrayTypeDecl[${IntTypeDecl}]} ;
+  echo "${StrTypeDecl} CVSROOT=/usr/local/src/ubuntu/cvs";
+  eval "${StrTypeDecl} CVSROOT=/usr/local/src/ubuntu/cvs";
+  echo "${StrTypeDecl} CVSPATH=( \"-d:local:${CVSROOT}\"  )" ;
+  echo "${StrTypeDecl} CVSEXTENSION=( py cpp c h  )" ;
+  echo "${StrTypeDecl} CVS_WRAP_EXTENSION"="\"*.__EXTENSION__ -k'Bz'\""
+  echo "${StrTypeDecl} CVS__IMPORT=( cvs -z9 __CVSPATH__ import -I CVS -W __CVSEXTENSION__ -m__CVS_MODULE_NAME__ -- __PATH_EXPORT__ __TAG__ __MSG__ )" ;
+  echo "${StrTypeDecl} CVS_MAKE_INIT=( \"cd __CVSPATH__\"  \"mkdir -p __CVSPATH__\" \"cvs -d:local:__CVSPATH__ init \" )" ;
+}
+
+
+
+
+CreateUnionFSDecl()
+{
+  eval $( __call_locality ) ;
+  function GetUnionFSLine()
+  {
+    cat /etc/fstab | egrep -i "#fuse" ;
+  } ;
+  local ArrayUnionInfo=( $( GetUnionFSLine ) );
+  local UnionFSTemplate=( unionfs-fuse -o__4__ __5__ __2__ __2__ ) ;
+  local UnionFSLoad=( ${UnionFSTemplate[@]} ) ;
+  local ArraySubs=( 4 5 2 );
+  for(( intx=0 ; intx <= ${#ArraySubs[@]}; intx++ )) ; do
+    local UnionFSLoad=( ${UnionFSLoad[@]/__${ArraySubs[${intx}]}__/${ArrayUnionInfo[${ArraySubs[${intx}]}]}} )  ;
+  done ;
+  echo -ne "From Array:${ArrayArg[0]},\nCmdLine:[${UnionFSLoad[@]}]\n\n" > /dev/stderr ;
+  echo "declare -a Array${ArrayArg[0]}=( ${UnionFSLoad[@]} )" ;
+}
+
+HexDump()
+{
+  eval $( __call_locality ) ;
+  local IntDict=${ArrayArg[0]} ;
+  IntDict=${IntDict:=0} ;
+  local CmdEval=( hexdump ${HexdumpFormat[${IntDict}]} );
+  echo -ne "\n\tCmdLine:[${CmdEval[@]}]\n"  > /dev/stderr ;
+  eval "${CmdEval[@]}" ;
+}
+
+indent_file ()
+{
+  eval $( __call_localityLocalName=indent_file __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+  local CmdEval=( indent ${IndentFormat[0]} ) ;
+  echo -ne "CmdLine:\n\t${CmdEval[@]}\n" > /dev/stderr ;
+  eval ${CmdEval[@]} ;
+}
+
+Base64Decoding()
+{
+  eval $( __call_locality ) ;
+  local ErrorStatement;
+  local StrReturn=$( echo "${ArrayArg[@]}" | base64 --wrap=0 -d ; ErrorStatement=$? ) 2> /dev/null ;
+  #echo "StrReturn return : ${StrReturn}" > /dev/stderr ;
+  if [ ${ErrorStatement:=1} -eq 1 ] ; then
+   echo "${ArrayArg[@]}" ;
+   return 1 ;
+  else
+    echo "${StrReturn}" ;
+    return 0 ;
+  fi
+}
+
+reg_exp_handler()
+{
+  eval $( __call_locality ) ;
+  local RegExp="${ArrayArg[0]}" ;
+  echo "Entry RegExp : ${RegExp} " ;
+  local IntRegExp=${#ArrayArg[0]} ;
+  if [ ${IntRegExp:=0} -gt 0 ] ; then
+    echo "Length of Argument : ${IntRegExp}" > /dev/stderr ;
+    #local StrUnBase64=$( echo "${RegExp}" |  ; local ErrorState=$? ) ;
+    #echo "Error Statement, decoding base64 Stream : ${ErrorState}" > /dev/stderr ;
+    local StrUnBase64=$( Base64Decoding "${RegExp}" ) ;
+    local ErrorState=$? ;
+    if [ ${ErrorState:=1} -eq 1 ] ; then
+      echo "Information is not base64 wrapped." > /dev/stderr ;
+      RegExp=${RegExp:="[*]{2,3}[a-zA-z]+"} ;
+    else
+      echo "Information is base64 wrapped." > /dev/stderr ;
+      RegExp=${StrUnBase64} ;
+    fi
+  else
+    echo "No Argument provided" > /dev/stderr ;
+  fi
+  echo "${RegExp}"  ;
+}
+
+get_find()
+{
+  eval $( __call_locality ) ;
+  local ArrayName=${ArrayArg[0]} ;
+  local RegExp=$( reg_exp_handler ${ArrayArg[1]} );
+  CmdEval=( "local" "${ArrayName}=(" "\$(" "find ./ -type f -iname" "\"*.py\"" "-exec egrep -iHl" "\${RegExp}" "{}" "\;" ")" ")" ) ;
+  echo -ne "\n\tCmdLine:[${CmdEval[@]}]\n" ;
+  eval "${CmdEval[@]}" ;
+  ArrayFindResult[${#ArrayFindResult[@]}]="---- END-OF-SEARCH ----" ;
+  function __zenity_term()
+  {
+    eval $( __call_locality ) ;
+    local CmdEval=( "echo \${${ArrayArg[0]}[@]}"  "\|" "eval" "\$(" "__zenity" "${IntZenityTextInterface}" "${ArrayArg[@]:1}" ) ;
+    eval "${CmdEval[@]}" ;
+  } ;
+  __zenity_term ArrayFindResult ${ArrayArg[@]}
+}  ;
+
+__short_ots ()
+{
+   eval $( __call_locality );
+   local UUID=$( uuidgen -r );
+   local IntNbArg=${#ArrayArg[@]} ;
+   local ArrayOTSTemplate=( "ots --ratio=\${ArrayArg[0]} \${UUID}.temp" "ots --ratio=\${ArrayArg[1]} \${ArrayArg[1]} ; " "ots --ratio=\${ArrayArg[0]} \${UUID}.temp ;" ) ;
+   if [ ${IntNbArg:=0} -gt 2 ] ; then
+      echo "Synthetisation From Console at ${ArrayArg[0]}%" > /dev/stderr ;
+      echo "${ArrayArg[@]:1}" > ${UUID}.temp;
+      eval "${ArrayOTSTemplate[0]}" ;
+   fi
+   if [ ${IntNbArg:=0} -eq 2 ] ; then
+       if [ -e ${ArrayArg[1]} ] ; then
+         echo "Synthetisation From File at ${ArrayArg[0]}%" > /dev/stderr ;
+         eval "${ArrayOTSTemplate[1]}" ;
+       else
+         echo "Synthetisation From Base64 Argument at ${ArrayArg[0]}%" > /dev/stderr ;
+         echo "${ArrayArg[@]:1}" | Base64DecodeAlgo > ${UUID}.temp ;
+         eval "${ArrayOTSTemplate[2]}" ;
+       fi
+   fi
+   rm -f ${UUID}.temp ;
+}
+
+
+
+get_battery_info ()
+{
+  eval $( __call_locality );
+  local ArrayBatteryinfo=( design_capacity last_full_capacity battery_technology design_voltage design_capacity_warning design_capacity_low capacity_granularity_1 capacity_granularity_2 model_number serial_number battery_type OEM_info ) ;
+  local ArrayBatterystate=( capacity_state charging_state present_rate remaining_capacity present_voltage )
+  local ArrayBatteryItem=( info state ) ;
+  function get_battery_item()
+  {
+    eval $( __call_locality );
+    cd ${BatteryPath};
+    local ArrayBattery=( $( find  ./ -maxdepth 1 -type d -iname "BAT*" -printf "%p " | sed 's/\.\///g' ) );
+    echo "local ArrayBattery=( ${ArrayBattery[@]} ) " ;
+  }
+
+  function battery_by_item()
+  {
+    eval $( __call_locality );
+    #ArrayArg0 : UserChoice( item:query )
+    #ArrayArg1 : info/state
+    local ArrayQueryItem=( ${ArrayArg[0]/:/ } ) ;
+
+    function get_battery_value()
+    {
+      eval $( __call_locality );
+      #ArrayArg0 : From ArrayQueryItem, the right memeber.
+      #ArrayArg1 : ArrayBattery(info/state) with all queryable item.
+      eval $( get_battery_item ) ;
+      function battery_by_number()
+      {
+        eval $( __call_locality );
+        #ArrayArg0 : BAT0, BAT1...
+        #ArrayArg1 : ---
+        local StrInfo=${ArrayQueryItem[1]/_/ } ;
+        local StrResult=$( cat ${BatteryPath}/${ArrayArg[0]}/${ArrayQueryItem[0]} | egrep -i "${StrInfo}" | eval sed 's/://g;s/${StrInfo}//g' ) ;
+        echo "${ArrayQueryItem[1]}:${StrResult}" ;
+      }
+      eval $( __in_for ArrayBattery battery_by_number )
+    }
+    echo "User choice : <${ArrayQueryItem[0]}:${ArrayQueryItem[1]}>" > /dev/stderr ;
+    eval $( __in_for ArrayBattery${ArrayQueryItem[0]} get_battery_value ${ArrayQueryItem[1]} ) ;
+  }
+
+  if [ ! -d ${BatteryPath} ]; then
+    echo "The ACPI module did not provide a Battery Module inspection." > /dev/stderr;
+    return 1;
+  else
+    ### Obtain the active battery List.
+    local StrQuery="${ArrayArg[0]}:${ArrayArg[1]}" ;
+    ### Coded query Arg0[ info/state ]:Arg1[ capacity_state/design_capacity]
+    echo "Query:[ ${StrQuery[@]} ]" > /dev/stderr ;
+    eval $( __in_for ArrayBatteryItem battery_by_item ${StrQuery} ) ;
+
+  fi
+
+}
+
+CreateTagsDirLink ()
+{
+  eval $(__call_locality);
+  local UUID=$( uuidgen -r ) ;
+  local PathFileList="/tmp/${UUID}" ;
+  local CtagFile=${ArrayArg[0]}/${ArrayArg[1]} ;
+  function CreateCtags()
+  {
+   eval $( __call_locality ) ;
+   ctags -L ${ArrayArg[0]} --fields=+afiKmsSt -f ${ArrayArg[1]} ;
+  }
+
+  function CreateFileList()
+  {
+   find ${ArrayArg[0]} -type f -iname "${ArrayArg[1]}" > ${ArrayArg[2]} ;
+
+  }
+  CreateFileList ${ArrayArg[0]} ${ArrayArg[1]} ${PathFileList} ;
+  CreateCtags ${PathFileList} ${CtagFile}
+  local ArrayPathIncludeHeader=( $( find ${ArrayArg[0]} -type d -printf \"%p \" ) ) ;
+
+  function create_link ()
+  {
+    eval $(__call_locality);
+    local CmdEval=(ln -sf __0__ __1__);
+    CmdEval=( ${CmdEval[@]//__0__/${ArrayArg[0]}} ) ;
+    CmdEval=( ${CmdEval[@]//__1__/${ArrayArg[1]}/tags} );
+    echo -ne "CmdLine:[ ${CmdEval[@]} ]\n" > /dev/stderr;
+    eval "${CmdEval[@]}"
+  }
+  eval $( __in_for ArrayPathIncludeHeader create_link ${ArrayArg[0]}/${ArrayArg[1]} ) ;
+}
+
+
+__fnct_get_pid()
+{
+  eval $( __call_locality ) ;
+
+  function get_pid_per_req()
+  {
+    eval $( __call_locality ) ;
+    local ArrayPID=( $( ps -eo pid,command | egrep -i "${ArrayArg[1]}" | grep -v "grep" | get_col 1 ) ) ;
+    function DisplayPID()
+    {
+      eval $( __call_locality )  ;
+      local CmdLine=( "ps -eo pid,command" "|" "egrep -i" "${ArrayArg[0]} | egrep -v \"egrep\"" ) ;
+      echo "command line : ${CmdLine[@]}" ;
+      local PIDInformation=( $( ${CmdLine[@]} ) ) ;
+      echo "PID information:[ ${PIDInformatio[@]:1} ]" ;
+    }
+    eval $( __in_for ArrayPID DisplayPID )
+    local CmdEval=( ${ArrayArg[0]} "${ArrayPID[@]}" ) ;
+    echo "CmdLine: ${CmdEval[@]}" > /dev/stderr  ;
+    eval "${CmdEval[@]}" ;
+  } ;
+  local IntNbArg=${IntNbArg:=1} ;
+  local ArrayRequest=( ${ArrayArg[@]:${IntNbArg}} ) ;
+  local DefaultAction=${ArrayArg[@]:0:${IntNbArg}} ;
+  DefaultAction=${DefaultAction:=echo};
+  echo "Default Action:[${DefaultAction}]" > /dev/stderr ;
+  eval $( __in_for ArrayRequest get_pid_per_req ${DefaultAction} ) ;
+}
+
+get_pid_by_apps()
+{
+ eval $( __call_localityDisplayFunctionEntry=1 __call_localityLocalName=get_pid_by_apps __call_locality ) ;
+
+ function __fnct_get_pid()
+ {
+  eval $( __call_localityDisplayFunctionEntry=1 __call_localityLocalName=__fnct_get_pid __call_locality ) ;
+  local TypePID=$( ps_id | egrep -i "firefox" | egrep -v grep | get_col 1 ) ;
+  local TypeCommand=$( ps -eo command | egrep -i "firefox" | egrep -v grep ) ;
+  function __fnct_re_start()
+  {
+    eval $( __call_localityDisplayFunctionEntry=1 __call_localityLocalName=__fnct_re_start __call_locality ) ;
+    exec
+  }
+  function __fnct_kill_pid()
+  {
+   eval $( __call_localityDisplayFunctionEntry=1 __call_localityLocalName=__fnct_kill_pid __call_locality ) ;
+
+   eval $( EvalKeyFuncStartOnCond ne 0 ResStartPID __fnct_re_start  ) ;
+  }
+
+  eval $( EvalKeyFuncStartOnCond ne 0 KillPID __fnct_kill_pid  ) ;
+
+ }
+
+ eval $( __in_for ArrayArg __fnct_get_pid )
+}
+
+
+### Update Mini_fnct.d
+###
+__update_mini_package()
+{
+ eval $( __call_localityLocalName=__update_mini_package __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+ local StrFuncName=( __update_mini_package ) ;
+ local PathPackage=( /home/maxiste/mini_fnct.d ) ;
+ local PackageName=( "fnct_d-${__update_mini_packageVersion:=0.001}-${__update_mini_packageVersionStateVersion:=alpha}_init.d_bash.${__update_mini_packageVersionFormat:=tar.gz}" ) ;
+
+ function make_update()
+ {
+   eval $( __call_localityLocalName=make_update __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+   function MakeTar()
+   {
+      eval $( __call_localityLocalName=MakeTar __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+      #eval $( __call_localityLocalName=MakeTar __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+      if [ "${__update_mini_packageVersionFormat:=tar.gz}" == "tar.gz" ] ; then 
+       eval $( EvalFunctorOnScreen=True __fnctCmdEval tar --exclude=db_parse_newvar -c -v -z -f../${PackageName[${intPackageName}]} ./ ) ;
+      fi
+      if [ "${__update_mini_packageVersionFormat:=tar.gz}" == "tar.bz2" ] ; then 
+       eval $( EvalFunctorOnScreen=True __fnctCmdEval tar --exclude=db_parse_newvar -c -v -j -f../${PackageName[${intPackageName}]} ./ ) ;
+      fi
+   }
+   
+   function CanUpdateCurrentFile()
+   {
+    eval $( __call_localityLocalName=CanUpdateCurrentFile __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    eval $( EvalFunctorOnScreen=True __fnctCmdEval rm -f ${ArrayArg[0]} \; MakeTar ${ArrayArg[0]} \; mv ../${ArrayArg[0]}  .  ) ;
+    eval $( EvalFunctorOnScreen=True __fnctCmdEval chown ${__update_mini_packageUser:=maxiste}.${__update_mini_packageGroup:=maxiste} * -R ) ;
+   }
+   
+   function TarActualPath()
+   {
+    eval $( __call_localityLocalName=TarActualPath __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    echo -ne "File ${ArrayArg[0]} does not exist, please force setting for new project.\n" > /dev/stderr
+    eval $( EvalFunctorOnScreen=True __fnctCmdEval MakeTar ${PackageName[${intPackageName}]} ) ;
+   }
+   
+   cd ${PathPackage[${intPackageName}]} ;
+   TestWithSpreadArgOnFailedTestFunc=False TestWithDefaultFailTestFunc=TarActualPath TestWithDefaultFinalTestFunc=CanUpdateCurrentFile ImbriqIf -e ${ArrayArg[0]} ;
+ }
+ eval $( __in_for PackageName make_update )
+}
+
+HexArrayConversion()
+{
+  eval $( __call_localityDisplayFunctionEntry=0 __call_localityLocalName=HexArrayConversion __call_locality ) ;
+  StreamPwd=${ArrayArg[0]} ;
+
+  function CharConversion()
+  {
+    eval $( __call_localityDisplayFunctionEntry=0 __call_localityLocalName=CharConversion __call_locality ) ;
+    ArrayResult[${intx}]=$( echo -ne "\x${HexValue}" ) ;
+  }
+
+  function HexConversionFilter()
+  {
+    eval $( __call_localityDisplayFunctionEntry=0 __call_localityLocalName=Start_ImplementEzSetup __call_locality ) ;
+    ArrayResult[${intx}]=$( echo -ne "${HexValue}" ) ;
+  }
+
+  function DecConversionFilter()
+  {
+    eval $( __call_localityDisplayFunctionEntry=0 __call_localityLocalName=Start_ImplementEzSetup __call_locality ) ;
+    ArrayResult[${intx}]=$( echo -ne "$((16#${HexValue}))" ) ;
+  }
+
+  function DividerChange()
+  {
+    eval "DividerLength=\${${StrFuncName}IntNewDivider}" ;
+    eval  "echo Set Divider from var${StrFuncName}IntNewDivider:[\${${StrFuncName}IntNewDivider}]" > /dev/stderr ;
+  }
+
+  eval "local DividerLength=\${${StrFuncName}IntNewDivider:=2}" ;
+  eval $( EvalKeyFuncStartOnCond gt 0 IntNewDivider DividerChange ) ;
+  #echo -ne "\n\tDivider Length:[${DividerLength}]\n" > /dev/stderr ;
+
+  function DisplayStreamIn()
+  {
+    eval $( __call_localityDisplayFunctionEntry=0 __call_localityLocalName=DisplayStreamIn __call_locality ) ;
+    echo -ne "Initial Stream in Input:\n[ ${StreamPwd} ]\nLength:${#StreamPwd} bytes\n" ;
+  }
+  eval $( EvalKeyFuncStartOnCond eq 1 DisplayStreamInformation DisplayStreamIn ) ;
+
+  local IntStreamLength=${#StreamPwd} ;
+
+  local IntHexSplit=$(( ${IntStreamLength} / ${DividerLength} ));
+  local ArrayResult=();
+
+  for (( intx=0 ; intx <= ${IntHexSplit}-1 ; intx++ )) ; do
+    if [ ${intx:=0} -eq 0 ] ; then
+     local adjust=0;
+    else
+     local adjust=1;
+    fi
+    local IntStart=$(( ((${intx} ) * (${DividerLength}-1)) + ${adjust})) ;
+    local HexValue=${StreamPwd:${IntStart}:${DividerLength}};
+
+    eval $( EvalKeyFuncStartOnCond ne 0 CharConversion CharConversionFilter  ) ;
+    eval $( EvalKeyFuncStartOnCond ne 0 HexConversion HexConversionFilter  ) ;
+    eval $( EvalKeyFuncStartOnCond ne 0 DecConversion DecConversionFilter ) ;
+  done ;
+  echo "${ArrayResult[@]}" ;
+}
+
+
+get_attribute_value_html_sheet ()
+{
+    eval $( __call_localityDisplayFunctionEntry=1 __call_localityLocalName=get_attribute_value_html_sheet __call_locality );
+    local StrFile=${ArrayArg[0]} ;
+    local StrFile=${StrFileName:=/home/maxiste/dict_list.txt} ;
+    local Buffer;
+    function ExtractFromFile()
+    {
+      eval $( __call_localityDisplayFunctionEntry=1 __call_localityLocalName=ExtractFromFile __call_locality );
+      Buffer=$( cat ${StrFileName} ) ;
+    }
+    function ExtractFromFile()
+    {
+      eval $( __call_localityDisplayFunctionEntry=1 __call_localityLocalName=ExtractFromFile __call_locality );
+      Buffer=$( cat ${StrFileName} ) ;
+    }
+
+    function ExtractFromCurl()
+    {
+      eval "Buffer=$( curl \${${StrFuncName}CurlAddr} )" ;
+    }
+    function SetDefaultExtract()
+    {
+      eval "\${${StrFuncName}DataFile}=1" ;
+    }
+
+    eval $( EvalKeyFuncStartOnCond eq 0 DefaultExtracMeth SetDefaultExtract  ) ;
+    eval $( EvalKeyFuncStartOnCond ne 0 DataFile ExtractFromFile  ) ;
+    eval $( EvalKeyFuncStartOnCond ne 0 DataWeb ExtractFromCurl  ) ;
+    local ArrayQuotingStyle=( "'s/ /'\'','\''/g'" "'s/ /'\"','\"'/g'" ) ;
+    eval "echo \"${Buffer}\" | sed 's/\(<\${${StrFuncName}Tag:=option}\ value=\"\)\([a-zA-Z0-9\*]*\)\(\">\)/\2 /g' | get_col \${${StrFuncName}DefaultCol:=1} | tr '[:cntrl:]' ' ' | sed ${ArrayQuotingStyle[\${${StrFuncName}QuoteStyle:=0}]}" ;
+}
+
+
+ps_id()
+{
+  eval $(  __call_localityLocalName=ps_id __call_locality );
+
+  local ArrayPSColType=( "f,uid,pid,ppid,pri,ni,vsz,rss,wchan,stat,tty,time,command" "pid,command" "pid" "command" ) ;
+  local ps_idColType=0 ;
+
+  function __pid()
+  {
+   eval $( __call_locality );
+   eval "local CmdEval=( ps -eo ${ArrayPSColType[${ps_idColType:=0}]} \| grep \"${ArrayArg[0]}\" \| egrep -v grep )" ;
+   #echo -ne "${CmdEval[@]}\n" ;
+   eval "${CmdEval[@]}" ;
+  }
+
+  function __fnct_PS_PidCommand()
+  {
+   ps_idColType=1 ;
+  }
+
+  function __fnct_PS_byPid()
+  {
+    ps_idColType=2 ;
+  }
+
+  function __fnct_PS_byCommand()
+  {
+   ps_idColType=3 ;
+  }
+
+  eval $( EvalKeyFuncStartOnCond eq 1 GetPidCommand __fnct_PS_PidCommand  ) ;
+  eval $( EvalKeyFuncStartOnCond eq 1 GetPid __fnct_PS_byPid  ) ;
+  eval $( EvalKeyFuncStartOnCond eq 1 GetCommand __fnct_PS_byCommand  ) ;
+  eval $( __in_for ArrayArg __pid );
+}
+
+
+SCSIUnpoolerDisk()
+{
+  eval $(  __call_localityDisplayFunctionEntry=1 __call_localityLocalName=Device_unpool_test2 __call_locality );
+
+  local FileName=( /etc/mtab /home/maxiste/mtab.temp mtab )
+  local DeviceUnpoolBase64=( L2Rldi9zZGMxIC9tZWRpYS9DSEtORk1HVzMyIHZmYXQgcncsbm9zdWlkLG5vZGV2LHVoZWxwZXI9ZGV2a2l0LHVpZD0xMDAwLGdpZD0xMDAwLHNob3J0bmFtZT1taXhlZCxkbWFzaz0wMDc3LHV0Zjg9MSxmbHVzaCAwIDAK );
+  local DeviceUnpoolable=( /dev/sdc1 ) ;
+  local DeviceUnpoolDecoded=$( Base64Decode ${DeviceUnpoolBase64[0]} ) ;
+  echo "Based Unpooled segment:${DeviceUnpoolDecoded}" ;
+  local ArrayTimeSleep=();
+
+  function TestScsi()
+  {
+    eval $(  __call_localityDisplayFunctionEntry=1 __call_localityLocalName=TestScsi __call_locality );
+    function __fnct_scsi_ready()
+    {
+     eval $(  __call_localityDisplayFunctionEntry=1 __call_localityLocalName=__fnct_scsi_ready __call_locality );
+     local ReturnInfo=$( scsi_ready ${ArrayArg[0]} | tr '[:cntrl:]' '|' | sed 's/\(sg_turs\)/|\1/g' ) ;
+     echo "${ReturnInfo}" > /dev/stderr ;
+    }
+
+    local ArraySCSI=( $( scsiinfo -l ) ) ;
+    eval $( __in_for ArraySCSI __fnct_scsi_ready  ) ;
+  } ;
+
+  function Base64Decode()
+  {
+   eval $(  __call_localityDisplayFunctionEntry=1 __call_localityLocalName=Base64Decode __call_locality );
+   echo "${ArrayArg[0]}" | base64 --wrap=0 -d ;
+  }
+
+  function SleepProcess()
+  {
+   eval $(  __call_localityDisplayFunctionEntry=1 __call_localityLocalName=SleepProcess __call_locality );
+   echo "Sleeping for ${ArrayArg[0]} sec. " > /dev/stderr ;
+   sleep ${ArrayArg[0]} ;
+  }
+
+  function UnmountPooledDevice()
+  {
+   eval $(  __call_localityDisplayFunctionEntry=1 __call_localityLocalName=UnmountPooledDevice __call_locality );
+   local ErrorStatementUmount=1;
+   local IntCount=0;
+   local ArrayUnmountOption=( -f -l ) ;
+   while [ ${ErrorStatementUmount:=0} -ne 0 ] ; do
+    local CmdEval=( "umount" "${ArrayUnmountOption[${IntCount}]}" "${ArrayArg[0]}"  );
+    echo -ne "\n\tCmdLine:[${CmdEval[@]}]\n" ;
+    eval "${CmdEval[@]}" ;
+    ErrorStatementUmount=$? ;
+    (( IntCount+=1 )) ;
+   done
+  }
+  function CheckFileDevice()
+  {
+   eval $(  __call_localityDisplayFunctionEntry=1 __call_localityLocalName=CheckFileDevice __call_locality );
+   local IntMtabFree=1;
+   while [ ${IntMtabFree:=1} -ne 0 ] ; do
+     echo "${ArrayArg[0]} not free" ;
+     IntMtabFree=$( lsof -w | egrep -ic --no-filename "${ArrayArg[0]}" 2> /dev/null ) ;
+     echo "IntMtabFree State:[${IntMtabFree}]" ;
+     sleep 1 ;
+   done
+  }
+  function SetRandom()
+  {
+   eval $(  __call_localityDisplayFunctionEntry=1 __call_localityLocalName=SetRandom __call_locality );
+   local ArrayRandomName=${ArrayArg[2]};
+   ArrayRandomName=${ArrayRandomName:=ArrayTimerSleep} ;
+   for(( intx=0;intx<=${ArrayArg[0]}-1;intx++));do
+    local IntRandom=$(( (${RANDOM} % ${ArrayArg[1]})+1 )) ;
+    echo -ne "Adding random number:${IntRandom} in List\n" > /dev/stderr ;
+    local CmdEval=( "${ArrayRandomName}[${intx}]=${IntRandom}" ) ;
+    echo -ne "\n\tCmdLine:[${CmdEval[@]}]\n" > /dev/stderr ;
+    eval "${CmdEval[@]}" ;
+   done
+  }
+
+  local IntSleepCount=0;
+  local IntMaxSleep=100 ;
+  while [ 1 ] ; do
+
+   if [ ${IntSleepCount:=0} -eq 0 ] ; then
+     SetRandom ${IntMaxSleep} 20 ArrayTimeSleep ;
+   fi
+   echo "Array ArrayTimeSleep:[${ArrayTimeSleep[@]}]" ;
+
+   eval $( __in_for FileName CheckFileDevice )
+   echo "${DeviceUnpoolDecoded}" >> ${FileName[0]} ;
+   TestScsi ;
+   SleepProcess ${ArrayTimeSleep[0]} ;
+
+   eval $( __in_for FileName CheckFileDevice )
+   egrep -iv "${DeviceUnpoolDecoded}" ${FileName[0]} > ${FileName[1]} ;
+
+   eval $( __in_for FileName CheckFileDevice )
+   cat ${FileName[1]} > ${FileName[0]} ;
+
+   eval $( __in_for FileName CheckFileDevice )
+   SleepProcess ${ArrayTimeSleep[1]} ;
+
+   #eval $( __in_for DeviceUnpoolable UnmountPooledDevice ) ;
+
+   if [ ${IntSleepCount:=0} -gt ${IntMaxSleep} ] ; then
+     IntSleepCount=0;
+   else
+     ((IntSleepCount+=1)) ;
+   fi
+
+  done
+
+}
+
+
+### Ideal Pattern search accross multiple path.
+### Thoses 2 function are implicitly creating the find query to search in a path a finite pattern
+### and passing argument thru Array, for all pattern recorded in, and using last-member argument to
+### provide a search function.
+
+Ideal_search()
+{
+  eval $( __call_localityLocalName=Ideal_search __call_locality ) ;
+
+  local ArrayFuncProv=( get_file ) ;
+  local ArraySearch=( .jar .lib .zip .class .java ) ;
+  local ArrayPath=(  ) ;
+  local ArrayResult=(  ) ;
+  local StrDefaultPath="/usr/share/" ;
+  local StrDefaultTypeSearch="f" ;
+
+  function SetTypeSearch()
+  {
+    eval "StrDefaultTypeSearch=\${${StrFuncName}TypeSearch:=${StrDefaultTypeSearch}}" ;
+    echo -ne "setting new TypeSearch\nStrDefaultTypeSearch:[${StrDefaultTypeSearch}]\n" ;
+  }
+
+  function SetRootSearch()
+  {
+    eval "StrDefaultPath=\${${StrFuncName}SearchRoot:=${StrDefaultPath}}" ;
+    echo -ne "setting new SetRootSearch\nStrDefaultPath:[${StrDefaultPath}]\n" ;
+  }
+
+  function SetRootSearch()
+  {
+    eval "StrDefaultPath=\${${StrFuncName}SearchRoot:=${StrDefaultPath}}" ;
+    echo -ne "setting new SetRootSearch\nStrDefaultPath:[${StrDefaultPath}]\n" ;
+  }
+
+  function ClearDisplay()
+  {
+   eval $( __call_localityLocalName=ClearDisplay __call_locality ) ;
+   clear ;
+   sleep 2 ;
+  }
+  function DefaulSearch()
+  {
+   eval $( __call_localityLocalName=DefaulSearch __call_locality ) ;
+   echo "Using ${StrFuncName}" > /dev/stderr ;
+   ### -iname \"*jython*\"
+   local CmdEval=( "\$( find ${StrDefaultPath} -maxdepth 1 -type d -printf \"%p \" )" ) ;
+   echo -ne "CmdLine:\n\t[ ${CmdEval[@]} ]\n" ;
+   eval "ArrayPath=( ${CmdEval[@]} )" ;
+
+  }
+
+  function ProvideSearch()
+  {
+   eval $( __call_localityLocalName=ProvideSearch __call_locality ) ;
+   echo "Using ${StrFuncName}" > /dev/stderr ;
+   local CmdLine=( "eval" "ArrayPath=( \$( ${Ideal_searchSearchFuncName} ) ) " ) ;
+   echo -ne "CmdLine:\n\t[ ${CmdLine[@]} ]\n" ;
+   eval "ArrayPath=( ${CmdLine[@]} )" ;
+  }
+
+  function provide_stem()
+  {
+    eval $( __call_localityLocalName=ProvideStem __call_locality ) ;
+    eval $( __in_for ArrayPath ${ArrayArg[@]} ) ;
+  } ;
+
+  function get_file()
+  {
+    eval $( __call_localityLocalName=get_file __call_locality ) ;
+    local CmdEval=( find ${ArrayArg[1]} -maxdepth 1 -type ${StrDefaultTypeSearch} -iname "\"*${ArrayArg[0]}*\"" ) ;
+    echo -ne "CmdLine:\n\t[ ${CmdEval[@]} ]\n" ;
+    eval "local CmdResult=$(${CmdEval[@]})" ;
+    eval "ArrayResult[${#ArrayResult[@]}]=\"${CmdResult}\"" ;
+  } ;
+
+  function load_body()
+  {
+   eval $( __call_localityLocalName=LoadBodyMain __call_locality ) ;
+   eval $( __in_for ArraySearch provide_stem ${ArrayArg[0]} )  ;
+  }
+
+  eval $( EvalKeyFuncStartOnCond ne 0 ClearDisplay ClearDisplay ) ;
+  eval $( EvalKeyFuncStartOnCond eq 1 SetRootPath SetRootSearch ) ;
+  eval $( EvalKeyFuncStartOnCond eq 1 SetTypeSearch SetTypeSearch ) ;
+  eval $( EvalKeyFuncStartOnCond ne 0 SearchFunc DefaulSearch  ) ;
+  eval $( EvalKeyFuncStartOnCond ne 1 SearchFunc ProvideSearch  ) ;
+
+  eval $( __in_for ArrayFuncProv load_body ) ;
+  echo "ArrayResult holding ${#ArrayResult[@]}, items" ;
+  echo "ArrayResult:[${ArrayResult[@]}]" ;
+
+  ### example :
+  ### Ideal_searchSetRootPath=0 Ideal_searchSetTypeSearch=1 Ideal_searchTypeSearch="f" Ideal_searchSearchRoot=/usr/local  Ideal_search
+  ###
+}
+
+
+unset StartVLCFileName ;
+start_vlc()
+{
+  eval $( __call_localityLocalName=StartVLC __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+  local StopWhile=${StartVLCWhileState:=1} ;
+  while [ ${StopWhile:=1} -eq 1  ] ; do
+    StopWhile=${StartVLCWhileState:=1} ;
+    vlc "${StartVLCFileName:=/home/maxiste/Musique/une_photo_de_toit.wav}" ${StartVLCOption:=""} ;
+    sleep 1;
+  done ;
+} ;
+
+
+### This one can only be acheived if you download 2C from
+### http://code.google.com/p/2c-python/downloads/list.
+### Uncompress the content in you Python 2.x( mostly /usr/local/lib/python2.x/dist-packages path )
+###
+###
+CompilePythonFile()
+{
+ eval $( __call_localityLocalName=CompilePythonFile __call_locality );
+
+ function get_file_list()
+ {
+  eval $( __call_localityLocalName=get_file_list __call_locality );
+  local DefaultPath=${ArrayArg[0]};
+  DefaultPath=${DefaultPath:=./} ;
+  local CmdEval=( "find ${DefaultPath} -maxdepth 1 -type f -iname \"*.py\" -printf \"%p \"" "|" "sed 's/\.\///g'"  ) ;
+  echo -ne "CmdLine:${CmdEval[@]}\n" > /dev/stderr ;
+  eval "${CmdEval[@]}" ;
+ }
+
+ function CompilePython2C()
+ {
+  eval $( __call_locality ) ;
+  local CmdEval=( python2.6 /usr/local/lib/python2.6/dist-packages/2C.py ${ArrayArg[0]} ) ;
+  echo -ne "CmdLine:[ ${CmdEval[@]} ]\n" ;
+  eval "${CmdEval[@]}" ;
+ } ;
+
+ local ArrayPyCompile=( $( get_file_list ${ArrayArg[@]} ) ) ;
+
+ eval $( __in_for ArrayPyCompile CompilePython2C ) ;
+}
+
+
+function InstallPythonSetup()
+{
+  eval $( __call_localityLocalName=InstallPythonSetup __call_locality ) ;
+  local ArrayPythonSetupStdCommand=( $( python2.6 setup.py --help-command | egrep "Standard commands:" -A18 | egrep -v "upload|win|clean|sdist|register|bdist_rpm|bdist_dumb|Standard" | awk 'BEGIN{}{printf("%s ",$1)}END{}') ) ;
+  eval "local EvalTest=\${${StrFuncName}Eval:=False}" ;
+
+  function __fnct_install()
+  {
+    eval $( __call_localityLocalName=__fnct_install __call_locality ) ;
+    local CmdEval=( python2.6 setup.py ${ArrayArg[0]} ) ;
+
+    if [ "${EvalTest}" == "False" ] ; then
+      echo -ne "CmdLine:\n\t${CmdEval[@]}\n" ;
+    else
+      echo -ne "Executing CmdLine:\n\t${CmdEval[@]}\n" ;
+      eval "${CmdEval[@]}" ;
+    fi
+  } ;
+  eval $( __in_for ArrayPythonSetupStdCommand __fnct_install ) ;
+}
+
+function __echo()
+{
+  eval $( __call_locality ) ;
+  local StartHeader="CmdLine:\n" ;
+  if [ ${intCmdEval:=0} -eq 0 ] ; then
+    echo -ne "${StartHeader}\t${ArrayArg[0]//__ITEM__/${ArrayArg[1]}}\n" ;
+  else
+    echo -ne "\t${ArrayArg[0]}\n" ;
+  fi ;
+} ;
+
+function BindPythonRepository()
+{
+  eval $( __call_localityLocalName=BindPythonRepository  __call_locality ) ;
+
+  function __fnctBind()
+  {
+    eval $( __call_localityLocalName=__fnctBind __call_locality  ) ;
+    local CmdEval=() ;
+    CmdEval[0]="ln -sf /usr/local/lib/python2.6/dist-packages/repository/__ITEM__ /usr/local/lib/python2.6/dist-packages/__ITEM__" ;
+    CmdEval[1]="easy_install-2.6 __ITEM__" ;
+
+    eval $( __in_for CmdEval  __echo ${ArrayArg[0]} ) ;
+  } ;
+  eval $( TestWithDefaultFinalTestFunc=__fnctBind ImbriqIf -e ${ArrayArg[0]} ) ;
+}
+
+
+function MountCall()
+{
+  eval $( __call_localityLocalName=MountCall __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+
+  eval "local IsExec=\${${StrFuncName}Execute:=False}" ;
+  eval "local IsPrint=\${${StrFuncName}Print:=True}" ;
+  eval "local PrintDebug=\${${StrFuncName}PrintDebug:=True}" ;
+  eval "local IsEval=\${${StrFuncName}EvalExec:=True}" ;
+
+  function ParseItem()
+  {
+    local CmdEval=( "eval echo \$( cat /etc/fstab | egrep \""${ArrayArg[0]}"\" )"  "|" "awk -vIsExec=${IsExec} -vIsPrint=${IsPrint} -f ${ArrayAwkScriptPath[0]}/MountDeviceParser.awk" ) ;
+    if [ "${PrintDebug:=True}" == "True" ] ; then
+      echo -ne "CmdLine:\n\t${CmdEval[@]}\n" > /dev/stderr ;
+    fi
+    if [ "${IsEval:=True}" == "True" ] ; then
+      eval "${CmdEval[@]}" ;
+    else
+      echo -ne "Following command was not evaluated for execution:\n\t${CmdEval[@]}\n" > /dev/stderr ;
+    fi
+
+  }
+  eval $( __in_for ArrayArg ParseItem ) ;
+
+}
+
+function call_pydoc_based_module()
+{
+  eval $( __call_localityLocalName=CallPyDocBAsedModule __call_locality  ) ;
+  eval $( EvalFunctorOnScreen=True __fnctCmdEval pydoc ${ArrayArg[0]}.${ArrayArg[1]} ) ;
+}
+
+function eyestudio_Python_Module_Call()
+{
+  local ArrayPythonModuleeyestudio=( $( pydoc eyestudio | egrep -A10 "PACKAGE CONTENTS" | tail -n10 | awk 'BEGIN{}{printf("%s ",$1)}END{}') ) ;
+  eval $( __in_for ArrayPythonModuleeyestudio call_pydoc_based_module eyestudio )  ;
+}
+
+function update_idle_python_module()
+{
+  eval $( __call_localityLocalName=UpdateIdlePythonModule __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+
+  eval "local ModulePath=\${${StrFuncName}ModuleModulePath:=/usr/lib/python2.6/idlelib} ";
+
+  eval $( EvalFunctorOnScreen=True __fnctCmdEval cd ${ModulePath} ) ;
+
+  eval "local PythonVer=\${${StrFuncName}PythonVersion:=2.6}" ;
+
+  eval "local PythonCompiler=python${PythonVer}" ;
+
+  function GetFilePath()
+  {
+    eval $( __call_localityLocalName=GetFilePath __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    echo -ne "local ArrayPyCompile=( \$( find \${UpdateIdlePythonModuleModulePath} -maxdepth 1 -type f -iname \"*.py\" -printf \"%f \" ) )" ;
+  }
+
+  function FilePathSearchFileNotFound()
+  {
+    eval $( __call_localityLocalName=FilePathSearchFileNotFound __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    echo -ne "Could not find the path ${UpdateIdlePythonModuleModulePath}\n" > /dev/stderr
+  }
+
+  function CantTest
+  {
+    eval $( __call_localityLocalName=FailedTest __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    echo -ne "Testing ${ArrayArg[0]} over ${ArrayArg[1]}, report a error." > /dev/stderr ;
+  }
+
+  function __FnctCompileFile()
+  {
+    eval $( __call_localityLocalName=FinalTest __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    ${PythonCompiler} -c "import py_compile ; py_compile.compile('${ArrayArg[0]}')" ;
+  }
+
+  #eval $( EvalFunctorOnScreen=True __fnctCmdEval TestWithDefaultFailTestFunc=FilePathSearchFileNotFound TestWithDefaultFinalTestFunc=GetFilePath ImbriqIf -d ${UpdateIdlePythonModuleModulePath} );
+  eval $( TestWithReplaceTagSpacer=True TestWithRewriteTagSpacer=True TestWithCharSpacer=Space TestWithDefaultFailTestFunc=FilePathSearchFileNotFound TestWithDefaultFinalTestFunc=GetFilePath TestWithFuncRewriteTag=RewriteTagSpacer TestWithFuncReplaceTag=ReplaceTagBySpacer ImbriqIf -e -d ${ModulePath} ) ;
+
+  #local ArrayPyCompile=( $( find ${UpdateIdlePythonModuleModulePath} -maxdepth 1 -type f -iname "*.py" -printf "%f " ) ) ;
+  function pycompilefile()
+  {
+    eval $( __call_localityLocalName=PythonCompileFile __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    eval $( TestWithDebug=False TestWithReplaceTagSpacer=True TestWithRewriteTagSpacer=True TestWithCharSpacer=Space TestWithDefaultFailTestFunc=CantTest TestWithDefaultFinalTestFunc=__FnctCompileFile ImbriqIf -e -r ${ArrayArg[0]} ) ;
+  } ;
+  eval $( __in_for ArrayPyCompile __FnctCompileFile ) ;
+}
+
+function ZenityPackageManager()
+{
+  eval $( __call_localityLocalName=ZenityPackageManager __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+
+  function GetDpkgGetSelections()
+  {
+    eval $( __call_localityLocalName=GetDpkgGetSelections __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    #local StrBase64Send=$( echo -ne "( \$\( dpkg --get-selections |  \) )"  | base64 --wrap=0 ) ;
+    #EvalFunctorVarReturn=ArrayDpkgGetSelectionZList EvalFunctorBase64=True EvalFunctorVarIsArray=False EvalFunctorVarType=local EvalFunctorDebug=True EvalFunctorOnScreen=True __fnctCmdEval ${StrBase64Send} ;
+    function AwkFilter()
+    {
+      eval $( __call_localityLocalName=AwkFilter __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+      eval $( FParamFuncName=${StrFuncName} FParamSuffixName=AwkScript FParamVarName=StrAwkScript FParamDefaultValue=DpKgQueryPackageGetSelection.awk  __fnctCreateLocalityFuncParam ) ;
+      eval $( FParamFuncName=${StrFuncName} FParamSuffixName=AwkScriptPath FParamVarName=StrAwkScriptPath FParamDefaultValue=/etc/init.d/fnct.d/awk-script/  __fnctCreateLocalityFuncParam ) ;
+
+      eval $( FParamFuncName=${StrFuncName} FParamSuffixName=AwkProg FParamVarName=StrAwkProg FParamDefaultValue=awk  __fnctCreateLocalityFuncParam ) ;
+      eval $( FParamFuncName=${StrFuncName} FParamSuffixName=AwkProgOption FParamVarName=StrAwkProgOption FParamDefaultValue=-f  __fnctCreateLocalityFuncParam ) ;
+      eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ProgramFilterIn FParamVarName=StrProgramToFilter FParamDefaultValue=echo  __fnctCreateLocalityFuncParam ) ;
+      eval $( EvalFunctorDebug=False EvalFunctorOnScreen=True __fnctCmdEval ${StrProgramToFilter} __PIPE__ ${StrAwkProg} ${StrAwkProgOption} ${StrAwkScriptPath}/${StrAwkScript} ) ;
+    }
+    eval $( EvalFunctorDebug=False EvalFunctorOnScreen=True __fnctCmdEval dpkg --get-selections ) ;
+  }
+
+  function ZenityListDpkgRemove()
+  {
+    eval $( __call_localityLocalName=ZenityListDpkgRemove __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    eval $( GetDpkgGetSelections ) ;
+    eval $( EvalFunctorDebug=False EvalFunctorOnScreen=True __fnctCmdEval zenity --width=800 --height=600 --title "DPKG" --text "Get Selection of Package to UnInstall" --list --checklist --column "To Deinstall" --column "Package"  ) ;
+  }
+
+  #local ArrayPackage=( $( GetDpkgGetSelections ) );
+  EvalFunctorDebug=False EvalFunctorOnScreen=True __fnctCmdEval AwkFilterProgramFilterIn=GetDpkgGetSelections AwkFilter ;
+  #eval $( EvalFunctorDebug=False EvalFunctorOnScreen=True __fnctCmdEval ZenityListDpkgRemove ${ArrayDpkgGetSelectionZList[@]} ) ;
+  #${ArrayPackage[@]} ;
+}
+
+
+function GetFuncList()
+{
+    eval $( __call_localityLocalName=GetFuncList __call_locality );
+    function SedFilter()
+    {
+      eval $( __call_localityLocalName=SedFilter __call_locality );
+      #eval "local ProgMount=\${${StrFuncName}ProgName:=/bin/mount}" ;
+      EvalFunctorOnScreen=True __fnctCmdEval FParamFuncName=${StrFuncName} FParamSuffixName=ProgName FParamVarName=ProgMount FParamDefaultValue=/bin/mount __fnctCreateLocalityFuncParam ;
+      #sed --regexp-extended --file=/etc/init.d/fnct.d/sed-script/declare-function-filter.sed
+    }
+    #EvalFunctorOnScreen=True __fnctCmdEval declare -F
+    SedFilter ;
+}
+
+
+
+function GetDumpSyms()
+{
+  eval $( __call_localityLocalName=GetDumpSyms __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+  function __GetDumpSyms()
+  {
+    eval $( __call_localityLocalName=FunctorGetDumpSyms __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    eval $( EvalFunctorOnScreen=True __fnctCmdEval objdump ${ArrayArg[1]} ${ArrayArg[0]} ) | awk 'BEGIN{}{}END{}' ;
+  } ;
+
+  function GetDumpSymsProcessList()
+  {
+    eval $( __call_localityLocalName=GetDumpSymsProcessList __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    eval $( __in_for ArrayObjDumpSymbolsType __GetDumpSyms ${ArrayArg[0]} ) ;
+  } ;
+  eval $( __in_for ArrayArg GetDumpSymsProcessList ) ;
+} ;
+
+
+function CopyFSDeamonLoad()
+{
+    eval $( __call_localityLocalName=CPFS __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    ###
+    ### Generic variable, used in the main-body function or sub-body function can be called
+    ### from prompt
+
+    eval $( FParamFuncName=${StrFuncName} FParamSuffixName=RepositoryPath     FParamVarName=StrRepositoryPath     FParamDefaultValue=/media/COMST500GB/UnderscoreXDevlpt/src/ubuntu/RCS_COPYFS  __fnctCreateLocalityFuncParam ) ;
+    eval $( FParamFuncName=${StrFuncName} FParamSuffixName=RepositoryVarName  FParamVarName=StrRepositoryVarName  FParamDefaultValue=RCS_VERSION_PATH  __fnctCreateLocalityFuncParam ) ;
+
+    ###
+    ### Generic Debug variable
+    ### Used to avoid execution of function CopyFSDeamonLoad, MakePath or CreateDecl function
+    ### and display is't statement.
+    eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DebugCopyFSDeamonLoad FParamVarName=IsCopyFSDeamonLoadDebug FParamDefaultValue=True  __fnctCreateLocalityFuncParam ) ;
+    eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DebugMakePath FParamVarName=IsDebugMakePath FParamDefaultValue=True  __fnctCreateLocalityFuncParam ) ;
+    eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DebugCreateDecl FParamVarName=IsCreateDecl FParamDefaultValue=True  __fnctCreateLocalityFuncParam ) ;
+
+    local ArrayDefValue=( StrRepositoryPath StrRepositoryVarName IsCopyFSDeamonLoadDebug IsDebugMakePath IsCreateDecl ) ;
+    eval $( DDVArrayName=ArrayDefValue __call_default_display_Var ) ;
+
+    function CreateDecl()
+    {
+        eval $( __call_localityLocalName=CreateDecl __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+        local CmdEval=();
+        eval "CmdEval[0]=\"declare\ ${StrRepositoryVarName}=${StrRepositoryPath}\"" ;
+        eval "CmdEval[1]=\"export\ ${StrRepositoryVarName}\"" ;
+        function __postEval()
+        {
+          eval $( __call_localityLocalName=CreateDecl __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+          echo -ne "[\t ${ArrayArg[0]} \t]\n" ;
+
+        }
+        eval $( __in_for CmdEval __postEval ) ;
+        copyfs-daemon /media/copyfs ;
+    }
+    function MakePath()
+    {
+        eval $( __call_localityLocalName=MakePath __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+        eval "mkdir -p ${StrRepositoryPath}" ;
+        CreateDecl ;
+    }
+    #eval $( EvalFunctorOnScreen=${IsCopyFSDeamonLoad} TestWithSpreadArgOnFailedTestFunc=False TestWithDefaultFailTestFunc=MakePath TestWithDefaultFinalTestFunc=CreateDecl ImbriqIf -d ${StrRepositoryPath} ) ;
+    eval $( EvalFunctorOnScreen=${IsCopyFSDeamonLoad} TestWithSpreadArgOnFailedTestFunc=False TestWithDefaultFailTestFunc=MakePath TestWithDefaultFinalTestFunc=CreateDecl ImbriqIf -d ${StrRepositoryPath} ) ;
+}
+
+function MetaAwkFilter()
+{
+ #ArrayCharSpacerName=( Tab Space Tiret Dot LPThesis RPThesis LBrace RBrace LowerThan GreaterThan Star Slash BSlash Pipe DAnd DOr DCirc CtrlR Dollar Guill) ;
+ local DefaultScriptTpl="BEGIN{}{printfLPThesisGuill%sCtrlRGuill,DollarLPThesisDefaultColumnRPThesis}END{}" ;
+
+ eval $( __call_localityLocalName=AwkFilter __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ExternalScriptName  FParamVarName=StrExternalScriptName FParamDefaultValue=None  __fnctCreateLocalityFuncParam ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ExternalScriptVar   FParamVarName=StrExternalScriptVar  FParamDefaultValue=DefaultScriptTpl FParamInterpretVar=True  __fnctCreateLocalityFuncParam ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaultCol          FParamVarName=IntDefaultCol         FParamDefaultValue=1     __fnctCreateLocalityFuncParam ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ImplArrayArg        FParamVarName=StrImplArrayArg       FParamDefaultValue=None  __fnctCreateLocalityFuncParam ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ExternalScriptVar   FParamVarName=StrExternalScriptName FParamDefaultValue=None  __fnctCreateLocalityFuncParam ) ;
+
+ local ArrayDefValue=( StrExternalScriptName StrExternalScriptVar IntDefaultCol StrImplArrayArg StrExternalScriptName ) ;
+ eval $( DDVArrayName=ArrayDefValue __call_default_display_Var ) ;
+
+ local StrVariableAwk="__VAR__" ;
+ function ParseArrayArgValueTransfert()
+ {
+   eval $( __call_localityLocalName=ParseArrayArgValueTransfert __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+   local ArrayValue=( ${ArrayArg[0]/:/ } ) ;
+   local StrVarCreation="-v${ArrayValue[0]}=${ArrayValue[1]} __VAR__" ;
+   StrVariableAwk=${StrVariableAwk[@]/__VAR__/${StrVarCreation}} ;
+ }
+ local ArrayAwkScriptTemplate=( ) ;
+ #local DefaultScriptVar="BEGIN{}{printf(\"%s\\n\",\$(DefaultColumn))}END{}" ;
+ ArrayAwkScriptTemplate[0]="awk -vDefaultColumn=__COLUMN__ __VAR__ -f __SCRIPT_NAME__ '__SCRIPT_VAR__'" ;
+ local StrAwkScript=${StrAwkScript:=ArrayAwkScriptTemplate[0]} ;
+
+ if [ "${StrExternalScriptName}" != "None" ] ; then
+    echo -ne "Apply label StrExternalScriptName\n" > /dev/stderr ;
+    StrAwkScript=${ArrayAwkScriptTemplate[0]/__SCRIPT_NAME__/${StrExternalScriptName}} ;
+ else
+    StrAwkScript=${ArrayAwkScriptTemplate[0]/-f __SCRIPT_NAME__/} ;
+ fi
+
+ if [ "${ExternalScriptVar}" != "None" ] ; then
+    echo -ne "Apply label ExternalScriptVar\n" > /dev/stderr ;
+    echo -ne "Following Script \n\t[ ${StrExternalScriptVar} ]\n\tWill be Added\n" > /dev/stderr
+    eval "StrAwkScript=\${ArrayAwkScriptTemplate[0]//__SCRIPT_VAR__/${StrExternalScriptVar}}" ;
+ else
+    echo -ne "Following Script \n\t[ ${StrExternalScriptName} ]\n\tWill be Added\n" > /dev/stderr
+    StrAwkScript=${ArrayAwkScriptTemplate[0]/__SCRIPT_VAR__/${StrExternalScriptName}} ;
+ fi
+
+ if [ "${StrImplArrayArg}" != "None" ] ; then
+  echo -ne "Apply label StrImplArrayArg\n" > /dev/stderr ;
+  eval "local ArrayVarTransfert=( \${${StrImplArrayArg}[@]} )" ;
+  eval $( __in_for ArrayVarTransfert ParseArrayArgValueTransfert ) ;
+  StrAwkScript=${ArrayAwkScriptTemplate[0]/__VAR__/${StrVariableAwk/__VAR__/}} ;
+ else
+  StrAwkScript=${ArrayAwkScriptTemplate[0]/__VAR__/} ;
+ fi
+
+ echo "CmdLine: ${StrAwkScript}\n" > /dev/stderr ;
+ eval "${StrAwkScript}" ;
+}
+
+function GetDpkgList()
+{
+  eval $( __call_localityLocalName=GetDpkgList __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Packagelister    FParamVarName=StrPackagelister    FParamDefaultValue=PackageList    __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=PackageManager   FParamVarName=StrPackageMan       FParamDefaultValue=dpkg           __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=GrepFilterProg   FParamVarName=StrGrepFilterProg   FParamDefaultValue=egrep          __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=GrepFilter       FParamVarName=StrGrepFilter       FParamDefaultValue=GrepFilter     __fnctCreateLocalityFuncParam );
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=GrepFilterOption FParamVarName=StrGrepFilterOption FParamDefaultValue=-i             __fnctCreateLocalityFuncParam );
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=AwkFilter        FParamVarName=StrAwkFilter        FParamDefaultValue=MetaAwkFilter  __fnctCreateLocalityFuncParam );
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=FIROutput        FParamVarName=StrFIROut           FParamDefaultValue=False          __fnctCreateLocalityFuncParam );
+
+  local IntRecycle=0 ;
+  function GrepFilter()
+  {
+    eval $( __call_localityLocalName=GrepFilter __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    eval "${StrGrepFilterProg} ${StrGrepFilterOption} \"${ArrayArg[${intArrayArg}]}\"" ;
+  }
+
+  function PackageList()
+  {
+    eval $( __call_localityLocalName=PackageList __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    eval $( FParamFuncName=${StrFuncName} FParamSuffixName=WSwitch FParamVarName=StrSwitches FParamDefaultValue=--get-selections  __fnctCreateLocalityFuncParam ) ;
+    eval "${StrPackageMan} ${StrSwitches}" ;
+  }
+
+  function Caller()
+  {
+    eval $( __call_localityLocalName=Caller __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    #eval "${StrPackagelister} | ${StrGrepFilter} ${PushArgN[${intPushArgN}]} | ${StrAwkFilter}" ;
+    echo "eval ${StrPackagelister} | ${StrGrepFilter} ${PushArgN[${intPushArgN}]} | ${StrAwkFilter}" > /dev/stderr ;
+    echo "Filter ${PushArgN[${intPushArgN}]}\n" > /dev/stderr ;
+    eval "${StrPackagelister} | ${StrGrepFilter} ${PushArgN[${intPushArgN}]} | ${StrAwkFilter}" ;
+  }
+
+  local ArrayStrOut=() ;
+  function CallerRecycle()
+  {
+    eval $( __call_localityLocalName=CallerRecycle __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    function SubItemLoop()
+    {
+      eval $( __call_localityLocalName=SubItemLoop __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+      echo "${ArrayStrOut[@]}" | tr ' ' '\n' | ${StrGrepFilter} ${PushArgN[${intPushArgN}]} | ${StrAwkFilter} ;
+    }
+    if [ ${IntRecycle:=0} -eq 0 ] ; then
+        ArrayStrOut=( $( Caller ${PushArgN[0]} ) ) ;
+    else
+        ArrayStrOut=( $( SubItemLoop ) );
+    fi
+    $(( IntRecycle=${IntRecycle}+1 )) ;
+  }
+  local PushArgN=( ${ArrayArg[@]} ) ;
+  if [ "${StrFIROut}" == "False" ] ; then
+    eval $( __in_for PushArgN Caller ) ;
+  else
+    eval $( __in_for PushArgN CallerRecycle ) ;
+    eval $( __in_for ArrayStrOut echo ) ;
+  fi
+ }
+
+
+
+
+function AvfsMount()
+{
+  local PreTemplate="sudo -s %s %s -o%s,fsname=%s,nonempty" ;
+  local TemplateCommandPrint="printf(\"%s\",ParseTemplate);" ;
+  local TemplateCommandExecute="system(ParseTemplate);" ;
+  eval $( __call_localityLocalName=OptionMount  __call_locality );
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaultProg    FParamVarName=StrDefaultProg     FParamDefaultValue=/usr/bin/avfsd   __fnctCreateLocalityFuncParam );
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=FSFileRef      FParamVarName=StrFSFileRef       FParamDefaultValue=/etc/fstab       __fnctCreateLocalityFuncParam );
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=FsType         FParamVarName=StrFsType          FParamDefaultValue=avfsd            __fnctCreateLocalityFuncParam );
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=TemplateInfo   FParamVarName=StrTemplateInfo    FParamDefaultValue=PreTemplate      FParamInterpretVar=True         __fnctCreateLocalityFuncParam );
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=IsDebug   FParamVarName=IsDebug    FParamDefaultValue=False      FParamInterpretVar=False         __fnctCreateLocalityFuncParam );
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaultExecAwk   FParamVarName=StrDefaultExecAwk    FParamDefaultValue=TemplateCommandExecute      FParamInterpretVar=True         __fnctCreateLocalityFuncParam );
+
+  #if [ "${IsDebug}" == "True" ] ; then
+  #  StrDefaultExecAwk=${TemplateCommandPrint} ;
+  #fi
+
+  local FsList=$( cat ${StrFSFileRef} | egrep -i "${StrFsType}" );
+  #echo -ne "FsList : ${FsList}\n" > /dev/stderr ;
+  #echo -ne "Template Execution Part: ${StrDefaultExecAwk}\n" > /dev/stderr  ;
+  echo "${FsList}" | awk -vProg="${StrDefaultProg}" -vTemplateInfo="${StrTemplateInfo}"  'BEGIN{}{template=TemplateInfo;ParseTemplate=sprintf(template,Prog,$2,$4,$1);printf("Current Command Execution: [ %s ]\n",ExecTypeTpl) ; printf("%s",ParseTemplate); }END{}' ;
+
+}
+
+unset PS_Loader ;
+function PS_Loader()
+{
+  eval $( __call_localityLocalName=COMMAND __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+
+  local ArrayArgMaster=( $* ) ;
+
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DisplayFrameProg     FParamVarName=StrDisplayFrameProg    FParamDefaultValue=zenity                __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Width                FParamVarName=IntWidth               FParamDefaultValue=800                   __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=WidthProgress        FParamVarName=IntWidthProgress       FParamDefaultValue=600                   __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Height               FParamVarName=IntHeight              FParamDefaultValue=600                   __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Title                FParamVarName=StrTitle               FParamDefaultValue="LdConfig Dependency" __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Text                 FParamVarName=StrText                FParamDefaultValue="Updated Lib"         __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Col1                 FParamVarName=ArrayCol[0]            FParamDefaultValue="Updated"             __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Col2                 FParamVarName=ArrayCol[1]            FParamDefaultValue="__OFFICIAL__"        __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Col3                 FParamVarName=ArrayCol[2]            FParamDefaultValue="__VERSION__"         __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=WithProgress         FParamVarName=IsProgresShow          FParamDefaultValue=False                 __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaultLibState      FParamVarName=LibStateStr            FParamDefaultValue=FALSE                 __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaultScriptLoader  FParamVarName=StrDefaultScriptLoader FParamDefaultValue=Zenity_OTS_Resume __fnctCreateLocalityFuncParam ) ;
+
+  local LoaderLocalTitle="Loading ${StrDefaultScriptLoader} " ;
+  local StrLibName="Lib's Official Name" ;
+  local StrLibSubVersion="Lib's SubVersion Name" ;
+  local ClassicTitle="Ldconfig update lib dependency" ;
+
+  unset ZenityProgress ZenityLdConfigList ListAwkFilter VerboseLdConfig IDLEPython ;
+
+  function ZenityProgress()
+  {
+    eval $( __call_localityLocalName=ZenityProgress __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Title FParamVarName=StrTitle FParamDefaultValue=ClassicTitle FParamIsInterpretVar=True __fnctCreateLocalityFuncParam ) ;
+    local IntRand=$(( ${RANDOM} % 25 )) ;
+    echo -ne "Title : ${StrTitle}\n" > /dev/stderr ;
+    eval "zenity --progress --pulsate --width=${IntWidthProgress} --text=\"${StrTitle}\" --percentage=$(( 75 + ${IntRand} ))  --auto-close " ;
+  }
+
+  function ZenityLdConfigList()
+  {
+    eval $( __call_localityLocalName=ZenityLdConfigList __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    ${StrDisplayFrameProg} --width=${IntWidth} --height=${IntHeight} --title "${StrTitle}" --text "${StrText}" --list --checklist --column "${ArrayCol[0]}" --column "${ArrayCol[1]/__OFFICIAL__/${StrLibName}}" --column "${ArrayCol[2]/__VERSION__/${StrLibSubVersion}}" ${ArrayLibConfigList[@]} ;
+  }
+
+  function ListAwkFilter()
+  {
+    eval $( __call_localityLocalName=ListAwkFilter __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    awk -vLibState=${LibStateStr} 'BEGIN{}{ Xret="False" ; Ares="" ; for( intx=1 ; intx <= NF ; intx++ ){ if( $(intx) ~ /^lib/ ){ Xret="True" ; Ares=sprintf("%s %s ",Ares,$(intx) ) ; } ; } ; if( Xret == "True" ){ printf("%s %s ",LibState,Ares ) ; } ; }END{}'
+  }
+
+  function VerboseLdConfig()
+  {
+    eval $( __call_localityLocalName=VerboseLdConfig __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    sudo -s ldconfig -vf /etc/ld.so.conf
+  }
+
+  function Loader()
+  {
+    eval $( __call_localityLocalName=VerboseLdConfig __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    eval "${StrDefaultScriptLoader}" ;
+  }
+
+  #ZenityLdConfigList $( VerboseLdConfig | AwkFilter ) | ZenityProgress ;
+  #ZenityLdConfigList $( VerboseLdConfig | AwkFilter )
+  #IDLEPython | ZenityProgressTitle="Loading Python 2.6 with IDLE interface" ZenityProgress ;
+  local ArrayLibConfigList=( $( VerboseLdConfig | ListAwkFilter ) );
+  #echo ${ArrayLibConfigList[@]} | ZenityLdConfigList ;
+  local ArrayProg=( ZenityLdConfigList Loader ) ;
+  local ArrayProgOption=( ZenityProgressTitle=ClassicTitle ZenityProgressTitle=LoaderLocalTitle ) ;
+  function ConfigLoad()
+  {
+    eval $( __call_localityLocalName=VerboseLdConfig __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    if [ "${IsProgresShow}" == "True" ] ; then
+      eval "${ArrayProg[${intArrayProg}]} | ${ArrayProgOption[${intArrayProgOption}]} ${ArrayArg[0]}"
+    else
+      eval "${ArrayProg[${intArrayProg}]} " ;
+    fi
+  }
+  eval $( __in_for ArrayProg ConfigLoad ZenityProgress ) ;
+}
+
+function PS_Command()
+{
+ ### This is the default call, It does not pre-check all Lib...
+ ### This is eventually to check one of them and retreive some information...
+ ### Throught objdump, or some other interface... Like Inspector, Swig parser,
+ ### linker... Anything viewable...
+ ###
+ COMMANDDefaultLibState=FALSE COMMANDLoaderWithProgress=False PS_Loader $*;
+}
+
+function package_initrd_handler()
+{
+  eval $( __call_localityLocalName=Packinitrd __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+  eval $( FParamFuncName=${StrFuncName}       FParamSuffixName=DefaultPathTempName          FParamVarName=StrDefaultPathTempName          FParamDefaultValue=lztempdir      __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName}       FParamSuffixName=DefaultPathTemp              FParamVarName=StrDefaultPathTemp              FParamDefaultValue=/media/COMST500GB/linux-ubuntu-backup-intrepid/ubuntu-cdrom/casper/${StrDefaultPathTempName} __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName}       FParamSuffixName=DefaultFuncPack              FParamVarName=StrDefaultFuncPack              FParamDefaultValue=LzmaPacker     __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName}       FParamSuffixName=DefaultFuncPathCheck         FParamVarName=StrDefaultFuncPathCheck         FParamDefaultValue=path_check     __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName}       FParamSuffixName=DefaultFuncPathAccessorName  FParamVarName=StrDefaultFuncPathAccessorName  FParamDefaultValue=PathAccessor   __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName}       FParamSuffixName=DefaultinitrdName            FParamVarName=StrDefaultinitrdName            FParamDefaultValue=initrd.lz      __fnctCreateLocalityFuncParam ) ;
+
+  function path_check()
+  {
+    eval $( __call_localityLocalName=PathCheck __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    if [ ! -d ${StrDefaultPathTemp} ] ; then
+      mkdir -p ${StrDefaultPathTemp} ;
+      cd ${StrDefaultPathTemp} ;
+    fi
+  }
+
+  function LzmaUnPacker()
+  {
+    eval $( __call_localityLocalName=LzmaUnPacker __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    function PathAccessor()
+    {
+      eval $( __call_localityLocalName=PathAccessor __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+      eval "${StrDefaultFuncPathCheck}" ;
+    }
+    eval "${StrDefaultFuncPathAccessorName}" ;
+    lzma -dc -S ${StrDefaultinitrdName} ../${StrDefaultinitrdName} | cpio -imvd --no-absolute-filenames
+  }
+
+  function LzmaPacker()
+  {
+    eval $( __call_localityLocalName=LzmaPacker __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    function PathAccessor()
+    {
+      eval $( __call_localityLocalName=PathAccessor __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+      eval "${StrDefaultFuncPathCheck}" ;
+    }
+    eval "${StrDefaultFuncPathAccessorName}" ;
+    find . | cpio --quiet --dereference -o -H newc | lzma -7 > ${StrDefaultinitrdName} ;
+  }
+
+  eval "${StrDefaultFuncPack}" ;
+}
+
+
+### recompile_pythonapps()    { eval $( __call_localityLocalName=RecompilePlan __call_locality  ) ; local RecompileFile="compile.${ArrayArg[0]}" ; if [ -e ${RecompileFile} ] ; then rm -f ${RecompileFile} ; fi ;  while [ 1 ] ; do if [ -e ${RecompileFile} ] ; then if [ -e ${ArrayArg[0]}.pyc ] ; then echo -ne "****\n\tRecompiling Apps: ${ArrayArg[0]}\n****\n" > /dev/stderr ;  rm -f ${ArrayArg[0]}.pyc ; sudo -u ubuntu py_compilefiles ${ArrayArg[0]}.py ; chmod 776 ${ArrayArg[0]}.pyc ; sudo -u ubuntu chown ubuntu.ubuntu ${ArrayArg[0]}.pyc ; rm -f ${RecompileFile} ; fi ; fi ; sleep 5 ; done ; } ; recompile_pythonapps idlePythonConsole &
+
+
+
+function GetCurrentFuncList()
+{
+  echo -ne "declare -F | awk 'BEGIN{}{printf(\"%s \",\$3)}END{}'"
+}
+
+function GetDevWinePackage()
+{
+  eval $( __call_locality ) ;
+  dpkg --get-selections | egrep -i "wine" | egrep -i "dev" | awk 'BEGIN{}{printf("%s ",$1)}END{}' ;
+}
+
+function GetDevWineInlcude()
+{
+  eval $( __call_locality ) ;
+  dpkg --listfiles $( GetDevWinePackage ) | egrep -i "\.h" | awk 'BEGIN{}{printf("%s ",$1)}END{}' ;
+}
+
+function CondEvalParamPretest()
+{
+  eval $( __call_locality __call_localityLocalName=CondEvalParamPretest __call_localityDisplayFunctionEntry=1 ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=PathArrayExecRestriction   FParamVarName=StrExecRestriction        FParamDefaultValue=ArrayEnableAction __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=CommandEvalArrayName  FParamVarName=StrCmdEvalName        FParamDefaultValue=CmdEval __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=MemberTrue            FParamVarName=StrMemberTrue         FParamDefaultValue=True __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DeviceOutCmd          FParamVarName=StrDeviceOutCmd[0]    FParamDefaultValue=/dev/stderr __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DeviceOutCmd1         FParamVarName=StrDeviceOutCmd[1]    FParamDefaultValue=echo __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DeviceRedirAction     FParamVarName=StrDeviceRedirAction  FParamDefaultValue=GreaterThan __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DeviceHandlerIsOS     FParamVarName=IsDeviceHandlerOS     ParamDefaultValue=True __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Action0               FParamVarName=ArrayAction[0]        FParamDefaultValue=DeviceOutRedirection __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Action1               FParamVarName=ArrayAction[1]        FParamDefaultValue=EvaluationInit __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Action2               FParamVarName=ArrayAction[2]        FParamDefaultValue=ParseLoader __fnctCreateLocalityFuncParam ) ;
+
+  ### Tweak Within redirection way...
+  ### By default, all redirection are set to /dev/stderr. Producing an '> /dev/stderr' at the end of designed
+  ### StreamOut sequence of code. Exception is when netcat, or NC or any other program can be involved...
+  ### Most of the time, program like netcat, nc can support Pipe instruction from stdin... like echo "__Stream__" | nc ...
+  ### To activate this you need to specify ${StrFuncName}DeviceHandlerIsOS=False, ${StrFuncName}DeviceRedirAction=Pipe
+  ### like Array in ArrayCharSpacerName, from fnct_var_decl, and defining something else than echo in
+  ### ${StrFuncName}DeviceOutCmd1. like ${StrFuncName}DeviceOutCmd1=__fnct_nc ( it's better to assign a script, because )
+  ### passing space here is not likely to love chained-mechanism...
+  ### so It produce : echo "__Stream__" | __fnct_nc and can send you out information on paired-network.
+
+  local IntDeviceOut=0 ;
+  local CharCtrl="" ;
+  local StrHardwareRedir="" ;
+  local StrActionTest="" ;
+  local StrEvalAction="" ;
+  local StrEvalFailAction="" ;
+  local StrDevOut="" ;
+  local Template="" ;
+  local ArrayRegVar=( StrActionTest StrMemberTrue StrEvalAction StrEvalFailAction StrDevOut ) ;
+  local ArrayNoQuoteParse=( StrDevOut );
+  local MasterTemplate=( "if" "[" "__StrActionTest__" "==" "__StrMemberTrue__" "] ;" "then" "eval" "__StrEvalAction__" ";" "else" "echo" "-ne" "__StrEvalFailAction__" "__StrDevOut__" ";" "fi"  ) ;
+  function Parse()
+  {
+    eval $( __call_locality __call_localityLocalName=ParseAction __call_localityDisplayFunctionEntry=1 ) ;
+    local IsQuotable=$( echo "${ArrayNoQuoteParse[@]}" | egrep -c --no-filename "${ArrayArg[0]}" ) ;
+    if [ ${IsQuotable:=0} -gt 0 ] ; then
+      eval "local ValueEval=\${${ArrayArg[0]}}" ;
+    else
+      eval "local ValueEval=\"\${${ArrayArg[0]}}\"" ;
+    fi
+    echo -ne "Testing Value ${ArrayArg[0]}, Value: ${ValueEval}\n" ${StrHardwareRedir} ;
+    Template=( ${Template[@]//__${ArrayArg[0]}__/${ValueEval}} ) ;
+  }
+
+  function DeviceOutRedirection()
+  {
+    eval $( __call_locality __call_localityLocalName=DeviceOutRedirection __call_localityDisplayFunctionEntry=1 ) ;
+    if [ ${IsDeviceHandlerOS} == "True" ] ; then
+      IntDeviceOut=0 ;
+    else
+      IntDeviceOut=1 ;
+    fi
+    CharCtrl=$( GetSpacerChar=${StrDeviceRedirAction} GetSpacer 1 ) ;
+    StrHardwareRedir="${CharCtrl} ${StrDeviceOutCmd[${IntDeviceOut}]}" ;
+  }
+
+  function EvaluationInit()
+  {
+    eval $( __call_locality __call_localityLocalName=EvaluationInit __call_localityDisplayFunctionEntry=1 ) ;
+    eval "StrActionTest=\"\${${StrExecRestriction}[\${int${StrExecRestriction}}]}\"" ;
+    eval "StrEvalAction=\${${StrCmdEvalName}[@]}" ;
+    StrEvalFailAction="Following Action where disabled:\n\t CmdLine:[ \${StrEvalAction} ]" ;
+    StrDevOut="> ${StrDeviceOutCmd}" ;
+    Template=( ${MasterTemplate[@]} ) ;
+  }
+
+  function ParseLoader()
+  {
+    eval $( __call_locality __call_localityLocalName=ParseLoader __call_localityDisplayFunctionEntry=1 ) ;
+    eval $( __in_for ArrayRegVar Parse ) ;
+    echo -ne "Template: [ ${Template[@]} ]\n" > /dev/stderr ;
+    echo -ne "${Template[@]}" ;
+  }
+
+  function __exec()
+  {
+    eval $( __call_locality __call_localityLocalName=ExecStatement __call_localityDisplayFunctionEntry=1 ) ;
+    ${ArrayArg[0]} ;
+  }
+
+  function MainAction()
+  {
+    eval $( __call_locality __call_localityLocalName=MainAction __call_localityDisplayFunctionEntry=1 ) ;
+    eval $( __in_for ArrayAction __exec ) ;
+  }
+
+  echo -ne "Registry: ArrayAction:[ ${ArrayAction[@]} ]\n" > /dev/stderr ;
+  echo -ne "Registry: ArrayEnableAction:[ ${ArrayEnableAction[@]} ]\n" > /dev/stderr ;
+  echo -ne "Registry: ArrayCompressorOption:[ ${ArrayCompressorOption[@]} ]\n" > /dev/stderr ;
+
+  MainAction ;
+}
+
+function UpdateSquashFS()
+{
+  eval $( __call_locality __call_localityLocalName=SquashUpdate __call_localityDisplayFunctionEntry=1 ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaultPath                FParamVarName=StrDefaultPath              FParamDefaultValue=/media/COMST500GB/linux-ubuntu-backup-intrepid/ubuntu-cdrom/casper __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaultPathCompression     FParamVarName=StrDefaultPathCompression   FParamDefaultValue=/ __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaultFSName              FParamVarName=StrDefaultFSName            FParamDefaultValue=filesystem.squashfs __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaultExclusionFileName   FParamVarName=StrDefaultExclusionFileName FParamDefaultValue=/home/ubuntu/path-except.lst __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaultPriority            FParamVarName=IntDefaultPriority          FParamDefaultValue=-5 __fnctCreateLocalityFuncParam ) ;
+
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Compressor                 FParamVarName=StrCompressor               FParamDefaultValue=mksquashfs __fnctCreateLocalityFuncParam ) ;
+  #eval $( FParamFuncName=${StrFuncName} FParamSuffixName=CompressorOption0          FParamVarName=ArrayCompressorOption[0]    FParamDefaultValue=LXByb2Nlc3NvciAyCg== FParamBase64=True __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=CompressorOption2          FParamVarName=ArrayCompressorOption[1]    FParamDefaultValue=-keep-as-directory __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DeleteOnInit               FParamVarName=StrDeleteOnInit             FParamDefaultValue=True __fnctCreateLocalityFuncParam ) ;
+
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Action0                    FParamVarName=ArrayAction[0]              FParamDefaultValue=StreamCheck __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Action1                    FParamVarName=ArrayAction[1]              FParamDefaultValue=Deleter __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Action2                    FParamVarName=ArrayAction[2]              FParamDefaultValue=MainAction __fnctCreateLocalityFuncParam ) ;
+
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=EnableAction0              FParamVarName=ArrayEnableAction[0]        FParamDefaultValue=False __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=EnableAction1              FParamVarName=ArrayEnableAction[1]        FParamDefaultValue=False __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=EnableAction2              FParamVarName=ArrayEnableAction[2]        FParamDefaultValue=False __fnctCreateLocalityFuncParam ) ;
+
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ProcessLevelApps           FParamVarName=StrProcessLevelApps         FParamDefaultValue=nice __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ProcessLevelAppsOption0    FParamVarName=AProcessLevelAppsOption[0]  FParamDefaultValue=-n __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ProcessLevelAppsOption1    FParamVarName=AProcessLevelAppsOption[1]  FParamDefaultValue=${IntDefaultPriority} __fnctCreateLocalityFuncParam ) ;
+
+  local StrFsObject="${StrDefaultPath}/${StrDefaultFSName}" ;
+  local IntDeleteStatement=0 ;
+
+  function Deleter()
+  {
+    eval $( __call_locality __call_localityLocalName=DeleterAction __call_localityDisplayFunctionEntry=1 ) ;
+    local CmdEval=( "if [ \${IntDeleteStatement} -eq 1 ] ; then rm -f \${StrFsObject} ; fi " ) ;
+    #if [ "${ArrayEnableAction[${intArrayEnableAction}]}" == "True" ] ; then
+     #eval $( CondEvalParamPretest ArrayEnableAction ) ;
+    #fi
+    eval "${CmdEval[@]}" ;
+  }
+
+  function MainAction()
+  {
+    eval $( __call_locality __call_localityLocalName=StreamCheck __call_localityDisplayFunctionEntry=1 ) ;
+    local CmdEval=( \${StrProcessLevelApps} \${AProcessLevelAppsOption[@]} \${StrCompressor} \${StrDefaultPathCompression} \${StrFsObject} \${ArrayCompressorOption[@]} -ef \${StrDefaultExclusionFileName} ) ;
+    #if [ "${ArrayEnableAction[${intArrayEnableAction}]}" == "True" ] ; then
+     #eval $( CondEvalParamPretest ArrayEnableAction ) ;
+    #fi
+    eval "${CmdEval[@]}" ;
+  }
+
+  function StreamCheck()
+  {
+    eval $( __call_locality __call_localityLocalName=StreamCheckAction __call_localityDisplayFunctionEntry=1 ) ;
+    local CmdEval=( "if [ \"\${DeleteOnInit}\" == \"True\" ] ; then IntDeleteStatement=1 ; fi" );
+    #if [ "\${ArrayEnableAction[\${intArrayEnableAction}]}" == "True" ] ; then
+      #eval $( CondEvalParamPretest ArrayEnableAction ) ;
+    #fi
+    eval "${CmdEval[@]}" ;
+  }
+
+  function __exec()
+  {
+    eval $( __call_locality __call_localityLocalName=ExecStatement __call_localityDisplayFunctionEntry=1 ) ;
+    ${ArrayArg[0]} ;
+  }
+
+  echo -ne "Registry: ArrayAction:[ ${ArrayAction[@]} ]\n" > /dev/stderr ;
+  echo -ne "Registry: ArrayEnableAction:[ ${ArrayEnableAction[@]} ]\n" > /dev/stderr ;
+  echo -ne "Registry: ArrayCompressorOption:[ ${ArrayCompressorOption[@]} ]\n" > /dev/stderr ;
+
+  eval $( __in_for ArrayAction __exec ) ;
+}
+
+
+function UpdateIdlePackage()
+{
+  eval $( __call_locality __call_localityLocalName=UpdateIdlepackage __call_localityDisplayFunctionEntry=1 ) ;
+
+  eval $( FParamFuncName=${StrFuncName} \
+			  FParamSuffixName=VersionName 		\
+				FParamVarName=StrVersionName 		\
+				FParamDefaultValue=2.6.4alpha3 	\
+			  __fnctCreateLocalityFuncParam   ) ;
+
+  eval $( FParamFuncName=${StrFuncName}                 \
+			  FParamSuffixName=DefaultPathDestination 				\
+				FParamVarName=StrDefaultPathDestination 				\
+				FParamDefaultValue=/media/COMST500GB/UnderscoreXDevlpt/src/ubuntu/build 	\
+			  __fnctCreateLocalityFuncParam ) ;
+
+  eval $( FParamFuncName=${StrFuncName}                 \
+			  FParamSuffixName=DefaultPathSource 				      \
+				FParamVarName=StrDefaultPathSource 				      \
+				FParamDefaultValue=/usr/lib/python2.6/idlelib 	\
+			  __fnctCreateLocalityFuncParam                   ) ;
+
+  eval $( FParamFuncName=${StrFuncName}   \
+			  FParamSuffixName=MimeType 				\
+				FParamVarName=StrMimeType 				\
+				FParamDefaultValue=tar.bz2 	      \
+			  __fnctCreateLocalityFuncParam     ) ;
+
+  eval $( FParamFuncName=${StrFuncName} \
+			  FParamSuffixName=ProgramName 		\
+				FParamVarName=StrProgramName 		\
+				FParamDefaultValue=tar 	        \
+			  __fnctCreateLocalityFuncParam   ) ;
+
+  eval $( FParamFuncName=${StrFuncName} \
+			  FParamSuffixName=ProgramOption 	\
+				FParamVarName=StrProgramOption 	\
+				FParamDefaultValue=cvjf 	      \
+			  __fnctCreateLocalityFuncParam   ) ;
+
+  eval $( FParamFuncName=${StrFuncName} \
+			  FParamSuffixName=PrefixFileName \
+				FParamVarName=StrPrefixFileName \
+				FParamDefaultValue=idle 	      \
+			  __fnctCreateLocalityFuncParam   ) ;
+
+  eval $( FParamFuncName=${StrFuncName}       \
+			  FParamSuffixName=BackupFileNameDebug  \
+				FParamVarName=IsBackupFileNameDebug   \
+				FParamDefaultValue=True 	            \
+			  __fnctCreateLocalityFuncParam         ) ;
+
+  eval $( FParamFuncName=${StrFuncName}     \
+			  FParamSuffixName=CheckFileNameDebug \
+				FParamVarName=IsCheckFileNameDebug  \
+				FParamDefaultValue=True 	          \
+			  __fnctCreateLocalityFuncParam       ) ;
+
+  local StrFileName="${StrDefaultPathDestination}/${StrPrefixFileName}${StrVersionName}.${StrMimeType}" ;
+  local OnCondIsPackageBackuped=0 ;
+  local ArrayProcList=( InitMain Finalize ) ;
+
+  function __GetEvalState()
+  {
+    ### Work with GetEvalStateDebug=${StrFuncname} in Brace exec-eval type;
+    eval $( __call_locality __call_localityLocalName=EState __call_localityDisplayFunctionEntry=1 ) ;
+
+    eval $( FParamFuncName=${StrFuncName}     \
+			  FParamSuffixName=IsDebug \
+				FParamVarName=StrFuncDebugName  \
+				FParamDefaultValue=ThisFuncName 	          \
+			  __fnctCreateLocalityFuncParam       ) ;
+
+    local StrGraphLine=$( GetSpacerChar=Star GetSpacer 8 ) ;
+    local StrDebugLine="\n\t\t${StrGraphLine}DEBUG MODE${StrGraphLine}\n\tCmdLine: \${CmdEval[@]}\n" ;
+    local StrPreEvalState="local EvalStateDebug=\${Is${StrFuncDebugName}Debug}" ;
+    echo -ne "eval \"${StrPreEvalState}\" ; if [ \${EvalStateDebug} == \"True\" ] ; then echo -ne ${StrDebugLine} ; else eval ${CmdEval[@]} ; fi " ;
+  }
+
+  function __fnct_eval()
+  {
+    eval $( __call_locality __call_localityLocalName=Eval __call_localityDisplayFunctionEntry=1 ) ;
+    eval "${ArrayArg[0]}" ;
+  }
+
+  function CheckFileName()
+  {
+    eval $( __call_locality __call_localityLocalName=CheckFileName __call_localityDisplayFunctionEntry=1 ) ;
+    local CmdEval=( rm -f ${StrFileName} ) ;
+    #eval $( StrFuncName=${StrFuncName} __GetEvalState ) ;
+    GetEvalStateDebug=${StrFuncname} __GetEvalState ;
+    OnCondIsPackageBackuped=0 ;
+  }
+
+  function BackupFileName()
+  {
+    eval $( __call_locality __call_localityLocalName=BackupFileName __call_localityDisplayFunctionEntry=1 ) ;
+    local CmdEval=( ${StrProgramName} ${StrProgramOption} ${StrFileName} ${StrDefaultPathSource} ) ;
+    #eval $( StrFuncName=${StrFuncName} __GetEvalState ) ;
+    GetEvalStateDebug=${StrFuncname} __GetEvalState ;
+    OnCondIsPackageBackuped=1 ;
+  }
+
+  function InitMain()
+  {
+    eval $( __call_locality __call_localityLocalName=InitMain __call_localityDisplayFunctionEntry=1 ) ;
+    eval $( TestWithSpreadArgOnFailedTestFunc=False TestWithDefaultFailTestFunc=BackupFileName TestWithDefaultFinalTestFunc=CheckFileName ImbriqIf -e ${StrFileName} ) ;
+  }
+
+  function Finalize()
+  {
+    eval $( __call_locality __call_localityLocalName=Finalize __call_localityDisplayFunctionEntry=1 ) ;
+    eval $( EvalKeyFuncStartOnCond eq 0 IsPackageBackuped BackupFileName  )
+  }
+
+  eval $( __in_for ArrayProcList __fnct_eval ) ;
+
+}
+
+
+function find_include()
+{
+  eval $( __call_localityLocalName=SrcInclude __call_locality ) ;
+  eval $( FParamFuncName=${StrFuncName} \
+			  FParamSuffixName=IncludePath 		\
+				FParamVarName=StrIncludePath 		\
+				FParamDefaultValue=/usr/include	\
+			  __fnctCreateLocalityFuncParam   ) ;
+  eval $( FParamFuncName=${StrFuncName} \
+			  FParamSuffixName=ArrayExportName 		\
+				FParamVarName=StrArrayExportName 		\
+				FParamDefaultValue=ArraySearchExport	\
+			  __fnctCreateLocalityFuncParam   ) ;
+  eval $( FParamFuncName=${StrFuncName} \
+			  FParamSuffixName=ExportType 		\
+				FParamVarName=isExport 		\
+				FParamDefaultValue=False	\
+			  __fnctCreateLocalityFuncParam   ) ;
+
+  local StrGraphLine=$( GetSpacerChar=Star GetSpacer 8 ) ;
+  local StrEndGraphLine=$( GetSpacerChar=Tiret GetSpacer 8 ) ;
+  local FindResult=( $( find ${StrIncludePath} -type f -iname "*${ArrayArg[0]}*"  -printf "\"%p\" " ) ) ;
+  local IntResult=${#FindResult[@]} ;
+  local ArrayMsg[0]="Search in Path";
+  local ArrayMsg[1]="Search in Debian Package" ;
+
+  if [ ${IntResult:=0} -gt 0 ] ; then
+    echo -ne "\n\t${StrGraphLine}\n\t${ArrayMsg[0]}\n\t${StrGraphLine}\n\t${FindResult[@]}\n\t${StrEndGraphLine}\n" > /dev/stderr ;
+  else
+    FindResult=( $( apt-file search ${ArrayArg[0]} ) ) ;
+    echo -ne "\n\t${StrGraphLine}\n\t${ArrayMsg[1]}\n\t${StrGraphLine}\n\t${FindResult[@]}\n\t${StrEndGraphLine}\n" > /dev/stderr  ;
+  fi
+
+  if [ "${isExport}" == "True" ] ; then
+    echo "${StrArrayExportName}=( ${FindResult[@]} ) ;" ;
+  fi
+}
+
+function SearchPackageInfo()
+{
+  eval $( __call_localityLocalName=SPI __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+
+  eval $( FParamFuncName=${StrFuncName}           \
+			  FParamSuffixName=ArrayName 		            \
+				FParamVarName=StrArrayName 		            \
+				FParamDefaultValue=ArraySearch  	        \
+			  __fnctCreateLocalityFuncParam             ) ;
+
+  eval $( FParamFuncName=${StrFuncName}           \
+			  FParamSuffixName=DefaultIngoreSearchKey 	\
+				FParamVarName=StrDefaultIngoreSearchKey 	\
+				FParamDefaultValue=None  	                \
+			  __fnctCreateLocalityFuncParam             ) ;
+
+  eval $( FParamFuncName=${StrFuncName}           \
+			  FParamSuffixName=SearchFilter0 		        \
+				FParamVarName=ASearchFilter[0] 		        \
+				FParamDefaultValue=boost	                \
+			  __fnctCreateLocalityFuncParam             ) ;
+
+  eval $( FParamFuncName=${StrFuncName}           \
+			  FParamSuffixName=SearchFilter1 	 	        \
+				FParamVarName=ASearchFilter[1] 		        \
+				FParamDefaultValue=python	                \
+			  __fnctCreateLocalityFuncParam             ) ;
+
+  eval $( FParamFuncName=${StrFuncName}           \
+			  FParamSuffixName=SearchFilter2 	 	        \
+				FParamVarName=ASearchFilter[2] 		        \
+				FParamDefaultValue=None	                  \
+			  __fnctCreateLocalityFuncParam             ) ;
+
+  eval $( FParamFuncName=${StrFuncName}           \
+			  FParamSuffixName=SearchFilter3 	 	        \
+				FParamVarName=ASearchFilter[3] 		        \
+				FParamDefaultValue=None	                  \
+			  __fnctCreateLocalityFuncParam             ) ;
+
+  eval $( FParamFuncName=${StrFuncName}           \
+			  FParamSuffixName=SearchFilter4 	 	        \
+				FParamVarName=ASearchFilter[4] 		        \
+				FParamDefaultValue=None	                  \
+			  __fnctCreateLocalityFuncParam             ) ;
+
+  local ArrayAction=( Action1 Action2 );
+  local ArrayResultFilter=()
+  echo -ne "Content of ASearchFilter: [ ${ASearchFilter[@]} ], ${#ASearchFilter[@]} elements.\n" > /dev/stderr ;
+
+  function SearchFilter()
+  {
+    eval $( __call_localityLocalName=SearchFilter __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    local StrRecurrentAction="" ;
+    if [ ${intASearchFilter} -gt 1 ] ; then
+      StrRecurrentAction="Action2" ;
+    else
+      StrRecurrentAction="${ArrayAction[${intASearchFilter}]}" ;
+    fi
+    local LocalFilter="${ASearchFilter[${intASearchFilter}]}" ;
+    if [ "${LocalFilter}" == "${StrDefaultIngoreSearchKey}" ] ; then
+      echo -ne "Filter Ignored, value: ${LocalFilter}\n" > /dev/stderr ;
+    else
+      ArrayResultFilter=( $( eval "${StrRecurrentAction}" | tr '[:space:]' '\n' | egrep -i "${LocalFilter}" ) );
+      echo -ne "Filter ${intASearchFilter}:[ ${LocalFilter} ]\nresult:\n\t [ ${ArrayResultFilter[@]} ]\n" > /dev/stderr ;
+    fi
+  }
+
+  function Action1()
+  {
+    eval $( __call_localityLocalName=Action1 __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    dpkg-get-selections | awk 'BEGIN{}{printf("%s\n",$1)}{}' ;
+  }
+
+  function Action2()
+  {
+    eval $( __call_localityLocalName=Action2 __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    echo "${ArrayResultFilter[@]}" ;
+  }
+
+  eval $( __in_for ASearchFilter SearchFilter ) ;
+  eval "local ${StrArrayName}=( \${ArrayResultFilter[@]} )" ;
+
+  function get_list()
+  {
+    eval $( __call_localityLocalName=GetList __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    local StrGtaph=$( GetSpacerChar=Star GetSpacer 40 ) ;
+    local CmdEval=( dpkg --listfiles ${ArrayArg[0]} ) ;
+    echo -ne "\n${StrGtaph}\n\tPackage ${ArrayArg[0]}\n${StrGtaph}\n" > /dev/stderr ;
+    eval "${CmdEval[@]}" ;
+  } ;
+
+  eval "$( __in_for ${StrArrayName} get_list )" ;
+
+}
+
+
+function ZenityEtcConfEditor
+{
+  eval $( __call_localityLocalName=ZECE __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+  local StrDefaultPathBackupFile=/home/ubuntu/.ZenityEtcConfEditor/save ;
+  local StrDefaultPathBackupPath=/home/ubuntu/.ZenityEtcConfEditor ;
+  eval $( FParamFuncName=${StrFuncName}                 \
+			  FParamSuffixName=FileEditor 		                \
+				FParamVarName=StrFileEditor 		                \
+				FParamDefaultValue=ZenityEditFile  	            \
+			  __fnctCreateLocalityFuncParam     ) ;
+  eval $( FParamFuncName=${StrFuncName}                 \
+			  FParamSuffixName=BackupPath 		                \
+				FParamVarName=StrBackupPath 		                \
+				FParamDefaultValue=${StrDefaultPathBackupPath}  \
+			  __fnctCreateLocalityFuncParam     ) ;
+  eval $( FParamFuncName=${StrFuncName}                 \
+			  FParamSuffixName=BackupPathFileRef 	            \
+				FParamVarName=StrBackupPathFileRef 	            \
+				FParamDefaultValue=${StrDefaultPathBackupFile}  \
+			  __fnctCreateLocalityFuncParam     ) ;
+  eval $( FParamFuncName=${StrFuncName}                 \
+			  FParamSuffixName=FilePath 	                    \
+				FParamVarName=StrFilePath 	                    \
+				FParamDefaultValue=/etc                         \
+			  __fnctCreateLocalityFuncParam     ) ;
+  eval $( FParamFuncName=${StrFuncName}                 \
+			  FParamSuffixName=FileMimeTypeFind 	            \
+				FParamVarName=StrFileMimeTypeFind 	            \
+				FParamDefaultValue=conf                         \
+			  __fnctCreateLocalityFuncParam     ) ;
+
+  function FileList()
+  {
+    eval $( __call_localityLocalName=FileList __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    echo find ${StrFilePath} -maxdepth 1 -type f -iname \""*${StrFileMimeTypeFind}"\" -printf "\"FALSE %p "\" ;
+  }
+  function ZenityEditFile()
+  {
+    eval $( __call_localityLocalName=ZenityEditFfile __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    local CmdEval=( zenity --title "Edit File ${ArrayArg[0]}" --text "Edit Config File, ${ArrayArg[0]}" --width 600 --editable --height 400 --text-info --filename ${ArrayArg[0]} ) ;
+    eval "${CmdEval[@]}" ;
+  }
+  function ZenityList()
+  {
+    eval $( __call_localityLocalName=ZenityList __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    zenity --title "Config Editor" --text "Choose filename to edit" --width 400 --height 400 --editable --list --checklist --column "edit" --column "file" --separator " " ${ArrayArg[@]}  ;
+    #eval "${CmdEval[@]}" ;
+  }
+  function InitVerifStreamFS()
+  {
+    eval $( __call_localityLocalName=InitVerifStreamFS __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    if [ ! -d ${StrBackupPath} ] ; then
+      mkdir -p ${StrBackupPath} ;
+    fi
+    if [ -e ${StrBackupPath}/${StrBackupPathFileRef} ] ; then
+      echo "" | bzip2 -9zc >> ${StrBackupPath}/${StrBackupPathFileRef} ;
+    fi
+  }
+  function BackupEdition()
+  {
+    eval $( __call_localityLocalName=BackupEdition __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    local UUID=$( uuidgen -r ) ;
+    local DateEdition=$( date +"${ArrayDateFormat[0]}" ) ;
+
+    local StreamEdit="DATE[${DateEdition}]:UUID[${UUID}]:FILE[${ArrayArg[0]}]:MIME[bz2]" ;
+    echo -ne "Insertion inside current journal:[ ${StrBackupPath} ; ${StrBackupPathFileRef} ] ${StreamEdit}\n" > /dev/stderr ;
+
+    echo "${StreamEdit}" | bzip2 -9zc >> ${StrBackupPath}/${StrBackupPathFileRef} ;
+    cat ${ArrayArg[0]} | bzip2 -9zc > ${StrBackupPath}/${UUID}.bz2
+    local CmdEval=( ${StrFileEditor} ${ArrayArg[0]} )  ;
+    eval "${CmdEval[@]}" > ${ArrayArg[0]} ;
+  }
+  InitVerifStreamFS ;
+  FileList ;
+  local StrFileList=$( eval $( FileList ) );
+  echo -ne "File List:\n\t[ ${StrFileList} ]\n" ;
+  local ArrayFileList=( $( ZenityList ${StrFileList}  ) );
+  local IntLength=${#ArrayFileList[@]} ;
+  if [ ${IntLength} -gt 0 ] ; then
+    eval $( __in_for ArrayFileList BackupEdition ) ;
+  fi
+}
+
+

@@ -1,0 +1,777 @@
+EasyInstallKit()
+{
+  ### Function : EasyInstallKit
+  ### Pretty dumb implementation of ez_setup bootstrap installer inside
+  ### uncompleted and uninstalled python-distro.
+  ###
+  ### This function was initially designed to process all setup.py switches to report faulty one, and
+  ### I merely had time to implement the Stub to implement the bootstrap being inserted inside every
+  ### text/Python file... Don't use it with implemented file of ready-to use python module, or it will
+  ### slow your distribution... But there is hack to do around not-having clause in python and install
+  ## on run... just see 0install...
+  ###
+  #### Extra work , As homework...
+  ###
+  ### Implementing the EvalKeyFuncStartOnCond and all function in every specified default value to reflect
+  ### a standard use of $StrFuncName(Value), and it's function value ( can be a simple echo like pushing information)
+  ### You will had extra test available in ArrayMeta Course and Analysing thru declare -f a function and it's
+  ### Array Key... Know as au Doc/Generation, Semantic implemented function with Meta-Array key may
+  ### accelerate development.
+
+  eval $( __call_localityDisplayFunctionEntry=1 __call_localityLocalName=EasyInstallKit __call_locality ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=InstallProcess FParamVarName=OnCondInstallProcess FParamDefaultValue=0    __fnctCreateLocalityFuncParam );
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=BootStrapImplement FParamVarName=OnCondBootStrapImplement FParamDefaultValue=0    __fnctCreateLocalityFuncParam );
+  
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=GrantErase__fnct_remove FParamVarName=AllowDel__fnct_remove      FParamDefaultValue=True    __fnctCreateLocalityFuncParam );
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=GrantErase__fnct_proc_remove FParamVarName=AllowDel__fnct_proc_remove FParamDefaultValue=True    __fnctCreateLocalityFuncParam );
+
+  eval $( __DeclUUIDRandomPolicyEnv  ) ;
+  eval local QueryUUID=$( ${ArrayUUIDRandomPolicy[0]} ) ;
+
+  local ArrayEasyInstallOption=( build build_py build_ext build_clib build_scripts install install_lib install_headers install_scripts install_data bdist ) ;
+  local ArrayEzSetup=( "from ez_setup import use_setuptools" "use_setuptools()" ) ;
+  local HeaderForceImplment=0 ;
+  local IntHeaderForceImplement=10 ;
+  eval "local ${StrFuncName[0]}TempFileRemove=0" ;
+  local ArraySparse=( ${StrFuncName}.tempfile ) ;
+
+  function CmdEval_OnEraseGranted()
+  {
+    eval $( __call_localityLocalName=OnEraseGranted __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    local ParentStrFuncName="${ArrayArg[0]}" ;
+    echo -ne """local EraseIsGranted=\${AllowDel${ParentStrFuncName}} ; EraseIsGranted=${EraseIsGranted:=False} ; if [ \"\${EraseIsGranted}\" == \"True\" ] ; then eval \"\${CmdEval[@]}\" ; fi """ ;
+  }
+  
+  function EasyKit()
+  {
+   eval $( __call_localityDisplayFunctionEntry=1 __call_localityLocalName=EasyKit __call_locality ) ;
+   local CmdEval=( python${PythonDefaultVer:=2.6} ${DefaultInstaller:=setup.py} ${ArrayArg[0]} ) ;
+   echo -ne "Function ${StrFuncName[0]}\n\tCmdLine:[${CmdEval[@]}]\n" ;
+   eval "${CmdEval[@]}" ;
+  } ;
+
+  function ImplementEzSetup()
+  {
+    eval $( __call_localityDisplayFunctionEntry=1 __call_localityLocalName=ImplementEzSetup __call_locality ) ;
+    eval $( __DeclUUIDRandomPolicyEnv  ) ;
+    eval local QueryUUID=$( ${ArrayUUIDRandomPolicy[0]} ) ;
+    echo "${QueryUUID} " >>  ${ArraySparse[0]} ;
+
+    local IntStrFuncNameRegularExpressionCloseMatch=${#IntStrFuncNameRegularExpressionCloseMatch} ;
+    IntStrFuncNameRegularExpressionCloseMatch=${IntStrFuncNameRegularExpressionCloseMatch:=0} ;
+
+    if [ ${IntStrFuncNameRegularExpressionCloseMatch:=0} -gt 0 ] ; then
+     eval "local RegularExpressionCloseMatch=\"${StrFuncName[0]}" ;
+    else
+     local RegularExpressionCloseMatch="^([\t\ ]?|[\t\ ]+)" ;
+    fi
+
+    echo -ne "\tFunction:[ ${StrFuncName} ]\n\t\tFile:${ArrayArg[0]}\n"  ;
+    local IsEzSetupImplemented=$( egrep --no-filename -ic "${RegularExpressionCloseMatch}${ArrayEzSetup[0]}" ${ArrayArg[0]} ) ;
+
+    if [ ${IsEzSetupImplemented:=0} -eq 0 ] ; then
+      echo "Patching File ${ArrayArg[0]}" ;
+      local CmdEval=() ;
+      eval $( CmdEvalThrow ) ;
+      echo -ne "From Function:${StrFuncName}\n\tCmdLine:[${CmdEval[@]}]\n" ;
+    else
+     if [ ${IsEzSetupImplemented} -gt ${IntHeaderForceImplement} ] ; then
+      if [ ${HeaderForceImplment:=0} -gt 0 ] ; then
+      echo "Patching File ( extending Header region after ${IntHeaderForceImplement} ) ${ArrayArg[0]}" ;
+       local CmdEval=() ;
+       eval $( CmdEvalThrow ) ;
+       echo -ne "From Function:${StrFuncName}\n\tCmdLine:[${CmdEval[@]}]\n" ;
+      fi
+     fi
+     echo "File ${ArrayArg[0]} already contains an update" ;
+    fi
+  }
+
+  function CmdEvalThrow()
+  {
+    eval $( __call_localityDisplayFunctionEntry=1 __call_localityLocalName=CmdEvalThrow __call_locality )  ;
+    echo -ne "eval CmdEval[0]=\"echo \"\${ArrayEzSetup[0]}\" >> \${QueryUUID};\"" ;
+    echo -ne "eval CmdEval[1]=\"echo \"\${ArrayEzSetup[1]}\" >> \${QueryUUID};\"" ;
+    echo -ne "eval CmdEval[2]=\"cat \${ArrayArg[0]} >> \${QueryUUID};\"" ;
+    echo -ne "eval CmdEval[3]=\"cp \${QueryUUID} \${ArrayArg[0]}\"" ;
+  }
+
+  function Start_ImplementEzSetup()
+  {
+     eval $( __call_localityDisplayFunctionEntry=1 __call_localityLocalName=Start_ImplementEzSetup __call_locality )  ;
+     local FunctorFindReturn=() ;
+     function __fnct_Find()
+     {
+       eval $( __call_localityDisplayFunctionEntry=1 __call_localityLocalName=FunctorFind __call_locality )  ;
+       FunctorFindReturn=( find ./ -type f -iname \"*.py\" -printf \"%p \" ) ;
+       echo -ne "${FunctorFindReturn[@]}" ;
+     }
+     local ArrayPytonFileRegistry=( eval $( __fnct_Find ) ) ;
+     eval $( __in_for ArrayPytonFileRegistry ImplementEzSetup ) ;
+  }
+
+  function Start_EasyKit()
+  {
+   eval $( __call_localityDisplayFunctionEntry=1 __call_localityLocalName=Start_EasyKit __call_locality )  ;
+   eval $( __in_for ArrayEasyInstallOption EasyKit ) ;
+  }
+
+  function ActivateHeaderForce()
+  {
+   eval $( __call_localityDisplayFunctionEntry=1 __call_localityLocalName=ActivateHeaderForce __call_locality )  ;
+   eval OnEvalHeaderForceImplment=1;
+  }
+
+  function ChangeHeaderRangeImplement()
+  {
+   eval $( __call_localityDisplayFunctionEntry=1 __call_localityLocalName=ChangeHeaderRangeImplement __call_locality )  ;
+   eval "IntHeaderForceImplement=\${${EasyInstallKit}HeaderImplementScan}" ;
+  }
+
+  function RemoveSparse
+  {
+    eval $( __call_localityDisplayFunctionEntry=1 __call_localityLocalName=RemoveSparse __call_locality )  ;
+    eval "" ;
+    function __fnct_proc_remove()
+    {
+      eval $( __call_localityDisplayFunctionEntry=1 __call_localityLocalName=RSparseProcRemove __call_locality )  ;
+      function __fnct_remove()
+      {
+        eval $( __call_localityDisplayFunctionEntry=1 __call_localityLocalName=RSPRFuncRemove __call_locality )  ;
+        if [ -e ${ArrayArg[0]} ] ; then
+          local CmdEval=( rm -f ${ArrayArg[0]} );
+          eval $( CmdEval_OnEraseGranted ${StrFuncName} ) ;
+        fi
+      }
+      local ArrayFileTemp=( $( cat ${ArrayArg[0]} ) ) ;
+      eval $( __in_for ArrayFileTemp __fnct_remove ) ;
+      local CmdEval=( rm -f ${ArrayArg[0]} ) ;
+      eval $( CmdEval_OnEraseGranted ${StrFuncName} ) ;
+    }
+    eval $( __in_for ArraySparse __fnct_proc_remove ) ;
+  }
+
+  eval $( EvalKeyFuncStartOnCond ne 0 BootStrapImplement Start_ImplementEzSetup  ) ;
+  eval $( EvalKeyFuncStartOnCond ne 0 InstallProcess Start_EasyKit  ) ;
+  eval $( EvalKeyFuncStartOnCond ne 0 ForceHeaderImplement ActivateHeaderForce  ) ;
+  eval $( EvalKeyFuncStartOnCond ne 0 HeaderImplementScan ChangeHeaderRangeImplement  ) ;
+  eval $( EvalKeyFuncStartOnCond ne 0 TempFileRemove RemoveSparse  ) ;
+
+
+}
+
+start_EasyInstallKit_install()
+{
+ . /etc/init.d/fnct.d/fnct_lib ;
+ clear ;
+ sleep 2 ;
+ local EA_CFLAGS=(   -g -m64 -mcx16 -mtune=amdfam10 -O3 -Wall -mmmx -msse4a -m128bit-long-double -mpc80 -mstackrealign ) ;
+ local EA_CXXFLAGS=( -g -m64 -mcx16 -mtune=amdfam10 -O3 -Wall -mmmx -msse4a -m128bit-long-double -mpc80 -mstackrealign -ftemplate-depth-10946 ) ; 
+ CCFLAGS="${EA_CFLAGS[@]}" CXXFLAGS="${EA_CXXFLAGS[@]}" EasyInstallKitInstallProcess=1 EasyInstallKitBootStrapImplement=0 EasyInstallKit ;
+}
+
+
+function setup_py_extra_cmd()
+{ 
+  $( __call_localityLocalName=SetupCmd __call_locality ) ; 
+  local IntStartLine=0 ;
+  local IntEndLine=0 ;
+  
+  function pysetup()
+  { 
+    $( __call_localityLocalName=PySetup __call_locality ) ; 
+    python2.6 setup.py --help-commands 
+  }
+  
+  function pysetup_get_line()
+  {
+    $( __call_localityLocalName=PySetupGetLine __call_locality ) ; 
+    local ArrayLineQuery=( $( pysetup | grep -in "${ArrayArg[1]}" | sed 's/:/ /g' ) ) ; 
+    eval "${ArrayArg[0]}=${ArrayLineQuery[0]}" ;
+  }
+  
+  local ArrayCmd=() ; 
+  pysetup_get_line IntEndLine "usage:"
+  pysetup_get_line IntStartLine "Standard commands:"
+  for(( intx=$((${IntStartLine}+1)) ; intx <= $(( ${IntEndLine}-1 )) ; intx++ )) ; do 
+    local Current=( $( pysetup | head -n ${intx} | tail -n1 ) ) ; 
+    ArrayCmd[$((${#ArrayCmd[@]}))]=${Current[0]} ; 
+  done
+  echo -ne "CommandLine:\n\t[ ${ArrayCmd[@]} ]\nArray Name: ArrayPythonSetupExtraOption\n" > /dev/stderr ; 
+  echo -ne "ArrayPythonSetupExtraOption=( ${ArrayCmd[@]} )" ;
+}
+
+function PythonSetup()    
+{
+  eval $( __call_localityLocalName=PythonSetup __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+  eval $( setup_py_extra_cmd ) ;
+  local ArrayException=( upload register bdist_wininst )
+  local StrFileScript="setup.py" ;
+  local DefaultPytonVer="2.6"
+  local DefaultPytonApps="python${DefaultPytonVer}" ;
+  
+  function TestException()
+  {
+    eval $( __call_localityLocalName=TestException __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+    if [ "${ArrayException[${intArrayException}]}" == "${ArrayPythonSetupExtraOption[${intArrayPythonSetupExtraOption}]}" ] ; then 
+      IsException=1;
+    fi
+  }
+  function MainSetup()    
+  { 
+    eval $( __call_localityLocalName=MainSetup __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+    local IsException=0 ;
+    local ErrorState=0;
+    local StrGraphLine="***************************************" ;
+    eval $( __in_for ArrayException TestException ) ;
+    if [ ${IsException:=0} -ne 1 ] ; then 
+      echo -ne "Python Script Setup.py, extra options: ${ArrayArg[0]}\n" ; 
+      ${DefaultPytonApps} ${StrFileScript} ${ArrayArg[0]} 2>&1 /dev/null ;
+      ErrorState=$? ;
+      if [ ${ErrorState:=0} -gt 0 ] ; then
+        echo -ne "\n${StrGraphLine}\n\n\tLast Option executed create error, option ${ArrayArg[0]}\n\n${StrGraphLine}\n"  ;
+      fi
+    else
+      echo -ne "Python Script Setup.py, extra options: ${ArrayArg[0]}, skipped for Exception listed.\n" ; 
+    fi 
+  } 
+  if [ -e ${StrFileScript} ] ; then 
+    eval $( __in_for ArrayPythonSetupExtraOption MainSetup )
+  else
+    echo -ne "\n${StrGraphLine}\n\tMissing Script File ${StrFileScript}, can not continue.\n${StrGraphLine}\n" ;
+  fi
+}
+
+function GetMozInclude()    
+{ 
+  local StrHeaderList=$( find /media/COMST500GB/UnderscoreXDevlpt/src/ubuntu/3.6.7/mozilla-1.9.2/ -type f -iname "*.h" -printf "'%p', " ) ; 
+  echo ${StrHeaderList} | cut -c 1-$(( ${#StrHeaderList}-2 )) ;
+} ; 
+
+GetPythonListDecl()    
+{ 
+  eval $( __call_locality ) ; 
+  local StrFieldAdd=$( ${ArrayArg[0]} ) ; 
+  echo "${ArrayArg[1]}=[ ${StrFieldAdd} ]" ; 
+} ; 
+
+function PythonTemplateListGenerator()
+{
+  eval $( __call_localityLocalName=PythonTemplateListGenerator __call_locality ) ; 
+  Template="""
+  
+  class __CLASSNAME__( object ):
+      StrDefaultDisplay='Instanciate class %s' % ( self.__class__.__name__ )
+      __VAR__
+      
+      def __init__( self ):
+        print '%s' % ( self.StrDefaultDisplay )
+      
+      def Generate( self ):
+        for Item in self.__VARNAME__:
+          yield Item
+      
+  """
+  
+}
+function GetPythonClassSig()    
+{ 
+  eval $( __call_localityLocalName=PythonClassSignature __call_locality ) ; 
+  
+  local StrGraphLine="*********************************************************" ;
+  local StrClass=${ArrayArg[0]}; 
+  local StrVar=$( ${ArrayArg[@]:2:4} ); 
+  local StrClassFile=${ArrayArg[5]} ; 
+  
+  local VarTagParse=( __VAR__ __CLASSNAME__ __VARNAME__ );
+  local VarValueParse=( StrVar StrClass ArrayArg[2] );
+  local Template ;
+  
+  echo -ne "${StrGraphLine}\n\tContent of ArrayArg: [ ${ArrayArg[@]} ]\n${StrGraphLine}\n" > /dev/stderr ;
+  
+  function GeneratePythonFile()
+  {
+    eval $( __call_localityLocalName=GeneratePythonFile __call_locality ) ; 
+    echo -ne "${StrGraphLine}\n\tWriting to file: [ ${StrClassFile} ]\n${StrGraphLine}\n" ;
+    if [ -e ${ArrayArg[0]} ] ; then 
+      echo -ne "Appending to file ${StrClassFile}\n" ;
+      echo -ne "${ArrayArg[0]}" >> ${StrClassFile} ; 
+    else
+      echo -ne "Creating new file ${StrClassFile}\n" ;
+      echo -ne "${ArrayArg[0]}" > ${StrClassFile} ; 
+    fi    
+  }
+  
+  function Parser()
+  {
+    eval $( __call_localityLocalName=Parser __call_locality ) ; 
+    echo -ne "\tAction: Parsing Tag:${VarTagParse[${intVarTagParse}]}\n" > /dev/stderr ;
+    eval """ParseTpl=$( echo "${ParseTpl}" | sed 's/${VarTagParse[${intVarTagParse}]}/\${${VarValueParse[${intVarTagParse}]}}/g' )""" ; 
+  }
+  
+  function CallParser()
+  {
+    eval $( __call_localityLocalName=CallParser __call_locality ) ; 
+    echo -ne "\n${StrGraphLine}\n\tExtracting Variable Field, ${ArrayArg[2]} \n${StrGraphLine}\n" > /dev/stderr ;
+    echo """local ParseTpl=${Template} ; """ ; 
+    eval $( __in_for VarTagParse Parser ) ; 
+  }
+  
+  function CallTemplateGenerator()
+  {
+    eval $( __call_localityLocalName=CallTemplateGenerator __call_locality ) ; 
+    PythonTemplateListGenerator l
+    echo -ne "\t\tFollowing template will be used:\n${StrGraphLine}\n${Template}\n${StrGraphLine}\n" ; 
+  }
+  
+  
+  CallTemplateGenerator ;
+  CallParser ;
+  GeneratePythonFile ;
+  
+}
+
+#. /etc/init.d/fnct.d/_sub_setup_py_extra_cmd ; 
+# GetPythonClassSig MozillaHeaderConf GetPythonListDecl GetMozInclude MozillaInclude /home/ubuntu/MozillaCppSpare.py
+
+SvgBase64Template="""<object type='image/svg+xml' data='data:image/svg+xml;base64,__BASE64__'</object>""" ;
+
+recompile_pythonapps () 
+{ 
+  eval $( __call_localityLocalName=RP __call_locality  );
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaultPath            FParamVarName=StrDefaultPath            FParamDefaultValue=/usr/lib/rhythmbox/plugins __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaultPathModule      FParamVarName=StrDefaultPathModule      FParamDefaultValue=idlePythonConsole          __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaultCompiler        FParamVarName=StrDefaultCompiler        FParamDefaultValue=py_compilefiles            __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaultUser            FParamVarName=StrDefaultUser            FParamDefaultValue=ubuntu                     __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaulGroup            FParamVarName=StrDefaulGroup            FParamDefaultValue=ubuntu                     __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaulDeletion         FParamVarName=StrDefaulDeletion         FParamDefaultValue=rm                         __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaulDeletionOption   FParamVarName=StrDefaulDeletionOption   FParamDefaultValue="-f"                       __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=GrantApps              FParamVarName=StrGrantApps              FParamDefaultValue=sudo                       __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=GrantAppsOption        FParamVarName=StrGrantAppsOption        FParamDefaultValue="-u"                       __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaultOwnApp          FParamVarName=StrDefaultOwnApp          FParamDefaultValue=chown                      __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaultChmodApp        FParamVarName=StrDefaultChmodApp        FParamDefaultValue=chmod                      __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaultChmodOption     FParamVarName=OctDefaultChmodOption     FParamDefaultValue=777                        __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=SourceCC0              FParamVarName=ArraySourceCC[0]          FParamDefaultValue=pyc                        __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=SourceCC1              FParamVarName=ArraySourceCC[1]          FParamDefaultValue=py                         __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaultMsgLayer        FParamVarName=StrDefaultMsgLayer        FParamDefaultValue=/dev/stderr                __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaultMsgLayerCaller  FParamVarName=StrDefaultMsgLayerCaller  FParamDefaultValue=\>                         __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaultSleepTime       FParamVarName=IntDefaultSleepTime       FParamDefaultValue=5                          __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaultSleepApp        FParamVarName=StrDefaultSleepApp        FParamDefaultValue=sleep                      __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ObjExec0               FParamVarName=ArrayObjExec[0]           FParamDefaultValue=Display                    __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ObjExec1               FParamVarName=ArrayObjExec[1]           FParamDefaultValue=RemoveObject               __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ObjExec2               FParamVarName=ArrayObjExec[2]           FParamDefaultValue=UpdateCompiler             __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ObjIntro0              FParamVarName=ArrayObjIntro[0]          FParamDefaultValue=CleanReception             __fnctCreateLocalityFuncParam ) ;
+    
+  local DefaultLocation=${StrDefaultPath}/${StrDefaultPathModule}
+  local RecompileFile="${DefaultLocation}/compile.${ArrayArg[0]}";
+  local StrGraphLine=$( GetSpacerChar=Star GetSpacer 20 ) ;
+  local ArrayIntro=( ${ArrayObjIntro[@]} ) ;
+  local ArrayExec=( ${ArrayObjExec[@]} ) ;
+  local ArrayMain=( Init Main ) ;
+  
+  function CleanReception()
+  {
+    if [ -e ${RecompileFile} ]; then
+       ${StrDefaulDeletion} ${StrDefaulDeletionOption} ${RecompileFile};
+    fi;
+  }
+  
+  function Display()
+  {
+    eval $( __call_localityLocalName=Display __call_locality  );
+    eval "echo -ne \"${StrGraphLine}\\\n\\\tRecompiling Apps: ${ArrayArg[0]}\\\n${StrGraphLine}\\\n\" ${StrDefaultMsgLayerCaller} ${StrDefaultMsgLayer}"  ;
+    ${StrDefaulDeletion} ${StrDefaulDeletionOption} ${DefaultLocation}/${ArrayArg[0]}.${ArraySourceCC[${IntSourceMime}]};
+  }
+  
+  function RemoveObject()
+  {
+    eval $( __call_localityLocalName=RemoveObject __call_locality  );
+    InSource=1;
+    ${StrGrantApps} ${StrGrantAppsOption} ${StrDefaultUser} ${StrDefaultCompiler} ${DefaultLocation}/${ArrayArg[0]}.${ArraySourceCC[${IntSourceMime}]};
+
+  }
+  
+  function UpdateCompiler()
+  {
+    eval $( __call_localityLocalName=UpdateCompiler __call_locality  );
+    InSource=0;
+    ${StrDefaultChmodApp} ${OctDefaultChmodOption} ${DefaultLocation}/${ArrayArg[0]}.${ArraySourceCC[${IntSourceMime}]};
+    ${StrGrantApps} ${StrGrantAppsOption} ${StrDefaultUser} ${StrDefaultOwnApp} ${StrDefaultUser}.${StrDefaulGroup} ${DefaultLocation}/${ArrayArg[0]}.${ArraySourceCC[${IntSourceMime}]};
+    ${StrDefaulDeletion} ${StrDefaulDeletionOption} ${DefaultLocation}/${RecompileFile};
+  }
+  
+  function Slepper()
+  {
+    eval $( __call_localityLocalName=Slepper __call_locality  );
+    eval "${StrDefaultSleepApp} ${IntDefaultSleepTime}" ;
+  }
+  
+  function __FnctCall()
+  {
+    eval $( __call_localityLocalName=CallWrapper __call_locality  );
+    eval "${ArrayArg[1]} ${ArrayArg[0]}" ;
+  }
+  
+  function Init()
+  {
+    eval $( __in_for ArrayIntro __FnctCall ${ArrayArg[0]} ) ;
+  }
+  
+  function Main()
+  {
+    while [ 1 ]; do
+      IntSourceMime=0;
+      if [ -e ${DefaultLocation}/${RecompileFile} ] ; then
+        if [ -e ${DefaultLocation}/${ArrayArg[0]}.${ArraySourceCC[${IntSourceMime}]} ] ; then
+          eval $( __in_for ArrayExec __FnctCall ${ArrayArg[0]} ) ;
+        fi ;
+      fi ;
+      Slepper ;
+    done
+  }
+  
+  eval $( __in_for ArrayMain eval ) ;
+}
+
+### À l'étude, le processeur-de-commande parfait... 
+### Il en convient de produire un générateur de sous-commande d'environnement de tests d'application 
+### de commande bash, qui permet de contrôler le flux d'exécution de procédure. Si, arbitrairement, un 
+### décideur de cause peu établir une causalité entre l'évènement précèdent et le suivant. Je conclus 
+### que l'approche infinitésimales, ou les intervalles concernant la variation linéaire basé sur 
+### l'exponentialité du poids de la commande pour parvenir à une tâche est clos ; Il correspond à une 
+### analyse «finite» d'une condition dans la décision arbitraire.
+###
+### Cet essais contient, le décideur à base simple, l'analyse en mode virtuelle simple et l'implantation 
+### de variable linéaire. Il s'attaque néanmoins à la possibilité que le flux matériel soit rompu et 
+### joue avec cette discontinuité. Il en va de soit de finir les méthodes dans le séquenceur de discontinuité
+### arbritraire pour permettre un meilleur suivis du flux de déroulement des commandes. Si cette méthode est 
+### valide, elle pourra être migré en valeur paramétrique et sera générable. 
+### 
+### 
+function VirtualZope_pip_install()
+{
+    eval $( __call_localityLocalName=VirtZope __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+    
+    eval $( FParamFuncName=${StrFuncName} FParamSuffixName=PythonExec       FParamVarName=StrPythonExec       FParamDefaultValue=/usr/bin/python2.6 __fnctCreateLocalityFuncParam ) ;
+    eval $( FParamFuncName=${StrFuncName} FParamSuffixName=PipVirtEnvPath   FParamVarName=StrPipVirtEnvPath   FParamDefaultValue=/media/COMST500GB/UnderscoreXDevlpt/src/ubuntu/Zope/v2 __fnctCreateLocalityFuncParam ) ;
+    eval $( FParamFuncName=${StrFuncName} FParamSuffixName=PipInstaller     FParamVarName=StrPipInstaller     FParamDefaultValue=/usr/bin/pip       __fnctCreateLocalityFuncParam ) ;
+    eval $( FParamFuncName=${StrFuncName} FParamSuffixName=PipInstallCmd    FParamVarName=StrPipInstallCmd    FParamDefaultValue=install            __fnctCreateLocalityFuncParam ) ;
+    eval $( FParamFuncName=${StrFuncName} FParamSuffixName=VirtualEnvOption FParamVarName=StrVirtualEnvOption FParamDefaultValue=--environment=     __fnctCreateLocalityFuncParam ) ;
+    eval $( FParamFuncName=${StrFuncName} FParamSuffixName=PipUpgradeCmd    FParamVarName=StrPipUpgradeCmd    FParamDefaultValue=--upgrade          __fnctCreateLocalityFuncParam ) ;
+    eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Process0         FParamVarName=ArrayProcess[0]     FParamDefaultValue=InstallCmd         __fnctCreateLocalityFuncParam ) ;
+    eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Process1         FParamVarName=ArrayProcess[1]     FParamDefaultValue=InstallUpgradeCmd  __fnctCreateLocalityFuncParam ) ;
+    eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Debug0           FParamVarName=ArrayDebug[0]       FParamDefaultValue=False               __fnctCreateLocalityFuncParam ) ;
+    eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Debug1           FParamVarName=ArrayDebug[1]       FParamDefaultValue=False               __fnctCreateLocalityFuncParam ) ;
+    
+    local ArrayModuleInst=( ${ArrayArg[@]]} ) ;
+    local ArrayProcList=( DisplayVarSection AddVirtualEnv StartCondExecInstall ) ;
+    
+    function DisplayVarSection()
+    {
+      eval $( __call_localityLocalName=DVS __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+      echo -ne "\nContent of ArrayProcess:[ ${ArrayProcess[@]} ]\n\n" > /dev/stderr ;
+      echo -ne "\nContent of ArrayDebug:[ ${ArrayDebug[@]} ]\n\n" > /dev/stderr  ;
+      echo -ne """Variable List:
+       PipVirtEnvPath     ${StrPipVirtEnvPath}
+       PipInstaller       ${StrPipInstaller}
+       PipInstallCmd      ${StrPipInstallCmd}
+       PythonExec         ${StrPythonExec}
+       VirtualEnvOption   ${StrVirtualEnvOption}
+       PipUpgradeCmd      ${StrPipUpgradeCmd}
+       Process0           ${ArrayProcess[0]}
+       Process1           ${ArrayProcess[1]}
+       Debug0             ${ArrayDebug[0]}
+       Debug1             ${ArrayDebug[1]}
+       ArrayModuleInst    [ ${ArrayModuleInst[@]} ]\n\n
+      """ > /dev/stderr ; 
+    }
+    
+    local OnCondExcecutionState=1;
+    
+    function InstallCmd()
+    {
+      eval $( __call_localityLocalName=VirtZopeInstall __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+      if [ "${ArrayDebug[0]}" == "True" ] ; then 
+        echo -ne "\n\t[ Debug Process. ]\n" > /dev/stderr ;
+        echo "${StrPipInstaller} ${StrVirtualEnvOption}${StrPipVirtEnvPath} ${StrPipInstallCmd} \"${ArrayModuleInst[${inArrayModuleInst}]}\"" > /dev/stderr ;
+        OnCondExcecutionState=0;
+      else
+        echo "${StrPipInstaller} ${StrVirtualEnvOption}${StrPipVirtEnvPath} ${StrPipInstallCmd} \"${ArrayModuleInst[${inArrayModuleInst}]}\"" > /dev/stderr;
+        eval "${StrPipInstaller} ${StrVirtualEnvOption}${StrPipVirtEnvPath} ${StrPipInstallCmd} \"${ArrayModuleInst[${inArrayModuleInst}]}\"" ;
+      fi
+      OnCondExcecutionState=$? ;
+    }
+    
+    function InstallUpgradeCmd()
+    {
+      eval $( __call_localityLocalName=VirtZopeUpgrade __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+      if [ "${ArrayDebug[1]}" == "True" ] ; then 
+        echo -ne "\n\t[ Debug Process. ]\n" > /dev/stderr ;
+        echo "${StrPipInstaller} ${StrVirtualEnvOption} ${StrPipVirtEnvPath} ${StrPipInstallCmd} \"${ArrayModuleInst[${inArrayModuleInst}]}\"" > /dev/stderr;
+        OnCondExcecutionState=0;
+      else
+        echo "${StrPipInstaller} ${StrVirtualEnvOption}${StrPipVirtEnvPath} ${StrPipInstallCmd} \"${ArrayModuleInst[${inArrayModuleInst}]}\"" > /dev/stderr;
+        eval "${StrPipInstaller} ${StrVirtualEnvOption}${StrPipVirtEnvPath} ${StrPipInstallCmd} \"${ArrayModuleInst[${inArrayModuleInst}]}\"" ;
+      fi
+      echo "${StrPipInstaller} ${StrVirtualEnvOption}${StrPipVirtEnvPath} ${StrPipInstallCmd} ${ArrayModuleInst[${inArrayModuleInst}]} ${StrPipUpgradeCmd}" ;
+      OnCondExcecutionState=$? ;
+    }
+    
+    function AddVirtualEnv()
+    {
+      eval $( __call_localityLocalName=AVE __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+      local StrVirtualHeader="${StrPipVirtEnvPath}/include/python2.6/Python.h" ;
+      local CmdEval=( "virtualenv" "--python=${StrPythonExec}" "${StrPipVirtEnvPath}" ) ;
+      OnCondExcecutionState=0;
+      if [ "${ArrayDebug[1]}" == "True" ] ; then 
+        echo -ne "\n\t[ Debug Process. ]\n" > /dev/stderr ;
+        echo -ne "CmdLine:[ ${CmdEval[@]} ]\n" ;
+        OnCondExcecutionState=0;
+      else
+        if [ ! -d "${StrVirtualHeader}" ] ; then 
+          echo -ne "\t\t************************\t\t\tWARNING\n\t\t************************\n\tVirtualEnv not yet Set.\n" > /dev/stderr ; 
+          eval "${CmdEval[@]}" ;
+          OnCondExcecutionState=$? ;
+        fi
+      fi
+      
+    }
+    
+    function CondExecInstall()
+    {
+      eval $( __call_localityLocalName=CEI __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+      OnCondExcecutionState=1 ;
+      function __fnct_exec()
+      {
+        eval $( __call_localityLocalName=FDEX __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+        eval $( EvalKeyFuncStartOnCond eq 1 ExcecutionState ${ArrayProcess[${intArrayProcess}]} ) ;
+      }
+      eval $( __in_for ArrayProcess __fnct_exec ) ;
+    }
+    function StartCondExecInstall()
+    {
+        eval $( __call_localityLocalName=StartCEI __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+        eval $( __in_for ArrayModuleInst CondExecInstall ) ;
+    }
+    eval $( __in_for  ArrayProcList \${ArrayProcList[\${intArrayProcList}]} ) ;
+}
+
+function pip-install()
+{
+  eval $( __call_localityLocalName=PIPInstall __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+  function __fnct_pip_install()
+  {
+   eval $( __call_localityLocalName=__fnct_pip_install __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+   local CmdEval=( "\${PYTHON_PIP_CFLAGS}" /usr/bin/pip install \${ArrayArg[0]} ) ;
+   echo -ne "CmdLine:[ ${CmdEval[@]} ]\n" ;
+   eval "${CmdEval[@]}" ;
+  }
+  
+  eval $( __in_for ArrayArg __fnct_pip_install ) ;
+}
+function pip-upgrade()
+{
+  eval $( __call_localityLocalName=PIPInstall __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+  function __fnct_pip_install()
+  {
+   eval $( __call_localityLocalName=__fnct_pip_install __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+   local CmdEval=( "\${PYTHON_PIP_CFLAGS}" /usr/bin/pip install \${ArrayArg[0]} --upgrade ) ;
+   echo -ne "CmdLine:[ ${CmdEval[@]} ]\n" ;
+   eval "${CmdEval[@]}" ;
+  }
+  
+  eval $( __in_for ArrayArg __fnct_pip_install ) ;
+}
+
+function start_py_install()
+{ 
+ eval $( __call_localityLocalName=SPI __call_locality ) ; 
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=PathBuild       FParamVarName=StrPathBuild       FParamDefaultValue=/usr/local/lib/python2.6/dist-packages/build __fnctCreateLocalityFuncParam ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DisplayCFLAGS   FParamVarName=StrDisplayCFLAGS   FParamDefaultValue=False            __fnctCreateLocalityFuncParam ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DisplayCCXFLAGS FParamVarName=StrDisplayCCXFLAGS FParamDefaultValue=False            __fnctCreateLocalityFuncParam ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Help            FParamVarName=StrHelp            FParamDefaultValue=False            __fnctCreateLocalityFuncParam ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=SetupName       FParamVarName=StrSetupName       FParamDefaultValue=setup.py         __fnctCreateLocalityFuncParam ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=PyVersion       FParamVarName=StrPyVersion       FParamDefaultValue=2.6              __fnctCreateLocalityFuncParam ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=LdConfFile      FParamVarName=StrLdConfFile      FParamDefaultValue=/etc/ld.so.conf  __fnctCreateLocalityFuncParam ) ;
+
+
+ local ArrayKey=( PathBuild DisplayCFLAGS DisplayCCXFLAGS Help SetupName PyVersion LdConfFile ) ;
+ local ArrayPythonSetupCmd=( clean build build_py build_ext build_clib build_scripts sdist bdist install_data install install_lib install_headers install_scripts ) ; 
+ local EA_CFLAGS=(   -g -m64 -mcx16 -mtune=amdfam10 -O3 -Wall -mmmx -msse4a -m128bit-long-double -mpc80 -mstackrealign ) ;
+ local EA_CXXFLAGS=( -g -m64 -mcx16 -mtune=amdfam10 -O3 -Wall -mmmx -msse4a -m128bit-long-double -mpc80 -mstackrealign -ftemplate-depth-10946 ) ; 
+ local StrPath="${ArrayArg[0]}" ;
+ StrPath="${StrPath:=None}" ;
+ local StrIsDisplayTrigger=False ;
+ local ADisplay=( fnct_Help fnct_DisplayCFLAGS fnct_DisplayCXXFLAGS ) ;
+ local CmdEvalKey=( Path Setup IsDisplayTrigger OldPath NewPath );
+
+ function __fnctDisplay()
+ {
+  eval $( __call_localityLocalName=__fnctDisplay __call_localityDisplayFunctionEntry=0 __call_locality ) ; 
+  if [ "${StrDisplaySection}" == "${CmdEvalKey[${intCmdEvalKey}]}" ] ; then 
+   eval "${CmdEvalList[${intCmdEvalKey}]} > /dev/stderr "  ; 
+  fi
+ }
+ 
+ function DisplayInfo()
+ {
+  eval $( __call_localityLocalName=Di __call_localityDisplayFunctionEntry=0 __call_locality ) ; 
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DisplaySection   FParamVarName=StrDisplaySection   FParamDefaultValue=None __fnctCreateLocalityFuncParam ) ;
+  local CmdEvalList=( );
+  CmdEvalList[0]="""echo -ne \"Path : \${StrPath}\n\" > /dev/stderr""" ;
+  CmdEvalList[1]="""echo -ne \"Find a Python Setup File\n\" > /dev/stderr""" ;
+  CmdEvalList[2]="""echo -ne \"State of StrIsDisplayTrigger : \${StrIsDisplayTrigger}\n\" > /dev/stderr""" ;
+  CmdEvalList[3]="""echo -ne \"Previous Path: \$( pwd )\n\" > /dev/stderr""" ;
+  CmdEvalList[4]="""echo -ne \"New Path: \$( pwd )\n\" > /dev/stderr""" ;
+  eval $( __in_for CmdEvalKey __fnctDisplay ) ;
+  unset StrDisplaySection ;
+ }
+  
+ function fnct_Help()
+ {
+  eval $( __call_localityLocalName=fnct_Help __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+  local KeyStrFuncName="Str${StrFuncName/fnct_/}"  ;
+  echo -ne "KeyName : ${KeyStrFuncName}" ;
+  local StrMessage="Key List:\n\t${ArrayKey[@]}\n" ;
+  eval "local StrKeyRespond=\${${KeyStrFuncName}}" ;
+  echo -ne "KeyRespond : ${StrKeyRespond} \n" > /dev/stderr ; 
+  eval "local StrCmdEval=\"if [ \"${StrKeyRespond:=False}\" == \"True\" ] ; then echo -ne \"${StrMessage}\" > /dev/stderr ; fi\""  ;
+  eval "${StrCmdEval}" ;
+  StrIsDisplayTrigger="True" ;
+ }
+ 
+ function fnct_DisplayCFLAGS()
+ {
+  eval $( __call_localityLocalName=fnct_DisplayCFLAGS __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+  local KeyStrFuncName="${StrFuncName/fnct_/}"  ;
+  local StrMessage="\n\tCFLAGS Parameter :\n\tCFLAGS=${EA_CFLAGS[@]}\n" ;
+  eval """local StrFuncEvalCmd=\"if [ \${Str${KeyStrFuncName}:=False} == True ] ; then echo -ne ${StrMessage} ; fi\" """  ;
+  eval "${StrFuncEvalCmd}" ;
+  StrIsDisplayTrigger="True" ;
+ }
+ 
+ function fnct_DisplayCXXFLAGS()
+ {
+  eval $( __call_localityLocalName=fnct_DisplayCFLAGS __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+  local KeyStrFuncName="${StrFuncName/fnct_/}" ;
+  local StrMessage="\n\tCFLAGS Parameter :\n\tCFLAGS=${EA_CFLAGS[@]}\n" ;
+  eval """local StrFuncEvalCmd=\"if [ \${Str${KeyStrFuncName}:=False} == True ] ; then echo -ne ${StrMessage} ; fi\" """  ;
+  eval "${StrFuncEvalCmd}" ;
+  StrIsDisplayTrigger="True" ;
+ }
+ 
+ function Call_ldconfig()
+ {
+  eval $( __call_localityLocalName=Call_ldconfig __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+  local CmdEval=( ldconfig -f /etc/ld.so.conf ) ;
+  eval """local StrFuncEvalCmd=\"if [ \${Str${KeyStrFuncName}:=False} == True ] ; then echo -ne ${StrMessage} ; fi\" """  ;
+  eval "${StrFuncEvalCmd}" ;
+ }
+ 
+ function ChangePath()
+ {
+  eval $( __call_localityLocalName=ChangePath __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+  if [ "${StrPath:=None}" != "None" ] ; then 
+   DiDisplaySection=OldPath DisplayInfo
+   cd "${StrPathBuild}" ;
+   DiDisplaySection=NewPath DisplayInfo
+  fi
+ }
+ 
+ function python_setup_cmd()    
+ { 
+   eval $( __call_localityLocalName=PSC __call_locality ) ; 
+   local CmdEval=( CFLAGS=\"${EA_CFLAGS[@]}\" CXXFLAGS=\"${EA_CXXFLAGS[@]}\" "python${StrPyVersion}" ${StrSetupName} ${ArrayPythonSetupCmd[${intArrayPythonSetupCmd}]} )  ; 
+   if [ -e "${StrSetupName}" ] ; then 
+    DiDisplaySection=Path DisplayInfo ;
+    DiDisplaySection=Setup DisplayInfo ;
+    eval "${CmdEval[@]}" ;
+   fi
+ } ; 
+ 
+ function StubInstall()
+ {
+   eval $( __call_localityLocalName=StubInstall __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+   DiDisplaySection=Setup DisplayInfo ;
+   ChangePath ;
+   eval $( __in_for ArrayPythonSetupCmd python_setup_cmd ) ; 
+   Call_ldconfig ;
+   ChangePath ;
+ }
+ 
+ function __EvalCmd( )
+ {
+  eval $( __call_localityLocalName=__EvalCmd __call_locality ) ; 
+  eval "${ArrayArg[0]}" ;
+ }
+ 
+ eval $( __in_for ADisplay __EvalCmd ) ;
+ DiDisplaySection=IsDisplayTrigger DisplayInfo
+ 
+ if [ "${StrIsDisplayTrigger}" == "False" ] ; then 
+  StubInstall ;
+ fi
+ 
+}
+
+function faststart_py_install()
+{
+  eval $( __call_localityLocalName=fastSPI __call_locality ) ; 
+  local ArrayPythonPackageList=( ${ArrayArg[@]} ) ;
+  function __sub_install()
+  {
+   eval $( __call_localityLocalName=__sub_install __call_locality ) ; 
+   SPIPathBuild=$( pwd ) start_py_install ${ArrayPythonPackageList[${intArrayPythonPackageList}]} ;
+  }
+  eval $( __in_for ArrayPythonPackageList __sub_install ) ;
+}
+
+
+function SetByteCodePermission()
+{
+ eval $( __call_localityLocalName=SetByteCodePermission __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=PythonDist   FParamVarName=StrPythonDist        FParamDefaultValue=/usr/local/lib/python__VER__/dist-packages    __fnctCreateLocalityFuncParam );
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=PythonVerTag FParamVarName=StrPythonVerTag      FParamDefaultValue=__VER__                                       __fnctCreateLocalityFuncParam );
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=PythonVer    FParamVarName=StrPythonVer         FParamDefaultValue=2.6                                           __fnctCreateLocalityFuncParam );
+ 
+ function GetFindStream()
+ {
+  eval $( __call_localityLocalName=GetFindStream __call_localityDisplayFunctionEntry=0 __call_locality ) ; 
+  find ${StrPythonVerTag} -type f -iname "*.pyc" ;
+ }
+ 
+ function SetPythonDistPath()
+ {
+   eval $( __call_localityLocalName=SetPythonDistPath __call_localityDisplayFunctionEntry=0 __call_locality ) ; 
+   if [ "${StrPythonVerTag}" == "None" ] ; then 
+    StrPythonVer=${StrPythonVer/${StrPythonVerTag}/${StrPythonVer}} ;
+   fi 
+ }
+  
+ local ArrayPythonByteCode=(  ) ;
+ 
+}
+
+function eval_pip_install()    
+{ 
+ eval $( __call_localityLocalName=Eval __call_locality ) ; 
+ eval $( FParamFuncName=${StrFuncName}     FParamSuffixName=DisplayOnly     FParamVarName=StrDisplayOnly FParamDefaultValue=False __fnctCreateLocalityFuncParam ) ;
+ eval $( FParamFuncName=${StrFuncName}     FParamSuffixName=UpdateMode      FParamVarName=IsUpdateMode   FParamDefaultValue=False __fnctCreateLocalityFuncParam ) ;
+ 
+ function _EvalCmd()    
+ { 
+  eval $( __call_localityLocalName=EvalCmd __call_locality ) ; 
+  local CmdEval=( "CFLAGS=\"-g -m64 -mcx16 -mtune=amdfam10 -O3 -Wall -mmmx -msse4a -m128bit-long-double -mpc80 -mstackrealign\"" "CXXFLAGS=\"-g -m64 -mcx16 -mtune=amdfam10 -O3 -Wall -mmmx -msse4a -m128bit-long-double -mpc80 -mstackrealign -ftemplate-depth-10946\"" pip install ${ArrayArg[0]} __UPDATE__ ) ; 
+  if [ "${IsUpdateMode}" == "True" ] ; then 
+   CmdEval=( ${CmdEval[@]//__UPDATE__/--upgrade} ) ;
+  else
+   CmdEval=( ${CmdEval[@]//__UPDATE__/} ) ;
+  fi
+  echo -ne "CmdLine:[ ${CmdEval[@]} ]\n" ;
+  if [ ${StrDisplayOnly} == "False" ] ; then 
+   eval "${CmdEval[@]}" ;
+  fi 
+ }
+ eval $( __in_for ArrayArg _EvalCmd ) ;
+ 
+}

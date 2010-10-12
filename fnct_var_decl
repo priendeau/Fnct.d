@@ -1,0 +1,174 @@
+### Array-Meta,
+### This Array Hold Main Section Header Name, to
+### Access to a somewhat management Layer, thru
+### Python Bash-Management-Generator. (PyBMG)
+declare -a ArrayMetaMgmt=( Unset ReadOnly Empty DefaultConfList IntDefaultConfList SingleSet ) ;
+
+### Sub-Function List
+declare -a ArraySubFuncCall=( _sub_ssh_handler _sub_call_locality _sub_fnctCreateLocalityFuncParam fnct__in_for _sub_FParamDisplayValue _sub__in_while _sub_ImbriqIf  _sub_fnctCmdEval _sub_GetSpacer _sub_EvalKeyFuncStartOnCond _sub_parse_spacer_list _sub_call_default_display_Var _sub_UpdateMount_ShareVolume _sub_Zenity_OTS_Resume _sub_FuncParam fnct_filesystem _sub_setup_py_extra_cmd _sub_Monitor_Script _sub_AptOnCd_Handler _sub_aufs_fnct _sub_Git _sub_jack_script _sub_Generator  ) ;
+
+################################################
+### Main Section Array configuration :
+### Array Statement Holder :
+### Will Hold by both All Section in read-only section, Un-Initializer, Array Variable, Empty-Form,
+### Default Configuration set's...
+
+declare -a ArrayUnset=(           ZenityDefaultInterface  StrZenityTextTitle IntZenityTextWidth     IntZenityTextHeight ZenityOption       IntZenityListWidth     IntZenityListHeight     IntMinZenityScaleValue IntMaxZenityScaleValue IntZenityScaleStepValue StrQuestionZenityText             StrZenityQuestionYes      StrZenityQuestionNo   StrZenityTextHeader StrZenityColumnName     StrZenityColumnName     StrZenitySep            StrZenityScaleText    ArrayCharSpacerName   ArrayCharSpacerConv ) ;
+declare -a ArrayReadOnly=(        Type__InitFuncState ) ;
+declare -a ArrayEmpty=(           ZenityDefaultInterface  ArrayTimeToVoltage ZenityDefaultInterface StrZenityTextTitle  IntZenityTextWidth IntZenityTextHeight    ZenityOption            IntZenityListWidth     IntZenityListHeight    StrZenityTextHeader     StrZenityColumnName               StrZenityColumnName       StrZenitySep          StrZenityScaleText  IntMinZenityScaleValue  IntMaxZenityScaleValue  IntZenityScaleStepValue StrQuestionZenityText StrZenityQuestionYes  StrZenityQuestionNo   ArrayCharSpacerName ArrayCharSpacerConv ) ;
+declare -a ArrayDefaultConfList=( TypedVarDeclaration     TypeDebugKey       ServicesType           ArrayAwkScriptPath  ArraySedScriptPath ArrayObjDumpOptionType ArrayObjDumpSymbolsType ArrayDateFormat        ArraFloatRegExp        ArrayFindPrintf         RightMemberVariableTypeRegExpDecl ArrayVariableTypeBase64   ArrayDPKG_QueryHeader ArrayPython26Lib    ArrayTestFS             ArraySedSysCtl          ArraySedVariableEval    ArraySysCtlKeyName    LZMAFormat            IndentFormat          HexdumpFormat       BatterryPath          ArrayCFLAGS ArrayInitType ArrayHWInfo ) ;
+
+declare -a ArrayIntDefaultConfList=(      IntDateNormalFormat   IntTestPath   IntTestFile   IntTestExist   IntTestExec   IntSedNumFormatSedSysCtlKey   IntSedNumFormatSedSysCtlCSV   IntSedNumFormatSedSysCtlValue   IntSysCtlFileMax   IntZenityTextInterface   IntZenityListInterface   IntZenityScaleInterface   IntZenityQuestionInterface   IntInitUniqueID   IntInitShaSumID   IntInitCatId   IntInitDate   IntInitWhile   IntInitWordCountFileSize     IntInitEgrepCount   IntEAwkScriptPath   IntESedScriptPath   IntEparamTypeDebugDecl   IntEParamNoDebugDecl   IntEFunctionTypeDecl   IntEGlobalTypeDecl   IntEShellType   IntDefaultCharSpacer ) ;
+declare -a ArrayIntDefaultConfListValue=( IntDateNormalFormat=0 IntTestPath=0 IntTestFile=1 IntTestExist=2 IntTestExec=3 IntSedNumFormatSedSysCtlKey=0 IntSedNumFormatSedSysCtlCSV=1 IntSedNumFormatSedSysCtlValue=2 IntSysCtlFileMax=0 IntZenityTextInterface=0 IntZenityListInterface=1 IntZenityScaleInterface=2 IntZenityQuestionInterface=3 IntInitUniqueID=0 IntInitShaSumID=1 IntInitCatId=2 IntInitDate=3 IntInitWhile=4 IntInitWordCountFileSize=5   IntInitEgrepCount=6 IntEAwkScriptPath=0 IntESedScriptPath=0 IntEparamTypeDebugDecl=0 IntEParamNoDebugDecl=1 IntEFunctionTypeDecl=0 IntEGlobalTypeDecl=1 IntEShellType=2 IntDefaultCharSpacer=1 ) ;
+
+declare -a ArraySingleSet=(               CFLAGS                StrQuestionZenityText       StrZenityQuestionYes         StrZenityQuestionNo           StrZenityTextHeader           StrZenityColumnName             StrZenityColumnName                         StrZenitySep             StrZenityScaleText  ) ;
+
+### End-Main Section.
+################################################
+
+### Un-Initializer.
+unset ZenityDefaultInterface StrZenityTextTitle IntZenityTextWidth IntZenityTextHeight ZenityOption IntZenityListWidth IntZenityListHeight StrZenityTextHeader StrZenityColumnName StrZenityColumnName StrZenitySep StrZenityScaleText IntMinZenityScaleValue IntMaxZenityScaleValue IntZenityScaleStepValue StrQuestionZenityText StrZenityQuestionYes StrZenityQuestionNo ;
+
+### Read Only Variable
+function R_OnlyVar()
+{
+ local CmdEval=() ;
+ CmdEval[0]="""declare -r Type__InitFuncState=disable""" ;
+ #CmdEval[1]="""declare -r CFLAGS=\"-g -m64 -mfpmath=sse -mcx16 -malign-loops -mtune=amdfam10 -O3 -I/usr/include/libxml2 -Wall -mmmx -msse4a -m128bit-long-double -mpc80 -mstackrealign\" """ ;
+ #CmdEval[2]="""declare -r PYTHON_PIP_CFLAGS=\"CFLAGS=-g -m64 -mcx16 -mtune=amdfam10 -O3 -Wall -mmmx -msse4a -m128bit-long-double -mpc80 -mstackrealign\" """ ;
+ function __eval()
+ {
+   local ArrayArg=( $* ) ;
+   ${ArrayArg[0]} ;
+ }
+ for(( intx=0;intx<=$(( ${#CmdEval[@]}-1 ));intx++)); do 
+  __eval "${CmdEval[${intx}]}" ;
+ done
+}
+R_OnlyVar > /dev/null;
+
+
+### Common Array Variable
+declare -a TypedVarDeclaration=( "local" "declare" "declare -a" );
+declare -a TypeDebugKey=( debug nodebug ) ;
+declare -a ServicesType=( start stop help restart ask ) ;
+declare -a ArrayAwkScriptPath=( "/etc/init.d/fnct.d/awk-script" ) ;
+declare -a ArraySedScriptPath=( "/etc/init.d/fnct.d/sed-script" ) ;
+declare -a ArrayObjDumpOptionType=( "--all-headers --section=import" "--all-headers --full-contents --include=/usr/local/src/ubuntu/caps-0.4.2 --all-headers" ) ;
+declare -a ArrayObjDumpSymbolsType=( --syms --dynamic-syms ) ;
+declare -a ArrayDateFormat=( "%F %H:%M:%S.%s.%N" "%Y%m%d_%s" "%Y%m%d" "%s.%N" ) ;
+declare -a ArraFloatRegExp=( "[+-]\?[0-9]\+\(\.[0-9]\{2\}\)\?" ) ;
+declare -a ArrayFindPrintf=( "\nFromSearchPath:${StrPathFind}\nPath:%h\nFullFileName:%p\nDepth:%d\nFilePermission:%m\nSize:%s\nGUID:%G\nUID:%U\n\n" "%p " ) ;
+declare -a RightMemberVariableTypeRegExpDecl=( "=[a-zA-Z0-9_\-\$\\\/+\=\:\"\'\.\%]{1,}|[a-zA-Z0-9_]{1,}\[[\)\(\$\}\{]{0,}[0-9]{1,}[\)\(\$\}\{]{0,}\]" ) ;
+declare -a ArrayVariableTypeBase64=( "64|base64|baseuuencode|uuencodetype|type64|typebase64|typeuuencode|uuencodetype" ) ;
+declare -a ArrayDPKG_QueryHeader=( "Architecture" "Bugs" "Conffiles" "Config-Version" "Conflicts" "Breaks" "Depends" "Description" "Enhances" "Essential" "Filename" "Homepage" "Installed-Size" "MD5sum" "MSDOS-Filename" "Maintainer" "Origin" "Package" "Pre-Depends" "Priority" "Provides" "Recommends" "Replaces" "Revision" "Section" "Size" "Source" "Status" "Suggests" "Tag" "Triggers-Awaited" "Triggers-Pending" "Version" ) ;
+declare -a ArrayPython26Lib=( /usr/lib/pyshared/python2.6 ) ;
+declare -a ArrayTestFS=( "-d" "-f" "-e" "-x" ) ;
+declare -a ArraySedSysCtl=( "s/\(^[[:alpha:]\.=-]*\)\([\t\ =]*\)\([[:digit:]|[:xdigit:]|[:alpha:]\_\.\-]*\)/\1/g" "s/\(^[[:alpha:]\.=-]*\)\([\t\ =]*\)\([[:digit:]|[:xdigit:]|[:alpha:]\_\.\-]*\)/\2/g" "s/\(^[[:alpha:]\.=-]*\)\([\t\ =]*\)\([[:digit:]|[:xdigit:]|[:alpha:]\_\.\-]*\)/\3/g" ) ;
+declare -a ArraySedVariableEval=( "s/\([Ss]tr\|[Ii]nt\|[Tt]ype|[Cc]har|[Bb]ase\)\([a-zA-Z0-9_]*\)/\$\{\1\2\}/g" "s/\([Aa][Rr][Rr][Aa][Yy]\)\([a-zA-Z0-9_]*\)/\$\{\1\2\[__INT__]}/g" "s/\([Aa][Rr][Rr][Aa][Yy]\)\([a-zA-Z0-9_]*\)/\$\{#\1\2\[@]}/g" "s/\([Aa][Rr][Rr][Aa][Yy]\)\([a-zA-Z0-9_]*\)/\$\{\1\2\[@]:__IntStart__:__IntStop__}/g" "s/\([Aa][Rr][Rr][Aa][Yy]\)\([a-zA-Z0-9_]*\)/\$\{\1\2\[__INT__]:__IntStart__:__IntStop__}/g" "s/\([Aa][Rr][Rr][Aa][Yy]\)\([a-zA-Z0-9_]*\)/\$\{\1\2\[__INT__]\/__REGEXP__\/__REPLACE__}/g" );
+declare -a ArraySysCtlKeyName=( "fs.file-max" "kernel.slow-work.max-threads" );
+declare -a LZMAFormat=( "-9zc --force --format=lzma --lzma1=dict=64Mi --memory=675Mi" ) ;
+declare -a IndentFormat=( "-bbb -bl -i1 -bli1 -cbi1 -cli1 -pi1 -cs -blf -bls -nut -pcs -ppi1 -prs -sai -saw -st" ) ;
+declare -a HexdumpFormat=( "-x | tr '[:cntrl:]' ' ' | sed -r 's/[0-9a-fA-F]{7}//g;s/[\\t\ ]+//g'" ) ;
+declare -a BatterryPath=( "/proc/acpi/battery" ) ;
+declare -a ArrayCFLAGS=( ${CFLAGS[@]} ) ;
+declare -a ArrayInitType=( "uuidgen -r" "sha1sum -b __FILE__" "cat __FILE__" "date +'__DATEFORMAT__'" "while [ 1 ] ; do __SERVICE__ ; done " "wc -c __FILE__" "egrep -ic __PATTERN__") ;
+declare -a ArrayCharSpacerName=( Tab Space Tiret Dot LPThesis RPThesis LBrace RBrace LowerThan GreaterThan Star Slash BSlash Pipe DAnd DOr DCirc CtrlR Dollar Guill FrLGuill FrRGuill LBraceExec RBraceExec LBraceVar RBraceVar TriGuill ) ;
+declare -a ArrayCharSpacerConv=( "\t" " " "-" "." "(" ")" "{" "}" "<" ">" "*" "/" "\\" "|" "\&\&" "\|\|" "\^\^" "\n" "\$" "\"" "«" "»" "$(" ")" "\${" "}" "\"\"\"" ) ;
+declare -a ArrayFileRegExp=( "/usr/lib/libcuda.so.[0-9][0-9][0-9].[0-9][0-9].[0-9][0-9]" ) ;
+declare -a ArrayIDLRegExp=( "GLIBC_(2.[0-9].[0-9]|2.[0-9] )" );
+declare -a ArrayHWInfo=( all bios block bluetooth braille bridge camera cdrom chipcard cpu disk dsl dvb fingerprint floppy framebuffer gfxcard hub ide isapnp isdn joystick keyboard memory modem monitor mouse netcard network partition pci pcmcia pcmcia-ctrl pppoe printer scanner scsi smp sound storage-ctrl sys tape tv usb usb-ctrl vbe wlan zip ) ;
+
+UpdateIncludeHeader()
+{
+ local ArrayArg=( $* ) ;
+ local StrFuncName=( UpdateIncludeHeader ) ;
+ function FindAction()
+ {
+  local ArrayArg=( $* ) ;
+  find /usr/include/ -type f -iname "*.h" -printf "%p " ;
+ }
+ unset ArrayFileInclude ;
+ echo -ne "Function ${StrFuncName}:\n\tUpdating Array Include header, will be update in Array ArrayFileInclude\n" > /dev/stderr ;
+ declare -a ArrayFileInclude=( $( FindAction ) ) ;
+ echo -ne "Function ${StrFuncName}:\n\tEnd of update\n" > /dev/stderr ;
+}
+#UpdateIncludeHeader 
+
+UpdateLibCudaDynSo()
+{
+ local ArrayArg=( $* ) ;
+ local StrFuncName=( UpdateLibCudaDynSo ) ;
+ unset ArrayLibCudaDynSo ;
+ echo "Updating Array LibCudaDynSo Dynamic Symbolic Link, will be update in Array ArrayLibCudaDynSo" > /dev/stderr ;
+ function ObjDump()
+ {
+   local ArrayArg=( $* ) ;
+   objdump --dynamic-syms ${ArrayFileRegExp[0]} | egrep -iv ${ArrayIDLRegExp[0]} | egrep -i "Base" ;
+ }
+ declare -a ArrayLibCudaDynSo=( $( ObjDump ) ) ;
+ echo -ne "Function : ${StrFuncName} End of update\n" > /dev/stderr ;
+}
+#UpdateLibCudaDynSo ;
+
+
+### Empty Array for, form design and extra-settings in function declaration.
+### See Zenity example.
+declare -a ZenityDefaultInterface=( ) ;
+declare -a ArrayTimeToVoltage=( ) ;
+
+### Load Default Func.
+. ${ConfFnctDPath[0]}/_sub_call_locality ;
+. ${ConfFnctDPath[0]}/fnct__in_for ;
+. ${ConfFnctDPath[0]}/_sub_fnctCreateLocalityFuncParam ;
+. ${ConfFnctDPath[0]}/_sub_GetSpacer ;
+
+
+### Default Integer Configuration Settings.
+###
+function CreateDeclIntegerValue()
+{
+  local ArrayArg=( $* ) ;
+  eval "declare -i ${ArrayArg[0]}" ;
+}
+eval $( __in_for ArrayIntDefaultConfListValue CreateDeclIntegerValue ) ;
+
+
+### Single Set Variable
+
+### Sequential Variable Assignation
+### This is boggus, but some information embedded can not
+### be inserted all in one-shoot. Maybe some error in insertion.
+ZenityDefaultInterface[${IntZenityTextInterface}]="--text-info --editable --title=\${StrZenityTextTitle:=\"This Title\"} --width=\${IntZenityTextWidth:=800} --height=\${IntZenityTextHeight:=600} ${ZenityOption[@]}" ;
+
+ZenityDefaultInterface[${IntZenityListInterface}]="--list --width=\${IntZenityListWidth:=800} --height=\${IntZenityListHeight:=600} --text=\${StrZenityTextHeader:=\"Displayed result\"} --column=\${StrZenityColumnName[0]:=\"__SELECTED__\"} --column=\${StrZenityColumnName[1]:=\"__ITEM__\"} --checklist --editable --separator \${StrZenitySep:=\"\n\"} ${ZenityOption[@]}"  ;
+ZenityDefaultInterface[${IntZenityScaleInterface}]="--scale --text=\${StrZenityScaleText:=\"Scaling value of command item __ITEM__\"} --min-value=\${MinZenityScaleValue:=0} --max-value=\${MaxZenityScaleValue:=100} --step=\${IntZenityScaleStepValue:=2} ${ZenityOption[@]} " ;
+ZenityDefaultInterface[${IntZenityQuestionInterface}]="--question --text=\"\${StrQuestionZenityText:=do you want to keep same value for this item}\" --ok-label=\${StrZenityQuestionYes:=yes} --cancel-label=\${StrZenityQuestionNo:=no} \${ZenityOption[@]} " ;
+
+### Management Array/Variable  :
+if [ ${USER} != 'root' ] ; then
+  declare -a ArrayVariableLoader=( __Env___UUIDRandomPolicyConfig  __Env_DPKG_config __Env_GoogleConfig  );
+  eval "declare -a ArrayPath${USER}=( \$( find ./ -mount -maxdepth 1 -ignore_readdir_race -type d -not -uid 1000 -uid ${UID} -printf \"%p \" ) )" ;
+else
+  declare -a ArrayVariableLoader=( __Env___UUIDRandomPolicyConfig __Env_CpuFreqSysConfig __Env_DPKG_config __Env_GoogleConfig  );
+  eval "declare -a ArrayPath${USER}=( \$( find ./ -mount -maxdepth 1 -ignore_readdir_race -type d -not -uid 0 -uid ${UID} -printf \"%p \" ) )" ;
+fi
+
+#declare -a ArrayLicense=( $(find ./ -maxdepth 1 -type f -iname "*.txt" -printf "%f " ) ) ;
+
+
+convert_path_inpath_sum_file_size()
+{
+  eval $( __call_locality ) ;
+  function report_sum()
+  {
+    eval $(__call_locality ) ;
+    IntSum=$(( ${ArrayIntList[${intArrayIntList}]} += ${ArrayArg[0]} )) ;
+  } ;
+  local ArrayIntList=( $(find ${ArrayPath[${intArrayPath}]} -printf "%s " ) ) ;
+  local IntSum=0 ;
+  eval $( __in_for ArrayIntList report_sum )  ;
+  ArrayPath[${intArrayPath}]=${IntSum} ;
+} ;
+
+

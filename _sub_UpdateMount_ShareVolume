@@ -1,0 +1,152 @@
+unset UpdateMount_ShareVolume
+function UpdateMount_ShareVolume()    
+{ 
+  eval $( __call_localityLocalName=UpdateMount __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Action FParamVarName=StrAction FParamDefaultValue=mount __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ActionParam FParamVarName=StrActionParam FParamDefaultValue=StrExtraParam FParamInterpretVar=True __fnctCreateLocalityFuncParam ) ;
+  
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=VolumeList FParamVarName=StrVolumeList FParamDefaultValue=/media/COMST500GB,/media/rescue,/media/Ebook,/media/ISO/flv-20100609 __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Trigger0 FParamVarName=ATrig[0] FParamDefaultValue=500107862016 __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Trigger1 FParamVarName=ATrig[1] FParamDefaultValue=octets __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Trigger2 FParamVarName=ATrig[2] FParamDefaultValue="" __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Trigger3 FParamVarName=ATrig[3] FParamDefaultValue="" __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Trigger4 FParamVarName=ATrig[4] FParamDefaultValue="" __fnctCreateLocalityFuncParam ) ;
+  
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=IsReadyTrigger FParamVarName=IsReady FParamDefaultValue="ready" __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=IsNotReadyTrigger FParamVarName=IsNotReady FParamDefaultValue="notready" __fnctCreateLocalityFuncParam ) ;
+  
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=PathCreation FParamVarName=StrPathCreate FParamDefaultValue=mkdir __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=GrepCmd FParamVarName=StrEgrep FParamDefaultValue=egrep __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=SleepCmd FParamVarName=StrSleep FParamDefaultValue=sleep __fnctCreateLocalityFuncParam ) ;
+  
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=CheckDriveSleep FParamVarName=IntCheckDriveSleep FParamDefaultValue=2 __fnctCreateLocalityFuncParam ) ;
+  
+  
+  ArrayMount=(  ${StrVolumeList//,/ } ) ;
+  ArrayMountState=( ) ;
+  local ArrayParam=( ${StrExtraParam} ) ;
+  local intArrayParam=${#ArrayParam[@]}
+  
+  function __exec()
+  {
+    eval $( __call_locality __call_localityLocalName=ExecStatement __call_localityDisplayFunctionEntry=1 ) ;
+    eval "${ArrayArg[0]}" ;
+  }
+
+  function SelectiveFilter()
+  {
+    eval $( __call_localityLocalName=SelectiveFilter __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+    eval $( FParamFuncName=${StrFuncName} FParamSuffixName=IsEval FParamVarName=BoolIsEval FParamDefaultValue=False __fnctCreateLocalityFuncParam ) ;
+    local CmdEval=( ${StrEgrep} -ic --no-filename "${ArrayArg[@]}" ) ; 
+    eval "${CmdEval[@]}" ;
+  }
+  
+  function InitDiskTest()
+  {
+    eval $( __call_localityLocalName=DiskTest __call_localityDisplayFunctionEntry=0 __call_locality ) ; 
+    local CmdEval=( ${StrEgrep} -ic --no-filename "\"500107862016 octets\"" ) ;
+    eval "vartest=$( fdisk -l | ${CmdEval[@]} )" ; 
+  }
+  
+  function __MountCheck()
+  {
+    eval $( __call_localityLocalName=MountCheck __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+    echo -ne "local IsMount=\$( egrep -ic --no-filename \${ArrayArg[0]} /etc/mtab )" ;
+  }
+  
+  function __returnEvalCmd()
+  {
+    eval $( __call_localityLocalName=ReturnEvalCmd __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+    if [ ${intArrayParam:=0} -eq 0 ] ; then 
+      echo -ne "local CmdEval=( ${StrAction} ${ArrayArg[0]} )"  ; 
+    else
+      echo -ne "local CmdEval=( ${StrAction} ${ArrayParam[@]} ${ArrayArg[0]} )"   ; 
+    fi
+  }
+  
+  function __returnStateTest()
+  {
+    eval $( __call_localityLocalName=ReturnStateTest __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+    if [ ${StrAction} == "mount" ] ; then 
+      echo -ne "local ArrayStateTest=( -eq 0 )" ;
+    fi
+    if [ ${StrAction} == "umount" ] ; then 
+      echo -ne "local ArrayStateTest=( -ne 0 )" ;
+    fi  
+  }
+  
+  function __MainTestOnActionState()
+  {
+    eval $( __call_localityLocalName=MainTestOnActionState __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+    local StrEvalCmd="\\\t\\\tFunction \${StrFuncName} Main Cmdline:[ \${CmdEval[@]} ]\\\n"
+    local StrEvalMountMsg="Mount is already processed." ;
+    eval "if [ ${IsMount:=0} ${ArrayStateTest[@]} ] ; then eval $( __returnEvalCmd ) ; echo -ne ${StrEvalCmd}; eval ${CmdEval[@]} ; else echo ${StrEvalMountMsg} ; fi" ;
+  }
+  
+  function __main_action()    
+  { 
+    eval $( __call_localityLocalName=MainAction __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+    eval $( __MountCheck ${ArrayArg[0]} ) ; 
+    eval $( __returnStateTest ) ;
+    eval $( __returnEvalCmd ${ArrayArg[0]} ) ;
+    __MainTestOnActionState ;
+  }
+
+  function ProcessMount()
+  {
+    eval $( __call_localityLocalName=ProcessMount __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+    echo -ne "eval \$( __in_for ArrayMount __main_action ) ;"  ;
+  }
+  
+  function AddMountPoint()
+  {
+    eval $( __call_localityLocalName=AddMountPoint __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+    local CmdEval=( ${StrPathCreate} ${ArrayMount[${intArrayMount}]} ) ; 
+    eval "${CmdEval[@]}" ; 
+  }
+  
+  function SetDriveReady()
+  {
+    eval $( __call_localityLocalName=SetDriveReady __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+    ArrayMountState[${intArrayMount}]=${IsReady} ;
+  }
+  
+  function MountPointCheckIntegrity()
+  {
+    eval $( __call_localityLocalName=MountPointCheckIntegrity __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+    eval $( TestWithSpreadArgOnFailedTestFunc=False TestWithDefaultFailTestFunc=AddMountPoint TestWithDefaultFinalTestFunc=SetDriveReady ImbriqIf -d ${ArrayMount[${intArrayMount}]} ) ;
+  }
+  
+  function CheckPathMountPoint()
+  {
+    eval $( __call_localityLocalName=CheckPathMountPoint __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+    echo -ne "eval \$( __in_for ArrayMount MountPointCheckIntegrity ) ;"  ;
+  }
+  
+  function CheckDrive()
+  {
+    eval $( __call_localityLocalName=CheckDrive __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+    local vartest=0 ;
+    function LoopTest()
+    {
+      eval $( __call_localityLocalName=LoopTest __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+      function __SubUnit()
+      {
+        eval $( __call_localityLocalName=SubUnit __call_localityDisplayFunctionEntry=0 __call_locality ) ; 
+        local CmdEval=()
+        CmdEval[0]="${StrSleep} ${IntCheckDriveSleep}" ; 
+        CmdEval[1]="InitDiskTest" ;
+        CmdEval[2]="echo -ne \".\"" ;
+        eval $( __in_for CmdEval __exec ) ;
+        
+      }
+      local WhileOption=( WhileOptVarName=vartest WhileOptVarNameDef=0 WhileOptOperande=le WhileOptTestValue=0 WhileOptFuncLoop=__SubUnit WhileOptFuncFinalize=None ) ;
+      eval "$( ${WhileOption[@]} __in_while )" ;
+    }
+    LoopTest ;
+    echo -ne "\n" ;
+    eval $( CheckPathMountPoint ) ;
+    eval $( ProcessMount ) ;
+  }
+  CheckDrive ;
+}

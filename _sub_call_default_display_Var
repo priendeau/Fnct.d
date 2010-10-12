@@ -1,0 +1,13 @@
+function __call_default_display_Var()
+{
+  eval $( __call_localityLocalName=DDV __call_locality ) ;  
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ArrayName  FParamVarName=StrArrayName FParamDefaultValue=ArrayValueDisplay  __fnctCreateLocalityFuncParam ) ;
+  echo -ne "eval \$( FParamFuncName=\${StrFuncName} FParamSuffixName=DisplayDeclVar FParamVarName=StrDisplayDeclVar FParamDefaultValue=False  __fnctCreateLocalityFuncParam ) ;" ;
+  if [ "${StrArrayName}" == "ArrayValueDisplay" ] ; then 
+		echo -ne "local ${StrArrayName}=( DisplayDeclVar ) ;" ;
+	else
+		echo -ne "eval ${StrArrayName}=( \${${StrArrayName}[@]} StrDisplayDeclVar ) ;"
+	fi
+  echo -ne "if [ \"\${StrDisplayDeclVar}\" == \"True\" ] ; then DisplayValueArrayName=${StrArrayName} FParamDisplayValue ; fi ; " ;
+	
+}

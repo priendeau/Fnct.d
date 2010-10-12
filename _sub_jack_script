@@ -1,0 +1,87 @@
+loop_jack_connection()
+{
+  eval $( __call_locality ) ;
+  while [ 1 ] ; do
+    jackd --port-max 256 -d alsa --capture --playback --rate 44100 --period 1024 --nperiods 4 --duplex --inchannels 2 --outchannels 2 --input-latency 8 --output-latency 8  2>&1 /dev/null ;
+    sleep 5 ;
+  done ;
+}
+
+loop_jack_plumbing()
+{
+  eval $( __call_locality ) ;
+  while [ 1 ] ; do
+    jack.plumbing 2>&1 /dev/null ;
+    sleep 5 ;
+  done ;
+}
+
+jack_plumbing_handler()
+{
+  eval $( __call_locality ) ;
+  if [ "${ArrayArg[0]:=ListDisplay}" == "ListDisplay" ] ; then
+    #echo -ne "Adding Jack-Plumbing Interface to Zenity List\n" > /dev/stderr ;
+    echo "TRUE" ;
+    echo "Jack Plumbing Interface" ;
+    echo "2" ;
+  elif [ "${ArrayArg[0]:=ListDisplay}" == "start" ] ; then
+    cd ${USER} ;
+    loop_jack_plumbing ;
+  fi
+}
+
+jack_daemon_handler()
+{
+  eval $( __call_locality ) ;
+  if [ "${ArrayArg[0]:=ListDisplay}" == "ListDisplay" ] ; then
+    #echo -ne "Adding Jack-Daemon Interface to Zenity List\n" > /dev/stderr ;
+    echo "TRUE" ;
+    echo "Jack Deamon" ;
+    echo "1" ;
+  elif [ "${ArrayArg[0]:=ListDisplay}" == "start" ] ; then
+    while [ 1 ] ; do
+      loop_jack_connection ;
+    done
+  fi
+}
+
+Zenity_Jack_Manager()
+{
+ eval $( __call_locality ) ;
+ local ArrayHandler=( jack_daemon_handler jack_plumbing_handler ) ;
+ local ArrayAction=( ListDisplay start ) ;
+ local IntZenityListWidth=600 ;
+ local IntZenityListHeight=200 ;
+ local StrZenitySep="\"\n\"" ;
+ local StrZenityTextHeader="\"Jack audio Service Manager\"" ;
+ local StrZenityColumnName=( "\"Services To Start\"" "\"Services Name\" --column=\"Start Order\"" ) ;
+ local ListInterfaceService=$( eval echo "zenity ${ZenityDefaultInterface[${IntZenityListInterface}]}" ) ;
+ function ListDisplay()
+ {
+   eval $( __call_locality ) ;
+   local StrFuncName=( ListDisplay ) ;
+   local CmdEval=( ${ArrayArg[0]} ${ArrayArg[1]} ) ;
+   echo -ne "From Function:${StrFuncName[0]}\n\tCmdLine:[ ${CmdEval[@]} ]\n" > /dev/stderr ;
+   eval "${CmdEval[@]}" ;
+ }
+ function start()
+ {
+   eval $( __call_locality ) ;
+   local StrFuncName=( start ) ;
+   local CmdEval=( ${ArrayArg[0]} ${ArrayArg[1]} ) ;
+   echo -ne "From Function:${StrFuncName[0]}\n\tCmdLine:[ ${CmdEval[@]} ]\n" > /dev/stderr ;
+   eval "${CmdEval[@]}" ;
+ }
+ function Launch()
+ {
+   eval $( __in_for ArrayAction ${ArrayHandler[intArrayHandler]} ${ArrayArg[1]} ) ;
+ }
+ local StrCmd=$( eval $( __in_for ArrayHandler Launch ) | eval "${ListInterfaceService}" ) ;
+ echo "StrCmd:[${StrCmd}]" ;
+ #eval $( __in_for ArrayHandler LaunchAction ) | eval "${ListInterfaceService} ;
+ #| eval "${ListInterfaceService}" ;
+
+  #| eval "${ListInterfaceService}" ;
+}
+
+

@@ -1,0 +1,87 @@
+### Unset GetSpacer ;
+### Unset this function is quite problematic in user display experience.
+unset GetSpacer ;
+function GetSpacer()
+{
+  eval $( __call_localityLocalName=GetSpacer __call_localityDisplayFunctionEntry=0 __call_locality ) ; 
+  unset PreProcess ShowVarDebug InitCharSpacer AttributeCharSpacer ArrayInit ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ProcessShowVarDebug           FParamVarName=IsShowVarDebug         FParamDefaultValue="False"   __fnctCreateLocalityFuncParam   ) ; 
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ProcessAttributeCharSpacer    FParamVarName=IsAttributeCharSpacer  FParamDefaultValue="True"   __fnctCreateLocalityFuncParam   ) ; 
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ProcessCharSpacer             FParamVarName=IsCharSpacer           FParamDefaultValue="True"   __fnctCreateLocalityFuncParam   ) ; 
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Char                          FParamVarName=StrCharSpace           FParamDefaultValue=Star   __fnctCreateLocalityFuncParam   ) ; 
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=CharId                        FParamVarName=IntCharSpaceId         FParamDefaultValue=None   __fnctCreateLocalityFuncParam   ) ; 
+  
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=StarChar                      FParamVarName=StrStartChar           FParamDefaultValue=None   __fnctCreateLocalityFuncParam   ) ; 
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=EndChar                       FParamVarName=StrEndChar             FParamDefaultValue=None   __fnctCreateLocalityFuncParam   ) ; 
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Stream                        FParamVarName=StrStream              FParamDefaultValue=None   __fnctCreateLocalityFuncParam   ) ; 
+  
+  local ArrayInit=( CharSpacer AttributeCharSpacer ) ; 
+  local StrChr="" ;
+  local IntSpacer=${ArrayArg[0]} ;
+  local IsCharFound=0 ;
+  IntSpacer=${IntSpacer:=0} ;
+  local StrCharOut="" ;
+  local IntProcessEntity="False" ;
+  
+  function PreProcess( )
+  {
+    eval $( __call_localityLocalName=PreProcess __call_localityDisplayFunctionEntry=0 __call_locality ) ; 
+    eval "IntProcessEntity=\${Is${ArrayArg[0]}}" ;
+    if [ "${IntProcessEntity:=False}" == "True" ] ; then 
+     eval ${ArrayArg[0]} ;
+    fi
+  }
+  
+  function ShowVarDebug()
+  {
+    eval $( __call_localityLocalName=ShowVarDebug __call_localityDisplayFunctionEntry=0 __call_locality ) ; 
+    local StreamDisplay="""Variable IntCharSpaceId,        Value : ${IntCharSpaceId}
+Variable IsShowVarDebug,        Value : ${IsShowVarDebug}
+Variable IsCharSpacer,          Value : ${IsCharSpacer}
+Variable IsAttributeCharSpacer  Value : ${IsAttributeCharSpacer}
+Variable StrStartChar,          Value : ${StrStartChar}
+Variable StrEndChar,            Value : ${StrEndChar}
+Variable StrStream,             Value : ${StrStream}
+Default Char Used : <Char; ${StrCharSpace}>\nSpacer Length:${IntSpacer}\n""" ;
+  echo -ne "${StreamDisplay}" > /dev/stderr ;
+  }
+
+  
+  function InitCharSpacer()
+  {
+    eval $( __call_localityLocalName=InitCharSpacer __call_localityDisplayFunctionEntry=0 __call_locality ) ; 
+    if [ ${IsCharFound:=0} -ne 1 ] ; then 
+     if [ "${StrCharSpace:=Star}" == "${ArrayCharSpacerName[${intArrayCharSpacerName}]}" ] ; then 
+       StrChr="${ArrayCharSpacerConv[${intArrayCharSpacerName}]}" ; 
+       IsCharFound=1 ;
+     fi
+    fi
+  }
+  
+  function AttributeCharSpacer()
+  {
+    eval $( __call_localityLocalName=AttributeCharSpacer __call_localityDisplayFunctionEntry=0 __call_locality ) ; 
+    if [ ${IntSpacer:=0} -gt 0 ] ; then
+      for (( intx=0 ; intx <= $(( ${IntSpacer}-1 )) ; intx++ )) ; do 
+        StrCharOut="${StrCharOut}${StrChr}"
+      done ;
+    else
+      StrCharOut="" ; 
+    fi
+  }
+  
+  function CharSpacer()
+  {
+    eval $( __call_localityLocalName=CharSpacer __call_localityDisplayFunctionEntry=0 __call_locality ) ; 
+    if [ "${IntCharSpaceId:=None}" == "None" ]; then 
+     eval $( __in_for ArrayCharSpacerName InitCharSpacer ) ; 
+    else
+     StrChr=${ArrayCharSpacerConv[${IntCharSpaceId}]} ;
+    fi
+  }
+  
+ 
+  eval $( __in_for ArrayInit PreProcess ) ;
+  echo -ne "${StrCharOut}" ;
+  
+}

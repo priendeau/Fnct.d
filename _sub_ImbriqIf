@@ -1,0 +1,201 @@
+### This is the Generator, imbricated multiples test condition and generate 
+### scaled if condition with failed-test function-name result... 
+### 
+### Usually, Failed test can report or either use the integer within the Array, 
+### PushArgToNd ( intPushArgToNd ) which can be a trigger based function. 
+### There is a Default test on success, named FinalTest, and on any failed test, FailedTest.
+### Thoses argument may be renamed with respective variable Name : TestWithDefaultFailTestFunc TestWithDefaultFinalTestFunc
+### it use -e, -f, -g, -G, -h, -k, -L, -O, -p, -r, -s, -S, -t, -u, -w, -x,
+### and last argument must be a file... 
+
+### last Test Case cmdline :
+### in path : /usr/lib/python2.6/idlelib
+### cmdline : EvalFunctorDebug=False                            TestWithReplaceTagSpacer=False TestWithRewriteTagSpacer=False TestWithCharSpacer=Tiret TestWithDefaultFailTestFunc=CantTest TestWithDefaultFinalTestFunc=__FnctCompileFile TestWithFuncRewriteTag=RewriteTagSpacer TestWithFuncReplaceTag=ReplaceTagBySpacer ImbriqIf -e -r -x TreeWidget.py
+function ImbriqIf()
+{ 
+	eval $( __call_localityLocalName=TestWith __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+  ### Warning : 
+  ### Default Name calling Inner variable start with TestWith, not ImbriqIf...
+  ###
+  
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Eval                     \
+                                        FParamVarName=EvalTest                    \
+                                        FParamDefaultValue=False                  \
+                                        __fnctCreateLocalityFuncParam   ) ; 
+  
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=EvalExecute              \
+                                        FParamVarName=EvalNoBrace                 \
+                                        FParamDefaultValue=False                  \
+                                        __fnctCreateLocalityFuncParam   ) ; 
+  
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=SpreadArgOnFailedTestFunc  \
+                                        FParamVarName=SpreadArgOnFailedTestFunc     \
+                                        FParamDefaultValue=True                     \
+                                        __fnctCreateLocalityFuncParam   ) ;   
+  
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=CharSpacer           \
+                                        FParamVarName=CharSpaceType           \
+                                        FParamDefaultValue=Tab                \
+                                        __fnctCreateLocalityFuncParam   ) ; 
+  
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ReplaceTagSpacer     \
+                                        FParamVarName=IsReplaceTagSpacer      \
+                                        FParamDefaultValue=True               \
+                                        __fnctCreateLocalityFuncParam   ) ; 
+  
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=RewriteTagSpacer     \
+                                        FParamVarName=IsRewriteTagSpacer      \
+                                        FParamDefaultValue=True               \
+                                        __fnctCreateLocalityFuncParam   ) ; 
+  
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=FuncReplaceTag        \
+                                        FParamVarName=FuncReplaceTag           \
+                                        FParamDefaultValue=ReplaceTagBySpacer  \
+                                        __fnctCreateLocalityFuncParam   ) ; 
+  
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=FuncRewriteTag        \
+                                        FParamVarName=FuncRewriteTag           \
+                                        FParamDefaultValue=RewriteTagSpacer    \
+                                        __fnctCreateLocalityFuncParam   ) ; 
+  
+  local ArrayDefVar=( EvalTest EvalNoBrace SpreadArgOnFailedTestFunc FuncRewriteTag );
+  ### CharSpaceType <-IsRewriteTagSpacer IsRewriteTagSpacer-> FuncRewriteTag
+  ### SpreadArgOnFailedTestFunc <-CharSpaceType-> FuncRewriteTag
+  eval $( DDVArrayName=ArrayDefVar __call_default_display_Var ) ;  
+  
+  local ArraySpacerName=( __SPACER1__ __SPACER2__ __SPACER3__ __SPACER4_ __SPACER5__ __SPACERA1__ __SPACERA2__ __SPACERA3__ __SPACERA4_ __SPACERA5__ __SPACERB1__ __SPACERB2__ __SPACERB3__ __SPACERB4_ __SPACERB5__ __SPACERC1__ __SPACERC2__ __SPACERC3__ __SPACERC4_ __SPACERC5__ ) ;
+
+  function FailedTest()
+	{
+		eval $( __call_localityLocalName=FailedTest __call_localityDisplayFunctionEntry=0 __call_locality ) ; 
+		eval "local OutputTest=\${${StrFuncName}Output:=/dev/stderr}" ;
+		echo -ne "Failed Test with ${ArrayArg[0]} on ${ArrayArg[1]}\n" > ${OutputTest} ; 
+	}
+	
+	function FinalTest()
+	{
+		eval $( __call_localityLocalName=FinalTest __call_localityDisplayFunctionEntry=0 __call_locality ) ; 
+		eval "local OutputTest=\${${StrFuncName}Output:=/dev/stderr}" ;
+		echo -ne "${ArrayArg[0]}\n" > ${OutputTest} ; 
+	}
+  
+  function FailedTestReceivedParameter()
+  {
+    eval $( __call_localityLocalName=FailedTestReceivedParameter __call_localityDisplayFunctionEntry=0 __call_locality ) ; 
+    if [ ${SpreadArgOnFailedTestFunc:=True} ] ; then 
+      IfFailedTestReceiveParam=${IfExecuteTest} ;
+    else
+      IfFailedTestReceiveParam=3 ;
+    fi
+  }
+  
+  function CreateAssociation()
+  {
+    eval $( __call_localityLocalName=CreateAssociation __call_localityDisplayFunctionEntry=0 __call_locality ) ; 
+    eval $( FParamFuncName=${StrFuncName} FParamSuffixName=RMemberVar FParamVarName=IsRmemberVar FParamDefaultValue=False __fnctCreateLocalityFuncParam   ) ; 
+    
+    eval "local NameArraySearch=ArraySpacer${StrSpacerId}Name" ;
+    eval "local NameArrayReplace=ArraySpacer${StrSpacerId}Translate" ;
+    
+    if [ "${IsRmemberVar}" == "True" ] ; then 
+      #eval "local VarInterpret=\${\${${NameArrayReplace}[int${NameArrayReplace}]}}" ;
+      eval "${ArrayArg[0]}=\${${ArrayArg[0]}//\${${NameArraySearch}[int${NameArraySearch}]}/__VAR__}" ; 
+    else
+      eval "${ArrayArg[0]}=\${${ArrayArg[0]}//\${${NameArraySearch}[int${NameArraySearch}]}/\${${NameArrayReplace}[int${NameArrayReplace}]}}" ; 
+    fi
+  }
+
+  function TestInParseTest()
+  {
+    eval $( __call_localityLocalName=TestInParseTest __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+    if [ ${intPushArgToNd:=0} -lt $((${#PushArgToNd[@]}-1)) ] ; then 
+      ResultTest=${ResultTest//__TEST__/${Template[${IfBraceTest}]}} ;
+      eval $( EvalFunctorOnScreen=True __fnctCmdEval __fnct_TestBraceType_ParseTest __TEST__ ${intPushArgToNd} ${IfBraceTest} ) ;
+      elif [ ${intPushArgToNd:=0} -eq $((${#PushArgToNd[@]}-2)) ] ; then 
+        ResultTest=${ResultTest//__TEST__/${Template[${IfBraceTest}]}} ;
+        eval $( EvalFunctorOnScreen=True __fnctCmdEval __fnct_TestBraceType_ParseTest __TEST__ ${intPushArgToNd} ${IfEndParseItem} ) ;
+        elif [ ${intPushArgToNd:=0} -eq $((${#PushArgToNd[@]}-1)) ] ; then 
+          ResultTest=${ResultTest//__TEST__/${Template[${IfEndParseItem}]}} ;
+          eval $( EvalFunctorOnScreen=True __fnctCmdEval __fnct_TestBraceType_ParseTest __TEST__ ${intPushArgToNd} ${IfEndParseItem} ) ;
+        fi
+  }
+  
+  function FinalizeParseTest()
+  {
+    eval $( __call_localityLocalName=FinalizeParseTest __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+    ResultTest=${ResultTest//__TEST__/} ;
+    if [ "${EvalTest}" == "False" ] ; then 
+      echo -ne "${ResultTest}\n" ;
+    else
+      eval "${ResultTest}" ;
+    fi
+  }
+  
+  function ParseTest()
+	{
+		eval $( __call_localityLocalName=ParseTest __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+    ResultTest=${ResultTest//__ITEM__/${ArrayArg[0]}} ;
+    local IfExecuteTest=2 ;
+    local IfBraceTest=0 ;
+    local IfEndParseItem=1 ;
+    ResultTest=${ResultTest//__FILE__/${StrFileName}} ;
+    TestInParseTest
+	}
+
+  ### Assuming we are Shorting value with true/false instead of number or type, 
+  ### Using Major Discriminant like ${StrFuncName}, TestWith to save in variable 
+  ### exception naming, using function like EvalKeyFuncStartOnCond will carry
+  ### between embedded function. So it's important to name corresponding 
+  ### Numeric Value with right Prefix.... Like this case, we will use 
+  ### on prompt, TestWithReplaceTagSpacer and inside the main function, 
+  ### a variables named FunctorParseTestIntTagToSpace will be recognized by 
+  ### EvalKeyFuncStartOnCond to execute proper function is this one carry 1
+  ### rather than 1. Don't forget, while using EvalKeyFuncStartOnCond, 
+  ### you have to call only the Root-Name of this variable, IntTagToSpace
+  ### ... And will automatically handle FunctorParseTestIntTagToSpace
+  ### ## 
+  ### ##  This method EvalKeyFuncStartOnCond, can occur in multiple
+  ### ##  function name, with almost no change except the Function name ( according 
+  ### ##  with proper uses of __call_locality ), and the test will automatically
+  ### ##  call ${StrFuncName}RootNameVar inside the test, while you can also
+  ### ##  create the function name inside an eval of EvalKeyFuncStartOnCond
+  ### ##  CallMeth${StrFuncName} if the method exist or even you can define later 
+  ### ##  the method, by calling this function you get simple-executive corpus.
+  ### ##  
+  local FunctorParseTestIntTagToSpace=0;
+  local FunctorParseTestIntTagRewrite=0;
+  local IfFailedTestReceiveParam=0;
+  
+  #__fnct_FunctorParseTestIntTagToSpace
+  #__fnct_FunctorParseTestIntTagRewrite
+  
+  
+	local ArrayParseItem=( __ITEM__ __FILE__ __TEST__ ) ; 
+	
+	### echo \"${ArrayArg[1]}\"
+	eval "local DefaultFailTestFunc=\${${StrFuncName}DefaultFailTestFunc:=FailedTest}" ;
+	eval "local DefaultFinalTestFunc=\${${StrFuncName}DefaultFinalTestFunc:=FinalTest}" ;
+	
+	local Template=() 
+  local StrSpace=()
+  
+  Template[0]="if [ ${ArrayParseItem[0]} ${ArrayParseItem[1]} ] ; then ${ArrayParseItem[2]} ; else ${DefaultFailTestFunc} ${ArrayParseItem[0]} ${ArrayParseItem[1]} ; fi" 
+  Template[1]="${DefaultFinalTestFunc} ${ArrayParseItem[1]}" 
+  Template[2]="if ${ArrayParseItem[0]} ; then ${ArrayParseItem[2]} ; else ${DefaultFailTestFunc} ${ArrayParseItem[0]} ${ArrayParseItem[1]} ; fi\n" ;
+  Template[3]="if ${ArrayParseItem[0]} ; then ${ArrayParseItem[2]} ; else ${DefaultFailTestFunc} ; fi" ;
+  
+  local IfFailedTestReceiveParam;
+  
+  FailedTestReceivedParameter ;
+
+  local PushArgToNd=( ${ArrayArg[@]:0:$((${#ArrayArg[@]}-1))} ) ;
+  local StrFileName=${ArrayArg[$((${#ArrayArg[@]}-1))]} ;
+  local ResultTest=${Template[0]} ;
+  local IfExecuteTest=0;
+	local IfBraceTest=0;
+  local IfEndParseItem=0;
+  
+	
+	eval $( __in_for PushArgToNd ParseTest ) ;
+  FinalizeParseTest
+}	

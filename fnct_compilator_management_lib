@@ -1,0 +1,33 @@
+
+fzenity_external_header()
+{
+  local ArrayArg=( $* ) ;
+  local StrDefaultContainerFileList=${ArrayArg[0]} ;
+  local UUID=$( uuidgen -r ) ; 
+  local StrFile=${HOME}/${UUID} ;
+  include_header_from_usr_share () 
+  { 
+      find /usr/share/ -type f -iname "*.h" -printf "%h\n" | sort -u | grep --color=auto -iv "example|test" > ${StrFile} ;
+  }
+  function __fzenity_progress_bar()
+  {
+    local ArrayArg=( $* ) ;
+    zenity --progress --percentage=5 --pulsate --auto-close --auto-kill --text="Searching External Include Header out of CURRENT /usr/include" ;
+  }  
+  function __fzenity_interruption()
+  {
+    local ArrayArg=( $* ) ;
+    zenity --error --no-wrap --text="The Current process was interrupted" ; 
+  } 
+  function __fzenity_box_info()
+  {
+    local ArrayArg=( $* ) ;
+    zenity --text-info --editable --text-info --filename=${StrFile} ;
+    rm -f ${StrFile} ; 
+  } 
+  
+  include_header_from_usr_share    
+  __fzenity_box_info ; 
+
+}
+

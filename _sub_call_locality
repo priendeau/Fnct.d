@@ -1,0 +1,115 @@
+__call_locality()
+{
+ local ArrayArgInfo=( $* ) ;
+ local StrFuncName=( __call_locality ) ;
+ local ArrayLocalityScheme=( CreateFuncName CreateFuncEval DisplayFunctionInformation FinalizeLocality ) ; 
+ 
+ echo eval "local ArrayArg=( \$* ) ; " ;
+ eval "local StrNewFuncName=\${${StrFuncName[0]}LocalName}" ;
+ eval "local IsDisplayFunctionEntry=\${${StrFuncName[0]}DisplayFunctionEntry}" ;
+ 
+ #function InitLocallity()
+ #{
+    # initial
+    #echo eval "local ArrayArg=( \$* ) ; " ;
+    # --new--
+    #echo "echo \"local ArrayArg=( \\\$* )\"" ;
+    # initial
+    #eval "local StrNewFuncName=\${${StrFuncName[0]}LocalName}" ;
+    # --new--
+    #echo "echo eval \"local StrNewFuncName=\\\${${StrFuncName[0]}LocalName}\"" ;
+    # initial
+    #eval "local IsDisplayFunctionEntry=\${${StrFuncName[0]}DisplayFunctionEntry}" ;
+    # --new--
+    #echo "echo \"eval \"local IsDisplayFunctionEntry=\\\${${StrFuncName[0]}DisplayFunctionEntry}\"\"" ;
+ #}
+ IsDisplayFunctionEntry=${IsDisplayFunctionEntry:=0} ;
+ StrNewFuncName=${StrNewFuncName:=DefaultSubFunction} ; 
+ eval "local DefaultFunc=\${${StrFuncName[0]}DefaultFunc:=DisplayLocal}" ;
+ 
+ function InitVarLocality()
+ {
+    # initial
+    IsDisplayFunctionEntry=${IsDisplayFunctionEntry:=0} ;
+    # -new-
+    #echo "IsDisplayFunctionEntry=${IsDisplayFunctionEntry:=0}" ;
+    # initial
+    StrNewFuncName=${StrNewFuncName:=DefaultSubFunction} ; 
+    # -new-
+    #echo "StrNewFuncName=${StrNewFuncName:=DefaultSubFunction}" ; 
+    # initial
+    eval "local DefaultFunc=\${${StrFuncName[0]}DefaultFunc:=DisplayLocal}" ;
+    # -new-
+    #echo "eval \"local DefaultFunc=\${${StrFuncName[0]}DefaultFunc:=DisplayLocal}\""  ;
+ }
+ 
+ #echo -ne "function DisplayLocalEval()\t{ eval \$( __call_localityLocalName=DisplayLocal __call_locality ) ; echo -ne \"\${ArrayArg[0]}\n\" ; }" ; 
+ ###
+ ### This one only need few modification, to work, it simple design the Default display instead of echo in __in_for
+ ### ... Probably need some clear-eyes to find-it out... 
+ ###
+ ### And The goal :
+ ###     To generate Pre-designed sub-function here. Creating Function for CmdEval and you coumpound element and
+ ### choose the moment to display or execute them... You make any suggestion, The blog is here to 
+ ### promote C.O.R.P. ( Conflicting-Object-Resolution-Pattern... ).
+ ###
+ 
+ function CreateFuncName()
+ {
+    local TypeNoVal="None" ;
+    local StrLMember="${StrNewFuncName:=${TypeNoVal}}";
+    local StrRMember="${TypeNoVal}";
+    local StrNewMember="local StrFuncName=\( \${StrNewFuncName} \)"
+    echo -ne  "if [ ${StrLMember} != ${StrRMember} ] ; then echo \"eval ${StrNewMember} ;\" ; fi ;"  ; 
+ }
+ 
+ function CreateFuncEval()
+ {
+   local TypeNoVal="None" ;
+    local StrLMember="${DefaultFuncEval:=${TypeNoVal}}";
+    local StrRMember="${TypeNoVal}";
+    local StrNewMember="local StrFuncName=\( \${StrNewFuncName} \)"
+   echo -ne  "if [ ${StrLMember} != ${StrRMember} ] ; then echo \"eval \"local DefaultFunc=\( \${${StrFuncName[0]}DefaultFuncEval:=DisplayLocalEval} \) ; \"\" ; fi ;" ;
+ }
+ 
+ function DisplayFunctionInformation
+ {
+   local StrDisplay="From Function:[ ${StrNewFuncName} ]" ;
+   echo -ne "if [ \${IsDisplayFunctionEntry:=0} -ne 0 ] ; then echo ${StrDisplay} > /dev/stderr ; fi ;" ;
+ }
+ function FinalizeLocality()
+ {
+    echo -ne  "eval \"local StrHelperVarName=ArrayHelper${StrNewFuncName}\"" ;
+ }
+ 
+ for(( intx=0;intx<=$((${#ArrayLocalityScheme[@]}-1));intx++ )); do
+  #eval echo -ne "PRAGMA:\${ArrayLocalityScheme[\${intx}]}\\\n" > /dev/stderr ;
+  eval "eval \$( ${ArrayLocalityScheme[${intx}]} )";
+ done
+ 
+ 
+ ### |
+ ### +--> There is Something neet coming, and it's EvalKeyFuncStartOnCond in fnct_lib and will be promoted soon... 
+ ###
+ #function get_skip()
+ #{
+  #local ArrayArg=( $* ) ;
+  #local IntDefaultSkip=${ArrayArg[0]} ;
+  #IntDefaultSkip=${IntDefaultSkip:=0} ;
+  #local ArraySkip=() ;
+  #for (( intx=0 ; intx <= ${IntDefaultSkip} ; intx++ )) ; do 
+   #ArraySkip[${#ArraySkip[@]}]="\"\t\"" ;
+  #done
+  #echo "${ArraySkip[@]// /}" ;
+ #}
+
+ #eval "local LocalStrFuncNameHelper=AddHelper${StrNewFuncName}"; 
+ #eval "local LocalStrFuncNameHelperList=ListHelper${StrNewFuncName}";
+ #echo -ne "local ${StrHelperVarName}=() ;" ;
+ #echo -ne "local StrFuncNameHelper=${StrHelperVarName} ;" ;
+ #echo -ne "local StrFuncNameHelperAdd=${LocalStrFuncNameHelper} ;" ;
+ #echo -ne "local StrFuncNameHelperList=${LocalStrFuncNameHelperList} ;" ;
+ #echo -ne "function ${LocalStrFuncNameHelper}()    { ${StrHelperVarName}[\${#${StrHelperVarName}[@]}]=\$1 ; } ;" ;
+ #echo -ne "function ${LocalStrFuncNameHelperList}()    { function __echo()    { echo -ne \"\t<\${int${StrHelperVarName}};\${${StrHelperVarName}[\${int${StrHelperVarName}}]}>\n\" ; } ;  eval \$( __in_for ${StrHelperVarName} __echo ) ; } ;" ;
+ 
+}

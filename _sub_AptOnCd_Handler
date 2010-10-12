@@ -1,0 +1,229 @@
+
+LASTAPTONCD=$( cat /opt/aptoncd_lastdate )
+export LASTAPTONCD
+
+
+CreateAptOnCdLinkRef()
+{
+	eval $( __call_localityLocalName=CreateAptOnCdLinkRef __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+
+	function GetPackageList()
+	{
+		eval $( __call_localityLocalName=GetPackageList __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+		local CmdEval=( ${GetPackageListMainProg:=find} ${GetPackageListPath:=/media/apt-on-cd/packages/} "-type f" "-iname" "\"*.${GetPackageListMimeType:=deb}\"" -printf "\"%f \"" ) ;
+		eval "${CmdEval[@]}" ;
+	}
+
+	local ArrayDebianFile=( $( GetPackageList ) ) ;
+
+	function __fnct_link()
+	{
+		eval $( __call_localityLocalName=Fnct_Link __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+		local StrLinkName="${ArrayArg[0]}/${ArrayArg[1]}";
+		local StrNameToLink="${Fnct_LinkDefaultOrigin:=/media/apt-on-cd/packages/}${ArrayArg[1]}"
+		local CmdEval=( ln -sf \"${StrNameToLink}\" \"${StrLinkName}\" ) ;
+
+		if [ "${Fnct_LinkTestLink:=False}" == "True" ] ; then
+			if [ -L ${StrLinkName} ]  ; then
+				echo -ne "Link Name already Exist <${StrLinkName};${StrNameToLink}>\n" > /dev/stderr
+			else
+				echo -ne "Link Name does not Exist <${StrLinkName};${StrNameToLink}\n>" > /dev/stderr
+				echo -ne "CmdLine :\n [ ${CmdEval[@]} ] \n" > /dev/stderr ;
+				if [ "${Fnct_LinkEval:=False}" == "True" ] ; then
+					eval "${CmdEval[@]}" ;
+				fi
+			fi
+		else
+			if [ "${Fnct_LinkEval:=False}" == "True" ] ; then
+				eval "${CmdEval[@]}" ;
+				echo -ne "CmdLine :\n [ ${CmdEval[@]} ] \n" > /dev/stderr ;
+			fi ;
+		fi
+	} ;
+	eval $( __in_for ArrayDebianFile ${CreateAptOnCdLinkRefDefaultFinder:=__fnct_link} ${CreateAptOnCdLinkRefDefaultAptArch:=/var/cache/apt/archives} ) ;
+}
+
+CronAptOnCdLinkRenew()
+{
+	. ${fnct_libPathConf[0]}/fnct_lib ;
+	sleep 2 ;
+	clear ;
+	Fnct_LinkTestLink=True Fnct_LinkEval=True CreateAptOnCdLinkRef
+}
+
+function CronAptOnCdUpdateMount()
+{
+  eval $( __call_localityLocalName=CronAptOnCdUpdateMount __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+
+  local CmdLoopUpdateSequence=( FindDetachLoop FindDeleteOldCd UpdateAptOnCdDate CronMountAptOnCD CronAptOnCdLinkRenew );
+
+  ### Example of __fnctCreateLocalityFuncParam :
+  ### ParamList :
+  ### ${StrFuncName}FuncName      : ${StrFuncName}
+  ### ${StrFuncName}SuffixName    : NewNameStore
+  ### ${StrFuncName}VarName       : StrNewFileDate
+  ### ${StrFuncName}DefaultValue  : /opt/aptoncd_lastdate
+  eval $( FParamFuncName=CronAptOnCdUpdateMount FParamSuffixName=NewNameStore  FParamVarName=StrNewFileDate FParamDefaultValue=/opt/aptoncd_lastdate __fnctCreateLocalityFuncParam ) ;
+  echo -ne "Var : StrNewFileDate : ${StrNewFileDate}\n" ;
+  ### Example of __fnctCreateLocalityFuncParam :
+  ### ${StrFuncName}FuncName      : ${StrFuncName}
+  ### ${StrFuncName}SuffixName    : PreviousNameStore
+  ### ${StrFuncName}VarName       : StrPreviousFileDate
+  ### ${StrFuncName}DefaultValue  : /opt/aptoncd_previousdate
+  eval $( FParamFuncName=CronAptOnCdUpdateMount FParamSuffixName=PreviousNameStore FParamVarName=StrPreviousFileDate FParamDefaultValue=/opt/aptoncd_previousdate  __fnctCreateLocalityFuncParam ) ;
+  echo -ne "Var : StrPreviousFileDate : ${StrPreviousFileDate}\n" ;
+
+  eval $( FParamFuncName=CronAptOnCdUpdateMount FParamSuffixName=DebugMode FParamVarName=IsDebug FParamDefaultValue=True  __fnctCreateLocalityFuncParam ) ;
+  echo -ne "Var : IsDebug : ${IsDebug}\n" ;
+
+  function FindDetachLoop()
+  {
+    eval $( __call_localityLocalName=FindDetachLoop __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    local LoopNameDetach=$( losetup -j /media/COMST500GB/linux-ubuntu-backup-intrepid/apt-on-cd/apton* | awk '{ gsub(/:/,"",$1) ; printf("%s",$1)}' )  ;
+    LoopNameDetach=${LoopNameDetach:=None} ;
+    if [ ${LoopNameDetach:=None} != "None" ] ; then
+      eval $( EvalFunctorOnScreen=True __fnctCmdEval umount ${LoopNameDetach} ) ;
+      eval $( EvalFunctorOnScreen=True __fnctCmdEval losetup -d ${LoopNameDetach} );
+    else
+      eval $( EvalFunctorOnScreen=True __fnctCmdEval umount /media/apt-on-cd/ ) ;
+    fi
+
+  }
+
+  function FindDeleteOldCd()
+  {
+    eval $( __call_localityLocalName=FindDeleteOldCd __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    eval $( EvalFunctorOnScreen=True __fnctCmdEval find /media/COMST500GB/linux-ubuntu-backup-intrepid/apt-on-cd/ -iname \"aptoncd-${StrPreviousFileDate}*.iso\" -exec rm -f {} \; ) ;
+  }
+
+  function __call_CmdEval()
+  {
+    eval $( __call_localityLocalName=CallCmdEval __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    #eval $( EvalFunctorDebug=False EvalFunctorOnScreen=True __fnctCmdEval ${ArrayArg[0]} ) ;
+    if [ "${IsDebug:=True}" == "True" ] ; then
+      echo -ne "Calling Sub Function ${ArrayArg[0]}\n\tWith Call Debug Statement\n"  ;
+      eval $( EvalFunctorIsDebug=True EvalFunctorOnScreen=True __fnctCmdEval ${ArrayArg[0]} ) ;
+    else
+      echo -ne "Calling Sub Function ${ArrayArg[0]}\n"  ;
+      eval $( EvalFunctorOnScreen=True EvalFunctorIsDebug=False EvalFunctorOnScreen=True __fnctCmdEval ${ArrayArg[0]} ) ;
+    fi
+
+  }
+  eval $( __in_for CmdLoopUpdateSequence __call_CmdEval ) ;
+}
+
+function CronMountAptOnCD()
+{
+  eval $( __call_localityLocalName=CronMountAptOnCD __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+  local ArrayCheckMount=( /media/apt-on-cd ) ;
+  local ArrayMountKeyId=( LASTAPTONCD ) ;
+  function GetMountAptCdMtab()
+  {
+    eval $( __call_localityLocalName=GetMountAptCdMtab __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+
+    local ArrayProcParamList=( "MountCallExecute=True MountCallPrint=True MountCallPrintDebug=True MountCallEvalExec=True" "" ) ;
+    local ArrayProcList=( MountCall CronAptOnCdLinkRenew ) ;
+
+    function CallMountProc()
+    {
+      eval $( __call_localityLocalName=CallMountProc __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+      eval $( EvalFunctorOnScreen=True __fnctCmdEval ${ArrayProcParamList[${intArrayProcList}]} ${ArrayProcList[${intArrayProcList}]} ${ArrayArg[0]} ) ;
+    }
+    eval $( __call_localityLocalName=GetMountAptCdMtab __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    eval $( EvalFunctorVarType=local EvalFunctorVarReturn=Ismount EvalFunctorOnScreen=True __fnctCmdEval egrep -ic --no-filename "\"\${ArrayCheckMount[\${intArrayCheckMount}]}"\" /etc/mtab )
+    if [ ${IsMount:=0} -eq 0 ] ; then
+      echo -ne "Try to mount the APTOnCD iso \n" > /dev/stderr  ;
+      ###eval $( EvalFunctorOnScreen=True __fnctCmdEval MountCallExecute=True MountCallPrint=True MountCallPrintDebug=True MountCallEvalExec=True MountCall \${ArrayMountKeyId[\${intArrayCheckMount}]} ) ;
+      eval $( __in_for ArrayProcList CallMountProc \${ArrayMountKeyId[\${intArrayCheckMount}]} ) ;
+    else
+     echo -ne "APTOnCD Already Mounted\n" > /dev/stderr  ;
+     eval $( EvalFunctorOnScreen=True __fnctCmdEval CronAptOnCdLinkRenew ) ;
+    fi
+  }
+  eval $( __in_for ArrayCheckMount GetMountAptCdMtab ) ;
+
+}
+
+function UpdateAptOnCdDate()
+{
+  eval $( __call_localityLocalName=UpdateAptOnCdDate __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+  ### All Pre Declaration Variable are prefixed to :
+  ### Example of __fnctCreateLocalityFuncParam :
+  ### ${StrFuncName}FuncName      : UpdateAptOnCdDate
+  ### ${StrFuncName}SuffixName    : NewNameStore
+  ### ${StrFuncName}VarName       : StrNewFileDate
+  ### ${StrFuncName}DefaultValue  : /opt/aptoncd_lastdate
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=NewNameStore FParamVarName=StrNewFileDate FParamDefaultValue=/opt/aptoncd_lastdate  __fnctCreateLocalityFuncParam ) ;
+  ### Example of __fnctCreateLocalityFuncParam :
+  ### ${StrFuncName}FuncName      : UpdateAptOnCdDate
+  ### ${StrFuncName}SuffixName    : PreviousNameStore
+  ### ${StrFuncName}VarName       : StrPreviousFileDate
+  ### ${StrFuncName}DefaultValue  : /opt/aptoncd_previousdate
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=PreviousNameStore FParamVarName=StrPreviousFileDate FParamDefaultValue=/opt/aptoncd_previousdate __fnctCreateLocalityFuncParam ) ;
+
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaultFuncNameCall FParamVarName=StrDefaultFuncNameCall FParamDefaultValue=DateAptCdID __fnctCreateLocalityFuncParam ) ;
+  #UpdateAptOnCdDate
+
+  function DateAptCdID()
+  {
+    ### Call UpdateAptOnCdDate, or parent CronAptOnCdUpdateMount with variable pre-defined:
+    ### DateAptCdIDCDNumber=NNN to set new Cd-rom ID, like aptoncd-20100707-001-DVD1.iso
+    ### instead of aptoncd-20100707-000-DVD1.iso
+    ###
+    ### Sample of /etc/fstab with AptOnCd mountLine :
+    ### File : /etc/fstab
+    ### /media/COMST500GB/linux-ubuntu-backup-intrepid/apt-on-cd/aptoncd-${LASTAPTONCD}-DVD1.iso  /media/apt-on-cd iso9660 ro,loop 0 0 
+    ###
+    ### require acces to /opt, a file named /opt/aptoncd_lastdate is holding the name of the cdrom
+    
+    eval $( __call_localityLocalName=DateAptCdID __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    eval "local IDCd=\${${StrFuncName}CDNumber:=000}" ;
+    local CmdEval=( date "+%Y%m%d-${IDCd}" ) ;
+    echo -ne "CmdLine:\n\t[ ${CmdEval[@]} ]\n" > /dev/stderr ;
+    eval "${CmdEval[@]}" ;
+  }
+  function OptAptUpdateFile()
+  {
+    eval $( __call_localityLocalName=OptAptUpdateFile __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    #eval "local DefaultFuncNameCall=\${${StrFuncName}DateCall:=DateAptCdID}" ;
+    eval "local DefaultFileName=\${${StrFuncName}Name:=/opt/aptoncd_lastdate}" ;
+    echo -ne "Using Default Date Manager to update AptFileId: ${DefaultFuncNameCall}\nDefault FileName for AptFileId: ${DefaultFileName}\n" ;
+    local CmdEval=( ${StrDefaultFuncNameCall} \> ${DefaultFileName} ) ;
+    echo -ne "CmdLine:\n\t[ ${CmdEval[@]} ]\n" > /dev/stderr ;
+    eval "${CmdEval[@]}" ;
+    #declare LASTAPTONCD=$( cat /opt/aptoncd_lastdate ) ;
+    cat /opt/aptoncd_lastdate >> /opt/aptoncd_previousdate
+    export LASTAPTONCD=$( cat /opt/aptoncd_lastdate ) ;
+  }
+  OptAptUpdateFile ;
+}
+
+function MountSession()
+{
+  eval $( __call_localityLocalName=MountSession __call_locality );
+  function MountBranch()
+  {
+    $( __call_localityLocalName=MountBranch __call_locality ) ;
+    ### Example of Mount program can be supplied to command-line:
+    ### /bin/mount /sbin/mount.fuse /sbin/mount.mtpfs /sbin/mount.ecryptfs /sbin/mount.ecryptfs_private /sbin/mount.ntfs /sbin/mount.ntfs-3g /sbin/mount.ntfs-fuse
+    ### like : MountBranchProgName=/sbin/mount.fuse MountSession
+    eval "local ProgMount=\${${StrFuncName}ProgName:=/bin/mount}" ;
+    eval $( EvalFunctorOnScreen=True __fnctCmdEval ${ProgMount} ${ArrayArg[0]} );
+  } ;
+  local ArraySuggestMountDevice=( /media/rescue /media/COMST500GB /media/Ebook CronMountAptOnCD ) ;
+  eval "local MountDrive=\${${StrFuncName}ListArrayName:=ArraySuggestMountDevice}" ;
+  eval "local ArrayMount=( \${${MountDrive}[@]}  )" ;
+  eval $( __in_for ArrayMount MountBranch  );
+}
+
+SetNumberPackagesTest ()
+{
+    eval $( __call_localityLocalName=SetNumberPackagesTest  __call_locality );
+    eval $( FParamFuncName=${StrFuncName} FParamSuffixName=NumberPackageKeep    FParamVarName=IntNumberPackageKeep   FParamDefaultValue=100    __fnctCreateLocalityFuncParam );
+    eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaultPackagePath    FParamVarName=StrDefaultPackagePath  FParamDefaultValue=/var/cache/apt/archives    __fnctCreateLocalityFuncParam );
+    CronAptOnCdLinkRenew;
+    cd ${StrDefaultPackagePath};
+    local ArrayPackageDeb=($( find ./ -maxdepth 1 -iname "*.deb" -printf "%p " | sed 's/\.\///g' ));
+    rm -f ${ArrayPackageDeb[@]:${IntNumberPackageKeep}}
+}
+

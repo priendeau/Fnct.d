@@ -1,0 +1,12 @@
+function __parse_spacer_list()
+{
+ eval $( __call_localityLocalName=ParserList __call_locality ) ;  
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ArrayName  FParamVarName=StrArrayName FParamDefaultValue=DefaultScriptTpl  __fnctCreateLocalityFuncParam ) ;
+ function ParseSpacerList()
+ {
+   eval $( __call_localityLocalName=AwkFilter __call_localityDisplayFunctionEntry=0 __call_locality ) ;  
+   eval "${ArrayArg[0]}=\${${ArrayArg[0]}//${ArrayCharSpacerName[${intArrayCharSpacerName}]}/${ArrayCharSpacerConv[${intArrayCharSpacerConv}]}}" ;
+ }
+ eval $( __in_for ArrayCharSpacerName ParseSpacerList DefaultScriptTpl ) ;
+	
+}

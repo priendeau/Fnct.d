@@ -1,0 +1,109 @@
+safe_pwgen()
+{
+ eval $( __call_localityLocalName=SafePassword __call_locality ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=MinStartRandomPct    FParamVarName=IntLowestPctCycling      FParamDefaultValue=47     __fnctCreateLocalityFuncParam ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=BasedCyclic          FParamVarName=IntBasedCyclic           FParamDefaultValue=2000   __fnctCreateLocalityFuncParam ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=PasswordLength       FParamVarName=IntPasswordLength        FParamDefaultValue=2000   __fnctCreateLocalityFuncParam ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=GenType              FParamVarName=IntGenType               FParamDefaultValue=1      __fnctCreateLocalityFuncParam ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ScreenDisplayLength  FParamVarName=IntScreenDisplayLength   FParamDefaultValue=80     __fnctCreateLocalityFuncParam ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=FileDeposit          FParamVarName=StrFileDeposit           FParamDefaultValue=None   __fnctCreateLocalityFuncParam ) ;
+ 
+ local MethodPassGeneration=( "-cnsB1" "-ncsBy1" "-0cA1" "-0yBs1" ) ;
+
+ local NextMod=1;
+ local IsInAverage=0;
+ local IntRandom=0;
+
+ function VarDisplay()
+ {
+   eval $( __call_localityLocalName=VarDisplay __call_locality ) ;
+   echo -ne "Percent of mandatory recycling: ${IntLowestPctCycling}\n"  > /dev/stderr ;
+   echo -ne "Based Cycling Factor is: ${IntBasedCyclic}\n"              > /dev/stderr ;
+   echo -ne "Minimum Cycling factor is: ${IntMinBasedRand}\n"           > /dev/stderr ;
+ }
+
+ function BasedCyclicGeneration()
+ {
+  eval $( __call_localityLocalName=BasedCyclicGeneration __call_locality ) ;
+  echo -ne """
+  if [ \${IntRandomReturn} -gt \${IntMinBasedRand} ] ; then
+    IsInAverage=1;
+  else
+    IsInAverage=0;
+  fi\n
+  """ ;
+ }
+
+ function InitRand_Avg()
+ {
+   echo -ne """
+   IsInAverage=0;
+   IntRandom=0;
+   """ ;
+ }
+
+ function GetRandomInformation()
+ {
+  eval $( __call_localityLocalName=GetRandomInformation __call_locality ) ;
+  local IntCountGenLoop=0 ;
+  local IntBasedRand=${ArrayArg[0]} ;
+  local IntMinBasedRand=$( echo "${IntBasedCyclic} ${IntLowestPctCycling}" | awk 'END{}{printf("%i",$1*($2/100))}{}' ) ;
+  VarDisplay ;
+
+  #local IntRandomReturn ;
+  while [ ${IntCountGenLoop:=0} -lt ${IntBasedCyclic} ] ; do
+   (( IntCountGenLoop++ )) ;
+    #~ eval $( InitRand_Avg ) ;
+    local IsInAverage=0;
+    local IntRandom=0;
+    while [ ${IsInAverage} -eq 0 ] ; do
+     IntRandomReturn=$(( ${RANDOM} % ${IntBasedCyclic} )) ;
+     #~ eval $( BasedCyclicGeneration ) ;
+      IntRandomReturn=$(( ${RANDOM} % ${IntBasedCyclic} )) ;
+      if [ ${IntRandomReturn} -gt ${IntMinBasedRand} ] ; then
+        IsInAverage=1;
+      else
+        IsInAverage=0;
+      fi
+    done
+  done
+  #~ echo ${IntRandomReturn} ;
+ }
+ local IntRandomReturn;
+ GetRandomInformation ;
+ local IntRandom=${IntRandomReturn} ;
+ local PasswordLength=${ArrayArg[0]};
+ PasswordLength=${PasswordLength:=16} ;
+ if [ ${IntRandom:=0} -gt 80 ] ; then
+  local TryPerDot=$(( (${IntRandom}-1) / 80 )) ;
+ else
+  TryPerDot=${IntRandom} ;
+ fi
+
+ local intCount=0;
+ echo -ne "Based Item generated : ${IntRandom}\nPer Dot-Generation:${TryPerDot}\n" > /dev/stderr ;
+ while [ ${intCount:=0} -ne ${IntRandom} ] ; do
+   local CmdEval=( pwgen ${MethodPassGeneration[${IntGenType}]} ${PasswordLength} ) ;
+   local StrPasswd=$( ${CmdEval[@]} ) ;
+   if [ $(( ${intCount:=0} % ${TryPerDot} )) -eq 0 ] ; then
+    echo -ne "." > /dev/stderr;
+   fi ;
+ (( intCount+=1 )) ;
+ done ;
+ 
+ local StrBase64Header=$( echo -ne "${StrPasswd}" | base64 --wrap=0 ) ;
+ local Base64Sha=( $( echo -ne "${StrPasswd}" | sha1sum -b ) ) ;
+ local IntLengthBase64Passwd=${#StrBase64Header} ;
+ 
+ if [ ${StrFileDeposit:=None} != "None" ] ; then 
+  if [ -e ${StrFileDeposit:=None} ] ; then 
+   rm -f ${StrFileDeposit:=None} ;
+  fi
+  echo -ne "Password length : ${IntLengthBase64Passwd}\nSHA1SUM : ${Base64Sha[0]}\n" > /dev/stderr ; 
+  echo -ne "BASE64:${StrBase64Header}\n"                  >> ${StrFileDeposit:=None} ;
+  echo -ne "LENGTH:${IntLengthBase64Passwd}\n"            >> ${StrFileDeposit:=None} ;  
+  echo -ne "SHA1:${Base64Sha[0]}\n"                       >> ${StrFileDeposit:=None} ;  
+ else  
+  echo -ne "\npasswd:[${StrPasswd}]\n"                    > /dev/stderr ;
+ fi
+}

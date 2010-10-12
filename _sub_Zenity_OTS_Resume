@@ -1,0 +1,104 @@
+Zenity_OTS_Resume()
+{
+ eval $( __call_localityDisplayFunctionEntry=1 __call_localityLocalName=Zenity_OTS_ResumeV2 __call_locality )  ;
+ local ListInterfaceChoice=();
+ ListInterfaceChoice[0]="TRUE \"Parsing Text With OTS\" 0 " ;
+ ListInterfaceChoice[1]="FALSE \"Changing Ratio Settings\" 1 " ;
+ ListInterfaceChoice[2]="FALSE \"Quit OTS\" 2" ;
+ local Ratio=20 ;
+ local uuid=( $( uuidgen -r ) $( uuidgen -r ) ) ;
+ local ArrayOrderReturn=( 0 1 2 ) ; 
+ local ArrayOrderFunct=( ParseText SetRatio ChangeExitState ) ;
+ 
+ local IntExit=0;
+ local Result=0;
+ 
+ function FilterText()
+ {
+   eval $( __call_localityDisplayFunctionEntry=1 __call_localityLocalName=FilterText __call_locality )  ;
+   eval $( __call_default_display_Var )  ;
+   StreamIn=$( cat ${ArrayArg[0]} ); 
+   StreamOut=$( echo -ne "${StreamIn}" | tr '[:cntrl:]' ' '  ) ; 
+   echo -ne "Received Text:\n\t----BEGINING-OF-TEXT----\n${StreamIn}\n\t----END-OF-TEXT----\n" > /dev/stderr ;
+   echo -ne "Filtered Text:\n\t----BEGINING-OF-TEXT----\n${StreamOut}\n\t----END-OF-TEXT----\n" > /dev/stderr ;
+   echo -ne "${StreamOut}" > ${ArrayArg[1]} ;
+ }
+ function ZenityBoxSize()
+ {
+  eval $( __call_localityDisplayFunctionEntry=1 __call_localityLocalName=BoxSize __call_locality )  ;
+  eval $( __call_default_display_Var )  ;
+  local Value=( ${ArrayArg[0]/x/ } ) ;
+  echo "--width=${Value[0]} --height=${Value[1]}" ;
+ }
+ function __on_return_error()
+ {
+  eval $( __call_localityDisplayFunctionEntry=1 __call_localityLocalName=__on_return_error __call_locality )  ;
+  eval $( __call_default_display_Var )  ;
+  echo "if [ \$? -ne 0 ] ; then ${ArrayArg[@]:0} ; fi" ;
+ }
+ 
+ function MainInterface()
+ { 
+   eval $( __call_localityDisplayFunctionEntry=1 __call_localityLocalName=MainInterface __call_locality )  ;
+   eval $( __call_default_display_Var )  ;
+   Result=$(  eval "zenity --list --text=\"OTS Interface\" $( ZenityBoxSize 400x260 ) --radiolist --column=\"Choice\" --column=\"Selection\" --column=\"ID\" --separator=\":\" --hide-column=3 --print-column=3  ${ListInterfaceChoice[@]}" ); 
+   #eval $( __on_return_error return 1 ) ;
+   if [ $? -ne 0 ] ; then 
+     return 1 ; 
+   fi
+   #echo "Return throw value:[${Result}]" > /dev/stderr ;
+ }
+ 
+ function SetRatio()
+ {
+  eval $( __call_localityDisplayFunctionEntry=1 __call_localityLocalName=SetRatio __call_locality )  ;
+  
+  eval $( __call_default_display_Var )  ;
+  Ratio=$( zenity --scale --min-value=0 --max-value=100 --value=20 --text="Default Resume option" --title="Percentage resume Settings" ) ; 
+  ParseTextDefaultRatio=${Ratio} ParseText ;
+ }
+ 
+ function ChangeExitState()
+ {
+   eval $( __call_localityDisplayFunctionEntry=1 __call_localityLocalName=ChangeExitState __call_locality )  ;
+   IntExit=1;
+ }
+ 
+ function ParseText()
+ {
+   eval $( __call_localityDisplayFunctionEntry=1 __call_localityLocalName=ParseText __call_locality )  ;
+   eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaultRatio FParamVarName=IntDefRatio    FParamDefaultValue=${Ratio}                __fnctCreateLocalityFuncParam ) ;
+   zenity $( ZenityBoxSize 800x600 ) --title="Resume input to produce resume@${IntDefRatio} percent." --editable --text-info > ${uuid[0]} ; 
+   #FilterByHexConversion ${uuid[0]} ${uuid[1]} ;
+   FilterText ${uuid[0]} ${uuid[1]} ;
+   
+   ots --ratio=${Ratio} ${uuid[1]} > "${uuid}.resume" 
+   zenity $( ZenityBoxSize 800x600 ) --editable --text-info --title="Resume result at ${IntDefRatio} percent" --filename="${uuid}.resume" ;
+   rm -f ${uuid[0]} ${uuid[1]} "${uuid}.resume" ; 
+ }
+ 
+ function CompareResult()
+ {
+  eval $( __call_localityDisplayFunctionEntry=1 __call_localityLocalName=CompareResult __call_locality ) ;
+  eval "if [ \${${ArrayArg[0]}} -eq ${ArrayArg[1]} ] ; then eval \"${ArrayOrderFunct[${intArrayOrderReturn}]}\" ; fi "
+  
+ }
+ 
+ function TerminationCall()
+ {
+   eval $( __call_localityDisplayFunctionEntry=1 __call_localityLocalName=TerminationCall __call_locality ) ;
+   zenity --warning --text="The Application end due to termination signal send to application." ;
+ }
+ 
+ while [ ${IntExit:=0} -eq 0 ] ; do
+  MainInterface ;
+  local ErrorStatement=$? ;
+  echo "ErrorStatement:[${ErrorStatement}]" ;
+  if [ ${ErrorStatement:=1} -eq 0 ] ; then 
+   eval $( __in_for ArrayOrderReturn CompareResult Result ) ;
+  else
+    IntExit=1 ; 
+    TerminationCall ;
+  fi
+ done
+}

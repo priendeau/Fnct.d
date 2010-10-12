@@ -1,0 +1,85 @@
+function MonitorSytemReport()
+{
+  eval $( __call_localityLocalName=MonitorSytemReport __call_locality  ) ; 
+  
+  function ShowDate()
+  {
+    eval $( __call_localityLocalName=ShowDate __call_locality  ) ; 
+    date "+${ArrayDateFormat[0]}, epoch:%s" ; 
+  }  
+  
+  function NetReport()
+  {
+    eval $( __call_localityLocalName=NetReport __call_locality  ) ; 
+    echo -ne "****************************************\n\tNETWORK MONITOR\n****************************************\n" ; 
+    netstat -tulpn ;
+  }  
+  
+  function DiskReport()
+  {
+    eval $( __call_localityLocalName=DiskReport __call_locality  ) ; 
+    echo -ne "****************************************\n\tDISK MONITOR\n****************************************\n" ; 
+    df -h ;
+  }
+  
+  function DefaultSleep()
+  {
+    eval $( __call_localityLocalName=DefaultSleep __call_locality  ) ; 
+    eval "local DefaultSleepInterleave=\${${StrFuncName}Time:=2}" ;
+    sleep ${DefaultSleepInterleave} ;
+    clear ; 
+  }  
+  
+  function __fnct_exec()
+  {
+    eval $( __call_localityLocalName=FunctorExecute __call_locality  ) ; 
+    eval "${ArrayArg[0]}" ;
+  }
+  
+  local ArrayExecOrder=( ShowDate DiskReport NetReport DefaultSleep ) ;
+  
+  while [ 1 ] ; do 
+    eval $( __in_for ArrayExecOrder __fnct_exec ) ;
+  done
+
+}
+
+function MonitorKernelReport()
+{
+  eval $( __call_localityLocalName=MonitorSytemReport __call_locality  ) ; 
+  
+  function ShowDate()
+  {
+    eval $( __call_localityLocalName=ShowDate __call_locality  ) ; 
+    date "+${ArrayDateFormat[0]}, epoch:%s" ; 
+  }  
+  
+  function KernelReport()
+  {
+    eval $( __call_localityLocalName=KernelReport __call_locality  ) ; 
+    eval "local IntTailSize=\${${StrFuncName}NbLine:=15}" ;
+    echo -ne "****************************************\n\tKERNEL MESSAGE\n****************************************\n" ; 
+    dmesg | tail -n ${IntTailSize} ;
+  }  
+  
+  function DefaultSleep()
+  {
+    eval $( __call_localityLocalName=DefaultSleep __call_locality  ) ; 
+    eval "local DefaultSleepInterleave=\${${StrFuncName}Time:=2}" ;
+    sleep ${DefaultSleepInterleave} ;
+    clear ; 
+  }
+    
+  function __fnct_exec()
+  {
+    eval $( __call_localityLocalName=FunctorExecute __call_locality  ) ; 
+    eval "${ArrayArg[0]}" ;
+  }
+  
+  local ArrayExecOrder=( ShowDate KernelReport DefaultSleep ) ;
+  
+  while [ 1 ] ; do 
+    eval $( __in_for ArrayExecOrder __fnct_exec ) ;
+  done
+
+}

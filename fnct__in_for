@@ -1,0 +1,133 @@
+### Function : __in_for () 
+### Function to Loop Process f(x) from Array in loop
+### Noted : eval $( __in_for <|ArrayContent|> f() x
+### where : 
+###   <|ArrayContent|> : is an Array. The Holder-Name can be a Global or local Array
+###   f() : is a function or program with __call_locality ability or parse_newvar or even __InitFunc 
+###   x : Is the variable, can be fixed result from query or variable assignation like, var=value
+###   
+###   Content of f() must:
+###     Having support for ${ArrayArg[0]} or ${<|ArrayContent|>[int<|ArrayContent|>]} is the internal
+###     form and both of them are working, but ${<|ArrayContent|>[int<|ArrayContent|>]} will be Array-named
+###     dependent.
+###   
+###     ex : 
+###     function __test_internal_form()
+###     {
+###       eval $( __InitFunc __test_internal_form ) ; 
+###       if [ ${InternalForm:=full} == "full" ] ; then 
+###           echo "${ArrayTest[${intArrayTest}]}" ;
+###       elif [ ${InternalForm:=full} == "ArrayArg" ] ; then 
+###           echo "${ArrayArg[0]}" ;
+###       fi
+###    }
+###   
+###   while, ArrayTest=( 1 2 3 ) ;while, ArrayTest1=( 3 2 1 ) ;
+###   calling : eval $( __in_for ArrayTest __test_internal_form )
+###    ---> will pass, displaying 1\n 2\n 3\n ...
+###   calling : eval $( __in_for ArrayTest1 __test_internal_form )
+###    ---> Will Fail...
+###     Because ArrayTest1 is involved in looping and looking for ${ArrayTest1[${inArrayTest1}]} and not
+###     ${ArrayTest[${intArrayTest}]}, but 
+###   calling : eval $( __in_for ArrayTest1 __test_internal_form InternalForm=ArrayArg )
+###   ---> will pass, displaying 3\n 2\n 1\n ...
+###   
+###   But this function can not perform everything if : 
+###   eval $( __InitFunc __test_internal_form ) ; 
+###       Thank to evolution of ArrayBashCmd... 
+###   Note: Base64 is not supported.
+###   
+###   
+
+ForBase64Encode()
+{
+ local ArrayBase=( $* ) ;
+ local Result=$( echo "${ArrayBase[@]}" | base64 --wrap=0 ) ;
+ echo "BASE64:${Result[@]}" ;
+}
+ 
+ForBase64Decode()
+{
+ local ArrayBase=( $* ) ;
+ local Result=( ${ArrayBase[@]//:/ } ) ;
+ if [ ${Result[0]:=none} == "BASE64"  ] ; then 
+   echo "${Result[1]}" | base64 --wrap=0 -d ; 
+ fi 
+}
+
+__in_for () 
+{ 
+  local ArrayArg=( $* );
+  eval $( parse_newvar ${EFunctionTypeDecl} ${TypeDebugKey[${EParamNoDebugDecl}]} ${ArrayArg[@]} ) ;
+  local IntUsingEgrepScanLoop=${IntUsingEgrepScanLoop:=0} ; 
+  local IntUsingArgModLimitation=${IntUsingArgModLimitation:=1} ;
+  local IntTransmitArgModbase64=${IntTransmitArgModbase64:=0} ;
+  local ParseTagArray="__ARRAY__" ;		    
+  local ArrayArgMod;
+  local ArrayName=${ArrayArg[0]};
+  ArrayName=${ArrayName:=Array} ;
+  local FunctionName=${ArrayArg[1]};
+  local FunctionNameArg=${ArrayArg[2]};
+  local CurrentIncType="int" ;
+  local ArrayInFor=( "for" "((" "${CurrentIncType}${ParseTagArray}=0" ";" "${CurrentIncType}${ParseTagArray}" "<=" "\${#${ParseTagArray}[@]}-1" ";" "${CurrentIncType}${ParseTagArray}++" "))" ";" "do" "${FunctionName:=echo}" "${FunctionNameArg:=}" "\"\${${ParseTagArray}[\$((int${ParseTagArray}))]}\"" "${ArrayArgMod[@]/#/;}"  ";" "done" ) ;    		
+  local StrRegExpParse=0;
+
+  function Base64Handler()
+  {
+    if [ ${IntUsingArgModLimitation} -eq 1 ] ; then 
+      if [ ${IntTransmitArgModbase64} -eq 1 ] ; then 
+        ArrayArgMod=( $( echo ${ArrayArg[@]:4} | ForBase64Encode ) ) ; 
+      else
+        ArrayArgMod=( ${ArrayArg[@]:4} ) ; 
+      fi
+    else
+      if [ ${IntTransmitArgModbase64} -eq 1 ] ; then 
+        ArrayArgMod=( $( echo ${ArrayArg[@]} | ForBase64Encode ) ) ; 
+      else
+        ArrayArgMod=( ${ArrayArg[@]} ) ; 
+      fi
+    fi 
+  }
+  function RegExpLoopParse()
+  {
+    local IntRegExpParse=0;
+    for(( IntY=0 ; intY <= ${#ArrayInFor[@]}-1 ;intY++ )) ; do 
+     local IntLengthArgInit=${#ArrayInFor[${IntY}]};
+     local StrCopyArg=${ArrayInFor[${IntY}]/${ParseTagArray}/} ;
+     local IntCopyArgLength=${#StrCopyArg} ;
+     if [ "${IntLengthArgInit}" -ne "${IntCopyArgLength}" ] ; then 
+       IntRegExpParse=1 ; 
+       break 1 ; 
+     fi
+    done
+  }
+  function ScanLoop()
+  { ### By default using egrep is not a problems, may 
+    ### be slow with an excessive amount of Item in an 
+    ### Array, or if the limitation from ArrayArgMod is removed...
+    ### 
+    if [ ${IntUsingEgrepScanLoop:=0} -eq 1 ] ; then  
+      local StrRegExpParse=$( echo "${ArrayInFor[@]}" | egrep -ic "${ParseTagArray}" ) ;
+    else
+      RegExpLoopParse ;
+    fi
+    echo "${IntRegExpParse:=0}" ; 
+    #echo "${StrRegExpParse:=0}" ; 
+  }    
+
+  Base64Handler ; 
+  
+  local IntNeedParse=$( ScanLoop ${ArrayInFor[@]} ) ; 
+  	ArrayInFor=( $( echo ${ArrayInFor[@]//__ARRAY__/$ArrayName} ) ) ;
+  echo "${ArrayInFor[@]}" ;
+}
+
+### Specialization of __in_for 
+### 
+### 
+__for()
+{
+  local ArrayArg=( $* );
+  local CmdEval=( "eval" "$(" "__in_for" "${ArrayArg[@]}" ")" )  ;
+  eval $( PostEval )  ;
+}

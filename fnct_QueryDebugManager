@@ -1,0 +1,97 @@
+### #######################################################################################################
+### QueryDebug Management 
+###
+### #######################################################################################################
+
+###: Amendement : 
+### changing openssl with base64 encoding, with base64 --wrap=0
+### Base64 is part of coreutils 7.4-2ubuntu1 
+### Specificity :
+### Unlike Openssl, base64 implement specialized carriage return based on N-char
+### being feed into the encoder and may be setted to 0 for continuous feed. Which 
+### is an advantage where carriage return filter may be elimined and won't change the
+### base64-algorithm, where all caracter may be used to convert 8-bit data into 
+### 64 common caracter, which is almost all [[:print:]] caracter filter and may be 
+### diffictul to re-assign... 
+
+function QueryTransfer()
+{
+	eval $( __InitFunc QueryTransfer ) ;
+	#echo ${ArrayArg[@]} | openssl enc -e -base64 | tr '[:cntrl:]' ';' ;
+  echo "${ArrayArg[@]}" | "${ProgName:=base64}" "${ProgOption:=--wrap=0}" ;
+  #echo "CmdEval:[${CmdEval[@]}]" ; 
+  #eval "${CmdEval[@]}" ; 
+}
+
+function QueryReceive()
+{
+	eval $( __InitFunc QueryReceive ) ;
+	#echo ${ArrayArg[@]} | tr ';' '\n' | openssl enc -d -base64 
+  function __functor_base64decode()
+  {
+	  eval $( __InitFunc __functor_base64decode ) ;
+    local CmdEval=( echo "${ArrayArg[0]}" "|" ${ProgName:=base64} ${ProgOption:=--wrap=0 -d} ) ;
+    eval "${CmdEval[@]}" ; 
+  }
+  eval $( __in_for ArrayArg __functor_base64decode ) ; 
+}
+
+function QueryDebug()
+{
+	### Embed: PathFind, Printf, TQueryTransfer
+	###
+	###
+	local ArrayArg=( $* );
+	local StrFuncName=QueryDebug
+	echo "From Function ${StrFuncName}" ; 
+	eval $( parse_newvar ${EFunctionTypeDecl} ${TypeDebugKey[${EParamNoDebugDecl}]} ${ArrayArg[@]} StrFuncName=${StrFuncName} ) ;
+	local EvalCmd=$( QueryReceive \${TQueryTransfer:=\${DefaultQueryTransfert}} ) ;
+	if [ ${QueryDebug:=false} == "true" ] ; then 
+		echo "CmdLine : ${EvalCmd[@]} " ;
+		#echo "TQueryTransfer : ${TQueryTransfer}" ;
+	else
+		eval ${EvalCmd[@]} ;
+	fi
+	#echo "end of Function ${StrFuncName}" ; 
+}
+
+### function __StartQueryDebug()
+###
+### This Function is involved in any structure who need an evaluation statement
+### being done. Also Used to send Evaluation statetement or any command 
+### being parsed in a Array where it cause no error calling it with ${__ArrayName__*[@]}
+### 
+###	This is the short call-statement for :
+### QueryDebug TQueryTransfer=\"$( QueryTransfer ${__ArrayName__*[@]} )\" QueryDebug=${QueryDebug:=false} ;
+### Where '\"' and '$( __code_segment__* )' can be annoying, redundant and boring in 
+### Debuging statement, and painful to debug. 
+### 
+### __ArrayName__* : Used as Pattern demonstration. 
+### __code_segment__* : Used as Code Pattern demonstration.
+###
+
+function __StartQueryDebug()
+{
+	### Embed: ArrayEval, ForceEvalArray, ArrayNoEval, ArrayMember
+	###
+	###
+	unset ArrayEval ForceEvalArray ArrayNoEval ArrayMember ;
+	local ArrayArg=( $* );
+	local StrFuncName=__StartQueryDebug
+	#echo "From Function ${StrFuncName}" ; 
+	eval $( parse_newvar ${EFunctionTypeDecl} ${TypeDebugKey[${EParamNoDebugDecl}]} ${ArrayArg[@]} StrFuncName=${StrFuncName} ) ;
+	if [ ${ForceEvalArray:=false} == "true" ] ; then 
+		eval local ArrayName=\${${ArrayEval:=CmdEval}[@]}
+		echo "QueryDebug TQueryTransfer=\"\$( QueryTransfer ${ArrayName[@]} )\" QueryDebug=${QueryDebug:=false} " ;
+	elif [ ${ArrayNoEval:=false} == "true" ] ; then 
+		eval local ArrayName=${ArrayEval:=CmdEval} ;
+		echo "QueryDebug TQueryTransfer=\"\$( QueryTransfer ${ArrayMember:=ArrayName}=${ArrayName} )\" QueryDebug=${QueryDebug:=false} " ;
+	else
+		echo "QueryDebug TQueryTransfer=\"\$( QueryTransfer \${${ArrayEval:=CmdEval}[@]} )\" QueryDebug=${QueryDebug:=false} " ;
+	fi
+}
+
+### End of : QueryDebug Management
+#################################################################################
+#################################################################################
+

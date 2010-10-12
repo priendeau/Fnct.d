@@ -1,0 +1,53 @@
+function FuncParam()
+{
+  eval $( __call_localityLocalName=Fx __call_localityDisplayFunctionEntry=1 __call_locality  );
+  ### FParamSuffixName  
+  ### FParamDefaultValue
+  local StrHeader=${StrHeaderName:=None} ;
+  local ArrayParamValue=( ) ;
+  local StrStreamOut ;
+  
+  function GetParametricList()
+  {
+    eval $( __call_localityLocalName=GetParametricList __call_localityDisplayFunctionEntry=1 __call_locality  );
+    local ArrayItemInspection=( __call_localityLocalName FParamSuffixName FParamDefaultValue ); 
+    local ArrayItemStore=( ArrayLocalPrefix ArraySuffixName ArrayDefaultValue ); 
+    local ArrayLocalPrefix=( );
+    local ArraySuffixName=( );
+    local ArrayDefaultValue=( );
+    
+    function GetFunctionFparam()
+    {
+      eval $( __call_localityLocalName=GetFunctionFparam __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+      local StrArrayName=${ArrayItemStore[${ArrayItemInspection}]} ;
+      local CmdEval=( "declare -f ${ArrayArg[0]}"  "|" "awk -vArgItemShow='${StrArrayName}' -f /etc/init.d/fnct.d/awk-script/FuncParam.awk" "|" "tr '[:cntrl:]' ' '" ) ; 
+      echo -ne "local ${StrArrayName}=( \\\$( ${CmdEval[@]} ) );"  ;
+    }
+    
+    function DisplayFuncParamList()
+    {
+      eval $( __call_localityLocalName=DisplayFuncParamList __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+      eval "local StrFieldDisplay=\"[ Default Value: \${${ArrayItemStore[2]}[${int${ArrayItemStore[1]}}]} ]\"" ;
+      echo -ne "Generating Item0\n" > /dev/stderr ;
+      eval "local ItemStore0=\${${ArrayItemStore[0]}[0]}" ;
+      echo -ne "Generating Item1\n" > /dev/stderr ;
+      eval "local ItemStore1=\${${ArrayItemStore[1]}[${int${ArrayItemStore[1]}}]}" ;
+      eval "StrStreamOut=${ItemStore0} ${ItemStore1} ${StrFieldDisplay}\n" ;
+      echo -ne "${StrStreamOut}\n" > /dev/stderr ; 
+    }
+    
+    function __Main()
+    {
+      eval $( __call_localityLocalName=Main __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+      echo -ne "Function Name:${ArrayArg[0]},\n\t__fnctCreateLocalityFuncParam Parameter List:\n" ;
+      echo -ne "Section: ArrayItemInspection\n\tHolding [ ${ArrayItemInspection[@]} ]\n" > /dev/stderr ;
+      eval $( __in_for ArrayItemInspection  GetFunctionFparam     ) ;
+      echo -ne "Section: ArraySuffixName\n\tHodlding:[ ${ArrayItemStore[@]} ]\n" > /dev/stderr ;
+      eval $( __in_for ArrayItemStore DisplayFuncParamList  ) ;
+    }
+    
+    local CmdEval=( __Main ${ArrayArg[${intArrayArg}]} ) ;
+    eval $( ${CmdEval[@]} ) ;
+  }
+  eval $( __in_for ArrayArg GetParametricList )
+}

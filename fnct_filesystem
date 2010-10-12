@@ -1,0 +1,68 @@
+#~ . /etc/init.d/fnct.d/fnct_lib ; 
+#~ function declareArray 
+#~ {  
+ #~ eval $( __call_locality ) ; 
+ #~ local StrFuncName=( declareArray ) ;
+ #~ local StrName=$( ${ArrayArg[0]} ) ;
+ #~ local CmdEval=( local "ArrayResult=(" "\$(" "eval" "\$(" "__in_for" "\${StrName}" "\${ArrayArg[1]}" ")" ")" ")" ) ;  
+ #~ eval $( PostEval )  ; 
+ #~ unset ${ArrayArg[1]} ;
+ #~ local CmdEval=( eval "\"declare -a ${StrName}=( ${ArrayResult[@]} )\"" )  ; 
+ #~ eval $( PostEval )  ;  
+#~ } ; 
+
+#~ function get_filesystems()
+#~ {
+ #~ eval $( __call_locality ) ; 
+ #~ local StrFuncName=( get_filesystems ) ; 
+ #~ local CmdEval=( "declare" "-a" "ArrayFlatFSInfo=(" "\$(" "cat" "/proc/filesystems" "|" "sed" "'s/[\t\ ]/:/g'" ")" ")" ) ; 
+ #~ eval $( PostEval )  ; 
+ #~ echo "ArrayFlatFSInfo" ; 
+#~ }
+
+#~ function get_valid_fs()    
+#~ {  
+  #~ eval $( __call_locality ) ;  
+  #~ local StrFuncName=( get_valid_fs ) ; 
+  #~ local VarArray=( ${ArrayArg[0]//:/ } ) ;  
+  #~ local intLastElement=$(( ${#VarArray[@]}-1 )) ; 
+  #~ echo -ne "${VarArray[${intLastElement}]} " ; 
+#~ } ; 
+
+function change_mode()    
+{ 
+ eval $( __call_localityLocalName=CM __call_locality ) ; 
+ local CmdEval=( """find ./ -type f -iname \"*.${AMimeType[${intAMimeType}]}\" -exec chmod ${APermType[${intAPermType}]} {} \;""" ) ; 
+ local TemplateTag="__SPACE__" ;
+ local Template="CmdLine: [ ${CmdEval[@]}${TemplateTag}]" ;
+ local IntSize=$(( 70 - ( ${#Template} - ${#TemplateTag} ) )) ;
+ local StrSpace=$( GetSpacerCharId=1 GetSpacer ${IntSize} ) ;
+ local StrParse=${Template/__SPACE__/${StrSpace}};
+ echo -ne "${StrParse}\n" ; 
+ eval "${CmdEval[@]}" ;
+} 
+
+function PerModType()    
+{ 
+  eval $( _call_localityLocalName=PMT __call_locality ) ; 
+   
+  function __fnct_CM()    
+  { 
+   eval $( __call_localityLocalName=__fnct_CM  __call_locality ) ; 
+   eval $( __in_for APermType change_mode ) 
+  };  
+  
+  local APermType=( 666 ) ; 
+  local AMimeType=( gz zip bz2 egg ) ; 
+  eval $( __in_for AMimeType __fnct_CM ) ; 
+  local APermType=( 777 ) ; 
+  local AMimeType=( pyc so pyx pyw  ) ; 
+  eval $( __in_for AMimeType __fnct_CM ) ; 
+}
+function call_change_mode()
+{
+ eval $( _call_localityLocalName=CCM __call_locality ) ; 
+ PerModType ;
+}
+ 
+ 

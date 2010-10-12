@@ -1,0 +1,233 @@
+###
+### 
+### env = Environment(CPPPATH=["..", "../../"])
+### 
+### source = [str(file) for file in Glob('*.cpp')]
+### 
+### for file in Glob('*test*.cc'):
+###   source.remove(str(file))
+### 
+### env.SharedLibrary('googleurl', source)
+### env.StaticLibrary('googleurl', source)
+### 
+### 
+### 
+
+
+function GenerateArrayOfCode()
+{
+ local ArrayArg=( $* ) ;
+  if [ -d ${ArrayArg[0]} ] ; then 
+    local ArrayFile=$( find ${ArrayArg[0]} -type f -iname "*.cpp" -printf "%p " )
+    echo "return :[ ${ArrayFile[@]} ]" ;
+    local StrArrayNameExport=Array${ArrayArg[1]};
+    echo "Creating in Global Mode Array:[ < ${StrArrayNameExport} ; ${#ArrayFile[@]} Items> ]" ;
+    eval "declare -a Array${ArrayArg[1]}=( ${ArrayFile} ) " ;
+  fi
+}
+
+#declare -a ArrayCppMainFinder=( $( find PythonGenerator/ -type f -iname "*.cpp" -printf "%p " ) ) ; 
+GenerateArrayOfCode PythonGenerator CppMainFinder ;
+function BaseEncode64( )
+{
+  base64 --wrap=0 ;
+}
+
+function BaseDecode64()
+{
+  base64 --wrap=0 -d ;
+}
+
+
+declare -a ArrayCodeDiscovery=( $(echo "[\t\ ]+main[\t\ ]?\(" | BaseEncode64 ) ) ; 
+declare IntMainCppDiscoveryRegExpBase64=0 ;  
+
+function get_filename_by_regexp_discovery()
+{ 
+  local ArrayArg=( $* ) ; 
+  local BaseDecode=( $( echo "${ArrayArg[0]}" | BaseDecode64 ) ) ;
+  ErrorStatemen=$? ;
+  if [ ${ErrorStatemen:=1} -eq 0 ] ; then 
+    StrRegExp="${BaseDecode[@]}" ;
+  else
+    StrRegExp="${ArrayArg[0]}";
+  fi
+  local IsMain=$( egrep -ic "${StrRegExp}" ${ArrayArg[1]} ) ; 
+  if [ ${IsMain:=0} -gt 0 ] ; then 
+   echo "${ArrayArg[1]}" ; 
+  fi
+}
+
+function launch_inspection()
+{
+  local ArrayArg=( $* ) ; 
+  local ArrayFunct=() ;
+  local ArrayName=${ArrayArg[0]};
+  ArrayName=${ArrayName:=ArrayCppMainFinder};
+  local FuncSearch=${ArrayArg[1]};
+  FuncSearch=${FuncSearch:=get_filename_by_regexp_discovery};
+  local CmdEval=( "\$(" eval __in_for ${ArrayName} ${FuncSearch} ${ArrayCodeDiscovery[${IntMainCppDiscoveryRegExpBase64}]} ")" );
+  eval "${CmdEval[@]}" ;
+}
+
+function echo_argument()
+{
+  local ArrayArg=( $* ) ;
+  echo "Argument:[ ${intArrayArg} ; ${ArrayArg[@]} ]" > /dev/stderr ;
+}
+
+function get_Zenity_ratio()
+{
+    local ArrayArg=( $* ) ; 
+    eval $( __in_for ArrayArg echo_argument ) ;
+    local ArrayFunct=( get_Zenity_ratio ${ArrayFunct[0]} ) ;
+    echo "Function:[${ArrayFunct[1]}.${ArrayFunct[0]}]" > /dev/stderr ;
+    local StrVarName="${ArrayArg[0]}" ;
+    eval "StrVarName=${StrVarName:=IntRatio}" ; 
+    local CmdEval=( "zenity" "--scale" "--width=240" "--height=320" "--text=\"Percent of ration/summarize\"" "--value=20" ""--min-value=1 "--max-value=100" "--step=1" "--title=\"Open text Summerizer\"" ) ;
+    echo "CmdEval:[${CmdEval[@]}]" > /dev/stderr ;
+    local IntReturnValue=$( ${CmdEval[@]} ) ; 
+    local ErrorStatement=$? ;
+    if [ ${ErrorStatement:=0} -eq 1 ] ; then 
+      return 1 ;
+    else
+      if [ ${IntReturnValue:=0} -gt 0 ] ; then 
+        eval "local CmdLine=( declare ${StrVarName}=${IntReturnValue:=20} )" ;
+        echo "CmdLine:[${CmdLine[@]}]" > /dev/stderr ;
+        eval "${CmdLine[@]}" ; 
+      else 
+        return 1 ;
+      fi
+    fi
+}
+
+function get_ZenityEntryFilePrompt()
+{
+  local ArrayArg=( $* ) ;
+  eval $( __in_for ArrayArg echo_argument ) ;
+  local ArrayFunct=( get_ZenityEntryFilePrompt ${ArrayFunct[0]} ) ;
+  echo "Function:[${ArrayFunct[1]}.${ArrayFunct[0]}]" > /dev/stderr ;
+  local ArrayDisplay=( \""OTS Text Entry resume"\" ) ;
+  local IntRatio=${ArrayArg[1]} ;
+  echo "Function ${ArrayFunct[0]}" > /dev/stderr ; 
+  echo -ne "\tIntRatio:${IntRatio}\n" > /dev/stderr ;
+  local CmdEval=( "zenity" "--editable"  "--width=800" "--height=600"  "--title=${ArrayDisplay[0]" "--text-info" ) ;
+  echo "CmdEval:[${CmdEval[@]}]" > /dev/stderr ;
+  TextResult=( $( eval ${CmdEval[@]} ) ) ;
+  local ErrorStatement=$? ;
+  if [ ${ErrorStatement:=0} -eq 1 ] ; then 
+    return 1 ;
+  else
+    echo "${TextResult[@]}" > ${ArrayArg[0]} ;
+  fi
+}
+
+function get_ZenityEntryFileResult()
+{
+  local ArrayArg=( $* ) ;
+  eval $( __in_for ArrayArg echo_argument ) ;
+  local ArrayFunct=( get_ZenityEntryFileResult ${ArrayFunct[0]} ) ;
+  echo "Function:[${ArrayFunct[1]}.${ArrayFunct[0]}]" > /dev/stderr ;
+  local ArrayDisplay=( \""OTS Text Result resume"\" ) ;
+  local IntRatio=${ArrayArg[2]};
+  echo "Function ${ArrayFunct[0]}" > /dev/stderr ;
+  echo -ne "\tIntRatio:${IntRatio}\n" > /dev/stderr ;
+  local CmdEval=( "zenity" "--editable"  "--width=800" "--height=600"  "--title=${ArrayDisplay[0]}" "--text-info" "--filename=${ArrayArg[0]}" );
+  echo "CmdEval:[${CmdEval[@]}]" > /dev/stderr ;
+  local TextResult=( $(  eval ${CmdEval[@]} ) ) ;
+  local ErrorStatement=$? ;
+  if [ ${ErrorStatement:=0} -eq 1 ] ; then 
+    return 1 
+  else
+    echo "${TextResult[@]}" > ${ArrayArg[1]} ;
+  fi
+}
+
+function InitRatio()
+{
+  local ArrayArg=( $* ) ;
+  eval $( __in_for ArrayArg echo_argument ) ;
+  local ArrayFunct=( InitRatio ${ArrayFunct[0]} ) ;
+  echo "Function:[${ArrayFunct[1]}.${ArrayFunct[0]}]" > /dev/stderr ;
+  if [ ${IntRatio:=0} -eq 0 ] ; then
+    $( get_Zenity_ratio IntRatio ) ; 
+    local ErrorStatement=$? ;
+    if [ ${ErrorStatement:=0} -eq 1 ] ; then 
+      echo "No Value returned: ${IntRatio}" > /dev/stderr ;
+      return 1 
+    else
+      echo "Value returned: ${IntRatio}" > /dev/stderr ;
+      return 0;
+    fi
+  fi
+  
+}
+
+function get_ZenityUserQuitLevel()
+{
+  local ArrayArg=( $* ) ;
+  eval $( __in_for ArrayArg echo_argument ) ;
+  local ArrayFunct=( get_ZenityUserQuitLevel ${ArrayFunct[0]} ) ;
+  echo "Function:[${ArrayFunct[1]}.${ArrayFunct[0]}]" > /dev/stderr ;
+  local StrReturn=$( zenity --question --text="Should we end the application." --ok-label="Quit" --cancel-label="stay" )  ;
+  local ErrorStatement=$? ;
+  if [ ${ErrorStatement:=0} -eq 1 ] ; then 
+    return 1 ;
+  else
+    return ${StrReturn}
+  fi
+}
+
+function compare_text_summarizer
+{
+  . /etc/init.d/fnct.d/fnct_lib ;
+  unset InitTimeSleep TemplateDisplay StrFile1 StrFile2 IntRatio TextPath shatext shacompare ShaHolder newDisplayEval ;
+  local ArrayArg=( $* ) ;
+  eval $( __in_for ArrayArg echo_argument ) ;
+  declare ArrayFunct=( compare_text_summarizer ) ;
+  echo "Function:[${ArrayFunct[0]}]" > /dev/stderr ;
+  local InitTimeSleep=2 ; 
+  local TemplateDisplay=( "\tCreating new Text Summarizer\n" "SHAINIT:\t[__SHA1__]\nSHACOMPARE:\t[__SHA2__]\n" "Compare Statement:\t[__INT__]\n" "__UUID__.txt" ) ; 
+  #local StrFile1=${ArrayArg[0]} ;
+  #local StrFile2=${ArrayArg[1]} ;
+  declare IntRatio=${ArrayArg[2]} ;
+  local InitTimeSleep=${ArrayArg[3]} ;
+  InitTimeSleep=${InitTimeSleep:=5} ;
+  
+  
+  InitRatio ; 
+  local ErrorStatement=$? ;
+  if [ ${ErrorStatement:=0} -eq 1 ] ; then 
+    echo "No Value returned" ;
+    return 1 ;
+    else
+    echo "Selected value for summerization : ${IntRatio}" ;
+  fi
+ 
+  local StrUUID=$( uuidgen -r ) ; 
+  UUID=${TemplateDisplay[3]//__UUID__/${StrUUID}} ; 
+  
+  while [ 1 ] ; do 
+    local ReturnStatement=$(get_ZenityEntryFilePrompt ${UUID} ${IntRatio} ) ; 
+    
+    #local shatext=( $( sha1sum --binary ${UUID} ) ) ; 
+    #sleep ${InitTimeSleep:=5} ; 
+    #local shacompare=( $( sha1sum --binary ${UUID} ) ) ; 
+    #local ShaHolder=( ${shatext[0]} ${shacompare[0]} ) ; 
+    #local newDisplayEval=${TemplateDisplay[1]/__SHA1__/${ShaHolder[0]}} ; 
+    #newDisplayEval=${newDisplayEval/__SHA2__/${ShaHolder[1]}} ; 
+    #local IntCompareShaSum=$( echo "${ShaHolder[0]}" | egrep -ic "${ShaHolder[1]}" ) ;
+    echo -ne ${TemplateDisplay[2]/__INT__/${IntCompareShaSum:=0}} ;
+    #if [ ${IntCompareShaSum:=0} -eq 1 ] ; then 
+      #echo -ne "${newDisplayEval}" ; 
+    #else 
+      echo -ne "${TemplateDisplay[0]}"  ; 
+      local CmdEval=( "ots" "--ratio=${IntRatio}" "${UUID}" \"--out=${UUID}.1\" ) ; 
+      echo -ne "Function:${ArrayFunct[0]}\nCmdEval:[${CmdEval[@]}]\n" > /dev/stderr ;
+      eval ""${CmdEval[@]} ;
+      
+      get_ZenityEntryFileResult "${UUID}.1" "${UUID}" ${IntRatio} ; 
+    #fi ; 
+  done
+}
+

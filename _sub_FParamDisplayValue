@@ -1,0 +1,50 @@
+function FParamDisplayValue()
+{
+ eval $( __call_localityLocalName=DisplayValue __call_locality ) ;  
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ArrayName  FParamVarName=StrArrayName FParamDefaultValue=ArrayArg  __fnctCreateLocalityFuncParam ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DisplayXIncrement  FParamVarName=StrDisplayXIncrement FParamDefaultValue=False  __fnctCreateLocalityFuncParam ) ;
+ 
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=MinTabTest  FParamVarName=IntMinTabTest   FParamDefaultValue=1    __fnctCreateLocalityFuncParam ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=MaxTabTest  FParamVarName=IntMaxTabTest   FParamDefaultValue=4    __fnctCreateLocalityFuncParam ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=MaxCharLen  FParamVarName=IntMinLen       FParamDefaultValue=33   __fnctCreateLocalityFuncParam ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=MinCharLen  FParamVarName=IntMaxLen       FParamDefaultValue=27   __fnctCreateLocalityFuncParam ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=tabDecr     FParamVarName=IntDecrTabTest  FParamDefaultValue=8    __fnctCreateLocalityFuncParam ) ;
+ 
+ ### It's not totally templetable, so don't uncomment this has long there is not a copy-transvertible of this func...
+ #local ArrayDefVarFPDV=( StrArrayName StrDisplayXIncrement IntMinTabTest IntMaxTabTest IntMinLen IntMaxLen IntDecrTabTest ) ;
+ #eval $( DDVArrayName=ArrayDefVarFPDV __call_default_display_Var ) ;  
+ 
+ function __fnctParamDisplay()
+ {
+  eval $( __call_localityLocalName=DisplayValueSub __call_locality ) ;  
+  #eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ArrayName  FParamVarName=StrArrayName FParamDefaultValue=ArrayArg  __fnctCreateLocalityFuncParam ) ;
+  function AlterBandTestTabValue()
+  {
+		AIntBandTest[0]=$(( ${AIntBandTest[0]}-IntDecrTabTest )) ; 
+		AIntBandTest[1]=$(( ${AIntBandTest[0]}-IntDecrTabTest )) ; 
+	}
+	function LoopTabTest()
+	{
+		for ((intx=${IntMinTabTest};intx<=${IntMaxTabTest};intx++)); do
+			if [ ${IntLength:=0} -le ${AIntBandTest[0]} -a ${IntLength:=0} -gt ${AIntBandTest[1]} ] ; then 
+				StrDisplay=${StrDisplay/__TAB__/$(GetSpacerChar=Tab GetSpacer ${intx})} ;
+				if [ "${StrDisplayXIncrement}" == "True" ] ; then 
+					StrDisplay=${StrDisplay/__X__/${intx}} ;
+				else
+					StrDisplay=${StrDisplay/IntX=__X__/} ;
+				fi
+			else
+				AlterBandTestTabValue ;
+			fi
+		done
+	}
+  eval "local StrValueItem=\${${ArrayArg[0]}}" ;
+  local IntLength=${#ArrayArg[0]} ;
+  local StrDisplay="\t Value of ${ArrayArg[0]} : __TAB__[ ${StrValueItem} ] IntX=__X__\n" ;
+  local AIntBandTest=( ${IntMaxLen} ${IntMinLen}  );
+  #local IntDecrTabTest=${}8 ;
+  LoopTabTest ;
+  eval "echo -ne \"${StrDisplay}\"" ;
+ }
+ eval $( __in_for ${StrArrayName} __fnctParamDisplay ) ;
+}

@@ -1,0 +1,45 @@
+#function a()    { eval $( __call_localityLocalName=a __call_locality ) ; function display_list()    { eval $( __call_localityLocalName=display __call_locality ) ; echo -ne "${ArrayArg[0]}" ; } ; function Finalize()    { eval $( __call_localityLocalName=Finalize __call_locality ) ; local TArray=( ${ArrayArg[@]} ) ; local intLenTArray=${#TArray[@]} ; if [ ${intLenTArray:=0} -gt 0 ] ; then eval $( __in_for TArray display_list ) ; fi ; } ; display_list ${StrFuncName} ; Finalize ${ArrayArg[@]} ; }
+declare -a ArrayArgFunc=( $( declare -F | sed 's/declare \-f //g' | tr '[:cntrl:]' ' ' ) ) ; 
+function test_if_func()    { eval $( __call_localityLocalName=TestFuncIf __call_locality ) ; local FindFunc=0 ; function WithTest()    { eval $( __call_locality ) ; if [ ${FindFunc:=0} -ne 1 ] ; then if [ "${ArrayArgFunc[${intArrayArgFunc}]}" == "${ArrayArg[0]}" ]; then FindFunc=1 ; else FindFunc=0 ; fi ; fi ; }  ; eval $( __in_for ArrayArgFunc WithTest ) ; echo "FindFunc=${FindFunc}" ;} 
+template="""
+function __TPL__()
+{ 
+  local DefaultNegate=Non ; 
+  function Non()    
+  { 
+    eval $( __call_localityLocalname=Non __call_locality ) ; 
+    echo -ne "${StrFuncName}-${ArrayArg[0]}" 
+  } ; 
+  eval $( __call_localityLocalName=__TPL__ __call_locality ) ; 
+  function display_list()    
+  { 
+    eval $( __call_localityLocalName=display __call_locality ) ; 
+    local FindFunc=0 ; 
+    eval test_if_func ${ArrayArg[0]} ; 
+    if [ ${FindFunc} -eq 1 ] ; 
+      then ${ArrayArg[0]} ; 
+    else ${DefaultNegate} ${ArrayArg[0]} ; 
+    fi ; 
+  } ; 
+  function Finalize()    
+  { 
+    eval $( __call_localityLocalName=Finalize __call_locality ) ; 
+    local TArray=( ${ArrayArg[@]} ) ; 
+    local intLenTArray=${#TArray[@]} ; 
+    if [ ${intLenTArray:=0} -gt 0 ] ; then 
+      eval $( __in_for TArray display_list ) ; 
+    fi ; 
+  } ; 
+  display_list ${StrFuncName} ; Finalize ${ArrayArg[@]} ; 
+} ;
+
+"""
+
+
+function FuncHeaderLine()
+{
+  declare -f GetSpacer | wc -l ;
+}
+
+function BodyWithEnd()    { declare -f GetSpacer | tail -n $(( $(FuncHeaderLine) -2 )); }
+

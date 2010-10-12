@@ -1,0 +1,3 @@
+
+
+zenity --title "Grep Report" --text "Search regexp within path of file(s)" --width 400 --height 400 --editable --list --checklist --column "Edit" --column "file" --column "line_number" --column "" --separator " "  $( find /etc/init.d/fnct.d/ -type f -exec egrep -iHn "from" {} \; | sed 's/^\/\FALSE:\//g' | awk 'BEGIN{}{for(intx=1;intx<=NF-1;intx++){ printf("%s ",$(intx));} ;system("base") }END{}' )

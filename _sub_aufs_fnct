@@ -1,0 +1,165 @@
+function DicrectiveCtrl()
+{
+  eval $( __call_locality __call_localityLocalName=CTRLExec __call_localityDisplayFunctionEntry=1 ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DWInfoName                   FParamVarName=StrDWInfo   FParamDefaultValue=CanContinue __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DWFollowName                 FParamVarName=StrDWFollow FParamDefaultValue=CanExecNext __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Init                         FParamVarName=TypeInit    FParamDefaultValue=False       __fnctCreateLocalityFuncParam ) ;
+  
+  local IntErrorRecv=${ArrayArg[0]};
+  
+  function __InitDirective()
+  {
+      echo -ne """local ${StrDWInfo}=1 ; local ${StrDWFollow}=0 ;""" ;
+  }
+  
+  function __WillContinue()
+  {
+    eval $( __call_locality __call_localityLocalName=CTRLWContinue __call_localityDisplayFunctionEntry=1 ) ;
+    eval """${StrDWInfo}=1""" ;
+    eval """${StrDWFollow}=1""" ;
+  }
+  
+  function __WillStop()
+  {
+    eval $( __call_locality __call_localityLocalName=CTRLWStop __call_localityDisplayFunctionEntry=1 ) ;
+    eval """${StrDWInfo}=0""" ;
+    eval """${StrDWFollow}=0""" ;
+  }
+    
+  function __Main()
+  {
+    eval """local IntCurrentState=\${${DWInfo}}"""  ;
+    if [ ${IntCurrentState:=0} -ne 0 ] ; then 
+      echo -ne """\tVariable ${StrDWInfo} already set to error detected.\n\tFunction named: ${ArrayArg[1]} attempt to execute instruction beyond ${StrDWInfo} scope.""" > /dev/stderr ; 
+    else
+      if [ ${IntErrorRecv:=1} -ne 0 ] ; then 
+        __WillStop
+      else
+        __WillContinue
+      fi
+    fi
+  }
+  
+  if [ """${TypeInit}""" == """True""" ] ; then 
+    __InitDirective
+  else
+    __Main
+  fi
+  
+}
+
+unset AufsMountPointMaker ;
+function AufsMountPointMaker()
+{
+  eval $( __call_localityLocalName=MPM __call_localityDisplayFunctionEntry=1 __call_locality   ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=FSNAME             FParamVarName=StrFsName             FParamDefaultValue=aufs-FS001                                 __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=FSTYPE             FParamVarName=StrMountFS            FParamDefaultValue=aufs                                       __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=AufsSpare          FParamVarName=StrAufsSpare          FParamDefaultValue=/media/COMST500GB/UnderscoreXDevlpt/src/ubuntu/build/rezound-aufs __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=AufsRo             FParamVarName=StrAufsreadOnly       FParamDefaultValue=/media/avfs-link/rezound                   __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=AufsMount          FParamVarName=StrAufMountPoint      FParamDefaultValue=/media/build/ubuntu/9.10/deb/rezound       __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=SchemeStorageName  FParamVarName=StrSchemeStorageName  FParamDefaultValue=/opt/persistent/etc/aufs-mount-scheme.info __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DebugDisplay       FParamVarName=IsDebugDisplay        FParamDefaultValue=True                                       __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=BlockVarShow       FParamVarName=IsVarDisplay          FParamDefaultValue=True                                       __fnctCreateLocalityFuncParam ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=StopOnBlockVarShow FParamVarName=IsStopOnBlockVarShow  FParamDefaultValue=False                                      __fnctCreateLocalityFuncParam ) ;
+
+  local StopProcess="${IsStopOnBlockVarShow}" ;
+  local StrVarParamDisplay="""
+FSNAME             [ ${StrFsName} ]
+FSTYPE             [ ${StrMountFS} ]
+AufsSpare          [ ${StrAufsSpare} ]
+AufsRo             [ ${StrAufsreadOnly} ]
+AufsMount          [ ${StrAufMountPoint} ]
+SchemeStorageName  [ ${StrSchemeStorageName} ]
+DebugDisplay       [ ${IsDebugDisplay} ]
+BlockVarShow       [ ${IsVarDisplay} ]
+StopOnBlockVarShow [ ${IsStopOnBlockVarShow} ]\n""" ;
+
+	
+  local ArrayMount=( ${StrAufsSpare} ${StrAufsreadOnly} ${StrAufMountPoint} ) ;
+	local DateMount;
+	local IsMountSuccess=1;
+  #local CanContinue=1;
+  #local CanExecNext=0; 
+  
+  eval $( CTRLExecInit=True DicrectiveCtrl ) ;
+	
+  local CmdEval=() ;
+	local ArrayFuncList=( PreProcess Loader_MountPathCheck GetDateMount Loader_Mount Loader_Update_Scheme ) ;
+
+  function PreProcess( )
+  {
+    eval $( __call_localityLocalName=PreProcess __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    if [ "${IsVarDisplay}" == "True" ] ; then 
+      echo -ne "${StrVarParamDisplay}\n" > /dev/stderr ;
+    fi
+    
+    local ArrayMountPlaceCheck=( ${StrAufsSpare} ${StrAufMountPoint} ) ;
+    if [ "${IsDebugDisplay}" == "True" ] ; then 
+      echo -ne "Content of ArrayMountPlaceCheck : [ ${ArrayMountPlaceCheck[@]} ]\n" > /dev/stderr ; 
+      echo -ne "Content of ArrayMount           : [ ${ArrayMount[@]} ]\n" > /dev/stderr ; 
+      echo -ne "Content of ArrayFuncList        : [ ${ArrayFuncList[@]} ]\n" > /dev/stderr ; 
+      
+    fi 
+  }
+  
+	function GetDateMount()
+	{
+		eval $( __call_localityLocalName=GetDateMount __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+		DateMount=$( date "+${ArrayDateFormat[0]}" ) ;	
+	}
+
+	function MountPathCheck()
+	{
+		eval $( __call_localityLocalName=MountPathCheck __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+		if [ ! -d ${StrAufsSpare} ] ; then 
+			mkdir ${ArrayArg[0]}	;
+      CTRLExecDWInfoName=CanContinue CTRLExecDWFollowName=CanExecNext DicrectiveCtrl $? ${StrFuncName};
+		fi
+	}	
+
+	function 	Loader_MountPathCheck()
+	{
+		eval $( __call_localityLocalName=LoaderMPC __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+		eval $( __in_for ArrayMountPlaceCheck MountPathCheck ) ; 
+	}
+	
+	function Loader_Mount()
+	{
+		eval $( __call_localityLocalName=LoaderMount __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+		### ### Aufs Mount Template. ###
+    ###
+    ###
+    local CmdEval=( "mount" "-t ${StrMountFS}" "-o br=${StrAufsreadOnly}:${StrAufsSpare}" "${StrFsName}" "${StrAufMountPoint}" ) ;  
+		echo -ne "Cmdline:\n\t[ ${CmdEval[@]} ]\n" ;
+		eval "${CmdEval[@]}" ; 
+		IsMountSuccess=$? ;
+    CTRLExecDWInfoName=CanContinue CTRLExecDWFollowName=CanExecNext DicrectiveCtrl ${IsMountSuccess} ${StrFuncName} ;
+	}
+	
+	function Loader_Update_Scheme()
+	{
+		eval $( __call_localityLocalName=LoaderUScheme __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+		if [ ${IsMountSuccess} -eq 0 ] ; then 
+			local IntCountShemeSave=$( egrep -ic --no-filename "${CmdEval[@]}" ${StrSchemeStorageName} );
+			if [ ${IntCountShemeSave:=0} -eq 0 ] ; then 
+				echo "[${DateMount}]: ${CmdEval[@]}" >> ${StrSchemeStorageName} ;
+        CTRLExecDWInfoName=CanContinue CTRLExecDWFollowName=CanExecNext DicrectiveCtrl $? ${StrFuncName} ;
+			fi
+		fi
+
+	}
+
+	function __eval()
+	{
+		eval $( __call_localityLocalName=ListExecutor __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+		eval "${ArrayArg[0]}" ;
+    CTRLExecDWInfoName=CanContinue CTRLExecDWFollowName=CanExecNext DicrectiveCtrl $? ${StrFuncName} ;
+	}	
+	  
+  if [ "${StopProcess}" == "True" ] ; then 
+    ArrayFuncList=( ${ArrayFuncList[0]} ) ;
+  fi
+ 
+  eval $( __in_for ArrayFuncList __eval ) ;
+
+}

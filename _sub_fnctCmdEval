@@ -1,0 +1,110 @@
+
+function __fnctCmdEval()
+{
+  if [ "${StrFuncName:=None}" != "None" ] ; then 
+    local ParentFunc=${StrFuncName} ; 
+  else
+    local ParentFunc="Prompt" ;
+  fi
+  ### ####
+  ### Imperatively using EvalFunctor instead of function name "__fnctCmdEval"
+  ### has Variable prefix in Evaluation Function.
+  ###
+  eval $( __call_localityLocalName=EvalFunctor __call_localityDisplayFunctionEntry=1 __call_locality ) ;  
+  ### Example of __fnctCreateLocalityFuncParam :
+  ### ParamList :
+  ### ${StrFuncName}FuncName      : ${StrFuncName}
+  ### ${StrFuncName}SuffixName    : NewNameStore
+  ### ${StrFuncName}VarName       : StrNewFileDate
+  ### ${StrFuncName}DefaultValue  : /opt/aptoncd_lastdate
+  
+  #local ArrayVarName=(      VarReturn VarIsArray      VarType IsDebug IsBase64  OnScreen );
+  #local ArraySuffix=(       VarReturn VarReturnArray  VarType Debug   Base64    ParamShowEval             );
+  #local ArrayDefaulValue=(  None      False           local   False   False     False                     );
+  
+  #### Embedded multi-uses of __fnctCreateLocalityFuncParam with Array and Evaluate-executing
+  #### 
+  #### 
+  eval $( FParamFuncName=EvalFunctor FParamSuffixName=VarReturn       FParamVarName=VarReturn   FParamDefaultValue=None  __fnctCreateLocalityFuncParam   ) ; 
+  eval $( FParamFuncName=EvalFunctor FParamSuffixName=VarReturnArray  FParamVarName=VarIsArray  FParamDefaultValue=False __fnctCreateLocalityFuncParam   ) ; 
+  eval $( FParamFuncName=EvalFunctor FParamSuffixName=VarType         FParamVarName=VarType     FParamDefaultValue=local __fnctCreateLocalityFuncParam   ) ; 
+  eval $( FParamFuncName=EvalFunctor FParamSuffixName=Debug           FParamVarName=IsDebug     FParamDefaultValue=False __fnctCreateLocalityFuncParam   ) ;
+  eval $( FParamFuncName=EvalFunctor FParamSuffixName=Base64          FParamVarName=IsBase64    FParamDefaultValue=False __fnctCreateLocalityFuncParam  ) ;
+  eval $( FParamFuncName=EvalFunctor FParamSuffixName=NameOrigin      FParamVarName=StrFuncNameOrigin   FParamDefaultValue=${StrFuncName}  __fnctCreateLocalityFuncParam   ) ; 
+  echo -ne "Helper List: [${ArrayHelperEvalFunctor[@]}]\n" > /dev/stderr ; 
+  ### DefaultStderr
+  eval $( FParamFuncName=EvalFunctor FParamSuffixName=StdErr FParamVarName=StdError  FParamDefaultValue=/dev/stderr  __fnctCreateLocalityFuncParam   ) ; 
+  
+  ### Normal Variable:
+  
+  local StrDebugHeader="__PTHESISL__Debug__PTHESISR__" ;
+  local StrFunctionTree="Parent Function " ;
+  local ArrayCmdLineDisplay=( "CmdLine\n\t\t[ \${StrUnBase} ]" "CmdLine\n\t\t[ \${CmdEval[@]} ]" ) ;
+  local StrSubFunctionHeader="Function Name" ;
+  
+  function DisplayToStdNamed()
+  {
+    local ArrayParseElement=( __RETURN__ __TAB__ __PTHESISL__ __PTHESISR__  ) ;
+    local ArrayParseResult=( \\n \\t \( \) ) ;
+    eval $( __call_localityLocalName=StdDisplay __call_localityDisplayFunctionEntry=1 __call_locality ) ;  
+    local StrReturn="__PARSED__" ;
+    function ReturnParsedValue()
+    {
+      eval $( __call_localityLocalName=ReturnParsedValue __call_localityDisplayFunctionEntry=1 __call_locality ) ;  
+      eval "StrReturn=${StrReturn/__PARSED__/${ArrayArg[${intArrayParseElement}]/${ArrayParseElement[${intArrayParseElement}]}/${ArrayParseResult[${intArrayParseResult}]}}__PARSED__}" ;
+    }
+    eval $( __in_for ArrayParseElement ReturnParsedValue ) ;
+    #eval "echo -ne \"${ArrayArg[@]}\n\" > ${StdError} ";
+    echo -ne "${StrReturn/__PARSED__/}\n" > ${StdError} ;
+  }
+  
+  function ShowVariablesStates()
+  {
+    eval $( __call_localityLocalName=ShowVariablesStates __call_localityDisplayFunctionEntry=1 __call_locality ) ;  
+    DisplayToStdNamed "${StrSubFunctionHeader}:${StrFuncNameOriginVariable}\\nUsed :\\n\\tVarReturn:${VarReturn}, VarIsArray:${VarIsArray}, VarType:${VarType}, IsDebug:${IsDebug}, IsBase64:${IsBase64}\n" ; 
+  }
+  
+  if [ "${IsBase64}" == "True" ] ; then 
+    local StrUnBase=$( echo "${ArrayArg[@]}" | base64 --wrap=0 -d ) ;
+    DisplayToStdNamed "UnDecoded information :\n${ArrayCmdLineDisplay[0]}\n" ;
+  fi
+  local TemplateEval=( "" )
+  eval local CmdEval=( ${ArrayArg[@]} ) ;
+  if [ "${IsDebug:=False}" == "False" ] ; then 
+      DisplayToStdNamed "\tParent Function ${ParentFunc}, ${ArrayCmdLineDisplay[1]}\n" ;
+    if [ "${VarReturn:=None}" == "None" ] ; then 
+      if [ "${IsBase64:=False}" == "True" ] ; then 
+        ShowVariablesStates ; 
+        eval "${StrUnBase}" ; 
+      else
+        ShowVariablesStates ; 
+        eval "echo ${CmdEval[@]}" ;
+      fi
+    else
+      if [ "${IsBase64:=False}" == "True" ] ; then 
+        if [ "${VarIsArray:=False}" == "True" ] ; then 
+          ShowVariablesStates ;
+          eval "echo -ne ${VarType} ${VarReturn}=\"( ${StrUnBase}\" )\n" ;
+        else
+          ShowVariablesStates ;
+          eval "echo -ne \"${VarType} ${VarReturn}=\"${StrUnBase}\"\n\"" ;
+        fi
+      else
+        if [ "${VarIsArray:=False}" == "True" ] ; then 
+          ShowVariablesStates ;
+          eval "echo -ne ${VarType} ${VarReturn}=\"( \\$( ${CmdEval[@]} ) )\"\n" ;
+        else
+          ShowVariablesStates ;
+          eval "echo -ne \"${VarType} ${VarReturn}=$( \"${CmdEval[@]}\" )\n\"" ;
+        fi
+      fi
+    fi
+  else
+    if [ "${IsBase64:=False}" == "True" ] ; then 
+      DisplayToStdNamed "Base64 Mode\n" 
+        DisplayToStdNamed "${StrDebugHeader}\t${StrFunctionTree}${ParentFunc}, ${ArrayCmdLineDisplay[0]}\n" ;
+    else
+        DisplayToStdNamed "${StrDebugHeader}\t${StrFunctionTree}${ParentFunc}, ${ArrayCmdLineDisplayp[1]}\n" ;
+    fi
+  fi 
+}

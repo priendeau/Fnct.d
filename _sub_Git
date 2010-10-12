@@ -1,0 +1,154 @@
+
+function git_add_reflection()
+{
+  eval $( __call_localityLocalName=GitMeth __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Dcommand FParamVarName=StrDcommand FParamDefaultValue=AddRepository __fnctCreateLocalityFuncParam     ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=CommitMessage FParamVarName=StrCommitMessage FParamDefaultValue=StrMsgGitCommit FParamInterpretVar=True __fnctCreateLocalityFuncParam     ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=GitRepository FParamVarName=StrGitRepository FParamDefaultValue=Montreal-Olympic-Statium-kml-python.git  __fnctCreateLocalityFuncParam     ) ;
+  local CmdEval=() ;
+  
+  function RemoveDbVarLog()
+  {
+   if [ -e db_parse_newvar ] ; then 
+    rm -f db_parse_newvar ;
+   fi
+  }
+  
+  function DisplayEvalCmd()
+  {
+    eval $( __call_localityLocalName=DisplayEvalCmd __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    echo -ne "\n\t\tCommand Eval:[ ${CmdEval[${intCmdEval}]} ]\n" ;
+    RemoveDbVarLog ;
+    eval "${CmdEval[${intCmdEval}]}" ;
+  }
+  
+  function SingleAdd()
+  {
+   eval $( __call_localityLocalName=SingleAdd __call_localityDisplayFunctionEntry=0 __call_locality ) ;
+   CmdEval[0]="git add ${ArrayArg[0]} "  ;
+   eval $( __in_for CmdEval DisplayEvalCmd  );
+  }
+  
+  function SinglePushOrigin()
+  {
+   eval $( __call_localityLocalName=SingleAdd __call_localityDisplayFunctionEntry=0 __call_locality ) ;
+   
+   eval """CmdEval[0]=\"git push origin master \" """  ;
+   eval $( __in_for CmdEval DisplayEvalCmd  );
+  }
+
+  function SingleAddOrigin()
+  {
+   eval $( __call_localityLocalName=SingleAdd __call_localityDisplayFunctionEntry=0 __call_locality ) ;
+   
+   eval """CmdEval[0]=\"git remote add origin git@github.com:priendeau/${StrGitRepository} \" """  ;
+   eval $( __in_for CmdEval DisplayEvalCmd  );
+  }
+  
+  function SingleCommit()
+  {
+   eval $( __call_localityLocalName=SingleAdd __call_localityDisplayFunctionEntry=0 __call_locality ) ;
+   eval """CmdEval[0]=\"git commit -m '\${${StrCommitMessage}}' \" """  ;
+   eval $( __in_for CmdEval DisplayEvalCmd  );
+  }
+  
+  function AddRepository()
+  {
+   eval $( __call_localityLocalName=AddRepository __call_localityDisplayFunctionEntry=0 __call_locality ) ;
+   CmdEval[0]="git add ${ArrayArg[0]} "  ;
+   eval """CmdEval[1]=\"git commit -m '\${${StrCommitMessage}}' \" """  ;
+   CmdEval[2]="git remote add origin git@github.com:priendeau/${ArrayArg[0]}"  ;
+   CmdEval[3]="git push origin master" ;
+   
+   eval $( __in_for CmdEval DisplayEvalCmd  );
+  
+  }
+  echo -ne "Command Git :[ ${StrDcommand} ]\n" ;
+  eval ${StrDcommand} ${ArrayArg[@]} ;
+}
+
+function GitAddFile()    
+{  
+ eval $( __call_localityLocalName=GitAdd __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
+ eval $( CleanDbParseNewVar );
+ local CmdEval=()
+ CmdEval[0]=$( echo "touch ${ArrayArg[0]}" | base64 --wrap=0 ) ; 
+ CmdEval[1]=$( echo "git add ${ArrayArg[0]}" | base64 --wrap=0  ); 
+
+ function SubEval()
+ {
+   eval $( __call_localityLocalName=SubEval __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
+   local StrCmd=$( echo ${CmdEval[${intCmdEval}]} | base64 --wrap=0 -d ) ;
+   echo -ne "CmdLine:[\n\tBase64:[ ${CmdEval[${intCmdEval}]} ]\n\tString:[ ${StrCmd}] ]\n" ;
+   eval $( CleanDbParseNewVar );
+   eval "${StrCmd}" ;
+ }
+ eval $( __in_for CmdEval SubEval )
+} ; 
+
+function GitCommitMsg()    
+{  
+ eval $( __call_localityLocalName=Add __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=TagMsg FParamVarName=StrTagMsg FParamDefaultValue=pocdedu __fnctCreateLocalityFuncParam     ) ;
+ local StrMsg="v.$( uuidgen -r )${StrTagMsg}/${RANDOM}" ; 
+ echo -ne "\nCommit Section Name:[ ${StrMsg} ]\n" ; 
+ git commit -m "${StrMsg}" ;
+
+}
+
+
+function CleanDbParseNewVar()
+{
+  eval $( __call_localityLocalName=CLDPNV __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
+  echo -ne """if [ -e db_parse_newvar ] ; then rm -f db_parse_newvar ; fi ; """ ;
+}
+
+function GitCreateLocalQueue()
+{
+ eval $( __call_localityLocalName=GCLQ __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ArrayName FParamVarName=StrArrayName FParamDefaultValue=ArrayGitQueue __fnctCreateLocalityFuncParam     ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaultPath FParamVarName=StrDefaultPath FParamDefaultValue=./ __fnctCreateLocalityFuncParam     ) ;
+ 
+ function EgrepFilter()
+ {
+   eval $( __call_localityLocalName=EgrepFilter __call_localityDisplayFunctionEntry=0 __call_locality  ) ; 
+   egrep -iv ".git|.decode|.encode|.gitfs|.avfs-git|.avfs_git|.passwd|.password|.htpasswd|.htconf|db_parse_newvar" ;
+   
+ }
+ 
+ function TrailRemove()
+ {
+  eval $( __call_localityLocalName=EgrepFilter __call_localityDisplayFunctionEntry=0 __call_locality  ) ; 
+  tr '[:cntrl:]' ' ' ;
+ }
+ 
+ function LocalFind()
+ {
+   eval $( __call_localityLocalName=LocalFind __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
+   find ${StrDefaultPath} -type f | sed 's/\.\///g'| EgrepFilter  | TrailRemove ;
+ }
+ eval $( CleanDbParseNewVar );
+ local CmdEval=( "declare -a ${StrArrayName}=( $( LocalFind ) )" ) ; 
+ echo -ne "CmdLine : CmdEval length: ${#CmdEval} bytes\n" > /dev/stderr ;
+ eval "echo \"${CmdEval[@]}\"" ;
+ echo -ne "Array with Git Local File are stored inside Array:[ ${StrArrayName} ]\n" > /dev/stderr ;
+}
+
+function GitCmdFileArray()    
+{  
+ eval $( __call_localityLocalName=Git __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ArrayName FParamVarName=StrArrayName FParamDefaultValue=ArrayArg __fnctCreateLocalityFuncParam     ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Cmd FParamVarName=StrCmd FParamDefaultValue=add __fnctCreateLocalityFuncParam     ) ;
+ eval "eval $( __in_for ${StrArrayName} StrCmd )" ;
+
+}
+
+function GitAddFileArray()    
+{  
+ eval $( __call_localityLocalName=GitAddFileArray __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ArrayName FParamVarName=StrArrayName FParamDefaultValue=ArrayArg __fnctCreateLocalityFuncParam     ) ;
+ eval $( CleanDbParseNewVar );
+ eval "eval $( __in_for ${StrArrayName} GitAddFile )" ;
+ 
+}
+

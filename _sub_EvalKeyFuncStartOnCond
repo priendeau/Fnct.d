@@ -1,0 +1,84 @@
+### Function : EvalKeyFuncStartOnCond
+### This Function is designed to implement locality_variable embeded by code
+### Calling ${StrFuncName}Suffix where Suffix is the meta definition, EvalKeyFuncStartOnCond
+### will call the function inside or not (as long it was designed ) a function name
+### if the condition embeded in the calling of EvalKeyFuncStartOnCond is specified :
+###
+### example : 
+### inside a function you write the following code: 
+### eval $( EvalKeyFuncStartOnCond ne 0 ResStartPID __fnct_re_start  ) ;
+### if you specified in a command-line the designed function restart_computer:
+###
+### restart_computerResStartPID=0 restart_computer
+### because you did not initialize ${restart_computerResStartPID} to 0 it will
+### not call function __fnct_re_start which can hold code to restart something belong
+### to information you specified... It's the closed embeded inline code evaluation execution
+### I may design before going back to business... This syntax can be remember easily because you can
+### remeber with this sentence:*
+### 
+### (Eval[ate] [this] Key Func[tion] [it] Start On Cond[ition]) [that] ne [the condition to] 0 [by reading variable] ResStartPID [ use ] __fnct_re_start
+###
+### note on uses of condition:
+### - Actually it use ne, but eq, lt, gt may be applied, you can even use:
+### - x ( executable test )
+### - e ( exist )
+### - d ( directory )
+### In fact it skip the '-' mark and parse you key-condition inside an evaluation.
+###
+### trick : 
+### using a function named error_detection you passing the variable RunThisExecTest=$? 
+### inside the function you have write this code :
+###
+###
+###
+### function DisplayYouFailed()
+### {
+###   eval $( __call_localityLocalName=DisplayYouFailed __call_locality ) ;
+###   echo "Detected Error" ;
+### }
+###
+### function RunThis()
+### {
+###   eval $( __call_localityLocalName=RunThis __call_locality ) ;
+###   eval $( ${ArrayArg[0]} ) ; 
+###   eval $( EvalKeyFuncStartOnCond ne 0 ExecTest DisplayYouFailed  ) ;     
+### }
+###
+###
+### function error_detection()
+### {
+###  eval $( __call_localityLocalName=error_detection __call_locality ) ;
+###  eval $( RunThisExecTest=\$? __in_for ArrayArg RunThis ) ;
+### }
+###
+### calling error_detection( with sometheing to execute like bunch of program), 
+### it will execute all information from ArrayArg and if an error happen, like 
+### program returning non-0 from their execution a "Detected Error will happen"
+### ... Using __call_localityDisplayFunctionEntry=1 you will be able to 
+### see error starting from a specified body function, designing some interest
+### you can see exctly know where is the problems... like surrounding
+### suggested 'eval $( ${ArrayArg[0]} ) ;' from RunThis with local CmdEval=( ... ); 
+### piping the CmdEval[@] somewhere.... 
+###
+###*:
+### syntax to understand this sentence :
+### ( Function Name expansion ) option
+### where [*] are commonly skipped information 
+###
+### 
+function EvalKeyFuncStartOnCond()
+{
+  ### This function uses parametric Prefix-filename : OnCond
+  ### 
+  ### 
+  eval $( __call_localityDisplayFunctionEntry=1 __call_localityLocalName=OnCond __call_locality )  ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ElseClauseFunc  \
+                                        FParamVarName=StrElseClauseFunc  \
+                                        FParamDefaultValue=None __fnctCreateLocalityFuncParam ) ;
+  eval $(__call_default_display_Var )  ;
+  if [ "${StrElseClauseFunc}" == "None" ] ; then 
+    echo "eval \"if [ \${${StrFuncName[0]}${ArrayArg[2]}:=1} -${ArrayArg[0]} ${ArrayArg[1]} ] ; then ${ArrayArg[@]:3}  ; fi \"" ; 
+  else
+    echo "eval \"if [ \${${StrFuncName[0]}${ArrayArg[2]}:=1} -${ArrayArg[0]} ${ArrayArg[1]} ] ; then ${ArrayArg[@]:3} ; else ${StrElseClauseFunc} ; fi \"" ; 
+  fi
+}

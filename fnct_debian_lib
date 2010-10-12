@@ -1,0 +1,280 @@
+
+. /etc/init.d/fnct.d/fnct_lib
+
+Debian_DPKG_update_InstallList()
+{
+  eval $( __InitFunc ) ;
+  declare -a ArrayDPKGInstalled=( $( ${DebianProg:=dpkg} ${DebianProgQuery:=--get-selections} | awk 'BEGIN{}{printf("%s ",$1)}END{}' ) ) ; 
+}
+
+
+Debian_DPKG_update_ArchivesList()
+{
+  eval $( __InitFunc ) ;
+  declare -a ArrayArchiveDPKG=( $( find ${DefaultRootPath:=/var/cache/apt/archives/} -printf "%p " ) ) ; 
+}
+
+declare -a ArrayMetaList=( Install Archives ) ; 
+declare -a ArrayCreator=( Debian Ubuntu Fedora ) ;
+declare -a ArrayPackageType=( DPKG APT YUM RPM ) ;
+declare -a ArrayPackageAction=( install update remove fix compile certify verify ) ;
+
+DebianDPKGProvideSubFunctionMember()
+{
+  function __search_item()
+  {
+    eval $( __InitFunc ) ;
+    if [ ${ArrayArg[1]} == ${ItemQuery:=update} ] ; then 
+      return 0 ;
+    fi
+    return 1 ;
+  }
+  eval $( __InitFunc ) ;
+  local Template="__CREATOR___PACKAGETYPE_____PACKAGEACTION___" ; 
+  local StrCreator=${Creator:=${ArrayCreator[0]}} ;
+  local StrPackageType=${PackageType:=${ArrayPackageType[0]}} ;
+  local StrPackageAction=${PackageAction:=update} ;
+  eval $( __in_for ArrayPackageAction __search_item ItemQuery=${StrPackageAction} ) ; 
+  local ErrorStatement=$? ; 
+  if [ ${ErrorStatement:=1} -eq 0 ] ; then 
+    echo "__TODO__" ;  
+  fi
+}
+
+MetaUpdateList()
+{
+  eval $( __InitFunc ) ;
+  function __FuncUpdate()
+  {
+    eval $( __InitFunc ) ;
+    local Template="__NODE____SECTION__List" ;
+    Template=${Template/__SECTION__/${ArrayArg[0]}}
+  } 
+  eval $( __in_for ArrayMetaList __FuncUpdate ) ; 
+}
+
+#function fast_dpkg_query()    
+#{ 
+#  local 
+#  function BAwkCode()
+#  {
+    
+#  }
+#  function Base64()
+#  {
+#    eval $( __call_locality ) ;
+#    local StrFuncName=PreImplementBase64 ;
+#    eval $( parse_newvar ${EFunctionTypeDecl} ${TypeDebugKey[${EParamNoDebugDecl}]} ${ArrayArg[@]} )  ;
+
+#  }
+#  eval $( __call_locality ) ; 
+#  eval $( parse_newvar ${EFunctionTypeDecl} ${TypeDebugKey[${EParamNoDebugDecl}]} ${ArrayArg[@]} ) ;
+#  dpkg-query --show | awk -vQuery=${Query} ;
+#}
+
+function __get_col()    
+{ 
+  eval $( __InitFunc ) ;
+  awk -vCol=${ArrayArg[0]} 'BEGIN{}{printf("%s ",$(Col));}END{}' ; 
+} ; 
+
+declare -a ArrayPackageCurrent=( $( dpkg --get-selections | __get_col 1 ) ) ; 
+
+function get_listfile()    
+{ 
+  eval $( __InitFunc get_listfile ) ;
+  function __BaseEncode64()
+  {
+    eval $( __InitFunc __BaseEncode64 ) ;
+    base64 --wrap=0 ; 
+  }
+  function __IfTestFile()    
+  { 
+    eval $( __InitFunc __IfTestFile ) ;
+    if [ -f ${ArrayArg[0]} ] ; then 
+      local StrStream=$( echo "${ArrayArg[0]}" | __BaseEncode64 ) ; 
+      echo -ne "${StrStream} " ;
+    fi 
+  } ; 
+  local ArrayFileList=( $( dpkg-query --listfiles ${ArrayArg[0]} ) ) ; 
+  eval $( __in_for ArrayFileList __IfTestFile ) ; 
+} ; 
+
+function get_search()
+{
+  eval $( __InitFunc get_search ) ;
+  eval $( __in_for ArrayPackageCurrent get_listfile ) ;
+}
+
+function get_package_by_file()
+{
+  eval $( __InitFunc get_package_by_file ) ;
+  function PostFilter()
+  {
+    eval $( __InitFunc PostFilter ) ;
+    awk -vGrepReturn=${GrepReturn} -f /etc/init.d/fnct.d/awk-script/DpKgQueryPackage.awk ; 
+  }  
+  local CmdEval=( ${Program:=apt-file} ${ProgramOption:=search} ${ProgramQuery:=lirc/lirc_client.h} ProgramQueryIs64=${ProgramQueryIs64:=false} "|" ${FilterProgram:=PostFilter} GrepReturn=${GrepReturn:=false} ${FilterProgramQuery:=""} ) ;
+  echo "CmdLine:[${CmdEval[@]}]" ;
+  #eval "${CmdEval[@]}" ; 
+  eval "local IntResult=$( eval ${CmdEval[@]} )" ; 
+  #echo "Return : ${IntResult}" ;
+}
+
+function AwkContentParsing()    
+{ 
+  eval $( __InitFunc AwkContentParsing ) ; 
+  function __TinyDecode64()
+  {
+    eval $( __InitFunc __TinyDecode64 ) ; 
+    local StrBaseDecode=$( echo "${VarDecode64}" | base64 -d --wrap=0 2> /dev/null ) ; 
+    local IntErrorReport=$? ;
+    if [ ${IntErrorReport:=1} -eq 1 ] ; then 
+      echo "${VarDecl:=local} ${VarName:=VarOut}=${VarDecode64}" ; 
+    else
+      echo "${VarDecl:=local} ${VarName:=VarOut}=${StrBaseDecode}" ; 
+    fi 
+  }
+  eval $( __TinyDecode64 VarDecode64=${RecurrentTemplateSearch} VarName=StrRecurrentTemplateSearch VarDecl=${VarDecl} )  ;
+  eval $( __TinyDecode64 VarDecode64=${StrQuerySearch} VarName=StrQuerySearch VarDecl=${VarDecl} )  ;
+    
+  
+  local ProgramParserRecurrentTemplate=${StrReturnBase64DecodeTry} ;
+  local CmdEval=( ${Program:=apt-file} ${ProgramOption:=search} ${StrQuerySearch} "|" ${ProgramParser:=awk} -vTemplateContent=${StrRecurrentTemplateSearch} -vVarNameOut=CmdEval -f /etc/init.d/fnct.d/awk-script/DpKgQueryPackage.awk ) ;
+  echo "CmdLine:[${CmdEval[@]}]" ; 
+}
+
+function libsearch_AwkContentParsing()
+{
+  eval $( __InitFunc AwkContentParsing ) ; 
+  local StrRecurrentTemplateSearch=$( echo "dpkg --get-selections | egrep -ic %s" | base64 --wrap=0 ) ;
+  local StrQuerySearch=$( echo "lirc/lirc_client.h" | base64 --wrap=0 ) ; 
+  AwkContentParsing RecurrentTemplateSearch=${StrRecurrentTemplateSearch} QuerySearch=${StrQuerySearch} ; 
+  
+}
+
+__funcZenity_DpkgList () 
+{ 
+    eval $( __InitFunc __funcZenity_DpkgList );
+    __unset CharCSV MainText CharCSV DefaultTitle DefaultAwkScript Program ProgramOption ;
+    
+    local CharCSV=${DefaultCharCSV:=:} ;
+
+    function __ZenityInterface()
+    {
+      eval $( __InitFunc __ZenityInterface );
+      local CmdEval=( zenity --list --text=\"${MainText:=DPKG-List}\" --column=\"Package, Install State.\" --separator=${CharCSV} --print-column=ALL --checklist --multiple --editable --print-column=2 --hide-column=1 --title=\"${DefaultTitle:=Package List}\" --listen ) ;
+      echo "echo \"CmdLine:[${CmdEval[@]}]\";"  ;    
+      eval "${CmdEval[@]}" ;
+    }
+    function PostFilter()
+    {
+      eval $( __InitFunc PostFilter );
+      awk -vDefaultCSV=${CharCSV} -f ${ArrayAwkScriptPath[0]}/${DefaultAwkScript:=DpKgQueryPackageZenity}.awk
+    }   
+    ${Program:=dpkg} ${ProgramOption:=--get-selections} | PostFilter CharCSV=${CharCSV} |__ZenityInterface MainText=${MainText} DefaultTitle=${DefaultTitle} CharCSV=${CharCSV} ; 
+}
+
+function get_list()  
+{ 
+  eval $( __InitFunc get_list ) ; 
+  local ArrayInfo=( $(find /usr/share/ -maxdepth 1 -type d -iname "man*" | tr '[:cntrl:]' ' ' ) ) ; 
+  echo "${VarDecl:=local} ${ArrayName:=ArrayList}=( ${ArrayInfo[@]})" ; 
+} ; 
+  
+function ffind()    
+{ 
+  eval $( __InitFunc ffind ) ; 
+  find ${ArrayArg[0]} -type f -iname "*man*" ; 
+} ; 
+function __ZenityProgressBar()    
+{ 
+  eval $( __InitFunc ) ;  
+  zenity --progress --pulsate 
+} ; 
+function __wrap_bar_find()    
+{ 
+  eval $( __InitFunc __wrap_bar_find ) ; 
+  eval $( get_list ArrayName=ArrayOut VarDecl=local ) ;
+  eval $( __in_for ArrayOut ffind ) | __ZenityProgressBar  ;
+}
+
+
+function __BuildDpkgShowFormat ()    
+{ 
+ eval $( __InitFunc __BuildDpkgShowFormat ) ; 
+ local DefaultTagValue="__TAG__" ;
+ if [ ${StructDpkgShowFormat:=__TAG__} == "__TAG__" ] ; then 
+  declare -a StructDpkgShowFormat="${DefaultTagValue}" ;
+ fi 
+ StructDpkgShowFormat=( $( echo "${StructDpkgShowFormat}" | sed 's/'${DefaultTagValue}'/'${ArrayDPKG_QueryHeader[${ArrayArg[0]}]}${DefaultTagValue}'/g' ) ) 
+} 
+
+function __BuildDpkgShowFormatXml()
+{
+  eval $( __InitFunc __BuildDpkgShowFormat ) ; 
+  function __functor_show_header()
+  {
+    eval $( __InitFunc __BuildDpkgShowFormat ) ; 
+    echo -ne "\nStyle=${Style}\n" ;     
+    echo -ne "${ArrayArg[2]}" ; 
+    echo -ne "\nDstyle=${Dstyle}\n" ;
+  }
+  eval $( __in_for ${ArrayNameDPKGQuery=ArrayDPKG_QueryHeader} __functor_show_header CCode64=$( ) ) ;
+}
+
+compare_package()
+{
+  local ArrayArg=( $* ) ; 
+  function get_name()    
+  { 
+    local ArrayArg=( $* ) ; 
+    local str="${ArrayArg[0]}" ; 
+    local ArrayPackage=( ${str/_/ } ) ; 
+    echo -ne "${ArrayPackage[0]} " ;  
+  } ; 
+  
+  function update_package_list()
+  {
+    local ArrayArg=( $* ) ; 
+    ${DebianProg:=dpkg} ${DebianProgQuery:=--get-selections} | awk 'BEGIN{}{printf("%s ",$1)}END{}' ; 
+  }
+  
+  function get_specific_search()
+  {
+    local ArrayArg=( $* ) ; 
+    apt-file search wxPython | awk 'BEGIN{}{intlength=split($1,Array,/:/); printf("%s\n",Array[1])}END{}' | sort -u | tr '[:cntrl:]' ' '  
+  }
+  
+  function get_specific_python()
+  {
+    local ArrayArg=( $* ) ; 
+    find /var/cache/apt/archives/ -iname "*.deb" -printf "%f "
+  }
+
+  function __compare_package()    
+  { 
+    local ArrayArg=( $* ) ; 
+    echo "Search for Package ${ArrayArg[0]} in Installed Package( ${#ArrayDPKGInstalled[@]} ) " ;      
+    function search_package_name()    
+    { 
+      local ArrayArg=( $* ) ; 
+      if [ "${ArrayArg[0]}" == "${ArrayArg[1]}" ] ; then 
+        echo -ne "\tInstalled Package is in the list [ ${ArrayArg[0]} ]\n" ; 
+        return 0 ; 
+      fi
+        ArrayDPKGUnInstalled[${#ArrayDPKGUnInstalled[@]}]="${ArrayArg[1]}";
+        return 1 ; 
+    } 
+    eval $( __in_for ArrayDPKGInstalled search_package_name ${ArrayArg[0]} ) ; 
+  }
+  
+  local ArrayPythonPackage=( $( ${ArrayArg[0]} ) ) ;
+  echo -ne "\nPackage List Choosed from Function: ${ArrayArg[0]}\n\t[ ${ArrayPythonPackage[@]} ]\n" ;
+  local ArrayDpkgPython=( $( eval $( __in_for ArrayPythonPackage get_name ) ) ) ;  
+  local ArrayDPKGInstalled=( $( update_package_list ) ) ;    
+  local ArrayDPKGUnInstalled ;
+  eval $( __in_for ArrayDpkgPython __compare_package ) ;
+  echo "declare -a ArrayDPKGUnInstalled=( ${ArrayDPKGUnInstalled[@]} )" ; 
+}
+
