@@ -112,7 +112,7 @@ function GitCreateLocalQueue()
  function EgrepFilter()
  {
    eval $( __call_localityLocalName=EgrepFilter __call_localityDisplayFunctionEntry=0 __call_locality  ) ; 
-   egrep -iv ".git|.decode|.encode|.gitfs|.avfs-git|.avfs_git|.passwd|.password|.htpasswd|.htconf|db_parse_newvar" ;
+   egrep -iv "git-password|.git|.decode|.encode|.gitfs|.avfs-git|.avfs_git|.passwd|.password|.htpasswd|.htconf|db_parse_newvar" ;
    
  }
  
@@ -139,7 +139,7 @@ function GitCmdFileArray()
  eval $( __call_localityLocalName=Git __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ArrayName FParamVarName=StrArrayName FParamDefaultValue=ArrayArg __fnctCreateLocalityFuncParam     ) ;
  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Cmd FParamVarName=StrCmd FParamDefaultValue=add __fnctCreateLocalityFuncParam     ) ;
- eval "eval $( __in_for ${StrArrayName} StrCmd )" ;
+ eval "eval $( __in_for ${StrArrayName} \"${StrCmd}\" )" ;
 
 }
 
@@ -149,6 +149,48 @@ function GitAddFileArray()
  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ArrayName FParamVarName=StrArrayName FParamDefaultValue=ArrayArg __fnctCreateLocalityFuncParam     ) ;
  eval $( CleanDbParseNewVar );
  eval "eval $( __in_for ${StrArrayName} GitAddFile )" ;
+ 
+}
+
+function encode_git_add()
+{ 
+ eval $( __call_localityLocalName=gitadd __call_locality ); 
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=PasswdFile FParamVarName=StrPasswdFile FParamDefaultValue=../.passwd __fnctCreateLocalityFuncParam     ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaultGitHeadFile FParamVarName=StrDefaultGitHeadFile FParamDefaultValue=.git/logs/HEAD __fnctCreateLocalityFuncParam     ) ;
+ 
+ local FileNameGit="${ArrayGitQueue[${intArrayGitQueue}]}" ; 
+ local StrRealFileName=${FileNameGit} ;
+ local UUID=$( uuidgen -r );
+ local ShaValue=( $( sha1sum --binary ${StrRealFileName} ) );
+ local NewMsg=${StrMsgCommit/__FILENAME__/${StrRealFileName}}; 
+ NewMsg=${NewMsg/__SHA__/${ShaValue[0]}}; 
+ NewMsg=${NewMsg/__UUID__/${UUID}} ;
+ 
+ if [ -e ${StrPasswdFile} ] ; then
+  local CmdEval=( openssl enc -e -base64 -cast5-cbc -kfile ${StrPasswdFile} -in ${StrRealFileName} -out ${FileNameGit}.encode ) ;
+  echo -ne "CmdEval: ${CmdEval[@]}\n" ;
+  eval "${CmdEval[@]}" ;
+  FileNameGit="${FileNameGit}.encode" ;
+  NewMsg=${NewMsg/__ENCODING__/BASE64:CAST5-CBC} ;
+ else
+  NewMsg=${NewMsg/__ENCODING__/NONE} ;
+ fi 
+
+ local IntAddFound=$( egrep -ic --no-filename "${FileNameGit}" ${StrDefaultGitHeadFile} ) ;
+ if [ ${IntAddFound:=0} -eq 0 ] ; then 
+  git add ${FileNameGit} ; 
+ fi
+ git commit -m "${NewMsg}" ${FileNameGit} ; 
+
+} ; 
+
+function encode_start_git_add()
+{
+ local StrMsgCommit="Commiting First Project File:__FILENAME__: SHA:__SHA__, UUID:__UUID__ ENCODING:__ENCODING__" ;
+ eval $( GitCreateLocalQueue ) ;
+ eval $( __in_for ArrayGitQueue encode_git_add ) ;
+ git remote add origin git@github.com:priendeau/MonoWebServicesStudio.git
+ git push origin master ;
  
 }
 
