@@ -5,9 +5,11 @@ import cPickle
 from optparse import OptionParser
 
 class CPass( object ):
-  IntMin=None
-  IntMax=None
-  VDict={ 'filename':{ 'overwrite' : False } }
+  VDict={
+    'filename':{
+      'overwrite' : False },
+    'IntMin':10,
+    'IntMax':20 }
   CmdPickle=None
   DictDirective=None
   FhDirective=None
@@ -52,17 +54,12 @@ class CPass( object ):
       
       self.RaiserSetDirectiveFile()
 
-      
-    
-  def SetDirectiveFile( self ):
-    raise self.OpenDirectiveWarn, [ self.DirectiveFile , 'CreatePassogva' ]
-
   @staticmethod
-  def CreatePassogva( cls , IntMin=10, IntMax=20 ):
+  def CreatePassogva( cls ):
     print "Function : CreatePassogva "
     if cls.IsCreationPassogva:
-      cls.IntMin=IntMin
-      cls.IntMax=IntMax
+      IntMin=cls.VDict['IntMin']
+      IntMax=cls.VDict['IntMax']
       #self.FhDirective=open( '.passogva-env', 'r' )
       cls.CmdPickle=cPickle.Unpickler( cls.FhDirective )
       cls.DictDirective=self.CmdPickle.load()
@@ -83,16 +80,24 @@ class CPass( object ):
             
       StreamCodeName=passogva.generate_password( IntMin, IntMax )[1].replace('-',' ')
 
-  def __init__( self ):
+  def ArgHandler( self ):
     self.ArgParser = OptionParser()
     self.ArgParser.add_option("-c", "--createPickle", dest="createPickle",
                   help="Create Pickle Based Directive", default=False)
-    self.ArgParser.add_option("-q", "--quiet",
-                  action="store_false", dest="verbose", default=True,
-                  help="don't print status messages to stdout")
-
-    self.ArgParser = OptionParser()
-    self.SetDirectiveFile()
+    self.ArgParser.add_option("-l", "--minimum",
+                  dest="IntMin", default=10,
+                  help="Passogva Minimum Length for Stemming.")
+    self.ArgParser.add_option("-u", "--maximum",
+                  dest="IntMax", default=10,
+                  help="Passogva Maximum Length for Stemming.")
+    (self.ArgParseroptions , self.ArgParserargs) = self.ArgParser.parse_args()
+    print "Option : %s, type(%s)" % ( self.ArgParseroptions , type( self.ArgParseroptions ) )
+    dir(self.ArgParser)
+    #self.VDict.update( self.ArgParseroptions )
+    
+  def __init__( self ):
+    self.ArgHandler() 
+    raise self.OpenDirectiveWarn, [ self.DirectiveFile , 'CreatePassogva' ]
 
     
 if __name__ == '__main__':
