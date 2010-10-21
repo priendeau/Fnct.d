@@ -83,3 +83,73 @@ function MonitorKernelReport()
   done
 
 }
+
+
+function GetAppsByPid()    
+{ 
+ eval $( __call_localityLocalName=GABP __call_locality  ) ; 
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaultApps FParamVarName=StrDefaultApps FParamDefaultValue=ps __fnctCreateLocalityFuncParam     ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaultAppsOption0 FParamVarName=ArrayDefaultApps[0] FParamDefaultValue=-eo __fnctCreateLocalityFuncParam     ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaultAppsOption1 FParamVarName=ArrayDefaultApps[1] FParamDefaultValue=pid,command __fnctCreateLocalityFuncParam     ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaultZenityFilterName FParamVarName=StrDefaultZenityFilterName FParamDefaultValue=FilterAwk __fnctCreateLocalityFuncParam     ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ToActionName FParamVarName=StrToActionName FParamDefaultValue=kill __fnctCreateLocalityFuncParam     ) ;
+ 
+ function MainAction()
+ {
+  eval $( __call_localityLocalName=MA __call_locality  ) ; 
+  local CmdEval=( ${StrDefaultApps} ${ArrayDefaultApps[@]} ) ;
+  eval "${CmdEval[@]}" ;
+ }
+ 
+ function FilterAwk()
+ {
+  eval $( __call_localityLocalName=FA __call_locality  ) ; 
+  awk 'BEGIN{}{Pid=$1;Apps=$0;gsub(/^[0-9]+\ /,"",Apps);printf("FALSE\n%s\n%s\n",Pid,Apps)}END{}' ;
+ }
+ function ActionExec()
+ {
+   eval $( __call_localityLocalName=AE __call_locality  ) ; 
+   awk -F='|' 'BEGIN{IntLength=split($0,ArrayPid,/|/)}{ for( IntId in ArrayPid){ printf("system(sprintf("kill -9 %s"))",ArrayPid[IntId])} }END{}' ;
+ }
+ StrDefaultZenityFilterName
+ function ZenityList()
+ {
+  eval $( __call_localityLocalName=FA __call_locality  ) ; 
+  zenity --width=800 --height=600 --list  --checklist --text="Choose Pid to ${StrToActionName}" --column "Selected" --column "Pid" --column "Apps" ;
+ }
+
+}
+
+function NicePidHarmonicAlteration()
+{
+  eval $( __call_localityLocalName=NPHA __call_locality  ) ; 
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=NiceSeek FParamVarName=IntNiceSeek FParamDefaultValue=0 __fnctCreateLocalityFuncParam     ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaultAppsOption0 FParamVarName=ArrayDefaultApps[0] FParamDefaultValue=-eo __fnctCreateLocalityFuncParam     ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaultAppsOption1 FParamVarName=ArrayDefaultApps[1] FParamDefaultValue=pid,nice __fnctCreateLocalityFuncParam     ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaultFilterName FParamVarName=StrDefaultFilterName FParamDefaultValue=FilterAwk __fnctCreateLocalityFuncParam     ) ;
+  
+  function AppsNice()
+  {
+   eval $( __call_localityLocalName=AN __call_locality ) ; 
+   local CmdEval=( ps ${ArrayDefaultApps[@]} ) ;
+   eval "${CmdEval[@]}" ;
+  }
+ 
+  function FilterAwk()
+  {
+   eval $( __call_localityLocalName=FA __call_locality  ) ; 
+   awk 'BEGIN{}{printf("%s ",$1)}END{}'
+  }
+  
+  function GetNicePid()    
+  { 
+   eval $( __call_localityLocalName=GNP __call_locality ) ; 
+    local CmdEval=( AppsNice "|" egrep -i "${DefaultNiceSeek}$" "|" ${StrDefaultFilterName} )  ;
+  } ; 
+  
+  eval "local ArrayPsNice${DefaultNiceSeek}=( $( GetNicePid ) )" ;
+  
+}
+
+
+
