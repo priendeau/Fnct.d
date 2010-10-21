@@ -91,9 +91,8 @@ class CPass( object ):
                   dest="IntMax", default=10,
                   help="Passogva Maximum Length for Stemming.")
     (self.ArgParseroptions , self.ArgParserargs) = self.ArgParser.parse_args()
-    print "Option : %s, type(%s)" % ( self.ArgParseroptions , type( self.ArgParseroptions ) )
-    dir(self.ArgParser)
-    #self.VDict.update( self.ArgParseroptions )
+    for ItemName in dir(self.ArgParserargs) :
+      self.VDict[ItemName]=getattr( self.ArgParserargs, ItemName )
     
   def __init__( self ):
     self.ArgHandler() 
