@@ -112,7 +112,7 @@ function GitCreateLocalQueue()
  function EgrepFilter()
  {
    eval $( __call_localityLocalName=EgrepFilter __call_localityDisplayFunctionEntry=0 __call_locality  ) ; 
-   egrep -iv "git-password|.git|.decode|.encode|.gitfs|.avfs-git|.avfs_git|.passwd|.password|.htpasswd|.htconf|db_parse_newvar" ;
+   egrep -iv ".passogva|.commit-msg|git-password|README.encode|.git|.decode|.encode|.gitfs|.avfs-git|.avfs_git|.passwd|.password|.htpasswd|.htconf|db_parse_newvar" ;
    
  }
  
@@ -152,33 +152,80 @@ function GitAddFileArray()
  
 }
 
+#declare -a ArrayFileRm=( WebServiceStudio.pidb WebServiceStudio.mdp WebServiceStudio.mds WebServiceStudio.mdp WebServiceStudio.userprefs ComponentSysWinFormTranslation.cs WebServiceStudio.exe.encode WebServiceStudio.exe.mdb.encode ) ; 
+
+function find_git_rm()    
+{ 
+  eval $( __call_localityLocalName=FGRM __call_locality ) ; 
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ArrayName FParamVarName=StrArrayName FParamDefaultValue=ArrayFileRm __fnctCreateLocalityFuncParam     ) ;
+  eval "find ./ -type f -iname \"\${${StrArrayName}[\${int${StrArrayName}}]}\" -exec git rm {} \; ;" 
+} 
+
+function start_find_rm()
+{
+  eval $( __call_localityLocalName=SFR __call_locality ) ; 
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ArrayName FParamVarName=StrArrayName FParamDefaultValue=ArrayFileRm __fnctCreateLocalityFuncParam     ) ;
+  FGRMArrayName=${StrArrayName} eval $( __in_for ArrayFileRm find_git_rm ) ;
+}
+
+function GetPassogva( )
+{
+  eval $( __call_localityLocalName=GetPassogva __call_locality ); 
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=MinLen FParamVarName=IntMinLen FParamDefaultValue=10 __fnctCreateLocalityFuncParam     ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=MaxLen FParamVarName=IntMaxLen FParamDefaultValue=20 __fnctCreateLocalityFuncParam     ) ;
+  /etc/init.d/fnct.d/GetPassogva.py
+  
+}
+
 function encode_git_add()
 { 
  eval $( __call_localityLocalName=gitadd __call_locality ); 
- eval $( FParamFuncName=${StrFuncName} FParamSuffixName=PasswdFile FParamVarName=StrPasswdFile FParamDefaultValue=../.passwd __fnctCreateLocalityFuncParam     ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=PasswdFile FParamVarName=StrPasswdFile FParamDefaultValue=/home/ubuntu/git/priendeau/.passwd __fnctCreateLocalityFuncParam     ) ;
  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaultGitHeadFile FParamVarName=StrDefaultGitHeadFile FParamDefaultValue=.git/logs/HEAD __fnctCreateLocalityFuncParam     ) ;
  
  local FileNameGit="${ArrayGitQueue[${intArrayGitQueue}]}" ; 
  local StrRealFileName=${FileNameGit} ;
+ local PASSOGVA
+ GetPassogva ;
  local UUID=$( uuidgen -r );
  local ShaValue=( $( sha1sum --binary ${StrRealFileName} ) );
  local NewMsg=${StrMsgCommit/__FILENAME__/${StrRealFileName}}; 
  NewMsg=${NewMsg/__SHA__/${ShaValue[0]}}; 
  NewMsg=${NewMsg/__UUID__/${UUID}} ;
+ NewMsg=${NewMsg/__PASSOGVA__/${PASSOGVA}} ;
+ local IsEncoded=False ;
+ 
  
  if [ -e ${StrPasswdFile} ] ; then
+  IsEncoded=True ;
   local CmdEval=( openssl enc -e -base64 -cast5-cbc -kfile ${StrPasswdFile} -in ${StrRealFileName} -out ${FileNameGit}.encode ) ;
   echo -ne "CmdEval: ${CmdEval[@]}\n" ;
   eval "${CmdEval[@]}" ;
   FileNameGit="${FileNameGit}.encode" ;
   NewMsg=${NewMsg/__ENCODING__/BASE64:CAST5-CBC} ;
+  if [ -e ${StrRealFileName} ]; then 
+   if [ -e ${FileNameGit} ] ; then 
+    git rm ${StrRealFileName} ; 
+   fi
+  fi
+
  else
+  IsEncoded=False ;
   NewMsg=${NewMsg/__ENCODING__/NONE} ;
  fi 
 
  local IntAddFound=$( egrep -ic --no-filename "${FileNameGit}" ${StrDefaultGitHeadFile} ) ;
  if [ ${IntAddFound:=0} -eq 0 ] ; then 
-  git add ${FileNameGit} ; 
+  
+  if [ "${IsEncoded:=False}" == "True" ] ; then 
+    local IsEncodedProduct=$( echo "${FileNameGit}" | egrep -ic --no-filename "\.encode"  ) ;
+    if [ ${IsEncodedProduct:=0} -gt 0 ] ; then 
+     git add "${FileNameGit}" ; 
+    fi
+  else
+   git add "${StrRealFileName}" ; 
+  fi 
+  
  fi
  git commit -m "${NewMsg}" ${FileNameGit} ; 
 
@@ -186,7 +233,10 @@ function encode_git_add()
 
 function encode_start_git_add()
 {
- local StrMsgCommit="Commiting First Project File:__FILENAME__: SHA:__SHA__, UUID:__UUID__ ENCODING:__ENCODING__" ;
+ local StrMsgCommit="__MSG__:__FILENAME__: SHA:__SHA__, UUID:__UUID__ ENCODING:__ENCODING__" ;
+ if [ -e .passogva ]; then 
+  rm -f .passogva 
+ fi
  eval $( GitCreateLocalQueue ) ;
  eval $( __in_for ArrayGitQueue encode_git_add ) ;
  git remote add origin git@github.com:priendeau/MonoWebServicesStudio.git
@@ -194,3 +244,93 @@ function encode_start_git_add()
  
 }
 
+function GitDailyWorkUpdate()
+{
+ eval $( __call_localityLocalName=GDWU __call_locality ); 
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=AddNewFileHolder FParamVarName=StrAddNewFileHolder FParamDefaultValue=.file-add __fnctCreateLocalityFuncParam     ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=BranchName FParamVarName=StrBranchName FParamDefaultValue=master __fnctCreateLocalityFuncParam     ) ;
+ 
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=MimeTypeCleanUp FParamVarName=StrMimeTypeCleanUp FParamDefaultValue=pyc __fnctCreateLocalityFuncParam     ) ;
+ 
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Interpreter FParamVarName=StrInterpreter FParamDefaultValue=python __fnctCreateLocalityFuncParam     ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=VersionName FParamVarName=StrVersionName FParamDefaultValue=2.6 __fnctCreateLocalityFuncParam     ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=SetupInstallName FParamVarName=StrSetupInstallName FParamDefaultValue=setup.py __fnctCreateLocalityFuncParam     ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=SetupInstallOption FParamVarName=StrSetupInstallOption FParamDefaultValue=clean,build,bdist,bdist_dumb,sdist,upload __fnctCreateLocalityFuncParam     ) ;
+
+ function ShowRegisteredStep()
+ {
+  eval $( __call_localityLocalName=ShowRS __call_locality ); 
+  echo -ne "\n\tAdding ${ArrayOption[${intArrayOption}]} has step to process.\n" ; 
+ }
+ 
+ local ArrayOption=( ${StrSetupInstallOption//,/ } ) ;
+ 
+ eval $( __in_for ArrayOption ShowRegisteredStep ) ;
+ 
+ function __fnct_git_add()
+ {
+  eval $( __call_localityLocalName=MGAF __call_locality ); 
+  local StrFileName=${ArrayFileAdd[${intArrayFileAdd}]} ;
+  local StrUUID=$( uuidgen -r );
+  local Sha1Sum=( $( sha1sum -b ${StrFileName} ) );
+  Sha1Sum=${Sha1Sum[0]} ;
+  git add ${StrFileName} ;
+  git commit -m "Adding new file: ${StrFileName}, UUID:${StrUUID}, SHA1SUM: ${Sha1Sum}" ${StrFileName} ;
+  
+ }
+ 
+ function main_git_add_file()    
+ {
+   eval $( __call_localityLocalName=MGAF __call_locality ); 
+   if [ -e ${StrAddNewFileHolder} ] ; then
+    local IntNbLine=( $( wc -l ${StrAddNewFileHolder} ) ) ;
+    IntNbLine=${IntNbLine[0]} ;
+    if [ ${IntNbLine:=0} -gt 0 ] ; then 
+     local ArrayFileAdd=( $( cat ${StrAddNewFileHolder} ) ) ;
+     eval $( __in_for ArrayFileAdd __fnct_git_add ) ;
+     echo > ${StrAddNewFileHolder} ;
+    fi
+   else
+    echo > ${StrAddNewFileHolder} ;
+   fi
+ }
+ 
+ function main_git_commit_update()    
+ { 
+   eval $( __call_localityLocalName=MGCU __call_locality ); 
+   
+   local UUID=$( uuidgen -r ) ;
+   find ./ -type f -iname "*.${StrMimeTypeCleanUp}" -exec rm -f {} \; 
+   git commit -m "UUID:${UUID}" -a ; 
+   git push origin ${StrBranchName} ; 
+ } ; 
+ 
+ function install_pymodule()    
+ { 
+   eval $( __call_localityLocalName=IPymodule __call_locality ); 
+   function install_py()    
+   { 
+     eval $( __call_localityLocalName=IPy __call_locality ); 
+     local CmdEval=( ${StrInterpreter}${StrVersionName} ${StrSetupInstallName} ${ArrayArg[0]} ) ;  
+     local strcmd="${ArrayOption[${intArrayOption}]}"; 
+     eval "${CmdEval[@]}" ;
+     if [ "${strcmd}" == "sdist" ] ; then 
+      echo -ne "\n\n\tCreating Source with tag : ${strcmd}\n\n" ; 
+     fi ; 
+   } ; 
+   eval $( __in_for ArrayOption install_py ); 
+ } ; 
+ 
+  main_git_commit_update ; 
+  install_pymodule 
+}
+
+#~ function GitAutoUpdate()
+#~ {
+ #~ eval $( __call_localityLocalName=GitUpdate __call_locality ); 
+ #~ #eval $( FParamFuncName=${StrFuncName} FParamSuffixName= FParamVarName= FParamDefaultValue= __fnctCreateLocalityFuncParam     ) ;
+ #~ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=TimeSlicing FParamVarName=IntTimeSlicing FParamDefaultValue=60 __fnctCreateLocalityFuncParam     ) ;
+ #~ 
+ #~ local IntFactorSlice=$(( IntTimeSlicing ))
+  #~ 
+#~ }
