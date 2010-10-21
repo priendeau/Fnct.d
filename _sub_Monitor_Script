@@ -122,6 +122,13 @@ function GetAppsByPid()
 
 function NicePidHarmonicAlteration()
 {
+  ###
+  ### The Goal is to lower all Nice Pid from the same Nice-level to a lower one, when electric
+  ### disruption happen. We also need to keep Pid list from Original Nice Level so we can
+  ### can restore back the Nice... and Also, to check the battery state with notmal
+  ### operation to see watts saved by brief interruption, and increase the test laps.
+  ###
+  ###
   eval $( __call_localityLocalName=NPHA __call_locality  ) ; 
   eval $( FParamFuncName=${StrFuncName} FParamSuffixName=NiceSeek FParamVarName=IntNiceSeek FParamDefaultValue=0 __fnctCreateLocalityFuncParam     ) ;
   eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DefaultAppsOption0 FParamVarName=ArrayDefaultApps[0] FParamDefaultValue=-eo __fnctCreateLocalityFuncParam     ) ;
