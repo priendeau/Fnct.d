@@ -278,3 +278,20 @@ compare_package()
   echo "declare -a ArrayDPKGUnInstalled=( ${ArrayDPKGUnInstalled[@]} )" ; 
 }
 
+function KeyAptSearch()    
+{ 
+ eval $( __call_localityLocalName=KAS __call_locality ); 
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=PackageArrayName FParamVarName=StrPackageArrayName FParamDefaultValue=ArrayPackage __fnctCreateLocalityFuncParam     ) ;
+ 
+ eval $( _call_locality ) ; 
+ function AptSearch()    
+ { 
+  eval $( __call_localityLocalName=AS __call_locality ); 
+  echo -ne "Key: ${ArrayArg[0]}\n" ; 
+  apt-file search ${ArrayArg[0]} ; 
+ } ; 
+ local CmdEval=( "eval" "$(" "__in_for" "${StrPackageArrayName}" "AptSearch" ) ; 
+ eval "${CmdEval[@]}" ;
+}
+
+
