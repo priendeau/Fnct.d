@@ -1,35 +1,38 @@
 
-. /etc/init.d/fnct.d/fnct_lib
-
-Debian_DPKG_update_InstallList()
-{
-  eval $( __InitFunc ) ;
-  declare -a ArrayDPKGInstalled=( $( ${DebianProg:=dpkg} ${DebianProgQuery:=--get-selections} | awk 'BEGIN{}{printf("%s ",$1)}END{}' ) ) ; 
-}
-
-
-Debian_DPKG_update_ArchivesList()
-{
-  eval $( __InitFunc ) ;
-  declare -a ArrayArchiveDPKG=( $( find ${DefaultRootPath:=/var/cache/apt/archives/} -printf "%p " ) ) ; 
-}
+#. /etc/init.d/fnct.d/fnct_lib
 
 declare -a ArrayMetaList=( Install Archives ) ; 
 declare -a ArrayCreator=( Debian Ubuntu Fedora ) ;
 declare -a ArrayPackageType=( DPKG APT YUM RPM ) ;
 declare -a ArrayPackageAction=( install update remove fix compile certify verify ) ;
 
+Debian_DPKG_update_InstallList()
+{
+  #eval $( __InitFunc ) ;
+  eval $( __call_localityLocalName=Debian_DPKG_update_InstallList __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
+  declare -a ArrayDPKGInstalled=( $( ${DebianProg:=dpkg} ${DebianProgQuery:=--get-selections} | awk 'BEGIN{}{printf("%s ",$1)}END{}' ) ) ; 
+}
+
+Debian_DPKG_update_ArchivesList()
+{
+  #eval $( __InitFunc ) ;
+  eval $( __call_localityLocalName=Debian_DPKG_update_ArchivesList __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
+  declare -a ArrayArchiveDPKG=( $( find ${DefaultRootPath:=/var/cache/apt/archives/} -printf "%p " ) ) ; 
+}
+
 DebianDPKGProvideSubFunctionMember()
 {
+  #eval $( __InitFunc ) ;
+  eval $( __call_localityLocalName=DebianDPKGProvideSubFunctionMember __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
   function __search_item()
   {
-    eval $( __InitFunc ) ;
+    #eval $( __InitFunc ) ;
+    eval $( __call_localityLocalName=__search_item __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
     if [ ${ArrayArg[1]} == ${ItemQuery:=update} ] ; then 
       return 0 ;
     fi
     return 1 ;
   }
-  eval $( __InitFunc ) ;
   local Template="__CREATOR___PACKAGETYPE_____PACKAGEACTION___" ; 
   local StrCreator=${Creator:=${ArrayCreator[0]}} ;
   local StrPackageType=${PackageType:=${ArrayPackageType[0]}} ;
@@ -43,54 +46,46 @@ DebianDPKGProvideSubFunctionMember()
 
 MetaUpdateList()
 {
-  eval $( __InitFunc ) ;
+  #eval $( __InitFunc ) ;
+  eval $( __call_localityLocalName=MetaUpdateList __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
   function __FuncUpdate()
   {
-    eval $( __InitFunc ) ;
+    #eval $( __InitFunc ) ;
+    eval $( __call_localityLocalName=__FuncUpdate __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
     local Template="__NODE____SECTION__List" ;
     Template=${Template/__SECTION__/${ArrayArg[0]}}
   } 
   eval $( __in_for ArrayMetaList __FuncUpdate ) ; 
 }
 
-#function fast_dpkg_query()    
-#{ 
-#  local 
-#  function BAwkCode()
-#  {
-    
-#  }
-#  function Base64()
-#  {
-#    eval $( __call_locality ) ;
-#    local StrFuncName=PreImplementBase64 ;
-#    eval $( parse_newvar ${EFunctionTypeDecl} ${TypeDebugKey[${EParamNoDebugDecl}]} ${ArrayArg[@]} )  ;
-
-#  }
-#  eval $( __call_locality ) ; 
-#  eval $( parse_newvar ${EFunctionTypeDecl} ${TypeDebugKey[${EParamNoDebugDecl}]} ${ArrayArg[@]} ) ;
-#  dpkg-query --show | awk -vQuery=${Query} ;
-#}
-
 function __get_col()    
 { 
-  eval $( __InitFunc ) ;
+  #eval $( __InitFunc ) ;
+  eval $( __call_localityLocalName=__get_col __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
   awk -vCol=${ArrayArg[0]} 'BEGIN{}{printf("%s ",$(Col));}END{}' ; 
 } ; 
 
-declare -a ArrayPackageCurrent=( $( dpkg --get-selections | __get_col 1 ) ) ; 
+function UpdateDpkgGetSelection()
+{
+  eval $( __call_localityLocalName=UpdateDpkgGetSelection __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
+  declare -a ArrayPackageCurrent=( $( dpkg --get-selections | __get_col 1 ) ) ; 
+}
+
 
 function get_listfile()    
 { 
-  eval $( __InitFunc get_listfile ) ;
+  #eval $( __InitFunc get_listfile ) ;
+  eval $( __call_localityLocalName=get_listfile __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
   function __BaseEncode64()
   {
-    eval $( __InitFunc __BaseEncode64 ) ;
+    #eval $( __InitFunc __BaseEncode64 ) ;
+    eval $( __call_localityLocalName=__BaseEncode64 __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
     base64 --wrap=0 ; 
   }
   function __IfTestFile()    
   { 
-    eval $( __InitFunc __IfTestFile ) ;
+    #eval $( __InitFunc __IfTestFile ) ;
+    eval $( __call_localityLocalName=__IfTestFile __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
     if [ -f ${ArrayArg[0]} ] ; then 
       local StrStream=$( echo "${ArrayArg[0]}" | __BaseEncode64 ) ; 
       echo -ne "${StrStream} " ;
@@ -102,16 +97,19 @@ function get_listfile()
 
 function get_search()
 {
-  eval $( __InitFunc get_search ) ;
+  #eval $( __InitFunc get_search ) ;
+  eval $( __call_localityLocalName=get_search __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
   eval $( __in_for ArrayPackageCurrent get_listfile ) ;
 }
 
 function get_package_by_file()
 {
-  eval $( __InitFunc get_package_by_file ) ;
+  #eval $( __InitFunc get_package_by_file ) ;
+  eval $( __call_localityLocalName=get_package_by_file __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
   function PostFilter()
   {
-    eval $( __InitFunc PostFilter ) ;
+    #eval $( __InitFunc PostFilter ) ;
+    eval $( __call_localityLocalName=PostFilter __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
     awk -vGrepReturn=${GrepReturn} -f /etc/init.d/fnct.d/awk-script/DpKgQueryPackage.awk ; 
   }  
   local CmdEval=( ${Program:=apt-file} ${ProgramOption:=search} ${ProgramQuery:=lirc/lirc_client.h} ProgramQueryIs64=${ProgramQueryIs64:=false} "|" ${FilterProgram:=PostFilter} GrepReturn=${GrepReturn:=false} ${FilterProgramQuery:=""} ) ;
@@ -123,10 +121,12 @@ function get_package_by_file()
 
 function AwkContentParsing()    
 { 
-  eval $( __InitFunc AwkContentParsing ) ; 
+  #eval $( __InitFunc AwkContentParsing ) ; 
+  eval $( __call_localityLocalName=AwkContentParsing __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
   function __TinyDecode64()
   {
-    eval $( __InitFunc __TinyDecode64 ) ; 
+    #eval $( __InitFunc __TinyDecode64 ) ; 
+    eval $( __call_localityLocalName=__TinyDecode64 __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
     local StrBaseDecode=$( echo "${VarDecode64}" | base64 -d --wrap=0 2> /dev/null ) ; 
     local IntErrorReport=$? ;
     if [ ${IntErrorReport:=1} -eq 1 ] ; then 
@@ -146,55 +146,109 @@ function AwkContentParsing()
 
 function libsearch_AwkContentParsing()
 {
-  eval $( __InitFunc AwkContentParsing ) ; 
+  #eval $( __InitFunc AwkContentParsing ) ; 
+  eval $( __call_localityLocalName=libsearch_AwkContentParsing __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
   local StrRecurrentTemplateSearch=$( echo "dpkg --get-selections | egrep -ic %s" | base64 --wrap=0 ) ;
   local StrQuerySearch=$( echo "lirc/lirc_client.h" | base64 --wrap=0 ) ; 
   AwkContentParsing RecurrentTemplateSearch=${StrRecurrentTemplateSearch} QuerySearch=${StrQuerySearch} ; 
   
 }
 
-__funcZenity_DpkgList () 
+__funcZenity_DpkgList() 
 { 
-    eval $( __InitFunc __funcZenity_DpkgList );
-    __unset CharCSV MainText CharCSV DefaultTitle DefaultAwkScript Program ProgramOption ;
+    eval $( __call_localityLocalName=__funcZenity_DpkgList __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
     
-    local CharCSV=${DefaultCharCSV:=:} ;
-
-    function __ZenityInterface()
+    
+    ### This Cover-up the theory of problematic transfert of commune Variable name in external function
+    ### being by definition to be treated ''AS'' the normal corpus of the definition of a script
+    ### Where this example show a possibility that it does not... The WeFixIt by
+    ### involve declaring this method inside this function by calling a declare-f and 
+    ### renaming the function (incase of) and calling it inside the function like a 
+    ### sub-function can be called and all variable within an external-function will 
+    ### be accessible... 
+    ### Noted by: Patrick Riendeau in 2003-2004 @vdl2 inc formelly know as Phéromone inc.
+    ### and 2010... 
+    
+    eval """$( declare -f LinkFuncRetOkA_B  | sed 's/\\n/\\\\n/g;s/LinkFuncRetOkA_B/localLinkFuncRetOkA_B/g' )"""
+    
+    function DisplayEvalCmd()
     {
-      eval $( __InitFunc __ZenityInterface );
-      local CmdEval=( zenity --list --text=\"${MainText:=DPKG-List}\" --column=\"Package, Install State.\" --separator=${CharCSV} --print-column=ALL --checklist --multiple --editable --print-column=2 --hide-column=1 --title=\"${DefaultTitle:=Package List}\" --listen ) ;
-      echo "echo \"CmdLine:[${CmdEval[@]}]\";"  ;    
+      echo -ne "in DisplayEvalCmd:\n\t\tCmdLine:${StrFuncName}:[ ${CmdEval[@]} ]\n" > /dev/stderr  ;  
+    }
+    
+    function ExecEvalCmd()
+    {
+      echo -ne "in ExecEvalCmd:\n" > /dev/stderr ;  
       eval "${CmdEval[@]}" ;
     }
-    function PostFilter()
+
+    function ZenityProgressBar()
     {
-      eval $( __InitFunc PostFilter );
-      awk -vDefaultCSV=${CharCSV} -f ${ArrayAwkScriptPath[0]}/${DefaultAwkScript:=DpKgQueryPackageZenity}.awk
-    }   
-    ${Program:=dpkg} ${ProgramOption:=--get-selections} | PostFilter CharCSV=${CharCSV} |__ZenityInterface MainText=${MainText} DefaultTitle=${DefaultTitle} CharCSV=${CharCSV} ; 
+      eval $( __call_localityLocalName=ZenityProgressBar __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
+      local IntRandomState=$(( ${RANDOM} % 20 )) ;
+      local CmdEval=( zenity --progress --percentage=${IntRandomState} --text="Fetching Package List" --auto-kill --pulsate ) ;
+      #DisplayEvalCmd ;
+      #ExecEvalCmd ;
+      LFuncAction0=DisplayEvalCmd LFuncAction1=ExecEvalCmd localLinkFuncRetOkA_B ;
+    }
+    
+    function ZenityListPackage()
+    {
+      eval $( __call_localityLocalName=ZenityProgressBar __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
+      zenity --list --checklist --column "Installed" --column "Package Name" ;
+      #DisplayEvalCmd
+      #ExecEvalCmd ;
+      LFuncAction0=DisplayEvalCmd LFuncAction1=ExecEvalCmd localLinkFuncRetOkA_B ;
+    }
+    
+    function DpkgSortedByInstall()
+    {
+     eval $( __call_localityLocalName=DpkgSortedByInstall __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
+     local CmdEval=( "dpkg" "--get-selections" "|" "sort" "-k2" "-r" ) ;
+     #DisplayEvalCmd ;
+     #ExecEvalCmd ;
+     LFuncAction0=DisplayEvalCmd LFuncAction1=ExecEvalCmd localLinkFuncRetOkA_B ;
+    }
+
+    function SedFilterConversionDpkgToZenityList()
+    {
+      eval $( __call_localityLocalName=DpkgSortedByInstall __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
+      #sed -r -f /etc/init.d/fnct.d/sed-script/FilterConversionDpkgToZenityList.sed ;
+      local CmdEval=( "sed" "-r" "-f" "/etc/init.d/fnct.d/sed-script/FilterConversionDpkgToZenityList.sed" ) ;
+      #DisplayEvalCmd ;
+      #ExecEvalCmd ;
+      LFuncAction0=DisplayEvalCmd LFuncAction1=ExecEvalCmd localLinkFuncRetOkA_B ;
+    }
+    local CmdEval=( LFuncAction0=ZenityProgressBar LFuncAction1=DpkgSortedByInstall LinkFuncPipedA_B ) ;
+    echo -ne "From Main Func:${StrFuncName}\n\n\tCmdEval:[ ${CmdEval[@]} ]\n" > /dev/stderr ;
+    LFuncAction0=DisplayEvalCmd LFuncAction1=ExecEvalCmd localLinkFuncRetOkA_B ;
+
 }
 
 function get_list()  
 { 
-  eval $( __InitFunc get_list ) ; 
+  #eval $( __InitFunc get_list ) ; 
+  eval $( __call_localityLocalName=get_list __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
   local ArrayInfo=( $(find /usr/share/ -maxdepth 1 -type d -iname "man*" | tr '[:cntrl:]' ' ' ) ) ; 
   echo "${VarDecl:=local} ${ArrayName:=ArrayList}=( ${ArrayInfo[@]})" ; 
 } ; 
   
 function ffind()    
 { 
-  eval $( __InitFunc ffind ) ; 
+  #eval $( __InitFunc ffind ) ; 
+  eval $( __call_localityLocalName=ffind __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
   find ${ArrayArg[0]} -type f -iname "*man*" ; 
 } ; 
 function __ZenityProgressBar()    
 { 
-  eval $( __InitFunc ) ;  
+  #eval $( __InitFunc ) ;  
+  eval $( __call_localityLocalName=__ZenityProgressBar __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
   zenity --progress --pulsate 
 } ; 
 function __wrap_bar_find()    
 { 
-  eval $( __InitFunc __wrap_bar_find ) ; 
+  #eval $( __InitFunc __wrap_bar_find ) ; 
+  eval $( __call_localityLocalName=__wrap_bar_find __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
   eval $( get_list ArrayName=ArrayOut VarDecl=local ) ;
   eval $( __in_for ArrayOut ffind ) | __ZenityProgressBar  ;
 }
@@ -202,7 +256,8 @@ function __wrap_bar_find()
 
 function __BuildDpkgShowFormat ()    
 { 
- eval $( __InitFunc __BuildDpkgShowFormat ) ; 
+ #eval $( __InitFunc __BuildDpkgShowFormat ) ; 
+ eval $( __call_localityLocalName=__BuildDpkgShowFormat __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
  local DefaultTagValue="__TAG__" ;
  if [ ${StructDpkgShowFormat:=__TAG__} == "__TAG__" ] ; then 
   declare -a StructDpkgShowFormat="${DefaultTagValue}" ;
@@ -215,7 +270,8 @@ function __BuildDpkgShowFormatXml()
   eval $( __InitFunc __BuildDpkgShowFormat ) ; 
   function __functor_show_header()
   {
-    eval $( __InitFunc __BuildDpkgShowFormat ) ; 
+    #eval $( __InitFunc __BuildDpkgShowFormat ) ; 
+    eval $( __call_localityLocalName=__BuildDpkgShowFormatXml __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
     echo -ne "\nStyle=${Style}\n" ;     
     echo -ne "${ArrayArg[2]}" ; 
     echo -ne "\nDstyle=${Dstyle}\n" ;
@@ -228,7 +284,7 @@ compare_package()
   local ArrayArg=( $* ) ; 
   function get_name()    
   { 
-    local ArrayArg=( $* ) ; 
+    eval $( __call_localityLocalName=compare_package __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
     local str="${ArrayArg[0]}" ; 
     local ArrayPackage=( ${str/_/ } ) ; 
     echo -ne "${ArrayPackage[0]} " ;  
@@ -236,25 +292,26 @@ compare_package()
   
   function update_package_list()
   {
-    local ArrayArg=( $* ) ; 
+    eval $( __call_localityLocalName=update_package_list __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
     ${DebianProg:=dpkg} ${DebianProgQuery:=--get-selections} | awk 'BEGIN{}{printf("%s ",$1)}END{}' ; 
   }
   
   function get_specific_search()
   {
-    local ArrayArg=( $* ) ; 
+    eval $( __call_localityLocalName=get_specific_search __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
     apt-file search wxPython | awk 'BEGIN{}{intlength=split($1,Array,/:/); printf("%s\n",Array[1])}END{}' | sort -u | tr '[:cntrl:]' ' '  
   }
   
   function get_specific_python()
   {
-    local ArrayArg=( $* ) ; 
+    eval $( __call_localityLocalName=get_specific_python __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
     find /var/cache/apt/archives/ -iname "*.deb" -printf "%f "
   }
 
   function __compare_package()    
   { 
-    local ArrayArg=( $* ) ; 
+    #local ArrayArg=( $* ) ; 
+    eval $( __call_localityLocalName= __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
     echo "Search for Package ${ArrayArg[0]} in Installed Package( ${#ArrayDPKGInstalled[@]} ) " ;      
     function search_package_name()    
     { 
@@ -293,4 +350,53 @@ function KeyAptSearch()
  eval "${CmdEval[@]}" ;
 }
 
+function dpkg-get-selections()
+{
+ eval $( __call_localityLocalName=DPKG __call_locality ); 
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=BranchShow FParamVarName=StrBranchShow FParamDefaultValue=Left __fnctCreateLocalityFuncParam     ) ;
+ 
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=CmdName0 FParamVarName=ArrayCmdName[0] FParamDefaultValue=dpkg __fnctCreateLocalityFuncParam     ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=CmdName1 FParamVarName=ArrayCmdName[1] FParamDefaultValue=--get-selections __fnctCreateLocalityFuncParam     ) ;
+ 
+ local StrFuncColDisplay="${StrBranchShow}ColDisplay" ;
+ 
+ function CommandCall()
+ {
+  eval $( __call_localityLocalName=CCall __call_locality ); 
+  local CmdEval=( ${ArrayCmdName[@]} ) ;
+  eval "${CmdEval[@]}" ;
+ }
+ 
+ function RightColDisplay()
+ {
+  eval $( __call_localityLocalName=ColDisplay __call_locality ); 
+  awk -vColName="${StrBranchShow}" -f /etc/init.d/fnct.d/awk-script/dpkg-col-display.awk 
+ }
+ 
+ function LeftColDisplay()
+ {
+  eval $( __call_localityLocalName=ColDisplay __call_locality ); 
+  awk -vColName="${StrBranchShow}" -f /etc/init.d/fnct.d/awk-script/dpkg-col-display.awk 
+ }
+ 
+ local CmdEval=( "${CommandCall} | ${StrFuncColDisplay}" ) ;
+ eval "${CmdEval[@]}" ;
+}
+
+function dpkg-set-selections()
+{
+ eval $( __call_localityLocalName=DPKG __call_locality ); 
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=BranchShow FParamVarName=StrBranchShow FParamDefaultValue=Left __fnctCreateLocalityFuncParam     ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=CmdName0 FParamVarName=ArrayCmdName[0] FParamDefaultValue=dpkg __fnctCreateLocalityFuncParam     ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=CmdName1 FParamVarName=ArrayCmdName[1] FParamDefaultValue=--set-selections __fnctCreateLocalityFuncParam     ) ;
+ 
+ function CommandCall()
+ {
+  eval $( __call_localityLocalName=CCall __call_locality ); 
+  local CmdEval=( "${ArrayCmdName[@]}" ) ;
+  eval "${CmdEval[@]}" ;
+ }
+ 
+
+}
 
