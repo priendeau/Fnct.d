@@ -1,0 +1,115 @@
+
+function __fnct_META ( )
+{
+ eval $( __call_localityLocalName=fnct_META __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+  function __fnctBasedType()
+  {
+   eval $( __call_localityLocalName=fnctBasedType __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+   local VarNameExch=${ArrayTypeVar[${intArrayTypeVar}]} ;
+   eval """__CaseMETAType=${VarNameExch} __CaseMETA""" ;
+  }
+  #case "META" in 
+  #    "META" )
+  eval $( __in_for ArrayTypeVar __fnctBasedType ) ;
+  #    ;;
+  #esac
+
+}
+
+ function __CaseMETA()
+ {
+  eval $( __call_localityLocalName=CaseMETA __call_localityDisplayFunctionEntry=0 __call_locality ) ; 
+  IntVariableTemplate=1 ;
+  case "${StrTypeVar}" in
+     "String" )
+     echo -ne "${StrFuncName}: 000\n"  > /dev/stderr ;
+     ;;
+    "Array" )
+     echo -ne "${StrFuncName}: 001\n"  > /dev/stderr ;
+     ;;
+     "Bool" )
+     echo -ne "${StrFuncName}: 002\n"  > /dev/stderr ;
+     ;;
+     "Base64" )
+     echo -ne "${StrFuncName}: 003\n"  > /dev/stderr ;
+     ;;
+  esac 
+ }
+
+function __fnctCreateLocalityFuncParam()
+{
+  ### All Pre Declaration Variable are prefixed to : 
+  ### FParam
+  ### FParam${Suffix}=Value 
+  ### FParam${Suffix}=Value __fnctCreateLocalityFuncParam
+  ### ParamList :
+  ### FParamFuncName
+  ### FParamSuffixName
+  ### FParamVarName
+  ### FParamDefaultValue
+  ### FParamInterpretVar
+  ### FParamBase64
+  ### FParamTypeVar
+  ### 
+  ### Note : To produce a valid command issued from this function it need evaluated-executive-parenthesis 
+  ### 'eval $( FParamFuncName=${StrFuncName} FParamSuffixName=__SUFFIX__ FParamVarName=__VARNAME__ 
+  ### FParamDefaultValue=__VALUE__ __fnctCreateLocalityFuncParam )'
+  ###
+  ### Typical uses : eval $( FParamFuncName= FParamSuffixName= \
+  ###                        FParamVarName= FParamDefaultValue= \
+  ###                        FParamTypeVar FParam= __fnctCreateLocalityFuncParam )
+  
+  eval $( __call_localityLocalName=FParam __call_localityDisplayFunctionEntry=0 __call_locality ) ; 
+  local ArrayTypeVar=( String Array Bool Base64 ) ;
+  local ArrayVariableFormat=( ) ; 
+  
+  ArrayVariableFormat[0]="""__SCOPE__ __PREFIX____VARNAME____SUFFIX__=__VARVALUE__""" 
+  ArrayVariableFormat[1]="""__SCOPE__ __PREFIX____VARNAME____SUFFIX__=__DOLLAR____LBRACE__VARNAME____RBRACE__""" 
+  ArrayVariableFormat[2]="""__SCOPE__ __PREFIX____VARNAME____SUFFIX__=__VARNEWVALUE__""" ;
+  local IntVariableTemplate=None;
+  eval "local IsInterpretVar=\${${StrFuncName}InterpretVar:=False}" ; 
+  eval "local StrFuncName=\${${StrFuncName}FuncName:=${StrFuncName}}" ; 
+  eval "local StrSuffixName=\${${StrFuncName}SuffixName:=None}" ; 
+  eval "local StrVarName=\${${StrFuncName}VarName:=IsItem}" ; 
+  eval "local StrDefaultValue=\${${StrFuncName}DefaultValue:=None}" ; 
+  eval "local StrTypeVar=\${${StrFuncName}TypeVar:=String}" ; 
+  eval "local StrPrefixVar=\${${StrFuncName}PrefixVar:=None}" ; 
+  
+  local ArrayHandlingOrder=( InterpretVar VarName SuffixName FuncName DefaultValue TypeVar ) ;
+  local ArrayHandlingVar=( IsInterpretVar StrVarName StrSuffixName StrFuncName StrDefaultValue StrTypeVar ) ;
+  
+   
+  ### Schema :
+  ###  InterpretVar ==================================+
+  ###                                                 |
+  ###                                                 +
+  ###                                               VarName
+  ###                                                 +            
+  ###                                                 |
+  ###           Out---------+                         +
+  ###                       |                     SuffixName
+  ###                       +                         +
+  ###                    TypeVar                      |
+  ###                       +                         +
+  ###                       +                     FuncName
+  ###                   DefaultValue                  +
+  ###                       +                         |
+  ###                       |                         |
+  ###                       +-------------------------+
+                                                
+ 
+  function __fnctChangeFunc()
+  {
+    eval $( __call_localityLocalName=ChangeFunc __call_localityDisplayFunctionEntry=0 __call_locality ) ; 
+    local VarNameExch=${ArrayHandlingOrder[${intArrayHandlingOrder}]} ;
+    local StrFuncContent=$( declare -f __fnct_META  | sed 's/\\n/\\\\n/g;s/META/\${VarNameExch}/g' ) ;
+    local NewFuncName="NameVar=META ValueVar=\${META} __fnct_${VarNameExch}" ;
+    echo -ne "\nContent of ${NewFuncName}:[ ${StrFuncContent} ]\n" ;
+    eval "$( ${StrFuncContent} )" ; 
+    echo -ne "Loading Function : ${NewFuncName}\n" > /dev/stderr ;
+    declare -f ${NewFuncName} > /dev/stderr ; 
+    eval "unset __fnct_${ArrayHandlingOrder[${intArrayHandlingOrder}]}" ;
+  }
+  eval $( __in_for ArrayHandlingOrder __fnctChangeFunc ) ;
+
+}

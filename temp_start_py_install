@@ -1,0 +1,134 @@
+function start_py_install()
+{ 
+ eval $( __call_localityLocalName=SPI __call_locality ) ; 
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=PathBuild       FParamVarName=StrPathBuild       FParamDefaultValue=/usr/local/lib/python2.6/dist-packages/build __fnctCreateLocalityFuncParam ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DisplayCFLAGS   FParamVarName=StrDisplayCFLAGS   FParamDefaultValue=False            __fnctCreateLocalityFuncParam ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DisplayCCXFLAGS FParamVarName=StrDisplayCCXFLAGS FParamDefaultValue=False            __fnctCreateLocalityFuncParam ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Help            FParamVarName=StrHelp            FParamDefaultValue=False            __fnctCreateLocalityFuncParam ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=SetupName       FParamVarName=StrSetupName       FParamDefaultValue=setup.py         __fnctCreateLocalityFuncParam ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=PyVersion       FParamVarName=StrPyVersion       FParamDefaultValue=2.6              __fnctCreateLocalityFuncParam ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=LdConfFile      FParamVarName=StrLdConfFile      FParamDefaultValue=/etc/ld.so.conf  __fnctCreateLocalityFuncParam ) ;
+
+
+ local ArrayKey=( PathBuild DisplayCFLAGS DisplayCCXFLAGS Help SetupName PyVersion LdConfFile ) ;
+ local ArrayPythonSetupCmd=( clean build build_py build_ext build_clib build_scripts sdist bdist install_data install install_lib install_headers install_scripts ) ; 
+ local EA_CFLAGS=(   -g -m64 -mcx16 -mtune=amdfam10 -O3 -Wall -mmmx -msse4a -m128bit-long-double -mpc80 -mstackrealign ) ;
+ local EA_CXXFLAGS=( -g -m64 -mcx16 -mtune=amdfam10 -O3 -Wall -mmmx -msse4a -m128bit-long-double -mpc80 -mstackrealign -ftemplate-depth-10946 ) ; 
+ local StrPath="${ArrayArg[0]}" ;
+ StrPath="${StrPath:=None}" ;
+ local StrIsDisplayTrigger=False ;
+ local ADisplay=( fnct_Help fnct_DisplayCFLAGS fnct_DisplayCXXFLAGS ) ;
+ local CmdEvalKey=( Path Setup IsDisplayTrigger OldPath NewPath );
+
+ function __fnctDisplay()
+ {
+  eval $( __call_localityLocalName=__fnctDisplay __call_localityDisplayFunctionEntry=0 __call_locality ) ; 
+  if [ "${StrDisplaySection}" == "${CmdEvalKey[${intCmdEvalKey}]}" ] ; then 
+   eval "${CmdEvalList[${intCmdEvalKey}]} > /dev/stderr "  ; 
+  fi
+ }
+ 
+ function DisplayInfo()
+ {
+  eval $( __call_localityLocalName=Di __call_localityDisplayFunctionEntry=0 __call_locality ) ; 
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DisplaySection   FParamVarName=StrDisplaySection   FParamDefaultValue=None __fnctCreateLocalityFuncParam ) ;
+  local CmdEvalList=( );
+  CmdEvalList[0]="""echo -ne \"Path : \${StrPath}\n\" > /dev/stderr""" ;
+  CmdEvalList[1]="""echo -ne \"Find a Python Setup File\n\" > /dev/stderr""" ;
+  CmdEvalList[2]="""echo -ne \"State of StrIsDisplayTrigger : \${StrIsDisplayTrigger}\n\" > /dev/stderr""" ;
+  CmdEvalList[3]="""echo -ne \"Previous Path: \$( pwd )\n\" > /dev/stderr""" ;
+  CmdEvalList[4]="""echo -ne \"New Path: \$( pwd )\n\" > /dev/stderr""" ;
+  eval $( __in_for CmdEvalKey __fnctDisplay ) ;
+  unset StrDisplaySection ;
+ }
+  
+ function fnct_Help()
+ {
+  eval $( __call_localityLocalName=fnct_Help __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+  local KeyStrFuncName="Str${StrFuncName/fnct_/}"  ;
+  echo -ne "KeyName : ${KeyStrFuncName}" ;
+  local ArrayMessage=( ${ArrayKey[@]} ) ;
+  eval "local StrKeyRespond=\${${KeyStrFuncName}}" ;
+  echo -ne "KeyRespond : ${StrKeyRespond} \n" > /dev/stderr ; 
+  if [ "${StrKeyRespond:=False}" == "True" ] ; then 
+    echo -ne "${StrMessage}" > /dev/stderr ; 
+  fi  ;
+  StrIsDisplayTrigger="True" ;
+ }
+ 
+ function fnct_DisplayCFLAGS()
+ {
+  eval $( __call_localityLocalName=fnct_DisplayCFLAGS __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+  local KeyStrFuncName="${StrFuncName/fnct_/}" ;
+  local StrMessage="\n\tCFLAGS Parameter :\n\tCFLAGS=${EA_CFLAGS[@]}\n" ;
+  eval "local StrValue=\${Str${KeyStrFuncName}:=False}" ;
+  if [ "${StrValue}" == "True" ] ; then 
+   echo -ne "${StrMessage}" > /dev/stderr  ; 
+  fi
+  StrIsDisplayTrigger="True" ;
+ }
+ 
+ function fnct_DisplayCXXFLAGS()
+ {
+  eval $( __call_localityLocalName=fnct_DisplayCXXFLAGS __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+  local KeyStrFuncName="${StrFuncName/fnct_/}" ;
+  local StrMessage="\n\tCXXFLAGS Parameter :\n\tCFLAGS=${EA_CXXFLAGS[@]}\n" ;
+  eval "local StrValue=\${Str${KeyStrFuncName}:=False}" ;
+  if [ "${StrValue}" == "True" ] ; then 
+   echo -ne "${StrMessage}" > /dev/stderr  ; 
+  fi
+  StrIsDisplayTrigger="True" ;
+ }
+ 
+ function Call_ldconfig()
+ {
+  eval $( __call_localityLocalName=Call_ldconfig __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+  local CmdEval=( ldconfig -f /etc/ld.so.conf ) ;
+  eval "${CmdEval[@]}" ;
+ }
+ 
+ function ChangePath()
+ {
+  eval $( __call_localityLocalName=ChangePath __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+  if [ "${StrPath:=None}" != "None" ] ; then 
+   DiDisplaySection=OldPath DisplayInfo
+   cd "${StrPathBuild}" ;
+   DiDisplaySection=NewPath DisplayInfo
+  fi
+ }
+ 
+ function python_setup_cmd()    
+ { 
+   eval $( __call_localityLocalName=PSC __call_locality ) ; 
+   local CmdEval=( CFLAGS=\"${EA_CFLAGS[@]}\" CXXFLAGS=\"${EA_CXXFLAGS[@]}\" "python${StrPyVersion}" ${StrSetupName} ${ArrayPythonSetupCmd[${intArrayPythonSetupCmd}]} )  ; 
+   if [ -e "${StrSetupName}" ] ; then 
+    DiDisplaySection=Path DisplayInfo ;
+    DiDisplaySection=Setup DisplayInfo ;
+    eval "${CmdEval[@]}" ;
+   fi
+ } ; 
+ 
+ function StubInstall()
+ {
+   eval $( __call_localityLocalName=StubInstall __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+   DiDisplaySection=Setup DisplayInfo ;
+   ChangePath ;
+   eval $( __in_for ArrayPythonSetupCmd python_setup_cmd ) ; 
+   Call_ldconfig ;
+   ChangePath ;
+ }
+ 
+ function __EvalCmd( )
+ {
+  eval $( __call_localityLocalName=__EvalCmd __call_locality ) ; 
+  eval "${ArrayArg[0]}" ;
+ }
+ 
+ eval $( __in_for ADisplay __EvalCmd ) ;
+ DiDisplaySection=IsDisplayTrigger DisplayInfo
+ 
+ if [ "${StrIsDisplayTrigger}" == "False" ] ; then 
+  StubInstall ;
+ fi
+ 
+}
