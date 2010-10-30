@@ -38,7 +38,6 @@ function __GitBranch( )
   CaseBranchingGit;
 }
 
-
 function GitBranchList()
 {
   eval $( __call_localityLocalName=GBL __call_locality ) ;
