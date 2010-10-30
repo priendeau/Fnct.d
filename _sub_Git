@@ -38,13 +38,65 @@ function __GitBranch( )
   CaseBranchingGit;
 }
 
+
 function GitBranchList()
 {
   eval $( __call_localityLocalName=GBL __call_locality ) ;
   eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ArrayName    FParamVarName=StrArrayName    FParamDefaultValue=ArrayGitBranch     __fnctCreateLocalityFuncParam );
   eval $( FParamFuncName=${StrFuncName} FParamSuffixName=VariableMode FParamVarName=StrVariableMode FParamDefaultValue=local              __fnctCreateLocalityFuncParam );
   
-    
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Action FParamVarName=StrAction FParamDefaultValue=ArrayCreation  __fnctCreateLocalityFuncParam );
+ 
+  GitBranchList.Property.N() 
+  {
+   eval $( __call_localityLocalName=${StrFuncName}.Property.N __call_localityDisplayFunctionEntry=1 __call_locality );
+   local IntID=(${StrFuncName/./ });
+   IntID=${IntID[${#IntID[@]}]};
+   local IntArrayArg=${#ArrayArg[@]} ;
+   local ArrayFuncProperty=( ${StrFuncName/Property/Getter} ${StrFuncName/Property/Setter} ) ;
+   if [ ${IntArrayArg:=0} -gt 0 ] ; then 
+    eval "${ArrayFuncProperty[1]/\.N/\.${IntID}} ${ArrayArg[@]}" ;
+   else
+    eval "${ArrayFuncProperty[0]/\.N/\.${IntID}} ${ArrayArg[@]}" ;
+   fi 
+  }
+  GitBranchList.Getter.N() 
+  { 
+      eval $( __call_localityLocalName=${StrFuncName}.Getter.N __call_localityDisplayFunctionEntry=1 __call_locality );
+      local IntID=(${StrFuncName/./ });
+      IntID=${IntID[${#IntID[@]}]};
+      echo "${__META__[${IntID}]}"
+  }
+  
+  GitBranchList.Setter.N() 
+  { 
+      eval $( __call_localityLocalName=${StrFuncName}.Setter.N __call_localityDisplayFunctionEntry=1 __call_locality );
+      local IntID=(${StrFuncName/./ });
+      IntID=${IntID[${#IntID[@]}]};
+      echo "__META__[${IntID}]=${ArrayArg[@]}" ;
+  }
+  
+  function ActionArrayProperty()
+  {
+    eval $( __call_localityLocalName=Property __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    local IntArrayId="int${StrArrayName}" ;
+    echo -ne "\nFunc: ${StrFuncName}, NameArrayID : ${ArrayArg[0]}\n" ;
+    eval """$( declare -f GitBranchList.Property.N | sed 's/__META__/${StrArrayName}/g;s/\.N/\.${${IntArrayId}}/g;s/\.${StrFuncName}//g')""" ;
+  }
+  
+  function ActionArrayGetter()
+  {
+    eval $( __call_localityLocalName=Getter __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    local IntArrayId="int${StrArrayName}" ;
+    eval """$( declare -f GitBranchList.Getter.N | sed 's/__META__/${StrArrayName}/g;s/\.N/\.${${IntArrayId}}/g;s/\.${StrFuncName}//g')""" ;
+  }
+
+  function ActionArraySetter()
+  {
+    eval $( __call_localityLocalName=Setter __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    eval """$( declare -f GitBranchList.Setter.N | sed 's/__META__/${StrArrayName}/g;s/\.N/\.${int${StrArrayName}}/g;s/\.${StrFuncName}//g')""" ;
+  }
+  
   function VarDeclHandler()
   {
     eval $( __call_localityLocalName=VDecl __call_localityDisplayFunctionEntry=1 __call_locality ) ;
@@ -75,7 +127,7 @@ function GitBranchList()
   function AwkFilter()
   {
     eval $( __call_localityLocalName=AwkFilter __call_locality ) ;
-    awk 'BEGIN{}{for( intx=1;intx<=NF;intx++){ if( $(intx) ~ /[a-zA-Z_\-]+/ ){ printf("%s ",$(intx));} } }END{}'
+    awk -f ${ArrayAwkScriptPath[0]}/GitBranchList.awk
   }
 
   function GitCmd()
@@ -86,10 +138,31 @@ function GitBranchList()
     eval "git ${ArrayGitCommand[@]}" ; 
   }
     
-  local GitBranch=$( ( GitCmd | AwkFilter ) );
-  local StrDeclVar="";
-  eval $( VDeclCreateVar=StrDeclVar VarDeclHandler ) ;
-  echo -ne "${StrDeclVar}${StrArrayName}=( ${GitBranch} )" ;
+  function ActionArrayCreation()
+  {
+    eval $( __call_localityLocalName=ActionArrayCreation __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    GitBranch=$( ( GitCmd | AwkFilter ) );
+    StrDeclVar="";
+    eval $( VDeclCreateVar=StrDeclVar VarDeclHandler ) ;
+    echo -ne "${StrDeclVar}${StrArrayName}=( ${GitBranch} )" ;
+  }
+  
+  function ActionArrayPropertyLoader()
+  {
+    eval $( __call_localityLocalName=ActionArrayPropertyLoader __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+    ActionArrayProperty ${ArrayArg[0]} ;
+    ActionArrayGetter ${ArrayArg[0]} ;
+    ActionArraySetter ${ArrayArg[0]} ;
+  }
+  
+  case ${StrAction} in
+   "ArrayCreation" )
+   ActionArrayCreation ;
+   ;;
+   "Property" )
+   eval $( __in_for ${StrArrayName} ActionArrayPropertyLoader ) ;
+   ;;
+  esac 
 }
 
 function git_add_reflection()
@@ -163,21 +236,28 @@ function git_add_reflection()
 function GitAddFile()    
 {  
  eval $( __call_localityLocalName=GitAdd __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
- eval $( CleanDbParseNewVar );
- local CmdEval=()
- CmdEval[0]=$( echo "touch ${ArrayArg[0]}" | base64 --wrap=0 ) ; 
- CmdEval[1]=$( echo "git add ${ArrayArg[0]}" | base64 --wrap=0  ); 
-
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=FileName FParamVarName=StrFileName FParamDefaultValue=None __fnctCreateLocalityFuncParam     ) ;
+ 
  function SubEval()
  {
-   eval $( __call_localityLocalName=SubEval __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
-   local StrCmd=$( echo ${CmdEval[${intCmdEval}]} | base64 --wrap=0 -d ) ;
-   echo -ne "CmdLine:[\n\tBase64:[ ${CmdEval[${intCmdEval}]} ]\n\tString:[ ${StrCmd}] ]\n" ;
-   eval $( CleanDbParseNewVar );
-   eval "${StrCmd}" ;
+   eval $( __call_localityLocalName=GitSE __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
+   if [ "${StrFileName}" == "None" ] ; then 
+    echo "No file-name to add to Git Repository: File=${StrFileName}\n" ;
+   else
+    local CmdEval=( git add ${StrFileName} );
+    echo -ne "CmdLine:[ ${CmdEval[@]} ]\n" > /dev/stderr ;
+    eval "${CmdEval[@]}" ;
+   fi
  }
- eval $( __in_for CmdEval SubEval )
+ StrFileName=${ArrayArg[0]} SubEval ;
 } ; 
+
+function start_git_add_file()
+{
+ eval $( GitCreateLocalQueue ) ;
+ eval $( __in_for ArrayGitQueue GitAddFile ) ;
+}
+
 
 function GitCommitMsg()    
 {  
@@ -428,56 +508,131 @@ function GitDailyWorkUpdate()
   #~ 
 #~ }
 
-Git_Branch_Handler    
+Git_Branch_Handler()  
 { 
- eval $( __call_localityLocalName=GBH __call_locality ) ; 
- eval $( FParamFuncName=${StrFuncName} FParamSuffixName=BranchName FParamVarName=StrBranchName FParamDefaultValue=SQ __fnctCreateLocalityFuncParam )  ; 
+ eval $( __call_localityLocalName=GBH __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=BranchName FParamVarName=StrBranchName FParamDefaultValue=master __fnctCreateLocalityFuncParam )  ; 
+ 
  local intSleep=0;
  local TestSleep=40 ; 
  local TotalTestTime=$(( ${TestSleep} + 10 )) ;
+ local ArrayPushBranch=( git push origin ${StrBranchName} ) ;
+ local ArrayDateFormatReport=( "date" "+\"%c, UnixTimeStamp:%s\"" ) ;
+ 
+ function BranchLocking()
+ {
+  eval $( __call_localityLocalName=BL __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+  BrOptAction=change BrOptName=${StrBranchName} __GitBranch   ; 
+ }
  
  function RandomInstance()
  {
-  
+   eval $( __call_localityLocalName=RI __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+   intSleep=$(( ${RANDOM} % 90 )) ;
+   DecalSleep=$(( ${RANDOM} % 20 )) ;
  }
+ 
  function SetRandomTime()
  {
-  eval $( __call_localityLocalName=GBHSRT __call_locality ) ; 
+  eval $( __call_localityLocalName=GBHSRT __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
   while [ ${intSleep} -lt ${TotalTestTime} ] ; do 
-   intSleep=$(( ${RANDOM} % 90 )) ;
-   DecalSleep=$(( ${RANDOM} % 20)) ;
+   RandomInstance ;
    TotalTestTime=$(( ${TestSleep} + ${DecalSleep:=10} )) ; 
   done ; 
  }
  
  function DisplayInfo()
  {
-   eval $( __call_localityLocalName=DisplayInfo __call_locality ) ; 
+   eval $( __call_localityLocalName=DisplayInfo __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
    echo -ne "\n\tSleeping for ${intSleep} seconds.\n\tTest was done with TimeTrigger=${TotalTestTime} ,Average +-${DecalSleep}\n" ; 
  }
+
+ function ContentLoop()
+ {
+  eval $( __call_localityLocalName=CL __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+ }
+ 
+ function TimerSleep()
+ {
+  eval $( __call_localityLocalName=TS __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+  sleep ${intSleep} ; 
+ }
+ 
+ function DateReport()
+ {
+  eval $( __call_localityLocalName=DateR __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+  eval "${ArrayDateFormatReport[@]}" ;
+ }
+ 
+ function __fnct_uuidgen()
+ {
+   eval $( __call_localityLocalName=__fnct_UUID __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+   StrUUID=$( uuidgen -r ) ;
+ } 
+ 
+ function UUIDGenerator()
+ {
+  eval $( __call_localityLocalName=UUID __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+  local StrUUID=None ;
+
+  git commit -m "updated:UUID( ${StrUUID} )" -a ; 
+ }
+ 
+ function git_push()
+ {
+  eval $( __call_localityLocalName=GitP __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+  eval "${ArrayPushBranch[@]}" ; 
+ } 
+ 
+ function __fnct_while_ArrayProc()
+ {
+  echo """local ArrayFuncLoop=( ${ListFuncProcList//,/ } ); while [ 1 ] ; do eval \$( __in_for ArrayFuncLoop eval ) ; done""" ;
+ }
+ 
+ function __fnct_ArrayProc()
+ {
+  echo """local ArrayFuncLoop=( ${ListFuncProcList//,/ } ); eval \$( __in_for ArrayFuncLoop eval )""" ;
+ } 
  
  function ContentLoop()
  {
-  eval $( __call_localityLocalName=GBHCL __call_locality ) ; 
-  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=FuncProcList FParamVarName=ListFuncProcList FParamDefaultValue=ContentLoop FParamTypeVar=Array __fnctCreateLocalityFuncParam )  ; 
+  eval $( __call_localityLocalName=GBHCL __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=FuncProcList FParamVarName=ListFuncProcList FParamDefaultValue=SetRandomTime,DisplayInfo,TimerSleep,DateReport,UUIDGenerator,git_push FParamTypeVar=Array __fnctCreateLocalityFuncParam )  ; 
   
-  sleep ${intSleep} ; 
-  date +"%c, UnixTimeStamp:%s" ; 
-  git commit -m "updated:UUID($(uuidgen -r))" -a ; 
-  git push origin ${StrBranchName} ; 
+  eval $( __fnct_while_ArrayProc ) ; 
+  #local ArrayFuncLoop=( ${ListFuncProcList//,/ } );
+  
+  #while [ 1 ] ; do 
+  # eval $( __in_for ArrayFuncLoop eval )
+  #done
   
  }
  
  function MainLoop()
  {
-  eval $( __call_localityLocalName=MainWhileLoop __call_locality ) ; 
-  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=FuncLoop FParamVarName=ListFuncLoop FParamDefaultValue=SetRandomTime,DisplayInfo,ContentLoop __fnctCreateLocalityFuncParam )  ; 
+  eval $( __call_localityLocalName=MainWhileLoop __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=FuncLoop FParamVarName=ListFuncProcList FParamDefaultValue=ContentLoop __fnctCreateLocalityFuncParam )  ; 
 
-  local ArrayFuncLoop=( ${ListFuncLoop//,/ } );
+  eval $( __fnct_while_ArrayProc ) ;  
+  #local ArrayFuncLoop=( ${ListFuncProcList//,/ } );
   
-  while [ 1 ] ; do 
-   eval $( __in_for ArrayFuncLoop eval )
-  done
+  #while [ 1 ] ; do 
+  # eval $( __in_for ArrayFuncLoop eval ) ; 
+  #done
  }
- MainLoop ;
+ 
+ function LoopInit()
+ {
+  eval $( __call_localityLocalName=LoopInit __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=LoopInit FParamVarName=ListFuncProcList FParamDefaultValue=BranchLocking,MainLoop __fnctCreateLocalityFuncParam )  ; 
+
+  eval $( __fnct_ArrayProc ) ;
+  #local ArrayFuncLoop=( ${ListFuncLoop//,/ } );
+  #eval $( __in_for ArrayFuncLoop eval ) ; 
+ }
+ LoopInit ;
+ 
+
 }
+
+
