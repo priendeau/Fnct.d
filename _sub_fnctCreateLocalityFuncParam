@@ -1,4 +1,6 @@
 
+IsfnctCreateLocalityFuncParam=True ;
+
 function __fnctCreateLocalityFuncParam()
 {
   ### All Pre Declaration Variable are prefixed to : 

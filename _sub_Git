@@ -1,4 +1,5 @@
 
+
 function __GitBranch( )
 {
  eval $( __call_localityLocalName=BrOpt __call_locality ) ;
@@ -49,14 +50,14 @@ function GitBranchList()
   GitBranchList.Property.N() 
   {
    eval $( __call_localityLocalName=${StrFuncName}.Property.N __call_localityDisplayFunctionEntry=1 __call_locality );
-   local IntID=(${StrFuncName/./ });
-   IntID=${IntID[${#IntID[@]}]};
+   #local IntID=(${StrFuncName/./ });
+   #IntID=${IntID[${#IntID[@]}]};
    local IntArrayArg=${#ArrayArg[@]} ;
    local ArrayFuncProperty=( ${StrFuncName/Property/Getter} ${StrFuncName/Property/Setter} ) ;
    if [ ${IntArrayArg:=0} -gt 0 ] ; then 
-    eval "${ArrayFuncProperty[1]/\.N/\.${IntID}} ${ArrayArg[@]}" ;
+    eval "${ArrayFuncProperty[1]/\.N/\.${IntPos}} ${ArrayArg[@]}" ;
    else
-    eval "${ArrayFuncProperty[0]/\.N/\.${IntID}} ${ArrayArg[@]}" ;
+    eval "${ArrayFuncProperty[0]/\.N/\.${IntPos}} ${ArrayArg[@]}" ;
    fi 
   }
   GitBranchList.Getter.N() 
@@ -78,22 +79,20 @@ function GitBranchList()
   function ActionArrayProperty()
   {
     eval $( __call_localityLocalName=Property __call_localityDisplayFunctionEntry=1 __call_locality ) ;
-    local IntArrayId="int${StrArrayName}" ;
     echo -ne "\nFunc: ${StrFuncName}, NameArrayID : ${ArrayArg[0]}\n" ;
-    eval """$( declare -f GitBranchList.Property.N | sed 's/__META__/${StrArrayName}/g;s/\.N/\.${${IntArrayId}}/g;s/\.${StrFuncName}//g')""" ;
+    eval """$( declare -f GitBranchList.Property.N | sed 's/__META__/${ArrayName}/g;s/\.N/\.${IntPos}/g;s/\.${StrFuncName}//g')""" ;
   }
   
   function ActionArrayGetter()
   {
     eval $( __call_localityLocalName=Getter __call_localityDisplayFunctionEntry=1 __call_locality ) ;
-    local IntArrayId="int${StrArrayName}" ;
-    eval """$( declare -f GitBranchList.Getter.N | sed 's/__META__/${StrArrayName}/g;s/\.N/\.${${IntArrayId}}/g;s/\.${StrFuncName}//g')""" ;
+    eval """$( declare -f GitBranchList.Getter.N | sed 's/__META__/${ArrayName}/g;s/\.N/\.${IntPos}/g;s/\.${StrFuncName}//g')""" ;
   }
 
   function ActionArraySetter()
   {
     eval $( __call_localityLocalName=Setter __call_localityDisplayFunctionEntry=1 __call_locality ) ;
-    eval """$( declare -f GitBranchList.Setter.N | sed 's/__META__/${StrArrayName}/g;s/\.N/\.${int${StrArrayName}}/g;s/\.${StrFuncName}//g')""" ;
+    eval """$( declare -f GitBranchList.Setter.N | sed 's/__META__/${ArrayName}/g;s/\.N/\.${IntPos}/g;s/\.${StrFuncName}//g')""" ;
   }
   
   function VarDeclHandler()
@@ -253,8 +252,11 @@ function GitAddFile()
 
 function start_git_add_file()
 {
+ eval $( __call_localityLocalName=SGaf __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
+ eval $( GBLVariableMode=local GitBranchList )
  eval $( GitCreateLocalQueue ) ;
  eval $( __in_for ArrayGitQueue GitAddFile ) ;
+ git commit -m "updated:UUID:$( uuidgen -r )" -a ; 
 }
 
 

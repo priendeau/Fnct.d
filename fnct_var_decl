@@ -119,8 +119,8 @@ declare -a ArrayTimeToVoltage=( ) ;
 
 ### Load Default Func.
 . ${ConfFnctDPath[0]}/_sub_call_locality ;
-. ${ConfFnctDPath[0]}/fnct__in_for ;
 . ${ConfFnctDPath[0]}/_sub_fnctCreateLocalityFuncParam ;
+. ${ConfFnctDPath[0]}/fnct__in_for ;
 . ${ConfFnctDPath[0]}/_sub_GetSpacer ;
 
 

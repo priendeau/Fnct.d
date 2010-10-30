@@ -250,12 +250,12 @@ parse_newvar()
 	local StrFuncName=parse_newvar
 	local IntTyped=${ArrayArg[0]} ;
 	
-  function egrep_decl()
-  {
-    egrep -ic ${RightMemberVariableTypeRegExpDecl[${VariableRegExpTypeDefault}]} ;
-  }
+ function egrep_decl()
+ {
+   egrep -ic ${RightMemberVariableTypeRegExpDecl[${VariableRegExpTypeDefault}]} ;
+ }
   
-  function egrep_VarValueCondition()
+ function egrep_VarValueCondition()
 	{
 		local ArrayArg=( $* ) ;
 		local IntResult=$( echo ${ArrayArg[0]} | egrep_decl ) ;
@@ -269,14 +269,16 @@ parse_newvar()
   
   function wc_decl()
   {
-    wc -l ${DbVar:=db_parse_newvar}
+    wc -l ${DbVar:=db_parse_newvar} ;
   }
   
   function DbVarLimitation()
   {
     if [ ${IntSizeDbVar} -gt 100 ] ; then 
-      sudo tail -n 100 ${DbVar:=db_parse_newvar} > .${DbVar:=db_parse_newvar} ;
-      sudo mv .${DbVar:=db_parse_newvar} ${DbVar:=db_parse_newvar} ; 
+      if [ -e .${DbVar:=db_parse_newvar} ] ; then 
+       sudo tail -n 100 ${DbVar:=db_parse_newvar} > .${DbVar:=db_parse_newvar} ;
+       sudo mv .${DbVar:=db_parse_newvar} ${DbVar:=db_parse_newvar} ; 
+      fi 
     fi 
   }
   
@@ -322,29 +324,33 @@ parse_newvar()
 		local IntStartInspect=1 ;
 	fi
 	InitSessionAnnonce 1 ;
-	for(( intx=${IntStartInspect:=1} ; intx <= ${#ArrayArg[@]}-1 ; intx++ )) ; do 
-	 local IntGrepInspect=$( egrep_VarValueCondition "${ArrayArg[${intx}]}" )  ;
+	for (( intx=${IntStartInspect:=1} ; intx <= ${#ArrayArg[@]}-1 ; intx++ )) ; do 
+	 local IntGrepInspect=$( egrep_VarValueCondition "${ArrayArg[${intx}]}" ) ;
 	 if (( ${IntGrepInspect:=0} > 0 )) ; then 
-		echo ${ArrayArg[intx]} >> ${DbVar:=db_parse_newvar} ;
-		if (( ${StrDebug:=true} == "true" )) ; then 
-			#$( InitSessionAnnonce 3 ) ;
-			local StrComment="echo \"New Variable discovered:${ArrayArg[intx]}\" > /dev/stderr ;" ;
-			ArrayNewCommand[${#ArrayNewCommand[@]}]=${StrComment} ;
-			echo ${StrComment} >> ${DbVar:=db_parse_newvar} ;
-		else
-			ArrayNewCommand[${#ArrayNewCommand[@]}]="${TypedVarDeclaration[${IntTyped}]} ${ArrayArg[intx]} ; " ;
-		fi
+   echo ${ArrayArg[intx]} >> ${DbVar:=db_parse_newvar} ;
+   if (( ${StrDebug:=true} == "true" )) ; then 
+    #$( InitSessionAnnonce 3 ) ;
+    local StrComment="echo \"New Variable discovered:${ArrayArg[intx]}\" > /dev/stderr ;" ;
+    ArrayNewCommand[${#ArrayNewCommand[@]}]=${StrComment} ;
+    echo ${StrComment} >> ${DbVar:=db_parse_newvar} ;
+   else
+    ArrayNewCommand[${#ArrayNewCommand[@]}]="${TypedVarDeclaration[${IntTyped}]} ${ArrayArg[intx]} ; " ;
+   fi
 		#local EUndefVar=${ArrayArg[intx]/=/ } ; 
 		#unset	${EUndefVar[0]} ; 
 		
-	 fi
+  fi
 	done 
 	echo ${ArrayNewCommand[@]} ;
 	#cat ${DbVar:=db_parse_newvar} | sort --dictionary-order > ${UUID}
-	cat ${DbVar:=db_parse_newvar} > ${UUID}
+ if [ -e ${DbVar:=db_parse_newvar} ] ; then 
+  cat ${DbVar:=db_parse_newvar} > ${UUID} ;
+ fi 
 	InitSessionAnnonce 2 ;
 	#mv ${UUID} ${DbVar:=db_parse_newvar} ;
- rm -f ${UUID} ; 
+ if [ -e ${UUID} ] ; then 
+  rm -f ${UUID} ; 
+ fi ;
 }
 
 
@@ -385,7 +391,12 @@ function FileLoadScript()
 
   . ${ArrayArg[0]}/${ArrayArg[1]} ;
   local IntErrorLoading=$? ;
-  local CmdEval=( """if [ \${IntErrorLoading:=1} -eq 0 ] ; then __OK ; else __Fail ; fi""" )  ;
+  local CmdEval=( """
+   if [ \${IntErrorLoading:=1} -eq 0 ] ; then 
+    __OK ; 
+   else 
+    __Fail ; 
+   fi ; """ )  ;
   eval "${CmdEval[@]}" ;
 }
 

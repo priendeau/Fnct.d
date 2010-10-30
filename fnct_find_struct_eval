@@ -1,4 +1,4 @@
-declare -a CmdEval=( ArrayFindPath __ in_for,fnct_find $( find ./ -maxdepth 1 -type d -printf "%p " | sed 's/\.\///g' ) ) ; 
+declare -a CmdEval=( ArrayFindPath __ in_for,__ARRAY__,fnct_find $( find ./ -maxdepth 1 -type d -printf "%p " | sed 's/\.\///g' ) ) ; 
 
 eval $( RedeclArrayName=CmdEval ArrayInlineRedecl ) ;
 

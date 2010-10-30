@@ -4,6 +4,34 @@ __call_locality()
  local StrFuncName=( __call_locality ) ;
  local ArrayLocalityScheme=( CreateFuncName CreateFuncEval DisplayFunctionInformation FinalizeLocality ) ; 
  
+ function ArrayArg.Property.NumberId()
+ {
+  local ArrayArg=( $* ) ;
+  local StrFuncName=( ArrayArg Property NumberId ) ;
+  local IntLength=${#ArrayArg[@]} ;
+  if [ ${IntLength} -gt 0 ] ; then
+   ArrayArg.Setter.NumberId ${ArrayArg[@]} ;
+  else
+   ArrayArg.Getter.NumberId 
+  fi
+ }
+ 
+ function ArrayArg.Getter.NumberId()
+ {
+  local ArrayArg=( $* ) ;
+  local StrFuncName=( ArrayArg Getter NumberId ) ;
+  local IntLength=${#ArrayArg[@]} ;
+  echo "${ArrayArg[NumberId]}" ;
+ }
+
+ function ArrayArg.Setter.NumberId()
+ {
+  local ArrayArg=( $* ) ;
+  local StrFuncName=( ArrayArg Setter NumberId ) ;
+  local IntLength=${#ArrayArg[@]} ;
+  ArrayArg[NumberId]="${ArrayArg[@]}" ;
+ }
+ 
  echo eval "local ArrayArg=( \$* ) ; " ;
  eval "local StrNewFuncName=\${${StrFuncName[0]}LocalName}" ;
  eval "local IsDisplayFunctionEntry=\${${StrFuncName[0]}DisplayFunctionEntry}" ;
@@ -75,13 +103,20 @@ __call_locality()
  function DisplayFunctionInformation
  {
    local StrDisplay="From Function:[ ${StrNewFuncName} ]" ;
-   echo -ne "if [ \${IsDisplayFunctionEntry:=0} -ne 0 ] ; then echo ${StrDisplay} > /dev/stderr ; fi ;" ;
+   echo -ne "if [ \${IsDisplayFunctionEntry:=0} -ne 0 ] ; then echo \"${StrDisplay}\" > /dev/stderr ; fi ;" ;
  }
  function FinalizeLocality()
  {
     echo -ne  "eval \"local StrHelperVarName=ArrayHelper${StrNewFuncName}\"" ;
  }
- 
+
+ echo """
+   for(( intY=0 ; intY <= (( \${#ArrayArg[@]}-1 )) ; intY++ )) ; do 
+     eval \"\$( declare -f ArrayArg.Property.NumberId | sed 's/\NumberId/${intY}/g')\"  ; 
+     eval \"\$( declare -f ArrayArg.Getter.NumberId | sed 's/\NumberId/${intY}/g')\" ;  
+     eval \"\$( declare -f ArrayArg.Setter.NumberId | sed 's/\NumberId/${intY}/g')\"  ; 
+   done ;
+   """ ; 
  for(( intx=0;intx<=$((${#ArrayLocalityScheme[@]}-1));intx++ )); do
   #eval echo -ne "PRAGMA:\${ArrayLocalityScheme[\${intx}]}\\\n" > /dev/stderr ;
   eval "eval \$( ${ArrayLocalityScheme[${intx}]} )";
