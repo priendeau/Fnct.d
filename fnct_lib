@@ -3624,3 +3624,85 @@ function ZenityEtcConfEditor
 }
 
 
+### Inline Array ReDeclaration :
+### This tiny method allow inserting a position-0, an array Name and create a new one from 
+### listed element from Element[1] to ${#Element[@]} 
+### 
+function ArrayInlineRedecl()
+{
+  eval $( __call_localityLocalName=Redecl  __call_locality ) ;
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ArrayName FParamVarName=StrArrayName FParamDefaultValue=CmdEval __fnctCreateLocalityFuncParam     )  ; 
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Debug FParamVarName=IsDebug FParamDefaultValue=False __fnctCreateLocalityFuncParam     ) ; 
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DeclType FParamVarName=StrDeclType FParamDefaultValue=local __fnctCreateLocalityFuncParam     ) ; 
+  
+  local ArrayEvalDecl=( "local" "declare -a" ) ;
+  
+  local EnumIntArrayEvalDecl=0 ;
+  
+  function GetDeclType()
+  {
+   eval $( __call_localityLocalName=GetDeclType  __call_locality ) ;
+   eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DeclStub FParamVarName=StrDeclStub FParamDefaultValue=process __fnctCreateLocalityFuncParam     )  ; 
+   
+   function ArrayDeclCreate()
+   {
+     echo -ne """local ArrayEvalDecl=( \"local\" \"declare -a\" ) ;""" ;
+   }
+   
+   function EnumDeclCreate()
+   {
+     echo -ne """ local EnumIntArrayEvalDecl=0 ; """ ;
+   }
+   
+   function Action()
+   {
+    case ${StrDeclType} in
+     "local" )
+      EnumIntArrayEvalDecl=0;
+     ;;
+     "global" )
+      EnumIntArrayEvalDecl=1;
+     ;;
+    esac
+   }
+   
+   case ${StrDeclStub} in
+    "process" )
+    Action ;
+    ;;
+    "array" )
+    ArrayDeclCreate ;
+    ;;
+    "enum" )
+    EnumDeclCreate ;
+    ;;
+    
+   esac 
+  }
+  
+  eval "local StrNameArray=\${${StrArrayName}[0]}" ;
+  local CmdLineEval=( """__DECLTYPE__${StrNameArray}=( \${${StrArrayName}[@]:2}  );"""  ) ;
+  if [ "${IsDebug}" == "True" ] ; then 
+   echo -ne "CmdLine:\n\t${CmdLineEval[@]}\n" > /dev/stderr ; 
+  fi 
+  eval "${CmdLineEval[@]}" ;
+}
+
+
+### Inline Array Content Insertion :
+### This tiny method allow to insert an array name inside a Parsed __ARRAY__ Tag
+### and re-evaluate the content within the declaration.
+### 
+function ArrayInlineCmdParser()
+{
+  eval $( __call_localityLocalName=Redecl  __call_locality ) ;
+  #eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ArrayName FParamVarName=StrArrayName FParamDefaultValue=CmdEval __fnctCreateLocalityFuncParam     )  ; 
+  #eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Debug FParamVarName=IsDebug FParamDefaultValue=False __fnctCreateLocalityFuncParam     ) ; 
+  
+  eval "local StrNameArray=\${${StrArrayName}[0]}" ;
+  local CmdLineEval=( """__DECLTYPE__${StrNameArray}=( \${${StrArrayName}[@]:2}  );"""  ) ;
+  if [ "${IsDebug}" == "True" ] ; then 
+   echo -ne "CmdLine:\n\t${CmdLineEval[@]}\n" > /dev/stderr ; 
+  fi 
+  eval "${CmdLineEval[@]}" ;
+}

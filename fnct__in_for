@@ -58,7 +58,11 @@ ForBase64Decode()
 __in_for () 
 { 
   local ArrayArg=( $* );
-  eval $( parse_newvar ${EFunctionTypeDecl} ${TypeDebugKey[${EParamNoDebugDecl}]} ${ArrayArg[@]} ) ;
+  #eval $( parse_newvar ${EFunctionTypeDecl} ${TypeDebugKey[${EParamNoDebugDecl}]} ${ArrayArg[@]} ) ;
+  ### parse_newvar is removed, time-saving arguments and FParam is more versatile...
+  ### 
+  ### 
+  
   local IntUsingEgrepScanLoop=${IntUsingEgrepScanLoop:=0} ; 
   local IntUsingArgModLimitation=${IntUsingArgModLimitation:=1} ;
   local IntTransmitArgModbase64=${IntTransmitArgModbase64:=0} ;
@@ -69,7 +73,18 @@ __in_for ()
   local FunctionName=${ArrayArg[1]};
   local FunctionNameArg=${ArrayArg[2]};
   local CurrentIncType="int" ;
-  local ArrayInFor=( "for" "((" "${CurrentIncType}${ParseTagArray}=0" ";" "${CurrentIncType}${ParseTagArray}" "<=" "\${#${ParseTagArray}[@]}-1" ";" "${CurrentIncType}${ParseTagArray}++" "))" ";" "do" "${FunctionName:=echo}" "${FunctionNameArg:=}" "\"\${${ParseTagArray}[\$((int${ParseTagArray}))]}\"" "${ArrayArgMod[@]/#/;}"  ";" "done" ) ;    		
+  local StrUUID=$( uuidgen -r ) ;
+  StrUUID=${StrUUID//-/} ;
+  local ArrayOptFParam=() ;
+  ArrayOptFParam[0]="""eval \$( FParamFuncName=ForOpt FParamSuffixName=Debug     FParamVarName=IsDebug         FParamDefaultValue=True     __fnctCreateLocalityFuncParam ) ;""" ;
+  ArrayOptFParam[1]="""eval \$( FParamFuncName=ForOpt FParamSuffixName=Try       FParamVarName=TryFunc         FParamDefaultValue=None     __fnctCreateLocalityFuncParam ) ;""" ;
+  ArrayOptFParam[2]="""eval \$( FParamFuncName=ForOpt FParamSuffixName=Main      FParamVarName=MainFunc        FParamDefaultValue=${FunctionName:=echo}     __fnctCreateLocalityFuncParam ) ;""" ;
+  ArrayOptFParam[3]="""eval \$( FParamFuncName=ForOpt FParamSuffixName=Except    FParamVarName=ExceptFunc      FParamDefaultValue=None     __fnctCreateLocalityFuncParam ) ;""" ;
+  ArrayOptFParam[4]="""eval \$( FParamFuncName=ForOpt FParamSuffixName=Else      FParamVarName=ElseFunc        FParamDefaultValue=None     __fnctCreateLocalityFuncParam ) ;""" ;
+  ArrayOptFParam[5]="""eval \$( FParamFuncName=ForOpt FParamSuffixName=Finalize  FParamVarName=FinalizeFunc    FParamDefaultValue=None     __fnctCreateLocalityFuncParam ) ;""" ;
+  ArraySubFunc=( "function" "this_loop_${StrUUID}()    " "{" "; }" ) ;
+  local ArrayTryCatchFunc=( "local TryErrorState=\$? ;" "if [ \"\${TryFunc:=None}\" != \"None\" ] ; then local TryFunc=\${TryErrorState} ; if [ \${ExceptFunc:=None} != \"None\" ] ; then eval \${ExceptFunc:=None} ; fi  ;  if [ \${FinalizeFunc:=None} != \"None\" ] ; then eval \${FinalizeFunc:=None} ; fi ; else if [ \${ElseFunc:=None} != \"None\" ] ; then eval \${ElseFunc:=None} ; fi ; fi" ) ;
+  local ArrayInFor=( "${ArraySubFunc[@]:0:3} eval \$( __call_localityLocalName=${StrUUID} __call_locality ) ; ${ArrayOptFParam[@]}" "local ArrayName=${ArrayArg[0]}" ";" "for" "((" "${CurrentIncType}${ParseTagArray}=0" ";" "${CurrentIncType}${ParseTagArray}" "<=" "\${#${ParseTagArray}[@]}-1" ";" "${CurrentIncType}${ParseTagArray}++" "))" ";" "do" "eval local IntPos=\${${CurrentIncType}${ParseTagArray}}" ";" "eval ${FunctionName:=${MainFunc:=echo}} \${${ParseTagArray}[\$((int${ParseTagArray}))]}" "${ArrayArgMod[@]/#/;} \${FunctionNameArg:=}" ";" ${ArrayTryCatchFunc[@]]} ";" "done" "${ArraySubFunc[3]}" ";" "${ArraySubFunc[1]/\(\)/}" ";" "unset ${ArraySubFunc[1]/\(\)/}" ) ;    		
   local StrRegExpParse=0;
 
   function Base64Handler()

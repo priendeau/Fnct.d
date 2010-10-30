@@ -1,0 +1,26 @@
+declare -a CmdEval=( ArrayFindPath __ in_for,fnct_find $( find ./ -maxdepth 1 -type d -printf "%p " | sed 's/\.\///g' ) ) ; 
+
+eval $( RedeclArrayName=CmdEval ArrayInlineRedecl ) ;
+
+function fnct_find()
+{ 
+ eval $( __call_localityLocalName=FFind  __call_locality ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=FilterFind FParamVarName=StrFindFilter FParamDefaultValue=__fnct_findfilter __fnctCreateLocalityFuncParam     )  ; 
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=RegExp FParamVarName=StrRegExp FParamDefaultValue="stem" __fnctCreateLocalityFuncParam     ) ; 
+ 
+ function __fnct_find_filter()    
+ { 
+  eval $( __call_localityLocalName=FctFF  __call_locality ) ;
+  echo ; 
+ } ; 
+ 
+ function fnct_find()    
+ {  
+  eval $( __call_localityLocalName=FctF  __call_locality ) ;
+  find ./ -type f -exec egrep -iHn "${StrRegExp}" {} ; 
+ } ; 
+ fnct_find | __fnct_find_filter ; 
+} ; 
+
+#eval $( __ in_for ${CmdEval[0]} fnct_find ) ;
+
