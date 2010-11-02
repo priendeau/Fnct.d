@@ -754,13 +754,15 @@ function SetByteCodePermission()
 
 function eval_pip_install()    
 { 
- eval $( __call_localityLocalName=Eval __call_locality ) ; 
+ eval $( __call_localityLocalName=Eval __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
  eval $( FParamFuncName=${StrFuncName}     FParamSuffixName=DisplayOnly     FParamVarName=StrDisplayOnly FParamDefaultValue=False __fnctCreateLocalityFuncParam ) ;
  eval $( FParamFuncName=${StrFuncName}     FParamSuffixName=UpdateMode      FParamVarName=IsUpdateMode   FParamDefaultValue=False __fnctCreateLocalityFuncParam ) ;
- 
+ echo -ne "DisplayOnly : ${StrDisplayOnly}\n" ;
+ echo -ne "UpdateMode  : ${IsUpdateMode}\n" ;
+ local ArrayEggModule=( ${ArrayArg[@]} ) ;
  function _EvalCmd()    
  { 
-  eval $( __call_localityLocalName=EvalCmd __call_locality ) ; 
+  eval $( __call_localityLocalName=EvalCmd __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
   local CmdEval=( "CFLAGS=\"-g -m64 -mcx16 -mtune=amdfam10 -O3 -Wall -mmmx -msse4a -m128bit-long-double -mpc80 -mstackrealign\"" "CXXFLAGS=\"-g -m64 -mcx16 -mtune=amdfam10 -O3 -Wall -mmmx -msse4a -m128bit-long-double -mpc80 -mstackrealign -ftemplate-depth-10946\"" pip install ${ArrayArg[0]} __UPDATE__ ) ; 
   if [ "${IsUpdateMode}" == "True" ] ; then 
    CmdEval=( ${CmdEval[@]//__UPDATE__/--upgrade} ) ;
@@ -772,6 +774,6 @@ function eval_pip_install()
    eval "${CmdEval[@]}" ;
   fi 
  }
- eval $( __in_for ArrayArg _EvalCmd ) ;
+ eval $( __in_for ArrayEggModule _EvalCmd ) ;
  
 }

@@ -1,4 +1,4 @@
-### Array-Meta,
+y### Array-Meta,
 ### This Array Hold Main Section Header Name, to
 ### Access to a somewhat management Layer, thru
 ### Python Bash-Management-Generator. (PyBMG)
@@ -49,7 +49,7 @@ R_OnlyVar > /dev/null;
 
 
 ### Common Array Variable
-declare -a TypedVarDeclaration=( "local" "declare" "declare -a" );
+declare -a TypedVarDeclaration=( "local" "declare" "declare -a" "declare -f" );
 declare -a TypeDebugKey=( debug nodebug ) ;
 declare -a ServicesType=( start stop help restart ask ) ;
 declare -a ArrayAwkScriptPath=( "/etc/init.d/fnct.d/awk-script" ) ;
@@ -63,6 +63,8 @@ declare -a RightMemberVariableTypeRegExpDecl=( "=[a-zA-Z0-9_\-\$\\\/+\=\:\"\'\.\
 declare -a ArrayVariableTypeBase64=( "64|base64|baseuuencode|uuencodetype|type64|typebase64|typeuuencode|uuencodetype" ) ;
 declare -a ArrayDPKG_QueryHeader=( "Architecture" "Bugs" "Conffiles" "Config-Version" "Conflicts" "Breaks" "Depends" "Description" "Enhances" "Essential" "Filename" "Homepage" "Installed-Size" "MD5sum" "MSDOS-Filename" "Maintainer" "Origin" "Package" "Pre-Depends" "Priority" "Provides" "Recommends" "Replaces" "Revision" "Section" "Size" "Source" "Status" "Suggests" "Tag" "Triggers-Awaited" "Triggers-Pending" "Version" ) ;
 declare -a ArrayPython26Lib=( /usr/lib/pyshared/python2.6 ) ;
+declare -a ArrayPython26Path=( /usr/lib/python2.6/dist-packages /usr/local/lib/python2.6/dist-packages );
+declare -a ArrayPythonVer=( 2.5 2.6 2.7 3.0 3.1 ) ;
 declare -a ArrayTestFS=( "-d" "-f" "-e" "-x" ) ;
 declare -a ArraySedSysCtl=( "s/\(^[[:alpha:]\.=-]*\)\([\t\ =]*\)\([[:digit:]|[:xdigit:]|[:alpha:]\_\.\-]*\)/\1/g" "s/\(^[[:alpha:]\.=-]*\)\([\t\ =]*\)\([[:digit:]|[:xdigit:]|[:alpha:]\_\.\-]*\)/\2/g" "s/\(^[[:alpha:]\.=-]*\)\([\t\ =]*\)\([[:digit:]|[:xdigit:]|[:alpha:]\_\.\-]*\)/\3/g" ) ;
 declare -a ArraySedVariableEval=( "s/\([Ss]tr\|[Ii]nt\|[Tt]ype|[Cc]har|[Bb]ase\)\([a-zA-Z0-9_]*\)/\$\{\1\2\}/g" "s/\([Aa][Rr][Rr][Aa][Yy]\)\([a-zA-Z0-9_]*\)/\$\{\1\2\[__INT__]}/g" "s/\([Aa][Rr][Rr][Aa][Yy]\)\([a-zA-Z0-9_]*\)/\$\{#\1\2\[@]}/g" "s/\([Aa][Rr][Rr][Aa][Yy]\)\([a-zA-Z0-9_]*\)/\$\{\1\2\[@]:__IntStart__:__IntStop__}/g" "s/\([Aa][Rr][Rr][Aa][Yy]\)\([a-zA-Z0-9_]*\)/\$\{\1\2\[__INT__]:__IntStart__:__IntStop__}/g" "s/\([Aa][Rr][Rr][Aa][Yy]\)\([a-zA-Z0-9_]*\)/\$\{\1\2\[__INT__]\/__REGEXP__\/__REPLACE__}/g" );

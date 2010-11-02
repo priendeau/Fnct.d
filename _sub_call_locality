@@ -1,36 +1,37 @@
+function ArrayArg.Getter.NumberId()
+{
+ local ArrayArg=( $* ) ;
+ local StrFuncName=( ArrayArg Getter NumberId ) ;
+ local IntLength=${#ArrayArg[@]} ;
+ echo "${ArrayArg[NumberId]}" ;
+}
+
+function ArrayArg.Setter.NumberId()
+{
+ local ArrayArg=( $* ) ;
+ local StrFuncName=( ArrayArg Setter NumberId ) ;
+ local IntLength=${#ArrayArg[@]} ;
+ ArrayArg[NumberId]="${ArrayArg[@]}" ;
+}
+
+function ArrayArg.Property.NumberId()
+{
+ local ArrayArg=( $* ) ;
+ local StrFuncName=( ArrayArg Property NumberId ) ;
+ local IntLength=${#ArrayArg[@]} ;
+ if [ ${IntLength} -gt 0 ] ; then
+  ArrayArg.Setter.NumberId ${ArrayArg[@]} ;
+ else
+  ArrayArg.Getter.NumberId 
+ fi
+}
+ 
 __call_locality()
 {
  local ArrayArgInfo=( $* ) ;
  local StrFuncName=( __call_locality ) ;
  local ArrayLocalityScheme=( CreateFuncName CreateFuncEval DisplayFunctionInformation FinalizeLocality ) ; 
  
- function ArrayArg.Property.NumberId()
- {
-  local ArrayArg=( $* ) ;
-  local StrFuncName=( ArrayArg Property NumberId ) ;
-  local IntLength=${#ArrayArg[@]} ;
-  if [ ${IntLength} -gt 0 ] ; then
-   ArrayArg.Setter.NumberId ${ArrayArg[@]} ;
-  else
-   ArrayArg.Getter.NumberId 
-  fi
- }
- 
- function ArrayArg.Getter.NumberId()
- {
-  local ArrayArg=( $* ) ;
-  local StrFuncName=( ArrayArg Getter NumberId ) ;
-  local IntLength=${#ArrayArg[@]} ;
-  echo "${ArrayArg[NumberId]}" ;
- }
-
- function ArrayArg.Setter.NumberId()
- {
-  local ArrayArg=( $* ) ;
-  local StrFuncName=( ArrayArg Setter NumberId ) ;
-  local IntLength=${#ArrayArg[@]} ;
-  ArrayArg[NumberId]="${ArrayArg[@]}" ;
- }
  
  echo eval "local ArrayArg=( \$* ) ; " ;
  eval "local StrNewFuncName=\${${StrFuncName[0]}LocalName}" ;
@@ -112,9 +113,9 @@ __call_locality()
 
  echo """
    for(( intY=0 ; intY <= (( \${#ArrayArg[@]}-1 )) ; intY++ )) ; do 
-     eval \"\$( declare -f ArrayArg.Property.NumberId | sed 's/\NumberId/${intY}/g')\"  ; 
-     eval \"\$( declare -f ArrayArg.Getter.NumberId | sed 's/\NumberId/${intY}/g')\" ;  
-     eval \"\$( declare -f ArrayArg.Setter.NumberId | sed 's/\NumberId/${intY}/g')\"  ; 
+     eval \"\$( ${TypedVarDeclaration[${#TypedVarDeclaration[@]}]} ArrayArg.Property.NumberId | sed 's/\NumberId/${intY}/g')\"  ; 
+     eval \"\$( ${TypedVarDeclaration[${#TypedVarDeclaration[@]}]} ArrayArg.Getter.NumberId | sed 's/\NumberId/${intY}/g')\" ;  
+     eval \"\$( ${TypedVarDeclaration[${#TypedVarDeclaration[@]}]} ArrayArg.Setter.NumberId | sed 's/\NumberId/${intY}/g')\"  ; 
    done ;
    """ ; 
  for(( intx=0;intx<=$((${#ArrayLocalityScheme[@]}-1));intx++ )); do

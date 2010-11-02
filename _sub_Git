@@ -44,8 +44,7 @@ function GitBranchList()
   eval $( __call_localityLocalName=GBL __call_locality ) ;
   eval $( FParamFuncName=${StrFuncName} FParamSuffixName=ArrayName    FParamVarName=StrArrayName    FParamDefaultValue=ArrayGitBranch     __fnctCreateLocalityFuncParam );
   eval $( FParamFuncName=${StrFuncName} FParamSuffixName=VariableMode FParamVarName=StrVariableMode FParamDefaultValue=local              __fnctCreateLocalityFuncParam );
-  
-  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Action FParamVarName=StrAction FParamDefaultValue=ArrayCreation  __fnctCreateLocalityFuncParam );
+  eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Action       FParamVarName=StrAction       FParamDefaultValue=ArrayCreation      __fnctCreateLocalityFuncParam );
  
   GitBranchList.Property.N() 
   {
@@ -60,6 +59,7 @@ function GitBranchList()
     eval "${ArrayFuncProperty[0]/\.N/\.${IntPos}} ${ArrayArg[@]}" ;
    fi 
   }
+  
   GitBranchList.Getter.N() 
   { 
       eval $( __call_localityLocalName=${StrFuncName}.Getter.N __call_localityDisplayFunctionEntry=1 __call_locality );
@@ -110,6 +110,7 @@ function GitBranchList()
       
     function __BinaryCase()
     {
+      echo -ne "Creating Array : ${StrArrayName }\n" > /dev/stderr ; 
       case "${StrVariableMode}" in 
         "local" )
         __Case0

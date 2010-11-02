@@ -9,14 +9,18 @@ class CPass( object ):
   VDict={
     'filename':{
       'overwrite' : False },
-    'IntMin':10,
-    'IntMax':20,
+    'IntMin':None,
+    'IntMax':None,
     'nospace':None,
     'generate':10,
     'list':False,
     'random':False, 
     'unique':False, 
-    'list':False }
+    'list':False,
+    'format':None,
+    'format-choice':[ 'python', 'string', 'csv', 'xml', 'bash-shell' ],
+    'bash-shell-format':None,
+    'bash-shell-format-choice':{ 'local':'local ArrayPassogva=( %s )' , 'global':'declare -a ArrayPassogva=( %s )' } }
   CmdPickle=None
   DictDirective=None
   FhDirective=None
@@ -93,50 +97,40 @@ class CPass( object ):
   def Get( self ):
    print "Returning Attr:%s" % ( self.DefaultPassogvaAttrOut )
    return getattr( self, self.DefaultPassogvaAttrOut ) 
+ 
+  def ArgOptionCreation( self ):
+    #print " Passing Arg:<< %s; %s>>" % ( Item[KeyPairList[0]], Item[KeyPairList[1]] )
+    #self.MkArgOptionParser( Item[KeyPairList[0]], Item[KeyPairList[1]] )
+    #~ #getattr( self.ArgParser, 'add_option')( Item[KeyPairList[0]], Item[KeyPairList[1]] )
+    self.ArgParser.add_option("-c", "--createPickle", dest="createPickle", action="store_true",
+                              help="Create Pickle Based Storage", default=False)
+    self.ArgParser.add_option("-n", "--nospace", action="store_true", dest="nospace",
+                              help="Create Unified String, with no space.", default=False)
+    self.ArgParser.add_option("-l", "--minimum",type='int',
+                              dest="IntMin", default=10,help="Passogva Minimum Length for Stemming.")
+    self.ArgParser.add_option("-b", "--maximum",
+                              dest="IntMax", default=10,type='int',help="Passogva Maximum Length for Stemming.")
+    self.ArgParser.add_option("-g", "--generate",
+                              dest="generate", default=10,type='int',help="Generation length")
+    self.ArgParser.add_option("-t", "--list",
+                              dest="list", default=False, action='store_true',help="Generate a list of Passogva")
+    self.ArgParser.add_option("-u", "--unique",
+                              dest="unique", default=False, action='store_true',help="All Generated passogva are unique")
+    self.ArgParser.add_option("-f", "--format",
+                              dest="format", default='python', type='string',help="Output format if no Pickle supplied ( Format: python, string, csv, xml, bash-shell )")
+    self.ArgParser.add_option("-k", "--bash-shell-format",
+                              dest="bash-shell-format", default='global', type='string',help="Bash-Shell Declaration type ( Format: local, global )")
+    self.ArgParser.add_option("-r", "--random",dest="random", default=False, action='store_true',help="Put random number between stemm. ( do not use with -n, --nospace... )")
 
   def ArgHandler( self ):
-    self.ArgParser = OptionParser()
-    #~ self.ArgParser.add_option("-h", "--help", dest="Help",
-                  #~ help="""
-                  #~ -c  --createPickle    Create Pickle Based Directive
-                  #~ -l  --minimum         Passogva Minimum Length for Stemming.
-                  #~ -u  --maximum         Passogva Maximum Length for Stemming.
-                  #~ -h  --help            This Help.
-                  #~ """, default=False)
-    
-    self.ArgParser.add_option("-c", "--createPickle", dest="createPickle", action="store_true",
-                  help="Create Pickle Based Directive", default=False)
-    self.ArgParser.add_option("-n", "--nospace", action="store_true", dest="nospace",
-                  help="Create Unified String, with no space.", default=False)
-    self.ArgParser.add_option("-l", "--minimum",type='int',
-                  dest="IntMin", default=10,
-                  help="Passogva Minimum Length for Stemming.")
-    self.ArgParser.add_option("-b", "--maximum",
-                  dest="IntMax", default=10,type='int',
-                  help="Passogva Maximum Length for Stemming.")
-    self.ArgParser.add_option("-g", "--generate",
-                  dest="generate", default=10,type='int',
-                  help="Generation length")
-    self.ArgParser.add_option("-t", "--list",
-                  dest="list", default=False, action='store_true',
-                  help="Generate a list of Passogva")
-    self.ArgParser.add_option("-u", "--unique",
-                  dest="unique", default=False, action='store_true',
-                  help="All Generated passogva are unique")
-    self.ArgParser.add_option("-f", "--format",
-                  dest="format", default='python', type='string',
-                  help="Output format if no Pickle supplied ( Format: python, string, csv, xml, bash-shell )")
-                  
-    self.ArgParser.add_option("-r", "--random",
-                  dest="random", default=False, action='store_true',
-                  help="Put random number between stemm. ( do not use with -n, --nospace... )")
-                  
     (self.ArgParseroptions , self.ArgParserargs) = self.ArgParser.parse_args()
     for ItemKeyInVDict in self.VDict.keys():
      if hasattr( self.ArgParseroptions, ItemKeyInVDict ):
       self.VDict[ItemKeyInVDict]=getattr( self.ArgParseroptions, ItemKeyInVDict )
     
   def __init__( self ):
+    self.ArgParser = OptionParser()
+    self.ArgOptionCreation( )
     self.ArgHandler( ) 
     self.PassogvaGenerator( )
     

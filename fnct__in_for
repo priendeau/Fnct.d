@@ -41,15 +41,15 @@
 
 ForBase64Encode()
 {
- local ArrayBase=( $* ) ;
- local Result=$( echo "${ArrayBase[@]}" | base64 --wrap=0 ) ;
+ eval $( __call_localityLocalName=ForBase64Encode __call_localityDisplayFunctionEntry=0 __call_locality ) ; 
+ local Result=$( echo "${ArrayArg[@]}" | base64 --wrap=0 ) ;
  echo "BASE64:${Result[@]}" ;
 }
 
 ForBase64Decode()
 {
- local ArrayBase=( $* ) ;
- local Result=( ${ArrayBase[@]//:/ } ) ;
+ eval $( __call_localityLocalName=ForBase64Decode __call_localityDisplayFunctionEntry=0 __call_locality ) ; 
+ local Result=( ${ArrayArg[@]//:/ } ) ;
  if [ ${Result[0]:=none} == "BASE64"  ] ; then
    echo "${Result[1]}" | base64 --wrap=0 -d ;
  fi
@@ -57,7 +57,7 @@ ForBase64Decode()
 
 __in_for ()
 {
-  local ArrayArg=( $* );
+  eval $( __call_localityLocalName=For __call_localityDisplayFunctionEntry=0 __call_locality ) ; 
   #eval $( parse_newvar ${EFunctionTypeDecl} ${TypeDebugKey[${EParamNoDebugDecl}]} ${ArrayArg[@]} ) ;
   ### parse_newvar is removed, time-saving arguments and FParam is more versatile...
   ###
@@ -144,5 +144,5 @@ __for()
 {
   local ArrayArg=( $* );
   local CmdEval=( "eval" "$(" "__in_for" "${ArrayArg[@]}" ")" )  ;
-  eval $( PostEval )  ;
+  eval "${CmdEval[@]}"  ;
 }

@@ -905,15 +905,7 @@ __get_lib_symbols()
   echo -ne "\n\n-------------------\n\tExtracted Symbols: ${ArrayArg[${IntArrayItemValue}]}\n\tArrayObjDumpOptionType:${IntOptionType}, List:[${ArrayObjDumpOptionType[${IntOptionType:=0}]}]\n-------------------\n\n" ;
   local CmdEval=( ${Program:=objdump} ${ProgramOptions:=${ArrayObjDumpOptionType[${IntOptionType:=0}]} ${ArrayArg[${IntArrayItemValue}]}} ${ProgramQuery:=${ObjLibName:=/usr/lib/libots-1.so.0.5.0}} ) ;
   eval "${CmdEval[@]}" ;
-  #function __functor_eval_stdout()
-  #{
-  #  local ArrayExportOption=( "ExportFormat=${ExportFormat}" "ExportType=${ExportType}" ) ;
-  #  local ArrayStdOutManagement=( "__functor_compress_stdout __TAG__" "__functor_stdout __TAG__" )
-  #  eval "${CmdEval[@]}" | ${ArrayStdOutManagement[0]/__TAG__/} ${ArrayExportOption[@]}   ;
-  #}
-  #__functor_eval_stdout ExportFormat=${ExportFormat:=text} ExportType=${ExportType=:stdout} ;
   eval ${CmdEval[@]} ;
-
 }
 
 configure_test_cflags ()
@@ -2530,7 +2522,7 @@ start_vlc()
 } ;
 
 
-### This one can only be acheived if you download 2C from
+### This one can only be acheived if you download 2C from ( cl2cru )
 ### http://code.google.com/p/2c-python/downloads/list.
 ### Uncompress the content in you Python 2.x( mostly /usr/local/lib/python2.x/dist-packages path )
 ###
@@ -2552,7 +2544,7 @@ CompilePythonFile()
  function CompilePython2C()
  {
   eval $( __call_locality ) ;
-  local CmdEval=( python2.6 /usr/local/lib/python2.6/dist-packages/2C.py ${ArrayArg[0]} ) ;
+  local CmdEval=( "python${ArrayPythonVer[1]}" "${ArrayPython26Path[1]}/2C.py" "${ArrayArg[0]}" ) ;
   echo -ne "CmdLine:[ ${CmdEval[@]} ]\n" ;
   eval "${CmdEval[@]}" ;
  } ;
@@ -2958,12 +2950,12 @@ function AvfsMount()
 
 }
 
-unset PS_Loader ;
-function PS_Loader()
+unset ZenityLdConfig ;
+function ZenityLdConfig()
 {
   eval $( __call_localityLocalName=COMMAND __call_localityDisplayFunctionEntry=1 __call_locality ) ;
 
-  local ArrayArgMaster=( $* ) ;
+  local ArrayArgMaster=( ${ArrayArg[@]} ) ;
 
   eval $( FParamFuncName=${StrFuncName} FParamSuffixName=DisplayFrameProg     FParamVarName=StrDisplayFrameProg    FParamDefaultValue=zenity                __fnctCreateLocalityFuncParam ) ;
   eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Width                FParamVarName=IntWidth               FParamDefaultValue=800                   __fnctCreateLocalityFuncParam ) ;

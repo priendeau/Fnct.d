@@ -261,3 +261,114 @@ function test_Unit001()
  local ArrayTestPreParam=( TestUnitArrayLoaderName=ArrayExtern TestUnitTestName=testGetSpacer TestUnitSocketInit=SocketLoadInit002 ) ;
  eval "${ArrayTestPreParam[@]} LTSFunction" ;
 }
+
+
+function SetTestResult()
+{
+ local ArrayArg=( $* ) ;
+ local Fail="${ArrayArg[0]}_OK" ; 
+ local Sucess="${ArrayArg[0]}_FAIL" ; 
+ local StrResult="";
+ local IntID=$(( ${#ArrayTestUnit[@]} - 1 )) ; 
+ if [ ${TestUnit[0]:=-1} -eq 1 ] ; then  
+  if [ ${TestUnit[1]:=-1} -eq 1 ] ; then  
+   if [ ${TestUnit[2]:=-1} -eq 0 ] ; then  
+    echo -ne "\nTest OK\n" > /dev/stderr ; 
+    StrResult=${Sucess} ; 
+   else
+    echo -ne "\nTest FAIL\n" > /dev/stderr ; 
+    StrResult=${Fail} ; 
+   fi
+  else
+   echo -ne "\nTest FAIL\n" > /dev/stderr ; 
+   StrResult=${Fail} ; 
+  fi
+ else
+  echo -ne "\nTest FAIL\n" > /dev/stderr ; 
+  StrResult=${Fail} ; 
+ fi
+ ArrayTestUnit[${IntID}]="${StrResult}" ;
+}
+
+
+function test_call_locality_Fparam()    
+{ 
+ eval $( __call_localityLocalName=Test __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Debug FParamVarName=IsDebug FParamDefaultValue=True __fnctCreateLocalityFuncParam ) ; 
+ echo -ne "State of parametric Var:[Debug]: ${IsDebug}\n" ; 
+}
+
+### Test Unit-002 : Testing the __fnctCreateLocalityFuncParam variable to detect if it's reporting valid
+### data output and invalid data output.
+### 
+function test_Unit002()
+{
+ local TestName="test_Unit002" ;
+ local TestUnit=( ) ;
+ local ArrayTest=( """State of parametric Var:\[Debug\]: True"""  """State of parametric Var:\[Debug\]: False""" ) ;
+ local IntTrue=0;
+ local IntFalse=1;
+ TestUnit[0]=$( TestDebug=True  test_call_locality_Fparam | egrep -ic --no-filename "${ArrayTest[${IntTrue}]}"  ) ;
+ TestUnit[1]=$( TestDebug=False test_call_locality_Fparam | egrep -ic --no-filename "${ArrayTest[${IntFalse}]}" ) ;
+ TestUnit[2]=$( TestDebug=True  test_call_locality_Fparam | egrep -ivc --no-filename "${ArrayTest[${IntTrue}]}"  ) ;
+ TestUnit[3]=$( TestDebug=False test_call_locality_Fparam | egrep -ivc --no-filename "${ArrayTest[${IntFalse}]}" ) ;
+ local StrBodyFunc=$( ${TypedVarDeclaration[3]} test_call_locality_Fparam ) ;
+ echo -ne "Function Body:[\n${StrBodyFunc}]\n" ;
+ echo -ne "Test1: Setting parameter to True,  should report 1: ${TestUnit[0]}\n" ;
+ echo -ne "Test2: Setting parameter to False, should report 1: ${TestUnit[1]}\n" ;
+ echo -ne "Test3: Setting parameter to True,  should report 0: ${TestUnit[2]}\n" ;
+ echo -ne "Test4: Setting parameter to False, should report 0: ${TestUnit[3]}\n" ;
+}
+
+function test_ArrayArg()    
+{ 
+ eval $( __call_localityLocalName=Test __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Set     FParamVarName=IntSet         FParamDefaultValue=0     __fnctCreateLocalityFuncParam ) ; 
+ 
+ case ${IntSet:=0} in 
+  0 )
+  echo -ne "Display Parameter ArrayArg[0] : ${ArrayArg[0]}\n" ; 
+  echo -ne "Display Parameter ArrayArg[0] : ${ArrayArg[0]}\n" > /dev/stderr ; 
+  ;;
+  1 )
+  echo -ne "Display Parameter ArrayArg[@] : ${ArrayArg[@]}\n" ;
+  echo -ne "Display Parameter ArrayArg[@] : ${ArrayArg[@]}\n" > /dev/stderr ;
+  ;;
+  esac ;
+}
+
+### Test Unit-003 : The multiples Argument of ArrayArg implicitly created by __call_locality.
+### they submmitting 2 type of set, one with ArrayArg[0], having one data, ArrayArg[@], holding
+### 3 more data, they are tested against similarity too
+### 
+function test_Unit003()
+{
+ local TestName="test_Unit003" ;
+ local TestUnit=( ) ;
+ local ArrayTest=( """Display Parameter ArrayArg\[0\] : INFO1"""  """Display Parameter ArrayArg\[@\] : INFO1 INFO2 INFO3""" ) ;
+ local DataSet=( "INFO1" "INFO1 INFO2 INFO3" );
+ local IntSet0=0;
+ local IntSet1=1;
+ TestUnit[0]=$( TestSet=${IntSet0} test_ArrayArg ${DataSet[${IntSet0}]}    | egrep -ic --no-filename  "${ArrayTest[${IntSet0}]}" ) ;
+ TestUnit[1]=$( TestSet=${IntSet1} test_ArrayArg ${DataSet[${IntSet1}]}    | egrep -ic --no-filename  "${ArrayTest[${IntSet1}]}" ) ;
+ TestUnit[2]=$( TestSet=${IntSet0} test_ArrayArg ${DataSet[${IntSet0}]}    | egrep -ivc --no-filename "${ArrayTest[${IntSet0}]}" ) ;
+ TestUnit[3]=$( TestSet=${IntSet1} test_ArrayArg ${DataSet[${IntSet1}]}    | egrep -ivc --no-filename "${ArrayTest[${IntSet1}]}" ) ;
+ local StrBodyFunc=$( ${TypedVarDeclaration[3]} test_ArrayArg ) ;
+ echo -ne "Function Body:[\n${StrBodyFunc}]\n" ;
+ echo -ne "Test1: Setting parameter to TestSet=0,  should report 1: ${TestUnit[0]}\n" ;
+ echo -ne "Test2: Setting parameter to TestSet=1,  should report 1: ${TestUnit[1]}\n" ;
+ echo -ne "Test3: Setting parameter to TestSet=1,  should report 0: ${TestUnit[2]}\n" ;
+ echo -ne "Test4: Setting parameter to TestSet=0,  should report 0: ${TestUnit[3]}\n" ;
+}
+
+function start_UnitTest()
+{
+ unset ArrayTestUnit;
+ declare ArrayTestUnit=( ) ;
+ local ArrayTestUnit=( test_Unit002 test_Unit003 )
+ for item in ${ArrayTestUnit[@]} ; do 
+  ${item} ;
+  SetTestResult ${item}
+ done 
+ echo -ne "\nTest Result:\n\t${ArrayTestUnit[@]}\n"  ;
+}
