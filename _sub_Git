@@ -254,6 +254,20 @@ function GitAddFile()
 function start_git_add_file()
 {
  eval $( __call_localityLocalName=SGaf __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=Email FParamVarName=StrEmail FParamDefaultValue=priendeau@live.ca __fnctCreateLocalityFuncParam     ) ;
+ eval $( FParamFuncName=${StrFuncName} FParamSuffixName=UserName FParamVarName=StrUserName FParamDefaultValue=Maxiste%20Deams __fnctCreateLocalityFuncParam     ) ;
+ 
+ ### Implement better algo, see http://bit.ly/diVIHI for example of conversion:
+ ### 
+ ### add remote repo : git remote add origin ssh://maxistedeams@disampleforblog.git.sourceforge.net/gitroot/disampleforblog/disampleforblog.git
+ StringUnUrlUserName=${StrUserName/\%[0-9][0-9]/ };
+ StringUnUrlUserEmail=${StrUserName/\%[0-9][0-9]/ };
+ 
+ if [ ! -d .git ] ; then 
+  git config --global user.name  "${StringUnUrlUserName}" ;
+  git config --global user.email "${StringUnUrlUserEmail}" ;
+  git init ;
+ fi
  eval $( GBLVariableMode=local GitBranchList )
  eval $( GitCreateLocalQueue ) ;
  eval $( __in_for ArrayGitQueue GitAddFile ) ;

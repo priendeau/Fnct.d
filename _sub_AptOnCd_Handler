@@ -7,12 +7,12 @@ CreateAptOnCdLinkRef()
 {
 	eval $( __call_localityLocalName=CreateAptOnCdLinkRef __call_localityDisplayFunctionEntry=1 __call_locality ) ;
 
-	function GetPackageList()
-	{
-		eval $( __call_localityLocalName=GetPackageList __call_localityDisplayFunctionEntry=1 __call_locality ) ;
-		local CmdEval=( ${GetPackageListMainProg:=find} ${GetPackageListPath:=/media/apt-on-cd/packages/} "-type f" "-iname" "\"*.${GetPackageListMimeType:=deb}\"" -printf "\"%f \"" ) ;
-		eval "${CmdEval[@]}" ;
-	}
+ function GetPackageList()
+ {
+  eval $( __call_localityLocalName=GetPackageList __call_localityDisplayFunctionEntry=1 __call_locality ) ;
+  local CmdEval=( ${GetPackageListMainProg:=find} ${GetPackageListPath:=/media/apt-on-cd/packages/} "-type f" "-iname" "\"*.${GetPackageListMimeType:=deb}\"" -printf "\"%f \"" ) ;
+  eval "${CmdEval[@]}" ;
+ }
 
 	local ArrayDebianFile=( $( GetPackageList ) ) ;
 
@@ -133,7 +133,7 @@ function CronMountAptOnCD()
     eval $( EvalFunctorVarType=local EvalFunctorVarReturn=Ismount EvalFunctorOnScreen=True __fnctCmdEval egrep -ic --no-filename "\"\${ArrayCheckMount[\${intArrayCheckMount}]}"\" /etc/mtab )
     if [ ${IsMount:=0} -eq 0 ] ; then
       echo -ne "Try to mount the APTOnCD iso \n" > /dev/stderr  ;
-      ###eval $( EvalFunctorOnScreen=True __fnctCmdEval MountCallExecute=True MountCallPrint=True MountCallPrintDebug=True MountCallEvalExec=True MountCall \${ArrayMountKeyId[\${intArrayCheckMount}]} ) ;
+      ### eval $( EvalFunctorOnScreen=True __fnctCmdEval MountCallExecute=True MountCallPrint=True MountCallPrintDebug=True MountCallEvalExec=True MountCall \${ArrayMountKeyId[\${intArrayCheckMount}]} ) ;
       eval $( __in_for ArrayProcList CallMountProc \${ArrayMountKeyId[\${intArrayCheckMount}]} ) ;
     else
      echo -ne "APTOnCD Already Mounted\n" > /dev/stderr  ;
