@@ -77,7 +77,25 @@ function ArrayArg.Property.NumberId()
  fi
 }
  
-__call_locality()
+function B__call_locality()
+{
+  local ArrayArg=( $* ) ; 
+  local PipeMechnismOutProg=${__call_localityPipeMechnismOutProg:=\>} ;
+  local StdOutDirOutProg=${__call_localityStdOutDirOutProg:=/dev/stdout} ;
+  local PipeMechnismOutErr=${__call_localityPipeMechnismOutErr:=\>} ;
+  local StdOutDirOutErr=${__call_localityStdOutDirOutErr:=/dev/stderr} ;
+  
+  echo -ne """ ;\n""" ${PipeMechnismOutProg} ${StdOutDirOutProg} 
+  echo -ne """local StrFuncName=${ArrayArg[0]} ;\n""" ${PipeMechnismOutProg} ${StdOutDirOutProg} 
+  echo -ne """FunctionName : ${ArrayArg[0]}\n""" ${PipeMechnismOutErr} ${StdOutDirOutErr}  ;
+  
+  _XBodyCallPipeMechnismOutProg=${PipeMechnismOutProg};
+  _XBodyCallStdOutDirOutProg=${StdOutDirOutProg};
+  _XBodyCall __InerOutDeclCallLocalityContent __InerOutDecl ;
+  
+}
+ 
+A__call_locality()
 {
  local ArrayArgInfo=( $* ) ;
  local StrFuncName=( __call_locality ) ;
@@ -200,3 +218,12 @@ __call_locality()
  #echo -ne "function ${LocalStrFuncNameHelperList}()    { function __echo()    { echo -ne \"\t<\${int${StrHelperVarName}};\${${StrHelperVarName}[\${int${StrHelperVarName}}]}>\n\" ; } ;  eval \$( __in_for ${StrHelperVarName} __echo ) ; } ;" ;
  
 }
+
+declare CallLocalityId=A__call_locality ;
+export CallLocalityId;
+
+function __call_locality()
+{
+  _XBodyCall ${CallLocalityId:=A__call_locality} ;
+}
+
