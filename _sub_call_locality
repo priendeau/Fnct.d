@@ -1,3 +1,54 @@
+function _XBodyCall()
+{
+  local ArrayArg=( $* ) ; 
+  local PipeMechnismOutProg=${_XBodyCallPipeMechnismOutProg:=\>} ;
+  local StdOutDirOutProg=${_XBodyCallStdOutDirOutProg:=/dev/stdout} ;
+  function __fnct_awk()
+  {
+   #### Warning, Implementing a loop to scan content of function body and add at the end of 
+   #### each statement, ${PipeMechnismOutProg} ${StdOutDirOutProg} to respect content being parsed in 
+   #### the good Stream can be inplement here... Several thing to worry, the presence of 
+   #### ${PipeMechnismOutErr} ${StdOutDirOutErr} at the end... Implementing Double pair of 
+   #### PipedInstruction<a;b> and StreamDirection<a;b> may help filtering case [io]f <PI=a;SD=a>, <PI=b;SD=b>, <PI=^[ab];SD=^[ab]>
+   #### Noted : PI: PipedInstruction
+   #### Noted : SD : StreamDirection
+   #### Result : 
+   ####  - Later we can define 
+   ####    PipeMechnismOutProg = '|'
+   ####    _XBodyCallStdOutDirOutProg = 'nc HostServerCollection -p HostServerPortCollection'
+   #### 
+    awk 'BEGIN{}{printf("%i\n",$1-2);}END{}' ; 
+  }
+  function __fnct_headLast()
+  {
+   head -n-1
+  }
+  function __fnct_LenLine()
+  {
+   wc -l ;
+  }
+  for (( intX=0 ; intX <= ${#ArrayArg[@]}-1 ; intX++ )) ; do 
+    declare -f ${ArrayArg[${intX}]} | tail -n $( declare -f ${ArrayArg[0]} | __fnct_LenLine  | __fnct_awk  ) | __fnct_headLast ${PipeMechnismOutProg} ${StdOutDirOutProg}  ; 
+  done
+}
+
+function __InerOutDeclCallLocalityContent()
+{
+  local ArrayArg=( \$* )
+  local StrFuncName=${ArrayArg[0]};
+  echo -ne """FunctionName : ${ArrayArg[0]}\n""" ${PipeMechnismOutErr} ${StdOutDirOutErr}  ;
+}
+
+function __InerOutDecl()
+{
+  if [ ${ArrayArg[1]} == "--help-options" ] ; then 
+   for ItemOption in ${LocalityVarList[@]} ; do 
+    echo -ne "\tVariable \${StrFuncName}\${ItemOption}\n\tDefault Value:[\${${StrFuncName}${ItemOption}[@]}].\n" ; 
+   done
+  fi
+}
+
+
 function ArrayArg.Getter.NumberId()
 {
  local ArrayArg=( $* ) ;
