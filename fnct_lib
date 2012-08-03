@@ -3698,3 +3698,29 @@ function ArrayInlineCmdParser()
   fi 
   eval "${CmdLineEval[@]}" ;
 }
+
+
+### Perl Module Update
+### - In some distro, like Linux Mint 12 x86_64 bit version I fall back over strange mode. 
+### - The synaptic don't stop to do Perl module missing... This was unresolvable until I
+### Boot with Linux kernel with few extra parameters like toram and persistent which probably
+### update the distro while un unattended services is up and can do itself somes update by 
+### itself...
+### - By The way I was developped a tiny Zenity bash shel which not throwing me error and I was
+### able to install some package thru cpan -O which is listing for outdated module, you select
+### package, you click OK and it download the update .
+### Obviously it does not show you the real status of installed package and the awk script 
+### used Involve an Array[ x, "package" ] and Array[x,"installation"], where Array[x,"installation"]
+### should store the result of the installation . 
+### Belong to cpan shortcut, involving and install thru cpan -i MODULE, or plain cpan MODULE 
+### report code 8 in case of package not installed... 
+### By the way running the application twice show some module comming once again... 
+
+ZenityPerlModuleUpgrade () 
+{ 
+    cpan -O | gawk 'BEGIN{}{if($1 ~ /[a-zA-Z0-9]+/ && $2 ~/[0-9]*\.[0-9]+/){ printf("FALSE\n%s\n%s\n%s\n",$1,$2,$3)};}END{}' |\
+    zenity --width=640 --height=400 --list --checklist --column="To Upgrade" --column="Perl package" --column="Current Version" --column="New version" --text="Module to upgrade" --print-column=2 --separator=';' |\
+    gawk -F";" 'BEGIN{ x=1 ; maxindex=0;}{ for( x=1 ; x <= NF;x++){ maxindex=x ; ArrayInstall[x,"package"]=$(x);ArrayInstall[x,"installation"]=system(sprintf("cpan -i %s",$x)) ;printf("Upgrading Package %s\n",$(x) ) ; }}END{printf("Package installation result:\n") ; for( x=1 ; x <= maxindex; x++){ printf("Package: %s, Result: %s\n",ArrayInstall[x,"package"],ArrayInstall[x,"installation"]); }}'
+}
+
+
