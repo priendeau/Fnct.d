@@ -16,7 +16,7 @@ loop_jack_connection()
   local CmdLine=( jackd ${LJCDefaultHardwareOption:=""}  --port-max ${LJCNbOpenPort:=256} -d ${LJCAudioInterface:=alsa} --rate ${LJCRate:=44100} --period ${LJCPeriodLen:=1024} --nperiods ${LJCNbPeriods:=4} --inchannels ${LJCInputChannel:=2} --outchannels ${LJCOutputChannel:=2} --input-latency ${LJCInputLatency:=8} --output-latency ${LJCOutputLatency:=8} ${LJCDefaultOption:=--playback} --device ${LJCDevice:=default} ${LJCInterfaceOption:=""} ) ; 
   #eval $( __call_locality ) ;
   if [ ${LJCDefaultAction:="startserver"} != "help" ] ; then
-    DisplayErrDev "Loop Jack Connection:\n\t Help Interface is available by typing following prefix command to the function:\nLLJCDefaultAction=help "    
+    DisplayErrDev "Loop Jack Connection:\n\t Help Interface is available by typing following prefix command to the function:\nLJCDefaultAction=help "    
   fi 
   local IntDefaultSleepTime=${LJCDefaultSleep:=2};
   if [ ${LJCDefaultAction:="startserver"} == "help" ] ; then
