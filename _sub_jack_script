@@ -1,3 +1,4 @@
+
 loop_jack_connection()
 {
   ### Should Use Prefix-option LJC -> LoopJackConnection before calling the function if you want to change any
@@ -12,7 +13,7 @@ loop_jack_connection()
    local ArrayArg=( $* ) ; 
    echo -ne "${ArrayArg[@]}\n" > /dev/stderr ;
   }
-  local CmdLine=( jackd ${LJCDefaultOption:=--capture --playback --duplex} ${LJCDefaultHardwareOption:=""}  --port-max ${LJCNbOpenPort:=256} -d ${LJCAudioInterface:=alsa} --rate ${LJCRate:=44100} --period ${LJCPeriodLen:=1024} --nperiods ${LJCNbPeriods:=4} --inchannels ${LJCInputChannel:=2} --outchannels ${LJCOutputChannel:=2} --input-latency ${LJCInputLatency:=8} --output-latency ${LJCOutputLatency:=8} ${LJCInterfaceOption:=""} ) ; 
+  local CmdLine=( jackd ${LJCDefaultHardwareOption:=""}  --port-max ${LJCNbOpenPort:=256} -d ${LJCAudioInterface:=alsa} --rate ${LJCRate:=44100} --period ${LJCPeriodLen:=1024} --nperiods ${LJCNbPeriods:=4} --inchannels ${LJCInputChannel:=2} --outchannels ${LJCOutputChannel:=2} --input-latency ${LJCInputLatency:=8} --output-latency ${LJCOutputLatency:=8} ${LJCDefaultOption:=--playback} --device ${LJCDevice:=default} ${LJCInterfaceOption:=""} ) ; 
   #eval $( __call_locality ) ;
   if [ ${LJCDefaultAction:="startserver"} != "help" ] ; then
     DisplayErrDev "Loop Jack Connection:\n\t Help Interface is available by typing following prefix command to the function:\nLLJCDefaultAction=help "    
@@ -21,22 +22,23 @@ loop_jack_connection()
   if [ ${LJCDefaultAction:="startserver"} == "help" ] ; then
    DisplayErrDev "Loop Jack Connection:" 
    DisplayErrDev "\tPrefix Options:" 
-   DisplayErrDev "\t\tLJCDefaultOption\t: Include jackd option:\n\t\t\t( --capture --playback --duplex )" 
-   DisplayErrDev "\t\tLJCNbOpenPort\t\t: default set to 256                    ( --port-max 256   )" 
-   DisplayErrDev "\t\tLJCAudioInterface\t: audio interface name, default is alsa ( -d               )" 
-   DisplayErrDev "\t\tLJCRate\t\t\t: default is 44100                      ( --rate           )" 
-   DisplayErrDev "\t\tLJCPeriodLen\t\t: default set to 1024                   ( --period         )" 
-   DisplayErrDev "\t\tLJCNbPeriods\t\t: defaut set to 4                       ( --nperiods       )" 
-   DisplayErrDev "\t\tLJCInputChannel\t\t: default set to 2                      ( --inchannels     )" 
-   DisplayErrDev "\t\tLJCOutputChannel\t: default set to 2                      ( --outchannels    )" 
-   DisplayErrDev "\t\tLJCInputLatency\t\t: default set to 8                      ( --input-latency  )" 
-   DisplayErrDev "\t\tLJCOutputLatency\t: default set to 8                      ( --output-latency )" 
+   DisplayErrDev "\tLJCDefaultOption\t: Include jackd option:\n\t\t\t( --capture --playback --duplex )" 
+   DisplayErrDev "\tLJCNbOpenPort\t\t: default set to 256                    ( --port-max 256   )" 
+   DisplayErrDev "\tLJCAudioInterface\t: audio interface name, default is alsa ( -d               )" 
+   DisplayErrDev "\tLJCRate\t\t\t: default is 44100                      ( --rate           )" 
+   DisplayErrDev "\tLJCPeriodLen\t\t: default set to 1024                   ( --period         )" 
+   DisplayErrDev "\tLJCNbPeriods\t\t: defaut set to 4                       ( --nperiods       )" 
+   DisplayErrDev "\tLJCInputChannel\t\t: default set to 2                      ( --inchannels     )" 
+   DisplayErrDev "\tLJCOutputChannel\t: default set to 2                      ( --outchannels    )" 
+   DisplayErrDev "\tLJCInputLatency\t\t: default set to 8                      ( --input-latency  )" 
+   DisplayErrDev "\tLJCOutputLatency\t: default set to 8                      ( --output-latency )" 
+   DisplayErrDev "\tLJCDevice\t\t: default set to (default)                     ( --device )" 
    DisplayErrDev "Other JackOption Option\n" 
-   DisplayErrDev "\t\tLJCHardwareOption\t: to add any other option not initialized." 
-   DisplayErrDev "\t\tLJCInterfaceOption\t: to add any interface related options not used." 
+   DisplayErrDev "\tLJCHardwareOption\t: to add any other option not initialized." 
+   DisplayErrDev "\tLJCInterfaceOption\t: to add any interface related options not used." 
    DisplayErrDev "Other Loop Jack Connection Semantic Action\n" 
-   DisplayErrDev "\t\tLLJCDefaultAction\t: default is set to startserver ( startserver/help/test/jackoption )" 
-   DisplayErrDev "\t\tLJCDefaultSleep\t: Internal sleep times, set to ${IntDefaultSleepTime} second(s)." 
+   DisplayErrDev "\tLLJCDefaultAction\t: default is set to startserver ( startserver/help/test/jackoption )" 
+   DisplayErrDev "\tLJCDefaultSleep\t: Internal sleep times, set to ${IntDefaultSleepTime} second(s)." 
   elif [ ${LJCDefaultAction:="startserver"} == "test" ] ; then
    DisplayErrDev "Following command line will be executed:\n\tCmd:[ ${CmdLine[@]} ]\n" ;
    DisplayErrDev "Waiting ${IntDefaultSleepTime} sec..."; 
