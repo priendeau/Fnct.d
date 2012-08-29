@@ -7,7 +7,6 @@ isdest="false";
 DebugLine="false";
 }
 {
-
  if ( $1 ~ /[a-zA-Z]+:/ )
  {
   if( DebugLine == "true" ) printf("Line Detected.[ %s ]\n",$0); 
@@ -38,7 +37,16 @@ for( x = 1 ; x<= NbConnection ; x++ )
  if( ArrayJackLsp[x,"source"] != "" )
  {
   varconnection=sprintf("(connect \"%s\" \"%s\"  )\n",ArrayJackLsp[x,"source"],ArrayJackLsp[x,"dest"],x-1) ;
-  printf("%s",varconnection);
+  if( UsingJackConnect == "True" )
+  {
+   ExecCmd=sprintf("jack_connect %s %s",ArrayJackLsp[x,"source"],ArrayJackLsp[x,"dest"]) ;
+   printf( "Variable UsingJackConnect Set to : %s\nExecuting command:[ %s]\n",UsingJackConnect, ExecCmd) ; 
+   system( ExecCmd) ; 
+  }
+  else
+  {
+   printf("%s",varconnection);
+  }
  }
 }
 }
