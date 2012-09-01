@@ -1,4 +1,31 @@
 
+function GitHubCommit()
+{ 
+ local ArrayArg=( $* ) ; 
+ function GetSelectedFile()    
+ { 
+  local FileSelection=$( zenity --width=640 --height=200 --file-selection --filename=${GitHubFilePath:=/home/maxiste/github/Technical-PorteFolio/Python} ) ; 
+  local FileCommit=( $( echo ${FileSelection//\// } ) ) ; 
+  local FileCommited=${FileCommit[$(( ${#FileCommit[@]}-1 ))]} ; 
+  echo "${FileCommited}" ; 
+ } ; 
+ function GitCommit( )
+ {
+  local ArrayArg=( $* ) ;
+  local CommitMessage=$( zenity --title="GitHub" --width=640 --height=200 --ok-label="commit" --text-info --editable --text="Git Commit message" ) ; 
+  git commit -m "${CommitMessage}" ${ArrayArg[0]} ; 
+  git push origin master
+ } 
+ local Arg0=${ArrayArg[0]} ;
+ if [ ${Arg0:=--selection} == "--selection" ] ; then 
+  local StrFileCommit=$( GetSelectedFile ) ;  
+  GitCommit ${StrFileCommit} ; 
+ else
+  test ! -e ${ArrayArg[0]} && echo -ne "\nFile ${ArrayArg[0]} can not be commited, does not exist.\n" > /dev/stderr ;
+  test -e ${ArrayArg[0]} &&  GitCommit ${ArrayArg[0]} ; 
+ fi
+
+}
 
 function __GitBranch( )
 {
