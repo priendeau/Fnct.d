@@ -1,12 +1,11 @@
-
 function GetPackageLadspa()
 {
- ### Example of Package Getter. 
- ### 
- ###  
+ ### Example of Package Getter.
+ ###
+ ###
  local __call_locality=( GetPackageLadspa ) ;
- local ArrayPackageList=$( $( find /usr/lib/ladspa/ -type f -iname "*.so" -exec dpkg-query --search {} \; | awk -F: 'BEGIN{}{printf("%s\n",$1)}END{}' | sort -k1 -u -t ':' | tr '[:cntrl:]' ' ' ) ) ; 
- echo -ne "${ArrayPackageList[@]}"  ; 
+ local ArrayPackageList=$( $( find /usr/lib/ladspa/ -type f -iname "*.so" -exec dpkg-query --search {} \; | awk -F: 'BEGIN{}{printf("%s\n",$1)}END{}' | sort -k1 -u -t ':' | tr '[:cntrl:]' ' ' ) ) ;
+ echo -ne "${ArrayPackageList[@]}" ;
 }
 
 function AptSrcInstallPackage()
@@ -17,10 +16,10 @@ function AptSrcInstallPackage()
  local PackageGetter=${ASIPPackageGetter:=GetPackageLadspa} ;
  local ArrayPackage=( $( ${PackageGetter} ) ) ;
  
- for (( intx=0 ; intx <= ${#ArrayPackage[@];intx++}+1 )) ; do 
-  local Item=${ArrayPackage[${intx}]} ; 
+ for (( intx=0 ; intx <= ${#ArrayPackage[@];intx++}+1 )) ; do
+local Item=${ArrayPackage[${intx}]} ;
   cd ${StartPath} ;
-  apt-src -p install ${Item} ; 
+  apt-src -p install ${Item} ;
  done
 
 }
@@ -38,10 +37,10 @@ function AptSrcBuildPackage()
  local PackageGetter=${ASBPPackageGetter:=GetPackageLadspa} ;
  local ArrayPackage=( $( ${PackageGetter} ) ) ;
  
- for (( intx=0 ; intx <= ${#ArrayPackage[@];intx++}+1 )) ; do 
-  local Item=${ArrayPackage[${intx}]} ; 
+ for (( intx=0 ; intx <= ${#ArrayPackage[@];intx++}+1 )) ; do
+local Item=${ArrayPackage[${intx}]} ;
   cd ${StartPath} ;
-  CC=${InternalCC} CXX=${InternalCXX} LD=${ASBPLD} apt-src build ${Item} ; 
+  CC=${InternalCC} CXX=${InternalCXX} LD=${ASBPLD} apt-src build ${Item} ;
  done
 
 }

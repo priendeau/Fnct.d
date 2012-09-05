@@ -34,7 +34,7 @@
 declare -i IntConfPathLength=${#ConfFnctDPath[@]} ;
 
 if [ ${IntConfPathLength:=0} -lt 1 ] ; then
-	declare -a ConfFnctDPath=( ${fnct_libPathConf:=/etc/init.d/fnct.d/ /scripts /media/8b3aee14-7b7f-4247-8fef-047c1c2760df/etc/init.d/fnct.d/} ) ;
+	declare -a ConfFnctDPath=( ${fnct_libPathConf:=/etc/init.d/Fnct.d/ /scripts /media/8b3aee14-7b7f-4247-8fef-047c1c2760df/etc/init.d/fnct.d/} ) ;
 	unset IntConfPathLength ;
 fi
 
@@ -49,7 +49,7 @@ fi
 . ${ConfFnctDPath[0]}/fnct_parse_var_lib
 
 unset get_col
-get_col()
+function get_col()
 {
   eval $( __call_localityLocalName=GetCol __call_locality ) ;
   
