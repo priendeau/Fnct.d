@@ -6,6 +6,15 @@ declare -a ArrayCreator=( Debian Ubuntu Fedora Mint ) ;
 declare -a ArrayPackageType=( DPKG APT YUM RPM ) ;
 declare -a ArrayPackageAction=( install update remove fix compile certify verify ) ;
 
+
+### Usefull for python installer using pip. 
+### Happen more than once have to call pip with another gcc compiler while test failed to compile many source
+### from Numpy numpy/linalg/lapack_litemodule.c and linalg/zlapack_lite.c failling or doing segmentation fault.
+### Most of the time they can work compiling them direct from the shell but in bash script called from bash or
+### python script like setup.py failed... 
+### So I'm changing couple of variable and calling indivilually pip installer like this :
+### Where cmd old followin value : cmd=( pip install __MODULE__ )
+### eval $( DpkgGetInlineBuildFlags ) CC=/usr/bin/x86_64-linux-gnu-gcc-4.4 CXX=/usr/bin/x86_64-linux-gnu-g++-4.4 ${cmd[@]}
 function DpkgGetInlineBuildFlags()
 {
   local __call_locality=( DpkgGetInlineBuildFlags ) ;
