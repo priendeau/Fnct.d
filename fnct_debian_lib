@@ -10,7 +10,7 @@ function DpkgGetInlineBuildFlags()
 {
   local __call_locality=( DpkgGetInlineBuildFlags ) ;
   local ArrayArg=( $* ) ;
-  local CmdEval=( "cat" "${DpkgGetInlineBuildFlagsPath:=/etc/dpkg/}" ${DpkgGetInlineBuildFlagsFile:=buildflags.conf} "|" sed 's/SET //g;s/[\ \t]*\"/=\"/g' "|" tr '[:cntrl:]' ' ' ) ;
+  local CmdEval=( "cat" "${DpkgGetInlineBuildFlagsPath:=/etc/dpkg/}"${DpkgGetInlineBuildFlagsFile:=buildflags.conf} "|" sed """'s/SET //g;s/[\ \t]*\"/=\"/g'""" "|" tr """'[:cntrl:]\' ' '""" ) ;
   eval "${CmdEval[@]}" ;
 
 }
