@@ -7,6 +7,26 @@ declare -a ArrayPackageType=( DPKG APT YUM RPM ) ;
 declare -a ArrayPackageAction=( install update remove fix compile certify verify ) ;
 
 
+function Survey_kill_apps()    
+{ 
+    function KillApps()
+    {
+        local __call_locality=( Survey_kil_apps ) ; 
+        local ArrayArg=( $* ) ; 
+        kill -9 $( ps -eo pid,command | egrep -i "${ArrayArg[0]}" | grep -v "egrep" | cut -d " " -f 1 )
+    }
+    local __call_locality=( Survey_kil_apps ) ; 
+    local ArrayArg=( $* ) ; 
+    local StrApps=${SurveyApps:=rezound} ; 
+    local IntDelay=${SurveyAppsRefresh:=4} ; 
+    while [ 1 ] ; do 
+        test -e /home/maxiste/kill_${StrApps} && \
+            rm -f /home/maxiste/kill_${StrApps} && \
+            KillApps ${StrApps} 
+        sleep ${IntDelay} ; 
+    done ; 
+}
+
 ### Usefull for python installer using pip. 
 ### Happen more than once have to call pip with another gcc compiler while test failed to compile many source
 ### from Numpy numpy/linalg/lapack_litemodule.c and linalg/zlapack_lite.c failling or doing segmentation fault.
