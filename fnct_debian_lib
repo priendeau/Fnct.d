@@ -6,6 +6,21 @@ declare -a ArrayCreator=( Debian Ubuntu Fedora Mint ) ;
 declare -a ArrayPackageType=( DPKG APT YUM RPM ) ;
 declare -a ArrayPackageAction=( install update remove fix compile certify verify ) ;
 
+function StartApps()
+{ 
+ local ArrayArg=( $* ) ; 
+ local __call_locality=( StartApps ) ; 
+ local AppsRefresh=${StartAppsRefresh:=4} ; 
+ local Apps=${StartAppsCmd:=rezound --audio-method=jack} ; 
+ local ScanApps=${StartAppsScan:=rezound} ;  
+ while [ 1 ] ; do 
+  local isApps=$( ps -eo pid,command | grep -v egrep | egrep -ic "${ScanApps}" ) ; 
+  if [ ${isApp:=0} -eq 0 ] ; then 
+   eval ${Apps} ; 
+  fi ; 
+  sleep ${AppsRefres} ; 
+  done ; 
+}
 
 function Survey_kill_apps()    
 { 
