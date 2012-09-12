@@ -37,7 +37,97 @@ function AgentLoader()
  fi 
 }
 
-if [ -e "${HOME}/.ssh/environment" ] ; then 
- AgentLoader ;
-fi 
+function GetGitHubKey()
+{
+ local __call_locality=( GetGitHubKey ) 
+ local ArrayArg=( $* ) ;
+ local SSHPassKey=${GetGitHubKeyIndex:=0} ;
+ local DisplayKeyName=${ArrayGitHubKeyName[${SSHPassKey}]} ;
+ local KeyOutput=$( echo ${ArrayGitHubKey[${SSHPassKey}]} | base64 --decode ) ; 
+ echo -ne "Key from ${DisplayKeyName}:\n[${KeyOutput}]\n"  > /dev/stderr ; 
+}
+
+function GetKeyChoice()
+{
+    local ArrayArg=( $* ) ;
+    local __call_locality=( GetKeyChoice ) ;
+    function ZenityMenuKey()
+    {
+        local ArrayArg=( $* ) ;
+        local __call_locality=( ZenityMenuKey )
+        zenity --width=300 --height=300 --list --radiolist --text="Choose your Key to add inside AgentLoader" --column "Selection" --column "Key Name"    
+    }
+    function ListKeyName()
+    {
+        local ArrayArg=( $* ) ;
+        local __call_locality=( ListKeyName )
+        for (( x=0 ; x <= ${#ArrayGitHubKeyName[@]}-1 ; x++ )) ; do 
+            echo -ne "FALSE\n${ArrayGitHubKeyName[$x]}\n" ; 
+        done
+    }
+    local IsDisplaySavedKey=${GetKeyChoiceDisplayKey:=True} ;
+
+    local KeyName=$( ListKeyName | ZenityMenuKey ) ;
+    echo -ne "Key Name selected: ${KeyName}\n" > /dev/stderr ; 
+    local KeyId=None ;
+    
+    local IsArrayCreated=$( declare -a | egrep -c "ArrayGitHubKey" ) ;
+ 
+    if [ ${IsArrayCreated:=0} -gt 0 ] ; then 
+        if [ "${KeyName:=None}" != "None" ] ; then 
+            for (( x=0 ; x <= ${#ArrayGitHubKeyName[@]}-1 ; x++ )) ; do 
+                local ItemKey="${ArrayGitHubKeyName[${x}]}" ;
+                if [ "${KeyName}" == "${ItemKey:=None}" ] ; then 
+                    KeyId=${x} ;
+                fi
+            done 
+            
+            local PathSSH=${HOME}/.ssh ; 
+            
+            if [ "${USER}" == "root" ] ; then 
+                PathSSH=/root/.ssh
+            fi
+                cp ${PathSSH}/${ArrayGitHubKeyFile[${KeyId}]} ${PathSSH}/id_rsa
+                cp ${PathSSH}/${ArrayGitHubKeyFile[${KeyId}]}.pub ${PathSSH}/id_rsa.pub
+                if [ ${IsDisplaySavedKey:=False} == "True" ] ; then 
+                    echo -ne "Add this key inside the required field:\n" ;
+                    GetGitHubKeyIndex=${KeyId} GetGitHubKey
+                fi
+                test -e ${PathSSH}/environment && rm -f ${PathSSH}/environment 
+                ssh-add ; 
+
+        fi    
+    else
+        echo -ne "Function ${__call_locality[0]} Need At least those Array being declared : \n" > /dev/stderr ; 
+        echo -ne "ArrayGitHubKey To Hold The PassPhrase in base64 format ( with no wrap line.) \n" > /dev/stderr ; 
+        echo -ne "ArrayGitHubKeyName To Hold The Zenity List Menu showing you wich key to use \n" > /dev/stderr ; 
+        echo -ne "ArrayGitHubKeyFile to hold file inside ${HOME} or .ssh path from user ${USER} to copy both KEYNAME-id_rsa KEYNAME-id_rsa.pub into id_rsa and id_rsa.pub \n" > /dev/stderr ; 
+        echo -ne "Being Afraid to display a passphrase on the screen, set this function has GetKeyChoiceDisplayKey=False GetKeyChoice on prompt or your .bashrc to prevent to be display.\n" > /dev/stderr ; 
+    fi    
+}
+
+### yet Another Password generator.
+function GetPasswd()    
+{ 
+ local ArrayArg=( $*) ; 
+ local __call_locality=( GetPasswd ) ; 
+ local Arg0=${ArrayArg[0]:=16} ; 
+ local IntDefaultFactor=${GetPasswdFactor:=1000} ; 
+ local IntRandomSeedFactor=${GetPasswdRandomSeed:=10} ; 
+ local x=0; 
+ local end=${IntDefaultFactor} ; 
+ local factor=$(( ${end} * $(( ( ${RANDOM} % ${IntRandomSeedFactor} ) + 1 )) )) ; 
+ echo -ne "Crunching for a factor of ${factor} password.\n" ; 
+ local value="" ;
+ while [ ${x} -ne ${factor} ] ; do 
+  value=$( pwgen -cnsB1 ${Arg0} ) ; 
+  let x=$x+1 ; 
+ done ; 
+ echo -ne "\npasswd:[${value}]\n\n" > /dev/stderr  ; 
+}
+
+###     Not Needed anymore, see GetKeyChoice for a clever choice... Must be with XWindows or any Kde, gtk, gnome, Mate interface. 
+#if [ -e "${HOME}/.ssh/environment" ] ; then 
+# AgentLoader ;
+#fi 
 
