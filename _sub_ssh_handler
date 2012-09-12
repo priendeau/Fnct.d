@@ -65,6 +65,24 @@ function GetKeyChoice()
             echo -ne "FALSE\n${ArrayGitHubKeyName[$x]}\n" ; 
         done
     }
+    function ExchangeKeyPair( ) 
+    {
+        local ArrayArg=( $* ) ;
+        local __call_locality=( ListKeyName )       
+        local PathSSH=${HOME}/.ssh ; 
+        
+        if [ "${USER}" == "root" ] ; then 
+            PathSSH=/root/.ssh
+        fi
+            cp ${PathSSH}/${ArrayGitHubKeyFile[${KeyId}]} ${PathSSH}/id_rsa
+            cp ${PathSSH}/${ArrayGitHubKeyFile[${KeyId}]}.pub ${PathSSH}/id_rsa.pub
+            if [ ${IsDisplaySavedKey:=False} == "True" ] ; then 
+                echo -ne "Add this key inside the required field:\n" ;
+                GetGitHubKeyIndex=${KeyId} GetGitHubKey
+            fi
+            test -e ${PathSSH}/environment && rm -f ${PathSSH}/environment 
+            ssh-add ;         
+    }
     local IsDisplaySavedKey=${GetKeyChoiceDisplayKey:=True} ;
 
     local KeyName=$( ListKeyName | ZenityMenuKey ) ;
@@ -84,19 +102,7 @@ function GetKeyChoice()
                     fi
                 done 
                 
-                local PathSSH=${HOME}/.ssh ; 
-                
-                if [ "${USER}" == "root" ] ; then 
-                    PathSSH=/root/.ssh
-                fi
-                    cp ${PathSSH}/${ArrayGitHubKeyFile[${KeyId}]} ${PathSSH}/id_rsa
-                    cp ${PathSSH}/${ArrayGitHubKeyFile[${KeyId}]}.pub ${PathSSH}/id_rsa.pub
-                    if [ ${IsDisplaySavedKey:=False} == "True" ] ; then 
-                        echo -ne "Add this key inside the required field:\n" ;
-                        GetGitHubKeyIndex=${KeyId} GetGitHubKey
-                    fi
-                    test -e ${PathSSH}/environment && rm -f ${PathSSH}/environment 
-                    ssh-add ; 
+                KeyId=${KeyId} IsDisplaySavedKey=${IsDisplaySavedKey} ExchangeKeyPair
 
             fi    
         else
