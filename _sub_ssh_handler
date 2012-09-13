@@ -39,18 +39,84 @@ function AgentLoader()
 
 function GetGitHubKey()
 {
+ ### List of Key:
+ ### GetGitHubKeyPassphraseHook
+ ### GetGitHubKeyIndex
+ ### GetGitHubKeyDecoder
+ ### 
+ ### 
  local __call_locality=( GetGitHubKey ) 
  local ArrayArg=( $* ) ;
- local SSHPassKey=${GetGitHubKeyIndex:=0} ;
+ local StrPassphraseHook=${GetGitHubKeyPassphraseHook:=IntDefaultSSHKey} ;
+ local DefaultKeylevelExist=$( declare -i | egrep -c "${StrPassphraseHook}" ); 
+ local SSHPassKey ; 
+ local StrDecodeBase=${GetGitHubKeyDecoder:=base64 --decode}
+
+ function LowLevelDecoder( )
+ {
+    local __call_locality=( LowLevelDecoder ) 
+    local ArrayArg=( $* ) ;
+    ${LowLevelDecoderCmd:=base64 --decode} ;
+ }
+
+ if [ ${DefaultKeylevelExist:=0} -eq 0 ] ; then 
+    SSHPassKey=${GetGitHubKeyIndex:=0} ;
+ else
+    eval SSHPassKey=\${${StrPassphraseHook}} ;
+ fi
+
  local DisplayKeyName=${ArrayGitHubKeyName[${SSHPassKey}]} ;
- local KeyOutput=$( echo ${ArrayGitHubKey[${SSHPassKey}]} | base64 --decode ) ; 
+ local KeyOutput=$( echo ${ArrayGitHubKey[${SSHPassKey}]} | LowLevelDecoderCmd=${StrDecodeBase} LowLevelDecoder ) ; 
  echo -ne "Key from ${DisplayKeyName}:\n[${KeyOutput}]\n"  > /dev/stderr ; 
 }
 
 function GetKeyChoice()
 {
+
+### Pre Variable List 
+### GetKeyChoiceDisplayKey                  -> ( True | False )
+###  - Inhibit custom passphrase beign displayed on screen while 
+###    invoking ssh-add . 
+### GetKeyChoiceEval                        -> ( True | False )
+###  - Creating extra line of shell used to add some update to your current 
+###    shell once the Application end it's task. In this case updating var 
+###    IntDefaultSSHKey to reflect current key selection. 
+###    ( usefull when re-calling GetGitHubKey ) 
+### GetKeyChoiceAppsKeyProvider             -> ( default : GetGitHubKey ) 
+###    Is the application responsible to provide you the passphrase in case
+###    you haven't noticed... Assuming your working on your sysetem and this 
+###    one is not lethal to your life. 
+###    Note : Involving this setting mean you have to call the Function like 
+###    this to let it work : eval $( GetKeyChoiceEval=True GetKeyChoice ) 
+###    next time By calling GetGitHubKey it will give you actual Passphrase. 
+### GetKeyChoicePassphraseHook              -> ( default : IntDefaultSSHKey )
+###    Allow GetGitHubKey to refer to this key to seek for actual Passphrase.
+###
+### !!! Paranoid Level !!!
+###
+### GetKeyChoiceDecoderLevel                -> ( default : base64 --decode)
+###    Allow safer decoding but need your hand and may interfer with stdout and
+###    stderr , using GetKeyChoiceEval may interfer and not working while asking
+###    you to enter another passphrase like using :
+###    openssl enc -d -cast5-cbc -k <PASSWORD> 
+###     - This <PASSWORD> must be somewhere like on stdin ( on screen ) if you forget
+###     option -k in openssl or using file as password holder, but it store the password 
+###    on the .bash_history.... why it's paranoid level. 
+### GetKeyChoiceStorageSuffix               -> ( default : GitHubKey )
+###    Allow to Store Key, name of the key and corresponding key-file from Another
+###    Array usually having ArrayGitHubKey, ArrayGitHubKeyName ArrayGitHubKeyFile
+###    it using suffix GitHubKey see -> 
+###         Array : Array[GitHubKey], Array[GitHubKey]Name Array[GitHubKey]File 
+###     this can serve managing different Array of Key and may store other type of 
+###    key, like passphrase for pem-file in apache like ... 
+
+
     local ArrayArg=( $* ) ;
     local __call_locality=( GetKeyChoice ) ;
+    local StrPassphraseHook=${GetKeyChoicePassphraseHook:=IntDefaultSSHKey} ;
+    local StrDecoder=${GetKeyChoiceDecoderLevel:=base64 --decode}
+    local StrStoreSuffix=${GetKeyChoiceStorageSuffix:=GitHubKey} ;
+    eval unset ${StrPassphraseHook} ; 
     function ZenityMenuKey()
     {
         local ArrayArg=( $* ) ;
@@ -60,7 +126,7 @@ function GetKeyChoice()
     function ListKeyName()
     {
         local ArrayArg=( $* ) ;
-        local __call_locality=( ListKeyName )
+        local __call_locality=( ListKeyName ) ;
         for (( x=0 ; x <= ${#ArrayGitHubKeyName[@]}-1 ; x++ )) ; do 
             echo -ne "FALSE\n${ArrayGitHubKeyName[$x]}\n" ; 
         done
@@ -68,31 +134,28 @@ function GetKeyChoice()
     function ExchangeKeyPair( ) 
     {
         local ArrayArg=( $* ) ;
-        local __call_locality=( ListKeyName )       
+        local __call_locality=( ExchangeKeyPair )       
         local PathSSH=${HOME}/.ssh ; 
         
         if [ "${USER}" == "root" ] ; then 
-            PathSSH=/root/.ssh
+            PathSSH=/root/.ssh ;
         fi
-            cp ${PathSSH}/${ArrayGitHubKeyFile[${KeyId}]} ${PathSSH}/id_rsa
-            cp ${PathSSH}/${ArrayGitHubKeyFile[${KeyId}]}.pub ${PathSSH}/id_rsa.pub
-            if [ ${IsDisplaySavedKey:=False} == "True" ] ; then 
-                echo -ne "Add this key inside the required field:\n" ;
-                GetGitHubKeyIndex=${KeyId} GetGitHubKey
-            fi
-            test -e ${PathSSH}/environment && rm -f ${PathSSH}/environment 
-            ssh-add ;         
+        cp ${PathSSH}/${ArrayGitHubKeyFile[${KeyId}]} ${PathSSH}/id_rsa
+        cp ${PathSSH}/${ArrayGitHubKeyFile[${KeyId}]}.pub ${PathSSH}/id_rsa.pub
+        if [ "${IsDisplaySavedKey:=False}" == "True" ] ; then 
+            echo -ne "Add this key inside the required field:\n" > /dev/stderr ;
+            GetGitHubKeyDecoder=${StrDecoder} GetGitHubKeyIndex=${KeyId} ${GetKeyChoiceAppsKeyProvider:=GetGitHubKey} > /dev/stderr ;
+        fi
+        test -e ${PathSSH}/environment && rm -f ${PathSSH}/environment 
+        ssh-add > /dev/stderr ;         
     }
     local IsDisplaySavedKey=${GetKeyChoiceDisplayKey:=True} ;
-
+    local IsArrayCreated=$( declare -a | egrep -c "ArrayGitHubKey" ) ;
     local KeyName=$( ListKeyName | ZenityMenuKey ) ;
 
     if [ "${KeyName:=None}" != "None" ] ; then 
         echo -ne "Key Name selected: ${KeyName}\n" > /dev/stderr ; 
         local KeyId=None ;
-        
-        local IsArrayCreated=$( declare -a | egrep -c "ArrayGitHubKey" ) ;
-     
         if [ ${IsArrayCreated:=0} -gt 0 ] ; then 
             if [ "${KeyName:=None}" != "None" ] ; then 
                 for (( x=0 ; x <= ${#ArrayGitHubKeyName[@]}-1 ; x++ )) ; do 
@@ -101,7 +164,6 @@ function GetKeyChoice()
                         KeyId=${x} ;
                     fi
                 done 
-                
                 KeyId=${KeyId} IsDisplaySavedKey=${IsDisplaySavedKey} ExchangeKeyPair
 
             fi    
@@ -113,7 +175,10 @@ function GetKeyChoice()
             echo -ne "Being Afraid to display a passphrase on the screen, set this function has GetKeyChoiceDisplayKey=False GetKeyChoice on prompt or your .bashrc to prevent to be display.\n" > /dev/stderr ; 
         fi
     else
-        echo -ne "User Cancel the Action.\n"    
+        echo -ne "User Cancel the Action.\n" > /dev/stderr
+    fi 
+    if [ "${GetKeyChoiceEval:=False}" == "True" ] ; then 
+        echo -ne "declare -i ${StrPassphraseHook}=\"${KeyId}\"\n" ;
     fi 
 }
 ### An example of what to add inside your /root/.bashrc 
