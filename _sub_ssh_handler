@@ -44,10 +44,13 @@ function GetGitHubKey()
  ### GetGitHubKeyIndex
  ### GetGitHubKeyDecoder
  ### 
- ### 
+ ### --- > see Fnct_GetSSHKey.py from https://github.com/priendeau/Technical-PorteFolio/
+ ### This will replace the function with safer storage thru sqlobject and sqlite backend
+ ### it using the same Zenity interface with PyZenity . 
+
  local __call_locality=( GetGitHubKey ) 
  local ArrayArg=( $* ) ;
- local StrPassphraseHook=${GetGitHubKeyPassphraseHook:=IntDefaultSSHKey} ;
+ local StrPassphraseHook=${GetGitHubKeyPassphraseHook:=${IntDefaultSSHKey}} ;
  local DefaultKeylevelExist=$( declare -i | egrep -c "${StrPassphraseHook}" ); 
  local SSHPassKey ; 
  local StrDecodeBase=${GetGitHubKeyDecoder:=base64 --decode}
@@ -109,6 +112,16 @@ function GetKeyChoice()
 ###         Array : Array[GitHubKey], Array[GitHubKey]Name Array[GitHubKey]File 
 ###     this can serve managing different Array of Key and may store other type of 
 ###    key, like passphrase for pem-file in apache like ... 
+###
+### !!! patented - talent !!! 
+### AppsRootName                           -> ( default : GetKeyChoice )
+###     Wrapping this Function another one you can call the application differently
+###     by doing sed and evoluated reg-exp, like using python module and re. 
+###     using declare -f GetKeyChoice give you the full body and may serve as template.
+###     using AppsRootName prevent ovewriting of the new function in memory by avoiding
+###     overwriting all already prefixed variable from this sedding or replacing action. 
+###     It's a patented - talent ... << Sam on radio ; patented - talent ... 
+###     Who know friend... >> ...
 
 
     local ArrayArg=( $* ) ;
@@ -117,22 +130,54 @@ function GetKeyChoice()
     local StrDecoder=${GetKeyChoiceDecoderLevel:=base64 --decode}
     local StrStoreSuffix=${GetKeyChoiceStorageSuffix:=GitHubKey} ;
     eval unset ${StrPassphraseHook} ; 
+	function TransformArray()
+	{
+	    local ArrayArg=( $* ) ;
+	    local __call_locality=( TransformArray ) ;
+		local StrScopeType="declare -a" ;
+		if [ "${TransformArrayScope:=local}" == "local" ] ; then 
+			StrScopeType="local" ;
+		fi
+		if [ "${TransformArrayScope:=global}" == "local" ] ; then 
+			StrScopeType="declare -a"
+
+		fi 
+		local StrSed="""'s/__SCOPE__ //g;s/^[a-zA-Z0-9\-\_]*=/__NEW_ARRAY__=/g'""" ;
+		StrSed=${StrSed//__SCOPE__/${StrScopeType}}
+		StrSed=${StrSed//__NEW_ARRAY__/${ArrayArg[0]}}
+		StrSed=${StrSed//\ /\\\ } ;
+		StrSed=${StrSed//\-/\\\-} ;
+		echo -ne "Sed: sed ${StrSed}\n" > /dev/stderr ;
+		local StrArrayTransform=$( ${StrScopeType} | egrep "${StrScopeType} ${ArrayArg[0]}"  | $( eval sed ${StrSed} )  ) 
+		echo -ne """${TransformArrayDecl:=local} ${StrArrayTransform} ;"""  
+	}
     function ZenityMenuKey()
     {
+        ### List of Key:
         local ArrayArg=( $* ) ;
         local __call_locality=( ZenityMenuKey )
         zenity --width=300 --height=300 --list --radiolist --text="Choose your Key to add inside AgentLoader" --column "Selection" --column "Key Name" 
     }
-    function ListKeyName()
+    function ReduceTagInSed()
     {
         local ArrayArg=( $* ) ;
+        local __call_locality=( ReduceTagInSed ) ;
+        sed -e 's/\([\\\/\$\}\{a-z]\)//g;s/\(([A-Z0-9]*:)\)/\1;/g;s/[\)\(\}\{\}]//g' | cut -d ";" -f 1 ;
+    }
+    function ListKeyName()
+    {
+        ### List of Key:
+        local ArrayArg=( $* ) ;
         local __call_locality=( ListKeyName ) ;
-        for (( x=0 ; x <= ${#ArrayGitHubKeyName[@]}-1 ; x++ )) ; do 
-            echo -ne "FALSE\n${ArrayGitHubKeyName[$x]}\n" ; 
-        done
+		eval $( TransformArrayDecl=local TransformArrayScope=global TransformArray Array${ListKeyNameStorageSuffix:=GitHubKey}Name _EArrayName ) 
+		#eval "local _EArray=( \${Array${ListKeyNameStorageSuffix:=GitHubKey}Name[@]//\"/\\\"} ) ;" 
+		for (( intx=0 ; intx <= ${#_EArrayName[@]}-1 ; intx++ )) ; do 
+			echo -ne "FALSE\n${_EArray[${intx}]}\n" ; 
+		done 
     }
     function ExchangeKeyPair( ) 
     {
+        ### List of Key:
         local ArrayArg=( $* ) ;
         local __call_locality=( ExchangeKeyPair )       
         local PathSSH=${HOME}/.ssh ; 

@@ -6,20 +6,76 @@ declare -a ArrayCreator=( Debian Ubuntu Fedora Mint ) ;
 declare -a ArrayPackageType=( DPKG APT YUM RPM ) ;
 declare -a ArrayPackageAction=( install update remove fix compile certify verify ) ;
 
+
+### Package Query function. 
+### give by-package, many option at once. 
+### 
+### Single package:
+### ex: GetPackage=flac PkgConfigQuery --cflags --libs
+### 
+### will output:
+### 
+### flac:--cflags:-I/usr/include/FLAC  
+### flac:--libs:-lFLAC -lm  
+### flac++:--cflags:-I/usr/include/FLAC++ -I/usr/include/FLAC  
+### flac++:--libs:-lFLAC++ -lFLAC -lm  
+### 
+###
+### Many Package : 
+### ex: GetPackage=samplerate,flac PkgConfigQuery --cflags --libs 
+### samplerate:--cflags: 
+### samplerate:--libs:-lsamplerate  
+### flac:--cflags:-I/usr/include/FLAC  
+### flac:--libs:-lFLAC -lm  
+### flac++:--cflags:-I/usr/include/FLAC++ -I/usr/include/FLAC  
+### flac++:--libs:-lFLAC++ -lFLAC -lm  
+
+function PkgConfigQuery()
+{ 
+    local ArrayArg=($*);
+    local __call_locality=( PkgConfigQuery );
+		local StrPackageList=${GetPackage:=flac} ;
+		local ArrayPackageListVar=( ${StrPackageList//,/ } ) ;
+		for (( intAx=0 ; intAx <= ${#ArrayPackageListVar[@]}-1 ; intAx++ )) ; do 
+			local CurrentPackage="${ArrayPackageListVar[${intAx}]}" ; 
+		  local _A=( $( pkg-config --list-all | cut -d " " -f 1 | egrep -i "${CurrentPackage}" | tr '[:cntrl:]' ' ' ) );
+		  local IntNbPackage=${#_A[@]} ;
+		  if [ ${IntNbPackage:=0} -gt 0 ]; then
+		      for ((x=0 ; x <= ${#_A[@]}-1 ; x++ ))
+		      do
+		          for ((cx=0 ; cx <= ${#ArrayArg[@]}-1 ; cx++ ))
+		          do
+		              res=$( pkg-config ${_A[${x}]} ${ArrayArg[${cx}]} );
+		              echo -ne "${_A[${x}]}:${ArrayArg[${cx}]}:${res}\n";
+		          done;
+		      done;
+		  else
+		      echo -ne "\n\n\tPackage Not Found\n" > /dev/stderr;
+		  fi
+	done 
+}
+
+unset StartApps
 function StartApps()
 { 
  local ArrayArg=( $* ) ; 
  local __call_locality=( StartApps ) ; 
  local AppsRefresh=${StartAppsRefresh:=4} ; 
  local Apps=${StartAppsCmd:=rezound --audio-method=jack} ; 
- local ScanApps=${StartAppsScan:=rezound} ;  
- while [ 1 ] ; do 
+ local ScanApps=${StartAppsScan:=rezound} ; 
+	local StrAppsStopSig=/home/${USER}/stop_${ScanApps}
+ local IsStopSig
+	IsStopSig=$( test -e ${StrAppsStopSig} && echo 1 );
+ while [ ${IsStopSig:=0} -eq 0 ] ; do 
   local isApps=$( ps -eo pid,command | grep -v egrep | egrep -ic "${ScanApps}" ) ; 
   if [ ${isApp:=0} -eq 0 ] ; then 
    eval ${Apps} ; 
   fi ; 
   sleep ${AppsRefres} ; 
-  done ; 
+		IsStopSig=$( test -e ${StrAppsStopSig} && echo 1 ) ;
+ done ; 
+	rm -f ${StrAppsStopSig} ;
+	echo -ne "Exiting signal catch for Application ${Apps} to cancel respawing.\n" > /dev/stderr 
 }
 
 function Survey_kill_apps()    
@@ -28,7 +84,7 @@ function Survey_kill_apps()
     {
         local __call_locality=( Survey_kil_apps ) ; 
         local ArrayArg=( $* ) ; 
-        kill -9 $( ps -eo pid,command | egrep -i "${ArrayArg[0]}" | grep -v "egrep" | cut -d " " -f 1 )
+        kill -9 $( ps -eo pid,command | egrep -i "${ArrayArg[0]}" | grep -v "egrep" | sed 's/^[\ \t]*//g' | cut -d " " -f 1 )
     }
     local __call_locality=( Survey_kil_apps ) ; 
     local ArrayArg=( $* ) ; 
@@ -57,6 +113,102 @@ function DpkgGetInlineBuildFlags()
   local CmdEval=( "cat" "${DpkgGetInlineBuildFlagsPath:=/etc/dpkg/}"${DpkgGetInlineBuildFlagsFile:=buildflags.conf} "|" """sed -e 's/^\(SET\ \)\([a-zA-Z]*FLAGS\)\([\t\ ]*\)/\2=/g'""" "|" tr """'[:cntrl:]\' ' '""" ) ;
   eval "${CmdEval[@]}" ;
 
+}
+
+function DebianAptSrcCompiler()
+{
+	local __call_locality=( DebianAptSrcCompiler ) ; 
+	local ArrayArg=$( $* ) ; 
+  	local ArrayPackageName=( ${DebianAptSrcCompilerPackage//;/ } ) ;
+	local CompilerVersion=${DebianAptSrcCompilerVersion:=4.4} ; 
+	local StrAptProc=${DebianAptSrcCompilerPackageAptProc:=clean;install;build}
+	local AddPatch=${DebianAptSrcCompilerPatch:=True} ;
+	local ArrayAptSrcProc=( ${StrAptProc//;/ }  ) ; 
+	local StrPatchOpt="" ; 
+	local res_exec=0 ; 
+	local StrPath=${DebianAptSrcCompilerPath:=/usr/local/src/apt} ;
+	if [ ${AddPatch:=True} == "True" ]; then 
+		StrPatchOpt="-p" ;
+	else
+		StrPatchOpt="" ;
+	fi 
+	for Package in ${ArrayPackageName[@]} ; do 
+		local old_dir=$( pwd )
+		test ! -d ${StrPath}/${Package} && mkdir -p ${StrPath}/${Package} ;
+		cd ${StrPath}/${Package} ; 
+		apt-src update ;
+		local UpdateState=$? ;
+		if [ ${UpdateState:=0} -eq 0 ] ; then 
+			echo -ne "\t\t----- Building -----\n\t\t\t${Package}\n\n" > /dev/stderr ; 
+			for item in ${ArrayAptSrcProc[@]} ; do 
+				echo -ne "\n\n\n\t\t----- APT-SRC STEP: -----\n\t\t\t${item}\n\n\n" > /dev/stderr ; 
+				CC=${DebianAptSrcCompilerCBaseName:=/usr/bin/x86_64-linux-gnu-gcc-}${CompilerVersion} \
+				CXX=${DebianAptSrcCompilerCXXBaseName:=/usr/bin/x86_64-linux-gnu-g++-}${CompilerVersion} \
+				apt-src ${item} ${Package} ${StrPatchOpt} ; 
+				res_exec=$? ; 
+				echo -ne "\n\n\t\t-----------------\n\t\t Error Status: ${res_exec}\n\t\t-----------------\n\n" > /dev/stderr  ;  
+			done ;
+		else
+			echo -ne "\n\n\t\t-------------------------------------------------------\n\t\t Error compilation/installation of ${Package}\n\t\t-------------------------------------------------------\n" > /dev/stderr 
+		fi 
+		cd ${old_dir}  ;
+	done 
+}
+
+function find_edit_file()
+{ 
+	local ArrayArg=( $* ) ; 
+	local __call_locality=( find_edit_file ) ; 
+	for file in ${ArrayArg[@]} ; do 
+		find ./ -type f -iname "${file}" -exec gedit {} \; & 
+	done ; 
+}
+
+### Usefult having clause with many compiler available and having h2xml or ctag path filtering to apply,
+### having command like 
+###
+### -> h2xml /usr/include/math.h $( find /usr/include/ -type d -printf "-I%p " ) -c -o math_c.xml 
+###	 Will reduce output of some treatment... 
+###  ->>>
+###  ->>>CompilerError: In file included from /usr/include/math.h:34,
+###  ->>>                 from /tmp/tmpX768Me.cpp:1:
+###  ->>>/usr/include/x86_64-linux-gnu/bits/huge_val.h:28:18: error: missing binary operator before token "("
+###  ->>>/usr/include/x86_64-linux-gnu/bits/huge_val.h:30:20: error: missing binary operator before token "("
+###  ->>>In file included from /tmp/tmpX768Me.cpp:1:
+###  ->>>/usr/include/math.h:403:42: error: missing binary operator before token "("
+###  ->>>In file included from /tmp/tmpX768Me.cpp:1:
+###  ->>>/usr/include/math.h:30: error: '__BEGIN_DECLS' does not name a type
+###  ->>>In file included from /usr/include/math.h:71,
+###  ->>>                 from /tmp/tmpX768Me.cpp:1:
+###  ->>>/usr/include/x86_64-linux-gnu/bits/mathcalls.h:55: error: '__' was not declared in this scope
+###  ->>>/usr/include/x86_64-linux-gnu/bits/mathcalls.h:55: error: 'acos' was not declared in this scope
+###  ->>>/usr/include/x86_64-linux-gnu/bits/mathcalls.h:55: error: '__CONCAT' cannot be used as a function
+###  ->>>/usr/include/x86_64-linux-gnu/bits/mathcalls.h:55: error: expected primary-expression before ')' token
+###  ->>>/usr/include/x86_64-linux-gnu/bits/mathcalls.h:55: error: initializer expression list treated as compound expression
+###  ->>>/usr/include/x86_64-linux-gnu/bits/mathcalls.h:55: error: expected ',' or ';' before '(' token
+###  ->>>/usr/include/x86_64-linux-gnu/bits/mathcalls.h:57: error: redefinition of 'double __CONCAT'
+###  ->>>/usr/include/x86_64-linux-gnu/bits/mathcalls.h:55: error: 'double __CONCAT' previously defined here
+###  ->>>/usr/include/x86_64-linux-gnu/bits/mathcalls.h:57: error: 'asin' was not declared in this scope
+###  ->>>/usr/include/x86_64-linux-gnu/bits/mathcalls.h:57: error: expected primary-expression before ')' token
+
+###
+###
+###
+
+function FindFilterPathExclusion()    
+{ 
+	local ArrayArg=( $* ) ; 
+	local __call_locality=( FindFilterPathExclusion ) ; 
+	local CurrentExlusion=${FindFilterPathKnowExclusion:=""} ; 
+	local SelectedPackagePath=${FindFilterPathName:="c++"} ; 
+	local SelectedMajor=${FindFilterMajorVer:=4} ; 
+	local SelectedMinor=${FindFilterMinorVer:=4} ; 
+	for (( intx=${FindFilterMinMajorVer:=0} ; intx <= ${FindFilterMaxMajorVer:=9} ; intx++ )) ; do 
+		if [ ${x} -eq ${SelectedMinor:=0}  ] ; then 
+			CurrentExlusion="${CurrentExlusion} -a ! -name \"${SelectedPackagePath}\${SelectedMajor}.${x}\"" ; 
+		fi ; 
+	done
+	echo -ne "${CurrentExlusion}" ; 
 }
 
 if [ ${VarFnctLib:=False} == "True" ] ; then
@@ -455,5 +607,6 @@ if [ ${VarFnctLib:=False} == "True" ] ; then
 
     }
 fi 
+
 
 
