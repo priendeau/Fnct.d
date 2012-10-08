@@ -199,14 +199,99 @@ function FindFilterPathExclusion()
 { 
 	local ArrayArg=( $* ) ; 
 	local __call_locality=( FindFilterPathExclusion ) ; 
+	### 
+	### The chainning mechanism , if there is already used filter, passing thru this 
+	### variable will add-it to current filter output. 
 	local CurrentExlusion=${FindFilterPathKnowExclusion:=""} ; 
+	
+	###
+	###
+	###
 	local SelectedPackagePath=${FindFilterPathName:="c++"} ; 
+
+	### - Will tell to filter function if this segment should be considered as
+	### first statement and in-middle statement... 
+  ### example, using FindFilterWithStartCond=True, for a clause for find to start adding -a ! -name "..." 
+	### in first statement of if will give command like 
+  ### find -type d [ -a ! -name "c++/4.4" ] <--- current filter . 
+  ### will simply be rejected or some warning may issued from . 
+
+	local StartFilterWithCondition=${FindFilterWithStartCond:=False};
+	local StrFilterPattern="${FindFilterPattern:=NAME/VER}";
+	### 	The FindFilterClause should be written like from Removing To adding
+	###   ex: with find, having removing or excluding pattern start like -a ! -name or -o ! -iname ...
+  ###       and adding or positive filter will include -a name, -o name ... 
+	###   and FindFilterClause should be written as : FindFilterClause="-a ! -name,-a name"
+	local StrConditionPattern=${FindFilterClause:=! -name, -name}
+
+	local StrTypeOfLogicForAnd=${FindFilterClauseAnd:=-a};
+	local StrTypeOfLogicForOr=${FindFilterClauseAnd:=-o};
+	local StrLogic=""
+	### FindFilterLogicSetTo default choice : ( And / Or )
+	### 
+	###
+
+	local DefaultLogic=${FindFilterLogicSetTo:=And}; 
+	if [ "${DefaultLogic}" == "And" ] ; then
+		StrLogic="${StrTypeOfLogicForAnd}" ;
+	else
+		StrLogic="${StrTypeOfLogicForOr}" ;
+	fi 
+
+	local ArrayClauseFilter ;
+	for(( intx=1 ; intx <= 2 ; intx++ )) ; do 
+		ArrayClauseFilter[${#ArrayClauseFilter[@]}]=$( echo "${StrConditionPattern}" | cut -d "," -f ${intx} ) ;
+	done 
+	
+
 	local SelectedMajor=${FindFilterMajorVer:=4} ; 
 	local SelectedMinor=${FindFilterMinorVer:=4} ; 
+	local TypeClauseFilter=0 ;
 	for (( intx=${FindFilterMinMajorVer:=0} ; intx <= ${FindFilterMaxMajorVer:=9} ; intx++ )) ; do 
-		if [ ${x} -eq ${SelectedMinor:=0}  ] ; then 
-			CurrentExlusion="${CurrentExlusion} -a ! -name \"${SelectedPackagePath}\${SelectedMajor}.${x}\"" ; 
-		fi ; 
+		local StrCriteronFilter=${StrFilterPattern};
+		local StrCriteronFilterPrefix="";
+			StrCriteronFilter=${StrCriteronFilter/NAME/${SelectedPackagePath}} ;
+			StrCriteronFilter=${StrCriteronFilter/VER/${SelectedMajor}.${intx}} ;
+
+		if [ ${intx} -ne ${SelectedMinor:=0}  ] ; then 
+			TypeClauseFilter=0 ;
+			if [ "${StartFilterWithCondition}" == "True" ] ; then 
+				StrCriteronFilterPrefix="${StrLogic} 1${ArrayClauseFilter[${TypeClauseFilter}]} \"${StrCriteronFilter}\"" ;
+			else
+				StrCriteronFilterPrefix="2${ArrayClauseFilter[${TypeClauseFilter}]} \"${StrCriteronFilter}\"" ;
+			fi ;
+		fi		
+
+		if [ ${intx} -eq ${FindFilterMinMajorVer:=0} ] ; then 
+			TypeClauseFilter=${TypeClauseFilter} ;
+			if [ "${StartFilterWithCondition}" == "True" ] ; then 
+				StrCriteronFilterPrefix="${StrLogic} ${ArrayClauseFilter[${TypeClauseFilter}]} \"${StrCriteronFilter}\"" ;
+			else
+				StrCriteronFilterPrefix="${ArrayClauseFilter[${TypeClauseFilter}]} \"${StrCriteronFilter}\"" ;
+			fi ;
+		else
+			if [ "${StartFilterWithCondition}" == "False" ] ; then 
+				StrCriteronFilterPrefix="${StrLogic} ${ArrayClauseFilter[${TypeClauseFilter}]} \"${StrCriteronFilter}\"" ;
+			else
+				StrCriteronFilterPrefix="${StrLogic} ${ArrayClauseFilter[${TypeClauseFilter}]} \"${StrCriteronFilter}\"" ;
+			fi ;
+			
+		fi
+
+
+		if [ ${intx} -eq ${SelectedMinor:=0} ] ; then 
+			TypeClauseFilter=1 ;
+			if [ "${StartFilterWithCondition}" == "True" ] ; then 
+				StrCriteronFilterPrefix="${StrLogic} ${ArrayClauseFilter[${TypeClauseFilter}]} ${StrCriteronFilter}" ;
+			else
+				if [ ${intx} -eq ${FindFilterMinMajorVer:=0} ] ; then 
+					StrCriteronFilterPrefix="${ArrayClauseFilter[${TypeClauseFilter}]} \"${StrCriteronFilter}\"" ;
+				else
+					StrCriteronFilterPrefix="${StrLogic} ${ArrayClauseFilter[1	]} \"${StrCriteronFilter}\"" ;				
+				fi
+			fi ;
+		fi
+		CurrentExlusion="${CurrentExlusion} ${StrCriteronFilterPrefix}" ;
 	done
 	echo -ne "${CurrentExlusion}" ; 
 }
