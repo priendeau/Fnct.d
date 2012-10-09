@@ -110,14 +110,14 @@ function Survey_kill_apps()
 { 
     function KillApps()
     {
-        local __call_locality=( Survey_kil_apps ) ; 
+        local __call_locality=( KillApps ) ; 
         local ArrayArg=( $* ) ; 
         kill -9 $( ps -eo pid,command | egrep -i "${ArrayArg[0]}" | grep -v "egrep" | sed 's/^[\ \t]*//g' | cut -d " " -f 1 )
     }
-    local __call_locality=( Survey_kil_apps ) ; 
+    local __call_locality=( SurveyApps ) ; 
     local ArrayArg=( $* ) ; 
 		if [ "${ArrayArg[0]}" = "--help" ] ; then 
-		 GetVarReference ${__call_locality[0]} ; 
+		 GetVarReference Survey_kill_apps ; 
 		else	 
 		  local StrApps=${SurveyApps:=rezound} ; 
 		  local IntDelay=${SurveyAppsRefresh:=4} ; 
