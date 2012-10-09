@@ -55,27 +55,55 @@ function PkgConfigQuery()
 	done 
 }
 
+function GetVarReference( )
+{
+	local ArrayArg=( $* ) ;
+	
+	function ParseInternalVar( )
+	{
+		local ArrayArg=( $* ) ;
+		local __call_locality=( ParseInternalVar ) ;
+		egrep -i ":=" |\
+			sed -r 's/(^[\ \t]*)//g;s/=\$/ \$/g;s/;//g' |\
+			cut -d ' ' -f 3- |\
+			sed 's/\(:=\)/ /g;s/\${//g;s/}$//g;s/\(^[A-Za-z0-9=_]* \)/Variable \1,\n\tDefault Value:/g' ; 
+	}
+	function ParseLocalityVar()
+	{
+		local ArrayArg=( $* ) ;
+		local __call_locality=( ParseLocalityVar ) ;
+		egrep "__call_locality" | sed 's/[\)\(]/ /g;s/;//g' | cut -d ' ' -f 7 ;	
+	}
+	echo -ne "Help:\n\nFunction ${ArrayArg[0]}\nDefault Variable Value:\n"; 
+	local CallLocalityInternalName=$( declare -f ${ArrayArg[0]} | ParseLocalityVar ) ; 
+	declare -f ${ArrayArg[0]} | egrep "${CallLocalityInternalName}" |  ParseInternalVar ; 
+}
+
 unset StartApps
 function StartApps()
 { 
  local ArrayArg=( $* ) ; 
  local __call_locality=( StartApps ) ; 
- local AppsRefresh=${StartAppsRefresh:=4} ; 
- local Apps=${StartAppsCmd:=rezound --audio-method=jack} ; 
- local ScanApps=${StartAppsScan:=rezound} ; 
-	local StrAppsStopSig=/home/${USER}/stop_${ScanApps}
- local IsStopSig
-	IsStopSig=$( test -e ${StrAppsStopSig} && echo 1 );
- while [ ${IsStopSig:=0} -eq 0 ] ; do 
-  local isApps=$( ps -eo pid,command | grep -v egrep | egrep -ic "${ScanApps}" ) ; 
-  if [ ${isApp:=0} -eq 0 ] ; then 
-   eval ${Apps} ; 
-  fi ; 
-  sleep ${AppsRefres} ; 
-		IsStopSig=$( test -e ${StrAppsStopSig} && echo 1 ) ;
- done ; 
-	rm -f ${StrAppsStopSig} ;
-	echo -ne "Exiting signal catch for Application ${Apps} to cancel respawing.\n" > /dev/stderr 
+ if [ "${ArrayArg[0]}" = "--help" ] ; then 
+	GetVarReference ${__call_locality[0]} ; 
+ else	 
+	 local AppsRefresh=${StartAppsRefresh:=4} ; 
+	 local Apps=${StartAppsCmd:=rezound --audio-method=jack} ; 
+	 local ScanApps=${StartAppsScan:=rezound} ; 
+		local StrAppsStopSig=/home/${USER}/stop_${ScanApps}
+	 local IsStopSig
+		IsStopSig=$( test -e ${StrAppsStopSig} && echo 1 );
+	 while [ ${IsStopSig:=0} -eq 0 ] ; do 
+		local isApps=$( ps -eo pid,command | grep -v egrep | egrep -ic "${ScanApps}" ) ; 
+		if [ ${isApp:=0} -eq 0 ] ; then 
+		 eval ${Apps} ; 
+		fi ; 
+		sleep ${AppsRefres} ; 
+			IsStopSig=$( test -e ${StrAppsStopSig} && echo 1 ) ;
+	 done ; 
+		rm -f ${StrAppsStopSig} ;
+		echo -ne "Exiting signal catch for Application ${Apps} to cancel respawing.\n" > /dev/stderr 
+ fi
 }
 
 function Survey_kill_apps()    
@@ -88,14 +116,18 @@ function Survey_kill_apps()
     }
     local __call_locality=( Survey_kil_apps ) ; 
     local ArrayArg=( $* ) ; 
-    local StrApps=${SurveyApps:=rezound} ; 
-    local IntDelay=${SurveyAppsRefresh:=4} ; 
-    while [ 1 ] ; do 
-        test -e /home/maxiste/kill_${StrApps} && \
-            rm -f /home/maxiste/kill_${StrApps} && \
-            KillApps ${StrApps} 
-        sleep ${IntDelay} ; 
-    done ; 
+		if [ "${ArrayArg[0]}" = "--help" ] ; then 
+		 GetVarReference ${__call_locality[0]} ; 
+		else	 
+		  local StrApps=${SurveyApps:=rezound} ; 
+		  local IntDelay=${SurveyAppsRefresh:=4} ; 
+		  while [ 1 ] ; do 
+		      test -e /home/maxiste/kill_${StrApps} && \
+		          rm -f /home/maxiste/kill_${StrApps} && \
+		          KillApps ${StrApps} 
+		      sleep ${IntDelay} ; 
+		  done ; 
+		fi
 }
 
 ### Usefull for python installer using pip. 
@@ -110,8 +142,12 @@ function DpkgGetInlineBuildFlags()
 {
   local __call_locality=( DpkgGetInlineBuildFlags ) ;
   local ArrayArg=( $* ) ;
-  local CmdEval=( "cat" "${DpkgGetInlineBuildFlagsPath:=/etc/dpkg/}"${DpkgGetInlineBuildFlagsFile:=buildflags.conf} "|" """sed -e 's/^\(SET\ \)\([a-zA-Z]*FLAGS\)\([\t\ ]*\)/\2=/g'""" "|" tr """'[:cntrl:]\' ' '""" ) ;
-  eval "${CmdEval[@]}" ;
+ 	if [ "${ArrayArg[0]}" = "--help" ] ; then 
+		GetVarReference ${__call_locality[0]} ; 
+ 	else	 
+  	local CmdEval=( "cat" "${DpkgGetInlineBuildFlagsPath:=/etc/dpkg/}"${DpkgGetInlineBuildFlagsFile:=buildflags.conf} "|" """sed -e 's/^\(SET\ \)\([a-zA-Z]*FLAGS\)\([\t\ ]*\)/\2=/g'""" "|" tr """'[:cntrl:]\' ' '""" ) ;
+  	eval "${CmdEval[@]}" ;
+	fi 
 
 }
 
@@ -119,7 +155,7 @@ function DebianAptSrcCompiler()
 {
 	local __call_locality=( DebianAptSrcCompiler ) ; 
 	local ArrayArg=$( $* ) ; 
-  	local ArrayPackageName=( ${DebianAptSrcCompilerPackage//;/ } ) ;
+  local ArrayPackageName=( ${DebianAptSrcCompilerPackage//;/ } ) ;
 	local CompilerVersion=${DebianAptSrcCompilerVersion:=4.4} ; 
 	local StrAptProc=${DebianAptSrcCompilerPackageAptProc:=clean;install;build}
 	local AddPatch=${DebianAptSrcCompilerPatch:=True} ;
@@ -127,32 +163,36 @@ function DebianAptSrcCompiler()
 	local StrPatchOpt="" ; 
 	local res_exec=0 ; 
 	local StrPath=${DebianAptSrcCompilerPath:=/usr/local/src/apt} ;
-	if [ ${AddPatch:=True} == "True" ]; then 
-		StrPatchOpt="-p" ;
-	else
-		StrPatchOpt="" ;
-	fi 
-	for Package in ${ArrayPackageName[@]} ; do 
-		local old_dir=$( pwd )
-		test ! -d ${StrPath}/${Package} && mkdir -p ${StrPath}/${Package} ;
-		cd ${StrPath}/${Package} ; 
-		apt-src update ;
-		local UpdateState=$? ;
-		if [ ${UpdateState:=0} -eq 0 ] ; then 
-			echo -ne "\t\t----- Building -----\n\t\t\t${Package}\n\n" > /dev/stderr ; 
-			for item in ${ArrayAptSrcProc[@]} ; do 
-				echo -ne "\n\n\n\t\t----- APT-SRC STEP: -----\n\t\t\t${item}\n\n\n" > /dev/stderr ; 
-				CC=${DebianAptSrcCompilerCBaseName:=/usr/bin/x86_64-linux-gnu-gcc-}${CompilerVersion} \
-				CXX=${DebianAptSrcCompilerCXXBaseName:=/usr/bin/x86_64-linux-gnu-g++-}${CompilerVersion} \
-				apt-src ${item} ${Package} ${StrPatchOpt} ; 
-				res_exec=$? ; 
-				echo -ne "\n\n\t\t-----------------\n\t\t Error Status: ${res_exec}\n\t\t-----------------\n\n" > /dev/stderr  ;  
-			done ;
+ 	if [ "${ArrayArg[0]}" = "--help" ] ; then 
+		GetVarReference ${__call_locality[0]} ; 
+ 	else	 	
+		if [ ${AddPatch:=True} == "True" ]; then 
+			StrPatchOpt="-p" ;
 		else
-			echo -ne "\n\n\t\t-------------------------------------------------------\n\t\t Error compilation/installation of ${Package}\n\t\t-------------------------------------------------------\n" > /dev/stderr 
+			StrPatchOpt="" ;
 		fi 
-		cd ${old_dir}  ;
-	done 
+		for Package in ${ArrayPackageName[@]} ; do 
+			local old_dir=$( pwd )
+			test ! -d ${StrPath}/${Package} && mkdir -p ${StrPath}/${Package} ;
+			cd ${StrPath}/${Package} ; 
+			apt-src update ;
+			local UpdateState=$? ;
+			if [ ${UpdateState:=0} -eq 0 ] ; then 
+				echo -ne "\t\t----- Building -----\n\t\t\t${Package}\n\n" > /dev/stderr ; 
+				for item in ${ArrayAptSrcProc[@]} ; do 
+					echo -ne "\n\n\n\t\t----- APT-SRC STEP: -----\n\t\t\t${item}\n\n\n" > /dev/stderr ; 
+					CC=${DebianAptSrcCompilerCBaseName:=/usr/bin/x86_64-linux-gnu-gcc-}${CompilerVersion} \
+					CXX=${DebianAptSrcCompilerCXXBaseName:=/usr/bin/x86_64-linux-gnu-g++-}${CompilerVersion} \
+					apt-src ${item} ${Package} ${StrPatchOpt} ; 
+					res_exec=$? ; 
+					echo -ne "\n\n\t\t-----------------\n\t\t Error Status: ${res_exec}\n\t\t-----------------\n\n" > /dev/stderr  ;  
+				done ;
+			else
+				echo -ne "\n\n\t\t-------------------------------------------------------\n\t\t Error compilation/installation of ${Package}\n\t\t-------------------------------------------------------\n" > /dev/stderr 
+			fi 
+			cd ${old_dir}  ;
+		done 
+	fi
 }
 
 function find_edit_file()
@@ -199,101 +239,106 @@ function FindFilterPathExclusion()
 { 
 	local ArrayArg=( $* ) ; 
 	local __call_locality=( FindFilterPathExclusion ) ; 
-	### 
-	### The chainning mechanism , if there is already used filter, passing thru this 
-	### variable will add-it to current filter output. 
-	local CurrentExlusion=${FindFilterPathKnowExclusion:=""} ; 
+ 	if [ "${ArrayArg[0]}" = "--help" ] ; then 
+		GetVarReference ${__call_locality[0]} ; 
+ 	else	 
+
+		### 
+		### The chainning mechanism , if there is already used filter, passing thru this 
+		### variable will add-it to current filter output. 
+		local CurrentExlusion=${FindFilterPathKnowExclusion:=""} ; 
 	
-	###
-	###
-	###
-	local SelectedPackagePath=${FindFilterPathName:="c++"} ; 
+		###
+		###
+		###
+		local SelectedPackagePath=${FindFilterPathName:="c++"} ; 
 
-	### - Will tell to filter function if this segment should be considered as
-	### first statement and in-middle statement... 
-  ### example, using FindFilterWithStartCond=True, for a clause for find to start adding -a ! -name "..." 
-	### in first statement of if will give command like 
-  ### find -type d [ -a ! -name "c++/4.4" ] <--- current filter . 
-  ### will simply be rejected or some warning may issued from . 
+		### - Will tell to filter function if this segment should be considered as
+		### first statement and in-middle statement... 
+		### example, using FindFilterWithStartCond=True, for a clause for find to start adding -a ! -name "..." 
+		### in first statement of if will give command like 
+		### find -type d [ -a ! -name "c++/4.4" ] <--- current filter . 
+		### will simply be rejected or some warning may issued from . 
 
-	local StartFilterWithCondition=${FindFilterWithStartCond:=False};
-	local StrFilterPattern="${FindFilterPattern:=NAME/VER}";
-	### 	The FindFilterClause should be written like from Removing To adding
-	###   ex: with find, having removing or excluding pattern start like -a ! -name or -o ! -iname ...
-  ###       and adding or positive filter will include -a name, -o name ... 
-	###   and FindFilterClause should be written as : FindFilterClause="-a ! -name,-a name"
-	local StrConditionPattern=${FindFilterClause:=! -name, -name}
+		local StartFilterWithCondition=${FindFilterWithStartCond:=False};
+		local StrFilterPattern="${FindFilterPattern:=NAME/VER}";
+		### 	The FindFilterClause should be written like from Removing To adding
+		###   ex: with find, having removing or excluding pattern start like -a ! -name or -o ! -iname ...
+		###       and adding or positive filter will include -a name, -o name ... 
+		###   and FindFilterClause should be written as : FindFilterClause="-a ! -name,-a name"
+		local StrConditionPattern=${FindFilterClause:=! -name, -name}
 
-	local StrTypeOfLogicForAnd=${FindFilterClauseAnd:=-a};
-	local StrTypeOfLogicForOr=${FindFilterClauseAnd:=-o};
-	local StrLogic=""
-	### FindFilterLogicSetTo default choice : ( And / Or )
-	### 
-	###
+		local StrTypeOfLogicForAnd=${FindFilterClauseAnd:=-a};
+		local StrTypeOfLogicForOr=${FindFilterClauseAnd:=-o};
+		local StrLogic=""
+		### FindFilterLogicSetTo default choice : ( And / Or )
+		### 
+		###
 
-	local DefaultLogic=${FindFilterLogicSetTo:=And}; 
-	if [ "${DefaultLogic}" == "And" ] ; then
-		StrLogic="${StrTypeOfLogicForAnd}" ;
-	else
-		StrLogic="${StrTypeOfLogicForOr}" ;
-	fi 
-
-	local ArrayClauseFilter ;
-	for(( intx=1 ; intx <= 2 ; intx++ )) ; do 
-		ArrayClauseFilter[${#ArrayClauseFilter[@]}]=$( echo "${StrConditionPattern}" | cut -d "," -f ${intx} ) ;
-	done 
-	
-
-	local SelectedMajor=${FindFilterMajorVer:=4} ; 
-	local SelectedMinor=${FindFilterMinorVer:=4} ; 
-	local TypeClauseFilter=0 ;
-	for (( intx=${FindFilterMinMajorVer:=0} ; intx <= ${FindFilterMaxMajorVer:=9} ; intx++ )) ; do 
-		local StrCriteronFilter=${StrFilterPattern};
-		local StrCriteronFilterPrefix="";
-			StrCriteronFilter=${StrCriteronFilter/NAME/${SelectedPackagePath}} ;
-			StrCriteronFilter=${StrCriteronFilter/VER/${SelectedMajor}.${intx}} ;
-
-		if [ ${intx} -ne ${SelectedMinor:=0}  ] ; then 
-			TypeClauseFilter=0 ;
-			if [ "${StartFilterWithCondition}" == "True" ] ; then 
-				StrCriteronFilterPrefix="${StrLogic} 1${ArrayClauseFilter[${TypeClauseFilter}]} \"${StrCriteronFilter}\"" ;
-			else
-				StrCriteronFilterPrefix="2${ArrayClauseFilter[${TypeClauseFilter}]} \"${StrCriteronFilter}\"" ;
-			fi ;
-		fi		
-
-		if [ ${intx} -eq ${FindFilterMinMajorVer:=0} ] ; then 
-			TypeClauseFilter=${TypeClauseFilter} ;
-			if [ "${StartFilterWithCondition}" == "True" ] ; then 
-				StrCriteronFilterPrefix="${StrLogic} ${ArrayClauseFilter[${TypeClauseFilter}]} \"${StrCriteronFilter}\"" ;
-			else
-				StrCriteronFilterPrefix="${ArrayClauseFilter[${TypeClauseFilter}]} \"${StrCriteronFilter}\"" ;
-			fi ;
+		local DefaultLogic=${FindFilterLogicSetTo:=And}; 
+		if [ "${DefaultLogic}" == "And" ] ; then
+			StrLogic="${StrTypeOfLogicForAnd}" ;
 		else
-			if [ "${StartFilterWithCondition}" == "False" ] ; then 
-				StrCriteronFilterPrefix="${StrLogic} ${ArrayClauseFilter[${TypeClauseFilter}]} \"${StrCriteronFilter}\"" ;
-			else
-				StrCriteronFilterPrefix="${StrLogic} ${ArrayClauseFilter[${TypeClauseFilter}]} \"${StrCriteronFilter}\"" ;
-			fi ;
-			
-		fi
+			StrLogic="${StrTypeOfLogicForOr}" ;
+		fi 
 
+		local ArrayClauseFilter ;
+		for(( intx=1 ; intx <= 2 ; intx++ )) ; do 
+			ArrayClauseFilter[${#ArrayClauseFilter[@]}]=$( echo "${StrConditionPattern}" | cut -d "," -f ${intx} ) ;
+		done 
+	
 
-		if [ ${intx} -eq ${SelectedMinor:=0} ] ; then 
-			TypeClauseFilter=1 ;
-			if [ "${StartFilterWithCondition}" == "True" ] ; then 
-				StrCriteronFilterPrefix="${StrLogic} ${ArrayClauseFilter[${TypeClauseFilter}]} ${StrCriteronFilter}" ;
-			else
-				if [ ${intx} -eq ${FindFilterMinMajorVer:=0} ] ; then 
-					StrCriteronFilterPrefix="${ArrayClauseFilter[${TypeClauseFilter}]} \"${StrCriteronFilter}\"" ;
+		local SelectedMajor=${FindFilterMajorVer:=4} ; 
+		local SelectedMinor=${FindFilterMinorVer:=4} ; 
+		local TypeClauseFilter=0 ;
+		for (( intx=${FindFilterMinMajorVer:=0} ; intx <= ${FindFilterMaxMajorVer:=9} ; intx++ )) ; do 
+			local StrCriteronFilter=${StrFilterPattern};
+			local StrCriteronFilterPrefix="";
+				StrCriteronFilter=${StrCriteronFilter/NAME/${SelectedPackagePath}} ;
+				StrCriteronFilter=${StrCriteronFilter/VER/${SelectedMajor}.${intx}} ;
+
+			if [ ${intx} -ne ${SelectedMinor:=0}  ] ; then 
+				TypeClauseFilter=0 ;
+				if [ "${StartFilterWithCondition}" == "True" ] ; then 
+					StrCriteronFilterPrefix="${StrLogic} 1${ArrayClauseFilter[${TypeClauseFilter}]} \"${StrCriteronFilter}\"" ;
 				else
-					StrCriteronFilterPrefix="${StrLogic} ${ArrayClauseFilter[1	]} \"${StrCriteronFilter}\"" ;				
-				fi
-			fi ;
-		fi
-		CurrentExlusion="${CurrentExlusion} ${StrCriteronFilterPrefix}" ;
-	done
-	echo -ne "${CurrentExlusion}" ; 
+					StrCriteronFilterPrefix="2${ArrayClauseFilter[${TypeClauseFilter}]} \"${StrCriteronFilter}\"" ;
+				fi ;
+			fi		
+
+			if [ ${intx} -eq ${FindFilterMinMajorVer:=0} ] ; then 
+				TypeClauseFilter=${TypeClauseFilter} ;
+				if [ "${StartFilterWithCondition}" == "True" ] ; then 
+					StrCriteronFilterPrefix="${StrLogic} ${ArrayClauseFilter[${TypeClauseFilter}]} \"${StrCriteronFilter}\"" ;
+				else
+					StrCriteronFilterPrefix="${ArrayClauseFilter[${TypeClauseFilter}]} \"${StrCriteronFilter}\"" ;
+				fi ;
+			else
+				if [ "${StartFilterWithCondition}" == "False" ] ; then 
+					StrCriteronFilterPrefix="${StrLogic} ${ArrayClauseFilter[${TypeClauseFilter}]} \"${StrCriteronFilter}\"" ;
+				else
+					StrCriteronFilterPrefix="${StrLogic} ${ArrayClauseFilter[${TypeClauseFilter}]} \"${StrCriteronFilter}\"" ;
+				fi ;
+			
+			fi
+
+
+			if [ ${intx} -eq ${SelectedMinor:=0} ] ; then 
+				TypeClauseFilter=1 ;
+				if [ "${StartFilterWithCondition}" == "True" ] ; then 
+					StrCriteronFilterPrefix="${StrLogic} ${ArrayClauseFilter[${TypeClauseFilter}]} ${StrCriteronFilter}" ;
+				else
+					if [ ${intx} -eq ${FindFilterMinMajorVer:=0} ] ; then 
+						StrCriteronFilterPrefix="${ArrayClauseFilter[${TypeClauseFilter}]} \"${StrCriteronFilter}\"" ;
+					else
+						StrCriteronFilterPrefix="${StrLogic} ${ArrayClauseFilter[1	]} \"${StrCriteronFilter}\"" ;				
+					fi
+				fi ;
+			fi
+			CurrentExlusion="${CurrentExlusion} ${StrCriteronFilterPrefix}" ;
+		done
+		echo -ne "${CurrentExlusion}" ; 
+	fi 
 }
 
 if [ ${VarFnctLib:=False} == "True" ] ; then
