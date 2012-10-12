@@ -1,12 +1,14 @@
 
-
+. /etc/init.d/Fnct.d/fnct_debian_lib
 
 function GitHubCommit()
 { 
  local ArrayArg=( $* ) ; 
+ local __call_locality=( GitHubCommit )
  function GetSelectedFile()    
  { 
-  local FileSelection=$( zenity --width=640 --height=200 --file-selection --filename=${GitHubFilePath:=/home/maxiste/github/Technical-PorteFolio/Python} ) ; 
+ 	local StrFileToCommit=${GitHubCommitFilePath:=/home/maxiste/github/Technical-PorteFolio/Python}
+  local FileSelection=$( zenity --width=640 --height=200 --file-selection --multiple --filename="${StrFileToCommit}" --separator=',' ) ; 
   local FileCommit=( $( echo ${FileSelection//\// } ) ) ; 
   local FileCommited=${FileCommit[$(( ${#FileCommit[@]}-1 ))]} ; 
   echo "${FileCommited}" ; 
@@ -14,24 +16,33 @@ function GitHubCommit()
  function GitCommit( )
  {
   local ArrayArg=( $* ) ;
-  local CommitMessage=$( zenity --title="GitHub, commiting file ${ArrayArg[0]}" --width=640 --height=200 --ok-label="commit" --text-info --editable --text="Git Commit message" ) ; 
-  local ErrorCommit=$? ;
-  if [ ${ErrorCommit:=0} -eq 0 ] ; then 
-   git commit -m "${CommitMessage}" ${ArrayArg[0]} ; 
-   git push origin master 
-  else
-   echo -ne "File ${ArrayArg[0]} not committed, Cancel was pressed.\n" > /dev/stderr ;  
-  fi
- } 
- local Arg0=${ArrayArg[0]} ;
- if [ ${Arg0:=--selection} == "--selection" ] ; then 
-  local StrFileCommit=$( GetSelectedFile ) ;  
-  GitCommit ${StrFileCommit} ; 
- else
-  test ! -e ${ArrayArg[0]} && echo -ne "\nFile ${ArrayArg[0]} can not be commited, does not exist.\n" > /dev/stderr ;
-  test -e ${ArrayArg[0]} && GitCommit ${ArrayArg[0]} ; 
+  local StrMessageCommit=${GitHubCommitMessageCommiting:=Git Commit message} ;
+  local ArrayFileCommit=( ${GitCommitFileList/,/ } ) ;
+  for (( intx=0 ; intx <= $(( ${#ArrayFileCommit[@]}-1 )) ; intx++ )) ; do 
+  	local StrFile="${ArrayFileCommit[${intx}]}" ;
+		 local CommitMessage=$( zenity --title="GitHub, commiting file ${StrFile}" --width=640 --height=200 --ok-label="commit" --text-info --editable --text="${StrMessageCommit}" ) ; 
+		 local ErrorCommit=$? ;
+		 if [ ${ErrorCommit:=0} -eq 0 ] ; then 
+		  git commit -m "${CommitMessage}" ${StrFile} ; 
+		  git push origin master 
+		 else
+		  echo -ne "File ${ArrayArg[0]} not committed, Cancel was pressed.\n" > /dev/stderr ;  
+		 fi
+  
+  done 
+ }
+ local Arg0=${ArrayArg[0]} ; 
+	if [ "${Arg0:=--start}" == "--help" ] ; then 
+		GetVarReference ${__call_locality[0]} ; 
+ else	 
+		if [ ${Arg0:=--selection} == "--selection" ] ; then 
+		 local StrFileCommit=$( GetSelectedFile ) ; 
+		 GitCommitFileList=${StrFileCommit} GitCommit "${StrFileCommit}" ; 
+		else
+		 test ! -e ${ArrayArg[0]} && echo -ne "\nFile ${ArrayArg[0]} can not be commited, does not exist.\n" > /dev/stderr ;
+		 test -e ${ArrayArg[0]} && GitCommit ${ArrayArg[0]} ; 
+		fi
  fi
-
 }
 
 function GitAutoCommit ()    
@@ -40,7 +51,7 @@ function GitAutoCommit ()
  local Arg0=${ArrayArg[0]} ;
  
  while [ 1 ] ; do 
-  GitHubFilePath=${TodayGitHub[${TodayIndex:=${Arg0}}]} GitHubCommit ${TodayGitFile[${TodayIndex:=${Arg0}}]]}  ; 
+  GitHubCommitFilePath=${TodayGitHub[${TodayIndex:=${Arg0}}]} GitHubCommit ${TodayGitFile[${TodayIndex:=${Arg0}}]]}  ; 
  done 
 } 
 
