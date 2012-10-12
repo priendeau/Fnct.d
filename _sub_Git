@@ -5,13 +5,35 @@ function GitHubCommit()
 { 
  local ArrayArg=( $* ) ; 
  local __call_locality=( GitHubCommit )
+	local StrCommitAction=${GitHubCommitActionPush:=push} ;
+	local StrBranchLocation=${GitHubCommitBrLocation:=origin}; 
+	local StrBranchName=${GitHubCommitBranch:=master} ;
+	
+	function GitCPAction()
+	{
+		local __call_locality=( GitCommitPushAction ); 
+		local ArrayArg=( $* ) ; 
+	 if [ ${GitCPActionLength:=0 :=0} -gt 5 ] ; then 
+	  git commit -m "${GitCPActionCommitMessage}" ${GitCPActionFile} ; 
+	  git ${GitCPActionIs:=push} ${GitCPActionPoint:=origin} ${GitCPActionBranch:=master} ;
+	 else
+	  echo -ne "File ${GitCPActionFile} not committed, Cancel was pressed.\n" > /dev/stderr ;  
+	 fi
+		
+	}
+ 
  function GetSelectedFile()    
  { 
  	local StrFileToCommit=${GitHubCommitFilePath:=/home/maxiste/github/Technical-PorteFolio/Python}
   local FileSelection=$( zenity --width=640 --height=200 --file-selection --multiple --filename="${StrFileToCommit}" --separator=',' ) ; 
-  local FileCommit=( $( echo ${FileSelection//\// } ) ) ; 
-  local FileCommited=${FileCommit[$(( ${#FileCommit[@]}-1 ))]} ; 
-  echo "${FileCommited}" ; 
+  local ArrayReturnedFile=( ) ;
+  local FileCommit=( $( echo ${FileSelection//,/ } ) ) ; 
+  for (( intx=0 ; intx <= ${#FileCommit[@]} ; intx++ )) ; do 
+  	local FileName=( ${FileCommit[${intx}]//\// } ) ;
+  	ArrayReturnedFile[${#ArrayReturnedFile[@]}]="${FileName[ $(( ${#FileName[@]} - 1 ))]}" ;
+  done 
+  #local FileCommited=${FileCommit[$(( ${#FileCommit[@]}-1 ))]} ; 
+  echo "${ArrayReturnedFile[@]// /,}" ; 
  } 
  function GitCommit( )
  {
@@ -22,13 +44,8 @@ function GitHubCommit()
   	local StrFile="${ArrayFileCommit[${intx}]}" ;
 		 local CommitMessage=$( zenity --title="GitHub, commiting file ${StrFile}" --width=640 --height=200 --ok-label="commit" --text-info --editable --text="${StrMessageCommit}" ) ; 
 		 local ErrorCommit=$? ;
-		 if [ ${ErrorCommit:=0} -eq 0 ] ; then 
-		  git commit -m "${CommitMessage}" ${StrFile} ; 
-		  git push origin master 
-		 else
-		  echo -ne "File ${ArrayArg[0]} not committed, Cancel was pressed.\n" > /dev/stderr ;  
-		 fi
-  
+		 local IntLenMessage=${#CommitMessage} ;
+  	GitCPActionIs=${GitCommitAction} GitCPActionPoint=${GitCommitBranchLocation} GitCPActionBranch=${GitCommitBranchName} GitCPActionLength=${IntLenMessage} GitCPActionCommitMessage=${CommitMessage} GitCPActionFile=${StrFile} GitCPAction ; 
   done 
  }
  local Arg0=${ArrayArg[0]} ; 
@@ -37,7 +54,7 @@ function GitHubCommit()
  else	 
 		if [ ${Arg0:=--selection} == "--selection" ] ; then 
 		 local StrFileCommit=$( GetSelectedFile ) ; 
-		 GitCommitFileList=${StrFileCommit} GitCommit "${StrFileCommit}" ; 
+		 GitCommitBranchLocation=${StrBranchLocation} GitCommitBranchName=${StrBranchName} GitCommitAction=${StrCommitAction} GitCommitFileList="${StrFileCommit}" GitCommit  ; 
 		else
 		 test ! -e ${ArrayArg[0]} && echo -ne "\nFile ${ArrayArg[0]} can not be commited, does not exist.\n" > /dev/stderr ;
 		 test -e ${ArrayArg[0]} && GitCommit ${ArrayArg[0]} ; 
