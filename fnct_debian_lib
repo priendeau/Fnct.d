@@ -32,8 +32,8 @@ declare -a ArrayPackageAction=( install update remove fix compile certify verify
 
 function PkgConfigQuery()
 { 
-    local ArrayArg=($*);
-    local __call_locality=( PkgConfigQuery );
+  local ArrayArg=($*);
+  local __call_locality=( PkgConfigQuery );
 		local StrPackageList=${GetPackage:=flac} ;
 		local ArrayPackageListVar=( ${StrPackageList//,/ } ) ;
 		for (( intAx=0 ; intAx <= ${#ArrayPackageListVar[@]}-1 ; intAx++ )) ; do 
@@ -78,6 +78,98 @@ function GetVarReference( )
 	local CallLocalityInternalName=$( declare -f ${ArrayArg[0]} | ParseLocalityVar ) ; 
 	declare -f ${ArrayArg[0]} | egrep "${CallLocalityInternalName}" |  ParseInternalVar ; 
 }
+
+
+ ### GetOtherDate :
+ ###
+ ###
+ ###	Full-length example : 
+ ### Including Loop to create different day pattern
+ ###
+ ### hint:
+ ### - Having to check 1 day before and 1 day after need to combine 
+ ### settign GetOtherDateReferenceFormat="__INT__ day" , and not "__INT__ day ago", give you positive forward in time
+ ### setting GetOtherDateIsLoop=True 
+ ### setting GetOtherDateLoop=-1,1 ( tricky but work ) , create interleave between -1 to 1, so it's -1 day in futur, 0 day in futur and 1 day in futur... 
+ 
+ ### GetOtherDateReferenceFormat="__INT__ day ago"  GetOtherDateFormat="%Y%m%d" GetOtherDateIsLoop=True GetOtherDateLoop=1,4 GetOtherDateVerbose=True  GetOtherDate
+ ### Will display :
+ ### 
+ ### 20121010
+ ### 20121011
+ ### 20121012
+ ###
+ ### Short example :
+ ### GetOtherDate
+ ###
+ ### Will display :
+ ###
+ ### 20121011
+ ###
+ ### GetOtherDateReferenceFormat="__INT__ day ago"
+ ###
+ ###
+unset GetOtherDate ;
+
+function GetOtherDate()
+{
+		local __call_locality=( GetOtherDate );
+		local ArrayArg=( $* ) ; 
+		
+		function Verbosis()
+		{
+			local __call_locality=( Verbosis );
+			local StrMsg=${VerbosisMsg:=__TEXT__} ; 
+			local StrDevOut=${VerbosisDev:=/dev/stderr} ; 
+			local ArrayArg=( $* ) ; 
+			if [ ${ArrayArg[0]} == "True" ] ; then 
+				echo -ne "${StrMsg}" > ${StrDevOut} ;
+			fi
+			
+		}
+		
+		function DateFunc()
+		{
+			local __call_locality=( DateFunc ) ;
+			local ArrayArg=( $* ) ; 
+			eval """date +"${DateFuncFormat:=%Y%m%d}" -d '${DateFuncIndicator:=0 day}'""" ; 
+		}
+		
+		local StrDateIndicatorFormat=${GetOtherDateReferenceFormat:='__INT__ day'}
+		local StrDateIndicator=${StrDateIndicatorFormat/__INT__/${GetOtherDateReference:=0}}  ;
+		local StrDateFormat=${GetOtherDateFormat:=%Y%m%d} ;
+		local isLoop=${GetOtherDateIsLoop:=False} ;
+		local LoopRange=${GetOtherDateLoop:=0,3} ;
+		local ArrayRange=( ${LoopRange/,/ } ) ;
+		local OperRange="<=" ;  
+		local OperRangeIn="Intx++" ;
+		local OperBaseStart=${ArrayRange[0]} ;
+		local IsVerbose=${GetOtherDateVerbose=False} ;
+		local IntEndLoop=$(( ${ArrayRange[$((${#ArrayRange[@]}-1))]} ));
+		
+		local Arg0=${ArrayArg[0]}; 
+		
+ 	if [ "${Arg0:=--start}" == "--help" ] ; then 
+			GetVarReference ${__call_locality[0]} ; 
+	 else	 
+	 	if [ "${isLoop:=False}" == "True" ] ; then 
+				VerbosisMsg="ArrayRange, nb-element:${#ArrayRange[@]}, hold [ ${ArrayRange[@]} ]\n" Verbosis ${IsVerbose} ;
+				if (( ${ArrayRange[0]} > ${IntEndLoop} )) ; then 
+					OperRange=">=" ;
+					OperRangeIn="Intx--" ; 
+					OperBaseStart=${ArrayRange[$((${#ArrayRange[@]-1))}]} ;
+				fi		
+	 		VerbosisMsg="Looping from ${OperBaseStart} to ${IntEndLoop} \n" Verbosis ${IsVerbose} ;
+	 		for (( Intx=${OperBaseStart} ;  Intx ${OperRange} ${IntEndLoop} ; ${OperRangeIn} )) ; do 
+		 			StrDateIndicator="${StrDateIndicatorFormat/__INT__/${Intx}}" ; 
+		 			DateFuncFormat=${StrDateFormat} DateFuncIndicator=${StrDateIndicator} DateFunc ;
+	 		done
+	 	else 
+	 		DateFuncFormat=${StrDateFormat} DateFuncIndicator=${StrDateIndicator} DateFunc ;
+			fi
+ 	fi 
+}
+
 
 unset StartApps
 function StartApps()
