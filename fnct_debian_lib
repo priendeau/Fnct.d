@@ -33,27 +33,74 @@ declare -a ArrayPackageAction=( install update remove fix compile certify verify
 function PkgConfigQuery()
 { 
   local ArrayArg=($*);
-  local __call_locality=( PkgConfigQuery );
-		local StrPackageList=${GetPackage:=flac} ;
+  local __call_locality=( PkgConfigQuery ) ;
+	local Arg0=${ArrayArg[0]:=--start} ; 
+	local ArrayArgFlag=( ${ArrayArg[@]:1} ) ; 
+	local IntArgLen=${#ArrayArgFlag[@]} ;
+	local StrPackageList=${PkgConfigQueryGetPackage:=flac} ;
+	local StrFlagList=${PkgConfigQueryFlagList:=--libs,--static,--short-errors,--libs-only-l,--libs-only-other,--libs-only-L,--cflags,--cflags-only-I,--cflags-only-other} ;
+	local ArrayFlagTest=( ) ;
+	if [ ${IntArgLen:=0} -eq 0 ] ; then 
+		ArrayFlagTest=( ${StrFlagList//,/ } ) ; 
+	else
+		ArrayFlagTest=( ${ArrayArgFlag[@]} ) ; 
+	fi 
+ 
+ 	if [ "${Arg0:=--start}" == "--help" ] ; then 
+			GetVarReference ${__call_locality[0]} ; 
+	else
 		local ArrayPackageListVar=( ${StrPackageList//,/ } ) ;
 		for (( intAx=0 ; intAx <= ${#ArrayPackageListVar[@]}-1 ; intAx++ )) ; do 
 			local CurrentPackage="${ArrayPackageListVar[${intAx}]}" ; 
 		  local _A=( $( pkg-config --list-all | cut -d " " -f 1 | egrep -i "${CurrentPackage}" | tr '[:cntrl:]' ' ' ) );
 		  local IntNbPackage=${#_A[@]} ;
 		  if [ ${IntNbPackage:=0} -gt 0 ]; then
-		      for ((x=0 ; x <= ${#_A[@]}-1 ; x++ ))
-		      do
-		          for ((cx=0 ; cx <= ${#ArrayArg[@]}-1 ; cx++ ))
-		          do
-		              res=$( pkg-config ${_A[${x}]} ${ArrayArg[${cx}]} );
-		              echo -ne "${_A[${x}]}:${ArrayArg[${cx}]}:${res}\n";
+		      for ((x=0 ; x <= ${#_A[@]}-1 ; x++ )) ; do
+		          for ((cx=0 ; cx <= ${#ArrayFlagTest[@]}-1 ; cx++ )) ; do
+		              res=$( pkg-config ${_A[${x}]} ${ArrayFlagTest[${cx}]} );
+		              echo -ne "${_A[${x}]}:${ArrayFlagTest[${cx}]}:${res}\n";
 		          done;
 		      done;
 		  else
 		      echo -ne "\n\n\tPackage Not Found\n" > /dev/stderr;
 		  fi
-	done 
+		done 
+	fi 
 }
+
+### Default Fast reference Helper. 
+### Extract current Prefixed variables from your function and show it on stdout( screen output ). 
+### The prefixed variable are indicated on decalation of __call_locality which usually had same name has 
+### top function. 
+### Desc : It actively look inside the function code and extract value prefixed with function name...
+### was initially developped on $0, but change by creating subFunction, and some code may be reserved for private
+### use or recurrent-code with recurrent variable name, may be show and alter your perception of functionality of 
+### the design ...
+
+### Example to implement the body-helper. 
+### 
+### function Helper()
+### {
+###  __call_locality=( Helper ) ; 
+### 	local ArrayArg=( $* ) ; 
+### 	local Arg0=${ArrayArg[0]}; 
+###  local StrHelperInvolved=${HelperQuestionInvolved:=Nothing} ; ### <---1a 
+### 	if [ "${Arg0:=--start}" == "--help" ] ; then 
+###			GetVarReference ${__call_locality[0]} ; 
+###  else	
+###   ---> Normal Body event and code. 
+###  
+###   ... 
+###  fi 
+### }
+### 
+### Note, In case your Helper --help be tested, if it does not output only Prefixed var definition.
+### retreive all your variable from your command and do like example StrHelperInvolved in 1a
+### Create specific local variable and associate the content of your Prefixed variables, help get 
+### better body definition and reduce complexity by reading it... 
+### 
+
+
 
 function GetVarReference( )
 {
@@ -171,6 +218,24 @@ function GetOtherDate()
 }
 
 
+
+function kill_cmd()    
+{ 
+	local ArrayArg=( $* ) ; 
+	local __call_locality=( kill_cmd ) ;  
+	local IntDefaultKillSig=${kill_cmdDefaultSigInt:=-9} ;
+	if [ "${ArrayArg[0]}" = "--help" ] ; then 
+		GetVarReference ${__call_locality[0]} ; 
+	else
+		for (( x=0 ; x <= ${#ArrayArg[@]}-1 ; x++ )) ; do 
+			cmd=${ArrayArg[${x}] } ; 
+			kill ${IntDefaultKillSig} $( ps -eo pid,command | egrep -i "${cmd}" | grep -v grep | cut -d ' ' -f 1 ) ; 
+		done 
+	fi 
+}
+
+
+
 unset StartApps
 function StartApps()
 { 
@@ -221,6 +286,8 @@ function Survey_kill_apps()
 		  done ; 
 		fi
 }
+
+
 
 ### Usefull for python installer using pip. 
 ### Happen more than once have to call pip with another gcc compiler while test failed to compile many source

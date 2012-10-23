@@ -57,8 +57,14 @@ function GitHubCommit()
 		 GitCommitBranchLocation=${StrBranchLocation} GitCommitBranchName=${StrBranchName} GitCommitAction=${StrCommitAction} GitCommitFileList="${StrFileCommit}" GitCommit  ; 
 		else
 		 #test ! -e ${ArrayArg[0]} && echo -ne "\nFile ${ArrayArg[0]} can not be commited, does not exist.\n" > /dev/stderr ;
-		 local StrFileList=${ArrayArg[@]// /,}
-		 GitCommitBranchLocation=${StrBranchLocation} GitCommitBranchName=${StrBranchName} GitCommitAction=${StrCommitAction} GitCommitFileList="${StrFileList}" GitCommit  ; 
+		 if [ "${ArrayArg[0]}" != "" ] ; then 
+		 	GitCommitBranchLocation=${StrBranchLocation} GitCommitBranchName=${StrBranchName} GitCommitAction=${StrCommitAction} GitCommitFileList="${ArrayArg[0]}" GitCommit  ; 
+		 else
+		 	local StrFileList=${ArrayArg[@]// /,}
+		 	GitCommitBranchLocation=${StrBranchLocation} GitCommitBranchName=${StrBranchName} GitCommitAction=${StrCommitAction} GitCommitFileList="${StrFileList}" GitCommit  ; 
+		 fi	
+		 
+		 
 		fi
  fi
 }

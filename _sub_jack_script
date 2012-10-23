@@ -14,7 +14,7 @@ loop_jack_connection()
    echo -ne "${ArrayArg[@]}\n" > /dev/stderr ;
   }  
 
-		local StrDefaultServerNamelist=${LJCDefaultServerName:=jack000} ;
+		local StrDefaultServerNamelist=${LJCDefaultServerName:=NONE} ;
 		local StrOptionList="${LJCDefaultHardwareOption:=}" ;
 		local StrOpenPortList="${LJCNbOpenPort:=512}" ;
 		local StrAudioInterfaceList="${LJCAudioInterface:=alsa}" ;
@@ -28,7 +28,11 @@ loop_jack_connection()
 		local StrDefaultOptionList="${LJCDefaultOption:=--playback}" ;
 		local StrDeviceList="${LJCDevice:=default}" ;
 		local StrInterfaceOptionList="${LJCInterfaceOption:=}" ;
-		local CmdLine=( ${LJCDefaultJackServer:=/usr/local/bin/jackd} --name ${StrDefaultServerNamelist} ${StrOptionList}  --port-max ${StrOpenPortList} -d ${StrAudioInterfaceList} --rate ${StrRateList} --period ${StrPeriodLenList} --nperiods ${StrNbPeriodsList} --inchannels ${StrInputChannelList} --outchannels ${StrOutputChannelList} --input-latency ${StrInputLatencyList} --output-latency ${StrOutputLatencyList} ${StrDefaultOptionList} --device ${StrDeviceList} ${StrInterfaceOptionList} ) ; 		
+		if [ "${StrDefaultServerNamelist:=NONE}" == "NONE" ] ; then 
+			local CmdLine=( ${LJCDefaultJackServer:=/usr/local/bin/jackd} ${StrOptionList}  --port-max ${StrOpenPortList} -d ${StrAudioInterfaceList} --rate ${StrRateList} --period ${StrPeriodLenList} --nperiods ${StrNbPeriodsList} --inchannels ${StrInputChannelList} --outchannels ${StrOutputChannelList} --input-latency ${StrInputLatencyList} --output-latency ${StrOutputLatencyList} ${StrDefaultOptionList} --device ${StrDeviceList} ${StrInterfaceOptionList} ) ; 		
+		else
+			local CmdLine=( ${LJCDefaultJackServer:=/usr/local/bin/jackd} ${StrOptionList} --name ${StrDefaultServerNamelist} --port-max ${StrOpenPortList} -d ${StrAudioInterfaceList} --rate ${StrRateList} --period ${StrPeriodLenList} --nperiods ${StrNbPeriodsList} --inchannels ${StrInputChannelList} --outchannels ${StrOutputChannelList} --input-latency ${StrInputLatencyList} --output-latency ${StrOutputLatencyList} ${StrDefaultOptionList} --device ${StrDeviceList} ${StrInterfaceOptionList} ) ; 		
+		fi
 		
 		if [ "${ArrayArg[0]}" = "--help" ] ; then 
 			GetVarReference ${__call_locality[0]} ; 
@@ -44,7 +48,7 @@ loop_jack_connection()
 		  DisplayErrDev "\tPrefix Options:" 
 		  DisplayErrDev "\tLJCDefaultOption\t: Include jackd option:\n\t\t\t( --capture --playback --duplex )" 
 		  DisplayErrDev "\tLJCDefaultJackServer \t: default set to /usr/local/bin/jackd" 
-		  DisplayErrDev "\tLJCDefaultServerName \t: default set to rack000" 
+		  DisplayErrDev "\tLJCDefaultServerName \t: default set to NONE" 
 		  DisplayErrDev "\tLJCNbOpenPort\t\t: default set to 512                    ( --port-max 512   )" 
 		  DisplayErrDev "\tLJCAudioInterface\t: audio interface name, default is alsa ( -d               )" 
 		  DisplayErrDev "\tLJCRate\t\t\t: default is 44100                      ( --rate           )" 
