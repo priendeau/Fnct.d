@@ -224,12 +224,15 @@ function kill_cmd()
 	local ArrayArg=( $* ) ; 
 	local __call_locality=( kill_cmd ) ;  
 	local IntDefaultKillSig=${kill_cmdDefaultSigInt:=-9} ;
+	local StrColDisplayInSearch=${kill_cmdPsColList:=pid,command}
+	local IntNbCol=$(( $( echo "${StrColDisplayInSearch}" | wc -m ) - $( echo "${StrColDisplayInSearch//,/}" | wc -m ) ))
+	local IntIdPassToKiller=${kill_cmdColIdToKill:=${IntNbCol}} ; 
 	if [ "${ArrayArg[0]}" = "--help" ] ; then 
 		GetVarReference ${__call_locality[0]} ; 
 	else
 		for (( x=0 ; x <= ${#ArrayArg[@]}-1 ; x++ )) ; do 
 			cmd=${ArrayArg[${x}] } ; 
-			kill ${IntDefaultKillSig} $( ps -eo pid,command | egrep -i "${cmd}" | grep -v grep | cut -d ' ' -f 1 ) ; 
+			kill ${IntDefaultKillSig} $( ps -eo ${StrColDisplayInSearch} | egrep -i "${cmd}" | grep -v grep | cut -d ' ' -f ${IntIdPassToKiller} ) ; 
 		done 
 	fi 
 }
