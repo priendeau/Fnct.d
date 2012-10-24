@@ -113,7 +113,7 @@ function GetVarReference( )
 		egrep -i ":=" |\
 			sed -r 's/(^[\ \t]*)//g;s/=\$/ \$/g;s/;//g' |\
 			cut -d ' ' -f 3- |\
-			sed 's/\(:=\)/ /g;s/\${//g;s/}$//g;s/\(^[A-Za-z0-9=_]* \)/Variable \1,\n\tDefault Value:/g' ; 
+			sed 's/\(:=\)/ /g;s/\${//g;s/}$//g;s/\(^[A-Za-z0-9=_]* \)/Variable \1,\n\tDefault Value:/g' | sed 's/[\}\{]//g' ; 
 	}
 	function ParseLocalityVar()
 	{
