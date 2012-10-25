@@ -101,19 +101,19 @@ function PkgConfigQuery()
 ### 
 
 
-
+unset GetVarReference ;
 function GetVarReference( )
 {
 	local ArrayArg=( $* ) ;
-	
+
 	function ParseInternalVar( )
 	{
 		local ArrayArg=( $* ) ;
 		local __call_locality=( ParseInternalVar ) ;
 		egrep -i ":=" |\
-			sed -r 's/(^[\ \t]*)//g;s/=\$/ \$/g;s/;//g' |\
-			cut -d ' ' -f 3- |\
-			sed 's/\(:=\)/ /g;s/\${//g;s/}$//g;s/\(^[A-Za-z0-9=_]* \)/Variable \1,\n\tDefault Value:/g' | sed 's/[\}\{]//g' ; 
+				sed -r 's/(^[\ \t]*)//g;s/=\$/ \$/g;s/;//g' |\
+				cut -d ' ' -f 3- |\
+				sed 's/\(:=\)/ /g;s/\${//g;s/}$//g;s/\(^[A-Za-z0-9=_]* \)/Variable \1,\n\tDefault Value:/g' | sed 's/[\}\{]//g' ;
 	}
 	function ParseLocalityVar()
 	{
@@ -121,9 +121,9 @@ function GetVarReference( )
 		local __call_locality=( ParseLocalityVar ) ;
 		egrep "__call_locality" | sed 's/[\)\(]/ /g;s/;//g' | cut -d ' ' -f 7 ;	
 	}
-	echo -ne "Help:\n\nFunction ${ArrayArg[0]}\nDefault Variable Value:\n"; 
-	local CallLocalityInternalName=$( declare -f ${ArrayArg[0]} | ParseLocalityVar ) ; 
-	declare -f ${ArrayArg[0]} | egrep "${CallLocalityInternalName}" |  ParseInternalVar ; 
+	echo -ne "Help:\n\nFunction ${ArrayArg[0]}\nDefault Variable Value:\n";
+	local CallLocalityInternalName=$( declare -f ${ArrayArg[0]} | ParseLocalityVar ) ;
+	declare -f ${ArrayArg[0]} | egrep "${CallLocalityInternalName}" | ParseInternalVar ;
 }
 
 
@@ -231,8 +231,11 @@ function kill_cmd()
 		GetVarReference ${__call_locality[0]} ; 
 	else
 		for (( x=0 ; x <= ${#ArrayArg[@]}-1 ; x++ )) ; do 
-			cmd=${ArrayArg[${x}] } ; 
-			kill ${IntDefaultKillSig} $( ps -eo ${StrColDisplayInSearch} | egrep -i "${cmd}" | grep -v grep | cut -d ' ' -f ${IntIdPassToKiller} ) ; 
+			local cmd=${ArrayArg[${x}]} ; 
+			local PsResult=$( ps -eo ${StrColDisplayInSearch} | egrep -i "${cmd}" | grep -v grep | cut -d ' ' -f ${IntIdPassToKiller} | tr '[:cntrl:]' ' ' )
+			CmdEval=( kill ${IntDefaultKillSig} ${PsResult} ); 
+			echo -ne "PsResult:\n\n${PsResult}\n\n" > /dev/stderr ;
+			echo -ne "Command Eval:[ ${CmdEval} ]\n" > /dev/stderr ; 
 		done 
 	fi 
 }
@@ -500,6 +503,131 @@ function FindFilterPathExclusion()
 			CurrentExlusion="${CurrentExlusion} ${StrCriteronFilterPrefix}" ;
 		done
 		echo -ne "${CurrentExlusion}" ; 
+	fi 
+}
+
+
+
+
+
+
+### Yet Another Debian package Mangler and backup-management. 
+### 
+### It basically move actual Debian package from archive /var/cache/apt/archives
+### some-where else like /media/COMST500GB/Linux-Debian/archives/Mint-12_x86-64...
+### or some NFS mounted point or any mounted partition dedicated to save or backup... 
+### - It create an index of the day, inside the Destination.
+###  - The index file is in a new directory of the destination, calling it Destination/index
+###  - The index file-name is named on the today date or on the day executed by the manager. 
+###  - The index used to drop Package into destination are accounted and the index hold 
+###  - the beginnign of the transfert. 
+###  - Index day used can be changed thru PkgRepoMgmtReposIndexDay, but the time of the transaction
+###    remain unchanged... look weird, but may have some goal .... 
+###   - Variable PkgRepoMgmtReposIndex change the Index destination. 
+### 
+### The Action. 
+### It's A loop inside the archives, a move to the destination and a link is done between them 
+### - to remain somewhat active, or become inacessible if the mount is down... not bad for nfs
+### mounting detection or lazy mount with economic transfert mode while having no reason
+### to leave it mounted until you need to get some update or removing stuff. 
+### If the management from APT, dpkg, gdebi remove the package, it give silent error to 
+### remove something not being a file but link, but are not following the source... 
+### Being serious with this action, PkgRepoMgmtReposBkpAct can change the Action. 
+### 
+### basically work like this :
+### [ cmd1 __VIRG__ cmd2 ... ] 
+### 
+### cmd1 should include at least 
+### __SRC__ tag , it transform it into proper destication  called __DEST__ 
+### __FILE__ is critical and mandatory, it loop the command and turn __FILE__ into every item to be backuped 
+### 
+### - __VIRG__ tag is an hack, It's required when more then one command is called, it change in into ';' . 
+### ex : PkgRepoMgmtReposBkpAct="scp  __SRC__/__FILE__ root@domainname:/__DEST__ __VIRG__ rm -f __SRC__/__FILE__" PackageRepositoryMgmt
+### - transfert by scp a file from Debian packages from /var/cache/apt/archives and remove it. 
+### 
+### 
+### ... So basically, this guys had a spade in hand and Spell it: 'I.B.M.' ;) from 1901, I should live long 
+### enought to work there or know what they are doing... 
+### 
+
+
+unset PackageRepositoryMgmt ; 
+
+function PackageRepositoryMgmt()
+{
+	
+	local __call_locality=( PkgRepoMgmt ) ;
+	local ArrayArg=( $* ) ; 
+	local Arg0=${ArrayArg[0]} ;
+	local StrPathArchives=${PkgRepoMgmtPathArchives:=/var/cache/apt/archives} ; 
+	local StrFindStringFormat=${PkgRepoMgmtStrFmt:="%f "} ;
+	local StrPackageType=${PkgRepoMgmtFileFormat:=deb} ;
+	local StrPathRepository=${PkgRepoMgmtRepository:=/media/COMST500GB/Linux-Debian/archives/Mint-12_x86-64} ;
+	local StrPathReposIndex=${PkgRepoMgmtReposIndex:=/media/COMST500GB/Linux-Debian/archives/Mint-12_x86-64/index} ;
+	local StrDefaultActionIndex=${PkgRepoMgmtReposIndexAction:="mkdir -p __PATH__"} ;
+	local StrIndexTest=${PkgRepoMgmtReposIndexTest:=! -d} ;
+	### Explained in GetOtherDate, GetOtherDateReference can be negative and report yesterday date too. and not null will
+  ### give n-day after today... 	
+	local IntDefaultDayIndexName=${PkgRepoMgmtReposIndexDay:=0} ;
+	local StrBackupAction=${PkgRepoMgmtReposBkpAct:=mv __SRC__/__FILE__ __DEST__ __VIRG__ ln -s __DEST__/__FILE__ __SRC__/__FILE__} ;
+	local StrTransactionStart=$( GetOtherDateFormat="%Y%m%d\ %H:%M:%S" GetOtherDate ) ; 
+	local StrTodatDateTransfert=$( GetOtherDateReference=${IntDefaultDayIndexName} GetOtherDate ) ; 
+	local StrIndexFile=${StrPathReposIndex}/${StrTodatDateTransfert};
+	
+	test ! -e ${StrIndexFile} && echo -ne "NEW TRANSACTION:${StrTransactionStart}\n" > ${StrIndexFile} ; 
+	test -e ${StrIndexFile} && echo "COMMIT TRANSACTION:${StrTransactionStart}\n" >> ${StrIndexFile} ; 
+
+	TestPathIndexName=${StrPathReposIndex} TestPathIndexTest=${StrIndexTest} TestPathIndexResultAction=${StrDefaultActionIndex} TestPathIndex ;
+	
+	function TestPathIndex()
+	{
+		local __call_locality=( TestPathIndex ) ;
+		local ArrayArg=( $* ) ; 
+		local StrPathTest=${TestPathIndexName:=/media/COMST500GB/Linux-Debian/archives/Mint-12_x86-64/index} ; 
+		local StrTestType=${TestPathIndexTest:=! -d} ;
+		local StrTestResultAction=${TestPathIndexResultAction:=mkdir -p __PATH__} ;
+		test ${StrTestType} ${StrPathReposIndex} && ${StrTestResultAction//__PATH__/${StrPathReposIndex}} ;
+	}	
+	
+	function GetPackageList()
+	{
+		local __call_locality=( GetPackageList ) ;
+		local ArrayArg=( $* ) ; 
+		local StrPathArchives=${GetPackageListPathArchives:=/var/cache/apt/archives} ; 
+		local StrPackageType=${GetPackageListFormat:=deb} ;
+		local StrDisplayOutput=${GetPackageListStringFormat:='%f '} ;
+		local ArrayFileList=( $( find ${StrPathArchives} -maxdepth 1 -type f -iname "*.${StrPackageType}" -printf "${StrDisplayOutput}" ) ) ; 
+		local IntLenFileList=${#ArrayFileList[@]} ;
+		if [ ${IntLenFileList:=0} -gt 0 ] ; then 
+			echo "${ArrayFileList[@]}" ; 
+			return 0 ; 
+		else
+			echo "None" ;
+			return 1 ; 
+		fi
+	}
+	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+			GetVarReference PackageRepositoryMgmt ; 
+	else 
+			local ArrayFileList=( $( GetPackageListPathArchives=${StrPathArchives} GetPackageListFormat=${StrPackageType} GetPackageListStringFormat="${StrFindStringFormat}" GetPackageList ) )
+			local Result=$? ; 
+			if [ ${Result:=1} -eq 0 ] ; then 
+				for (( intx=0 ; intx <= ${#ArrayFileList[@]}-1 ; intx++ )) ; do 
+					local strfile="${ArrayFileList[${intx}]}" ;
+					echo -ne "File: ${strfile}\n" > /dev/stderr ; 
+					local StrLinkAction=${StrBackupAction};
+					StrLinkAction=${StrLinkAction//__FILE__/${strfile}} ; 
+					StrLinkAction=${StrLinkAction//__SRC__/${StrPathArchives}} ; 
+					StrLinkAction=${StrLinkAction//__DEST__/${StrPathRepository}} ;
+					StrLinkAction=${StrLinkAction//__VIRG__/;} ; 
+					echo -ne "${strfile}\n" >> ${StrIndexFile} ; 
+					echo -ne "Action:[ ${StrLinkAction} ]\n" > /dev/stderr ; 
+					eval "${StrLinkAction}" ; 
+					
+				done 
+			else
+				echo -ne "ArrayFileList return Empty List\n" > /dev/stderr . 
+			fi
 	fi 
 }
 
