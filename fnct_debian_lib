@@ -68,6 +68,39 @@ function PkgConfigQuery()
 	fi 
 }
 
+### Warning : 
+### This version of pkg-config-all is aliased to pkg-config inside .bashrc of the user shell and following function 
+### are also dependent of alias .
+### cut -> to alias cut='/usr/bin/cut -d "'" "'" '
+### pkg-config -> to alias pkg-config='pkg-config-all'
+### 
+### 
+### 
+
+function pkg-config-all()
+{
+	local __call_locality=( PkgConfigAll ) ; 
+	local StrpackageName=${PkgConfigAllArrayName:=ArrayPackageName}	;
+	local StrScopeType=${PkgConfigAllScoping:=declare -a}	;
+	local StrCutCol=${PkgConfigAllCutAlias:=cut}	;
+	local StrPkgConfig=${PkgConfigAllApps:=/usr/bin/pkg-config} ; 
+	local ArrayArg=( $* ) ; 
+	local Arg0=${ArrayArg[0]} ;
+ 	if [ "${Arg0:=--startservices}" == "--help" ] ; then 
+			GetVarReference pkg-config-all ; 
+			echo -ne "Following switch are available:\n\n\t--startservices\tStart the application normally and output the package list\n\t--asarray\tStart The application and output the content into an Array, see varriable                               PkgConfigAllArrayName to change the name. This command need an eval braced                              to get the array being initialized.\n\n"
+	else
+		if [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+			eval "${StrPkgConfig} --list-all | ${StrCutCol} -f 1" ; 
+		fi 
+		if [ "${Arg0:=--startservices}" == "--asarray" ] ; then 
+				local StrPackageList=$( ${StrPkgConfig} --list-all | eval "${StrCutCol} -f 1" | tr '[:cntrl:]' ' ' ) ; 
+				echo -ne "${StrScopeType} ${StrpackageName}=( ${StrPackageList} )\n" ;
+		fi
+	fi
+}
+
+
 ### Default Fast reference Helper. 
 ### Extract current Prefixed variables from your function and show it on stdout( screen output ). 
 ### The prefixed variable are indicated on decalation of __call_locality which usually had same name has 
