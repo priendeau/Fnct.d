@@ -37,9 +37,19 @@ function PkgConfigQuery()
 	local Arg0=${ArrayArg[0]:=--start} ; 
 	local ArrayArgFlag=( ${ArrayArg[@]:1} ) ; 
 	local IntArgLen=${#ArrayArgFlag[@]} ;
+	local StrPkgConfigApps=${PkgConfigQueryAppsName:=/usr/bin/pkg-config};
+	local StrPkgConfigAppsOpt=${PkgConfigQueryAppsOption:=--list-all};
+
 	local StrPackageList=${PkgConfigQueryGetPackage:=flac} ;
 	local StrFlagList=${PkgConfigQueryFlagList:=--libs,--static,--short-errors,--libs-only-l,--libs-only-other,--libs-only-L,--cflags,--cflags-only-I,--cflags-only-other} ;
 	local ArrayFlagTest=( ) ;
+	function FilterPackageList()
+	{
+		local ArrayArg=( $* );
+		local __call_locality=( FilterPackageList ) ;
+		local StrGrepFilter=${FilterPackageListGrepFilter:=${CurrentPackage}}
+		cut -d " " -f 1 | egrep -i "${StrGrepFilter}" | tr '[:cntrl:]' ' ' 
+	}
 	if [ ${IntArgLen:=0} -eq 0 ] ; then 
 		ArrayFlagTest=( ${StrFlagList//,/ } ) ; 
 	else
@@ -52,12 +62,12 @@ function PkgConfigQuery()
 		local ArrayPackageListVar=( ${StrPackageList//,/ } ) ;
 		for (( intAx=0 ; intAx <= ${#ArrayPackageListVar[@]}-1 ; intAx++ )) ; do 
 			local CurrentPackage="${ArrayPackageListVar[${intAx}]}" ; 
-		  local _A=( $( pkg-config --list-all | cut -d " " -f 1 | egrep -i "${CurrentPackage}" | tr '[:cntrl:]' ' ' ) );
+		  local _A=( $( ${StrPkgConfigApps} ${StrPkgConfigAppsOpt} | FilterPackageListGrepFilter=${CurrentPackage} FilterPackageList ) );
 		  local IntNbPackage=${#_A[@]} ;
 		  if [ ${IntNbPackage:=0} -gt 0 ]; then
 		      for ((x=0 ; x <= ${#_A[@]}-1 ; x++ )) ; do
-		          for ((cx=0 ; cx <= ${#ArrayFlagTest[@]}-1 ; cx++ )) ; do
-		              res=$( pkg-config ${_A[${x}]} ${ArrayFlagTest[${cx}]} );
+		          for (( cx=0 ; cx <= ${#ArrayFlagTest[@]}-1 ; cx++ )) ; do
+		              res=$( ${StrPkgConfigApps} ${_A[${x}]} ${ArrayFlagTest[${cx}]} );
 		              echo -ne "${_A[${x}]}:${ArrayFlagTest[${cx}]}:${res}\n";
 		          done;
 		      done;
