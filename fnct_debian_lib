@@ -617,18 +617,14 @@ function PackageRepositoryMgmt()
 	local StrTodatDateTransfert=$( GetOtherDateReference=${IntDefaultDayIndexName} GetOtherDate ) ; 
 	local StrIndexFile=${StrPathReposIndex}/${StrTodatDateTransfert};
 	
-	test ! -e ${StrIndexFile} && echo -ne "NEW TRANSACTION:${StrTransactionStart}\n" > ${StrIndexFile} ; 
-	test -e ${StrIndexFile} && echo "COMMIT TRANSACTION:${StrTransactionStart}\n" >> ${StrIndexFile} ; 
-
-	TestPathIndexName=${StrPathReposIndex} TestPathIndexTest=${StrIndexTest} TestPathIndexResultAction=${StrDefaultActionIndex} TestPathIndex ;
 	
 	function TestPathIndex()
 	{
 		local __call_locality=( TestPathIndex ) ;
 		local ArrayArg=( $* ) ; 
 		local StrPathTest=${TestPathIndexName:=/media/COMST500GB/Linux-Debian/archives/Mint-12_x86-64/index} ; 
-		local StrTestType=${TestPathIndexTest:=! -d} ;
-		local StrTestResultAction=${TestPathIndexResultAction:=mkdir -p __PATH__} ;
+		local StrTestType="${TestPathIndexTest:=! -d}" ;
+		local StrTestResultAction="${TestPathIndexResultAction:=mkdir -p __PATH__}" ;
 		test ${StrTestType} ${StrPathReposIndex} && ${StrTestResultAction//__PATH__/${StrPathReposIndex}} ;
 	}	
 	
@@ -638,7 +634,7 @@ function PackageRepositoryMgmt()
 		local ArrayArg=( $* ) ; 
 		local StrPathArchives=${GetPackageListPathArchives:=/var/cache/apt/archives} ; 
 		local StrPackageType=${GetPackageListFormat:=deb} ;
-		local StrDisplayOutput=${GetPackageListStringFormat:='%f '} ;
+		local StrDisplayOutput="${GetPackageListStringFormat:='%f '}" ;
 		local ArrayFileList=( $( find ${StrPathArchives} -maxdepth 1 -type f -iname "*.${StrPackageType}" -printf "${StrDisplayOutput}" ) ) ; 
 		local IntLenFileList=${#ArrayFileList[@]} ;
 		if [ ${IntLenFileList:=0} -gt 0 ] ; then 
@@ -649,30 +645,72 @@ function PackageRepositoryMgmt()
 			return 1 ; 
 		fi
 	}
+	function TestDriveMount()
+	{
+		local __call_locality=( TestDriveMount ) ; 
+		local ArrayArg=( $* ) ; 
+		local IsMountDrive="True";
+		local StrScopeType="${TestDriveMountScope:=local -a}";
+		local StrDriveList="${TestDriveMountList}";
+		local MountDriveCheck=( ${StrDriveList//,/ } ) ;
+		local IsDisplayDebug=${TestDriveMountDebug:=False} ;
+		local Arg0="${ArrayArg[0]}" ;
+		if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+				GetVarReference ${__call_locality[0]} ; 
+		else
+			for (( intx=0 ; intx <= ${#MountDriveCheck[@]}-1 ; intx++ )) ; do
+				if [ "${IsDisplayDebug:=False}" == "True" ] ; then 
+					echo -ne "Checking Path: ${MountDriveCheck[${intx}]}\n" > /dev/stderr ; 
+				fi
+				test ! -d "${MountDriveCheck[${intx}]}" && IsMountDrive="False" ;
+			done 
+			if [ "${IsMountDrive:=True}" == "False" ] ; then 
+				echo -ne "\nCheck Variable PkgRepoMgmtRepository,PkgRepoMgmtPathArchives, some Path are inaccessible or not mounted\n" > /dev/stderr ; 
+			fi 
+			echo -ne "${StrScopeType} IsMountDrive=${IsMountDrive}" ; 
+		fi 
+	}
 	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
 			GetVarReference PackageRepositoryMgmt ; 
+			echo -ne "Following switch are available:\n\n\t--startservices\tStart the application normally and output the package list\n\t--checkdrive\tPerform a Drive/Path check to see if access point is valid.\n\n" > /dev/stderr ; 
+	elif [ "${Arg0:=--startservices}" == "--checkdrive"	] ; then 
+		$( TestDriveMountList=${StrPathRepository},${StrPathArchives} TestDriveMount ) ; 
+		echo -ne "Status of IsMountDrive: ${IsMountDrive}\n" > /dev/stderr ; 
 	else 
-			local ArrayFileList=( $( GetPackageListPathArchives=${StrPathArchives} GetPackageListFormat=${StrPackageType} GetPackageListStringFormat="${StrFindStringFormat}" GetPackageList ) )
-			local Result=$? ; 
-			if [ ${Result:=1} -eq 0 ] ; then 
-				for (( intx=0 ; intx <= ${#ArrayFileList[@]}-1 ; intx++ )) ; do 
-					local strfile="${ArrayFileList[${intx}]}" ;
-					echo -ne "File: ${strfile}\n" > /dev/stderr ; 
-					local StrLinkAction=${StrBackupAction};
-					StrLinkAction=${StrLinkAction//__FILE__/${strfile}} ; 
-					StrLinkAction=${StrLinkAction//__SRC__/${StrPathArchives}} ; 
-					StrLinkAction=${StrLinkAction//__DEST__/${StrPathRepository}} ;
-					StrLinkAction=${StrLinkAction//__VIRG__/;} ; 
-					echo -ne "${strfile}\n" >> ${StrIndexFile} ; 
-					echo -ne "Action:[ ${StrLinkAction} ]\n" > /dev/stderr ; 
-					eval "${StrLinkAction}" ; 
+			$( TestDriveMountDebug=True TestDriveMountList=${StrPathRepository},${StrPathArchives} TestDriveMount ) ; 
+			if [ "${IsMountDrive:=True}" == "True" ] ; then 
+				TestPathIndexName=${StrPathReposIndex} TestPathIndexTest=${StrIndexTest} TestPathIndexResultAction=${StrDefaultActionIndex} TestPathIndex ;
+				test ! -e ${StrIndexFile} && echo -ne "NEW TRANSACTION:${StrTransactionStart}\n" > ${StrIndexFile} ; 
+ 			  test -e ${StrIndexFile} && echo "COMMIT TRANSACTION:${StrTransactionStart}\n" >> ${StrIndexFile} ; 
+
+				local ArrayFileList=( $( GetPackageListPathArchives=${StrPathArchives} GetPackageListFormat=${StrPackageType} GetPackageListStringFormat="${StrFindStringFormat}" GetPackageList ) )
+				local Result=$? ; 
+				if [ ${Result:=1} -eq 0 ] ; then 
+					for (( intx=0 ; intx <= ${#ArrayFileList[@]}-1 ; intx++ )) ; do 
+						local strfile="${ArrayFileList[${intx}]}" ;
+						echo -ne "File: ${strfile}\n" > /dev/stderr ; 
+						local StrLinkAction=${StrBackupAction};
+						StrLinkAction=${StrLinkAction//__FILE__/${strfile}} ; 
+						StrLinkAction=${StrLinkAction//__SRC__/${StrPathArchives}} ; 
+						StrLinkAction=${StrLinkAction//__DEST__/${StrPathRepository}} ;
+						StrLinkAction=${StrLinkAction//__VIRG__/;} ; 
+						echo -ne "${strfile}\n" >> ${StrIndexFile} ; 
+						echo -ne "Action:[ ${StrLinkAction} ]\n" > /dev/stderr ; 
+						eval "${StrLinkAction}" ; 
 					
-				done 
+					done 
+				else
+					echo -ne "ArrayFileList return Empty List\n" > /dev/stderr . 
+  			fi
 			else
-				echo -ne "ArrayFileList return Empty List\n" > /dev/stderr . 
+				echo -ne "Exit on Path acces Problems\nStatus of IsMountDrive: ${IsMountDrive}\n" > /dev/stderr ;
+				return 1 ;
 			fi
 	fi 
 }
+
+
+
 
 if [ ${VarFnctLib:=False} == "True" ] ; then
 
