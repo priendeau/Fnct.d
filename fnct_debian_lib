@@ -709,7 +709,64 @@ function PackageRepositoryMgmt()
 	fi 
 }
 
+### Function : GetMplayerStream()
+### 
+### - Filter out selected stream from Firefox browser on Ubuntu/Mint and kill active stream to get only the 
+### http - stream url and load itself with mplayer... Assuming the Browser openning the stream with mplayer...
+### 
+### 
+function GetMplayerStream()
+{
+	local ArrayArg=( $* ) ; 
+	local __call_locality=( GetMplayerStream ) ;
+	local StrAwkPath=${GetMplayerStreamAwkPath:=/etc/init.d/Fnct.d/awk-script/} ;
+	local StrAwkScriptName=${GetMplayerStreamScriptName:=MplayerStreamTransfert.awk}
+	local StrAwkApps=${GetMplayerStreamAwkApps:=/usr/bin/awk} ;
+	local StrGrepApps=${GetMplayerStreamGrepApps:=/bin/egrep};
+	local StrGrepOpt=${GetMplayerStreamGrepOpt:=-i};
+	local StrPsOpt=${GetMplayerStreamPsOpt:=-eo pid,command};
 
+	local StrPsApps=${GetMplayerStreamPsApps:=/bin/ps};
+	local StrUrlGrep=${GetMplayerStreamUrlGrep:="http:\/\/"};
+	local StrPlayerName=${GetMplayerStream:=mplayer};
+	local Arg0=${ArrayArg[0]} ;
+	
+	function GetStreamFromPs()
+	{
+		local ArrayArg=( $* ) ; 
+		local __call_locality=( GetStreamFromPs ) ;
+		local StrAppsName=${GetStreamFromPsApps:=/bin/ps} ;
+		local StrAppsOpt=${GetStreamFromPsOpt:=-eo pid,command} ;
+		local StrFilterAppsName=${GetStreamFromPsFName:=egrep} ;
+		local StrFilterAppsOpt=${GetStreamFromPsFNOpt:=-i} ;
+		local StrUrlFilter=${GetStreamFromPsUrlFilter:="http:\/\/"} ;
+		local StrPlayerFilter=${GetStreamFromPsUrlPlayerName:=mplayer} ;
+
+		${StrAppsName} ${StrAppsOpt} | ${StrFilterAppsName} ${StrFilterAppsOpt} "${StrPlayerFilter}" | ${StrFilterAppsName} ${StrUrlFilter} ; 
+	}
+	
+	function AwkScript()
+	{
+		local ArrayArg=( $* ) ; 
+		local __call_locality=( AwkScript ) ;
+		local StrAwkPath=${AwkScriptAwkPath} ;
+		local StrAwkScriptName=${AwkScriptScriptName} ;
+		local StrAwkApps=${AwkScriptApps} ;
+		${StrAwkApps} -f ${StrAwkPath}/${StrAwkScriptName}
+	}
+	local cmdline=( ) ;
+	local cmdline[0]="GetStreamFromPsUrlPlayerName=${StrPlayerName} GetStreamFromPsUrlFilter=${StrUrlGrep} GetStreamFromPsFName=${StrGrepApps} GetStreamFromPsFNOpt=${StrGrepOpt} GetStreamFromPsApps=${StrPsApps} GetStreamFromPsOpt=${StrPsOpt} GetStreamFromPs";
+	local cmdline[1]="AwkScriptApps=\"${StrAwkApps}\" AwkScriptAwkPath=\"${StrAwkPath}\" AwkScriptScriptName=${StrAwkScriptName} AwkScript" ; 
+	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+			GetVarReference ${__call_locality[0]} ;
+			echo -ne "Following switch are available:\n\n\t--startservices\tStart the application normally and output the package list\n\t--debug\tExpose result to be executed.\n\n" > /dev/stderr ; 
+	elif [ "${Arg0:=--startservices}" == "debug"	] ; then 
+		echo -ne "CmdLine[0]:${cmdline[0]} \nCmdLine[1]:${cmdline[1]}\n" > /dev/stderr ;
+	else
+		echo -ne "CmdLine[0]:${cmdline[0]} \nCmdLine[1]:${cmdline[1]}\n" > /dev/stderr ;		
+	fi	
+}
+ 
 
 
 if [ ${VarFnctLib:=False} == "True" ] ; then
