@@ -714,6 +714,9 @@ function PackageRepositoryMgmt()
 ### - Filter out selected stream from Firefox browser on Ubuntu/Mint and kill active stream to get only the 
 ### http - stream url and load itself with mplayer... Assuming the Browser openning the stream with mplayer...
 ### 
+### Initial idea : ps -eo pid,command | egrep -i "mplayer" | egrep "http:\/\/" | awk 'BEGIN{stream="";}{printf("%s %s\n",$1,$(NF)) ; system(sprintf("kill -9 %s",$1)); stream=$(NF); }END{ system(sprintf("mplayer -ao alsa -cache 3072 %s",stream)) }'
+### ... but how ingeneer see a tire over a Tree for child use... 
+### 
 ### 
 function GetMplayerStream()
 {
