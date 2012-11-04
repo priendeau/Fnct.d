@@ -782,6 +782,94 @@ function GetMplayerStream()
 	fi	
 }
  
+### Late-Homework for old duty... 
+### Preceding some specific moment in a traveller when he have to know when the plane is going to leave , 
+### I was messing around faulty compilation and try to find 
+### way to randomize startup a bit and lib loading to see if it's anomalies in process or simply stack 
+### hacking... See Hacking The art of exploitation from No Starch press...  
+### Initial Setup on how collecting information and how generate fast random number was heavy and may
+### collide whith the function FaultyProcess, rendering too much work from High-heavy precesing awk-sed-grep
+### line at every ';' was also slowing this baby pentium-mmx from college Rosemont also... 
+unset BuildOnFaultCompiler
+function BuildOnFaultCompiler()
+{
+	local ArrayArg=( $* )
+	local __call_locality=( BOFC ) ; 
+	local StrAppsLib=${BOFCLib:=/sbin/ldconfig} ;
+	local StrAppsLibOpt=${BOFCLibOpt:=-f,/etc/ld.so.conf} ;
+	local StrAppsAppsFault=${BOFCAppsFault:=make} ;
+	local StrAppsAppsFaultOpt=${BOFCAppsFaultOpt:=''} ;
+	local IntRandomSize=${BOFCRandomSeedLevel:=20} ;
+	local Arg0=${ArrayArg[0]:=--startservices}
+	
+	function InitLib()
+	{
+		local ArrayArg=( $* )
+		local __call_locality=( InitLib ) ; 
+		local StrApps=${InitLibInitApps:=/sbin/ldconfig} ;
+		local StrAppsOpt={InitLibInitAppsOpt:=-f,/etc/ld.so.conf} ;
+		local ArrayAppsOpt=${StrAppsOpt//,/ } ; 
+		### ldconfig -f /etc/ld.so.conf ; 
+		eval "${StrApps} ${ArrayAppsOpt[@]}" ; 
+	}
+	function FaultyProcess()
+	{
+		local ArrayArg=( $* )
+		local __call_locality=( FaultyProcess ) ; 
+		local StrApps=${FaultyProcessInitApps:=make} ;
+		local StrAppsOpt=${FaultyProcessAppsOpt} ;
+		local ArrayAppsOpt=${FaultyProcessAppsOpt[@]//,/ } ;
+		eval "${StrApps} ${ArrayAppsOpt[@]}" ; 
+		return $? ; 
+	}
+
+	function Start()
+	{
+		local res=1 ; 
+		local IntRandSize=${IntRandomSize} ; 
+		local StrStarHeaderLine="********************************************************************************" ;
+		local StrHeader="__StrStarHeaderLine__\n\n\tBuild Failed , sleeping __IntRand__\n\n__StrStarHeaderLine__\n" ;
+		echo -ne "StartWhile\n" > /dev/stderr ;
+		while [ ${res} -ne 0 ] ; do 
+			local ArrayRandom=(  ) ; 
+			local EndRand=$(( ( ${RANDOM} % ${IntRandSize} ) )) ; 
+			local IndexRand=$(( ${RANDOM} % ${IntRandSize} )) ; 
+			echo -ne "IntRandSize: ${IntRandSize}\nEndRand:${EndRand}\n" > /dev/stderr ; 
+			sleep 5 ; 
+			echo -ne "StartFor\n" > /dev/stderr ;
+			for (( intx=0 ; intx <= ${EndRand} ; intx++ )) ; do 
+				echo -ne "." > /dev/stderr ;
+				local RandBaseMul=$(( ${IntRandSize} *  ( ${RANDOM} % 10 ) )) ; 
+				local IntRandNum=$(( ${RANDOM} % ${RandBaseMul} )) ;
+				ArrayRandom[${intx}]=${IntRandNum} ; 
+			done ; 
+			echo -ne "\n" > /dev/stderr ;
+			local IntRand=${ArrayRandom[${IndexRand}]} ; 
+			echo -ne "IntRand:${IntRand}\n" > /dev/stderr ; 
+			echo -ne "StartInitLib:1\n" > /dev/stderr ;
+			InitLibInitApps=${StrAppsLib} InitLibInitAppsOpt=${StrAppsLibOpt} InitLib ; 
+			echo -ne "StartFaultyProcess\n" > /dev/stderr ;
+			res=$( FaultyProcessInitApps=${StrAppsAppsFault} FaultyProcessAppsOpt=${StrAppsAppsFaultOpt} FaultyProcess )  ;
+			echo -ne "StartIf\n" > /dev/stderr ;
+			if [ ${res:=0} -ne 0 ] ; then 
+				local StrDisplayHeader=${StrHeader//__StrStarHeaderLine__/${StrStarHeaderLine}} ;
+				StrDisplayHeader=${StrHeader//__IntRand__/${IntRand}} ;
+				echo -ne ${StrDisplayHeader} > /dev/stderr ; 
+				echo -ne "StartInitSleepRandom\n" > /dev/stderr ;
+				sleep ${IntRand} ; 
+				echo -ne "StartInitLib:2\n" > /dev/stderr ;
+				InitLib ;
+			fi ; 
+		done 
+
+	}
+
+	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+			GetVarReference BuildOnFaultCompiler ;
+	else
+		StrAppsLib=${StrAppsLib} StrAppsLibOpt=${StrAppsLibOpt} StrAppsLibOpt=${StrAppsLibOpt} StrAppsAppsFault=${StrAppsAppsFault} StrAppsAppsFaultOpt=${StrAppsAppsFaultOpt} IntRandomSize=${IntRandomSize} Start ; 
+	fi 
+} 
 
 
 if [ ${VarFnctLib:=False} == "True" ] ; then
