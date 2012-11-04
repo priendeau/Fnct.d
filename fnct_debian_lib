@@ -849,8 +849,9 @@ function BuildOnFaultCompiler()
 			echo -ne "StartInitLib:1\n" > /dev/stderr ;
 			InitLibInitApps=${StrAppsLib} InitLibInitAppsOpt=${StrAppsLibOpt} InitLib ; 
 			echo -ne "StartFaultyProcess\n" > /dev/stderr ;
-			res=$( FaultyProcessInitApps=${StrAppsAppsFault} FaultyProcessAppsOpt=${StrAppsAppsFaultOpt} FaultyProcess )  ;
-			echo -ne "res return ${res}\n" > /dev/stderr ; 
+			FaultyProcessInitApps=${StrAppsAppsFault} FaultyProcessAppsOpt=${StrAppsAppsFaultOpt} FaultyProcess
+			res=$?  ;
+			echo -ne "res return [${res}]\n" > /dev/stderr ; 
 			echo -ne "StartIf\n" > /dev/stderr ;
 			if [ ${res:=0} -ne 0 ] ; then 
 				local StrDisplayHeader=${StrHeader//__StrStarHeaderLine__/${StrStarHeaderLine}} ;
