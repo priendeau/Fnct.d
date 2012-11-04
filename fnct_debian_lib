@@ -406,10 +406,20 @@ function DebianAptSrcCompiler()
 function find_edit_file()
 { 
 	local ArrayArg=( $* ) ; 
-	local __call_locality=( find_edit_file ) ; 
-	for file in ${ArrayArg[@]} ; do 
-		find ./ -type f -iname "${file}" -exec gedit {} \; & 
-	done ; 
+	local __call_locality=( FEF ) ; 
+	local StrPath=${FEFDefaultPath:=./} ;
+	local StrAppsFind=${FEFAppsFind:=/usr/bin/find} ;
+	local StrEditor=${FEFEditorApps:=/usr/bin/gedit} ;
+	local StrFindFilterOpt=${FEFFindFilter:=-iname \"__FILE__\"} ;
+
+ 	if [ "${ArrayArg[0]}" = "--help" ] ; then 
+		GetVarReference find_edit_file ; 
+ 	else	
+		for file in ${ArrayArg[@]} ; do 
+			local StrFilterInFind=${StrFindFilterOpt//__FILE__/${file}}
+			eval "${StrAppsFind} ${StrPath} -type f ${StrFilterInFind} -exec ${StrEditor} {} \;" & 
+		done ; 
+	fi
 }
 
 ### Usefult having clause with many compiler available and having h2xml or ctag path filtering to apply,
@@ -608,6 +618,7 @@ function PackageRepositoryMgmt()
 	local StrPathRepository=${PkgRepoMgmtRepository:=/media/COMST500GB/Linux-Debian/archives/Mint-12_x86-64} ;
 	local StrPathReposIndex=${PkgRepoMgmtReposIndex:=/media/COMST500GB/Linux-Debian/archives/Mint-12_x86-64/index} ;
 	local StrDefaultActionIndex=${PkgRepoMgmtReposIndexAction:="mkdir -p __PATH__"} ;
+	local StrTestDriveDebug=${PkgRepoMgmtReposDriveDebug:=False} ;
 	local StrIndexTest=${PkgRepoMgmtReposIndexTest:=! -d} ;
 	### Explained in GetOtherDate, GetOtherDateReference can be negative and report yesterday date too. and not null will
   ### give n-day after today... 	
@@ -674,10 +685,10 @@ function PackageRepositoryMgmt()
 			GetVarReference PackageRepositoryMgmt ; 
 			echo -ne "Following switch are available:\n\n\t--startservices\tStart the application normally and output the package list\n\t--checkdrive\tPerform a Drive/Path check to see if access point is valid.\n\n" > /dev/stderr ; 
 	elif [ "${Arg0:=--startservices}" == "--checkdrive"	] ; then 
-		$( TestDriveMountList=${StrPathRepository},${StrPathArchives} TestDriveMount ) ; 
+		$( TestDriveMountDebug=${StrTestDriveDebug} TestDriveMountList=${StrPathRepository},${StrPathArchives} TestDriveMount ) ; 
 		echo -ne "Status of IsMountDrive: ${IsMountDrive}\n" > /dev/stderr ; 
 	else 
-			$( TestDriveMountDebug=True TestDriveMountList=${StrPathRepository},${StrPathArchives} TestDriveMount ) ; 
+			$( TestDriveMountDebug=${StrTestDriveDebug} TestDriveMountList=${StrPathRepository},${StrPathArchives} TestDriveMount ) ; 
 			if [ "${IsMountDrive:=True}" == "True" ] ; then 
 				TestPathIndexName=${StrPathReposIndex} TestPathIndexTest=${StrIndexTest} TestPathIndexResultAction=${StrDefaultActionIndex} TestPathIndex ;
 				test ! -e ${StrIndexFile} && echo -ne "NEW TRANSACTION:${StrTransactionStart}\n" > ${StrIndexFile} ; 
@@ -757,9 +768,10 @@ function GetMplayerStream()
 		local StrAwkApps=${AwkScriptApps} ;
 		${StrAwkApps} -f ${StrAwkPath}/${StrAwkScriptName}
 	}
+
 	local cmdline=( ) ;
-	local cmdline[0]="GetStreamFromPsUrlPlayerName=${StrPlayerName} GetStreamFromPsUrlFilter=${StrUrlGrep} GetStreamFromPsFName=${StrGrepApps} GetStreamFromPsFNOpt=${StrGrepOpt} GetStreamFromPsApps=${StrPsApps} GetStreamFromPsOpt=${StrPsOpt} GetStreamFromPs";
-	local cmdline[1]="AwkScriptApps=\"${StrAwkApps}\" AwkScriptAwkPath=\"${StrAwkPath}\" AwkScriptScriptName=${StrAwkScriptName} AwkScript" ; 
+	local cmdline[0]="GetStreamFromPsUrlPlayerName=\"${StrPlayerName}\" GetStreamFromPsUrlFilter=\"${StrUrlGrep}\" GetStreamFromPsFName=\"${StrGrepApps}\" GetStreamFromPsFNOpt=\"${StrGrepOpt}\" GetStreamFromPsApps=\"${StrPsApps}\" GetStreamFromPsOpt=\"${StrPsOpt}\" GetStreamFromPs";
+	local cmdline[1]="AwkScriptApps=\"${StrAwkApps}\" AwkScriptAwkPath=\"${StrAwkPath}\" AwkScriptScriptName=\"${StrAwkScriptName}\" AwkScript" ; 
 	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
 			GetVarReference ${__call_locality[0]} ;
 			echo -ne "Following switch are available:\n\n\t--startservices\tStart the application normally and output the package list\n\t--debug\tExpose result to be executed.\n\n" > /dev/stderr ; 
