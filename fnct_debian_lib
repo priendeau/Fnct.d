@@ -819,7 +819,7 @@ function BuildOnFaultCompiler()
 		local StrApps=${FaultyProcessInitApps:=make} ;
 		local StrAppsOpt=${FaultyProcessAppsOpt} ;
 		local ArrayAppsOpt=${FaultyProcessAppsOpt[@]//,/ } ;
-		eval "${StrApps} ${ArrayAppsOpt[@]}" ; 
+		eval "${StrApps} ${ArrayAppsOpt[@]}" > /dev/stderr  ; 
 		return $? ; 
 	}
 
@@ -839,7 +839,7 @@ function BuildOnFaultCompiler()
 			echo -ne "StartFor\n" > /dev/stderr ;
 			for (( intx=0 ; intx <= ${EndRand} ; intx++ )) ; do 
 				echo -ne "." > /dev/stderr ;
-				local RandBaseMul=$(( ${IntRandSize} *  ( ${RANDOM} % 10 ) )) ; 
+				local RandBaseMul=$(( ( ${IntRandSize} *  ( ${RANDOM} % 10 ) ) + 1 )) ; 
 				local IntRandNum=$(( ${RANDOM} % ${RandBaseMul} )) ;
 				ArrayRandom[${intx}]=${IntRandNum} ; 
 			done ; 
@@ -850,6 +850,7 @@ function BuildOnFaultCompiler()
 			InitLibInitApps=${StrAppsLib} InitLibInitAppsOpt=${StrAppsLibOpt} InitLib ; 
 			echo -ne "StartFaultyProcess\n" > /dev/stderr ;
 			res=$( FaultyProcessInitApps=${StrAppsAppsFault} FaultyProcessAppsOpt=${StrAppsAppsFaultOpt} FaultyProcess )  ;
+			echo -ne "res return ${res}\n" > /dev/stderr ; 
 			echo -ne "StartIf\n" > /dev/stderr ;
 			if [ ${res:=0} -ne 0 ] ; then 
 				local StrDisplayHeader=${StrHeader//__StrStarHeaderLine__/${StrStarHeaderLine}} ;
