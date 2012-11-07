@@ -25,7 +25,7 @@ function ValueParser()
 		local ArrayValue=( ${StrValueList//:/ } ) ;
 		local StrValueReturn="" ;
 		local StrDebug=${VPDebug:=False}
-		local ArrayScopeIndex=( "local -a" "declare" ) ;
+		local ArrayScopeIndex=( "local" "declare -a" ) ;
 
 		function GetScope()
 		{
@@ -69,7 +69,7 @@ function ValueParser()
 				local StrVarSuffixType="${VarSeg[0]}" ;
 				local StrVarSuffix="${VarSeg[1]}" ;
 				#local StrVarName="__scope__ __prefix____suffix__=\${__locality____suffix__:=__value__}" ;
-				local StrVarName="Variable __locality____suffix__,\n\tDefault Value __value__\n" ;
+				local StrVarName="Variable __locality____suffix__,\n\tDefault Value __value__\n\tInternal variable: __prefix____suffix__\n" ;
 				
 				local ArrayScopeTest=( $( Value=${StrVarSuffix} VarInScopeList ${ArrayScope[@]} ) ) ; 
 				
@@ -157,17 +157,18 @@ function ValueParser()
 ### flac++:--libs:-lFLAC++ -lFLAC -lm  
 function PkgConfigQuery()
 { 
-  local ArrayArg=($*);
-  local __call_locality=( PkgQuery ) ;
+	local ArrayArg=( $* );
+	local __call_locality=( PkgQuery ) ;
 	local Arg0=${ArrayArg[0]:=--start} ; 
 	local ArrayArgFlag=( ${ArrayArg[@]:1} ) ; 
 	local IntArgLen=${#ArrayArgFlag[@]} ;
-	local StrValueParserInfo="VPCallLocalityName=${__call_locality[0]} VPVarArgList=Str:AppsName,Str:AppsOpt,Str:FlagList,Str:PackageList VPScopeList=AppsName:local,AppsOpt:local,FlagList:local,PackageList:local VPValueList=/usr/bin/pkg-config:--list-all:--libs,--static,--short-errors,--libs-only-l,--libs-only-other,--libs-only-L,--cflags,--cflags-only-I,--cflags-only-other:flac ValueParser" ;
+	local StrValueParserInfo="VPCallLocalityName=${__call_locality[0]} VPVarArgList=Str:AppsName,Str:AppsOpt,Str:FlagList,Str:PackageList VPScopeList=AppsName:local,AppsOpt:local,FlagList:local,PackageList:local VPValueList=/usr/bin/pkg-config:--list-all:--libs,--static,--short-errors,--libs-only-l,--libs-only-other,--libs-only-L,--cflags,--cflags-only-I,--cflags-only-other:flac" ;
 	
 	### Replaced by ValueParser
 	#local StrPkgConfigApps=${PkgConfigQueryAppsName:=/usr/bin/pkg-config};
 	#local StrPkgConfigAppsOpt=${PkgConfigQueryAppsOption:=--list-all};
-	eval $( StrValueParserInfo )  ;
+	eval $( eval "${StrValueParserInfo} ValueParser " ) ;
+	
 	#echo -ne "StrAppsName : ${StrAppsName}\n" > /dev/stderr ;
 	#echo -ne "StrAppsOpt  : ${StrAppsOpt}\n" > /dev/stderr ;
 	#echo -ne "StrFlagList  : ${StrFlagList}\n" > /dev/stderr ;
@@ -183,16 +184,17 @@ function PkgConfigQuery()
 		local StrGrepFilter=${FilterPackageListGrepFilter:=${CurrentPackage}}
 		cut -d " " -f 1 | egrep -i "${StrGrepFilter}" | tr '[:cntrl:]' ' ' 
 	}
-	if [ ${IntArgLen:=0} -eq 0 ] ; then 
-		ArrayFlagTest=( ${StrFlagList//,/ } ) ; 
-	else
-		ArrayFlagTest=( ${ArrayArgFlag[@]} ) ; 
-	fi 
+
  
  	if [ "${Arg0:=--start}" == "--help" ] ; then 
 			GetVarReference PkgConfigQuery ; 
-			eval ${StrValueParserInfo} --varhelper ;
+			eval ${StrValueParserInfo} ValueParser --varhelper ;
 	else
+		if [ ${IntArgLen:=0} -eq 0 ] ; then 
+			ArrayFlagTest=( ${StrFlagList//,/ } ) ; 
+		else
+			ArrayFlagTest=( ${ArrayArgFlag[@]} ) ; 
+		fi 		
 		local ArrayPackageListVar=( ${StrPackageList//,/ } ) ;
 		for (( intAx=0 ; intAx <= ${#ArrayPackageListVar[@]}-1 ; intAx++ )) ; do 
 			local CurrentPackage="${ArrayPackageListVar[${intAx}]}" ; 
@@ -224,23 +226,33 @@ function PkgConfigQuery()
 function pkg-config-all()
 {
 	local __call_locality=( PkgConfigAll ) ; 
-	local StrpackageName=${PkgConfigAllArrayName:=ArrayPackageName}	;
-	local StrScopeType=${PkgConfigAllScoping:=declare -a}	;
-	local StrCutCol=${PkgConfigAllCutAlias:=cut}	;
-	local StrPkgConfig=${PkgConfigAllApps:=/usr/bin/pkg-config} ; 
 	local ArrayArg=( $* ) ; 
 	local Arg0=${ArrayArg[0]} ;
- 	if [ "${Arg0:=--startservices}" == "--help" ] ; then 
-			GetVarReference pkg-config-all ; 
-			echo -ne "Following switch are available:\n\n\t--startservices\tStart the application normally and output the package list\n\t--asarray\tStart The application and output the content into an Array, see varriable                               PkgConfigAllArrayName to change the name. This command need an eval braced                              to get the array being initialized.\n\n"
-	else
+	local StrValueParserInfo="VPCallLocalityName=${__call_locality[0]} VPVarArgList=Str:ArrayName,Int:Scoping,Str:CutAlias,Str:AppsName,Str:AppsOpt VPScopeList=ArrayName:local,Scoping:local,CutAlias:local,AppsName:local,AppsOpt:local VPValueList=ArrayPackageName:1:cut:/usr/bin/pkg-config:--list-all ValueParser" ;
+	
+	eval $( eval "${StrValueParserInfo} ValueParser " ) ;
+	### ValueParser replace following value.
+	#local StrpackageName=${PkgConfigAllArrayName:=ArrayPackageName}	;
+	#local IntScoping=${PkgConfigAllScoping:=1}	;
+	#local StrCutAlias=${PkgConfigAllCutAlias:=cut}	;
+	#local StrPkgConfig=${PkgConfigAllApps:=/usr/bin/pkg-config} ; 
+	echo -ne "Var StrAppsName: ${StrAppsName}\nVar StrAppsOpt: ${StrAppsOpt}\n" > /dev/stderr ;
+	function Main()
+	{
+		local ArrayScopingType=( "local" "declare -a");
 		if [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
-			eval "${StrPkgConfig} --list-all | ${StrCutCol} -f 1" ; 
-		fi 
-		if [ "${Arg0:=--startservices}" == "--asarray" ] ; then 
-				local StrPackageList=$( ${StrPkgConfig} --list-all | eval "${StrCutCol} -f 1" | tr '[:cntrl:]' ' ' ) ; 
-				echo -ne "${StrScopeType} ${StrpackageName}=( ${StrPackageList} )\n" ;
+			eval "${StrAppsName} --list-all | ${StrCutAlias} -f 1" ; 
+		elif [ "${Arg0:=--startservices}" == "--asarray" ] ; then 
+				local StrPackageList=$( ${StrAppsName} ${StrAppsOpt} | eval "${StrCutAlias} -f 1" | tr '[:cntrl:]' ' ' ) ; 
+				echo -ne "${ArrayScopingType[${IntScoping}]} ${StrArrayName}=( ${StrPackageList} )\n" ;
 		fi
+	}
+ 	if [ "${Arg0:=--startservices}" == "--help" ] ; then 
+		GetVarReference pkg-config-all ; 
+		eval ${StrValueParserInfo} --varhelper
+		echo -ne "Following switch are available:\n\n\t--startservices\tStart the application normally and output the package list\n\t--asarray\tStart The application and output the content into an Array, see varriable                               PkgConfigAllArrayName to change the name. This command need an eval braced                              to get the array being initialized.\n\n"
+	else
+		Arg0=${Arg0} StrAppsName=${StrAppsName} StrCutAlias=${StrCutAlias} StrAppsOpt=${StrAppsOpt} IntScoping=${IntScoping} StrArrayName=${StrArrayName} Main
 	fi
 }
 
