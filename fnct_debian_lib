@@ -7,6 +7,132 @@ declare -a ArrayPackageType=( DPKG APT YUM RPM ) ;
 declare -a ArrayPackageAction=( install update remove fix compile certify verify ) ;
 
 
+
+unset ValueParser ;
+
+function ValueParser()
+{
+		local ArrayArg=( $* ) ; 
+		local Arg0=${ArrayArg[0]} ;
+		local __call_locality=( VP );
+		local StrVarArgList=${VPVarArgList:=Str:AppsName,Str:AppsOpt} ; 
+		local StrValueList=${VPValueList:=echo,__VALUE__} ; 
+		local StrLocality=${VPCallLocalityName:=Default} ; 
+		local StrScope=${VPScopeList:=AppsName:local,AppsOpt:local}
+		local StrDefaultScope=${VPScopeDefault:=local};
+		local ArrayScope=( ${StrScope//,/ } ) ; 
+		local ArrayVar=( ${StrVarArgList//,/ } ) ; 
+		local ArrayValue=( ${StrValueList//:/ } ) ;
+		local StrValueReturn="" ;
+		local StrDebug=${VPDebug:=False}
+		local ArrayScopeIndex=( "local -a" "declare" ) ;
+
+		function GetScope()
+		{
+				local ArrayArg=( $* ) ; 
+				local __call_locality=( GetScope );
+				local StrDebug=${GetScopeDebug:=False}
+				local Arg0=${ArrayArg[0]} ;
+				if [ "${Arg0:=local}" == "local" ] ; then 
+					echo -ne "0" ; 
+				elif [ "${Arg0:=local}" == "global" ] ; then 
+					echo -ne "1" ; 
+				fi 
+		}
+		function VarInScopeList()
+		{
+			local ArrayArg=( $* ) ; 
+			local __call_locality=( VarInScopeList );
+			local StrDebug=${VarInScopeListDebug:=False}
+			local StrValue=${Value:=AppsName} ;
+			local StrIsScoped=False
+			local StrValueReturn="False" ;
+			for (( intx=0 ; intx <= ${#ArrayArg[@]}-1 ; intx++ )) ; do 
+				local ArrayValue=( ${ArrayArg[${intx}]//:/ } ) ;
+				local StrSuffix=${ArrayValue[0]} ; 
+				if [ "${StrSuffix}" == "${StrValue}" ] ; then 
+					local StrScope=$( GetScope ${ArrayValue[1]} ) ; 
+					StrIsScoped=True
+					StrValueReturn="${StrIsScoped} ${StrScope} ${StrValue}" 
+				fi 
+			done 
+			echo -ne "${StrValueReturn}" ; 
+		}
+		function MainHelper()
+		{
+			local ArrayVar=( $* ) ;
+			local __call_locality=( MainHelper )
+			local ArrayScope=( ${ArrayScope[@]//,/ } ) ; 
+			local StrDebug=${MainDebug:=False} ;
+			for (( intx=0 ; intx <= ${#ArrayVar[@]}-1 ; intx++ )) ; do 
+				local VarSeg=( ${ArrayVar[${intx}]//:/ } ) ; 
+				local StrVarSuffixType="${VarSeg[0]}" ;
+				local StrVarSuffix="${VarSeg[1]}" ;
+				#local StrVarName="__scope__ __prefix____suffix__=\${__locality____suffix__:=__value__}" ;
+				local StrVarName="Variable __locality____suffix__,\n\tDefault Value __value__\n" ;
+				
+				local ArrayScopeTest=( $( Value=${StrVarSuffix} VarInScopeList ${ArrayScope[@]} ) ) ; 
+				
+				if [ "${ArrayScopeTest[0]}" == "True" ] ; then 
+					StrVarName=${StrVarName//__scope__/${ArrayScopeIndex[${ArrayScopeTest[1]}]}} ;
+					StrVarName=${StrVarName//__suffix__/${StrVarSuffix}} ; 
+					StrVarName=${StrVarName//__value__/${ArrayValue[${intx}]}};
+					StrVarName=${StrVarName//__prefix__/${StrVarSuffixType}} ;
+					StrVarName=${StrVarName//__locality__/${StrLocality}} ;
+				else
+					StrVarName=${StrVarName//__scope__/${StrDefaultScope}} ;
+					StrVarName=${StrVarName//__suffix__/${StrVarSuffix}} ; 
+					StrVarName=${StrVarName//__value__/${ArrayValue[${intx}]}} 
+					StrVarName=${StrVarName//__prefix__/${StrVarSuffixType}} ;
+					StrVarName=${StrVarName//__locality__/${StrLocality}} ;
+				fi 
+				StrValueReturn="${StrValueReturn} ${StrVarName}" ;
+			done 
+			echo -ne "${StrValueReturn}" ;
+			
+		}		
+		function Main()
+		{
+			local ArrayVar=( $* ) ;
+			local __call_locality=( Main )
+			local ArrayScope=( ${ArrayScope[@]//,/ } ) ; 
+			local StrDebug=${MainDebug:=False} ;
+			for (( intx=0 ; intx <= ${#ArrayVar[@]}-1 ; intx++ )) ; do 
+				local VarSeg=( ${ArrayVar[${intx}]//:/ } ) ; 
+				local StrVarSuffixType="${VarSeg[0]}" ;
+				local StrVarSuffix="${VarSeg[1]}" ;
+				local StrVarName="__scope__ __prefix____suffix__=\${__locality____suffix__:=__value__}" ;
+				
+				local ArrayScopeTest=( $( Value=${StrVarSuffix} VarInScopeList ${ArrayScope[@]} ) ) ; 
+				
+				if [ "${ArrayScopeTest[0]}" == "True" ] ; then 
+					StrVarName=${StrVarName//__scope__/${ArrayScopeIndex[${ArrayScopeTest[1]}]}} ;
+					StrVarName=${StrVarName//__suffix__/${StrVarSuffix}} ; 
+					StrVarName=${StrVarName//__value__/${ArrayValue[${intx}]}};
+					StrVarName=${StrVarName//__prefix__/${StrVarSuffixType}} ;
+					StrVarName=${StrVarName//__locality__/${StrLocality}} ;
+				else
+					StrVarName=${StrVarName//__scope__/${StrDefaultScope}} ;
+					StrVarName=${StrVarName//__suffix__/${StrVarSuffix}} ; 
+					StrVarName=${StrVarName//__value__/${ArrayValue[${intx}]}} 
+					StrVarName=${StrVarName//__prefix__/${StrVarSuffixType}} ;
+					StrVarName=${StrVarName//__locality__/${StrLocality}} ;
+				fi 
+				StrValueReturn="${StrValueReturn} ${StrVarName} ; " ;
+			done 
+			echo -ne "${StrValueReturn}" ;
+			
+		}
+		if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+			GetVarReference ValueParser ;
+		elif [ "${Arg0:=--startservices}" == "--startservices"	] ; then 
+			ArrayScope=${ArrayScope[@]// /,} StrVarSuffix=${StrVarSuffix} StrValueReturn=${StrValueReturn} StrDefaultScope=${StrDefaultScope} StrLocality=${StrLocality}  Main ${ArrayVar[@]} ; 
+		elif [ "${Arg0:=--startservices}" == "--varhelper"	] ; then 
+			ArrayScope=${ArrayScope[@]// /,} StrVarSuffix=${StrVarSuffix} StrValueReturn=${StrValueReturn} StrDefaultScope=${StrDefaultScope} StrLocality=${StrLocality}  MainHelper ${ArrayVar[@]} ;
+		fi 
+	
+}
+
 ### Package Query function. 
 ### give by-package, many option at once. 
 ### 
@@ -29,19 +155,26 @@ declare -a ArrayPackageAction=( install update remove fix compile certify verify
 ### flac:--libs:-lFLAC -lm  
 ### flac++:--cflags:-I/usr/include/FLAC++ -I/usr/include/FLAC  
 ### flac++:--libs:-lFLAC++ -lFLAC -lm  
-
 function PkgConfigQuery()
 { 
   local ArrayArg=($*);
-  local __call_locality=( PkgConfigQuery ) ;
+  local __call_locality=( PkgQuery ) ;
 	local Arg0=${ArrayArg[0]:=--start} ; 
 	local ArrayArgFlag=( ${ArrayArg[@]:1} ) ; 
 	local IntArgLen=${#ArrayArgFlag[@]} ;
-	local StrPkgConfigApps=${PkgConfigQueryAppsName:=/usr/bin/pkg-config};
-	local StrPkgConfigAppsOpt=${PkgConfigQueryAppsOption:=--list-all};
-
-	local StrPackageList=${PkgConfigQueryGetPackage:=flac} ;
-	local StrFlagList=${PkgConfigQueryFlagList:=--libs,--static,--short-errors,--libs-only-l,--libs-only-other,--libs-only-L,--cflags,--cflags-only-I,--cflags-only-other} ;
+	local StrValueParserInfo="VPCallLocalityName=${__call_locality[0]} VPVarArgList=Str:AppsName,Str:AppsOpt,Str:FlagList,Str:PackageList VPScopeList=AppsName:local,AppsOpt:local,FlagList:local,PackageList:local VPValueList=/usr/bin/pkg-config:--list-all:--libs,--static,--short-errors,--libs-only-l,--libs-only-other,--libs-only-L,--cflags,--cflags-only-I,--cflags-only-other:flac ValueParser" ;
+	
+	### Replaced by ValueParser
+	#local StrPkgConfigApps=${PkgConfigQueryAppsName:=/usr/bin/pkg-config};
+	#local StrPkgConfigAppsOpt=${PkgConfigQueryAppsOption:=--list-all};
+	eval $( StrValueParserInfo )  ;
+	#echo -ne "StrAppsName : ${StrAppsName}\n" > /dev/stderr ;
+	#echo -ne "StrAppsOpt  : ${StrAppsOpt}\n" > /dev/stderr ;
+	#echo -ne "StrFlagList  : ${StrFlagList}\n" > /dev/stderr ;
+	#echo -ne "StrPackageList  : ${StrPackageList}\n" > /dev/stderr ;
+	
+	#local StrPackageList=${PkgConfigQueryGetPackage:=flac} ;
+	#local StrFlagList=${PkgConfigQueryFlagList:=--libs,--static,--short-errors,--libs-only-l,--libs-only-other,--libs-only-L,--cflags,--cflags-only-I,--cflags-only-other} ;
 	local ArrayFlagTest=( ) ;
 	function FilterPackageList()
 	{
@@ -57,17 +190,18 @@ function PkgConfigQuery()
 	fi 
  
  	if [ "${Arg0:=--start}" == "--help" ] ; then 
-			GetVarReference ${__call_locality[0]} ; 
+			GetVarReference PkgConfigQuery ; 
+			eval ${StrValueParserInfo} --varhelper ;
 	else
 		local ArrayPackageListVar=( ${StrPackageList//,/ } ) ;
 		for (( intAx=0 ; intAx <= ${#ArrayPackageListVar[@]}-1 ; intAx++ )) ; do 
 			local CurrentPackage="${ArrayPackageListVar[${intAx}]}" ; 
-		  local _A=( $( ${StrPkgConfigApps} ${StrPkgConfigAppsOpt} | FilterPackageListGrepFilter=${CurrentPackage} FilterPackageList ) );
+		  local _A=( $( ${StrAppsName} ${StrAppsOpt} | FilterPackageListGrepFilter=${CurrentPackage} FilterPackageList ) );
 		  local IntNbPackage=${#_A[@]} ;
 		  if [ ${IntNbPackage:=0} -gt 0 ]; then
 		      for ((x=0 ; x <= ${#_A[@]}-1 ; x++ )) ; do
 		          for (( cx=0 ; cx <= ${#ArrayFlagTest[@]}-1 ; cx++ )) ; do
-		              res=$( ${StrPkgConfigApps} ${_A[${x}]} ${ArrayFlagTest[${cx}]} );
+		              res=$( ${StrAppsName} ${_A[${x}]} ${ArrayFlagTest[${cx}]} );
 		              echo -ne "${_A[${x}]}:${ArrayFlagTest[${cx}]}:${res}\n";
 		          done;
 		      done;
@@ -873,6 +1007,39 @@ function BuildOnFaultCompiler()
 	fi 
 } 
 
+
+
+function RoundRobinSwapRealloc()
+{
+	local __call__locality=( RRSR ) ;
+	local ArrayArg=( $* ) ;
+	local Arg0=${ArrayArg[0]} ; 
+	
+	local Str=${RRSR:=}
+	
+	function GetSwapList()
+	{
+		local __call__locality=( GSL ) ;
+		local ArrayArg=( $* ) ;
+		ArrayListSwap=( $( swapon -s | cut -d ' ' -f 1  | grep -v "Filename" | tr '[:cntrl:]' ' ' ) ) ; 
+		
+	}
+	function Start()
+	{
+		local __call__locality=( Start ) ;
+		local ArrayArg=( $* ) ;
+		
+	}
+	
+	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+			GetVarReference RoundRobinSwapRealloc ;
+			echo -ne "Following switch are available:\n\n\t--startservices\tStart the application normally and output the package list\n\t--swaptorealloc\tShow Next Swap To apply a re-allocation.\n\n" > /dev/stderr ; 
+	elif [ "${Arg0:=--startservices}" == "--swaptorealloc"	] ; then 
+		GetSwapList ;
+	else
+		 Start ; 
+	fi 
+}
 
 if [ ${VarFnctLib:=False} == "True" ] ; then
 
