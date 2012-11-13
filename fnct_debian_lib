@@ -758,11 +758,13 @@ function PackageRepositoryMgmt()
 	local __call_locality=( PkgRepoMgmt ) ;
 	local ArrayArg=( $* ) ; 
 	local Arg0=${ArrayArg[0]} ;
+	local StrUUID=$( uuidgen -t ) ; 
 	local StrPathArchives=${PkgRepoMgmtPathArchives:=/var/cache/apt/archives} ; 
 	local StrFindStringFormat=${PkgRepoMgmtStrFmt:="%f "} ;
 	local StrPackageType=${PkgRepoMgmtFileFormat:=deb} ;
 	local StrPathRepository=${PkgRepoMgmtRepository:=/media/COMST500GB/Linux-Debian/archives/Mint-12_x86-64} ;
 	local StrPathReposIndex=${PkgRepoMgmtReposIndex:=/media/COMST500GB/Linux-Debian/archives/Mint-12_x86-64/index} ;
+	local StrDumpingFormat=${PkgRepoMgmtReposIndexFmt:=__ID__:__FILE__};
 	local StrDefaultActionIndex=${PkgRepoMgmtReposIndexAction:="mkdir -p __PATH__"} ;
 	local StrTestDriveDebug=${PkgRepoMgmtReposDriveDebug:=False} ;
 	local StrIndexTest=${PkgRepoMgmtReposIndexTest:=! -d} ;
@@ -837,10 +839,13 @@ function PackageRepositoryMgmt()
 			$( TestDriveMountDebug=${StrTestDriveDebug} TestDriveMountList=${StrPathRepository},${StrPathArchives} TestDriveMount ) ; 
 			if [ "${IsMountDrive:=True}" == "True" ] ; then 
 				TestPathIndexName=${StrPathReposIndex} TestPathIndexTest=${StrIndexTest} TestPathIndexResultAction=${StrDefaultActionIndex} TestPathIndex ;
-				test ! -e ${StrIndexFile} && echo -ne "NEW TRANSACTION:${StrTransactionStart}\n" > ${StrIndexFile} ; 
- 			  test -e ${StrIndexFile} && echo "COMMIT TRANSACTION:${StrTransactionStart}\n" >> ${StrIndexFile} ; 
-
+				
 				local ArrayFileList=( $( GetPackageListPathArchives=${StrPathArchives} GetPackageListFormat=${StrPackageType} GetPackageListStringFormat="${StrFindStringFormat}" GetPackageList ) )
+				local ShaSum=$( echo ${ArrayFileList[@]} | sha1sum | cut -d ' ' -f 1 )
+				test ! -e ${StrIndexFile} && echo -ne "NEW TRANSACTION:${StrTransactionStart}\n" > ${StrIndexFile} ; 
+ 			  test -e ${StrIndexFile} && echo -ne "COMMIT TRANSACTION:ID:${StrUUID}:NB_FILE:${#ArrayFileList[@]}:SHA1SUM:${ShaSum}:${StrTransactionStart}\n" >> ${StrIndexFile} ; 
+
+				
 				local Result=$? ; 
 				if [ ${Result:=1} -eq 0 ] ; then 
 					for (( intx=0 ; intx <= ${#ArrayFileList[@]}-1 ; intx++ )) ; do 
@@ -851,7 +856,10 @@ function PackageRepositoryMgmt()
 						StrLinkAction=${StrLinkAction//__SRC__/${StrPathArchives}} ; 
 						StrLinkAction=${StrLinkAction//__DEST__/${StrPathRepository}} ;
 						StrLinkAction=${StrLinkAction//__VIRG__/;} ; 
-						echo -ne "${strfile}\n" >> ${StrIndexFile} ; 
+						local StrDump=${StrDumpingFormat}; 
+						StrDump=${StrDump//__ID__/${StrUUID}};
+						StrDump=${StrDump//__FILE__/${strfile}};
+						echo -ne "${StrDump}\n" >> ${StrIndexFile} ; 
 						echo -ne "Action:[ ${StrLinkAction} ]\n" > /dev/stderr ; 
 						eval "${StrLinkAction}" ; 
 					
@@ -865,6 +873,120 @@ function PackageRepositoryMgmt()
 			fi
 	fi 
 }
+
+### Here the restoring for PackageRepositoryMgmt
+### Likely to use PRRIsLink=1 PRRIsResolve=0 PackageRepositoryRest
+### PRRIsResolve variable is reserver to search the package following specific time
+### inside an index, which is merely not working to restore whole packaging...
+### lacking ID on every Package name index, which is not hard to modify.
+function PackageRepositoryRest()
+{
+	local __call_locality=( PRR )	 ; 
+	local ArrayArg=( $* ) ;
+	local IsLink=${PRRIsLink:=0} ; 
+	local IsResolve=${PRRIsResolve:=1} ; 
+	local IsDebug=${PRRIsDebug:=0} ; 
+	local IsDebugResult=${PRRIsDebugResult:=0} ;
+	local IsRemoveResolve=${PRRRemoveOldResolved:=1} ;
+	local thisdate=${PRRGetDate:=20121108} ;
+	local drv=${PRRBackupPath:=/media/COMST500GB/Linux-Debian/archives/Mint-12_x86-64} ; 
+	local index=${PRRBackupIndex:=__BackupPath__/index} ;
+	local resolve=${PRRResolveFile:=__IndexFile__/resolve-__DATE__} ;
+	local IntSleepWarning=${PRRSleepWarning:=10} ; 	
+	
+	local src=${PRRRepositoryPath:=/var/cache/apt/archives} ; 
+	local _TA=( ) ;
+	local Arg0=${ArrayArg[0]}	; 
+	
+	if [ "${Arg0:=--startservices}" == "--help" ] ; then 
+		GetVarReference PackageRepositoryRest ; 
+	elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+		index=${index//__BackupPath__/${drv}} ;
+		resolve=${resolve//__DATE__/${thisdate}} ;
+		resolve=${resolve//__IndexFile__/${index}} ;
+		local _index=${index}/${thisdate} ; 
+	
+		
+  if [ ${IsResolve:=0} -eq 1 ] ; then  
+			echo -ne "Will resolve package into resolve file store inside index path.\n\tUsefull to get all package-name, package-file and commit level based on PRRGetDate value.\n\tFile resolver:${resolve}\n" > /dev/stderr ; 
+		else
+			echo -ne	"Will not perform a resolution package into resolve file store inside index path.\n" > /dev/stderr ; 
+		fi ### End of test IsResolve-eq-1 
+		
+  if [ ${IsLink:=0} -eq 1 ] ; then 
+			echo -ne "Will link package into Repository destination, based on Variable PRRRepositoryPath,\n\twill link inside path:${src}\n" > /dev/stderr ; 
+		else
+			echo -ne "Will not performing linking package into Repository destination\n" > /dev/stderr ;		
+		fi ### End of test IsLink-eq-1 
+		sleep ${IntSleepWarning} ; 
+
+		### erasing old resolved information:
+		test ${IsRemoveResolve:=1} == 1 &&	test -e ${resolve} && rm -f ${resolve} ; 
+
+		### List of Deb File
+		local _A=( $( find ${drv} -maxdepth 1 -type f -printf "%f " ) ) ;
+	
+		### Current Line Number and time for all commit from ${thisdate}
+		### Format by Index: Line[1-...],Date[YYYYMMDD],Time[HH:MM:SS], 
+		local _TI=(  $( cat ${_index} | egrep -n "COMMIT" | sed 's/\ /:/g;s/\\n//g' | cut -d ':' -f 1,4,5,6,7 | sed 's/^\([0-9]*\):\([0-9]*\):/\1,\2,/g' | tr '[:cntrl:]' ' ' ) ) ; 
+		local _RA=( ) ; 
+
+		if [ ${IsResolve:=0} -eq 1 ] ; then  
+			for (( x=0 ; x<= ${#_A[@]}-1 ; x++ )) ; do 
+				local file=${_A[${x}]} ; 
+				### Do the resolving .
+					local tfile=$( cat ${_index} | egrep -n "${file}" ) ;
+					local ifile=( ${tfile//:/ } ) ; 
+					ifile=${ifile[0]:=-1} ; 
+					### Get The ID from which commit file was part of (... may be none if file was not installed on ${thisday} )
+					local IntoldIndex=1 ;		
+					local IsIndexed=0 ; 		
+					test ${IsDebugResult:=0} == 1 && echo -ne "Resolving File: ${file},\n\tat line ${ifile},from commit " > /dev/stderr ; 
+					local PackageName=( ${file//_/ } ) ; 
+					for (( y=0 ; y<= ${#_TI[@]}-1 ; y++ )) ; do 
+								local _TIA=( ${_TI[${y}]/,/ } ) ; 
+								local IntLine=${_TIA[0]} ; 
+								if [ ${ifile:=0} -gt 0 ] ; then 
+									if [ ${ifile:=0} -gt ${IntoldIndex} ] ; then 
+										if [ ${ifile:=0} -lt ${IntLine} ] ; then 
+											test ${IsDebugResult:=0} == 1 && echo -ne "${IntLine}\n" > /dev/stderr ; 
+											test ${IsDebug:=0} == 1 && echo -ne "File located at index: ${ifile:=0}, from commit: ${IntLine}\n" > /dev/stderr  
+											_RA[${#_RA[@]}]="${IntLine},${PackageName[0]},${ifile:=0},${file}" ; 
+											IsIndexed=1; 
+										else
+											IsIndexed=0; 
+										fi ### End of test ifile-lt-IntLine
+									fi ### End of test ifile-gt-IntoldIndex
+								fi ### End of test ifile-gt-0
+						IntoldIndex=${IntLine} ; 
+					### _TI -> Action Based on Index from commit in file-index from ${thisdate}
+					done 
+					if [ ${IsIndexed:=0} -eq 0 ] ; then 
+						test ${IsDebugResult:=0} == 1 && echo -ne "None\n" > /dev/stderr ;  
+						_RA[${#_RA[@]}]="0,${PackageName[0]},${ifile:=0},${file}"
+					fi ### End of test IsIndexed-eq-0 
+				### _A -> File location and action based on file 
+				done 
+				echo -ne "Resolved information from index writed in file ${resolve}\n" ;		
+				for (( x=0 ; x<= ${#_RA[@]}-1 ; x++ )) ; do 
+					echo -ne "${_RA[${x}]//,/ }\n" >> ${resolve} ; 
+				### _RA -> Stored informations while looping in _TI and _A to get all resolved file.
+				done 
+		else
+			echo -ne "\n\n\tResolving Procedure was cancelled"
+		fi ### End of test IsResolve-eq-1 
+		### Do The link.
+		if [ ${IsLink:=0} -eq 1 ] ; then 
+			for (( x=0 ; x<= ${#_A[@]}-1 ; x++ )) ; do 
+				local file=${_A[${x}]} ; 
+				test ! -L ${src}/${file} && ln -s ${drv}/${file} ${src}/${file} ; 
+			### _A -> File location and action based on file 
+			done 
+		fi ### End of test IsLink-eq-1 
+		
+	fi ### End of test Arg0==--startservices
+}
+
 
 ### Function : GetMplayerStream()
 ### 
