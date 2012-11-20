@@ -408,6 +408,7 @@ function GetOtherDate()
 
 
 
+
 function kill_cmd()    
 { 
 	local ArrayArg=( $* ) ; 
