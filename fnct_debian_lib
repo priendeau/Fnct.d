@@ -315,6 +315,132 @@ function GetVarReference( )
 	declare -f ${ArrayArg[0]} | egrep "${CallLocalityInternalName}" | ParseInternalVar ;
 }
 
+unset DefaultConfigure ;
+function DefaultConfigure()
+{ 
+	local ArrayArg=( $* ) ; 
+	local __call_locality=( DefConfigure ) ; 
+	local Arg0=${ArrayArg[0]}; 
+	local StrLD='${DefConfigureLD:=${LD} -laudiofile}' ; 
+	local StrLDFLAGS='${DefConfigureLDFLAGS:=${LDFLAGS}}' ; 
+	local StrCXX=${DefConfigureCXX:=\${CXX}} ; 
+	local StrCC=${DefConfigureCC:=\${CC}} ; 
+	local StrCPP=${DefConfigureCPP:=\${CPP}} ; 
+	local StrCFLAGS=${DefConfigureCFLAGS:=\${CFLAGS}} ;
+	local StrCPPFLAGS=${DefConfigureCPPFLAGS:=\${CPPFLAGS}} ; 
+	local StrCXXFLAGS=${DefConfigureCXXFLAGS:=\${CXXFLAGS}} ; 
+	local StrNewConfigureOptFile=${DefConfigureOptFile:=${HOME}/.DefConfigureOption} ; 
+	local StrNameConfigure=${DefConfigureName:=default} ;
+	local StrDefaultAction=${DefConfigureAction:=--start-services} ;
+	local CmdEval=( ./configure  ) ;
+	
+	function GetNameConfigureOption()
+	{
+			local ArrayArg=( $* ) ; 
+			local __call_locality=( GetConfOpt ) ; 
+			local Arg0=${ArrayArg[0]}; 
+			local StrNameOption=${GetConfOptName:=default} ;
+			local StrOptionFile=${GetConfOptFile:=${HOME}/.DefConfigureOption} ;
+			local StrGrepSep=${GetConfOptSep:=:} ;
+			local StrGrepPattern=${GetConfOptGrepPattern:=__PATTERN____SEP__} ;
+			local StrGrepForm="${StrGrepPattern//__PATTERN__/${StrNameOption}}";
+			StrGrepForm=${StrGrepForm//__SEP__/${StrGrepSep}} ; 
+			local StrContent=$( cat ${StrOptionFile} | egrep -i ${StrGrepForm} | head -n 1 | cut -d ':' -f 2- ) ; 
+			echo -ne "${StrContent}" ; 
+	}
+	local StrConfigureContentTest="" ;
+	test -e ${StrOptionFile} && local StrConfigureContentTest=$( GetConfOptName=${StrNameConfigure} GetConfOptFile=${StrNewConfigureOptFile} GetNameConfigureOption ) ; 
+	local StrConfigureContent=${StrConfigureContentTest:=--help} ; 
+	#local StrConfigContent=$( test -e ${StrNewConfigureOptFile} && local CmdEval=( ./configure  ) ) ; 
+	if [ "${ArrayArg[0]}" = "--help" ] ; then 
+		GetVarReference DefaultConfigure ; 
+	elif [ "${ArrayArg[0]}" == "${StrDefaultAction}" ] ; then 
+		CmdEval=( ${CmdEval[@]} ${StrConfigureContent} ) ; 
+		echo -ne "Configure option extracted: \n\t${CmdEval[@]}\n\n" > /dev/stderr ; 
+		#eval """${CmdEval[@]}""" ; 
+	elif [ "${ArrayArg[0]}" == "--add" ] ; then 
+		echo -ne """Adding Configure Option Name:${StrNameOption}:\n\t\t\t${ArrayArg[@]:1:}\n""" > /dev/stderr ; 
+		local StrExportSream="""${StrNameConfigure}:__configure__ ${ArrayArg[@]:1:} LD=\"${StrLD}\" LDFLAGS=\"${StrLDFLAGS}\" CXX=\"${StrCXX}\" CC=\"${StrCC}\" CPP=\"${StrCPP}\" CFLAGS=\"${StrCFLAGS}\" CPPFLAGS=\"${StrCPPFLAGS}\" CXXFLAGS=\"${StrCXXFLAGS}\" ${ArrayArg[@]:1:}""" ; 
+		StrExportSream=${StrExportSream//__configure__/${StrNameOption}} ;
+		echo -ne "Configure Command:\n\t${StrExportSream}\n" > /dev/stderr ; 
+		#echo -ne "${StrExportSream//__configure__/${StrNameOption}}\n" >> ${StrNewConfigureOptFile} ; 
+	elif [ "${ArrayArg[0]}" == "--update" ] ; then 
+		echo -ne """Updating Configure Option:\n\t\t${ArrayArg[@]:1:}\n""" > /dev/stderr ; 
+	elif [ "${ArrayArg[0]}" == "--remove" ] ; then 
+		echo -ne """Removing Configure Option:\n\t\t${ArrayArg[@]:1:}\n""" > /dev/stderr ; 
+	else
+		echo -ne """Arg0 No option specified\n""" > /dev/stderr ; 
+	fi
+
+	
+}
+
+ ### IsPathName :
+ ###
+ ###
+ ###	Full-length example : 
+ ### Including 2 main definition
+ ###
+ ### - Return value:
+ ### if the test success, it report number of element retain in grep filter. 
+ ###  - it also return 0 in case of sucess and 1 if fail. 
+ ### example: 
+ ###
+ ### - Return True on a test on Arg0 to be a path with appropriate sematic for current path. 
+ ### IsPathName ./avfsd 
+ ### -> return 0 
+ ###
+ ### IsPathNameAction=CurrentPath IsPathName ./avfsd 
+ ### -> return 0 
+ ###
+ ### IsPathName /avfsd 
+ ### -> return 1 # This is not a current path specified. 
+ ###
+ ### IsPathName IsPathNameAction=IsRootPath avfsd 
+ ### -> return 1 # This is not a Rooted-path name.
+ ###
+ ### IsPathName IsPathNameAction=IsRootPath /avfsd 
+ ### -> return 0 .
+ ###
+ ###
+
+unset IsPathName 
+function IsPathName()
+{
+		local __call_locality=( IsPathName );
+		local ArrayArg=( $* ) ;
+		local Arg0=${ArrayArg[0]}; 
+		local ArgActionList=${IsPathNameActLst:=CurrentPath,IsRootPath}
+		local RegActionList=${IsPathNameReglst:="^\.+\/"__SEP__"^\/"} ; 
+		local StrAction=${IsPathNameAction:=CurrentPath} ; 
+		local IntReturnValue=0 ; 
+		local IntReturnState=0 ; 
+		
+		local ArrayActionList=( ${ArgActionList//,/ } ) ; 
+		local ArrayRegExp=( ${RegActionList//__SEP__/ } ) ; 
+		
+		if [ "${ArrayArg[0]}" = "--help" ] ; then 
+			IntReturnState=0 ;
+			GetVarReference ${__call_locality[0]} ; 
+		else
+			for(( intx=0 ; intx <= ${#ArrayActionList[@]]}-1 ; intx++ )) ; do 
+			 local StrReg="${ArrayRegExp[${intx}]}" ;
+			 local StrMainAction=${ArrayActionList[${intx}]} ; 
+			 if [ "${StrAction}" == "${StrMainAction}" ] ; then 
+					IntReturnValue=$( echo "${Arg0}" | egrep -ice "${StrReg}"	 2&>1 /dev/null ) ; 
+			 fi 
+			done 
+		 if [ ${IntReturnValue:=0} -gt 0 ] ; then 
+				IntReturnState=0 ;
+			else
+				IntReturnState=1 ;
+			fi 
+			
+		fi 
+		return ${IntReturnState} ;  
+}
+
+
 
  ### GetOtherDate :
  ###
@@ -714,7 +840,7 @@ function FindFilterPathExclusion()
 ### Yet Another Debian package Mangler and backup-management. 
 ### 
 ### It basically move actual Debian package from archive /var/cache/apt/archives
-### some-where else like /media/COMST500GB/Linux-Debian/archives/Mint-12_x86-64...
+### some-where else like /media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64...
 ### or some NFS mounted point or any mounted partition dedicated to save or backup... 
 ### - It create an index of the day, inside the Destination.
 ###  - The index file is in a new directory of the destination, calling it Destination/index
@@ -763,8 +889,8 @@ function PackageRepositoryMgmt()
 	local StrPathArchives=${PkgRepoMgmtPathArchives:=/var/cache/apt/archives} ; 
 	local StrFindStringFormat=${PkgRepoMgmtStrFmt:="%f "} ;
 	local StrPackageType=${PkgRepoMgmtFileFormat:=deb} ;
-	local StrPathRepository=${PkgRepoMgmtRepository:=/media/COMST500GB/Linux-Debian/archives/Mint-12_x86-64} ;
-	local StrPathReposIndex=${PkgRepoMgmtReposIndex:=/media/COMST500GB/Linux-Debian/archives/Mint-12_x86-64/index} ;
+	local StrPathRepository=${PkgRepoMgmtRepository:=/media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64} ;
+	local StrPathReposIndex=${PkgRepoMgmtReposIndex:=/media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64/index} ;
 	local StrDumpingFormat=${PkgRepoMgmtReposIndexFmt:=__ID__:__FILE__};
 	local StrDefaultActionIndex=${PkgRepoMgmtReposIndexAction:="mkdir -p __PATH__"} ;
 	local StrTestDriveDebug=${PkgRepoMgmtReposDriveDebug:=False} ;
@@ -782,7 +908,7 @@ function PackageRepositoryMgmt()
 	{
 		local __call_locality=( TestPathIndex ) ;
 		local ArrayArg=( $* ) ; 
-		local StrPathTest=${TestPathIndexName:=/media/COMST500GB/Linux-Debian/archives/Mint-12_x86-64/index} ; 
+		local StrPathTest=${TestPathIndexName:=/media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64/index} ; 
 		local StrTestType="${TestPathIndexTest:=! -d}" ;
 		local StrTestResultAction="${TestPathIndexResultAction:=mkdir -p __PATH__}" ;
 		test ${StrTestType} ${StrPathReposIndex} && ${StrTestResultAction//__PATH__/${StrPathReposIndex}} ;
@@ -890,7 +1016,7 @@ function PackageRepositoryRest()
 	local IsDebugResult=${PRRIsDebugResult:=0} ;
 	local IsRemoveResolve=${PRRRemoveOldResolved:=1} ;
 	local thisdate=${PRRGetDate:=20121108} ;
-	local drv=${PRRBackupPath:=/media/COMST500GB/Linux-Debian/archives/Mint-12_x86-64} ; 
+	local drv=${PRRBackupPath:=/media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64} ; 
 	local index=${PRRBackupIndex:=__BackupPath__/index} ;
 	local resolve=${PRRResolveFile:=__IndexFile__/resolve-__DATE__} ;
 	local IntSleepWarning=${PRRSleepWarning:=10} ; 	
