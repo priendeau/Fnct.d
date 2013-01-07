@@ -6,10 +6,106 @@ declare -a ArrayCreator=( Debian Ubuntu Fedora Mint ) ;
 declare -a ArrayPackageType=( DPKG APT YUM RPM ) ;
 declare -a ArrayPackageAction=( install update remove fix compile certify verify ) ;
 
-
+ ### ValueParser :
+ ### 
+ ### Description: 
+ ### - Aim to be a Value Parser with specific semantic to automatically create lists
+ ### of variable with specific notation. It was designed to Create a Unique Variable,
+ ### like StrValueParserInfo and evaluating the Variable with string-like specified with.
+ ### 2 level of CSV, between type ( Profixed variable are VPCallLocalityName VPVarArgList VPScopeList VPValueList )
+ ### are reserved to specify somes crucial information. 
+ ### 
+ ### VPCallLocalityName -> Under wichh prefix named variable are transfered from their calling name.
+ ### Ex: Having Function with var __call_locality=( ValueTest ), mean all variable from incoming 
+ ### function called with ValueTest(), like :
+ ### var1=value1 var2=value2 ValueTest --opt , var1 and var2 must have theirs names starting by
+ ### ValueTestvar1=value1 ValueTestvar2=value2 ... 
+ ### 
+ ### - Value parser will transform variable from ValueTestvar1 into Strvar1, Strvar2 if VPVarArgList
+ ### is specified.
+ ### 
+ ### VPVarArgList -> Specify the list of name and their internal Prefix Type. 
+ ### as said in VPCallLocalityName, variable have external and internal names. 
+ ### Passing by will not directly convert by create a variable starting with specified prefix.
+ ### Having :
+ ### VPCallLocalityName=ValueTest VPVarArgList=Str:var1,Str:var2 
+ ###  - inside function :ValueTest() will:
+ ### get from extern name like ValueTestvar1=value1 ValueTestvar2=value2 , 
+ ### will transfert the content into appropriate internal name: Strvar1, Strvar2 . 
+ ### - This is purely a simple transfert, convertion, name mangling and linting ( like checking name of 
+ ### var if they are not exceeding 32 chars are not yet show. )
+ ### 
+ ### VPScopeList -> Implicitly tell to ValueParser if the variable are created in local or global, telling
+ ### also about lifetime of variable... Important when dealing with function and sub-function and sub-n-function. 
+ ### 
+ ### 
+ ### 
+ ###	Full-length example : 
+ ### Including 
+ ### 
+ ### See StartCoproc, variable StrValueParserInfo hold the references and work well with triple-guillements.
+ ### 
+ ##
+ ### eval $( eval """
+ ###	VPCallLocalityName=${__call_locality[0]} 
+ ###	VPVarArgList=Str:ProcName,
+ ###	             Str:InWhile,
+ ###	             Str:WhCond,
+ ###	             Str:WhRetStat,
+ ###	             Str:AppsName,
+ ###	             Str:AppsPrVar,
+ ###	             Str:AppsOpt
+ ###	VPScopeList=ProcName:local,
+ ###	             InWhile:local,
+ ###	             WhCond:local,
+ ###	             WhRetStat:local,
+ ###	             AppsName:local,
+ ###	             AppsPrVar:local,
+ ###	             AppsOpt:local 
+ ###	VPValueList=DefaultCoprocName:True:__VAR__ -ne 1:__VAR__=\$( __CMD__ ):GitHubCommit:GitHubCommitFilePath=/etc/init.d/Fnct.d:fnct_debian_lib
+ ###	""" ValueParser )  ;
+ ### 
+ ### -Note Calling ValueParser with same string embedded in the value with following switches --varhelper, will transform this stream of variables
+ ### - into helper like GetVarReference . Don't forget, what ValueParser showing or creating is not visible from GetVarReference. GetVarReference
+ ### Function extract information from a 'declare -f ' statement and ValueParser is not creating inside the function the value, they are created 
+ ### by using this function... Quite simple, almost dynamic, but not fully-dynamic... It's bash afterall... 
+ ### Note : Sometimes more easy calling VPCallLocalityName=${__call_locality[0]} instead if re-writing the function names...
+ ### Some will love $0 wich is the function name or the script name if this one is inside a shell-file-script. but personally,  I report a lot 
+ ### of problems.  
+ ### 
+ ### 
+ ### Comparaison : 
+ ### 
+ ### Following method are similar .
+ ### 
+ ### function ValueTest()
+ ### {
+	###  local ArrayArg=( $* ) ; 
+	###  __call__locality=( ValueTest )	
+ ###  StrValueTest=${ValueTestValue:=None} ; 
+ ###  echo -ne """${StrValueTest}\n""" ; 
+ ### } 
+ ### 
+ ### function ValueTest()
+ ### {
+	###  local ArrayArg=( $* ) ; 
+	###  __call__locality=( ValueTest )	
+ ###  local StrValueParserInfo="VPCallLocalityName=${__call_locality[0]} VPVarArgList=Str:Value VPScopeList=Value:local VPValueList=None" ; 
+ ###  eval $( eval "${StrValueParserInfo} ValueParser " ) ;
+ ###  echo -ne """${StrValueTest}\n""" ; 
+ ### } 
+ ###
+ ### - It's eat more line if the number of variables are lower than 3 variables, but both function
+ ### work on same way... Calling-function to see the result:
+ ### 
+ ###  ValueTestValue="This is a test" ValueTest
+ ### 
+ ### - Exception : Still unable to read new variable definition from command-line and only create 
+ ### a Variable transfert blindly. 
+ 
+ 
 
 unset ValueParser ;
-
 function ValueParser()
 {
 		local ArrayArg=( $* ) ; 
@@ -101,7 +197,7 @@ function ValueParser()
 				local VarSeg=( ${ArrayVar[${intx}]//:/ } ) ; 
 				local StrVarSuffixType="${VarSeg[0]}" ;
 				local StrVarSuffix="${VarSeg[1]}" ;
-				local StrVarName="__scope__ __prefix____suffix__=\${__locality____suffix__:=__value__}" ;
+				local StrVarName="__scope__ __prefix____suffix__=\${__locality____suffix__:=\${__locality____suffix__:=__value__}}" ;
 				
 				local ArrayScopeTest=( $( Value=${StrVarSuffix} VarInScopeList ${ArrayScope[@]} ) ) ; 
 				
@@ -132,6 +228,63 @@ function ValueParser()
 		fi 
 	
 }
+
+ ### StartCoproc :
+ ###
+ ###
+ ###	Full-length example : 
+ ### Including 
+ ###
+ ###
+ ###
+ ###
+ ###
+ ###
+ ###
+ ###
+ ###
+
+unset StartCoproc
+function StartCoproc()
+{ 
+	local ArrayArg=( $* ) ; 
+	local __call_locality=( StartCoproc ) ; 
+ local Arg0=${ArrayArg[0]} ; 
+ ### Prototype model, 
+ ### - Require . /etc/init.d/Fnct.d/_sub_Git to work. 
+	### coproc git_fnct_debian { while [ ${res:=0} -ne 1  ] ; do res=$( GitHubCommitFilePath=/etc/init.d/Fnct.d  GitHubCommit fnct_debian_lib ) ; sleep 5 ; done ; }
+	local StrValueParserInfo="""
+	VPCallLocalityName=${__call_locality[0]} 
+	VPVarArgList=Str:ProcName,
+	             Str:InWhile,
+	             Str:WhCond,
+	             Str:WhRetStat,
+	             Str:AppsName,
+	             Str:AppsPrVar,
+	             Str:AppsOpt
+	VPScopeList=ProcName:local,
+	             InWhile:local,
+	             WhCond:local,
+	             WhRetStat:local,
+	             AppsName:local,
+	             AppsPrVar:local,
+	             AppsOpt:local,
+	VPValueList=DefaultCoprocName:True:__VAR__ -ne 1:__VAR__=\$( __CMD__ ):GitHubCommit:GitHubCommitFilePath=/etc/init.d/Fnct.d:fnct_debian_lib
+	""" ;
+	
+	eval $( eval "${StrValueParserInfo} ValueParser " ) ;
+	local EvalCoprocCmd=( ${StrAppsPrVar} ${StrAppsName} ${StrAppsOpt} ) ; 
+	if [ "${Arg0:=--startservices}" == "--help" ] ; then 
+		GetVarReference StartCoproc ; 
+		eval ${StrValueParserInfo} ValueParser --varhelper
+		echo -ne "Following switch are available:\n\n\t--startservices\tStart the application normally and output the package list\n\t--asarray\tStart The application and output the content into an Array, see varriable                               PkgConfigAllArrayName to change the name. This command need an eval braced                              to get the array being initialized.\n\n"
+	elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+		echo ""
+		### Prog To create a coprocess 
+		#if [ ${StrInWhile} ]
+	fi
+}
+
 
 ### Package Query function. 
 ### give by-package, many option at once. 
