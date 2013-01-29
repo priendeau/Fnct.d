@@ -473,7 +473,8 @@ function DefaultConfigure()
 { 
 	local ArrayArg=( $* ) ; 
 	local __call_locality=( DefConfigure ) ; 
-	local Arg0=${ArrayArg[0]}; 
+	local StrDefaultAction=${DefConfigureAction:=--start-services} ;
+	local Arg0=${ArrayArg[0]:=${StrDefaultAction}}; 
 	local StrLD='${DefConfigureLD:=${LD} -laudiofile}' ; 
 	local StrLDFLAGS='${DefConfigureLDFLAGS:=${LDFLAGS}}' ; 
 	local StrCXX=${DefConfigureCXX:=\${CXX}} ; 
@@ -484,7 +485,7 @@ function DefaultConfigure()
 	local StrCXXFLAGS=${DefConfigureCXXFLAGS:=\${CXXFLAGS}} ; 
 	local StrNewConfigureOptFile=${DefConfigureOptFile:=${HOME}/.DefConfigureOption} ; 
 	local StrNameConfigure=${DefConfigureName:=default} ;
-	local StrDefaultAction=${DefConfigureAction:=--start-services} ;
+	
 	local CmdEval=( ./configure  ) ;
 	
 	function GetNameConfigureOption()
@@ -785,6 +786,24 @@ function DpkgGetInlineBuildFlags()
 
 }
 
+function fast_dpkg_build()    
+{ 
+	local ArrayArg=( $* ) ; 
+	local __call_locality=( FDB ) ; 
+	local StrOptionDpkgBuild=${FDBDpkgBuildOpt:=} ;
+	local StrOptionDpkgInst=${FDBDpkgInstOpt:=} ;
+	for (( intx=0 ; intx <= ${#ArrayArg[@]}-1 ; intx++ )) ; do 
+		local StrPackage=${ArrayArg[${intx}]} ; 
+		cd /usr/local/src/apt/ ; 
+		md_cd $(pwd)/${StrPackage} ; 
+		cd ${StrPackage} ; 
+		local IntBuild=0 ; 
+		apt-src install ${StrOptionDpkgInst} -p ${StrPackage} && apt-src ${StrOptionDpkgBuild} -p build ${StrPackage} && IntBuild=1 ; 
+		echo -ne "\n\n\tBuild Status\n\t\titem : ${StrPackage}\n\t\tStatus: ${IntBuild}\n\n" ; 
+		dpkg --install $( find ./ -type f -iname "*.deb" -printf "%p " ) ; 
+	done ; 
+}
+
 function DebianAptSrcCompiler()
 {
 	local __call_locality=( DebianAptSrcCompiler ) ; 
@@ -985,8 +1004,59 @@ function FindFilterPathExclusion()
 	fi 
 }
 
-
-
+unset GkSuZenityLoader ; 
+function GkSuZenityLoader()
+{
+	local ArrayArg=( $* ) ; 
+	local __call_locality=( GkSuZenityLoader ) ; 
+	local StrUser=${GkSuZenityLoaderUser:=none}
+	local StrApps=${GkSuZenityLoaderApps:=/usr/local/bin/idlex}
+	local StrAppsOpt=${GkSuZenityLoaderAppsOpt:=} ;
+	local StrTitle=${GkSuZenityLoaderTitle:="Select a user for Idlex"} ;
+	local StrFileInfo=${GkSuZenityLoaderFile:=/etc/passwd} ;
+	local StrCol0=${GkSuZenityLoader:="selection"} ;
+	local StrCol1=${GkSuZenityLoader:="user"} ;
+	local StrRegSearch=${GkSuZenityLoaderReg:="\/bin\/bash"}
+	local StrDefaultCSV=${GkSuZenityLoaderCSV:=':'} ;
+	local IntDefaultColExtr=${GkSuZenityLoaderColExtr:=1} ;
+	local BoolShowUserSelection=${GkSuZenityLoaderSUS:=False}
+	
+	local Arg0=( ${ArrayArg[0]} ) ;
+	
+	function ZenityFilter()
+	{
+			egrep -i ${StrRegSearch} ${StrFileInfo} | cut -d ${StrDefaultCSV} -f ${IntDefaultColExtr} | sed  's/\(^[a-zA-Z0-9]*\)/FALSE \1/g' ; 
+	}
+	function GetPwdUser()
+	{
+		local StrUserSelection=$( zenity --list --title ${StrTitle} --column="${StrCol0}" --column="${StrCol1}" --radiolist $( StrDefaultCSV=${StrDefaultCSV} StrFileInfo=${StrFileInfo} StrRegSearch=${StrRegSearch} IntDefaultColExtr=${IntDefaultColExtr} ZenityFilter )	) ;
+		StrUserSelection=${StrUserSelection:=${StrUser}} ;
+		if [ "${BoolShowUserSelection}" == "True" ] ; then 
+			echo -ne "User selected: ${StrUserSelection}\n" > /dev/stderr ; 
+		fi 
+		echo "${StrUserSelection}" ; 
+	}
+	function Loader()
+	{
+		local ArrayArg=( $* ) ; 
+		local __call_locality=( Loader ) ; 
+		gksu --user ${StrUser} ${StrApps} ${StrAppsOpt} 
+	}
+	 if [ "${ArrayArg[0]}" = "--help" ] ; then 
+			GetVarReference ${__call_locality[0]} ; 
+ 	else	
+			if [ "${StrUser:=none}" ==  "none" ] ; then 
+				StrUser=$( StrDefaultCSV=${StrDefaultCSV} IntDefaultColExtr=${IntDefaultColExtr} StrFileInfo=${StrFileInfo} StrTitle=${StrTitle} StrCol0=${StrCol0} StrCol1=${StrCol1} StrRegSearch=${StrRegSearch} BoolShowUserSelection=${BoolShowUserSelection} GetPwdUser ) ; 
+			fi 
+			if [ "${StrUser:=none}" == "none" ] ; then 
+				echo -ne "Warning Invalid user: ${StrUser}\n" > /dev/stderr ; 
+			else
+				StrUser=${StrUser} StrApps=${StrApps} StrAppsOpt=${StrAppsOpt} Loader ;
+			fi 
+			
+	fi
+	
+}
 
 
 
