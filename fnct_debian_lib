@@ -1011,11 +1011,11 @@ function GkSuZenityLoader()
 	local __call_locality=( GkSuZenityLoader ) ; 
 	local StrUser=${GkSuZenityLoaderUser:=none}
 	local StrApps=${GkSuZenityLoaderApps:=/usr/local/bin/idlex}
-	local StrAppsOpt=${GkSuZenityLoaderAppsOpt:=} ;
+	local StrAppsOpt=${GkSuZenityLoaderAppsOpt:=''} ;
 	local StrTitle=${GkSuZenityLoaderTitle:="Select a user for Idlex"} ;
 	local StrFileInfo=${GkSuZenityLoaderFile:=/etc/passwd} ;
-	local StrCol0=${GkSuZenityLoader:="selection"} ;
-	local StrCol1=${GkSuZenityLoader:="user"} ;
+	local StrCol0=${GkSuZenityLoaderCol0:="selection"} ;
+	local StrCol1=${GkSuZenityLoaderCol1:="user"} ;
 	local StrRegSearch=${GkSuZenityLoaderReg:="\/bin\/bash"}
 	local StrDefaultCSV=${GkSuZenityLoaderCSV:=':'} ;
 	local IntDefaultColExtr=${GkSuZenityLoaderColExtr:=1} ;
@@ -1029,7 +1029,7 @@ function GkSuZenityLoader()
 	}
 	function GetPwdUser()
 	{
-		local StrUserSelection=$( zenity --list --title ${StrTitle} --column="${StrCol0}" --column="${StrCol1}" --radiolist $( StrDefaultCSV=${StrDefaultCSV} StrFileInfo=${StrFileInfo} StrRegSearch=${StrRegSearch} IntDefaultColExtr=${IntDefaultColExtr} ZenityFilter )	) ;
+		local StrUserSelection=$( zenity --list --title "${StrTitle}" --column="${StrCol0}" --column="${StrCol1}" --radiolist $( StrDefaultCSV=${StrDefaultCSV} StrFileInfo=${StrFileInfo} StrRegSearch=${StrRegSearch} IntDefaultColExtr=${IntDefaultColExtr} ZenityFilter ) ) ;
 		StrUserSelection=${StrUserSelection:=${StrUser}} ;
 		if [ "${BoolShowUserSelection}" == "True" ] ; then 
 			echo -ne "User selected: ${StrUserSelection}\n" > /dev/stderr ; 
