@@ -1,4 +1,7 @@
 
+. /etc/init.d/Fnct.d/fnct_debian_lib 
+
+
 SSH_ENV="$HOME/.ssh/environment"
 
 function start_agent 
@@ -242,19 +245,38 @@ function GetPasswd()
 { 
  local ArrayArg=( $*) ; 
  local __call_locality=( GetPasswd ) ; 
- local Arg0=${ArrayArg[0]:=16} ; 
+ local Arg0=${ArrayArg[0]} ; 
+ local IntDefaultPwdSize=${GetPasswdSize:=16}
  local IntDefaultFactor=${GetPasswdFactor:=1000} ; 
  local IntRandomSeedFactor=${GetPasswdRandomSeed:=10} ; 
- local x=0; 
- local end=${IntDefaultFactor} ; 
- local factor=$(( ${end} * $(( ( ${RANDOM} % ${IntRandomSeedFactor} ) + 1 )) )) ; 
- echo -ne "Crunching for a factor of ${factor} password.\n" ; 
- local value="" ;
- while [ ${x} -ne ${factor} ] ; do 
-  value=$( pwgen -cnsB1 ${Arg0} ) ; 
-  let x=$x+1 ; 
- done ; 
- echo -ne "\npasswd:[${value}]\n\n" > /dev/stderr  ; 
+ local StrPasswordTypeForm=${GetPasswdArgType:=cnsB1,cysB1} ; 
+ local ArrayFormPassword=( ${StrPasswordTypeForm//,/ } ) ;
+ local IntPasswordType=${GetPasswdGenFormType:=0} ;
+ local StrPwGenFormPassword=-${ArrayFormPassword[${IntPasswordType}]};
+ local StrAppsPwdGenerator=${GetPasswdAppsGen:=pwgen} ;
+ 
+ function MainProcess()
+ {
+		local __call_locality=( MainProcess )
+		local x=0; 
+		local end=${IntDefaultFactor} ; 
+		local factor=$(( ${end} * $(( ( ${RANDOM} % ${IntRandomSeedFactor} ) + 1 )) )) ; 
+		echo -ne "Crunching for a factor of ${factor} password.\n" ; 
+		local value="" ;
+		while [ ${x} -ne ${factor} ] ; do 
+			eval """value=\$( ${StrAppsPwdGenerator} ${StrPwGenFormPassword} ${Arg0} )""" ; 
+			let x=$x+1 ; 
+		done ; 
+		echo -ne "\npasswd:[${value}]\n\n" > /dev/stderr  ; 		
+	}
+	 
+ if [ "${Arg0:=--startservices}" == "--help" ] ; then 
+		GetVarReference ${__call_locality[0]} ; 
+ elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+		IntDefaultPwdSize=${IntDefaultPwdSize} IntDefaultFactor=${IntDefaultFactor} IntRandomSeedFactor=${IntRandomSeedFactor} IntPasswordType=${IntPasswordType} StrPwGenFormPassword=${StrPwGenFormPassword} StrAppsPwdGenerator=${StrAppsPwdGenerator} MainProcess ; 
+ fi
+ 
+
 }
 
 ###     Not Needed anymore, see GetKeyChoice for a clever choice... Must be with XWindows or any Kde, gtk, gnome, Mate interface. 
