@@ -264,7 +264,7 @@ function GetPasswd()
 		echo -ne "Crunching for a factor of ${factor} password.\n" ; 
 		local value="" ;
 		while [ ${x} -ne ${factor} ] ; do 
-			eval """value=\$( ${StrAppsPwdGenerator} ${StrPwGenFormPassword} ${Arg0} )""" ; 
+			eval """value=\$( ${StrAppsPwdGenerator} ${StrPwGenFormPassword} ${IntDefaultPwdSize} )""" ; 
 			let x=$x+1 ; 
 		done ; 
 		echo -ne "\npasswd:[${value}]\n\n" > /dev/stderr  ; 		
