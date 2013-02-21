@@ -1004,12 +1004,16 @@ function FindFilterPathExclusion()
 	fi 
 }
 
+unset acquire_lan_ifconfig
 function acquire_lan_ifconfig()
 {
  local ArrayArg=( $* ) ; 
+ local Arg0=${ArrayArg[0]} ; 
  local __call_locality=( AWI ) ; 
  local StrDefaultCard=${AWICardName:=wlan0} ;
  local StrAppsNetConf=${AWIAppsIfconf:=/sbin/ifconfig} ; 
+ local StrAwkFilter=${AWIAwkScript:=/etc/init.d/Fnct.d/awk-script/ifconfig_tag_detection.awk} ; 
+ local StrTagNameList=${AWIAwkTagInspect:=HWaddr,inet addr,inet6\ addr};
  
  function IfconfigGetter()
  {
@@ -1024,11 +1028,18 @@ function acquire_lan_ifconfig()
   local ArrayArg=( $* ) ; 
   local __call_locality=( GetIpaddr ) ;
   local StrAddr=${GetIpaddrAddr:=local} ; 
-  local StrAppsIfconfig=t${GetIpaddrAppsIfconfig:=/sbin/ifconfig} ;  
-  local StrReturn=$( IfconfigGetterApps=${StrAppsIfconfig} IfconfigGetterAddr=${StrAddr} IfconfigGetter ) ; 
+  local StrAppsIfconfig=${GetIpaddrAppsIfconfig:=/sbin/ifconfig} ;
+  local StrAwkFilter=${GetIpaddrFilterMatch:=/etc/init.d/Fnct.d/awk-script/ifconfig_tag_detection.awk} ;   
+  local StrTagList=${GetIpaddrTagList:=HWaddr,inet addr,inet6\ addr} ; 
+  local StrTagCleanFilter=${StrTagList//\\ / } ;
+  local StrReturn=$( IfconfigGetterApps=${StrAppsIfconfig} IfconfigGetterAddr=${StrAddr} IfconfigGetter awk -vTagName="${StrTagCleanFilter}"  -f StrAwkFilter ) ; 
   
  }
- StrAppsIfconfig=${StrAppsNetConf} GetIpaddrAddr=${StrDefaultCard} GetIpaddr ; 
+	if [ "${Arg0:=--start-services}" = "--help" ] ; then 
+		GetVarReference acquire_lan_ifconfig ; 
+	elif [ "${Arg0:=--start-services}" == "--start-services" ] ; then 
+  GetIpaddrTagList=${StrTagNameList} GetIpaddrAppsIfconfig=${StrAppsNetConf} GetIpaddrAddr=${StrDefaultCard} GetIpaddr ; 
+ fi 
 }
 
 
