@@ -1004,6 +1004,35 @@ function FindFilterPathExclusion()
 	fi 
 }
 
+function acquire_lan_ifconfig()
+{
+ local ArrayArg=( $* ) ; 
+ local __call_locality=( AWI ) ; 
+ local StrDefaultCard=${AWICardName:=wlan0} ;
+ local StrAppsNetConf=${AWIAppsIfconf:=/sbin/ifconfig} ; 
+ 
+ function IfconfigGetter()
+ {
+  local ArrayArg=( $* ) ; 
+  local __call_locality=( IfconfigGetter ) ;
+  local StrOptGetter=${IfconfigGetterAddr:=local} ; 
+  local StrApps=${IfconfigGetterApps:=/sbin/ifconfig} ; 
+  $( eval ${StrApps} ${StrOptGetter} | tr '[:cntrl:]' ' ' | sed 's/[\ ]\+/ /g' ) ; 
+ }
+ function GetIpaddr()
+ {
+  local ArrayArg=( $* ) ; 
+  local __call_locality=( GetIpaddr ) ;
+  local StrAddr=${GetIpaddrAddr:=local} ; 
+  local StrAppsIfconfig=t${GetIpaddrAppsIfconfig:=/sbin/ifconfig} ;  
+  local StrReturn=$( IfconfigGetterApps=${StrAppsIfconfig} IfconfigGetterAddr=${StrAddr} IfconfigGetter ) ; 
+  
+ }
+ StrAppsIfconfig=${StrAppsNetConf} GetIpaddrAddr=${StrDefaultCard} GetIpaddr ; 
+}
+
+
+
 unset GkSuZenityLoader ; 
 function GkSuZenityLoader()
 {
