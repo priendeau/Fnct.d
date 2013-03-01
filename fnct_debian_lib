@@ -409,6 +409,76 @@ function pkg-config-all()
 	fi
 }
 
+function ObjFindFunction()
+{
+ local ArrayArg=( $* )	;
+ local __call_locality=( ObjFindFunction ) ; 
+ local Arg0=( ${ArrayArg[0]} ) ; 
+ 
+	local StrDllFunctionFind=${ObjFindFunctionDllList:=iolog_unlink,GetUserDetailsType,GetCommandDetailsType}  ; 
+	local dllFunction=( ${StrDllFunctionFind//,/ } ) ; 
+	local StrObjDumpFlagsSet=${ObjFindFunctionFlagSet:=--dynamic-syms;--syms}
+	local StrObjDumpApps=${ObjFindFunctionObjApps:=objdump} ;
+	
+	local ArrayInspecType=( ${StrObjDumpFlagsSet//;/ } ) ; 
+	local StrPathStartFind=${ObjFindFunctionPath:=./} ;
+	local StrDllSuffix=${ObjFindFunctionDllSearch:=*.so} ;
+	local StrUniqueIDType=${ObjFindFunctionUUIDType:=--time} ;
+	local StrUniqueIDTypeApps=${ObjFindFunctionUUIDType:=uuidgen} ;
+	local StrPrintfFormat=${ObjFindFunctionPrintfFormat:="%h/%f"} ;
+	
+	function GetUniqueUUID()
+	{
+		local ArrayArg=( $* ) ; 
+		local __call_locality=( GetUniqueUUID ) ; 
+		local StrUUIDFlags=${GetUniqueUUIDFlags:=--time} ; 
+		local StrUUIDApps=${GetUniqueUUIDApps:=uuidgen} ; 
+		
+		eval """ local StrUUID=$( ${StrUUIDApps} ${StrUUIDFlags}  ) """ ;
+		echo -ne "${StrUUID}" ; 
+	} ; 
+	function GetFindList()
+	{
+		local ArrayArg=( $* ) ; 
+		local __call_locality=( GetFindList ) ; 
+		local StrStartPath=${GetFindListStartPath:=./} ; 
+		local StrInameSuffix=${GetFindListNamePatter:=*.so} ; 
+		local StrPrintfFormat=${GetFindListPrintfFormat:="%h/%f"} ; 
+		
+		find ${StrPathStartFind} -type f -iname "${StrInameSuffix}" -printf "${StrPrintfFormat}" ; 
+	}
+	function DllSearch()
+	{
+		local ArrayArg=( $* ) ; 
+		local __call_locality=( DllSearch ) ; 
+		StrDllInspectApps=${DllSearchApps:=objdump} ; 
+		StrDllInspectFlagsInArg=${DllSearchFlags:=--dynamic-syms} ; 
+		StrDllInspectFlags=${StrDllInspectFlagsInArg//,/ } ;
+		StrFileSearch=${DllSearchFileName:=None} ; 
+		StrDllFunctionName=${DllSearchFunctionName:=none} ; 
+		eval """ ${StrDllInspectApps} ${StrDllInspectFlags} ${StrFileSearch} | egrep -ic "${StrDllFunctionName}" """ ; 
+		
+	}
+	
+	if [ "${Arg0:=--startservices}" == "--help" ] ; then 
+	 GetVarReference ${__call_locality[0]} ; 
+	else
+		local ArrayDll=( $( GetFindListStartPath=${StrPathStartFind} GetFindListNamePatter=${StrDllSuffix} GetFindListPrintfFormat=${StrPrintfFormat} ) ) ; 
+		for StrdllFunction in ${dllFunction[@]}; do 
+			for (( intx=0 ; intx <= ${#ArrayDll[@]}-1 ; intx++ )) ; do 
+				item="${ArrayDll[${intx}]}" ; 
+				for DllTypeInspect in ${ArrayInspecType[@]} ; do 
+					local UUID_T=$( GetUniqueUUIDApps=${StrUniqueIDTypeApps} GetUniqueUUIDFlags=${StrUniqueIDType} GetUniqueUUID ) ;  
+					isDllfunction=$( DllSearchApps=${StrObjDumpApps} DllSearchFlags=${DllTypeInspect} DllSearchFileName=${item} DllSearchFunctionName=${StrdllFunction} DllSearch ) ; 
+					dllState=${isDllfunction:=0} ; 
+					echo -ne "PKID:${UUID_T}:found:${dllState}:DllInpectMeth:${DllTypeInspect}:Function:${StrdllFunction}:dllName:${item}\n" ; 
+				done ; 
+			done ; 
+		done
+	fi
+	
+ 
+}
 
 ### Default Fast reference Helper. 
 ### Extract current Prefixed variables from your function and show it on stdout( screen output ). 
