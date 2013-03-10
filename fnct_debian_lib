@@ -918,40 +918,84 @@ function DebianAptSrcCompiler()
 	fi
 }
 
+ ### AptRebuild :
+ ### - Use script apt-src to commonly clean and build a debian source packages
+ ###  being installed as source and it's ready to compile. This function uses 
+ ###  the prefixed variable AptRebuildCommand to select any new order wanted to
+ ###  pass to the function. 
+ ###    - Commonly AptRebuildCommand is owning 'clean,build' but affecting it with 
+ ###  other task like install and build can be substitued to this Common Task. 
+ ###
+ ###	Full-length example : 
+ ### AptRebuildCommand=install,build AptRebuild libots-dev
+ ###
+ ### hint:
+ ###  - switch '--help' is available for this function. 
+ ### 
+ ### 
+ ### 
+ 
+ ### Fixing a Predefined Association of Tag and Variable Name using the GetVarReference structure. 
+ ### AptRebuild, may own it's own purposes by assigning to AptRebuildTagVar other variable and 
+ ### other Tag inside AptRebuildTag prefixed var. meaning it can support 
+ ###
+ ###  following call : 
+ ###    NewVar=Value AptRebuildTagVar=NewVar,Option,Package,StrAppsName,StrAppsOptExtr AptRebuildTag=__OTHERTAG__,__OPTION__,__PACKAGE__,__APPS__,__APPSOPT__ AptRebuild <package-module>, and will automatically parse the Variable NewVar into ${NewVar} (in this case it exist and will not overwrite the affected value.) into the Tag __OTHERTAG__. 
+ ### 
+ ###  This also need to change the AptRebuildExec Tag order to let it evaluate correctly. 
+
 unset AptRebuild ; 
 function AptRebuild()    
 { 
-		local __call_locality=( AptRebuild ) ; 
-		local ArrayArg=( $* ) ; 
-		local Arg0=${ArrayArg[0]} ;
-		local StrCSVSep=${AptRebuildCSV:=,} ; 
-		local StrAppsName=${AptRebuildApps:=apt-src} ; 
-		local StrCmdLine=${AptRebuildExec:=__APPS__,__OPTION__,-p,__PACKAGE__} ; 
-		local StrCmdOption=${AptRebuildCommand:=clean,build} ; 
-		cmdline=( ${StrCmdLine//${StrCSVSep}/ } ) ; 
-		
-		local ArrayOption=( ${StrCmdOption//${StrCSVSep}/ } ) ; 
-		
-		
-		if [ "${Arg0}" = "--help" ] ; then 
-			GetVarReference ${__call_locality[0]} ; 
-		else	 
-			
-				for (( intx=0 ; intx <= ${#ArrayArg[@]}-1 ; intx++ )) ; do 
-					Package=${ArrayArg[${intx}]} ; 
-					for (( intAx=0 ; intAx <= ${#ArrayOption[@]}-1 ; intAx++ )) ; do
-						local Option=${ArrayOption[${intAx}]} ;
-						echo -ne "\tProcessing ${Option}\n" > /dev/stderr
-						local CmdExec=( ${cmdline[@]//__OPTION__/${Option}} ); 
-						CmdExec=( ${CmdExec[@]//__PACKAGE__/${Package}} ); 
-						CmdExec=( ${CmdExec[@]//__APPS__/${StrAppsName}} ); 
-						
-						echo -ne "\nCommandLine:[ ${CmdExec[@]} ]\n" > /dev/stderr ; 
-						eval ${CmdExec[@]} ; 
-					done
-				done
-		fi 
+	local __call_locality=( AptRebuild ) ; 
+	local ArrayArg=( $* ) ; 
+	local Arg0=${ArrayArg[0]} ;
+	local StrCSVSep=${AptRebuildCSV:=,} ; 
+	local StrAppsName=${AptRebuildApps:=apt-src} ; 
+	local StrAppsOptExtr=${AptRebuildAppsOption:=-p} ; 
+	local StrCmdLine=${AptRebuildExec:=__APPS__,__OPTION__,__APPSOPT__,__PACKAGE__} ; 
+	local StrCmdTag=${AptRebuildTag:=__OPTION__,__PACKAGE__,__APPS__,__APPSOPT__}
+	local StrCmdTagVar=${AptRebuildTagVar:=Option,Package,StrAppsName,StrAppsOptExtr}
+	local IsShowDebug=${AptRebuildShowDebug:=False} ;
+	local IsCmdExec=${AptRebuildCmdExec:=True} ;
+	local StrCmdOption=${AptRebuildCommand:=clean,build} ; 
+	cmdline=( ${StrCmdLine//${StrCSVSep}/ } ) ; 
+	
+	local ArrayTag=( ${StrCmdTag//${StrCSVSep}/ } ) ; 
+	local ArrayOption=( ${StrCmdOption//${StrCSVSep}/ } ) ; 
+	local ArrayOptionVar=( ${StrCmdTagVar//${StrCSVSep}/ } )
+	
+	
+	if [ "${Arg0}" = "--help" ] ; then 
+		GetVarReference ${__call_locality[0]} ; 
+	else	 
+	
+		for (( intx=0 ; intx <= ${#ArrayArg[@]}-1 ; intx++ )) ; do 
+			Package=${ArrayArg[${intx}]} ; 
+			for (( intAx=0 ; intAx <= ${#ArrayOption[@]}-1 ; intAx++ )) ; do
+				local Option=${ArrayOption[${intAx}]} ;
+				echo -ne "\tProcessing ${Option}\n" > /dev/stderr
+				local CmdExec=( ${cmdline[@]} ) ; 
+				
+				for (( intCx=0 ; intCx <= ${#ArrayOptionVar[@]}-1 ; intCx++ )) ; do 
+					local tagName=${ArrayTag[intCx]} ; 
+					local varName=${ArrayOptionVar[intCx]} ; 
+					eval """local NewVarValue=\${${varName}}""" ; 
+					if [ "${IsShowDebug}" == "True" ] ; then 
+						echo -ne "\t\ttagName: ${tagName}\n\t\tvarName: ${varName}\n\t\tValue: ${NewVarValue}\n" > /dev/stderr ; 
+					fi
+					eval """CmdExec=( ${CmdExec[@]//${tagName}/${NewVarValue}} )""" ; 
+				done 
+				echo -ne "\nCommandLine:[ ${CmdExec[@]} ]\n" > /dev/stderr ; 
+				if [ ${IsCmdExec:=True} == "True" ] ; then 
+					eval ${CmdExec[@]} ; 
+			  fi
+			done
+		done
+	fi 
 }
+
+
 
 function find_edit_file()
 { 
