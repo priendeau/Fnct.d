@@ -943,6 +943,82 @@ function DebianAptSrcCompiler()
  ###    NewVar=Value AptRebuildTagVar=NewVar,Option,Package,StrAppsName,StrAppsOptExtr AptRebuildTag=__OTHERTAG__,__OPTION__,__PACKAGE__,__APPS__,__APPSOPT__ AptRebuild <package-module>, and will automatically parse the Variable NewVar into ${NewVar} (in this case it exist and will not overwrite the affected value.) into the Tag __OTHERTAG__. 
  ### 
  ###  This also need to change the AptRebuildExec Tag order to let it evaluate correctly. 
+ ### 
+ ### Use of Pre-Fixed Variable AptRebuildExec and AptRebuildTag. 
+ ### 
+ ### Description:
+ ### - While this function is quite restricted, it's a mechanism that feed definition and will
+ ### ultimately execute the sequence. Having a strong role inside AptRebuildCommand. the code 
+ ### is structured like 1-finite loop of instruction and have to parse the commandline 
+ ### defined inside AptRebuildExec and having others application being substitued you can
+ ### create a virtual other command working inside this type of loop. 
+ ### 
+ ###  AptRebuildCommand hold 2 item : clean,build 
+ ###  - where this variable fix the first command to own instruction for 'clean' and 'build' . 
+ ###  - The Argument List after the  AptRebuild are the complete loop whitin First Fixed Element,
+ ###  Variable -> Tag and execution . The case is tweaky, assuming eth0 and wlan0 are ultimately
+ ###  the source being analysed with other condition , This one will pre-used eth0 and wlan0, 
+ ###  to use the Forced Variable Package to hold eth0 or wlan0. This mean Package and 
+ ### 
+ ###  AptRebuildApps hold usually apt-src but in other case it may hold network-topology application
+ ### being used. One popular, ifconfig. 
+ ###  - In many uses ifconfig may also depend os some fixed instruction. like seeing the interface
+ ### eth0 and wlan0 to verify both information. 
+ ### 
+ ### give as parameter : AptRebuildCommand=eth0,wlan0  AptRebuildApps=ifconfig 
+ ### 
+ ### AptRebuildExec and AptRebuildTag are also the order you want to use pre-defined 
+ ### VAR -> __TAG__ substitution and the way the command exit depend of working example.
+ ### 
+ ### And there is 2 finite hard-fixed value to not remove because it hold in a double-loop value
+ ### from iteration 
+ ### for A ( Argument[ 0 - 15+ ] )
+ ### 			 for B ( AptRebuildCommand ) 
+ ### 					--- Parsing Level and Substitution Level --- 
+ ### 
+ ### - Also some basic prefixed value also own it's priority .
+ ### AptRebuildAppsOption -> Internally used as StrAppsOptExtr will use the tag you defined but 
+ ### need to be reflected inside the Tag-Loop Association. It will use 
+ ### AptRebuildTag=__OPTION__,__PACKAGE__,__OTHEROPTION__ and use tag __OTHEROPTION__ is definied inside 
+ ### AptRebuildTagVar, like :
+ ### AptRebuildTagVar=Option,Package,StrAppsOptExtr AptRebuildTag=__OPTION__,__PACKAGE__,__OTHEROPTION__
+ ### and commandline inside AptRebuildExec should reflect an __OTHEROPTION__ tag. 
+ ### 
+ ### AptRebuildApps -> Internally used as StrApps will own have to define it's own Tag too. 
+ ### 
+ ### 
+ ### example : ifconfig eth0 -apr 
+ ###  - To Set NOARP to your local ethernet card. 
+ ###  
+ ###  - And AptRebuildTag will look like this : 
+ ###   AptRebuildCmdExec=False \
+ ###   AptRebuildApps=ifconfig \
+ ###   AptRebuildCommand=eth0,wlan0 \
+ ###   AptRebuildAppsOption=-arp \
+ ###   AptRebuildTag=__OPTION__,__PACKAGE__,__APPS__,__OTHEROPTION__ \
+ ###   AptRebuildTagVar=Option,Package,StrAppsName,StrAppsOptExtr \
+ ###   AptRebuildExec=__APPS__,__OPTION__,__OTHEROPTION__,__PACKAGE__  AptRebuild -v 
+ ### 
+ ### Will give a sequence to set -arp and verbosis to internet working interface:
+ ### 
+ ### AptRebuildCmdExec=False AptRebuildApps=ifconfig AptRebuildCommand=eth0,wlan0 AptRebuildAppsOption=-arp AptRebuildTag=__OPTION__,__PACKAGE__,__APPS__,__OTHEROPTION__ AptRebuildTagVar=Option,Package,StrAppsName,StrAppsOptExtr AptRebuildExec=__APPS__,__OPTION__,__OTHEROPTION__,__PACKAGE__  AptRebuild -v
+ ### - Output
+ ### 
+ ###  	Processing eth0
+ ### 
+ ### CommandLine:[ ifconfig eth0 -arp -v ]
+ ### 	Processing wlan0
+ ### 
+ ### CommandLine:[ ifconfig wlan0 -arp -v ]
+ ### 
+ ###  just by setting AptRebuildCmdExec=False to True will allow executing the sequence. 
+ ### 
+ ### 
+ ### ... Just a good candidate for automation and generating corpus definition in variable transfert and
+ ### Variable substitution. 
+ 
+
+
 
 unset AptRebuild ; 
 function AptRebuild()    
