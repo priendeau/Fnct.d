@@ -1018,6 +1018,61 @@ function DebianAptSrcCompiler()
  ### Variable substitution. 
  
 
+ ### AptSrcChange :
+ ### 
+ ### - Function AptSrcSourceChange, change the default /etc/apt/source.list and restitute it
+ ### after coming back from the application apt-src. 
+ ### -Note : apt-src is dependant from packages apt-src, and need to be installed with apt, dpkg
+ ### and/or synaptic. 
+ ### - It voluntary change the source.list until it was more convenient to alter the content
+ ### of this file by replacing only debian information for package retrevial into debian-source
+ ### package. It also change the type of architecture and it's convenient to leave and/or 
+ ### adapt other application dependant from /etc/apt/source.list . 
+ ### 
+ ###  exemple : 
+ ###   - synaptic depend from /etc/apt/source.list  
+ ### using AptSrcChangeApps=synaptic AptSrcChange 
+ ###  - and will load automatically synaptic after doing a change inside /etc/apt/source.list .  
+ ###  - it will not do an automatic update. Like apt-src need to run periodically apt-src update
+ ### to update it's cache, synaptic has this example show there is no update available as external 
+ ### switch and the condition are not yet defined to supply a function for automatic-update. 
+ ### ... while python module from apt and dpkg can re-update and write the cache it was not supply 
+ ### here. 
+ ### 
+ ### 
+ 
+ 
+ 
+unset AptSrcChange
+function AptSrcChange()
+{
+ local __call_locality=( AptSrc ) ;
+ local ArrayArg=( $* ) ; 
+ local Arg0=${ArrayArg[0]} ; 
+ local IntUUID=$( uuidgen -t ) ; 
+ local StrUUID="/tmp/${IntUUID}" ; 
+ local StrApps=${AptSrcChangeApps:=/usr/bin/apt-src} ; 
+ local StrAptSourceList=${AptSrcChangeFile:=/etc/apt/sources.list} ; 
+ local StrAptSourceSave=${AptSrcChangeSave:=/etc/apt/sources.list.save} ; 
+ local StrTagSearch=${AptSrcChangeTagSearch:=deb} ;
+ local StrTagAdd=${AptSrcChangeTagChange:=deb-src} ;
+ local StrDefaultArch=${AptSrcChangeArch:=amd64} ;
+ local StrDefaultURI=${AptSrcChangeURIType:=http}
+ if [ "${Arg0}" = "--help" ] ; then 
+  GetVarReference ${__call_locality[0]} ; 
+ else	
+  cp ${StrAptSourceList} ${StrAptSourceSave} ; 
+  cat ${StrAptSourceList} | sed 's/^${StrTagSearch} ${StrDefaultURI}/${StrTagAdd} [ arch=${StrDefaultArch} ] ${StrDefaultURI}/g' > ${StrUUID} ; 
+  cp ${StrUUID} ${StrAptSourceList} ; 
+  echo -ne "\n\tUUID: ${StrUUID}\n" > /dev/stderr ; 
+  if [ "${StrApps}" == "/usr/bin/apt-src" ]  ;then 
+   # doing extra update 
+   eval "${StrApps} update" ; 
+  fi 
+  eval "${StrApps} ${ArrayArg[@]}" ; 
+  cp ${StrAptSourceSave} ${StrAptSourceList}
+ fi
+}
 
 
 unset AptRebuild ; 
