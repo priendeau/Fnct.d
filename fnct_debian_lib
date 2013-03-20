@@ -1425,7 +1425,7 @@ unset PackageRepositoryMgmt ;
 function PackageRepositoryMgmt()
 {
 	
-	local __call_locality=( PkgRepoMgmt ) ;
+	local __call_locality=( PkgRepoMgmt PackageRepositoryMgmt ) ;
 	local ArrayArg=( $* ) ; 
 	local Arg0=${ArrayArg[0]} ;
 	local StrUUID=$( uuidgen -t ) ; 
@@ -1434,6 +1434,10 @@ function PackageRepositoryMgmt()
 	local StrPackageType=${PkgRepoMgmtFileFormat:=deb} ;
 	local StrPathRepository=${PkgRepoMgmtRepository:=/media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64} ;
 	local StrPathReposIndex=${PkgRepoMgmtReposIndex:=/media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64/index} ;
+	local StrIndexLatest=${PkgRepoMgmtLatestIndexName:=latest};
+	local StrAppsLinkerName=${PkgRepoMgmtLinkerName:=/bin/ln} ; 
+	local StrAppsLinkerOptionRecv=${PkgRepoMgmtLinkerOption:=-s} ; 
+	local StrAppsLinkerOption=( ${StrAppsLinkerOptionRecv//,/ }  );
 	local StrDumpingFormat=${PkgRepoMgmtReposIndexFmt:=__ID__:__FILE__};
 	local StrDefaultActionIndex=${PkgRepoMgmtReposIndexAction:="mkdir -p __PATH__"} ;
 	local StrTestDriveDebug=${PkgRepoMgmtReposDriveDebug:=False} ;
@@ -1446,6 +1450,7 @@ function PackageRepositoryMgmt()
 	local StrTodatDateTransfert=$( GetOtherDateReference=${IntDefaultDayIndexName} GetOtherDate ) ; 
 	local StrIndexFile=${StrPathReposIndex}/${StrTodatDateTransfert};
 	
+	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally and output the package list\n\t--checkdrive\tPerform a Drive/Path check to see if access point is valid.\n\n"
 	
 	function TestPathIndex()
 	{
@@ -1500,8 +1505,8 @@ function PackageRepositoryMgmt()
 		fi 
 	}
 	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-			GetVarReference PackageRepositoryMgmt ; 
-			echo -ne "Following switch are available:\n\n\t--startservices\tStart the application normally and output the package list\n\t--checkdrive\tPerform a Drive/Path check to see if access point is valid.\n\n" > /dev/stderr ; 
+			GetVarReference ${__call_locality[1]} ; 
+			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 	elif [ "${Arg0:=--startservices}" == "--checkdrive"	] ; then 
 		$( TestDriveMountDebug=${StrTestDriveDebug} TestDriveMountList=${StrPathRepository},${StrPathArchives} TestDriveMount ) ; 
 		echo -ne "Status of IsMountDrive: ${IsMountDrive}\n" > /dev/stderr ; 
@@ -1534,6 +1539,8 @@ function PackageRepositoryMgmt()
 						eval "${StrLinkAction}" ; 
 					
 					done 
+					### Adding Latest index being stored.
+					eval """${StrAppsLinkerName} ${StrAppsLinkerOption[@]} ${StrIndexFile} ${StrPathReposIndex}/${StrIndexLatest} """; 
 				else
 					echo -ne "ArrayFileList return Empty List\n" > /dev/stderr . 
   			fi
