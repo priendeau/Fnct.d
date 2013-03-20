@@ -1,0 +1,177 @@
+#!/bin/bash
+
+. /etc/init.d/Fnct.d/fnct_debian_lib ; 
+
+### Use of ln_s 
+### This an example that use Lib /etc/init.d/Fnct.d/fnct_debian_lib
+### - It merely use the GetOtherDate but more convenience is coming .
+### Description :
+### ln_s, is equivalent to ln_s , but using Lock mechanism. to ensure
+### good readibility of the ${HOME}/.ArrayLnS, a storage file to store
+### date of creation for public purposes and showing both confirmation 
+### by doing a sha1sum on all operation and suming new operation .
+### The Lock Mechanism can allow same user in different shell or operation
+### to call the md_cd and wait until it get the lock removed to add the 
+### the link to directory. 
+### Also, if the file CurrentLinkHistory.tar.bz2 is present inside the user path 
+### 'and configurable method will come with uses of ValueParser' will allow
+### to dump linking history... as example, every path created need a 
+### Current backup to save linking against archiving problems.
+### 
+### 
+### 
+### 
+### 
+### 
+### 
+### 
+### 
+### 
+### 
+### --- 
+### The Lock-Mechanism is easy and can be migrated in future templating to change the command
+### for something else. 
+### Also the lock mechanism own a specification, it's variable to hold the lock 
+### is a variable-var... mean, it's name is somewhat unique on any call and may be called 
+### many time by the same user and will old n-time variable lock owning their own 
+### value to receveive the OK to proceed in execution of some strict operation. 
+
+test "${USER}" != "root" && declare StrBasePath=${HOME} && declare StrFileStoreInfo=${StrBasePath}/.ArrayLinkDir && declare StrFileStoreLock=${StrBasePath}/.ArrayLinkDir_Lock ;
+test "${USER}" == "root" && declare StrBasePath=/root && declare StrFileStoreInfo=${StrBasePath}/.ArrayLinkDir && declare StrFileStoreLock=${StrBasePath}/.ArrayLinkDir_Lock ;
+
+test ! -f ${StrFileStoreLock} && echo 0 > ${StrFileStoreLock} ; 
+test "${USER}" != "root" && test -f ${StrFileStoreInfo} && chown ${USER}.${USER} ${StrFileStoreInfo} 2> /dev/null ; 
+test $? -ne 0 && sudo chown ${USER}.${USER} ${StrFileStoreInfo} 2> /dev/null
+test "${USER}" != "root" && test -f ${StrFileStoreLock} && chown ${USER}.${USER} ${StrFileStoreLock} 2> /dev/null ; 
+test $? -ne 0 && sudo chown ${USER}.${USER} ${StrFileStoreLock} 2> /dev/null
+
+
+function GetDateReportCreation()
+{
+	GetOtherDateFormat=%Y%m%d_%H%M%S GetOtherDate ; 
+}
+
+function md_cd()
+{ 
+	local ArrayArg=( $* ) ;
+	local __call_locality=( MDCD ) ;
+
+	echo -ne "StrFileStoreInfo : ${StrFileStoreInfo}\n" > /dev/stderr ; 
+	echo -ne "StrFileStoreLock : ${StrFileStoreLock}\n" > /dev/stderr ; 
+
+	local UserTypeLocationModel="${StrBasePath}/NewPathModel.tar.bz2" ;
+	echo -ne "UserTypeLocationModel : ${UserTypeLocationModel}\n" > /dev/stderr ; 
+	function GetFile()
+	{
+		test -f ${StrFileStoreInfo} && cat ${StrFileStoreInfo} ; 
+		test ! -f ${StrFileStoreInfo} && return 1 ; 
+	}	
+		
+	function getcol1()
+	{
+		/usr/bin/cut -d ' ' -f 1 
+	}
+	
+	function sha1()
+	{
+		/usr/bin/sha1sum ;
+	}	
+	
+	function GetMemHeader()
+	{
+		echo "${ArrayLinkDir[@]}" | sha1 | getcol1
+	}
+	
+	function GetMemContent()
+	{
+		echo "${ArrayLinkDir[@]}" ; 
+	}
+	
+	function GetterData()
+	{
+		local ArrayArg=( $* ) ; 
+		local __call_locality=( GetterData )
+		local Stream=$( GetFile ) ;
+		local vret=$? ; 
+  if [ ${vret:=-1} -eq 0 ] ; then 
+			echo "${Stream}" | head -n${ArrayArg[0]} | tail -n1 ;
+			return 0 ; 
+	 else
+			return -1 ; 		
+		fi
+
+	}
+	function GetHeader()
+	{
+		local __call_locality=( GetHeader )
+		local IntLineId=${GetHeaderId:=1} ; 
+		echo $( GetterData	${IntLineId} ) ; 
+		return $? ;
+	}
+	
+	function GetContent()
+	{	
+		local __call_locality=( GetContent ) ;
+		local IntLineId=${GetContentId:=2} ; 
+		echo $( GetterData	${IntLineId} ) ; 
+		return $? ;
+	}
+
+	local currentSHA=$( GetHeader ) ;
+
+	local StrContent=$( GetContent ) ; 
+ local ErrContent=$? ; 
+	if [ ${ErrContent:=-1} -eq 0 ] ; then 
+		declare -a ArrayLinkDir=( ${StrContent} ${ArrayLinkDir[@]} );
+	else
+		declare -a ArrayLinkDir=( ${ArrayLinkDir[@]} );
+	fi 
+
+	for (( x=0 ; x <= ${#ArrayArg[@]}-1 ; x++ )) ; do 
+		local path_loc=${ArrayArg[${x}]} ;
+		local StrDate=$( GetDateReportCreation ) ; 
+		local StrStoreStream="" ; 
+		test ! -d	${path_loc} && mkdir -p ${path_loc} ;
+		
+		cd ${path_loc} 
+		echo -ne "Cmd:[ tar xvjfC ${path_loc} ${UserTypeLocationModel}  ]\n" > /dev/stderr ; 
+		test -f ${UserTypeLocationModel} && tar xjfC ${UserTypeLocationModel} ${path_loc} 2> /dev/null ;
+		resultTar=$? ; 
+  if [ ${resultTar:=1} -eq 0 ] ; then 
+			StrStoreStream="${StrDate}:${path_loc}:${UserTypeLocationModel}:Yes" ; 
+		else
+			StrStoreStream="${StrDate}:${path_loc}:${UserTypeLocationModel}:No" ; 
+		fi 
+		ArrayLinkDir[${#ArrayLinkDir[@]}]=${StrStoreStream} ;  
+		echo "cd ${path_loc} ;" ;
+	done 
+	GetMemHeader > ${StrFileStoreInfo} ; 
+	GetMemContent >> ${StrFileStoreInfo} ; 
+}
+
+declare -a UUID=( $( uuidgen | sed 's/-/ /g' ) )
+
+evalName="IsLockArrayLinkDir${UUID[0]}" ;
+eval "declare -i ${evalName}=0" ; 
+echo -ne "\n" > /dev/stderr ; 
+while [ $( eval "echo \${${evalName}:=0}" ) -ne 1  ] ; do 
+	value=$( cat ${StrFileStoreLock} ) ; 
+	if [ ${value:=0} -eq 1 ] ; then 
+		echo -ne "." > /dev/stderr ; 
+		sleep 1 ; 
+	else 
+			echo -ne "\n" > /dev/stderr ; 
+			eval "${evalName}=1"
+			echo -ne "Adding lock.\n" > /dev/stderr  ; 
+			eval "echo \${${evalName}} > ${StrFileStoreLock} 2> /dev/null ";
+			test $? != 0 && sudo eval "echo \${${evalName}} > ${StrFileStoreLock} 2> /dev/null ";
+			echo -ne "loading $0\n" > /dev/stderr ;
+			eval $( md_cd $* ) ; 
+			echo -ne "Removing lock.\n" > /dev/stderr  ; 
+			echo 0 > ${StrFileStoreLock} 2> /dev/null ; 
+			valueRet=$? ; 
+			test $? != 0 && sudo echo 0 > ${StrFileStoreLock}
+	fi 
+done 
+unset StrFileStoreInfo StrFileStoreLock UUID ${evalName} value ; 
+
