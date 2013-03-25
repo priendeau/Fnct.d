@@ -1,0 +1,69 @@
+. /etc/init.d/Fnct.d/fnct_debian_lib 
+
+### Iptables_AddSetAttack and Iptables_AddDropAttack
+### - Extracted from http://go2linux.garron.me/linux/2010/04/stop-brute-force-attacks-these-iptables-examples-732
+###  - Create basic blocking and used to detect overflow and possible bursting... 
+### Note: There is no actual jitterring calculation between flow-bandwith and times-respond of 
+### services among distance to see electric variance but, iptables and well calibred
+### host, services and calculation ( like cloud's, can usually syncrhonized themself agains time jitterring ), 
+### So Drop falling Filter may become LOG to monitor bursting ( Another theorem, multi-user generation are ,
+### fake bandwith and are virtual welcome-and-response from unique point and will lie if there is 
+### network relation study... 
+### - just do Iptables_AddSetAttack --help 
+###   and 
+### - Iptables_AddDropAttack --help 
+### replace default variable, doing in in a for like :
+### for(( x=0 ; x<= 1024 ; x++ )) ; do Iptables_AddSetAttack ${x}; Iptables_AddDropAttack ${x} ; done 
+### drop all bursting from any port ( easy to see who are bursting and why ? ntpd....em ), but not all network attempt and not against electricity
+### power-flow if you are aware of having lease-time and electric harmony the length of you card/channel 
+### consumption ... lol 
+### 
+
+function Iptables_AddSetAttack () 
+{ 
+	local ArrayArg=($*);
+	local __call_locality=( IptASA Iptables_AddSetAttack ) ; 
+	local StrDefaultIpAction=${IptASADefaultAction:-I}
+	local StrDefaultInterface=${IptASAInterface:=eth0,wlan0} ; 
+	local StrDefaultState=${IptASAStateSet:=NEW} ; 
+	local StrDefaultTable=${IptASATable:=INPUT} ; 
+	local StrDefaultProto=${IptASAProto:=tcp} ; 
+	local StrDefaultModuleNameIn=${IptASAModuleIn:=state} ; 
+	local StrDefaultModuleNameOut=${IptASAModuleOut:=recent} ; 
+	local StrDefaultModOutAction=${IptASAModuleOut:=--set} ; 
+	local StrSwitchMod=--${StrDefaultModuleName}
+	local Arg0=${ArrayArg[0]} ; 
+	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+			GetVarReference ${__call_locality[1]} ; 
+	else
+		iptables ${StrDefaultIpAction} ${StrDefaultTable} -p ${StrDefaultProto} --dport ${ArrayArg[0]} -i ${StrDefaultInterface} -m ${StrDefaultModuleNameIn} ${StrSwitchMod} ${StrDefaultState} -m ${StrDefaultModuleNameOut} ${StrDefaultModOutAction} 
+	fi 
+	
+}
+
+function Iptables_AddDropAttack () 
+{ 
+	local ArrayArg=($*);
+	local __call_locality=( IptADA Iptables_AddDropAttack ) ; 
+	local StrDefaultIpAction=${IptADADefaultAction:-I}
+	local StrDefaultInterface=${IptADAInterface:=eth0,wlan0} ; 
+	local StrDefaultState=${IptADAStateSet:=NEW} ; 
+	local StrDefaultTable=${IptADATable:=INPUT} ; 
+	local StrDefaultProto=${IptADAProto:=tcp} ; 
+	local StrDefaultModuleNameIn=${IptADAModuleIn:=state} ; 
+	local StrDefaultModuleNameOut=${IptADAModuleOut:=recent} ; 
+	local StrDefaultModOutAction=${IptADAModuleOut:=--set} ; 
+	local StrSwitchMod=--${StrDefaultModuleName}
+	local IntDefaultModTimeOut=${IptADAModuleTimeout:=600} ; 
+	local IntDefaultModHit=${IptADAModuleHitCount:=2} ;
+	local StrDefaultFallGrp=${IptADAFallInGroup:=DROP} ;
+	
+	local Arg0=${ArrayArg[0]} ; 
+	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+			GetVarReference ${__call_locality[1]} ; 
+	else
+		iptables ${StrDefaultIpAction} ${StrDefaultTable} -p ${StrDefaultProto} --dport ${ArrayArg[0]} -i ${StrDefaultInterface} -m ${StrDefaultModuleNameIn} ${StrSwitchMod} ${StrDefaultState} -m -m ${StrDefaultModuleNameOut} ${StrDefaultModOutAction} --seconds ${IntDefaultModTimeOut} --hitcount ${IntDefaultModHit} -j ${StrDefaultFallGrp} 
+	fi
+	
+	
+}
