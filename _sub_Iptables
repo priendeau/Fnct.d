@@ -43,12 +43,13 @@ function Iptables_AddSetAttack ()
 	local StrDefaultModuleNameOut=${IptASAModuleOut:=recent} ; 
 	local StrDefaultModOutAction=${IptASAModuleOutAction:=--set,--name,__NAME__} ; 
 	local StrDefModOutName=${IptASAModOutName:=IptASA_${Arg0}} ;
-	local StrDefMofOutAction=${StrDefaultModOutAction//__NAME__/${StrDefModOutName}} ;
+	local StrDefModOutAction=${StrDefaultModOutAction//__NAME__/${StrDefModOutName}} ;
+	StrDefModOutAction=${StrDefModOutAction//,/ } ;
 	local StrSwitchMod=--${StrDefaultModuleNameIn}
 	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
 			GetVarReference ${__call_locality[1]} ; 
 	else
-	 local cmdLine=( iptables ${StrDefaultIpAction} ${StrDefaultTable} -p ${StrDefaultProto} --dport ${ArrayArg[0]} -i ${StrDefaultInterface} -m ${StrDefaultModuleNameIn} ${StrSwitchMod} ${StrDefaultState} -m ${StrDefaultModuleNameOut} ${StrDefMofOutAction}  ) ; 
+	 local cmdLine=( iptables ${StrDefaultIpAction} ${StrDefaultTable} -p ${StrDefaultProto} --dport ${ArrayArg[0]} -i ${StrDefaultInterface} -m ${StrDefaultModuleNameIn} ${StrSwitchMod} ${StrDefaultState} -m ${StrDefaultModuleNameOut} ${StrDefModOutAction}  ) ; 
 		eval ${cmdLine[@]}
 		#iptables ${StrDefaultIpAction} ${StrDefaultTable} -p ${StrDefaultProto} --dport ${ArrayArg[0]} -i ${StrDefaultInterface} -m ${StrDefaultModuleNameIn} ${StrSwitchMod} ${StrDefaultState} -m ${StrDefaultModuleNameOut} ${StrDefaultModOutAction} 
 		if [ $? -ne 0 ] ; then 
@@ -91,5 +92,36 @@ function Iptables_AddDropAttack ()
 		fi 
 	fi
 	
+	
+}
+
+
+### IptFastRuleTest
+### - Just a fast rules execution after calling iptables-persistent services to flush 
+###  rules and need to execute them to see where is the error. 
+###  
+function IptFastRuleTest()
+{
+	local ArrayArg=( $* ) ; 
+	local __call_locality=( IptFastRuleTest IptFRT ) ;
+	local Arg0=${ArrayArg[0]} ; 
+	local ArrayFileType=( rules.v4 rules.v6 ) ; 
+	local IntIpVersion=${IptFRTIpV:=0} ; 
+	local StrDefaultPath=${IptFRTPathPersitent:=/etc/iptables}
+	local StrIpVersionFile=${ArrayFileType[${IntIpVersion}]} ; 
+	local StrGrepMatch=${IptFRTAction:=-A}
+	StrIpVersionFile=${StrDefaultPath}/${StrIpVersionFile} ; 
+	
+	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+			GetVarReference ${__call_locality[1]} ; 
+	else
+		### Match is important, it curse accross iptables lines aligned in one 
+		### stream and let the ';' doing the sequence execution, exception , 
+		### the last command should not onw a ';' or this one will be ignored. 
+		### using cut from 1 to (Nb Match) it throw away the ';' after selecting 
+		### command line from specified csv inside cut command . 
+		eval intMatch=$( grep -ic "^\${StrGrepMatch}" ${StrIpVersionFile} ) ; 
+		eval $( grep "^${StrGrepMatch}" ${StrIpVersionFile} | tr '[:cntrl:]' ';' | sed 's/\(${StrGrepMatch}\)/iptables \1/g;s/\(\;\)/ \1 /g' | cut -d ';' -f 1-${intMatch} )
+	fi
 	
 }
