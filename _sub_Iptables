@@ -100,10 +100,11 @@ function Iptables_AddDropAttack ()
 ### - Just a fast rules execution after calling iptables-persistent services to flush 
 ###  rules and need to execute them to see where is the error. 
 ###  
+unset IptFastRuleTest ; 
 function IptFastRuleTest()
 {
 	local ArrayArg=( $* ) ; 
-	local __call_locality=( IptFastRuleTest IptFRT ) ;
+	local __call_locality=( IptFRT IptFastRuleTest  ) ;
 	local Arg0=${ArrayArg[0]} ; 
 	local ArrayFileType=( rules.v4 rules.v6 ) ; 
 	local IntIpVersion=${IptFRTIpV:=0} ; 
