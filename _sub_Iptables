@@ -100,6 +100,13 @@ function Iptables_AddDropAttack ()
 ### - Just a fast rules execution after calling iptables-persistent services to flush 
 ###  rules and need to execute them to see where is the error. 
 ###  
+### This, comming from command line on prompt : 
+### :  intMatch=$( grep -ic "^\-A" rules.v4 ) ; eval $( grep "^-A" rules.v4 | tr '[:cntrl:]' ';' | sed 's/\(-A\)/iptables \1/g;s/\(\;\)/ \1 /g' | cut -d ';' -f 1-${intMatch}  )
+### something fast to re-implement into function ... 
+###  
+###  
+###  
+
 unset IptFastRuleTest ; 
 function IptFastRuleTest()
 {
@@ -121,8 +128,13 @@ function IptFastRuleTest()
 		### the last command should not onw a ';' or this one will be ignored. 
 		### using cut from 1 to (Nb Match) it throw away the ';' after selecting 
 		### command line from specified csv inside cut command . 
-		eval intMatch=$( grep -ic "^\${StrGrepMatch}" ${StrIpVersionFile} ) ; 
-		eval $( grep "^${StrGrepMatch}" ${StrIpVersionFile} | tr '[:cntrl:]' ';' | sed 's/\(${StrGrepMatch}\)/iptables \1/g;s/\(\;\)/ \1 /g' | cut -d ';' -f 1-${intMatch} )
+		local intMatch=$( grep -ic "^${StrGrepMatch}" ${StrIpVersionFile} ) ; 
+		echo -ne "Nb of Match: ${intMatch}\n" > /dev/stderr ; 
+		local StrCutCmd="""cut -d ; -f 1-${intMatch}""" ; 
+		local StrSedCmd="sed \'s/(\-A)/iptables \1/g;s/(;)/ \1 /g\'" ; 
+		local StrTrCmd="""tr '[:cntrl:]' ';'""" ; 
+		local StrGrep="""grep "^\-A" ${StrIpVersionFile}""" ;
+		eval """ $( ${StrGrep} | ${StrTrCmd} |  ${StrSedCmd} | ${StrCutCmd} ) """ ; 
 	fi
 	
 }
