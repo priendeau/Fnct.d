@@ -1322,6 +1322,84 @@ function acquire_lan_ifconfig()
  fi 
 }
 
+unset GetBuildFlagsList
+function GetBuildFlagsList( )
+{
+		local ArrayArg=( $* ) ; 
+		local __call_locality=( ZPI ) ;  
+		dpkg-buildflags --list
+} 
+
+unset GetZenityText ; 
+function GetZenityText()
+{
+	local ArrayArg=( $* ) ; 
+	local __call_locality=( GZT GetZenityText ) ;  
+	local Arg0=${ArrayArg[0]} ;
+	local StrTypeUI=${GZTUiType:=--entry}
+	local StrApps=${GZTUiApps:=/usr/bin/zenity} ;
+	if [ "${Arg0:=--startservices}" == "--help" ] ; then 
+		GetVarReference ${__call_locality[1]} ; 
+	else
+		eval ${StrApps} ${StrTypeUI} ${ArrayArg[@]} ;
+	fi 
+}
+
+unset GetZenityTextEntry ; 
+function GetZenityTextEntry()
+{
+	local ArrayArg=( $* ) ; 
+	local __call_locality=( GZTE GetZenityTextEntry ) ;  
+	local Arg0=${ArrayArg[0]} ;
+	local IntWidth=${GZTEWidth:=640}
+	local IntHeight=${GZTEHeight:=275}
+	local StrTitle="${GZTETitle:=Pip installation Try-up}"
+	local StrQuestion="${GZTETextQuestion:=Python Package to test the installation}"
+	local StrReturn ;
+		if [ "${Arg0:=--startservices}" == "--help" ] ; then 
+			GetVarReference ${__call_locality[1]} ; 
+		else
+		StrReturn=$( GetZenityText --width=${IntWidth}  \
+			--height=${IntHeight} \
+			--title="${StrTitle}" \
+			--text="${StrQuestion}" ) 
+		fi 
+		echo -ne "${StrReturn}" ; 
+}
+
+
+unset zenity_pip_installer ; 
+function zenity_pip_installer()    
+{ 
+	
+		local ArrayArg=( $* ) ; 
+		local __call_locality=( ZPI ) ;  
+		local pkg_res=0 ; 
+		function GetItemFlags()
+		{
+			local ArrayArg=( $* ) ; 
+			local __call_locality=( GIF ) ;  
+			dpkg-buildflags --get ${ArrayArg[0]} ;
+		}
+		
+		while [ ${pkg_res:=0} -eq 0 ] ; do 
+		local ADDFLAGS="" ; 
+		local package=$( GetZenityTextEntry ) ; 
+
+		for Item in $( GetBuildFlagsList ) ; do 
+			local newFlags=$( GetItemFlags ${Item} ) 
+			ADDFLAGS="${ADDFLAGS} ${Item}=\"${newFlags}\"" ; 
+		done  ; 
+		echo -ne "ADDFLAGS:\n${ADDFLAGS}\n" ; 
+		if [ ${package:=none} != "none"  ] ; then 
+			eval ${ADDFLAGS} pip install ${package} ; 
+		else 
+			echo -ne "\n\n\t\tError reporting package: ${package:=none}\n\n" ; 
+			sleep 10 ; 
+			pkg_res=1 ;  
+		fi ; 
+		done ; 
+}
 
 
 unset GkSuZenityLoader ; 
