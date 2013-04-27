@@ -1353,17 +1353,16 @@ function GetZenityTextEntry()
 	local Arg0=${ArrayArg[0]} ;
 	local IntWidth=${GZTEWidth:=640}
 	local IntHeight=${GZTEHeight:=275}
-	local StrTitle="${GZTETitle:=Pip installation Try-up}"
-	local StrQuestion="${GZTETextQuestion:=Python Package to test the installation}"
+	local StrTitle="""${GZTETitle:="Pip installation Try-up"}""" ; 
+	local StrQuestion="""${GZTETextQuestion:="Installation Package to install (test)"}""" ; 
 	local StrReturn ;
 		if [ "${Arg0:=--startservices}" == "--help" ] ; then 
 			GetVarReference ${__call_locality[1]} ; 
 		else
-		StrReturn=$( GetZenityText --width=${IntWidth}  \
-			--height=${IntHeight} \
-			--title="${StrTitle}" \
-			--text="${StrQuestion}" ) 
+			local CmdEval=( """local StrReturn=\$( GetZenityText --width=${IntWidth}  --height=${IntHeight} --title="${StrTitle}" --text="${StrQuestion}" 2> /dev/null ) """ ); 
+			echo -ne "\n\nCmdEval : ${CmdEval[@]}\n\n" > /dev/stderr ; 
 		fi 
+		echo -ne "StrReturn return: ${StrReturn}\n" > /dev/stderr ; 
 		echo -ne "${StrReturn}" ; 
 }
 
@@ -1506,13 +1505,21 @@ function PackageRepositoryMgmt()
 	local __call_locality=( PkgRepoMgmt PackageRepositoryMgmt ) ;
 	local ArrayArg=( $* ) ; 
 	local Arg0=${ArrayArg[0]} ;
-	local StrUUID=$( uuidgen -t ) ; 
+	function GetUUID()
+	{
+		local __call_locality=( GetUUID ) ;
+		local StrDefaultSwitches=${GetUUIDSwitches:=-t}
+		local ArrayArg=( $* ) ;  
+		uuidgen ${StrDefaultSwitches}	; 
+	} 
+	local StrUUID=$( GetUUID ) ; 
 	local StrPathArchives=${PkgRepoMgmtPathArchives:=/var/cache/apt/archives} ; 
 	local StrFindStringFormat=${PkgRepoMgmtStrFmt:="%f "} ;
 	local StrPackageType=${PkgRepoMgmtFileFormat:=deb} ;
 	local StrPathRepository=${PkgRepoMgmtRepository:=/media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64} ;
 	local StrPathReposIndex=${PkgRepoMgmtReposIndex:=/media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64/index} ;
 	local StrIndexLatest=${PkgRepoMgmtLatestIndexName:=latest};
+	local StrAddPackageListing=${PkgRepoMgmtAddPkgLst:=False} ; 
 	local StrAppsLinkerName=${PkgRepoMgmtLinkerName:=/bin/ln} ; 
 	local StrAppsLinkerOptionRecv=${PkgRepoMgmtLinkerOption:=-s} ; 
 	local StrAppsLinkerOption=( ${StrAppsLinkerOptionRecv//,/ }  );
@@ -1528,7 +1535,39 @@ function PackageRepositoryMgmt()
 	local StrTodatDateTransfert=$( GetOtherDateReference=${IntDefaultDayIndexName} GetOtherDate ) ; 
 	local StrIndexFile=${StrPathReposIndex}/${StrTodatDateTransfert};
 	
-	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally and output the package list\n\t--checkdrive\tPerform a Drive/Path check to see if access point is valid.\n\n"
+	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally and output the package list\n\t--checkdrive\tPerform a Drive/Path check to see if access point is valid.\n\n\t--add-snapshoot\tAdd DPKG Listing inside Current Index File.\n\t\t\tOnly Store an ID in the index-file and the content into UUID-name from index path.\n\n" ;
+	
+	function GetIdDpkgListing()
+	{
+		local __call_locality=( GetIdDpkgListing ) ;
+		local ArrayArg=( $* ) ;		
+		local StrID=$( GetUUID ) ; 
+		test ! -e ${StrIndexFile} && echo -ne "ADD SNAPSHOT\nDATE:${StrTransactionStart}:ID:${StrID}\n" > ${StrIndexFile} ; 
+		echo -ne "${StrID}" ; 
+	}
+	
+	function GetDpkgInstalled()
+	{
+		local __call_locality=( GetDpkgInstalled ) ;
+		local ArrayArg=( $* ) ; 
+		dpkg --get-selections | awk  'BEGIN{x=0}{x=x+1;printf("%i;%s;%s ",x,$1,$2)}END{}'
+	}
+	function StreamCprEnvlTxt()
+	{
+		local __call_locality=( StreamCprEnvlTxt ) ;
+		local StrFile=${StreamCprEnvlTxtFile:=none.lst}
+		local ArrayArg=( $* ) ; 
+		bzip2 -9z | base64 --wrap=0 > ${StrFile} ; 
+	}
+	function GetDpkgListing()
+	{
+		local __call_locality=( GetPackageListing ) ;
+		local ArrayArg=( $* ) ; 
+		local StrId=$( StrIndexFile=${StrIndexFile} StrTransactionStart=${StrTransactionStart} GetIdDpkgListing ) 
+		GetDpkgInstalled | StreamCprEnvlTxtFile=${StrPathReposIndex}/${StrId}.lst StreamCprEnvlTxt  ; 
+		local StrSHASnap=$( sha1sum --binary ${StrPathReposIndex}/${StrId}.lst | cut -d ' ' -f 1 ) 
+		test ! -e ${StrIndexFile} && echo -ne "SNAPSHOT:SHA1SUM:${StrSHASnap}\nSNAPSHOT END\n" > ${StrIndexFile} ; 
+	}
 	
 	function TestPathIndex()
 	{
@@ -1588,6 +1627,9 @@ function PackageRepositoryMgmt()
 	elif [ "${Arg0:=--startservices}" == "--checkdrive"	] ; then 
 		$( TestDriveMountDebug=${StrTestDriveDebug} TestDriveMountList=${StrPathRepository},${StrPathArchives} TestDriveMount ) ; 
 		echo -ne "Status of IsMountDrive: ${IsMountDrive}\n" > /dev/stderr ; 
+	elif [ "${Arg0:=--startservices}" == "--add-snapshoot" ] ; then 
+		$( TestDriveMountDebug=${StrTestDriveDebug} TestDriveMountList=${StrPathRepository},${StrPathArchives} TestDriveMount ) ; 
+		StrIndexFile=${StrIndexFile} StrTransactionStart=${StrTransactionStart} GetDpkgListing ; 
 	else 
 			$( TestDriveMountDebug=${StrTestDriveDebug} TestDriveMountList=${StrPathRepository},${StrPathArchives} TestDriveMount ) ; 
 			if [ "${IsMountDrive:=True}" == "True" ] ; then 
@@ -1595,6 +1637,9 @@ function PackageRepositoryMgmt()
 				
 				local ArrayFileList=( $( GetPackageListPathArchives=${StrPathArchives} GetPackageListFormat=${StrPackageType} GetPackageListStringFormat="${StrFindStringFormat}" GetPackageList ) )
 				local ShaSum=$( echo ${ArrayFileList[@]} | sha1sum | cut -d ' ' -f 1 )
+				if [ ${StrAddPackageListing:=False} == "True" ] ; then 
+					 StrIndexFile=${StrIndexFile} StrTransactionStart=${StrTransactionStart} GetDpkgListing ; 
+				fi 
 				test ! -e ${StrIndexFile} && echo -ne "NEW TRANSACTION:${StrTransactionStart}\n" > ${StrIndexFile} ; 
  			  test -e ${StrIndexFile} && echo -ne "COMMIT TRANSACTION:ID:${StrUUID}:NB_FILE:${#ArrayFileList[@]}:SHA1SUM:${ShaSum}:${StrTransactionStart}\n" >> ${StrIndexFile} ; 
 
