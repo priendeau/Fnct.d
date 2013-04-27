@@ -1542,7 +1542,7 @@ function PackageRepositoryMgmt()
 		local __call_locality=( GetIdDpkgListing ) ;
 		local ArrayArg=( $* ) ;		
 		local StrID=$( GetUUID ) ; 
-		test ! -e ${StrIndexFile} && echo -ne "ADD SNAPSHOT\nDATE:${StrTransactionStart}:ID:${StrID}\n" > ${StrIndexFile} ; 
+		echo -ne "ADD SNAPSHOT\nDATE:${StrTransactionStart}:ID:${StrID}\n" >> ${StrIndexFile} ; 
 		echo -ne "${StrID}" ; 
 	}
 	
@@ -1566,7 +1566,8 @@ function PackageRepositoryMgmt()
 		local StrId=$( StrIndexFile=${StrIndexFile} StrTransactionStart=${StrTransactionStart} GetIdDpkgListing ) 
 		GetDpkgInstalled | StreamCprEnvlTxtFile=${StrPathReposIndex}/${StrId}.lst StreamCprEnvlTxt  ; 
 		local StrSHASnap=$( sha1sum --binary ${StrPathReposIndex}/${StrId}.lst | cut -d ' ' -f 1 ) 
-		test ! -e ${StrIndexFile} && echo -ne "SNAPSHOT:SHA1SUM:${StrSHASnap}\nSNAPSHOT END\n" > ${StrIndexFile} ; 
+		echo -ne "ShaSUM of snapshot, ID:${StrId} SHA:${StrSHASnap}\n" > /dev/stderr ; 
+		echo -ne "SNAPSHOT:SHA1SUM:${StrSHASnap}\nSNAPSHOT END\n" >> ${StrIndexFile} ; 
 	}
 	
 	function TestPathIndex()
@@ -1629,7 +1630,7 @@ function PackageRepositoryMgmt()
 		echo -ne "Status of IsMountDrive: ${IsMountDrive}\n" > /dev/stderr ; 
 	elif [ "${Arg0:=--startservices}" == "--add-snapshoot" ] ; then 
 		$( TestDriveMountDebug=${StrTestDriveDebug} TestDriveMountList=${StrPathRepository},${StrPathArchives} TestDriveMount ) ; 
-		StrIndexFile=${StrIndexFile} StrTransactionStart=${StrTransactionStart} GetDpkgListing ; 
+		StrPathReposIndex=${StrPathReposIndex} StrIndexFile=${StrIndexFile} StrTransactionStart=${StrTransactionStart} GetDpkgListing ; 
 	else 
 			$( TestDriveMountDebug=${StrTestDriveDebug} TestDriveMountList=${StrPathRepository},${StrPathArchives} TestDriveMount ) ; 
 			if [ "${IsMountDrive:=True}" == "True" ] ; then 
@@ -1638,9 +1639,9 @@ function PackageRepositoryMgmt()
 				local ArrayFileList=( $( GetPackageListPathArchives=${StrPathArchives} GetPackageListFormat=${StrPackageType} GetPackageListStringFormat="${StrFindStringFormat}" GetPackageList ) )
 				local ShaSum=$( echo ${ArrayFileList[@]} | sha1sum | cut -d ' ' -f 1 )
 				if [ ${StrAddPackageListing:=False} == "True" ] ; then 
-					 StrIndexFile=${StrIndexFile} StrTransactionStart=${StrTransactionStart} GetDpkgListing ; 
+					 StrPathReposIndex=${StrPathReposIndex} StrIndexFile=${StrIndexFile} StrTransactionStart=${StrTransactionStart} GetDpkgListing ; 
 				fi 
-				test ! -e ${StrIndexFile} && echo -ne "NEW TRANSACTION:${StrTransactionStart}\n" > ${StrIndexFile} ; 
+				test -e ${StrIndexFile} && echo -ne "NEW TRANSACTION:${StrTransactionStart}\n" > ${StrIndexFile} ; 
  			  test -e ${StrIndexFile} && echo -ne "COMMIT TRANSACTION:ID:${StrUUID}:NB_FILE:${#ArrayFileList[@]}:SHA1SUM:${ShaSum}:${StrTransactionStart}\n" >> ${StrIndexFile} ; 
 
 				
