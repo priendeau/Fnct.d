@@ -1359,7 +1359,7 @@ function GetZenityTextEntry()
 		if [ "${Arg0:=--startservices}" == "--help" ] ; then 
 			GetVarReference ${__call_locality[1]} ; 
 		else
-			local CmdEval=( """local StrReturn=\$( GetZenityText --width=${IntWidth}  --height=${IntHeight} --title="${StrTitle}" --text="${StrQuestion}" 2> /dev/null ) """ ); 
+			local CmdEval=( """local StrReturn=\$( GetZenityText --width=${IntWidth}  --height=${IntHeight} --title="${StrTitle}" --text="${StrQuestion}" ) """ ); 
 			echo -ne "\n\nCmdEval : ${CmdEval[@]}\n\n" > /dev/stderr ; 
 		fi 
 		echo -ne "StrReturn return: ${StrReturn}\n" > /dev/stderr ; 
@@ -1520,6 +1520,7 @@ function PackageRepositoryMgmt()
 	local StrPathReposIndex=${PkgRepoMgmtReposIndex:=/media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64/index} ;
 	local StrIndexLatest=${PkgRepoMgmtLatestIndexName:=latest};
 	local StrAddPackageListing=${PkgRepoMgmtAddPkgLst:=False} ; 
+	local StrPkgLstExt=${PkgRepoMgmtPkgExt:=base64.bz2}
 	local StrAppsLinkerName=${PkgRepoMgmtLinkerName:=/bin/ln} ; 
 	local StrAppsLinkerOptionRecv=${PkgRepoMgmtLinkerOption:=-s} ; 
 	local StrAppsLinkerOption=( ${StrAppsLinkerOptionRecv//,/ }  );
@@ -1555,7 +1556,7 @@ function PackageRepositoryMgmt()
 	function StreamCprEnvlTxt()
 	{
 		local __call_locality=( StreamCprEnvlTxt ) ;
-		local StrFile=${StreamCprEnvlTxtFile:=none.lst}
+		local StrFile=${StreamCprEnvlTxtFile:=none.${StrPkgLstExt}}
 		local ArrayArg=( $* ) ; 
 		bzip2 -9z | base64 --wrap=0 > ${StrFile} ; 
 	}
@@ -1564,8 +1565,8 @@ function PackageRepositoryMgmt()
 		local __call_locality=( GetPackageListing ) ;
 		local ArrayArg=( $* ) ; 
 		local StrId=$( StrIndexFile=${StrIndexFile} StrTransactionStart=${StrTransactionStart} GetIdDpkgListing ) 
-		GetDpkgInstalled | StreamCprEnvlTxtFile=${StrPathReposIndex}/${StrId}.lst StreamCprEnvlTxt  ; 
-		local StrSHASnap=$( sha1sum --binary ${StrPathReposIndex}/${StrId}.lst | cut -d ' ' -f 1 ) 
+		GetDpkgInstalled | StrPkgLstExt=${StrPkgLstExt} StreamCprEnvlTxtFile=${StrPathReposIndex}/${StrId}.${StrPkgLstExt} StreamCprEnvlTxt  ; 
+		local StrSHASnap=$( sha1sum --binary ${StrPathReposIndex}/${StrId}.${StrPkgLstExt} | cut -d ' ' -f 1 ) 
 		echo -ne "ShaSUM of snapshot, ID:${StrId} SHA:${StrSHASnap}\n" > /dev/stderr ; 
 		echo -ne "SNAPSHOT:SHA1SUM:${StrSHASnap}\nSNAPSHOT END\n" >> ${StrIndexFile} ; 
 	}
@@ -1597,6 +1598,7 @@ function PackageRepositoryMgmt()
 			return 1 ; 
 		fi
 	}
+	
 	function TestDriveMount()
 	{
 		local __call_locality=( TestDriveMount ) ; 
@@ -1622,6 +1624,7 @@ function PackageRepositoryMgmt()
 			echo -ne "${StrScopeType} IsMountDrive=${IsMountDrive}" ; 
 		fi 
 	}
+	
 	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
 			GetVarReference ${__call_locality[1]} ; 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
@@ -1630,16 +1633,24 @@ function PackageRepositoryMgmt()
 		echo -ne "Status of IsMountDrive: ${IsMountDrive}\n" > /dev/stderr ; 
 	elif [ "${Arg0:=--startservices}" == "--add-snapshoot" ] ; then 
 		$( TestDriveMountDebug=${StrTestDriveDebug} TestDriveMountList=${StrPathRepository},${StrPathArchives} TestDriveMount ) ; 
-		StrPathReposIndex=${StrPathReposIndex} StrIndexFile=${StrIndexFile} StrTransactionStart=${StrTransactionStart} GetDpkgListing ; 
+		StrPathReposIndex=${StrPathReposIndex}     \
+		StrIndexFile=${StrIndexFile}               \
+		StrTransactionStart=${StrTransactionStart} \
+		StrPkgLstExt=${StrPkgLstExt} GetDpkgListing ; 
 	else 
 			$( TestDriveMountDebug=${StrTestDriveDebug} TestDriveMountList=${StrPathRepository},${StrPathArchives} TestDriveMount ) ; 
 			if [ "${IsMountDrive:=True}" == "True" ] ; then 
-				TestPathIndexName=${StrPathReposIndex} TestPathIndexTest=${StrIndexTest} TestPathIndexResultAction=${StrDefaultActionIndex} TestPathIndex ;
+				TestPathIndexName=${StrPathReposIndex}   \
+				TestPathIndexTest=${StrIndexTest}        \
+				TestPathIndexResultAction=${StrDefaultActionIndex} TestPathIndex ;
 				
 				local ArrayFileList=( $( GetPackageListPathArchives=${StrPathArchives} GetPackageListFormat=${StrPackageType} GetPackageListStringFormat="${StrFindStringFormat}" GetPackageList ) )
 				local ShaSum=$( echo ${ArrayFileList[@]} | sha1sum | cut -d ' ' -f 1 )
 				if [ ${StrAddPackageListing:=False} == "True" ] ; then 
-					 StrPathReposIndex=${StrPathReposIndex} StrIndexFile=${StrIndexFile} StrTransactionStart=${StrTransactionStart} GetDpkgListing ; 
+					 StrPathReposIndex=${StrPathReposIndex}     \
+					 StrIndexFile=${StrIndexFile}               \
+					 StrTransactionStart=${StrTransactionStart} \
+					 StrPkgLstExt=${StrPkgLstExt} GetDpkgListing ; 
 				fi 
 				test -e ${StrIndexFile} && echo -ne "NEW TRANSACTION:${StrTransactionStart}\n" > ${StrIndexFile} ; 
  			  test -e ${StrIndexFile} && echo -ne "COMMIT TRANSACTION:ID:${StrUUID}:NB_FILE:${#ArrayFileList[@]}:SHA1SUM:${ShaSum}:${StrTransactionStart}\n" >> ${StrIndexFile} ; 
