@@ -1528,6 +1528,7 @@ function PackageRepositoryMgmt()
 	local StrDefaultActionIndex=${PkgRepoMgmtReposIndexAction:="mkdir -p __PATH__"} ;
 	local StrTestDriveDebug=${PkgRepoMgmtReposDriveDebug:=False} ;
 	local StrIndexTest=${PkgRepoMgmtReposIndexTest:=! -d} ;
+	local ScriptAwkFilter=${PkgRepoMgmtReposAwkLst:=/etc/init.d/Fnct.d/awk-script/dpkg-package-id-listing.awk} ;
 	### Explained in GetOtherDate, GetOtherDateReference can be negative and report yesterday date too. and not null will
   ### give n-day after today... 	
 	local IntDefaultDayIndexName=${PkgRepoMgmtReposIndexDay:=0} ;
@@ -1544,14 +1545,15 @@ function PackageRepositoryMgmt()
 		local ArrayArg=( $* ) ;		
 		local StrID=$( GetUUID ) ; 
 		echo -ne "ADD SNAPSHOT\nDATE:${StrTransactionStart}:ID:${StrID}\n" >> ${StrIndexFile} ; 
-		echo -ne "${StrID}" ; 
+		echo -ne "${StrID}"  > /dev/stderr ; 
 	}
 	
 	function GetDpkgInstalled()
 	{
 		local __call_locality=( GetDpkgInstalled ) ;
+		local StrAwkScript=${GetDpkgInstalledAwkScript:=/etc/init.d/Fnct.d/awk-script/dpkg-package-id-listing.awk}
 		local ArrayArg=( $* ) ; 
-		dpkg --get-selections | awk  'BEGIN{x=0}{x=x+1;printf("%i;%s;%s ",x,$1,$2)}END{}'
+		dpkg --get-selections | awk -f ${StrAwkScript}
 	}
 	function StreamCprEnvlTxt()
 	{
@@ -1565,7 +1567,7 @@ function PackageRepositoryMgmt()
 		local __call_locality=( GetPackageListing ) ;
 		local ArrayArg=( $* ) ; 
 		local StrId=$( StrIndexFile=${StrIndexFile} StrTransactionStart=${StrTransactionStart} GetIdDpkgListing ) 
-		GetDpkgInstalled | StrPkgLstExt=${StrPkgLstExt} StreamCprEnvlTxtFile=${StrPathReposIndex}/${StrId}.${StrPkgLstExt} StreamCprEnvlTxt  ; 
+		GetDpkgInstalledAwkScript=${ScriptAwkFilter} GetDpkgInstalled | StrPkgLstExt=${StrPkgLstExt} StreamCprEnvlTxtFile=${StrPathReposIndex}/${StrId}.${StrPkgLstExt} StreamCprEnvlTxt  ; 
 		local StrSHASnap=$( sha1sum --binary ${StrPathReposIndex}/${StrId}.${StrPkgLstExt} | cut -d ' ' -f 1 ) 
 		echo -ne "ShaSUM of snapshot, ID:${StrId} SHA:${StrSHASnap}\n" > /dev/stderr ; 
 		echo -ne "SNAPSHOT:SHA1SUM:${StrSHASnap}\nSNAPSHOT END\n" >> ${StrIndexFile} ; 
@@ -1636,7 +1638,8 @@ function PackageRepositoryMgmt()
 		StrPathReposIndex=${StrPathReposIndex}     \
 		StrIndexFile=${StrIndexFile}               \
 		StrTransactionStart=${StrTransactionStart} \
-		StrPkgLstExt=${StrPkgLstExt} GetDpkgListing ; 
+		StrPkgLstExt=${StrPkgLstExt}               \
+		GetDpkgInstalledAwkScript=${ScriptAwkFilter} GetDpkgListing ; 
 	else 
 			$( TestDriveMountDebug=${StrTestDriveDebug} TestDriveMountList=${StrPathRepository},${StrPathArchives} TestDriveMount ) ; 
 			if [ "${IsMountDrive:=True}" == "True" ] ; then 
@@ -1650,11 +1653,18 @@ function PackageRepositoryMgmt()
 					 StrPathReposIndex=${StrPathReposIndex}     \
 					 StrIndexFile=${StrIndexFile}               \
 					 StrTransactionStart=${StrTransactionStart} \
-					 StrPkgLstExt=${StrPkgLstExt} GetDpkgListing ; 
+					 StrPkgLstExt=${StrPkgLstExt}               \
+					 GetDpkgInstalledAwkScript=${ScriptAwkFilter} GetDpkgListing ; 
+				fi
+				local IntIsFile=0 ;
+				test -e ${StrIndexFile} && IntIsFile=1 ; 
+				if [ ${IntIsFile:=0} -eq 1 ] ; then 
+					echo -ne "NEW TRANSACTION:${StrTransactionStart}\n" >> ${StrIndexFile} ;  
+				else
+				 echo -ne "NEW FILE\n" > ${StrIndexFile} ; 
+				 echo -ne "NEW TRANSACTION:${StrTransactionStart}\n" > ${StrIndexFile} ;  
 				fi 
-				test -e ${StrIndexFile} && echo -ne "NEW TRANSACTION:${StrTransactionStart}\n" > ${StrIndexFile} ; 
- 			  test -e ${StrIndexFile} && echo -ne "COMMIT TRANSACTION:ID:${StrUUID}:NB_FILE:${#ArrayFileList[@]}:SHA1SUM:${ShaSum}:${StrTransactionStart}\n" >> ${StrIndexFile} ; 
-
+				echo -ne "COMMIT TRANSACTION:ID:${StrUUID}:NB_FILE:${#ArrayFileList[@]}:SHA1SUM:${ShaSum}:${StrTransactionStart}\n" >> ${StrIndexFile} ; 
 				
 				local Result=$? ; 
 				if [ ${Result:=1} -eq 0 ] ; then 
