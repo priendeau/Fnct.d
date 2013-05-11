@@ -110,7 +110,7 @@ function ValueParser()
 {
 		local ArrayArg=( $* ) ; 
 		local Arg0=${ArrayArg[0]} ;
-		local __call_locality=( VP );
+		local __call_locality=( VP ValueParser );
 		local StrVarArgList=${VPVarArgList:=Str:AppsName,Str:AppsOpt} ; 
 		local StrValueList=${VPValueList:=echo,__VALUE__} ; 
 		local StrLocality=${VPCallLocalityName:=Default} ; 
@@ -220,7 +220,7 @@ function ValueParser()
 			
 		}
 		if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-			GetVarReference ValueParser ;
+			GetVarReference ${__call_locality[1]} ; 
 		elif [ "${Arg0:=--startservices}" == "--startservices"	] ; then 
 			ArrayScope=${ArrayScope[@]// /,} StrVarSuffix=${StrVarSuffix} StrValueReturn=${StrValueReturn} StrDefaultScope=${StrDefaultScope} StrLocality=${StrLocality}  Main ${ArrayVar[@]} ; 
 		elif [ "${Arg0:=--startservices}" == "--varhelper"	] ; then 
@@ -228,6 +228,36 @@ function ValueParser()
 		fi 
 	
 }
+
+unset __default_test ;
+function __default_test()
+{
+	local ArrayArg=( $* ) ; 
+	local __call_locality=( DT __default_test  ) ; 
+ local Arg0=${ArrayArg[0]} ; 
+	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+	 GetVarReference ${__call_locality[1]} ;
+	else
+		echo "__BODY__" > /dev/stderr ; 
+	fi 
+	
+}
+
+unset AddPValueStore
+function AddPValueStore()
+{
+	local ArrayArg=( $* ) ; 
+	local __call_locality=( APVS AddPValueStore  ) ; 
+ local Arg0=${ArrayArg[0]} ; 
+	local StrAction=${APVSAction:=add} ; 
+	local StrFunction=${APVSFunction:=__default_test} ; 
+	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+	 GetVarReference ${__call_locality[1]} ;
+	else
+		echo -ne "__BODY__\n" > /dev/stderr ; 
+	fi 
+}
+
 
  ### StartCoproc :
  ###
@@ -1327,7 +1357,7 @@ function GetBuildFlagsList( )
 {
 		local ArrayArg=( $* ) ; 
 		local __call_locality=( ZPI ) ;  
-		dpkg-buildflags --list
+		dpkg-buildflags --list | tr '[:cntrl:]' ' ' 
 } 
 
 unset GetZenityText ; 
@@ -1386,7 +1416,7 @@ function zenity_pip_installer()
 		local package=$( GetZenityTextEntry ) ; 
 
 		for Item in $( GetBuildFlagsList ) ; do 
-			local newFlags=$( GetItemFlags ${Item} ) 
+			local newFlags=$( GetItemFlags ${Item} ) ;
 			ADDFLAGS="${ADDFLAGS} ${Item}=\"${newFlags}\"" ; 
 		done  ; 
 		echo -ne "ADDFLAGS:\n${ADDFLAGS}\n" ; 
