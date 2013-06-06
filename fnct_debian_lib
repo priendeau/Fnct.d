@@ -229,7 +229,7 @@ function ValueParser()
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 			echo -ne """${ArgGet}\n""" ; 			
 		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval ${__call_locality[1]} --help | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+			eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
 		elif [ "${Arg0:=--startservices}" == "--varhelper"	] ; then 
 			ArrayScope=${ArrayScope[@]// /,} StrVarSuffix=${StrVarSuffix} StrValueReturn=${StrValueReturn} StrDefaultScope=${StrDefaultScope} StrLocality=${StrLocality}  MainHelper ${ArrayVar[@]} ;
 		fi 
@@ -250,7 +250,7 @@ function __default_test()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval ${__call_locality[1]} --help | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+		eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
 	else
 		echo "__BODY__" > /dev/stderr ; 
 	fi 
@@ -333,7 +333,7 @@ function StartCoproc()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval ${__call_locality[1]} --help | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+		eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
 	elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
 		echo ""
 		### Prog To create a coprocess 
@@ -404,7 +404,7 @@ function PkgConfigQuery()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval ${__call_locality[1]} --help | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+		eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
 	else
 		if [ ${IntArgLen:=0} -eq 0 ] ; then 
 			ArrayFlagTest=( ${StrFlagList//,/ } ) ; 
@@ -473,7 +473,7 @@ function pkg-config-all()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval ${__call_locality[1]} --help | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+		eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
 	else
 		Arg0=${Arg0} StrAppsName=${StrAppsName} StrCutAlias=${StrCutAlias} StrAppsOpt=${StrAppsOpt} IntScoping=${IntScoping} StrArrayName=${StrArrayName} Main
 	fi
@@ -538,7 +538,7 @@ function ObjFindFunction()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval ${__call_locality[1]} --help | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+		eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
 	else
 		local ArrayDll=( $( GetFindListStartPath=${StrPathStartFind} GetFindListNamePatter=${StrDllSuffix} GetFindListPrintfFormat=${StrPrintfFormat} ) ) ; 
 		for StrdllFunction in ${dllFunction[@]}; do 
@@ -661,7 +661,7 @@ function DefaultConfigure()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval ${__call_locality[1]} --help | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+		eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
 	elif [ "${ArrayArg[0]}" == "${StrDefaultAction}" ] ; then 
 		CmdEval=( ${CmdEval[@]} ${StrConfigureContent} ) ; 
 		echo -ne "Configure option extracted: \n\t${CmdEval[@]}\n\n" > /dev/stderr ; 
@@ -736,7 +736,7 @@ function IsPathName()
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 			echo -ne """${ArgGet}\n""" ; 			
 		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval ${__call_locality[1]} --help | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+			eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
 		else
 			for(( intx=0 ; intx <= ${#ArrayActionList[@]]}-1 ; intx++ )) ; do 
 			 local StrReg="${ArrayRegExp[${intx}]}" ;
@@ -834,7 +834,7 @@ function GetOtherDate()
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 			echo -ne """${ArgGet}\n""" ; 			
 		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval ${__call_locality[1]} --help | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+			eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
 	 else	 
 	 	if [ "${isLoop:=False}" == "True" ] ; then 
 				VerbosisMsg="ArrayRange, nb-element:${#ArrayRange[@]}, hold [ ${ArrayRange[@]} ]\n" Verbosis ${IsVerbose} ;
@@ -873,7 +873,7 @@ function kill_cmd()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval ${__call_locality[1]} --help | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+		eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
 	else
 		for (( x=0 ; x <= ${#ArrayArg[@]}-1 ; x++ )) ; do 
 			local cmd=${ArrayArg[${x}]} ; 
@@ -900,7 +900,7 @@ function StartApps()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval ${__call_locality[1]} --help | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+		eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
  else	 
 	 local AppsRefresh=${StartAppsRefresh:=4} ; 
 	 local Apps=${StartAppsCmd:=rezound --audio-method=jack} ; 
@@ -939,7 +939,7 @@ function Survey_kill_apps()
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 			echo -ne """${ArgGet}\n""" ; 			
 		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval ${__call_locality[1]} --help | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+			eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
 		else	 
 		  local StrApps=${SurveyApps:=rezound} ; 
 		  local IntDelay=${SurveyAppsRefresh:=4} ; 
@@ -974,7 +974,7 @@ function DpkgGetInlineBuildFlags()
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 			echo -ne """${ArgGet}\n""" ; 			
 		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval ${__call_locality[1]} --help | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+			eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
  	else	 
   	local CmdEval=( "cat" "${DpkgGetInlineBuildFlagsPath:=/etc/dpkg/}"${DpkgGetInlineBuildFlagsFile:=buildflags.conf} "|" """sed -e 's/^\(SET\ \)\([a-zA-Z]*FLAGS\)\([\t\ ]*\)/\2=/g'""" "|" tr """'[:cntrl:]\' ' '""" ) ;
   	eval "${CmdEval[@]}" ;
@@ -1020,7 +1020,7 @@ function DebianAptSrcCompiler()
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 			echo -ne """${ArgGet}\n""" ; 			
 		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval ${__call_locality[1]} --help | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+			eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
  	else	 	
 		if [ ${AddPatch:=True} == "True" ]; then 
 			StrPatchOpt="-p" ;
@@ -1199,7 +1199,7 @@ function AptSrcChange()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
 		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval ${__call_locality[1]} --help | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+			eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
 		else	
   cp ${StrAptSourceList} ${StrAptSourceSave} ; 
   cat ${StrAptSourceList} | sed 's/^${StrTagSearch} ${StrDefaultURI}/${StrTagAdd} [ arch=${StrDefaultArch} ] ${StrDefaultURI}/g' > ${StrUUID} ; 
@@ -1245,7 +1245,7 @@ function AptRebuild()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval ${__call_locality[1]} --help | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+		eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
 	else	 
 		for (( intx=0 ; intx <= ${#ArrayArg[@]}-1 ; intx++ )) ; do 
 			Package=${ArrayArg[${intx}]} ; 
@@ -1291,7 +1291,7 @@ function find_edit_file()
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 			echo -ne """${ArgGet}\n""" ; 			
 		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval ${__call_locality[1]} --help | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+			eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
  	else	
 		for file in ${ArrayArg[@]} ; do 
 			local StrFilterInFind=${StrFindFilterOpt//__FILE__/${file}}
@@ -1343,7 +1343,7 @@ function FindFilterPathExclusion()
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 			echo -ne """${ArgGet}\n""" ; 			
 		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval ${__call_locality[1]} --help | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+			eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
  	else	 
 
 		### 
@@ -1483,7 +1483,7 @@ function acquire_lan_ifconfig()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval ${__call_locality[1]} --help | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+		eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
 	elif [ "${Arg0:=--start-services}" == "--start-services" ] ; then 
   GetIpaddrTagList=${StrTagNameList} GetIpaddrAppsIfconfig=${StrAppsNetConf} GetIpaddrAddr=${StrDefaultCard} GetIpaddr ; 
  fi 
@@ -1513,7 +1513,7 @@ function GetZenityText()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval ${__call_locality[1]} --help | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+		eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
 	else
 		eval ${StrApps} ${StrTypeUI} ${ArrayArg[@]} ;
 	fi 
@@ -1538,7 +1538,7 @@ function GetZenityTextEntry()
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 			echo -ne """${ArgGet}\n""" ; 			
 		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval ${__call_locality[1]} --help | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+			eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
 		else
 			local CmdEval=( """local StrReturn=\$( GetZenityText --width=${IntWidth}  --height=${IntHeight} --title="${StrTitle}" --text="${StrQuestion}" ) """ ); 
 			echo -ne "\n\nCmdEval : ${CmdEval[@]}\n\n" > /dev/stderr ; 
@@ -1628,7 +1628,7 @@ function GkSuZenityLoader()
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 			echo -ne """${ArgGet}\n""" ; 
 		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval ${__call_locality[1]} --help | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+			eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
 		else	
 			if [ "${StrUser:=none}" ==  "none" ] ; then 
 				StrUser=$( StrDefaultCSV=${StrDefaultCSV} IntDefaultColExtr=${IntDefaultColExtr} StrFileInfo=${StrFileInfo} StrTitle=${StrTitle} StrCol0=${StrCol0} StrCol1=${StrCol1} StrRegSearch=${StrRegSearch} BoolShowUserSelection=${BoolShowUserSelection} GetPwdUser ) ; 
@@ -1809,7 +1809,7 @@ function PackageRepositoryMgmt()
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 			echo -ne """${ArgGet}\n""" ;
 		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval ${__call_locality[1]} --help | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+			eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
 		else
 			for (( intx=0 ; intx <= ${#MountDriveCheck[@]}-1 ; intx++ )) ; do
 				if [ "${IsDisplayDebug:=False}" == "True" ] ; then 
@@ -1928,7 +1928,7 @@ function PackageRepositoryRest()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval ${__call_locality[1]} --help | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+		eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
 	elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
 		index=${index//__BackupPath__/${drv}} ;
 		resolve=${resolve//__DATE__/${thisdate}} ;
@@ -2078,7 +2078,7 @@ function GetMplayerStream()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval ${__call_locality[1]} --help | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+		eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
 	elif [ "${Arg0:=--startservices}" == "debug"	] ; then 
 		echo -ne "CmdLine[0]:${cmdline[0]} \nCmdLine[1]:${cmdline[1]}\n" > /dev/stderr ;
 	else
@@ -2179,7 +2179,7 @@ function BuildOnFaultCompiler()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval ${__call_locality[1]} --help | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+		eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
 	else
 		StrAppsLib=${StrAppsLib} StrAppsLibOpt=${StrAppsLibOpt} StrAppsLibOpt=${StrAppsLibOpt} StrAppsAppsFault=${StrAppsAppsFault} StrAppsAppsFaultOpt=${StrAppsAppsFaultOpt} IntRandomSize=${IntRandomSize} Start ; 
 	fi 
@@ -2217,7 +2217,7 @@ function RoundRobinSwapRealloc()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval ${__call_locality[1]} --help | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+		eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
 	elif [ "${Arg0:=--startservices}" == "--swaptorealloc"	] ; then 
 		GetSwapList ;
 	else
