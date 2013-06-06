@@ -219,9 +219,9 @@ function ValueParser()
 			echo -ne "${StrValueReturn}" ;
 			
 		}
+		local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\t\n--get\t\tReturn value of Internal Variable.\n" 
 		if [ "${Arg0:=--startservices}" == "--help"	] ; then 
 			GetVarReference ${__call_locality[1]} ; 
-			local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\t\n--get\t\tReturn value of Internal Variable.\n" 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 		elif [ "${Arg0:=--startservices}" == "--startservices"	] ; then 
 			ArrayScope=${ArrayScope[@]// /,} StrVarSuffix=${StrVarSuffix} StrValueReturn=${StrValueReturn} StrDefaultScope=${StrDefaultScope} StrLocality=${StrLocality}  Main ${ArrayVar[@]} ; 
@@ -240,9 +240,9 @@ function __default_test()
 	local ArrayArg=( $* ) ; 
 	local __call_locality=( DT __default_test  ) ; 
  local Arg0=${ArrayArg[0]} ; 
+	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\t\n--get\t\tReturn value of Internal Variable.\n" 
 	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
 	 GetVarReference ${__call_locality[1]} ;
-		local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
@@ -319,9 +319,9 @@ function StartCoproc()
 	
 	eval $( eval "${StrValueParserInfo} ValueParser " ) ;
 	local EvalCoprocCmd=( ${StrAppsPrVar} ${StrAppsName} ${StrAppsOpt} ) ; 
+	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\t\n--get\t\tReturn value of Internal Variable.\n" 
 	if [ "${Arg0:=--startservices}" == "--help" ] ; then 
 		GetVarReference StartCoproc ; 
-		local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 		eval ${StrValueParserInfo} ValueParser --varhelper
 		echo -ne "--asarray\tStart The application and output the content into an Array, see varriable                               PkgConfigAllArrayName to change the name. This command need an eval braced                              to get the array being initialized.\n\n"
@@ -388,10 +388,10 @@ function PkgConfigQuery()
 		cut -d " " -f 1 | egrep -i "${StrGrepFilter}" | tr '[:cntrl:]' ' ' 
 	}
 
+		local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
  
  	if [ "${Arg0:=--start}" == "--help" ] ; then 
 			GetVarReference PkgConfigQuery ; 
-			local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 			eval ${StrValueParserInfo} ValueParser --varhelper ;
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
@@ -455,9 +455,9 @@ function pkg-config-all()
 				echo -ne "${ArrayScopingType[${IntScoping}]} ${StrArrayName}=( ${StrPackageList} )\n" ;
 		fi
 	}
+	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
  	if [ "${Arg0:=--startservices}" == "--help" ] ; then 
 		GetVarReference pkg-config-all ; 
-		local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 		eval ${StrValueParserInfo} --varhelper
 		echo -ne "Following switch are available:\n\n\t--startservices\tStart the application normally and output the package list\n\t--asarray\tStart The application and output the content into an Array, see varriable                               PkgConfigAllArrayName to change the name. This command need an eval braced                              to get the array being initialized.\n\n"
@@ -519,10 +519,10 @@ function ObjFindFunction()
 		eval """ ${StrDllInspectApps} ${StrDllInspectFlags} ${StrFileSearch} | egrep -ic "${StrDllFunctionName}" """ ; 
 		
 	}
+	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 	
 	if [ "${Arg0:=--startservices}" == "--help" ] ; then 
 	 GetVarReference ${__call_locality[0]} ; 
-		local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
@@ -641,9 +641,9 @@ function DefaultConfigure()
 	test -e ${StrOptionFile} && local StrConfigureContentTest=$( GetConfOptName=${StrNameConfigure} GetConfOptFile=${StrNewConfigureOptFile} GetNameConfigureOption ) ; 
 	local StrConfigureContent=${StrConfigureContentTest:=--help} ; 
 	#local StrConfigContent=$( test -e ${StrNewConfigureOptFile} && local CmdEval=( ./configure  ) ) ; 
+	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 	if [ "${ArrayArg[0]}" = "--help" ] ; then 
 		GetVarReference DefaultConfigure ; 
-		local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
@@ -713,10 +713,10 @@ function IsPathName()
 		local ArrayActionList=( ${ArgActionList//,/ } ) ; 
 		local ArrayRegExp=( ${RegActionList//__SEP__/ } ) ; 
 		
+		local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 		if [ "${ArrayArg[0]}" = "--help" ] ; then 
 			IntReturnState=0 ;
 			GetVarReference ${__call_locality[0]} ; 
-			local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 		elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
@@ -809,10 +809,10 @@ function GetOtherDate()
 		local IntEndLoop=$(( ${ArrayRange[$((${#ArrayRange[@]}-1))]} ));
 		
 		local Arg0=${ArrayArg[0]}; 
+		local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 		
  	if [ "${Arg0:=--start}" == "--help" ] ; then 
 			GetVarReference ${__call_locality[0]} ; 
-			local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 		elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
@@ -847,9 +847,9 @@ function kill_cmd()
 	local StrColDisplayInSearch=${kill_cmdPsColList:=pid,command}
 	local IntNbCol=$(( $( echo "${StrColDisplayInSearch}" | wc -m ) - $( echo "${StrColDisplayInSearch//,/}" | wc -m ) ))
 	local IntIdPassToKiller=${kill_cmdColIdToKill:=${IntNbCol}} ; 
+	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 	if [ "${ArrayArg[0]}" = "--help" ] ; then 
 		GetVarReference ${__call_locality[0]} ; 
-		local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
@@ -872,9 +872,9 @@ function StartApps()
 { 
  local ArrayArg=( $* ) ; 
  local __call_locality=( StartApps ) ; 
+	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
  if [ "${ArrayArg[0]}" = "--help" ] ; then 
 		GetVarReference ${__call_locality[0]} ; 
-		local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
@@ -909,9 +909,9 @@ function Survey_kill_apps()
     }
     local __call_locality=( SurveyApps ) ; 
     local ArrayArg=( $* ) ; 
+		local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 		if [ "${ArrayArg[0]}" = "--help" ] ; then 
 		 GetVarReference Survey_kill_apps ; 
-			local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 		elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
@@ -942,9 +942,9 @@ function DpkgGetInlineBuildFlags()
 {
   local __call_locality=( DpkgGetInlineBuildFlags ) ;
   local ArrayArg=( $* ) ;
+		local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
  	if [ "${ArrayArg[0]}" = "--help" ] ; then 
 			GetVarReference ${__call_locality[0]} ; 
-			local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 		elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
@@ -986,9 +986,9 @@ function DebianAptSrcCompiler()
 	local StrPatchOpt="" ; 
 	local res_exec=0 ; 
 	local StrPath=${DebianAptSrcCompilerPath:=/usr/local/src/apt} ;
+	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
  	if [ "${ArrayArg[0]}" = "--help" ] ; then 
 			GetVarReference ${__call_locality[0]} ; 
-			local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 		elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
@@ -1163,9 +1163,9 @@ function AptSrcChange()
  local StrTagAdd=${AptSrcChangeTagChange:=deb-src} ;
  local StrDefaultArch=${AptSrcChangeArch:=amd64} ;
  local StrDefaultURI=${AptSrcChangeURIType:=http}
+	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
  if [ "${Arg0}" = "--help" ] ; then 
   GetVarReference ${__call_locality[0]} ; 
-		local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
@@ -1207,9 +1207,9 @@ function AptRebuild()
 	local ArrayOptionVar=( ${StrCmdTagVar//${StrCSVSep}/ } )
 	
 	
+	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 	if [ "${Arg0}" = "--help" ] ; then 
 		GetVarReference ${__call_locality[0]} ; 
-		local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
@@ -1251,10 +1251,10 @@ function find_edit_file()
 	local StrEditor=${FEFEditorApps:=/usr/bin/gedit} ;
 	local StrFindFilterOpt=${FEFFindFilter:=-iname \"__FILE__\"} ;
 
- 	if [ "${ArrayArg[0]}" = "--help" ] ; then 
-		GetVarReference find_edit_file ; 
 		local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
-		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+ 	if [ "${ArrayArg[0]}" = "--help" ] ; then 
+			GetVarReference find_edit_file ; 
+			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 		elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 			echo -ne """${ArgGet}\n""" ; 			
@@ -1301,9 +1301,9 @@ function FindFilterPathExclusion()
 { 
 	local ArrayArg=( $* ) ; 
 	local __call_locality=( FindFilterPathExclusion ) ; 
+	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
  	if [ "${ArrayArg[0]}" = "--help" ] ; then 
 			GetVarReference ${__call_locality[0]} ; 
-			local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 		elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
@@ -1439,9 +1439,9 @@ function acquire_lan_ifconfig()
   local StrReturn=$( IfconfigGetterApps=${StrAppsIfconfig} IfconfigGetterAddr=${StrAddr} IfconfigGetter awk -vTagName="${StrTagCleanFilter}"  -f StrAwkFilter ) ; 
   
  }
+	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 	if [ "${Arg0:=--start-services}" = "--help" ] ; then 
 		GetVarReference acquire_lan_ifconfig ; 
-		local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
@@ -1467,9 +1467,9 @@ function GetZenityText()
 	local Arg0=${ArrayArg[0]} ;
 	local StrTypeUI=${GZTUiType:=--entry}
 	local StrApps=${GZTUiApps:=/usr/bin/zenity} ;
+	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 	if [ "${Arg0:=--startservices}" == "--help" ] ; then 
 		GetVarReference ${__call_locality[1]} ; 
-		local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
@@ -1490,9 +1490,9 @@ function GetZenityTextEntry()
 	local StrTitle="""${GZTETitle:="Pip installation Try-up"}""" ; 
 	local StrQuestion="""${GZTETextQuestion:="Installation Package to install (test)"}""" ; 
 	local StrReturn ;
+	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 		if [ "${Arg0:=--startservices}" == "--help" ] ; then 
 			GetVarReference ${__call_locality[1]} ; 
-			local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 		elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
@@ -1578,9 +1578,9 @@ function GkSuZenityLoader()
 		local __call_locality=( Loader ) ; 
 		gksu --user ${StrUser} ${StrApps} ${StrAppsOpt} 
 	}
+		local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 	 if [ "${ArrayArg[0]}" = "--help" ] ; then 
 			GetVarReference ${__call_locality[0]} ; 
-			local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 		elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
@@ -1756,9 +1756,9 @@ function PackageRepositoryMgmt()
 		local MountDriveCheck=( ${StrDriveList//,/ } ) ;
 		local IsDisplayDebug=${TestDriveMountDebug:=False} ;
 		local Arg0="${ArrayArg[0]}" ;
+		local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 		if [ "${Arg0:=--startservices}" == "--help"	] ; then 
 				GetVarReference ${__call_locality[0]} ; 
-				local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 				echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 		elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
@@ -1873,9 +1873,9 @@ function PackageRepositoryRest()
 	local _TA=( ) ;
 	local Arg0=${ArrayArg[0]}	; 
 	
+	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 	if [ "${Arg0:=--startservices}" == "--help" ] ; then 
 		GetVarReference PackageRepositoryRest ; 
-		local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
@@ -2017,13 +2017,13 @@ function GetMplayerStream()
 		${StrAwkApps} -f ${StrAwkPath}/${StrAwkScriptName}
 	}
 
+	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 	local cmdline=( ) ;
 	local cmdline[0]="GetStreamFromPsUrlPlayerName=\"${StrPlayerName}\" GetStreamFromPsUrlFilter=\"${StrUrlGrep}\" GetStreamFromPsFName=\"${StrGrepApps}\" GetStreamFromPsFNOpt=\"${StrGrepOpt}\" GetStreamFromPsApps=\"${StrPsApps}\" GetStreamFromPsOpt=\"${StrPsOpt}\" GetStreamFromPs";
 	local cmdline[1]="AwkScriptApps=\"${StrAwkApps}\" AwkScriptAwkPath=\"${StrAwkPath}\" AwkScriptScriptName=\"${StrAwkScriptName}\" AwkScript" ; 
 	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
 			GetVarReference ${__call_locality[0]} ;
 			#echo -ne "Following switch are available:\n\n\t--startservices\tStart the application normally and output the package list\n\t--debug\tExpose result to be executed.\n\n" > /dev/stderr ; 
-			local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
@@ -2118,10 +2118,11 @@ function BuildOnFaultCompiler()
 		done 
 
 	}
+	
+	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 
 	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
 			GetVarReference BuildOnFaultCompiler ;
-			local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
@@ -2154,10 +2155,10 @@ function RoundRobinSwapRealloc()
 		local ArrayArg=( $* ) ;
 		
 	}
+	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 	
 	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
 			GetVarReference RoundRobinSwapRealloc ;
-			local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
