@@ -219,7 +219,7 @@ function ValueParser()
 			echo -ne "${StrValueReturn}" ;
 			
 		}
-		local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\t\n--get\t\tReturn value of Internal Variable.\n" 
+		local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
 		if [ "${Arg0:=--startservices}" == "--help"	] ; then 
 			GetVarReference ${__call_locality[1]} ; 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
@@ -229,7 +229,7 @@ function ValueParser()
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 			echo -ne """${ArgGet}\n""" ; 			
 		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+			eval $( __GetVarReferenceList ) ;
 		elif [ "${Arg0:=--startservices}" == "--varhelper"	] ; then 
 			ArrayScope=${ArrayScope[@]// /,} StrVarSuffix=${StrVarSuffix} StrValueReturn=${StrValueReturn} StrDefaultScope=${StrDefaultScope} StrLocality=${StrLocality}  MainHelper ${ArrayVar[@]} ;
 		fi 
@@ -242,7 +242,7 @@ function __default_test()
 	local ArrayArg=( $* ) ; 
 	local __call_locality=( DT __default_test  ) ; 
  local Arg0=${ArrayArg[0]} ; 
-	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\t\n--get\t\tReturn value of Internal Variable.\n" 
+	local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
 	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
 	 GetVarReference ${__call_locality[1]} ;
 		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
@@ -250,7 +250,7 @@ function __default_test()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+		eval $( __GetVarReferenceList ) ;
 	else
 		echo "__BODY__" > /dev/stderr ; 
 	fi 
@@ -267,7 +267,7 @@ function AddPValueStore()
 	local StrFunction=${APVSFunction:=__default_test} ; 
 	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
 	 GetVarReference ${__call_locality[1]} ;
-		local StrSwitchMessages"Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
+		local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
 		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
@@ -277,6 +277,27 @@ function AddPValueStore()
 	fi 
 }
 
+unset GetStdPrefixName ; 
+function GetStdPrefixName()
+{
+	local ArrayArg=( $* ) ; 
+	local __call_locality=( GSPN GetStdPrefixName  ) ; 
+ local Arg0=${ArrayArg[0]} ; 
+ local StrSedDefFilter=${GSPNSedFilter:=s/[a-z\)\(\_\-]//g} ; 
+	local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
+ 
+	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+	 GetVarReference ${__call_locality[1]} ;
+		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+		echo -ne """${ArgGet}\n""" ; 			
+	else
+		echo -ne "${Arg0}\n" | eval "sed '${StrSedDefFilter}'" ; 
+	fi 
+ 
+ 
+}
 
  ### StartCoproc :
  ###
@@ -323,7 +344,7 @@ function StartCoproc()
 	
 	eval $( eval "${StrValueParserInfo} ValueParser " ) ;
 	local EvalCoprocCmd=( ${StrAppsPrVar} ${StrAppsName} ${StrAppsOpt} ) ; 
-	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\t\n--get\t\tReturn value of Internal Variable.\n" 
+	local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
 	if [ "${Arg0:=--startservices}" == "--help" ] ; then 
 		GetVarReference StartCoproc ; 
 		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
@@ -333,7 +354,7 @@ function StartCoproc()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+		eval $( __GetVarReferenceList ) ;
 	elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
 		echo ""
 		### Prog To create a coprocess 
@@ -394,7 +415,7 @@ function PkgConfigQuery()
 		cut -d " " -f 1 | egrep -i "${StrGrepFilter}" | tr '[:cntrl:]' ' ' 
 	}
 
-		local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
+		#local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
  
  	if [ "${Arg0:=--start}" == "--help" ] ; then 
 			GetVarReference PkgConfigQuery ; 
@@ -404,7 +425,7 @@ function PkgConfigQuery()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+		eval $( __GetVarReferenceList ) ;
 	else
 		if [ ${IntArgLen:=0} -eq 0 ] ; then 
 			ArrayFlagTest=( ${StrFlagList//,/ } ) ; 
@@ -463,7 +484,7 @@ function pkg-config-all()
 				echo -ne "${ArrayScopingType[${IntScoping}]} ${StrArrayName}=( ${StrPackageList} )\n" ;
 		fi
 	}
-	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
+	local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
  	if [ "${Arg0:=--startservices}" == "--help" ] ; then 
 		GetVarReference pkg-config-all ; 
 		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
@@ -473,7 +494,7 @@ function pkg-config-all()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+		eval $( __GetVarReferenceList ) ;
 	else
 		Arg0=${Arg0} StrAppsName=${StrAppsName} StrCutAlias=${StrCutAlias} StrAppsOpt=${StrAppsOpt} IntScoping=${IntScoping} StrArrayName=${StrArrayName} Main
 	fi
@@ -529,7 +550,7 @@ function ObjFindFunction()
 		eval """ ${StrDllInspectApps} ${StrDllInspectFlags} ${StrFileSearch} | egrep -ic "${StrDllFunctionName}" """ ; 
 		
 	}
-	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
+	local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
 	
 	if [ "${Arg0:=--startservices}" == "--help" ] ; then 
 	 GetVarReference ${__call_locality[0]} ; 
@@ -538,7 +559,7 @@ function ObjFindFunction()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+		eval $( __GetVarReferenceList ) ;
 	else
 		local ArrayDll=( $( GetFindListStartPath=${StrPathStartFind} GetFindListNamePatter=${StrDllSuffix} GetFindListPrintfFormat=${StrPrintfFormat} ) ) ; 
 		for StrdllFunction in ${dllFunction[@]}; do 
@@ -615,6 +636,12 @@ function GetVarReference( )
 	declare -f ${ArrayArg[0]} | egrep "${CallLocalityInternalName}" | ParseInternalVar ;
 }
 
+unset __GetVarReferenceList ;
+function __GetVarReferenceList( )
+{
+		echo -ne """eval ${__call_locality[1]} --help 2> /dev/null | egrep -i \"^Variable\" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '""" ; 
+}
+
 unset DefaultConfigure ;
 function DefaultConfigure()
 { 
@@ -653,7 +680,7 @@ function DefaultConfigure()
 	test -e ${StrOptionFile} && local StrConfigureContentTest=$( GetConfOptName=${StrNameConfigure} GetConfOptFile=${StrNewConfigureOptFile} GetNameConfigureOption ) ; 
 	local StrConfigureContent=${StrConfigureContentTest:=--help} ; 
 	#local StrConfigContent=$( test -e ${StrNewConfigureOptFile} && local CmdEval=( ./configure  ) ) ; 
-	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
+	local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
 	if [ "${ArrayArg[0]}" = "--help" ] ; then 
 		GetVarReference DefaultConfigure ; 
 		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
@@ -661,7 +688,7 @@ function DefaultConfigure()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+		eval $( __GetVarReferenceList ) ;
 	elif [ "${ArrayArg[0]}" == "${StrDefaultAction}" ] ; then 
 		CmdEval=( ${CmdEval[@]} ${StrConfigureContent} ) ; 
 		echo -ne "Configure option extracted: \n\t${CmdEval[@]}\n\n" > /dev/stderr ; 
@@ -727,7 +754,7 @@ function IsPathName()
 		local ArrayActionList=( ${ArgActionList//,/ } ) ; 
 		local ArrayRegExp=( ${RegActionList//__SEP__/ } ) ; 
 		
-		local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
+		local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
 		if [ "${ArrayArg[0]}" = "--help" ] ; then 
 			IntReturnState=0 ;
 			GetVarReference ${__call_locality[0]} ; 
@@ -736,7 +763,7 @@ function IsPathName()
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 			echo -ne """${ArgGet}\n""" ; 			
 		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+			eval $( __GetVarReferenceList ) ;
 		else
 			for(( intx=0 ; intx <= ${#ArrayActionList[@]]}-1 ; intx++ )) ; do 
 			 local StrReg="${ArrayRegExp[${intx}]}" ;
@@ -825,7 +852,7 @@ function GetOtherDate()
 		local IntEndLoop=$(( ${ArrayRange[$((${#ArrayRange[@]}-1))]} ));
 		
 		local Arg0=${ArrayArg[0]}; 
-		local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
+		local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
 		
  	if [ "${Arg0:=--start}" == "--help" ] ; then 
 			GetVarReference ${__call_locality[0]} ; 
@@ -834,7 +861,7 @@ function GetOtherDate()
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 			echo -ne """${ArgGet}\n""" ; 			
 		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+			eval $( __GetVarReferenceList ) ;
 	 else	 
 	 	if [ "${isLoop:=False}" == "True" ] ; then 
 				VerbosisMsg="ArrayRange, nb-element:${#ArrayRange[@]}, hold [ ${ArrayRange[@]} ]\n" Verbosis ${IsVerbose} ;
@@ -865,7 +892,7 @@ function kill_cmd()
 	local StrColDisplayInSearch=${kill_cmdPsColList:=pid,command}
 	local IntNbCol=$(( $( echo "${StrColDisplayInSearch}" | wc -m ) - $( echo "${StrColDisplayInSearch//,/}" | wc -m ) ))
 	local IntIdPassToKiller=${kill_cmdColIdToKill:=${IntNbCol}} ; 
-	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
+	local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
 	if [ "${ArrayArg[0]}" = "--help" ] ; then 
 		GetVarReference ${__call_locality[0]} ; 
 		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
@@ -873,7 +900,7 @@ function kill_cmd()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+		eval $( __GetVarReferenceList ) ;
 	else
 		for (( x=0 ; x <= ${#ArrayArg[@]}-1 ; x++ )) ; do 
 			local cmd=${ArrayArg[${x}]} ; 
@@ -892,7 +919,7 @@ function StartApps()
 { 
  local ArrayArg=( $* ) ; 
  local __call_locality=( StartApps ) ; 
-	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
+	local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
  if [ "${ArrayArg[0]}" = "--help" ] ; then 
 		GetVarReference ${__call_locality[0]} ; 
 		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
@@ -900,7 +927,7 @@ function StartApps()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+		eval $( __GetVarReferenceList ) ;
  else	 
 	 local AppsRefresh=${StartAppsRefresh:=4} ; 
 	 local Apps=${StartAppsCmd:=rezound --audio-method=jack} ; 
@@ -931,7 +958,7 @@ function Survey_kill_apps()
     }
     local __call_locality=( SurveyApps ) ; 
     local ArrayArg=( $* ) ; 
-		local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
+		local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
 		if [ "${ArrayArg[0]}" = "--help" ] ; then 
 		 GetVarReference Survey_kill_apps ; 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
@@ -939,7 +966,7 @@ function Survey_kill_apps()
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 			echo -ne """${ArgGet}\n""" ; 			
 		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+			eval $( __GetVarReferenceList ) ;
 		else	 
 		  local StrApps=${SurveyApps:=rezound} ; 
 		  local IntDelay=${SurveyAppsRefresh:=4} ; 
@@ -966,7 +993,7 @@ function DpkgGetInlineBuildFlags()
 {
   local __call_locality=( DpkgGetInlineBuildFlags ) ;
   local ArrayArg=( $* ) ;
-		local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
+		local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
  	if [ "${ArrayArg[0]}" = "--help" ] ; then 
 			GetVarReference ${__call_locality[0]} ; 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
@@ -974,7 +1001,7 @@ function DpkgGetInlineBuildFlags()
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 			echo -ne """${ArgGet}\n""" ; 			
 		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+			eval $( __GetVarReferenceList ) ;
  	else	 
   	local CmdEval=( "cat" "${DpkgGetInlineBuildFlagsPath:=/etc/dpkg/}"${DpkgGetInlineBuildFlagsFile:=buildflags.conf} "|" """sed -e 's/^\(SET\ \)\([a-zA-Z]*FLAGS\)\([\t\ ]*\)/\2=/g'""" "|" tr """'[:cntrl:]\' ' '""" ) ;
   	eval "${CmdEval[@]}" ;
@@ -1012,7 +1039,7 @@ function DebianAptSrcCompiler()
 	local StrPatchOpt="" ; 
 	local res_exec=0 ; 
 	local StrPath=${DebianAptSrcCompilerPath:=/usr/local/src/apt} ;
-	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
+	local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
  	if [ "${ArrayArg[0]}" = "--help" ] ; then 
 			GetVarReference ${__call_locality[0]} ; 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
@@ -1020,7 +1047,7 @@ function DebianAptSrcCompiler()
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 			echo -ne """${ArgGet}\n""" ; 			
 		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+			eval $( __GetVarReferenceList ) ;
  	else	 	
 		if [ ${AddPatch:=True} == "True" ]; then 
 			StrPatchOpt="-p" ;
@@ -1191,7 +1218,7 @@ function AptSrcChange()
  local StrTagAdd=${AptSrcChangeTagChange:=deb-src} ;
  local StrDefaultArch=${AptSrcChangeArch:=amd64} ;
  local StrDefaultURI=${AptSrcChangeURIType:=http}
-	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
+	local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
  if [ "${Arg0}" = "--help" ] ; then 
   GetVarReference ${__call_locality[0]} ; 
 		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
@@ -1199,7 +1226,7 @@ function AptSrcChange()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
 		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+			eval $( __GetVarReferenceList ) ;
 		else	
   cp ${StrAptSourceList} ${StrAptSourceSave} ; 
   cat ${StrAptSourceList} | sed 's/^${StrTagSearch} ${StrDefaultURI}/${StrTagAdd} [ arch=${StrDefaultArch} ] ${StrDefaultURI}/g' > ${StrUUID} ; 
@@ -1237,7 +1264,7 @@ function AptRebuild()
 	local ArrayOptionVar=( ${StrCmdTagVar//${StrCSVSep}/ } )
 	
 	
-	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
+	local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
 	if [ "${Arg0}" = "--help" ] ; then 
 		GetVarReference ${__call_locality[0]} ; 
 		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
@@ -1245,7 +1272,7 @@ function AptRebuild()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+		eval $( __GetVarReferenceList ) ;
 	else	 
 		for (( intx=0 ; intx <= ${#ArrayArg[@]}-1 ; intx++ )) ; do 
 			Package=${ArrayArg[${intx}]} ; 
@@ -1277,13 +1304,13 @@ function AptRebuild()
 function find_edit_file()
 { 
 	local ArrayArg=( $* ) ; 
-	local __call_locality=( FEF ) ; 
+	local __call_locality=( FEF find_edit_file ) ; 
 	local StrPath=${FEFDefaultPath:=./} ;
 	local StrAppsFind=${FEFAppsFind:=/usr/bin/find} ;
 	local StrEditor=${FEFEditorApps:=/usr/bin/gedit} ;
 	local StrFindFilterOpt=${FEFFindFilter:=-iname \"__FILE__\"} ;
 
-		local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
+		local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
  	if [ "${ArrayArg[0]}" = "--help" ] ; then 
 			GetVarReference find_edit_file ; 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
@@ -1291,7 +1318,7 @@ function find_edit_file()
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 			echo -ne """${ArgGet}\n""" ; 			
 		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+			eval $( __GetVarReferenceList ) ;
  	else	
 		for file in ${ArrayArg[@]} ; do 
 			local StrFilterInFind=${StrFindFilterOpt//__FILE__/${file}}
@@ -1335,7 +1362,7 @@ function FindFilterPathExclusion()
 { 
 	local ArrayArg=( $* ) ; 
 	local __call_locality=( FindFilterPathExclusion ) ; 
-	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
+	local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
  	if [ "${ArrayArg[0]}" = "--help" ] ; then 
 			GetVarReference ${__call_locality[0]} ; 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
@@ -1343,7 +1370,7 @@ function FindFilterPathExclusion()
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 			echo -ne """${ArgGet}\n""" ; 			
 		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+			eval $( __GetVarReferenceList ) ;
  	else	 
 
 		### 
@@ -1475,7 +1502,7 @@ function acquire_lan_ifconfig()
   local StrReturn=$( IfconfigGetterApps=${StrAppsIfconfig} IfconfigGetterAddr=${StrAddr} IfconfigGetter awk -vTagName="${StrTagCleanFilter}"  -f StrAwkFilter ) ; 
   
  }
-	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
+	local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
 	if [ "${Arg0:=--start-services}" = "--help" ] ; then 
 		GetVarReference acquire_lan_ifconfig ; 
 		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
@@ -1483,7 +1510,7 @@ function acquire_lan_ifconfig()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+		eval $( __GetVarReferenceList ) ;
 	elif [ "${Arg0:=--start-services}" == "--start-services" ] ; then 
   GetIpaddrTagList=${StrTagNameList} GetIpaddrAppsIfconfig=${StrAppsNetConf} GetIpaddrAddr=${StrDefaultCard} GetIpaddr ; 
  fi 
@@ -1505,7 +1532,7 @@ function GetZenityText()
 	local Arg0=${ArrayArg[0]} ;
 	local StrTypeUI=${GZTUiType:=--entry}
 	local StrApps=${GZTUiApps:=/usr/bin/zenity} ;
-	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
+	local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
 	if [ "${Arg0:=--startservices}" == "--help" ] ; then 
 		GetVarReference ${__call_locality[1]} ; 
 		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
@@ -1513,7 +1540,7 @@ function GetZenityText()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+		eval $( __GetVarReferenceList ) ;
 	else
 		eval ${StrApps} ${StrTypeUI} ${ArrayArg[@]} ;
 	fi 
@@ -1530,7 +1557,7 @@ function GetZenityTextEntry()
 	local StrTitle="""${GZTETitle:="Pip installation Try-up"}""" ; 
 	local StrQuestion="""${GZTETextQuestion:="Installation Package to install (test)"}""" ; 
 	local StrReturn ;
-	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
+	local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
 		if [ "${Arg0:=--startservices}" == "--help" ] ; then 
 			GetVarReference ${__call_locality[1]} ; 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
@@ -1538,7 +1565,7 @@ function GetZenityTextEntry()
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 			echo -ne """${ArgGet}\n""" ; 			
 		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+			eval $( __GetVarReferenceList ) ;
 		else
 			local CmdEval=( """local StrReturn=\$( GetZenityText --width=${IntWidth}  --height=${IntHeight} --title="${StrTitle}" --text="${StrQuestion}" ) """ ); 
 			echo -ne "\n\nCmdEval : ${CmdEval[@]}\n\n" > /dev/stderr ; 
@@ -1628,7 +1655,7 @@ function GkSuZenityLoader()
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 			echo -ne """${ArgGet}\n""" ; 
 		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+			eval $( __GetVarReferenceList ) ;
 		else	
 			if [ "${StrUser:=none}" ==  "none" ] ; then 
 				StrUser=$( StrDefaultCSV=${StrDefaultCSV} IntDefaultColExtr=${IntDefaultColExtr} StrFileInfo=${StrFileInfo} StrTitle=${StrTitle} StrCol0=${StrCol0} StrCol1=${StrCol1} StrRegSearch=${StrRegSearch} BoolShowUserSelection=${BoolShowUserSelection} GetPwdUser ) ; 
@@ -1643,6 +1670,25 @@ function GkSuZenityLoader()
 	
 }
 
+function GetUUID()
+{
+	local __call_locality=( GetU GetUUID ) ;
+	local StrDefaultSwitches=${GetUSwitches:=-t}
+	local ArrayArg=( $* ) ; 
+	local Arg0=${ArrayArg[0]} ;
+	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n" ;
+	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+			GetVarReference ${__call_locality[1]} ; 
+			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+		echo -ne """${ArgGet}\n""" ;
+	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+		eval $( __GetVarReferenceList ) ;	
+	else
+		uuidgen ${StrDefaultSwitches}	; 
+	fi 
+} 
 
 
 ### Yet Another Debian package Mangler and backup-management. 
@@ -1685,6 +1731,7 @@ function GkSuZenityLoader()
 ### 
 
 
+
 unset PackageRepositoryMgmt ; 
 
 function PackageRepositoryMgmt()
@@ -1693,13 +1740,7 @@ function PackageRepositoryMgmt()
 	local __call_locality=( PkgRepoMgmt PackageRepositoryMgmt ) ;
 	local ArrayArg=( $* ) ; 
 	local Arg0=${ArrayArg[0]} ;
-	function GetUUID()
-	{
-		local __call_locality=( GetUUID ) ;
-		local StrDefaultSwitches=${GetUUIDSwitches:=-t}
-		local ArrayArg=( $* ) ;  
-		uuidgen ${StrDefaultSwitches}	; 
-	} 
+
 	local StrUUID=$( GetUUID ) ; 
 	local StrPathArchives=${PkgRepoMgmtPathArchives:=/var/cache/apt/archives} ; 
 	local StrFindStringFormat=${PkgRepoMgmtStrFmt:="%f "} ;
@@ -1708,7 +1749,7 @@ function PackageRepositoryMgmt()
 	local StrPathReposIndex=${PkgRepoMgmtReposIndex:=/media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64/index} ;
 	local StrIndexLatest=${PkgRepoMgmtLatestIndexName:=latest};
 	local StrAddPackageListing=${PkgRepoMgmtAddPkgLst:=False} ; 
-	local StrPkgLstExt=${PkgRepoMgmtPkgExt:=base64.bz2}
+	local StrPkgLstExt=${PkgRepoMgmtPkgExt:=bz2.base64}
 	local StrAppsLinkerName=${PkgRepoMgmtLinkerName:=/bin/ln} ; 
 	local StrAppsLinkerOptionRecv=${PkgRepoMgmtLinkerOption:=-s} ; 
 	local StrAppsLinkerOption=( ${StrAppsLinkerOptionRecv//,/ }  );
@@ -1725,11 +1766,24 @@ function PackageRepositoryMgmt()
 	local StrTodatDateTransfert=$( GetOtherDateReference=${IntDefaultDayIndexName} GetOtherDate ) ; 
 	local StrIndexFile=${StrPathReposIndex}/${StrTodatDateTransfert};
 	
-	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally and output the package list.\n\t--get\t\tReturn value of Internal Variable.\n\t--checkdrive\tPerform a Drive/Path check to see if access point is valid.\n\t--add-snapshoot\tAdd DPKG Listing inside Current Index File.\n\t\t\tOnly Store an ID in the index-file and the content into UUID-name from index path.\n\n" ;
+	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--add-snapshoot\tAdd DPKG Listing inside Current Index File.\n\t\t\tOnly Store an ID in the index-file and the content into UUID-name from index path.\n\n" ;
 	
+	function TestPathIndex()
+	{
+		local __call_locality=( TestPathIndex ) ;
+		local ArrayArg=( $* ) ; 
+		local StrPathTest=${TestPathIndexName:=/media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64/index} ; 
+		local StrTestType="${TestPathIndexTest:=! -d}" ;
+		local StrTestResultAction="${TestPathIndexResultAction:=mkdir -p __PATH__}" ;
+		test ${StrTestType} ${StrPathReposIndex} && ${StrTestResultAction//__PATH__/${StrPathReposIndex}} ;
+	}	
+
+	######################################################################
+	### Part of Snapshoot section 
+	###
 	function GetIdDpkgListing()
 	{
-		local __call_locality=( GetIdDpkgListing ) ;
+		local __call_locality=( GIDL GetIdDpkgListing ) ;
 		local ArrayArg=( $* ) ;		
 		local StrID=$( GetUUID ) ; 
 		echo -ne "ADD SNAPSHOT\nDATE:${StrTransactionStart}:ID:${StrID}\n" >> ${StrIndexFile} ; 
@@ -1739,18 +1793,18 @@ function PackageRepositoryMgmt()
 	function GetDpkgInstalled()
 	{
 		local __call_locality=( GetDpkgInstalled ) ;
-		local StrAwkScript=${GetDpkgInstalledAwkScript:=/etc/init.d/Fnct.d/awk-script/dpkg-package-id-listing.awk}
 		local ArrayArg=( $* ) ; 
+		local StrAwkScript=${GetDpkgInstalledAwkScript:=/etc/init.d/Fnct.d/awk-script/dpkg-package-id-listing.awk}
 		dpkg --get-selections | awk -f ${StrAwkScript}
 	}
 	
 	function StreamCprEnvlTxt()
 	{
 		local __call_locality=( StreamCprEnvlTxt ) ;
-		local StrFile=${StreamCprEnvlTxtFile:=none.${StrPkgLstExt}}
 		local ArrayArg=( $* ) ; 
+		local StrFile=${StreamCprEnvlTxtFile:=none.${StrPkgLstExt}}
 		bzip2 -9z | base64 --wrap=0 > ${StrFile} ; 
-	}
+	}	
 	
 	function GetDpkgListing()
 	{
@@ -1762,17 +1816,7 @@ function PackageRepositoryMgmt()
 		echo -ne "ShaSUM of snapshot, ID:${StrId} SHA:${StrSHASnap}\n" > /dev/stderr ; 
 		echo -ne "SNAPSHOT:SHA1SUM:${StrSHASnap}\nSNAPSHOT END\n" >> ${StrIndexFile} ; 
 	}
-	
-	function TestPathIndex()
-	{
-		local __call_locality=( TestPathIndex ) ;
-		local ArrayArg=( $* ) ; 
-		local StrPathTest=${TestPathIndexName:=/media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64/index} ; 
-		local StrTestType="${TestPathIndexTest:=! -d}" ;
-		local StrTestResultAction="${TestPathIndexResultAction:=mkdir -p __PATH__}" ;
-		test ${StrTestType} ${StrPathReposIndex} && ${StrTestResultAction//__PATH__/${StrPathReposIndex}} ;
-	}	
-	
+		
 	function GetPackageList()
 	{
 		local __call_locality=( GetPackageList ) ;
@@ -1791,6 +1835,10 @@ function PackageRepositoryMgmt()
 		fi
 	}
 	
+	### End of Snapshoot section 
+	###
+	######################################################################
+
 	function TestDriveMount()
 	{
 		local __call_locality=( TestDriveMount ) ; 
@@ -1801,7 +1849,7 @@ function PackageRepositoryMgmt()
 		local MountDriveCheck=( ${StrDriveList//,/ } ) ;
 		local IsDisplayDebug=${TestDriveMountDebug:=False} ;
 		local Arg0="${ArrayArg[0]}" ;
-		local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
+		local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n--list\t\tReturn Internal Variable List.\n" 
 		if [ "${Arg0:=--startservices}" == "--help"	] ; then 
 				GetVarReference ${__call_locality[0]} ; 
 				echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
@@ -1809,7 +1857,7 @@ function PackageRepositoryMgmt()
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 			echo -ne """${ArgGet}\n""" ;
 		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+			eval $( __GetVarReferenceList ) ;
 		else
 			for (( intx=0 ; intx <= ${#MountDriveCheck[@]}-1 ; intx++ )) ; do
 				if [ "${IsDisplayDebug:=False}" == "True" ] ; then 
@@ -1824,17 +1872,24 @@ function PackageRepositoryMgmt()
 		fi 
 	}
 
+	### #############################################
+	### Main Body 
+	### #############################################
+
 	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
 			GetVarReference ${__call_locality[1]} ; 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ;
+	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+		eval $( __GetVarReferenceList ) ;
 	elif [ "${Arg0:=--startservices}" == "--checkdrive"	] ; then 
-		$( TestDriveMountDebug=${StrTestDriveDebug} TestDriveMountList=${StrPathRepository},${StrPathArchives} TestDriveMount ) ; 
+		test $( TestDriveMountDebug=${StrTestDriveDebug} TestDriveMountList=${StrPathRepository},${StrPathArchives} TestDriveMount ) && \
 		echo -ne "Status of IsMountDrive: ${IsMountDrive}\n" > /dev/stderr ; 
 	elif [ "${Arg0:=--startservices}" == "--add-snapshoot" ] ; then 
-		$( TestDriveMountDebug=${StrTestDriveDebug} TestDriveMountList=${StrPathRepository},${StrPathArchives} TestDriveMount ) ; 
+		echo -ne "File to store next SnapShoot: ${StrIndexFile}\n" > /dev/stderr ; 
+		test $( TestDriveMountDebug=${StrTestDriveDebug} TestDriveMountList=${StrPathRepository},${StrPathArchives} TestDriveMount ) && \
 		StrPathReposIndex=${StrPathReposIndex}     \
 		StrIndexFile=${StrIndexFile}               \
 		StrTransactionStart=${StrTransactionStart} \
@@ -1928,7 +1983,7 @@ function PackageRepositoryRest()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+		eval $( __GetVarReferenceList ) ;
 	elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
 		index=${index//__BackupPath__/${drv}} ;
 		resolve=${resolve//__DATE__/${thisdate}} ;
@@ -2078,7 +2133,7 @@ function GetMplayerStream()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+		eval $( __GetVarReferenceList ) ;
 	elif [ "${Arg0:=--startservices}" == "debug"	] ; then 
 		echo -ne "CmdLine[0]:${cmdline[0]} \nCmdLine[1]:${cmdline[1]}\n" > /dev/stderr ;
 	else
@@ -2179,7 +2234,7 @@ function BuildOnFaultCompiler()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+		eval $( __GetVarReferenceList ) ;
 	else
 		StrAppsLib=${StrAppsLib} StrAppsLibOpt=${StrAppsLibOpt} StrAppsLibOpt=${StrAppsLibOpt} StrAppsAppsFault=${StrAppsAppsFault} StrAppsAppsFaultOpt=${StrAppsAppsFaultOpt} IntRandomSize=${IntRandomSize} Start ; 
 	fi 
@@ -2217,7 +2272,7 @@ function RoundRobinSwapRealloc()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+		eval $( __GetVarReferenceList ) ;
 	elif [ "${Arg0:=--startservices}" == "--swaptorealloc"	] ; then 
 		GetSwapList ;
 	else
