@@ -4,10 +4,12 @@
 function GitHubCommit()
 { 
  local ArrayArg=( $* ) ; 
- local __call_locality=( GitHubCommit )
-	local StrCommitAction=${GitHubCommitActionPush:=push} ;
-	local StrBranchLocation=${GitHubCommitBrLocation:=origin}; 
-	local StrBranchName=${GitHubCommitBranch:=master} ;
+ local __call_locality=( GitHubCommit GitHubCommit )
+ local StrCommitAction=${GitHubCommitActionPush:=push} ;
+ local StrBranchLocation=${GitHubCommitBrLocation:=origin}; 
+ local StrBranchName=${GitHubCommitBranch:=master} ;
+ local Arg0=${ArrayArg[0]} ; 
+ local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n" 
 	
 	function GitCPAction()
 	{
@@ -48,10 +50,22 @@ function GitHubCommit()
   	GitCPActionIs=${GitCommitAction} GitCPActionPoint=${GitCommitBranchLocation} GitCPActionBranch=${GitCommitBranchName} GitCPActionLength=${IntLenMessage} GitCPActionCommitMessage=${CommitMessage} GitCPActionFile=${StrFile} GitCPAction ; 
   done 
  }
- local Arg0=${ArrayArg[0]} ; 
-	if [ "${Arg0:=--start}" == "--help" ] ; then 
+ 
+	### #############################################
+	### Main Body 
+	### ############################################# 
+ 
+	if [ "${Arg0:=--startservices}" == "--help" ] ; then 
 		GetVarReference ${__call_locality[0]} ; 
- else	 
+		echo -ne "${StrSwitchMessages}" > /dev/stderr ;
+	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  echo -ne "Query value for ${ArrayArg[1]}\n" > /dev/stderr ; 
+		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+		echo -ne """Value of ArgGet:${ArgGet}\n""" ;  
+	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+		#eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
+  eval $( __GetVarReferenceList ) ; 
+ else
 		if [ ${Arg0:=--selection} == "--selection" ] ; then 
 		 local StrFileCommit=$( GetSelectedFile ) ; 
 		 GitCommitBranchLocation=${StrBranchLocation} GitCommitBranchName=${StrBranchName} GitCommitAction=${StrCommitAction} GitCommitFileList="${StrFileCommit}" GitCommit  ; 
