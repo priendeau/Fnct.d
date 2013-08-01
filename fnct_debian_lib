@@ -6,6 +6,90 @@ declare -a ArrayCreator=( Debian Ubuntu Fedora Mint ) ;
 declare -a ArrayPackageType=( DPKG APT YUM RPM ) ;
 declare -a ArrayPackageAction=( install update remove fix compile certify verify ) ;
 
+
+ ###	Specification : 
+ ###	- This following Draft-Specification, offer a decent explanation of doing a function with
+ ###	appropriate control proned-protocolar development for scalarity-design . 
+ ###	
+ ### Example of definition of __call_locality:
+ ###	function FuncNameThatIsUnderstandable()
+	###	{
+	###		local __call_locality=( FNTIU FuncNameThatIsUnderstandable ); 
+ ###	                           |    |
+ ###	                           |    +---> LongName to be used with GetVarReference, see (3)
+ ###	                           |
+ ###	                           +---> Short Name to be used to name Prefixed Variable, see (2)
+ ###	
+ ###	
+ ###	Basic and Mandatory visibility and variable control 
+ ###	
+ ###	Since there is possible management with case switch, and index-pushing ArrayArg manage 
+ ###	- called value after Function name was called :
+ ###	 ex: Var1=value Var2=valueA;ValueB FuncNameThatIsUnderstandable --switches
+ ###	----> Uses of --switches is almost important and should be controled from Arg0, see (1)
+ ###	
+ ###	Note on Function Behavior : There is almost only one switches used from command line telling 
+ ###	which part is called , the actual embodinement after note (3) is an example of a called part.
+ ###	- This example uses if-elif-else-fi statement, but a loop with pre-defined switches control
+ ###	should end after is call. However uses of Prefixed-Var are infinite and might control
+ ###	Behavior of a part into sub-derived part, but should stay in scope and definition of switches made. 
+ ###	---> Later an round-up will convert all function from fnct_debian_lib into a Python parser that 
+ ###	generate the same file here but with possibility to control everything and should generate a
+ ###	stable meta-data file where this function should reflect it's present definition here. 
+ ###	Note1: After seeing unworkable switches or switches entering in conflicts it's better to 
+ ###	define value with possibilities to be useless or not used but preventing future version
+ ###	to not work by calling contradictive switches. 
+ ###	
+ ###	
+ ###	
+ ###	
+ ###	local ArrayArg=( $* ); ---> Really important line, all variable from outside are mangling inside
+ ###	this Variable-ArrayArg, we do not uses $* alone since there is a possible alteration.
+ ###	In Fact the declaration of ArrayArg should involve a read-only switch in final-draft. 
+ ###	
+ ###	Final Draft proposition of ArrayArg:
+ ###	local -r ArrayArg=( $* ); *** Only if bash version accept it, which start to be effective from 
+ ###	bash version 2.99 from FreeBsd transport to linux around 1997. 
+ ###	
+ ###	
+ ###	*(1)
+ ###	local Arg0=${ArrayArg[0]} ; ---> Allow uses of switches like --help, --list, --startservices, --get
+ ###	---> Default switches and easy to do stuff , --help, --list, --startservices, --get
+ ###	
+ ###	
+ ###	
+ ###	*(2)
+ ###	local StrSomeMeanFulName=${FNTIUDefinitionName}
+ ###	
+ ###	
+ ###	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n" 
+ ###	+---> Should be usefull to see default switches availables. 
+ ###	
+ ###	- First use in main body of a function 
+ ### *(3)
+ ###	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+	###  GetVarReference ${__call_locality[1]} ;  
+	###	 echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+	### elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+	###	 eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+	###	 echo -ne """${ArgGet}\n""" ; 			
+	### elif [ "${Arg0:=--startservices}" == "--list" ] ; then } ---> Sequence to extract Prefixed-var and uses 
+	###	 eval $( __GetVarReferenceList ) ;                     } of function call to accelerate external variable 
+ ###	                                                       } transfert, ex : FuncNameThatIsUnderstandable --get $(  FuncNameThatIsUnderstandable --list | cut -d ' ' -f 1  ) *(4)
+ ###	                                                       } will get the First Prefixed-variable value
+ ###	 
+ ###	 
+	### elif    [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+ ###	 +--------------> Main Body <--------------+
+ ###	else
+ ###	 
+ ###	...
+ ###	fi 
+ ###	
+ ###	
+
+
+
  ### ValueParser :
  ### 
  ### Description: 
@@ -102,9 +186,8 @@ declare -a ArrayPackageAction=( install update remove fix compile certify verify
  ### 
  ### - Exception : Still unable to read new variable definition from command-line and only create 
  ### a Variable transfert blindly. 
- 
- 
 
+ 
 unset ValueParser ;
 function ValueParser()
 {
