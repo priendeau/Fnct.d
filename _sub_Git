@@ -60,6 +60,7 @@ function GitHubCommit()
  
 	if [ "${Arg0:=--startservices}" == "--help" ] ; then 
 				GetVarReference ${__call_locality[1]} ; 
+    
 				echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
   eval """local ArgGet=\${${ArrayArg[1]}}""" ;  
