@@ -4,14 +4,15 @@
 function GitHubCommit()
 { 
  local ArrayArg=( $* ) ; 
- local __call_locality=( GitHubCommit GitHubCommit )
- local StrCommitAction=${GitHubCommitActionPush:=push} ;
- local StrBranchLocation=${GitHubCommitBrLocation:=origin}; 
- local StrBranchName=${GitHubCommitBranch:=master} ;
- local StrFileToCommit=${GitHubCommitFilePath:=/home/maxiste/github/Technical-PorteFolio/Python}
- local StrMessageCommit=${GitHubCommitMessageCommiting:=Git Commit message} ;
+ local __call_locality=( GitHubCommit GitHC   )
+ local StrCommitAction=${GitHCActionPush:=push} ;
+ local StrBranchLocation=${GitHCCommitBrLocation:=origin}; 
+ local StrBranchName=${GitHCBranch:=master} ;
+ local StrFileToCommit=${GitHCFilePath:=/home/maxiste/github/Technical-PorteFolio/Python} ;
+ local StrMessageCommit=${GitHCMessageCommiting:=Git Commit message} ;
+ local BoolUseZenityFileSelect=${GitHCZenityFileShell:=False} ; 
  local Arg0=${ArrayArg[0]} ; 
- local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n" 
+ local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n" ;
 	
 	function GitCPAction()
 	{
@@ -39,10 +40,10 @@ function GitHubCommit()
   #local FileCommited=${FileCommit[$(( ${#FileCommit[@]}-1 ))]} ; 
   echo "${ArrayReturnedFile[@]// /,}" ; 
  } 
+ 
  function GitCommit( )
  {
   local ArrayArg=( $* ) ;
-  ###->local StrMessageCommit=${GitHubCommitMessageCommiting:=Git Commit message} ;
   local ArrayFileCommit=( ${GitCommitFileList/,/ } ) ;
   for (( intx=0 ; intx <= $(( ${#ArrayFileCommit[@]}-1 )) ; intx++ )) ; do 
   	local StrFile="${ArrayFileCommit[${intx}]}" ;
@@ -58,31 +59,39 @@ function GitHubCommit()
 	### ############################################# 
  
 	if [ "${Arg0:=--startservices}" == "--help" ] ; then 
-		GetVarReference ${__call_locality[0]} ; 
-		echo -ne "${StrSwitchMessages}" > /dev/stderr ;
+				GetVarReference ${__call_locality[1]} ; 
+				echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-  echo -ne "Query value for ${ArrayArg[1]}\n" > /dev/stderr ; 
-		eval """local ArgGet=\${${ArrayArg[1]}}""" ;  
-		echo -ne """Value of ArgGet:${ArgGet}\n""" ; 
-  echo -ne "Hard Value of GitHubCommitFilePath: ${GitHubCommitFilePath}\n" > /dev/stderr ; 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ;  
+		echo -ne """${ArgGet}\n""" ; 
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
 		#eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
   eval $( __GetVarReferenceList ) ; 
- else
-		if [ ${Arg0:=--selection} == "--selection" ] ; then 
-		 local StrFileCommit=$( StrFileToCommit=${StrFileToCommit} GetSelectedFile ) ; 
-		 GitCommitBranchLocation=${StrBranchLocation} GitCommitBranchName=${StrBranchName} GitCommitAction=${StrCommitAction} GitCommitFileList="${StrFileCommit}" StrMessageCommit=${StrMessageCommit} GitCommit  ; 
-		else
-		 #test ! -e ${ArrayArg[0]} && echo -ne "\nFile ${ArrayArg[0]} can not be commited, does not exist.\n" > /dev/stderr ;
-		 if [ "${ArrayArg[0]}" != "" ] ; then 
-		 	GitCommitBranchLocation=${StrBranchLocation} GitCommitBranchName=${StrBranchName} GitCommitAction=${StrCommitAction} GitCommitFileList="${ArrayArg[0]}" StrMessageCommit=${StrMessageCommit} GitCommit  ; 
-		 else
-		 	local StrFileList=${ArrayArg[@]// /,}
-		 	GitCommitBranchLocation=${StrBranchLocation} GitCommitBranchName=${StrBranchName} GitCommitAction=${StrCommitAction} GitCommitFileList="${StrFileList}" StrMessageCommit=${StrMessageCommit} GitCommit  ; 
-		 fi	
-		 
-		 
-		fi
+ elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then
+  if [ ${BoolUseZenityFileSelect:=False} == "True" ] ; then 
+    local StrFileCommit=$( StrFileToCommit=${StrFileToCommit} GetSelectedFile ) ; 
+    GitCommitBranchLocation=${StrBranchLocation} \
+    GitCommitBranchName=${StrBranchName}         \
+    GitCommitAction=${StrCommitAction}           \
+    GitCommitFileList="${StrFileCommit}"         \
+    StrMessageCommit=${StrMessageCommit} GitCommit  ; 
+  else
+    #test ! -e ${ArrayArg[0]} && echo -ne "\nFile ${ArrayArg[0]} can not be commited, does not exist.\n" > /dev/stderr ;
+    if [ "${Arg0}" != "" ] ; then 
+     GitCommitBranchLocation=${StrBranchLocation} \
+     GitCommitBranchName=${StrBranchName}         \
+     GitCommitAction=${StrCommitAction}           \
+     GitCommitFileList="${ArrayArg[0]}"           \
+     StrMessageCommit=${StrMessageCommit} GitCommit  ; 
+    else
+     local StrFileList=${ArrayArg[@]// /,}
+     GitCommitBranchLocation=${StrBranchLocation} \
+     GitCommitBranchName=${StrBranchName}         \
+     GitCommitAction=${StrCommitAction}           \
+     GitCommitFileList="${StrFileList}"           \
+     StrMessageCommit=${StrMessageCommit} GitCommit  ; 
+    fi
+  fi
  fi
 }
 
