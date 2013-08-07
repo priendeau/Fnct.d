@@ -4,7 +4,7 @@
 function GitHubCommit()
 { 
  local ArrayArg=( $* ) ; 
- local __call_locality=( GitHubCommit GitHC   )
+ local __call_locality=( GitHC GitHubCommit    )
  local StrCommitAction=${GitHCActionPush:=push} ;
  local StrBranchLocation=${GitHCCommitBrLocation:=origin}; 
  local StrBranchName=${GitHCBranch:=master} ;
