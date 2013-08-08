@@ -14,7 +14,7 @@ function GitHubCommit()
  local Arg0=${ArrayArg[0]} ; 
  local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n" ;
 	
-	function GitCPAction()
+	function GitCommitPushAction()
 	{
 		local __call_locality=( GitCPAction GitCommitPushAction ); 
 		local ArrayArg=( $* ) ; 
@@ -29,10 +29,16 @@ function GitHubCommit()
  
  function GetSelectedFile()    
  { 
+  local __call_locality=( GSF GetSelectedFile )
  	###->local StrFileToCommit=${GitHubCommitFilePath:=/home/maxiste/github/Technical-PorteFolio/Python}
+  ### Saving Current Path
+  local StrCurrentPath=$( pwd ) ; 
+  cd ${GSFPath} ; 
   local FileSelection=$( zenity --width=640 --height=200 --file-selection --multiple --filename="${StrFileToCommit}" --separator=',' ) ; 
+  cd ${StrCurrentPath} ; 
   local ArrayReturnedFile=( ) ;
   local FileCommit=( $( echo ${FileSelection//,/ } ) ) ; 
+  
   for (( intx=0 ; intx <= ${#FileCommit[@]} ; intx++ )) ; do 
   	local FileName=( ${FileCommit[${intx}]//\// } ) ;
   	ArrayReturnedFile[${#ArrayReturnedFile[@]}]="${FileName[ $(( ${#FileName[@]} - 1 ))]}" ;
@@ -44,13 +50,19 @@ function GitHubCommit()
  function GitCommit( )
  {
   local ArrayArg=( $* ) ;
+		local __call_locality=( GitC GitCommit ); 
   local ArrayFileCommit=( ${GitCommitFileList/,/ } ) ;
   for (( intx=0 ; intx <= $(( ${#ArrayFileCommit[@]}-1 )) ; intx++ )) ; do 
   	local StrFile="${ArrayFileCommit[${intx}]}" ;
 		 local CommitMessage=$( zenity --title="GitHub, commiting file ${StrFile}" --width=640 --height=200 --ok-label="commit" --text-info --editable --text="${StrMessageCommit}" ) ; 
 		 local ErrorCommit=$? ;
 		 local IntLenMessage=${#CommitMessage} ;
-  	GitCPActionIs=${GitCommitAction} GitCPActionPoint=${GitCommitBranchLocation} GitCPActionBranch=${GitCommitBranchName} GitCPActionLength=${IntLenMessage} GitCPActionCommitMessage=${CommitMessage} GitCPActionFile=${StrFile} GitCPAction ; 
+  	GitCPActionIs=${GitCommitAction}             \
+   GitCPActionPoint=${GitCommitBranchLocation}  \
+   GitCPActionBranch=${GitCommitBranchName}     \
+   GitCPActionLength=${IntLenMessage}           \
+   GitCPActionCommitMessage=${CommitMessage}    \
+   GitCPActionFile=${StrFile} GitCommitPushAction ; 
   done 
  }
  
@@ -60,7 +72,6 @@ function GitHubCommit()
  
 	if [ "${Arg0:=--startservices}" == "--help" ] ; then 
 				GetVarReference ${__call_locality[1]} ; 
-    
 				echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
   eval """local ArgGet=\${${ArrayArg[1]}}""" ;  
@@ -69,8 +80,8 @@ function GitHubCommit()
 		#eval ${__call_locality[1]} --help 2> /dev/null | egrep -i "^Variable" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '
   eval $( __GetVarReferenceList ) ; 
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then
-  if [ ${BoolUseZenityFileSelect:=False} == "True" ] ; then 
-    local StrFileCommit=$( StrFileToCommit=${StrFileToCommit} GetSelectedFile ) ; 
+  if [ "${BoolUseZenityFileSelect:=False}" == "True" ] ; then 
+    local StrFileCommit=$( StrFileToCommit=${StrFileToCommit} GSFPath=${StrFileToCommit} GetSelectedFile ) ; 
     GitCommitBranchLocation=${StrBranchLocation} \
     GitCommitBranchName=${StrBranchName}         \
     GitCommitAction=${StrCommitAction}           \
