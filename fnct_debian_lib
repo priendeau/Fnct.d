@@ -382,6 +382,44 @@ function GetStdPrefixName()
  
 }
 
+### 
+### Note, Existence of A-Range Boolean Purposes and B-Applied Boolean
+### Variable. 
+### 
+### Def : A-Range Boolean Variable.
+###  - Allow the Position between True and False Adding A WIDE-RANGE of 
+### Information, Settled from Possibilities to Have at least 1 Data to 
+### Fit inside a compound, the A-Range Boolean will be defined as:
+### - Test 1:
+### The AIsMoreFruitTo=False will leave a compound sentence as is:
+### Sentence : The fruit are Grapes were all loved by children 
+### 
+### The AIsMoreFruitTo=True will Add-A-Range, this case being finite and
+### unique the sentence will Have an addition:
+### 
+### Sentence : The fruit are Grapes ( and Banana ) were all loved by children 
+### 
+### See Answer to pattern inside BoolVarTestVarCreation to see similarities. 
+### 
+### 
+### Def : B-Applied Boolean Variable.
+### - Expected case to add some extra functionalities to common argument. 
+### - See PackageRepositoryMgmt for example of PkgRepoMgmtAddPkgLst Boolean
+### variable allowing to add a listing in case Package are backuped and 
+### need a reference of status of package . 
+### 
+### 
+### To Fellow M.Murgullescu, Interrupted course to supplied informations 
+### to teacher about limitation of homo-erectus (also called Midget) . 
+### INF101 College Rosemont and Pre-homo-sapiens-sapiens limitation in 
+### learning problems. 
+### -Interaction done silently by turn-based event and noticing only 
+### on volume / ratio in comment on Any-Type defined from Pascal-Programmation.
+### 
+### - Teacher just supplied the answer in a case for an examen of 15% of the
+### sum and give any other information thru course traversal. 
+
+
 unset BoolVarTestVarCreation ; 
 function BoolVarTestVarCreation()
 {
