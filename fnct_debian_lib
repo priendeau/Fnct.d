@@ -382,6 +382,66 @@ function GetStdPrefixName()
  
 }
 
+unset BoolVarTestVarCreation ; 
+function BoolVarTestVarCreation()
+{
+
+### The main goal : 
+### Making , fitting inside this pattern 
+### 
+###   local StrMultipleFileSelectionAttr="--multiple"
+###   if [ "${StrZenityFSMultipleFile}" == "False" ] ; then 
+###    StrMultipleFileSelectionAttr="" ; 
+###   fi 
+### 
+### Into CommandLine Echo like pattern and  being evaluated to create following statement:
+### - Having a variable A Holding a content. 
+### - Having a Prefixed-Var named B holding either False Or True like ${Prefixed_Var_named_B:=False}
+### - On Having Reverse position inside ${Prefixed_Var_named_B:=False}, content of variable A, should
+### Be erased of asking to get alternative.
+### 
+### Answer to pattern, 
+### 
+### BVTestVarName=StrMultipleFileSelectionAttr BVTestVarHold="--multiple" BVTestBoolVarName=StrZenityFSMultipleFile BoolVarTestVarCreation 
+### 
+### Nominal purposes: 
+### This is intended to supply a Boolean test and Value Association, done in one line, 
+### it allow to generate a range of variable being Transited from Prefixed-Var and value
+### passed in a query, which is sometimes had no value and give extra code that might trigger error. 
+### 
+### 
+	local __call_locality=( BVTest BoolVarTestVarCreation ) ;
+	local ArrayArg=( $* ) ; 
+ local ArrayTypeTest=( False True )
+	local Arg0=${ArrayArg[0]} ;
+ local StrVarNamed=${BVTestVarName:=StrAttrHold} ; 
+ local StrVarNamedHold=${BVTestVarHold:=CONTENT} ; 
+ local StrVarBoolTest=${BVTestBoolVarName:=IsVarShould} ; 
+ local StrDefaultBoolTest=${BVTestBoolCase:=False} ;
+ local StrNotAsserted=${BVTestBoolAssertion:=\"\"} ;
+ local StrScopeType=${BVTestScopeTest:=local}
+ 
+ local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\n" ;
+ 
+ local StrTestTemplate=""" 
+  ${StrScopeType} ${StrVarNamed}=\"${StrVarNamedHold}\"
+  if [ \"${StrVarBoolTest}\" == \"${StrDefaultBoolTest}\" ] ; then 
+   ${StrVarNamed}=${StrNotAsserted} ; 
+  fi
+ """
+ 	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+			GetVarReference ${__call_locality[1]} ; 
+			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+		echo -ne """${ArgGet}\n""" ;
+	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+		eval $( __GetVarReferenceList ) ;
+ elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  echo -ne "${StrTestTemplate}" ; 
+ fi
+ 
+}
  ### StartCoproc :
  ###
  ###
