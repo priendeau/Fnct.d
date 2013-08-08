@@ -13,7 +13,8 @@ function GitHubCommit()
  local BoolUseZenityFileSelect=${GitHCZenityFileShell:=False} ; 
  local Arg0=${ArrayArg[0]} ; 
  local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n" ;
-	
+	local StrZenityTitle=${GitHCFileShellTitle:="GitHubCommit File Selection"} ; 
+ 
 	function GitCommitPushAction()
 	{
 		local __call_locality=( GitCPAction GitCommitPushAction ); 
@@ -30,11 +31,29 @@ function GitHubCommit()
  function GetSelectedFile()    
  { 
   local __call_locality=( GSF GetSelectedFile )
+  local ArrayArg=( $* ) ; 
+  local IntWidth=${GSFZenityWidth:=640} ; 
+  local IntWidth=${GSFZenityHeight:=200} ; 
+  local StrTitle=${GSFZenityTitle:="GetSelectedFile, Zenity File-Shell Selection"} ; 
+  local StrZenityMainAction=${GSFZenityMainAction:=--file-selection}
+  local StrSep=${GSFZenitySep:=,}
+  local StrZenityFSMultipleFile=${GSFZenitySetMultiple:=True} ; 
+
  	###->local StrFileToCommit=${GitHubCommitFilePath:=/home/maxiste/github/Technical-PorteFolio/Python}
   ### Saving Current Path
+  
+  ### See BoolVarTestVarCreation from fnct_debian_lib .
+  ### This replacement is intended to supply a Boolean test and Value Association, done in one line, 
+  ### it allow to generate a range of variable being Transited from Prefixed-Var and value
+  ### passed in a query, which is sometimes had no value and give extra code that might trigger error. 
+  ### local StrMultipleFileSelectionAttr="--multiple"
+  ### if [ "${StrZenityFSMultipleFile}" == "False" ] ; then 
+  ###  StrMultipleFileSelectionAttr="" ; 
+  ### fi 
+  $( eval BVTestVarName=StrMultipleFileSelectionAttr BVTestVarHold="--multiple" BVTestBoolVarName=StrZenityFSMultipleFile BoolVarTestVarCreation ) 
   local StrCurrentPath=$( pwd ) ; 
   cd ${GSFPath} ; 
-  local FileSelection=$( zenity --width=640 --height=200 --file-selection --multiple --filename="${StrFileToCommit}" --separator=',' ) ; 
+  local FileSelection=$( zenity --title="${StrTitle}" --width=${IntWidth} --height=${GSFZenityHeight} ${StrZenityMainAction} ${StrMultipleFileSelectionAttr} --filename="${StrFileToCommit}" --separator='${StrSep}' ) ; 
   cd ${StrCurrentPath} ; 
   local ArrayReturnedFile=( ) ;
   local FileCommit=( $( echo ${FileSelection//,/ } ) ) ; 
@@ -49,20 +68,17 @@ function GitHubCommit()
  
  function GitCommit( )
  {
+  echo -ne "Function:GitCommit\n" > /dev/stderr ; 
   local ArrayArg=( $* ) ;
 		local __call_locality=( GitC GitCommit ); 
   local ArrayFileCommit=( ${GitCommitFileList/,/ } ) ;
+  local StrGitCommitPAT="" ;
   for (( intx=0 ; intx <= $(( ${#ArrayFileCommit[@]}-1 )) ; intx++ )) ; do 
   	local StrFile="${ArrayFileCommit[${intx}]}" ;
 		 local CommitMessage=$( zenity --title="GitHub, commiting file ${StrFile}" --width=640 --height=200 --ok-label="commit" --text-info --editable --text="${StrMessageCommit}" ) ; 
 		 local ErrorCommit=$? ;
 		 local IntLenMessage=${#CommitMessage} ;
-  	GitCPActionIs=${GitCommitAction}             \
-   GitCPActionPoint=${GitCommitBranchLocation}  \
-   GitCPActionBranch=${GitCommitBranchName}     \
-   GitCPActionLength=${IntLenMessage}           \
-   GitCPActionCommitMessage=${CommitMessage}    \
-   GitCPActionFile=${StrFile} GitCommitPushAction ; 
+   GitCPActionIs=${GitCommitAction} GitCPActionPoint=${GitCommitBranchLocation} GitCPActionBranch=${GitCommitBranchName} GitCPActionLength=${IntLenMessage} GitCPActionCommitMessage=${CommitMessage} GitCPActionFile=${StrFile} GitCommitPushAction ;
   done 
  }
  
@@ -70,6 +86,14 @@ function GitHubCommit()
 	### Main Body 
 	### ############################################# 
  
+ local StrGFSPrefixT=StrFileToCommit=${StrFileToCommit} \
+                     GSFZenityTitle=${StrZenityTitle} \
+                     GSFPath=${StrFileToCommit} ; 
+ local StrGitCommitFileShellT=GitCommitBranchLocation=${StrBranchLocation} \
+                              GitCommitBranchName=${StrBranchName}         \
+                              GitCommitAction=${StrCommitAction}           \
+                              GitCommitFileList="${StrFileCommit}"         \
+                              StrMessageCommit=${StrMessageCommit}
 	if [ "${Arg0:=--startservices}" == "--help" ] ; then 
 				GetVarReference ${__call_locality[1]} ; 
 				echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
@@ -81,12 +105,8 @@ function GitHubCommit()
   eval $( __GetVarReferenceList ) ; 
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then
   if [ "${BoolUseZenityFileSelect:=False}" == "True" ] ; then 
-    local StrFileCommit=$( StrFileToCommit=${StrFileToCommit} GSFPath=${StrFileToCommit} GetSelectedFile ) ; 
-    GitCommitBranchLocation=${StrBranchLocation} \
-    GitCommitBranchName=${StrBranchName}         \
-    GitCommitAction=${StrCommitAction}           \
-    GitCommitFileList="${StrFileCommit}"         \
-    StrMessageCommit=${StrMessageCommit} GitCommit  ; 
+    local StrFileCommit=$( echo ${StrGFSPrefixT} GetSelectedFile ) ; 
+    $( ${StrGitCommitFileShellT} GitCommit  ) ; 
   else
     #test ! -e ${ArrayArg[0]} && echo -ne "\nFile ${ArrayArg[0]} can not be commited, does not exist.\n" > /dev/stderr ;
     if [ "${Arg0}" != "" ] ; then 
