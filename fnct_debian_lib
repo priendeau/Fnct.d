@@ -1825,18 +1825,20 @@ function PackageRepositoryMgmt()
 	local Arg0=${ArrayArg[0]} ;
 
 	local StrUUID=$( GetUUID ) ; 
+ local StrSnapShotUUID=$( GetUUID )
+ echo -ne "Reserved ID for COMMIT:${StrUUID}\nReserved ID for Listing:${StrSnapShotUUID}\n\n" > /dev/stderr ;
 	local StrPathArchives=${PkgRepoMgmtPathArchives:=/var/cache/apt/archives} ; 
 	local StrFindStringFormat=${PkgRepoMgmtStrFmt:="%f "} ;
 	local StrPackageType=${PkgRepoMgmtFileFormat:=deb} ;
 	local StrPathRepository=${PkgRepoMgmtRepository:=/media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64} ;
 	local StrPathReposIndex=${PkgRepoMgmtReposIndex:=/media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64/index} ;
-	local StrIndexLatest=${PkgRepoMgmtLatestIndexName:=latest};
+	local StrIndexLatest=${PkgRepoMgmtLatestIndexName:=latest} ;
 	local StrAddPackageListing=${PkgRepoMgmtAddPkgLst:=False} ; 
-	local StrPkgLstExt=${PkgRepoMgmtPkgExt:=bz2.base64}
+	local StrPkgLstExt=${PkgRepoMgmtPkgExt:=bz2.base64} ;
 	local StrAppsLinkerName=${PkgRepoMgmtLinkerName:=/bin/ln} ; 
 	local StrAppsLinkerOptionRecv=${PkgRepoMgmtLinkerOption:=-s} ; 
-	local StrAppsLinkerOption=( ${StrAppsLinkerOptionRecv//,/ }  );
-	local StrDumpingFormat=${PkgRepoMgmtReposIndexFmt:=__ID__:__FILE__};
+	local StrAppsLinkerOption=( ${StrAppsLinkerOptionRecv//,/ }  ) ;
+	local StrDumpingFormat=${PkgRepoMgmtReposIndexFmt:=__ID__:__FILE__} ;
 	local StrDefaultActionIndex=${PkgRepoMgmtReposIndexAction:="mkdir -p __PATH__"} ;
 	local StrTestDriveDebug=${PkgRepoMgmtReposDriveDebug:=False} ;
 	local StrIndexTest=${PkgRepoMgmtReposIndexTest:=! -d} ;
@@ -1847,7 +1849,7 @@ function PackageRepositoryMgmt()
 	local StrBackupAction=${PkgRepoMgmtReposBkpAct:=mv __SRC__/__FILE__ __DEST__ __VIRG__ ln -s __DEST__/__FILE__ __SRC__/__FILE__} ;
 	local StrTransactionStart=$( GetOtherDateFormat="%Y%m%d\ %H:%M:%S" GetOtherDate ) ; 
 	local StrTodatDateTransfert=$( GetOtherDateReference=${IntDefaultDayIndexName} GetOtherDate ) ; 
-	local StrIndexFile=${StrPathReposIndex}/${StrTodatDateTransfert};
+	local StrIndexFile=${StrPathReposIndex}/${StrTodatDateTransfert} ;
 	
 	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--add-snapshoot\tAdd DPKG Listing inside Current Index File.\n\t\t\tOnly Store an ID in the index-file and the content into UUID-name from index path.\n\n" ;
 	
@@ -1867,34 +1869,48 @@ function PackageRepositoryMgmt()
 	function GetIdDpkgListing()
 	{
 		local __call_locality=( GIDL GetIdDpkgListing ) ;
+  local StrPackageID=${GIDLPackageUUID:=DefaultID} ;
+  ### Note, moving UUID Creation at the top.
+  ### Assuming we need at least an UUID for the Package-naming deposition and 
+  ### another one to name a package-listing... ( Having --add-snapshoot and PkgRepoMgmtAddPkgLst Prefixed-Var managing listing )
 		local ArrayArg=( $* ) ;		
-		local StrID=$( GetUUID ) ; 
-		echo -ne "ADD SNAPSHOT\nDATE:${StrTransactionStart}:ID:${StrID}\n" >> ${StrIndexFile} ; 
-		echo -ne "${StrID}"  > /dev/stderr ; 
+		local StrID=${StrSnapShotUUID} ; 
+		echo -ne "ADD SNAPSHOT\nDATE:${StrTransactionStart}:ID:${StrPackageID}\n" >> ${StrIndexFile} ; 
+		echo -ne "ID of listing:${StrPackageID}\n"  > /dev/stderr ; 
 	}
 	
 	function GetDpkgInstalled()
 	{
-		local __call_locality=( GetDpkgInstalled ) ;
+		local __call_locality=( GetPkgInst GetDpkgInstalled ) ;
 		local ArrayArg=( $* ) ; 
-		local StrAwkScript=${GetDpkgInstalledAwkScript:=/etc/init.d/Fnct.d/awk-script/dpkg-package-id-listing.awk}
+		local StrAwkScript=${GetPkgInstAwkScript:=/etc/init.d/Fnct.d/awk-script/dpkg-package-id-listing.awk}
 		dpkg --get-selections | awk -f ${StrAwkScript}
 	}
 	
 	function StreamCprEnvlTxt()
 	{
-		local __call_locality=( StreamCprEnvlTxt ) ;
+  
+		local __call_locality=( StreamCET StreamCprEnvlTxt ) ;
 		local ArrayArg=( $* ) ; 
-		local StrFile=${StreamCprEnvlTxtFile:=none.${StrPkgLstExt}}
+  #local StrPackageID=${StreamCETPackageUUID:=None} GetIdDpkgListing=${StrSnapShotUUID}
+		local StrFile=${StreamCprEnvlTxtFile:=DefaultFileName}
 		bzip2 -9z | base64 --wrap=0 > ${StrFile} ; 
 	}	
 	
 	function GetDpkgListing()
 	{
-		local __call_locality=( GetPackageListing ) ;
+		### Note 
+  ### Transfert from External=>Root,StrSnapShotUUID inside GetDpkgListing, with same name. 
+  local __call_locality=( GetPackageListing ) ;
 		local ArrayArg=( $* ) ; 
-		local StrId=$( StrIndexFile=${StrIndexFile} StrTransactionStart=${StrTransactionStart} GetIdDpkgListing ) 
-		GetDpkgInstalledAwkScript=${ScriptAwkFilter} GetDpkgInstalled | StrPkgLstExt=${StrPkgLstExt} StreamCprEnvlTxtFile=${StrPathReposIndex}/${StrId}.${StrPkgLstExt} StreamCprEnvlTxt  ; 
+		local StrId=$( GIDLPackageUUID=${StrSnapShotUUID} \
+                 StrIndexFile=${StrIndexFile} \
+                 StrTransactionStart=${StrTransactionStart} \
+                 GetIdDpkgListing ) 
+		GetDpkgInstalledAwkScript=${ScriptAwkFilter} GetDpkgInstalled | \
+                            StrPkgLstExt=${StrPkgLstExt} \
+                            StreamCprEnvlTxtFile=${StrPathReposIndex}/${StrSnapShotUUID}.${StrPkgLstExt} \
+                            StreamCprEnvlTxt  ; 
 		local StrSHASnap=$( sha1sum --binary ${StrPathReposIndex}/${StrId}.${StrPkgLstExt} | cut -d ' ' -f 1 ) 
 		echo -ne "ShaSUM of snapshot, ID:${StrId} SHA:${StrSHASnap}\n" > /dev/stderr ; 
 		echo -ne "SNAPSHOT:SHA1SUM:${StrSHASnap}\nSNAPSHOT END\n" >> ${StrIndexFile} ; 
@@ -1973,11 +1989,12 @@ function PackageRepositoryMgmt()
 	elif [ "${Arg0:=--startservices}" == "--add-snapshoot" ] ; then 
 		echo -ne "File to store next SnapShoot: ${StrIndexFile}\n" > /dev/stderr ; 
 		test $( TestDriveMountDebug=${StrTestDriveDebug} TestDriveMountList=${StrPathRepository},${StrPathArchives} TestDriveMount ) && \
-		StrPathReposIndex=${StrPathReposIndex}     \
-		StrIndexFile=${StrIndexFile}               \
-		StrTransactionStart=${StrTransactionStart} \
-		StrPkgLstExt=${StrPkgLstExt}               \
-		GetDpkgInstalledAwkScript=${ScriptAwkFilter} GetDpkgListing ; 
+		StrPathReposIndex=${StrPathReposIndex}       \
+		StrIndexFile=${StrIndexFile}                 \
+		StrTransactionStart=${StrTransactionStart}   \
+		StrPkgLstExt=${StrPkgLstExt}                 \
+		GetDpkgInstalledAwkScript=${ScriptAwkFilter} \
+  StrSnapShotUUID=${StrSnapShotUUID} GetDpkgListing ; 
 	else 
 			$( TestDriveMountDebug=${StrTestDriveDebug} TestDriveMountList=${StrPathRepository},${StrPathArchives} TestDriveMount ) ; 
 			if [ "${IsMountDrive:=True}" == "True" ] ; then 
@@ -1988,11 +2005,12 @@ function PackageRepositoryMgmt()
 				local ArrayFileList=( $( GetPackageListPathArchives=${StrPathArchives} GetPackageListFormat=${StrPackageType} GetPackageListStringFormat="${StrFindStringFormat}" GetPackageList ) )
 				local ShaSum=$( echo ${ArrayFileList[@]} | sha1sum | cut -d ' ' -f 1 )
 				if [ ${StrAddPackageListing:=False} == "True" ] ; then 
-					 StrPathReposIndex=${StrPathReposIndex}     \
-					 StrIndexFile=${StrIndexFile}               \
-					 StrTransactionStart=${StrTransactionStart} \
-					 StrPkgLstExt=${StrPkgLstExt}               \
-					 GetDpkgInstalledAwkScript=${ScriptAwkFilter} GetDpkgListing ; 
+					 StrPathReposIndex=${StrPathReposIndex}       \
+					 StrIndexFile=${StrIndexFile}                 \
+					 StrTransactionStart=${StrTransactionStart}   \
+					 StrPkgLstExt=${StrPkgLstExt}                 \
+					 GetDpkgInstalledAwkScript=${ScriptAwkFilter} \
+      StrSnapShotUUID=${StrSnapShotUUID} GetDpkgListing ; 
 				fi
 				local IntIsFile=0 ;
 				test -e ${StrIndexFile} && IntIsFile=1 ; 
