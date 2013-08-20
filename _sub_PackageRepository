@@ -1,0 +1,531 @@
+# . /etc/init.d/Fnct.d/fnct_debian_lib
+
+### Yet Another Debian package Mangler and backup-management. 
+### 
+### It basically move actual Debian package from archive /var/cache/apt/archives
+### some-where else like /media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64...
+### or some NFS mounted point or any mounted partition dedicated to save or backup... 
+### - It create an index of the day, inside the Destination.
+###  - The index file is in a new directory of the destination, calling it Destination/index
+###  - The index file-name is named on the today date or on the day executed by the manager. 
+###  - The index used to drop Package into destination are accounted and the index hold 
+###  - the beginnign of the transfert. 
+###  - Index day used can be changed thru PkgRepoMgmtReposIndexDay, but the time of the transaction
+###    remain unchanged... look weird, but may have some goal .... 
+###   - Variable PkgRepoMgmtReposIndex change the Index destination. 
+### 
+### The Action. 
+### It's A loop inside the archives, a move to the destination and a link is done between them 
+### - to remain somewhat active, or become inacessible if the mount is down... not bad for nfs
+### mounting detection or lazy mount with economic transfert mode while having no reason
+### to leave it mounted until you need to get some update or removing stuff. 
+### If the management from APT, dpkg, gdebi remove the package, it give silent error to 
+### remove something not being a file but link, but are not following the source... 
+### Being serious with this action, PkgRepoMgmtReposBkpAct can change the Action. 
+### 
+### basically work like this :
+### [ cmd1 __VIRG__ cmd2 ... ] 
+### 
+### cmd1 should include at least 
+### __SRC__ tag , it transform it into proper destication  called __DEST__ 
+### __FILE__ is critical and mandatory, it loop the command and turn __FILE__ into every item to be backuped 
+### 
+### - __VIRG__ tag is an hack, It's required when more then one command is called, it change in into ';' . 
+### ex : PkgRepoMgmtReposBkpAct="scp  __SRC__/__FILE__ root@domainname:/__DEST__ __VIRG__ rm -f __SRC__/__FILE__" PackageRepositoryMgmt
+### - transfert by scp a file from Debian packages from /var/cache/apt/archives and remove it. 
+### 
+### 
+### ... So basically, this guys had a spade in hand and Spell it: 'I.B.M.' ;) from 1901, I should live long 
+### enought to work there or know what they are doing... 
+### 
+
+######################################################################
+### Main Function of PackageRepositoryMgmt function
+###
+
+
+ #########################################################################
+ ###### Part of Snapshoot section 
+ ######
+ function GetIdDpkgListing()
+ {
+  local __call_locality=( GIDL GetIdDpkgListing ) ;
+  local ArrayArg=( $* ) ;		
+  local Arg0=( ${ArrayArg[0]} ) ;
+  local StrPackageID=${GIDLPackageUUID:=DefaultID} ;
+  ### Note, moving UUID Creation at the top.
+  ### Assuming we need at least an UUID for the Package-naming deposition and 
+  ### another one to name a package-listing... ( Having --add-snapshoot and PkgRepoMgmtAddPkgLst Prefixed-Var managing listing )
+  local StrID=${StrSnapShotUUID} ; 
+  echo -ne "ADD SNAPSHOT\nDATE:${StrTransactionStart}:ID:${StrPackageID}\n" >> ${StrIndexFile} ; 
+  echo -ne "ID of listing:${StrPackageID}\n"  > /dev/stderr ; 
+ }
+  
+ function GetDpkgInstalled()
+ {
+  local __call_locality=( GetPkgInst GetDpkgInstalled ) ;
+  local ArrayArg=( $* ) ;
+  local Arg0=( ${ArrayArg[0]} ) ; 
+  local StrAwkScript=${GetPkgInstAwkScript:=/etc/init.d/Fnct.d/awk-script/dpkg-package-id-listing.awk}
+  dpkg --get-selections | awk -f ${StrAwkScript}
+ }
+  
+ function StreamCprEnvlTxt()
+ {
+  
+  local __call_locality=( StreamCET StreamCprEnvlTxt ) ;
+  local Arg0=( ${ArrayArg[0]} ) ;
+  local ArrayArg=( $* ) ; 
+  #local StrPackageID=${StreamCETPackageUUID:=None} GetIdDpkgListing=${StrSnapShotUUID}
+  local StrFile=${StreamCprEnvlTxtFile:=DefaultFileName}
+  bzip2 -9z | base64 --wrap=0 > ${StrFile} ; 
+ }	
+  
+ function GetDpkgListing()
+ {
+  ### Note 
+  ### Transfert from External=>Root,StrSnapShotUUID inside GetDpkgListing, with same name. 
+  local __call_locality=( GetDpkgLst GetPackageListing ) ;
+  local ArrayArg=( $* ) ; 
+  local Arg0=( ${ArrayArg[0]} ) ;
+  local StrId=$( GIDLPackageUUID=${StrSnapShotUUID}         \
+                 StrIndexFile=${StrIndexFile}               \
+                 StrTransactionStart=${StrTransactionStart} \
+                 GetIdDpkgListing                           ) 
+  GetDpkgInstalledAwkScript=${ScriptAwkFilter} GetDpkgInstalled                                        | \
+                            StrPkgLstExt=${StrPkgLstExt}                                                 \
+                            StreamCprEnvlTxtFile=${StrPathReposIndex}/${StrSnapShotUUID}.${StrPkgLstExt} \
+                            StreamCprEnvlTxt  ; 
+  local StrSHASnap=$( sha1sum --binary ${StrPathReposIndex}/${StrId}.${StrPkgLstExt} | cut -d ' ' -f 1 ) 
+  echo -ne "ShaSUM of snapshot, ID:${StrId} SHA:${StrSHASnap}\n" > /dev/stderr ; 
+  echo -ne "SNAPSHOT:SHA1SUM:${StrSHASnap}\nSNAPSHOT END\n" >> ${StrIndexFile} ; 
+ }
+   
+ function GetPackageList()
+ {
+  local __call_locality=( GetPackageList ) ;
+  local ArrayArg=( $* ) ; 
+  local Arg0=( ${ArrayArg[0]} ) ;
+  local StrPathArchives=${GetPackageListPathArchives:=/var/cache/apt/archives} ; 
+  local StrPackageType=${GetPackageListFormat:=deb} ;
+  local StrDisplayOutput="${GetPackageListStringFormat:='%f '}" ;
+  local ArrayFileList=( $( find ${StrPathArchives} -maxdepth 1 -type f -iname "*.${StrPackageType}" -printf "${StrDisplayOutput}" ) ) ; 
+  local IntLenFileList=${#ArrayFileList[@]} ;
+  if [ ${IntLenFileList:=0} -gt 0 ] ; then 
+   echo "${ArrayFileList[@]}" ; 
+   return 0 ; 
+  else
+   echo "None" ;
+   return 1 ; 
+  fi
+ }
+  
+ ###### End of Snapshoot section 
+ ######
+ #########################################################################
+
+ #########################################################################
+ ###### Part of TestDriveMount section 
+ ######
+ function TestPathIndex()
+ {
+  local __call_locality=( TestPathIndex ) ;
+  local ArrayArg=( $* ) ; 
+  local Arg0=( ${ArrayArg[0]} ) ;
+  local StrPathTest=${TestPathIndexName:=/media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64/index} ; 
+  local StrTestType="${TestPathIndexTest:=! -d}" ;
+  local StrTestResultAction="${TestPathIndexResultAction:=mkdir -p __PATH__}" ;
+  test ${StrTestType} ${StrPathReposIndex} && ${StrTestResultAction//__PATH__/${StrPathReposIndex}} ;
+ }	
+
+
+
+ function TestDriveMount()
+ {
+  local __call_locality=( TestDriveMount ) ; 
+  local ArrayArg=( $* ) ; 
+  local Arg0=( ${ArrayArg[0]} ) ;
+  local IsMountDrive="True";
+  local StrScopeType="${TestDriveMountScope:=local -a}";
+  local StrDriveList="${TestDriveMountList}";
+  local MountDriveCheck=( ${StrDriveList//,/ } ) ;
+  local IsDisplayDebug=${TestDriveMountDebug:=False} ;
+  local Arg0="${ArrayArg[0]}" ;
+  local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n--list\t\tReturn Internal Variable List.\n" 
+  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+    GetVarReference ${__call_locality[0]} ; 
+    echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;
+  else
+   for (( intx=0 ; intx <= ${#MountDriveCheck[@]}-1 ; intx++ )) ; do
+    if [ "${IsDisplayDebug:=False}" == "True" ] ; then 
+     echo -ne "Checking Path: ${MountDriveCheck[${intx}]}\n" > /dev/stderr ; 
+    fi
+    test ! -d "${MountDriveCheck[${intx}]}" && IsMountDrive="False" ;
+   done 
+   if [ "${IsMountDrive:=True}" == "False" ] ; then 
+    echo -ne "\nCheck Variable PkgRepoMgmtRepository,PkgRepoMgmtPathArchives, some Path are inaccessible or not mounted\n" > /dev/stderr ; 
+   fi 
+   echo -ne "${StrScopeType} IsMountDrive=${IsMountDrive}" ; 
+  fi 
+ }
+ ###### End of TestDriveMount section 
+ ######
+ #########################################################################
+
+### End of Main Function of PackageRepositoryMgmt function
+###
+######################################################################
+
+
+unset PackageRepositoryMgmt ; 
+
+function PackageRepositoryMgmt()
+{
+	
+	local __call_locality=( PkgRepoMgmt PackageRepositoryMgmt ) ;
+ local ArrayArg=( $* ) ; 
+ local Arg0=( ${ArrayArg[0]} ) ;
+
+	local StrUUID=$( GetUUID ) ; 
+ local StrSnapShotUUID=$( GetUUID )
+	local StrPathArchives=${PkgRepoMgmtPathArchives:=/var/cache/apt/archives} ; 
+	local StrFindStringFormat=${PkgRepoMgmtStrFmt:="%f "} ;
+	local StrPackageType=${PkgRepoMgmtFileFormat:=deb} ;
+	local StrPathRepository=${PkgRepoMgmtRepository:=/media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64} ;
+	local StrPathReposIndex=${PkgRepoMgmtReposIndex:=/media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64/index} ;
+	local StrIndexLatest=${PkgRepoMgmtLatestIndexName:=latest} ;
+	local StrAddPackageListing=${PkgRepoMgmtAddPkgLst:=False} ; 
+	local StrPkgLstExt=${PkgRepoMgmtPkgExt:=bz2.base64} ;
+	local StrAppsLinkerName=${PkgRepoMgmtLinkerName:=/bin/ln} ; 
+	local StrAppsLinkerOptionRecv=${PkgRepoMgmtLinkerOption:=-s} ; 
+	local StrAppsLinkerOption=( ${StrAppsLinkerOptionRecv//,/ }  ) ;
+	local StrDumpingFormat=${PkgRepoMgmtReposIndexFmt:=__ID__:__FILE__} ;
+	local StrDefaultActionIndex=${PkgRepoMgmtReposIndexAction:="mkdir -p __PATH__"} ;
+	local StrTestDriveDebug=${PkgRepoMgmtReposDriveDebug:=False} ;
+	local StrIndexTest=${PkgRepoMgmtReposIndexTest:=! -d} ;
+	local ScriptAwkFilter=${PkgRepoMgmtReposAwkLst:=/etc/init.d/Fnct.d/awk-script/dpkg-package-id-listing.awk} ;
+ echo -ne "Reserved ID for COMMIT:${StrUUID}\nReserved ID for Listing:${StrSnapShotUUID}\n\n" > /dev/stderr ;
+
+
+	### Explained in GetOtherDate, GetOtherDateReference can be negative and report yesterday date too. and not null will
+  ### give n-day after today... 	
+	local IntDefaultDayIndexName=${PkgRepoMgmtReposIndexDay:=0} ;
+	local StrBackupAction=${PkgRepoMgmtReposBkpAct:=mv __SRC__/__FILE__ __DEST__ __VIRG__ ln -s __DEST__/__FILE__ __SRC__/__FILE__} ;
+	local StrTransactionStart=$( GetOtherDateFormat="%Y%m%d\ %H:%M:%S" GetOtherDate ) ; 
+	local StrTodatDateTransfert=$( GetOtherDateReference=${IntDefaultDayIndexName} GetOtherDate ) ; 
+	local StrIndexFile=${StrPathReposIndex}/${StrTodatDateTransfert} ;
+	
+	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--add-snapshoot\tAdd DPKG Listing inside Current Index File.\n\t\t\tOnly Store an ID in the index-file and the content into UUID-name from index path.\n\n" ;
+	
+
+
+	### #############################################
+	### Main Body 
+	### #############################################
+
+	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+			GetVarReference ${__call_locality[1]} ; 
+			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+		echo -ne """${ArgGet}\n""" ;
+	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+		eval $( __GetVarReferenceList ) ;
+	elif [ "${Arg0:=--startservices}" == "--checkdrive"	] ; then 
+		test $( TestDriveMountDebug=${StrTestDriveDebug} TestDriveMountList=${StrPathRepository},${StrPathArchives} TestDriveMount ) && \
+		echo -ne "Status of IsMountDrive: ${IsMountDrive}\n" > /dev/stderr ; 
+	elif [ "${Arg0:=--startservices}" == "--add-snapshoot" ] ; then 
+		echo -ne "File to store next SnapShoot: ${StrIndexFile}\n" > /dev/stderr ; 
+		test $( TestDriveMountDebug=${StrTestDriveDebug} TestDriveMountList=${StrPathRepository},${StrPathArchives} TestDriveMount ) && \
+		StrPathReposIndex=${StrPathReposIndex}       \
+		StrIndexFile=${StrIndexFile}                 \
+		StrTransactionStart=${StrTransactionStart}   \
+		StrPkgLstExt=${StrPkgLstExt}                 \
+		GetDpkgInstalledAwkScript=${ScriptAwkFilter} \
+  StrSnapShotUUID=${StrSnapShotUUID} GetDpkgListing ; 
+	else 
+			$( TestDriveMountDebug=${StrTestDriveDebug} TestDriveMountList=${StrPathRepository},${StrPathArchives} TestDriveMount ) ; 
+			if [ "${IsMountDrive:=True}" == "True" ] ; then 
+				TestPathIndexName=${StrPathReposIndex}   \
+				TestPathIndexTest=${StrIndexTest}        \
+				TestPathIndexResultAction=${StrDefaultActionIndex} TestPathIndex ;
+				
+				local ArrayFileList=( $( GetPackageListPathArchives=${StrPathArchives} GetPackageListFormat=${StrPackageType} GetPackageListStringFormat="${StrFindStringFormat}" GetPackageList ) )
+				local ShaSum=$( echo ${ArrayFileList[@]} | sha1sum | cut -d ' ' -f 1 )
+				if [ ${StrAddPackageListing:=False} == "True" ] ; then 
+					 StrPathReposIndex=${StrPathReposIndex}       \
+					 StrIndexFile=${StrIndexFile}                 \
+					 StrTransactionStart=${StrTransactionStart}   \
+					 StrPkgLstExt=${StrPkgLstExt}                 \
+					 GetDpkgInstalledAwkScript=${ScriptAwkFilter} \
+      StrSnapShotUUID=${StrSnapShotUUID} GetDpkgListing ; 
+				fi
+				local IntIsFile=0 ;
+				test -e ${StrIndexFile} && IntIsFile=1 ; 
+				if [ ${IntIsFile:=0} -eq 1 ] ; then 
+					echo -ne "NEW TRANSACTION:${StrTransactionStart}\n" >> ${StrIndexFile} ;  
+				else
+				 echo -ne "NEW FILE\n" > ${StrIndexFile} ; 
+				 echo -ne "NEW TRANSACTION:${StrTransactionStart}\n" > ${StrIndexFile} ;  
+				fi 
+				echo -ne "COMMIT TRANSACTION:ID:${StrUUID}:NB_FILE:${#ArrayFileList[@]}:SHA1SUM:${ShaSum}:${StrTransactionStart}\n" >> ${StrIndexFile} ; 
+				
+				local Result=$? ; 
+				if [ ${Result:=1} -eq 0 ] ; then 
+					for (( intx=0 ; intx <= ${#ArrayFileList[@]}-1 ; intx++ )) ; do 
+						local strfile="${ArrayFileList[${intx}]}" ;
+						echo -ne "File: ${strfile}\n" > /dev/stderr ; 
+						local StrLinkAction=${StrBackupAction};
+						StrLinkAction=${StrLinkAction//__FILE__/${strfile}} ; 
+						StrLinkAction=${StrLinkAction//__SRC__/${StrPathArchives}} ; 
+						StrLinkAction=${StrLinkAction//__DEST__/${StrPathRepository}} ;
+						StrLinkAction=${StrLinkAction//__VIRG__/;} ; 
+						local StrDump=${StrDumpingFormat}; 
+						StrDump=${StrDump//__ID__/${StrUUID}};
+						StrDump=${StrDump//__FILE__/${strfile}};
+						echo -ne "${StrDump}\n" >> ${StrIndexFile} ; 
+						echo -ne "Action:[ ${StrLinkAction} ]\n" > /dev/stderr ; 
+						eval "${StrLinkAction}" ; 
+					
+					done 
+					### Adding Latest index being stored.
+					eval """${StrAppsLinkerName} ${StrAppsLinkerOption[@]} ${StrIndexFile} ${StrPathReposIndex}/${StrIndexLatest} """; 
+				else
+					echo -ne "ArrayFileList return Empty List\n" > /dev/stderr . 
+  			fi
+			else
+				echo -ne "Exit on Path acces Problems\nStatus of IsMountDrive: ${IsMountDrive}\n" > /dev/stderr ;
+				return 1 ;
+			fi
+	fi 
+}
+
+######################################################################
+### Main Function of PackageRepositoryRest function
+###
+
+### End of Main Function of PackageRepositoryRest function
+###
+######################################################################
+
+
+### Here the restoring for PackageRepositoryMgmt
+### Likely to use PRRIsLink=1 PRRIsResolve=0 PackageRepositoryRest
+### PRRIsResolve variable is reserver to search the package following specific time
+### inside an index, which is merely not working to restore whole packaging...
+### lacking ID on every Package name index, which is not hard to modify.
+function PackageRepositoryRest()
+{
+	local __call_locality=( PRR )	 ; 
+	local ArrayArg=( $* ) ;
+	local IsLink=${PRRIsLink:=0} ; 
+	local IsResolve=${PRRIsResolve:=1} ; 
+	local IsDebug=${PRRIsDebug:=0} ; 
+	local IsDebugResult=${PRRIsDebugResult:=0} ;
+	local IsRemoveResolve=${PRRRemoveOldResolved:=1} ;
+	local thisdate=${PRRGetDate:=20121108} ;
+	local drv=${PRRBackupPath:=/media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64} ; 
+	local index=${PRRBackupIndex:=__BackupPath__/index} ;
+	local resolve=${PRRResolveFile:=__IndexFile__/resolve-__DATE__} ;
+	local IntSleepWarning=${PRRSleepWarning:=10} ; 	
+	
+	local src=${PRRRepositoryPath:=/var/cache/apt/archives} ; 
+	local _TA=( ) ;
+	local Arg0=${ArrayArg[0]}	; 
+
+ function __main_StartServices( )
+ {
+		index=${index//__BackupPath__/${drv}} ;
+  local StrResolve
+		resolve=${resolve//__DATE__/${thisdate}} ;
+		resolve=${resolve//__IndexFile__/${index}} ;
+   
+		local _index=${index}/${thisdate} ; 
+	
+		
+  if [ ${IsResolve:=0} -eq 1 ] ; then  
+			echo -ne "Will resolve package into resolve file store inside index path.\n\tUsefull to get all package-name, package-file and commit level based on PRRGetDate value.\n\tFile resolver:${resolve}\n" > /dev/stderr ; 
+		else
+			echo -ne	"Will not perform a resolution package into resolve file store inside index path.\n" > /dev/stderr ; 
+		fi ### End of test IsResolve-eq-1 
+		
+  if [ ${IsLink:=0} -eq 1 ] ; then 
+			echo -ne "Will link package into Repository destination, based on Variable PRRRepositoryPath,\n\twill link inside path:${src}\n" > /dev/stderr ; 
+		else
+			echo -ne "Will not performing linking package into Repository destination\n" > /dev/stderr ;		
+		fi ### End of test IsLink-eq-1 
+		sleep ${IntSleepWarning} ; 
+
+		### erasing old resolved information:
+		test ${IsRemoveResolve:=1} == 1 &&	test -e ${resolve} && rm -f ${resolve} ; 
+
+		### List of Deb File
+		local _A=( $( find ${drv} -maxdepth 1 -type f -printf "%f " ) ) ;
+	
+		### Current Line Number and time for all commit from ${thisdate}
+		### Format by Index: Line[1-...],Date[YYYYMMDD],Time[HH:MM:SS], 
+		local _TI=(  $( cat ${_index} | egrep -n "COMMIT" | sed 's/\ /:/g;s/\\n//g' | cut -d ':' -f 1,4,5,6,7 | sed 's/^\([0-9]*\):\([0-9]*\):/\1,\2,/g' | tr '[:cntrl:]' ' ' ) ) ; 
+		local _RA=( ) ; 
+
+		if [ ${IsResolve:=0} -eq 1 ] ; then  
+			for (( x=0 ; x<= ${#_A[@]}-1 ; x++ )) ; do 
+				local file=${_A[${x}]} ; 
+				### Do the resolving .
+					local tfile=$( cat ${_index} | egrep -n "${file}" ) ;
+					local ifile=( ${tfile//:/ } ) ; 
+					ifile=${ifile[0]:=-1} ; 
+					### Get The ID from which commit file was part of (... may be none if file was not installed on ${thisday} )
+					local IntoldIndex=1 ;		
+					local IsIndexed=0 ; 		
+					test ${IsDebugResult:=0} == 1 && echo -ne "Resolving File: ${file},\n\tat line ${ifile},from commit " > /dev/stderr ; 
+					local PackageName=( ${file//_/ } ) ; 
+					for (( y=0 ; y<= ${#_TI[@]}-1 ; y++ )) ; do 
+								local _TIA=( ${_TI[${y}]/,/ } ) ; 
+								local IntLine=${_TIA[0]} ; 
+								if [ ${ifile:=0} -gt 0 ] ; then 
+									if [ ${ifile:=0} -gt ${IntoldIndex} ] ; then 
+										if [ ${ifile:=0} -lt ${IntLine} ] ; then 
+											test ${IsDebugResult:=0} == 1 && echo -ne "${IntLine}\n" > /dev/stderr ; 
+											test ${IsDebug:=0} == 1 && echo -ne "File located at index: ${ifile:=0}, from commit: ${IntLine}\n" > /dev/stderr  
+											_RA[${#_RA[@]}]="${IntLine},${PackageName[0]},${ifile:=0},${file}" ; 
+											IsIndexed=1; 
+										else
+											IsIndexed=0; 
+										fi ### End of test ifile-lt-IntLine
+									fi ### End of test ifile-gt-IntoldIndex
+								fi ### End of test ifile-gt-0
+						IntoldIndex=${IntLine} ; 
+					### _TI -> Action Based on Index from commit in file-index from ${thisdate}
+					done 
+					if [ ${IsIndexed:=0} -eq 0 ] ; then 
+						test ${IsDebugResult:=0} == 1 && echo -ne "None\n" > /dev/stderr ;  
+						_RA[${#_RA[@]}]="0,${PackageName[0]},${ifile:=0},${file}"
+					fi ### End of test IsIndexed-eq-0 
+				### _A -> File location and action based on file 
+				done 
+				echo -ne "Resolved information from index writed in file ${resolve}\n" ;		
+				for (( x=0 ; x<= ${#_RA[@]}-1 ; x++ )) ; do 
+					echo -ne "${_RA[${x}]//,/ }\n" >> ${resolve} ; 
+				### _RA -> Stored informations while looping in _TI and _A to get all resolved file.
+				done 
+		else
+			echo -ne "\n\n\tResolving Procedure was cancelled"
+		fi ### End of test IsResolve-eq-1 
+		### Do The link.
+		if [ ${IsLink:=0} -eq 1 ] ; then 
+			for (( x=0 ; x<= ${#_A[@]}-1 ; x++ )) ; do 
+				local file=${_A[${x}]} ; 
+				test ! -L ${src}/${file} && ln -s ${drv}/${file} ${src}/${file} ; 
+			### _A -> File location and action based on file 
+			done 
+		fi ### End of test IsLink-eq-1 
+  
+ } # Calling : IntSleepWarning=${IntSleepWarning} index=${index//__BackupPath__/${drv}} _index=${index}/${thisdate} StrResolve=${resolve} src=${src} drv=${drv} IsLink=${IsLink} IsDebug=${IsDebug} IsResolve=${IsResolve} IsRemoveResolve=${IsRemoveResolve} IsDebugResult=${IsDebugResult} __main_StartServices
+ function __main_Help( )
+ {
+   local __call_locality=( ${MaiHelpExtrnFunc:=None} )
+			GetVarReference ${__call_locality[1]} ; 
+			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+ } # Calling : StrSwitchMessages=${StrSwitchMessages} MaiHelpExtrnFunc=${__call_locality[1]} __main_Help 
+ function __main_List( )
+ {
+  echo "eval \$( __GetVarReferenceList ) ;"
+ }
+ function __main_Get( )
+ {
+  local ArrayArg=( $* )
+		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+		echo -ne """${ArgGet}\n""" ;
+ } # Calling : __main_Get ${ArrayArg[@]} 
+
+	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
+	if [ "${Arg0:=--startservices}" == "--help" ] ; then 
+		#GetVarReference PackageRepositoryRest ; 
+  StrSwitchMessages=${StrSwitchMessages} \
+  MaiHelpExtrnFunc=${__call_locality[1]} \
+  __main_Help ;
+		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  __main_Get ${ArrayArg[@]} 
+	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+		#eval $( __GetVarReferenceList ) ;
+  $( eval __main_List ) ; 
+	elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  IntSleepWarning=${IntSleepWarning}    \
+  index=${index//__BackupPath__/${drv}} \
+  _index=${index}/${thisdate}           \ 
+  StrResolve=${resolve}                 \
+  src=${src}                            \
+  drv=${drv}                            \
+  IsLink=${IsLink}                      \
+  IsDebug=${IsDebug}                    \
+  IsResolve=${IsResolve}                \
+  IsRemoveResolve=${IsRemoveResolve}    \ 
+  IsDebugResult=${IsDebugResult}        \
+  __main_StartServices
+  
+	fi ### End of test Arg0==--startservices
+}
+
+
+######################################################################
+### Main Function of PackageRepositoryFilter function
+###
+
+### End of Main Function of PackageRepositoryFilter function
+###
+######################################################################
+
+
+unset PackageRepositoryFilter ; 
+function PackageRepositoryFilter()
+{
+	local __call_locality=( PkgRepoFilter PackageRepositoryFilter ) ;
+	local ArrayArg=( $* ) ; 
+	local Arg0=${ArrayArg[0]} ;
+	local StrPathRepository=${PkgRepoFilterRepository:=/media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64} ;
+	local StrPathReposIndex=${PkgRepoFilterReposIndex:=/media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64/index} ;
+ local StrPkgLstExt=${PkgRepoFilterPkgExt:=bz2.base64} ;
+	local StrDateIndex=${PkgRepoFilterDateIndex:=} ;
+ local IntDefaultDayIndexName=${PkgRepoFilterDayRef:=0}
+ local StrTodaytDateTransfert=$( GetOtherDateReference=${IntDefaultDayIndexName} GetOtherDate ) ;
+ local StrSnapshootId=${PkgRepoFilterSnapID:=None} ;
+ 
+ local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\n" ;
+ local StrPathRef=$( PackageRepositoryMgmt --get $(  PackageRepositoryMgmt --list | cut -d ' ' -f 4 ) ) ; 
+ 
+ function main()
+ {
+  local PI=() ; 
+  declare -a ArrayOutput=( ) ; 
+  for (( i=0 ; i<= ${#APL[@]}-1 ; i++ )) ; do 
+   local APP=( ${APL[${i}]//;/ } ); 
+   local pname="${APP[1]/:amd64/}" ; 
+   local lpack=$( find ${PathRef} -type f -iname "${pname}*" -printf "%f\n" | tail -n 1 ) ; 
+   echo -ne "Package:\t\t${pname}\nFileName:\t\t${lpack}\n\n" > /dev/stderr ; 
+   if [ "${lpack:=NONE}" != "NONE" ] ; then 
+    PI[${#PI[@]}]="${PathRef}/${lpack}" ; 
+   fi ; 
+   for (( i=0 ; i<= ${#PI[@]}-1 ; i++ )) ; do 
+    ArrayOutput[${i}]="PI[${i}]" ; 
+   done ;
+  done ;
+ }
+ 
+	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+			GetVarReference ${__call_locality[1]} ; 
+			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+		echo -ne """${ArgGet}\n""" ;
+	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+		eval $( __GetVarReferenceList ) ;
+	elif [ "${Arg0:=--startservices}" == "--startservices"	] ; then 
+  StrPathRef=${StrPathRef} main ; 
+ fi
+}
