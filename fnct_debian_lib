@@ -473,11 +473,7 @@ function BoolVarTestVarCreation()
  local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\n" ;
  
  local StrTestTemplate=""" 
-  ${StrScopeType} ${StrVarNamed}=\"${StrVarNamedHold}\"
-  if [ \"${StrVarBoolTest}\" == \"${StrDefaultBoolTest}\" ] ; then 
-   ${StrVarNamed}=${StrNotAsserted} ; 
-  fi
- """
+  ${StrScopeType} ${StrVarNamed}=\"${StrVarNamedHold}\" ; if [ \"${StrVarBoolTest}\" == \"${StrDefaultBoolTest}\" ] ; then ${StrVarNamed}=${StrNotAsserted} ; fi"""
  	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
 			GetVarReference ${__call_locality[1]} ; 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
@@ -534,8 +530,64 @@ function PropertyLibName()
 }
 
 
-
-
+unset AutoChown ;
+function AutoChown()    
+{ 
+	local __call_locality=( AC AutoChown ) ;
+	local ArrayArg=( $* ) ; 
+	local Arg0=${ArrayArg[0]};
+ local StrUser=${ACUser:=maxiste.maxiste} ; 
+ local IntSleep=${ACSleep:=30} ; 
+ local IsPathRecurr=${ACRecurrent:=True} ; 
+ local StrApps=${ACChownApps:=chown} ; 
+ local IsLoop=${ACLooping:=True}
+ local StrPathList=${ACPathList:=Path1:Path2} ;
+ local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\n" ;
+ 
+ function __main_StartServices()
+ {
+		local __call_locality=( Main MainStartServices ) ;
+		local Arg0=${ArrayArg[0]};
+		local ArrayArg=( $* ) ; 
+  local ArrayPath=( ${StrPathList//:/ } ) ; 
+  
+  eval $( BVTestVarName=StrRecurrent BVTestVarHold='-R' BVTestBoolVarName=\${IsPathRecurr} BVTestBoolCase=False BVTestBoolAssertion='' BVTestScopeTest=local BoolVarTestVarCreation ) ; 
+  eval $( BVTestVarName=IntXWh BVTestVarHold='1' BVTestBoolVarName='\${IsLoop}' BVTestBoolCase=False BVTestBoolAssertion='0' BVTestScopeTest=local BoolVarTestVarCreation ) ; 
+  
+  while [ ${IntXWh} -eq 1 ] ; do 
+    for (( x=0 ; x <= ${#ArrayPath[@]}-1 ; x++ )) ; do 
+     local StrPathName=${ArrayPath[${x}]} ; 
+     chown ${StrUser} ${StrPathName} ${StrRecurrent} ; 
+    done ; 
+    if [ "${IsLoop}" == "False" ] ; then 
+     IntXWh=0 ; 
+    fi 
+   sleep ${IntSleep} ; 
+  
+  done
+ }
+	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+			GetVarReference ${__call_locality[1]} ; 
+			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+		echo -ne """${ArgGet}\n""" ;
+	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+		eval $( __GetVarReferenceList ) ;
+ elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  StrUser=${StrUser}               \
+  IntSleep=${IntSleep}             \
+  StrOutArrayRef=${StrOutArrayRef} \
+  IsPathRecurr=${IsPathRecurr}     \
+  StrApps=${StrApps}               \
+  StrPathList=${StrPathList}       \
+  IsLoop=${IsLoop}                 \
+  __main_StartServices             ; 
+  
+ fi
+ 
+ 
+}
 
 
 
