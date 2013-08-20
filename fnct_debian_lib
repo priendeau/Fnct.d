@@ -546,7 +546,7 @@ function AutoChown()
  
  function __main_StartServices()
  {
-		local __call_locality=( Main MainStartServices ) ;
+		local __call_locality=( Main __main_StartServices ) ;
 		local Arg0=${ArrayArg[0]};
 		local ArrayArg=( $* ) ; 
   local ArrayPath=( ${StrPathList//:/ } ) ; 
@@ -588,9 +588,192 @@ function AutoChown()
  
  
 }
+ ### ZenityShellEval :
+ ###
+ ###
+ ###	Full-length example : 
+ ### Including 1 example :
+ ###
+ ### $> ZenityShellEval (Enter)
+ ### 
+ ### - It Open Windows from Zenity with parameter for Text-info in editable
+ ### mode.
+ ### 
+ ### It Open by default a uuid-like temporary file. There is no actual was
+ ### to modify the name, but assuming the implementation of ZenityShellEval
+ ### imply a limited acces to shell, you might recuper information from shell
+ ### or futur adding to transfert a name or simple renaming the uuid-like
+ ### file-name... This is to prevent auto-execution of a script from 
+ ### canned-design by playing with without having all clearly create your 
+ ### shell script and/or having fully pseudo-code explained and having 
+ ### confirmation of your design work... 
+ ### 
+ ### - Like ZenityShellEval, will reach first stage-maturity fast enought,
+ ### it's possible the followed function will move into fnct_lib or fnct_lib_tool,
+ ### being a method to control chuck of information like descendant script lib
+ ### where fnct_debian_lib should descent from:
+ ### 
+ ### Level1 : ( fnct_lib or fnct_lib_tool )
+ ###     |
+ ###     +-----------> fnct_debian_lib ( Second Level )
+ ###                          |
+ ###                          +----------> { _sub_PackageRepository
+ ###                                         _sub_Git
+ ###                                         _sub_ssh_handler        } ( Third level and specialized chunk )
+ ### 
+ ### Where fnct_lib shall have all mandatory function being Really Essential.
+ ### Where fnct_lib_tool shall have all common tools to create code and Interract
+ ### with UX ( User Experience. )
+ ### 
+ ### Note: UX, like HP-UX, for Home-Profesionnal User-eXperience, and not UX for Unix/*nix 
+ ### 
+ ### Example of code for ZenityShellEval
+ ### 
+ ### Assuming you are looking to link fastly unpacked .deb from File-manager into
+ ### Unusual path and wanting to link against correct uses nvidia-driver to 
+ ### possibly manage a fake instance of CUDA from not-wished Capable-Card like 
+ ### Geforce 7000M, where it can exist at leat 4 to 8 node of CUDA GPU which is
+ ### not enought because minimal number of node are 16 and higher and willing 
+ ### to create so-cheap demo card around 1999-2002 in displaced time-and-space
+ ### 
+ ### - So having to find all nvidia .so lib, it should be linked inside 
+ ### /usr/lib/nvidia-304.84 which is your memory having merely remember the 
+ ### automated design from version 295.xx . 
+ ### Following that you bring into /usr/lib/lib*.so.1, /usr/lib/lib*.so.[3-5]
+ ### all other linked lib found inside /usr/lib/nvidia-304.84,
+ ### 
+ ### In Other term it's
+ ### Also seed to uses X from Xorg with the nouveau driver and wich to use 
+ ### the entire GPU memory location and VDPAU reserved operation for GPUing.
+ ### Like a package allowing to store image into GPU memory card... Having
+ ### feeling many slice of superposed image is just a matrix canonical-form
+ ### of code assembly to re-interpret into real execution... 
+ ### 
+ ### the sample to put inside the Zenity Text-Info in editable mode :
+ ### 
+ ### ----------------------------- SAMPLE ----------------------------- 
+ ### 
+ ### function test_expr()
+ ### {
+ ###   local __call_locality=( Filter __filter ) ;
+ ###   local Arg0=${ArrayArg[0]} ;
+ ###   local ArrayArg=( $* ) ; 
+ ###   local StrPath=/usr/local/src/apt/nvidia-304 ;
+ ###   function __filter()
+ ###   {
+ ###     local __call_locality=( Filter __filter ) ;
+ ###     local Arg0=${ArrayArg[0]} ;
+ ###     local ArrayArg=( $* ) ; 
+ ###     local StrFilterGrep=${FilterGrep:='lib32'} ;
+ ###     local StrTaillingSearch={FilterTrSearch:=[:cntrl:]};
+ ###     local StrTaillingRepl=${FilterTrReplace:=' '} ;
+ ###     grep -v "${StrFilterGrep}" | tr '${StrTaillingSearch}' '${StrTaillingRepl}' ; 
+ ###   }
+ ###   local AF=( $( find ${StrPath} -type f -iname "*.so*" | __filter ) ) ; 
+ ###   for (( x=0 ; x<= ${#AF[@]}-1; x++ )) ; do 
+ ###    item=${AF[${x}]} ; 
+ ###    local _file=( ${item//\// }  ) ; 
+ ###    local file="${_file[$((${#_file[@]}-1))]}" ;
+ ###    echo ln -s ${item} $(pwd)/${file} ; 
+ ###   done
+ ### }
+ ### test_expr ; 
+ ### ----------------------------- SAMPLE ----------------------------- 
+ ### 
+ ### You hit Enter or OK from the Window 'Shell Evaluation command', and 
+ ### Should not give you an error, if so the same code reapear and you 
+ ### have to find yourself the error if ZenityShellEval was not executed
+ ### from allowed Terminal or Windows-shell . 
+ ### If you do executed it from, you can read error and seemlesly seek for 
+ ### error... 
+ ### 
+ ### - Later example might have support for error like puting into warning 
+ ### Windows, error. And possibly conversion between uuid-like file into 
+ ### finite name... 
+ ### 
+ ### PS: Hint:
+ ###  - Using AutoChown will also let use execute the script with your own
+ ### user and group, and might allow you to put it elsewhere like into 
+ ### localized-execution section..... 
+ ### 
+ ### 
+ 
+ 
+
+unset ZenityShellEval ;
+function ZenityShellEval()    
+{ 
+	local __call_locality=( ZSE ZenityShellEval ) ;
+	local ArrayArg=( $* ) ; 
+	local Arg0=${ArrayArg[0]}              ;
+ local IntSleep=${ZSESleepInterval:=5}  ;
+ local IntFontSize=${ZSEFontSize:=12}   ; 
+ local IsEditField=${ZSEEditable:=True} ; 
+ local StrTitle=${ZSEZenityTitle:='Shell Evaluation command'} ;
+ local IntWidth=${ZSEWindowWidth:=640} ;
+ local IntHeight=${ZSEWindowHeight:=400} ;
+ 
+ local StrFileTmp=$( uuidgen -t )       ;
+ local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\n" ;
+ 
+ function __main_StartServices()
+ {
+		local __call_locality=( Main __main_StartServices ) ;
+		local Arg0=${ArrayArg[0]} ;
+		local ArrayArg=( $* ) ; 
+
+  test ! -e ${StrFileTmp} && echo "" > ${StrFileTmp} ; 
+  local res=1 ; 
+  local shell_res=0 ; 
+  local shell_quit=0 ; 
+  eval $( BVTestVarName=StrEditableAttr BVTestVarHold='--editable' BVTestBoolVarName=\${IsEditField} BVTestBoolCase=False BVTestBoolAssertion='' BVTestScopeTest=local BoolVarTestVarCreation ) ; 
+  
+  
+  while [ ${res} -eq 1 -a ${shell_quit} -eq 0 ] ; do 
+   CmdEval=$( zenity --text-info ${StrEditableAttr} --font=${IntFontSize} --filename=${StrFileTmp} --title=${StrTitle} --width=${IntWidth} --height=${IntHeight} ) ; 
+   res=$? ; 
+   if [ ${res} -ne 1 ] ; then 
+    echo "${CmdEval}" > ${StrFileTmp} ; 
+    chmod 775 ${file_tmp} ; 
+    . ./${StrFileTmp} ; 
+    shell_res=$?
+    if [ ${shell_res} -eq 1 ] ; then 
+     echo -ne "\n\n\tUser Shell evaluation reported error\n\n" > /dev/stderr ; 
+     res=1 ; 
+     shell_res=1 ; 
+    fi 
+   else 
+    echo -ne "\n\n\tUser cancel the test.\n\n" > /dev/stderr ; 
+    shell_quit=1 ; 
+   fi ; 
+   sleep ${IntSleep} ; 
+  done
+  echo -ne "\n\tQuitting Function :${__call_locality[1]}\n\n" > /dev/stderr ;  
+ }
+	
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+			GetVarReference ${__call_locality[1]} ; 
+			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+		echo -ne """${ArgGet}\n""" ;
+	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+		eval $( __GetVarReferenceList ) ;
+ elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  StrFileTmp=${StrFileTmp}           \
+  IsEditField=${IsEditField}         \
+  IntSleep=${IntSleep}               \
+  IntFontSize=${IntFontSize}         \
+  IsEditField=${IsEditField}         \
+  StrTitle=${StrTitle}               \
+  IntWidth=${IntWidth}               \
+  IntHeight=${IntHeight}             \
+  __main_StartServices               ; 
+  
+ fi
 
 
-
+}
 
  ### StartCoproc :
  ###
@@ -2226,6 +2409,7 @@ function RoundRobinSwapRealloc()
 		 Start ; 
 	fi 
 }
+
 
 ### Loading External Lib
 . /etc/init.d/Fnct.d/_sub_PackageRepository
