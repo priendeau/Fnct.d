@@ -458,7 +458,13 @@ function BoolVarTestVarCreation()
 ### it allow to generate a range of variable being Transited from Prefixed-Var and value
 ### passed in a query, which is sometimes had no value and give extra code that might trigger error. 
 ### 
+### For a Generated example between command-line BoolVarTestVarCreation and Pre-fixed value, see 
 ### 
+### BoolVarTestVarCreation for substitution of StrFileTmp from function ZenityShellEval()
+### Note reference : f1161962-0ad8-11e3-b166-001b3875b29c  
+### 
+### 
+
 	local __call_locality=( BVTest BoolVarTestVarCreation ) ;
 	local ArrayArg=( $* ) ; 
 	local Arg0=${ArrayArg[0]} ;
@@ -710,10 +716,53 @@ function ZenityShellEval()
  local IntFontSize=${ZSEFontSize:=12}   ; 
  local IsEditField=${ZSEEditable:=True} ; 
  local StrTitle=${ZSEZenityTitle:='Shell Evaluation command'} ;
+ local StrFileName=${ZSEFileName:=None} ;
+ local IntDefaultModeExec=${ZSEChmodFileExec:=775} ;
  local IntWidth=${ZSEWindowWidth:=640} ;
  local IntHeight=${ZSEWindowHeight:=400} ;
+ local IsLoopOnSucc=${ZSELoopOnSucc:=True} ; 
  
- local StrFileTmp=$( uuidgen -t )       ;
+ 
+ ### Note: f1161962-0ad8-11e3-b166-001b3875b29c 
+ ### 
+ ### Title : Variable Forwarding Example in BoolVarTestVarCreation & mutation 
+ ### of BoolVarTestVarCreation from True/False test into None
+ ### 
+ ### BoolVarTestVarCreation for substitution of StrFileTmp has unidirectionnaly
+ ### a uuid-like file name into Pre-fixed Var ZSEFileName:=None for 
+ ### affectation inside StrFileName=None, where if this one != None, will 
+ ### get the parameter Name Being passed inside StrFileTmp. 
+ ### 
+ ### - Had consequence:
+ ###  - if the file does not exist, an echo > StrFileTmp will be done . 
+ ###  - if the file exist, content will be open by Zenity in text-info --editable
+ ###  - Selected filename supplied, content will be overwritted and there is 
+ ###  no protection mechanism and no verification against file-permission
+ ###    - To this, a workaround will store all code generated from this application
+ ###    - into sub-directory being made by the command and store-it inside user
+ ###      respective home location which is safe and Pre-fixable into 
+ ###      your specification, and not-warrented to be correct but designable. 
+ ###  
+ ### 
+ ### - If the variable ZSEFileName is untouched, the content of StrFileTmp will
+ ### hold value 'None' and belong to parsed BoolVarTestVarCreation it should 
+ ### get it's uuid-like filename, see generated command from parameter below
+ ### 
+ ### Command : BVTestVarName=StrFileTmp BVTestVarHold='${StrFileName}' BVTestBoolVarName=\${StrFileName} BVTestBoolCase=None BVTestBoolAssertion='$( uuidgen -t )' BVTestScopeTest=local BoolVarTestVarCreation
+ ### 
+ ### generated code:
+ ### local StrFileTmp="${StrFileName}" ; 
+ ### if [ "${StrFileName}" == "None" ] ; then 
+ ###  StrFileTmp=$( uuidgen -t ) ; 
+ ### fi
+ ### 
+ ### Which is making sense. 
+ ### 
+ ### Also Note f1161962-0ad8-11e3-b166-001b3875b29c introduce explanation on mutation of BoolVarTestVarCreation from True/False test into None and moving uuid-file-id variable inside BVTestBoolAssertion
+ ### 
+ ### 
+ eval $( BVTestVarName=StrFileTmp BVTestVarHold='${StrFileName}' BVTestBoolVarName=\${StrFileName} BVTestBoolCase=None BVTestBoolAssertion='$( uuidgen -t )' BVTestScopeTest=local BoolVarTestVarCreation ) ; 
+ 
  local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\n" ;
  
  function __main_StartServices()
@@ -723,6 +772,7 @@ function ZenityShellEval()
 		local ArrayArg=( $* ) ; 
 
   test ! -e ${StrFileTmp} && echo "" > ${StrFileTmp} ; 
+  
   local res=1 ; 
   local shell_res=0 ; 
   local shell_quit=0 ; 
@@ -730,11 +780,11 @@ function ZenityShellEval()
   
   
   while [ ${res} -eq 1 -a ${shell_quit} -eq 0 ] ; do 
-   CmdEval=$( zenity --text-info ${StrEditableAttr} --font=${IntFontSize} --filename=${StrFileTmp} --title=${StrTitle} --width=${IntWidth} --height=${IntHeight} ) ; 
+   CmdEval=$( zenity --text-info ${StrEditableAttr} --font=${IntFontSize} --filename=${StrFileTmp} --title="${StrTitle}" --width=${IntWidth} --height=${IntHeight} ) ; 
    res=$? ; 
    if [ ${res} -ne 1 ] ; then 
     echo "${CmdEval}" > ${StrFileTmp} ; 
-    chmod 775 ${file_tmp} ; 
+    chmod 775 ${StrFileTmp} ; 
     . ./${StrFileTmp} ; 
     shell_res=$?
     if [ ${shell_res} -eq 1 ] ; then 
@@ -747,6 +797,7 @@ function ZenityShellEval()
     shell_quit=1 ; 
    fi ; 
    sleep ${IntSleep} ; 
+   test ${res} -eq 0 -a ${shell_res} -eq 0 && eval $( BVTestVarName=res BVTestVarHold='0' BVTestBoolVarName=\${IsLoopOnSucc} BVTestBoolCase=False BVTestBoolAssertion='1' BVTestScopeTest=local BoolVarTestVarCreation ) ; 
   done
   echo -ne "\n\tQuitting Function :${__call_locality[1]}\n\n" > /dev/stderr ;  
  }
@@ -760,15 +811,17 @@ function ZenityShellEval()
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
 		eval $( __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
-  StrFileTmp=${StrFileTmp}           \
-  IsEditField=${IsEditField}         \
-  IntSleep=${IntSleep}               \
-  IntFontSize=${IntFontSize}         \
-  IsEditField=${IsEditField}         \
-  StrTitle=${StrTitle}               \
-  IntWidth=${IntWidth}               \
-  IntHeight=${IntHeight}             \
-  __main_StartServices               ; 
+  StrFileTmp=${StrFileTmp}                 \
+  StrTitle=${StrTitle}                     \
+  IntSleep=${IntSleep}                     \
+  IntFontSize=${IntFontSize}               \
+  IsEditField=${IsEditField}               \
+  IntWidth=${IntWidth}                     \
+  IntHeight=${IntHeight}                   \
+  IntDefaultModeExec=${IntDefaultModeExec} \
+  IsEditField=${IsEditField}               \
+  IsLoopOnSucc=${IsLoopOnSucc}             \
+  __main_StartServices                     ; 
   
  fi
 
