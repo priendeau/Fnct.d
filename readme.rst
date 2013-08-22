@@ -288,3 +288,331 @@ hand of whom ask-it... probably been paied to see my skill's rather than having 
 
 #######################################################################################################
 
+
+
+Other Doc:
+Section _sub_PackageRepository
+
+### Yet Another Debian package Mangler and backup-management. 
+### 
+### It basically move actual Debian package from archive /var/cache/apt/archives
+### some-where else like /media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64...
+### or some NFS mounted point or any mounted partition dedicated to save or backup... 
+### - It create an index of the day, inside the Destination.
+###  - The index file is in a new directory of the destination, calling it Destination/index
+###  - The index file-name is named on the today date or on the day executed by the manager. 
+###  - The index used to drop Package into destination are accounted and the index hold 
+###  - the beginnign of the transfert. 
+###  - Index day used can be changed thru PkgRepoMgmtReposIndexDay, but the time of the transaction
+###    remain unchanged... look weird, but may have some goal .... 
+###   - Variable PkgRepoMgmtReposIndex change the Index destination. 
+### 
+### The Action. 
+### It's A loop inside the archives, a move to the destination and a link is done between them 
+### - to remain somewhat active, or become inacessible if the mount is down... not bad for nfs
+### mounting detection or lazy mount with economic transfert mode while having no reason
+### to leave it mounted until you need to get some update or removing stuff. 
+### If the management from APT, dpkg, gdebi remove the package, it give silent error to 
+### remove something not being a file but link, but are not following the source... 
+### Being serious with this action, PkgRepoMgmtReposBkpAct can change the Action. 
+### 
+### basically work like this :
+### [ cmd1 __VIRG__ cmd2 ... ] 
+### 
+### cmd1 should include at least 
+### __SRC__ tag , it transform it into proper destication  called __DEST__ 
+### __FILE__ is critical and mandatory, it loop the command and turn __FILE__ into every item to be backuped 
+### 
+### - __VIRG__ tag is an hack, It's required when more then one command is called, it change in into ';' . 
+### ex : PkgRepoMgmtReposBkpAct="scp  __SRC__/__FILE__ root@domainname:/__DEST__ __VIRG__ rm -f __SRC__/__FILE__" PackageRepositoryMgmt
+### - transfert by scp a file from Debian packages from /var/cache/apt/archives and remove it. 
+### 
+### 
+### ... So basically, this guys had a spade in hand and Spell it: 'I.B.M.' ;) from 1901, I should live long 
+### enought to work there or know what they are doing... 
+### 
+
+
+Documentation : 
+
+
+### Document : 
+### 
+### Note : 2224fe88-0b6f-11e3-812b-001b3875b29c 
+### 
+### Title : Using Alias from Bash to replace setter and 
+###         permanent Assignation in Prefixed-var . 
+### 
+### - An efficient way to replace Setter or active method to replace
+### Variable value from Prefixed-Var, using alias from shell enhance 
+### and allow in a simple .bashrc changing repository of 
+### PackageRepositoryMgmt, PackageRepositoryRest ... 
+### 
+### While not acknoledged Bug from GetVarReference to filter a function
+### directly by using declare -f __FUNCTION__, the --help will display 
+### original internal Value of Prefixed var, uses of Getter with --get
+### will show you actual value including uses of alias. 
+### 
+### ex:
+### simple PackageRepositoryMgmt --help will show for variable 
+### PkgRepoMgmtRepository 
+###     => 
+###        value: /media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64
+### 
+### - It's original design, developped under Mint-14_x86-64 realm, today
+### need evolute and required another Distribution like Mint-15_x86-64
+### - Also, using PackageRepositoryMgmt --get PkgRepoMgmtRepository 
+### will show you similar value... 
+### 
+### Except: 
+### - using following line imply having made another repository using 
+### Mint-15_x86-64 
+###   or 
+### /media/COMST500GB/Linux-Debian/archives/Mint-15_x86-64/UnderscoreXDevlpt-001
+### - Include possibility to use a Level Higher because Acer-One-Travel is also 
+### - hook to this drive for feeding the repository of other package where this one
+### depend of Radeon and OpenCL infrastructure to made simple uses of GPU during
+### my leasure time... ( if it exist... )
+### 
+### Using Alias...
+### Known to be a rubber-knife not depending from variable, but fixed informations
+### alias allow rewrite call from command line and Shell execution as well. 
+### 
+### - To be really important to inspect alias-sanity before doing a script to 
+### manage a Server, some doing extra verboses from this aliasing technique and
+### generating excess of informations and sometime it reduce filtering 
+### possibilities and anhilate uses of grep, sed and awk ... 
+### 
+### Assuming uses of alias is know, we can attach everyting to an allias.
+### - simple prefixed-Var
+### - test and execution on $? -eq 0 or 1 deppending how test was involved:
+### ex: 
+###   alias echo='test -e ${USER}/.echo_right && echo'
+###     -> this powerfull thruth involve having impossibility to do an echo
+###     on a terminal assuming .echo_right might be a deposed file from 
+###     root-priviledge and can not be erased, it allow-you to echo on terminal.
+### 
+###  using alias : 
+### 
+###  alias PackageRepositoryMgmt='PkgRepoMgmtAddPkgLst=True \
+###        PkgRepoMgmtRepository=/media/COMST500GB/Linux-Debian/archives/Mint-15_x86-64/UnderscoreXDevlpt-001 \
+###        PkgRepoMgmtReposIndex=/media/COMST500GB/Linux-Debian/archives/Mint-15_x86-64/UnderscoreXDevlpt-001/index \
+###        PackageRepositoryMgmt'
+### 
+###  - Effect on PackageRepositoryMgmt --help 
+###       -> PkgRepoMgmtRepository will continue to show :
+### 
+###          /media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64
+### 
+###  - effect on PackageRepositoryMgmt --get PkgRepoMgmtRepository
+###   will show : 
+###    
+###          /media/COMST500GB/Linux-Debian/archives/Mint-15_x86-64/UnderscoreXDevlpt-001
+### 
+###      - Which is the correct value... 
+### 
+### 
+### Of course a complex case of managing creation with md_cd will imply a test
+### and result to a permanent verification of Repository path with :
+### 
+### 
+### NewIndexRepository=/media/COMST500GB/Linux-Debian/archives/Mint-15_x86-64/UnderscoreXDevlpt-001/index
+### NewRepository=/media/COMST500GB/Linux-Debian/archives/Mint-15_x86-64/UnderscoreXDevlpt-001
+### 
+### alias PackageRepositoryMgmt='test -e  $( PkgRepoMgmtReposIndex=${NewIndexRepository} PackageRepositoryMgmt --get PkgRepoMgmtReposIndex ) && /etc/init.d/Fnct.d/md_cd $( PkgRepoMgmtReposIndex=${NewIndexRepository} PackageRepositoryMgmt --get PkgRepoMgmtReposIndex ) && PkgRepoMgmtAddPkgLst=True PkgRepoMgmtRepository=${NewRepository} PkgRepoMgmtReposIndex=${NewIndexRepository} PackageRepositoryMgmt'
+### 
+### - This case is also exceptionnal, Attempting to use the variable without having new declaration of it thru uses of get might cumbershot the call 
+### - But next uses of PackageRepositoryMgmt will not depend of 
+###   PkgRepoMgmtReposIndex and PkgRepoMgmtRepository anymore .
+### 
+
+Usual Shell Chunk-Development. 
+
+ ### ZenityShellEval :
+ ###
+ ###
+ ###	Full-length example : 
+ ### Including 1 example :
+ ###
+ ### $> ZenityShellEval (Enter)
+ ### 
+ ### - It Open Windows from Zenity with parameter for Text-info in editable
+ ### mode.
+ ### 
+ ### It Open by default a uuid-like temporary file. There is no actual was
+ ### to modify the name, but assuming the implementation of ZenityShellEval
+ ### imply a limited acces to shell, you might recuper information from shell
+ ### or futur adding to transfert a name or simple renaming the uuid-like
+ ### file-name... This is to prevent auto-execution of a script from 
+ ### canned-design by playing with without having all clearly create your 
+ ### shell script and/or having fully pseudo-code explained and having 
+ ### confirmation of your design work... 
+ ### 
+ ### - Like ZenityShellEval, will reach first stage-maturity fast enought,
+ ### it's possible the followed function will move into fnct_lib or fnct_lib_tool,
+ ### being a method to control chuck of information like descendant script lib
+ ### where fnct_debian_lib should descent from:
+ ### 
+ ### Level1 : ( fnct_lib or fnct_lib_tool )
+ ###     |
+ ###     +-----------> fnct_debian_lib ( Second Level )
+ ###                          |
+ ###                          +----------> { _sub_PackageRepository
+ ###                                         _sub_Git
+ ###                                         _sub_ssh_handler        } ( Third level and specialized chunk )
+ ### 
+ ### Where fnct_lib shall have all mandatory function being Really Essential.
+ ### Where fnct_lib_tool shall have all common tools to create code and Interract
+ ### with UX ( User Experience. )
+ ### 
+ ### Note: UX, like HP-UX, for Home-Profesionnal User-eXperience, and not UX for Unix/*nix 
+ ### 
+ ### Example of code for ZenityShellEval
+ ### 
+ ### Assuming you are looking to link fastly unpacked .deb from File-manager into
+ ### Unusual path and wanting to link against correct uses nvidia-driver to 
+ ### possibly manage a fake instance of CUDA from not-wished Capable-Card like 
+ ### Geforce 7000M, where it can exist at leat 4 to 8 node of CUDA GPU which is
+ ### not enought because minimal number of node are 16 and higher and willing 
+ ### to create so-cheap demo card around 1999-2002 in displaced time-and-space
+ ### 
+ ### - So having to find all nvidia .so lib, it should be linked inside 
+ ### /usr/lib/nvidia-304.84 which is your memory having merely remember the 
+ ### automated design from version 295.xx . 
+ ### Following that you bring into /usr/lib/lib*.so.1, /usr/lib/lib*.so.[3-5]
+ ### all other linked lib found inside /usr/lib/nvidia-304.84,
+ ### 
+ ### In Other term it's
+ ### Also seed to uses X from Xorg with the nouveau driver and wich to use 
+ ### the entire GPU memory location and VDPAU reserved operation for GPUing.
+ ### Like a package allowing to store image into GPU memory card... Having
+ ### feeling many slice of superposed image is just a matrix canonical-form
+ ### of code assembly to re-interpret into real execution... 
+ ### 
+ ### the sample to put inside the Zenity Text-Info in editable mode :
+ ### 
+ ### ----------------------------- SAMPLE ----------------------------- 
+ ### 
+ ### function test_expr()
+ ### {
+ ###   local __call_locality=( Filter __filter ) ;
+ ###   local Arg0=${ArrayArg[0]} ;
+ ###   local ArrayArg=( $* ) ; 
+ ###   local StrPath=/usr/local/src/apt/nvidia-304 ;
+ ###   function __filter()
+ ###   {
+ ###     local __call_locality=( Filter __filter ) ;
+ ###     local Arg0=${ArrayArg[0]} ;
+ ###     local ArrayArg=( $* ) ; 
+ ###     local StrFilterGrep=${FilterGrep:='lib32'} ;
+ ###     local StrTaillingSearch={FilterTrSearch:=[:cntrl:]};
+ ###     local StrTaillingRepl=${FilterTrReplace:=' '} ;
+ ###     grep -v "${StrFilterGrep}" | tr '${StrTaillingSearch}' '${StrTaillingRepl}' ; 
+ ###   }
+ ###   local AF=( $( find ${StrPath} -type f -iname "*.so*" | __filter ) ) ; 
+ ###   for (( x=0 ; x<= ${#AF[@]}-1; x++ )) ; do 
+ ###    item=${AF[${x}]} ; 
+ ###    local _file=( ${item//\// }  ) ; 
+ ###    local file="${_file[$((${#_file[@]}-1))]}" ;
+ ###    echo ln -s ${item} $(pwd)/${file} ; 
+ ###   done
+ ### }
+ ### test_expr ; 
+ ### ----------------------------- SAMPLE ----------------------------- 
+ ### 
+ ### You hit Enter or OK from the Window 'Shell Evaluation command', and 
+ ### Should not give you an error, if so the same code reapear and you 
+ ### have to find yourself the error if ZenityShellEval was not executed
+ ### from allowed Terminal or Windows-shell . 
+ ### If you do executed it from, you can read error and seemlesly seek for 
+ ### error... 
+ ### 
+ ### - Later example might have support for error like puting into warning 
+ ### Windows, error. And possibly conversion between uuid-like file into 
+ ### finite name... 
+ ### 
+ ### PS: Hint:
+ ###  - Using AutoChown will also let use execute the script with your own
+ ### user and group, and might allow you to put it elsewhere like into 
+ ### localized-execution section..... 
+ ### 
+ ### 
+ 
+
+- Variable Forwarding Example in BoolVarTestVarCreation & mutation 
+
+ ### Note: f1161962-0ad8-11e3-b166-001b3875b29c 
+ ### 
+ ### Title : Variable Forwarding Example in BoolVarTestVarCreation & mutation 
+ ### of BoolVarTestVarCreation from True/False test into None
+ ### 
+ ### BoolVarTestVarCreation for substitution of StrFileTmp has unidirectionnaly
+ ### a uuid-like file name into Pre-fixed Var ZSEFileName:=None for 
+ ### affectation inside StrFileName=None, where if this one != None, will 
+ ### get the parameter Name Being passed inside StrFileTmp. 
+ ### 
+ ### - Had consequence:
+ ###  - if the file does not exist, an echo > StrFileTmp will be done . 
+ ###  - if the file exist, content will be open by Zenity in text-info --editable
+ ###  - Selected filename supplied, content will be overwritted and there is 
+ ###  no protection mechanism and no verification against file-permission
+ ###    - To this, a workaround will store all code generated from this application
+ ###    - into sub-directory being made by the command and store-it inside user
+ ###      respective home location which is safe and Pre-fixable into 
+ ###      your specification, and not-warrented to be correct but designable. 
+ ###  
+ ### 
+ ### - If the variable ZSEFileName is untouched, the content of StrFileTmp will
+ ### hold value 'None' and belong to parsed BoolVarTestVarCreation it should 
+ ### get it's uuid-like filename, see generated command from parameter below
+ ### 
+ ### Command : BVTestVarName=StrFileTmp BVTestVarHold='${StrFileName}' BVTestBoolVarName=\${StrFileName} BVTestBoolCase=None BVTestBoolAssertion='$( uuidgen -t )' BVTestScopeTest=local BoolVarTestVarCreation
+ ### 
+ ### generated code:
+ ### local StrFileTmp="${StrFileName}" ; 
+ ### if [ "${StrFileName}" == "None" ] ; then 
+ ###  StrFileTmp=$( uuidgen -t ) ; 
+ ### fi
+ ### 
+ ### Which is making sense. 
+ ### 
+ ### Also Note f1161962-0ad8-11e3-b166-001b3875b29c introduce explanation on mutation of BoolVarTestVarCreation from True/False test into None and moving uuid-file-id variable inside BVTestBoolAssertion
+ ### 
+ ### 
+ 
+ 
+ Title : Developping and Helper 
+ 
+ 
+ ### Default Fast reference Helper. 
+### Extract current Prefixed variables from your function and show it on stdout( screen output ). 
+### The prefixed variable are indicated on decalation of __call_locality which usually had same name has 
+### top function. 
+### Desc : It actively look inside the function code and extract value prefixed with function name...
+### was initially developped on $0, but change by creating subFunction, and some code may be reserved for private
+### use or recurrent-code with recurrent variable name, may be show and alter your perception of functionality of 
+### the design ...
+
+### Example to implement the body-helper. 
+### 
+### function Helper()
+### {
+###  __call_locality=( Helper ) ; 
+### 	local ArrayArg=( $* ) ; 
+### 	local Arg0=${ArrayArg[0]}; 
+###  local StrHelperInvolved=${HelperQuestionInvolved:=Nothing} ; ### <---1a 
+### 	if [ "${Arg0:=--start}" == "--help" ] ; then 
+###			GetVarReference ${__call_locality[0]} ; 
+###  else	
+###   ---> Normal Body event and code. 
+###  
+###   ... 
+###  fi 
+### }
+### 
+### Note, In case your Helper --help be tested, if it does not output only Prefixed var definition.
+### retreive all your variable from your command and do like example StrHelperInvolved in 1a
+### Create specific local variable and associate the content of your Prefixed variables, help get 
+### better body definition and reduce complexity by reading it... 
+### 
+
