@@ -718,9 +718,11 @@ function ZenityShellEval()
  local StrTitle=${ZSEZenityTitle:='Shell Evaluation command'} ;
  local StrFileName=${ZSEFileName:=None} ;
  local IntDefaultModeExec=${ZSEChmodFileExec:=775} ;
+ local StrFilePath=${ZSEPathStorage:=./} ; 
  local IntWidth=${ZSEWindowWidth:=640} ;
  local IntHeight=${ZSEWindowHeight:=400} ;
  local IsLoopOnSucc=${ZSELoopOnSucc:=True} ; 
+ 
  
  
  ### Note: f1161962-0ad8-11e3-b166-001b3875b29c 
