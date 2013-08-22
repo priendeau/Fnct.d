@@ -321,7 +321,7 @@ function PackageRepositoryMgmt()
 ### lacking ID on every Package name index, which is not hard to modify.
 function PackageRepositoryRest()
 {
-	local __call_locality=( PRR )	 ; 
+	local __call_locality=( PRR PackageRepositoryRest )	 ; 
 	local ArrayArg=( $* ) ;
 	local IsLink=${PRRIsLink:=0} ; 
 	local IsResolve=${PRRIsResolve:=1} ; 
@@ -426,35 +426,16 @@ function PackageRepositoryRest()
 		fi ### End of test IsLink-eq-1 
   
  } # Calling : IntSleepWarning=${IntSleepWarning} index=${index//__BackupPath__/${drv}} _index=${index}/${thisdate} StrResolve=${resolve} src=${src} drv=${drv} IsLink=${IsLink} IsDebug=${IsDebug} IsResolve=${IsResolve} IsRemoveResolve=${IsRemoveResolve} IsDebugResult=${IsDebugResult} __main_StartServices
- function __main_Help( )
- {
-   local __call_locality=( ${MaiHelpExtrnFunc:=None} )
+
+	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n" ;
+	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
 			GetVarReference ${__call_locality[1]} ; 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
- } # Calling : StrSwitchMessages=${StrSwitchMessages} MaiHelpExtrnFunc=${__call_locality[1]} __main_Help 
- function __main_List( )
- {
-  echo "eval \$( __GetVarReferenceList ) ;"
- }
- function __main_Get( )
- {
-  local ArrayArg=( $* )
+	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ;
- } # Calling : __main_Get ${ArrayArg[@]} 
-
-	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
-	if [ "${Arg0:=--startservices}" == "--help" ] ; then 
-		#GetVarReference PackageRepositoryRest ; 
-  StrSwitchMessages=${StrSwitchMessages} \
-  MaiHelpExtrnFunc=${__call_locality[1]} \
-  __main_Help ;
-		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-  __main_Get ${ArrayArg[@]} 
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		#eval $( __GetVarReferenceList ) ;
-  $( eval __main_List ) ; 
+		eval $( __GetVarReferenceList ) ;
 	elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
   IntSleepWarning=${IntSleepWarning}    \
   index=${index//__BackupPath__/${drv}} \
