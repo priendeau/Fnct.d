@@ -814,8 +814,10 @@ function ZenityShellEval()
  local IntSleep=${ZSESleepInterval:=5}  ;
  local IntFontSize=${ZSEFontSize:=12}   ; 
  local IsEditField=${ZSEEditable:=True} ; 
+ local IsAddFootPrint=${ZSEAddFootPrint:=True} ; 
  local StrTitle=${ZSEZenityTitle:='Shell Evaluation command'} ;
  local StrFileName=${ZSEFileName:=None} ;
+ local StrDateFormat=${ZSEDateFormat:=%Y%m%d-%H:%M:%S,%s}
  local IntDefaultModeExec=${ZSEChmodFileExec:=775} ;
  local StrFilePath=${ZSEPathStorage:=./} ; 
  local IntWidth=${ZSEWindowWidth:=640} ;
@@ -884,7 +886,37 @@ function ZenityShellEval()
    CmdEval=$( zenity --text-info ${StrEditableAttr} --font=${IntFontSize} --filename=${StrFileTmp} --title="${StrTitle}" --width=${IntWidth} --height=${IntHeight} ) ; 
    res=$? ; 
    if [ ${res} -ne 1 ] ; then 
-    echo "${CmdEval}" > ${StrFileTmp} ; 
+    ### 
+    ### FootPrint Section
+    ###
+    ###
+      function _NoFootPrint()
+      {
+        echo -ne "###\n### No FootPrint Added, see Prefixed-Var ZSEAddFootPrint from ZenityShellEval\n###\n###\n###\n###\n###\n###\n###\n###\n###\n" ; 
+      }
+      function _FootPrint()
+      {
+        local StrUUID=$( uuidgen -t ) ; 
+        local StrSha1Sum=$( echo "${CmdEval}" | sha1sum | cut -d ' ' -f 1)
+        local StrSize=$( echo "${CmdEval}" | wc -c ) ; 
+        local StrNbWord=$( echo "${CmdEval}" | wc -w ) ; 
+        local StrDateConfirm=$( GetOtherDateFormat='${StrDateFormat}' GetOtherDate )
+        echo -ne "###\n### FootPrint Added, see Prefixed-Var ZSEAddFootPrint from ZenityShellEval\n###\n\n###File:${StrFileTmp}\n###UUID-TIME-MARKER:${StrUUID}\n###Date: ${StrDateConfirm}\n###Sha1Sum: ${StrSha1Sum}\n### Size:${StrSize}\n### NbWord: ${StrNbWord}\n\n" ; 
+      }
+      function _DetectFootPrint()
+      {
+       local IntFootPrintDetection=$( echo -ne "${CmdEval}" | head -n 11 | egrep -ic "FootPrint" ) ;
+       eval $( BVTestVarName=StrFootPrintMark BVTestVarHold='$( StrDateFormat=${StrDateFormat} CmdEval=${CmdEval} _FootPrint )' BVTestBoolVarName=\${IsAddFootPrint} BVTestBoolCase=False BVTestBoolAssertion='$( _NoFootPrint )' BVTestScopeTest=local BoolVarTestVarCreation ) ;
+      }
+      
+      eval $( BVTestVarName=StrFootPrintMark BVTestVarHold='$( StrDateFormat=${StrDateFormat} CmdEval=${CmdEval} _FootPrint )' BVTestBoolVarName=\${IsAddFootPrint} BVTestBoolCase=False BVTestBoolAssertion='$( _NoFootPrint )' BVTestScopeTest=local BoolVarTestVarCreation ) ;       
+      
+    ###
+    ### End FootPrint
+    ###
+    
+    
+    echo -ne "${StrFootPrintMark}\n${CmdEval}" > ${StrFileTmp} ; 
     chmod 775 ${StrFileTmp} ; 
     . ./${StrFileTmp} ; 
     shell_res=$?
@@ -914,6 +946,7 @@ function ZenityShellEval()
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
   StrFileTmp=${StrFileTmp}                 \
   StrTitle=${StrTitle}                     \
+  StrDateFormat=${StrDateFormat}           \
   IntSleep=${IntSleep}                     \
   IntFontSize=${IntFontSize}               \
   IsEditField=${IsEditField}               \
@@ -921,6 +954,7 @@ function ZenityShellEval()
   IntHeight=${IntHeight}                   \
   IntDefaultModeExec=${IntDefaultModeExec} \
   IsEditField=${IsEditField}               \
+  IsAddFootPrint=${IsAddFootPrint}         \
   IsLoopOnSucc=${IsLoopOnSucc}             \
   __main_StartServices                     ; 
   
