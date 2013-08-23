@@ -916,7 +916,7 @@ function ZenityShellEval()
     ###
     
     
-    echo -ne "${StrFootPrintMark}\n${CmdEval}" > ${StrFileTmp} ; 
+    echo """${StrFootPrintMark}\n${CmdEval}""" > ${StrFileTmp} ; 
     chmod 775 ${StrFileTmp} ; 
     . ./${StrFileTmp} ; 
     shell_res=$?
