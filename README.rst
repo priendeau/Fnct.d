@@ -80,6 +80,11 @@ Arguments
 Invocation
 ==========
 
+Likewise Bsd Middle-age, a sub-entity was existing inside /etc/init or /etc/init.d
+and desapear or move inside /usr This design exist inside /etc/init.d/Fnct.d to 
+establish a __future__ development for integration inse loader and initrd for shell
+management and Integration. 
+
 Definitions
 ===========
 
@@ -182,6 +187,39 @@ and result to a permanent verification of Repository path with :
 - But next uses of PackageRepositoryMgmt will not depend of 
 PkgRepoMgmtReposIndex and PkgRepoMgmtRepository anymore .
  
+
+
+:Note:e2382694-0ba3-11e3-98a2-001b3875b29c
+:Title:Usual Shell Chunk-Development.
+:function_name:ZenityShellEval
+
+.. code:: shell
+
+	function test_expr()
+	{
+	 local __call_locality=( Filter __filter ) ;
+	 local Arg0=${ArrayArg[0]} ;
+	 local ArrayArg=( $* ) ; 
+	 local StrPath=/usr/local/src/apt/nvidia-304 ;
+	 function __filter()
+	 {
+	  local __call_locality=( Filter __filter ) ;
+	  local Arg0=${ArrayArg[0]} ;
+	  local ArrayArg=( $* ) ; 
+	  local StrFilterGrep=${FilterGrep:='lib32'} ;
+	  local StrTaillingSearch={FilterTrSearch:=[:cntrl:]};
+	  local StrTaillingRepl=${FilterTrReplace:=' '} ;
+	  grep -v "${StrFilterGrep}" | tr '${StrTaillingSearch}' '${StrTaillingRepl}' ; 
+	 }
+	 local AF=( $( find ${StrPath} -type f -iname "*.so*" | __filter ) ) ; 
+	 for (( x=0 ; x<= ${#AF[@]}-1; x++ )) ; do 
+	  item=${AF[${x}]} ; 
+	  local _file=( ${item//\// }  ) ; 
+	  local file="${_file[$((${#_file[@]}-1))]}" ;
+	  echo ln -s ${item} $(pwd)/${file} ; 
+	 done
+	}
+	test_expr ; 
 
 
 Parameters
