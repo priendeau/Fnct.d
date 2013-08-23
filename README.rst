@@ -309,18 +309,18 @@ Uses of Universal switches.
 ---------------------------
 
 ------
-Getter
+	Getter
 ------
 
 
 ------
-Setter
+	Setter
 ------
-	* Not Developped yet
+		* Not Developped yet
 
 
 ----
-List
+	List
 ----
 
 
