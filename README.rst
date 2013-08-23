@@ -100,11 +100,13 @@ Documentation
 	will show you actual value including uses of alias. 
  
 ::
-	example:
+	
+	Example:
 	simple PackageRepositoryMgmt --help will show for variable 
 	PkgRepoMgmtRepository 
 	
 ::
+	
 	=> 
 	value: /media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64
  
@@ -144,6 +146,7 @@ Documentation
 	using alias : 
 	
 ::
+	
 	alias PackageRepositoryMgmt='PkgRepoMgmtAddPkgLst=True \
 	PkgRepoMgmtRepository=/media/COMST500GB/Linux-Debian/archives/Mint-15_x86-64/UnderscoreXDevlpt-001 \
 	PkgRepoMgmtReposIndex=/media/COMST500GB/Linux-Debian/archives/Mint-15_x86-64/UnderscoreXDevlpt-001/index \
@@ -168,6 +171,7 @@ Of course a complex case of managing creation with md_cd will imply a test
 and result to a permanent verification of Repository path with :
  
 ::
+	
 	NewIndexRepository=/media/COMST500GB/Linux-Debian/archives/Mint-15_x86-64/UnderscoreXDevlpt-001/index
 	NewRepository=/media/COMST500GB/Linux-Debian/archives/Mint-15_x86-64/UnderscoreXDevlpt-001
 	
@@ -191,18 +195,18 @@ Transport Layer between Function.
 Uses of Universal switches.
 ---------------------------
 
-	Getter
-	------
-	
-	Setter
-	------
-		Not Developped yet
+Getter
+------
 
-	List
-	----
-	
-	StartServices
-	-------------
+Setter
+------
+	Not Developped yet
+
+List
+----
+
+StartServices
+-------------
 
 Operator
 ========
