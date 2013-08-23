@@ -11,7 +11,7 @@ Copyright
 
 ::
 	
-	Copyright (c) 2009-1012 << Patrick. Riendeau, Maxiste Deams >>.
+	Copyright (c) 2009-2013 << Patrick. Riendeau, Maxiste Deams >>.
 	All rights reserved.
 	
 	Redistribution and use in source and binary forms are permitted
