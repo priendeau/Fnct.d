@@ -143,10 +143,11 @@ Documentation
 		on a terminal assuming .echo_right might be a deposed file from 
 		root-priviledge and can not be erased, it allow-you to echo on terminal.
  
-	using alias : 
 	
 ::
 	
+	using alias : 
+
 	alias PackageRepositoryMgmt='PkgRepoMgmtAddPkgLst=True \
 	PkgRepoMgmtRepository=/media/COMST500GB/Linux-Debian/archives/Mint-15_x86-64/UnderscoreXDevlpt-001 \
 	PkgRepoMgmtReposIndex=/media/COMST500GB/Linux-Debian/archives/Mint-15_x86-64/UnderscoreXDevlpt-001/index \
