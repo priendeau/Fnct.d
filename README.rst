@@ -308,26 +308,25 @@ Transport Layer between Function.
 Uses of Universal switches.
 ---------------------------
 
-*
-------
-Getter
-------
+	------
+	Getter
+	------
 
-*
-------
-Setter
-------
-	- Not Developped yet
 
-*
-----
-List
-----
+	------
+	Setter
+	------
+		* Not Developped yet
 
-*
--------------
-StartServices
--------------
+
+	----
+	List
+	----
+
+
+	-------------
+	StartServices
+	-------------
 
 Operator
 ========
