@@ -363,6 +363,7 @@ Step forward the ZenityShellEval sample
 :Note: f5f7532c-0bac-11e3-999d-001b3875b29c
 :Title: Developping and Helper 
 
+
 	- Default Fast reference Helper. 
 	
 	Extracting current Prefixed variables from your function and show it on stdout( screen output ). 
