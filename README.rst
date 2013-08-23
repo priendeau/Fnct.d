@@ -447,55 +447,55 @@ Will shorten the transfert mechanism from Outgoing Transport-Connection into aut
 will also offer Glueing technique for several descendant  uses of BoolVarTestVarCreation / Function_from_fnct_debian_lib, and 
 BodyFunc, with consideration had possibilty to be a fixed if-elif-fi topology . 
 
-	-------------------
-	function BodyFunc()
-	-------------------
-	
-	- Like BoolVarTestVarCreation, is defined to create on-demand if-pattern based on True Statement-Initial affectation and 
-	residual False statement as Assertive condition being another mechanism or either a branch this function BodyFunc
-	will manage the switch condition from Arg0, know to be the Operator for finite and unique action. Actual Action are 
-	Getter, List, Helper and StartServices. __Future__ view predict uses of Setter where it's actually tweaked with external
-	Subset of command within Bash whole-list of command. Developped has Micro-Architecture expansion require several
-	analysis and may depend of another compromised information related to Data. Data used from Setter Will stay out of the
-	code and actual Pre-fixed Variable are unique Start-up information where ultimately all information will migrate to None after
-	uniformisation and expansion of Exception into proper design. 
+-------------------
+function BodyFunc()
+-------------------
+
+- Like BoolVarTestVarCreation, is defined to create on-demand if-pattern based on True Statement-Initial affectation and 
+residual False statement as Assertive condition being another mechanism or either a branch this function BodyFunc
+will manage the switch condition from Arg0, know to be the Operator for finite and unique action. Actual Action are 
+Getter, List, Helper and StartServices. __Future__ view predict uses of Setter where it's actually tweaked with external
+Subset of command within Bash whole-list of command. Developped has Micro-Architecture expansion require several
+analysis and may depend of another compromised information related to Data. Data used from Setter Will stay out of the
+code and actual Pre-fixed Variable are unique Start-up information where ultimately all information will migrate to None after
+uniformisation and expansion of Exception into proper design. 
 
 
-	- BodyFunc Goal :
-	To create an [ if / elif / n-elif / fi ] command from finite action required inside need of fnct_debian_lib to be wise information
-	discovery . Wise-Discovery is not part of the function-type itself, but any coumpound will have Serious Notation and 
-	minimal helper.  Actually it will cover Finite action of Listing Prefixed-Var or Transport-Layer signature and Getter will 
-	extract entry from this Transport Layer, know to be actual Prefixed-Var. 
-	
-	BodyFunc and Expanded Entry inside Finite action, StartServices uses : 
-	
-	- Since Getter, Helper and List are simple finite action, a function body from this lib are the core of evolving multi-party-actor
-	involving many sub-derivate. Example: 
-	Inside PackageRepositoryMgmt, uses of GetOtherDate is crutial to leave a valid-footprint inside and index based on File-system
-	information deposition. 
+- BodyFunc Goal :
+To create an [ if / elif / n-elif / fi ] command from finite action required inside need of fnct_debian_lib to be wise information
+discovery . Wise-Discovery is not part of the function-type itself, but any coumpound will have Serious Notation and 
+minimal helper.  Actually it will cover Finite action of Listing Prefixed-Var or Transport-Layer signature and Getter will 
+extract entry from this Transport Layer, know to be actual Prefixed-Var. 
 
-	- The StartServices being a function with Tiny Prefixed-Var internally be a Inter-transport-Layer, it should result into calling a 
-	possible function inside the Function Body or Any good compound from this Lib with awarness of calling correctly any Pre-fixed
-	var. 
- 
-	Exception in Internal design from Function to Sub-Function Transport-Layer this mechanism is not regulated, but will not work if 
-	variable are not transfered. 
+BodyFunc and Expanded Entry inside Finite action, StartServices uses : 
 
-	Facility in External transport connection of BodyFunc. 
-	
-	- The prefixed-variable BFStackVariableList will accept a language operator known to be '+' sign to allow any conversion 
-	from good appelation of working function inside fnct_debian_lib by calling it and extracting variable. uses of GetOtherDate will
-	be used inside the example. 
+- Since Getter, Helper and List are simple finite action, a function body from this lib are the core of evolving multi-party-actor
+involving many sub-derivate. Example: 
+Inside PackageRepositoryMgmt, uses of GetOtherDate is crutial to leave a valid-footprint inside and index based on File-system
+information deposition. 
 
-	BFStackVariableList=$( GetOtherDate --list | sed 's/\([a-zA-Z]*\)/\1+,/g;s/\ //g;s/+,+,/+/g'  ) BF*=... BodyFunc 
+- The StartServices being a function with Tiny Prefixed-Var internally be a Inter-transport-Layer, it should result into calling a 
+possible function inside the Function Body or Any good compound from this Lib with awarness of calling correctly any Pre-fixed
+var. 
 
-	Will shorten the transfert mechanism from Outgoing Transport-Connection into automated StackList adding sequence, and 
-	will also offer Glueing technique for several descendant  uses of BoolVarTestVarCreation / Function_from_fnct_debian_lib, and 
-	BodyFunc, with consideration had possibilty to be a fixed if-elif-fi topology . 
+Exception in Internal design from Function to Sub-Function Transport-Layer this mechanism is not regulated, but will not work if 
+variable are not transfered. 
 
-	- This is the actual development being tagged Prototyping, it show multiples 
-	part of a nominal function internal-body and allow presence of Getter, Setter, Listing
-	and StartServices which is the Core of a Function for a finite action. 
+Facility in External transport connection of BodyFunc. 
+
+- The prefixed-variable BFStackVariableList will accept a language operator known to be '+' sign to allow any conversion 
+from good appelation of working function inside fnct_debian_lib by calling it and extracting variable. uses of GetOtherDate will
+be used inside the example. 
+
+BFStackVariableList=$( GetOtherDate --list | sed 's/\([a-zA-Z]*\)/\1+,/g;s/\ //g;s/+,+,/+/g'  ) BF*=... BodyFunc 
+
+Will shorten the transfert mechanism from Outgoing Transport-Connection into automated StackList adding sequence, and 
+will also offer Glueing technique for several descendant  uses of BoolVarTestVarCreation / Function_from_fnct_debian_lib, and 
+BodyFunc, with consideration had possibilty to be a fixed if-elif-fi topology . 
+
+- This is the actual development being tagged Prototyping, it show multiples 
+part of a nominal function internal-body and allow presence of Getter, Setter, Listing
+and StartServices which is the Core of a Function for a finite action. 
 
 .. code:: shell
 	
