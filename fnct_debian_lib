@@ -2305,23 +2305,26 @@ function zenity_pip_installer()
 unset GkSuZenityLoader ; 
 function GkSuZenityLoader()
 {
+	local __call_locality=( GSZ GkSuZenityLoader ) ; 
 	local ArrayArg=( $* ) ; 
-	local __call_locality=( GkSuZenityLoader ) ; 
-	local StrUser=${GkSuZenityLoaderUser:=none}
-	local StrApps=${GkSuZenityLoaderApps:=/usr/local/bin/idlex}
-	local StrAppsOpt=${GkSuZenityLoaderAppsOpt:=''} ;
-	local StrTitle=${GkSuZenityLoaderTitle:="Select a user for Idlex"} ;
-	local StrFileInfo=${GkSuZenityLoaderFile:=/etc/passwd} ;
-	local StrCol0=${GkSuZenityLoaderCol0:="selection"} ;
-	local StrCol1=${GkSuZenityLoaderCol1:="user"} ;
-	local StrRegSearch=${GkSuZenityLoaderReg:="\/bin\/bash"}
-	local StrDefaultCSV=${GkSuZenityLoaderCSV:=':'} ;
-	local IntDefaultColExtr=${GkSuZenityLoaderColExtr:=1} ;
-	local BoolShowUserSelection=${GkSuZenityLoaderSUS:=False}
+ local Arg0=( ${ArrayArg[0]} ) ;
+
+	local StrUser=${GSZLUser:=none}
+	local StrApps=${GSZLLApps:=/usr/local/bin/idlex}
+	local StrAppsOpt=${GSZLLAppsOpt:=''} ;
+	local StrTitle=${GSZLTitle:="Select a user for Idlex"} ;
+	local StrFileInfo=${GSZLFile:=/etc/passwd} ;
+	local StrCol0=${GSZLCol0:="selection"} ;
+	local StrCol1=${GSZLCol1:="user"} ;
+	local StrRegSearch=${GSZLLrReg:="\/bin\/bash"}
+	local StrDefaultCSV=${GSZLLCSV:=':'} ;
+	local IntDefaultColExtr=${GSZLColExtr:=1} ;
+	local BoolShowUserSelection=${GSZLSUS:=False} ;
+ local BoolUpdateLdconfig=${GSZLUpdadeLdconfig:=True} ;
+ local StrLdConfigUser=${GSZLLdconfigUser:=root} ;
+ local StrLdconfigGreeting=${GSZLLdconfigGreeting:='\n\nHint\nLoading ldconfig on need if some module require to be loaded from ldconfig ( from pip installation of easy_setup.py ) It can be accessible thru Prefixed-var GSZLUpdadeLdconfig=True from GkSuZenityLoader.\n\n'}
 	
-	local Arg0=( ${ArrayArg[0]} ) ;
-	
-	function ZenityFilter()
+ function ZenityFilter()
 	{
 			egrep -i ${StrRegSearch} ${StrFileInfo} | cut -d ${StrDefaultCSV} -f ${IntDefaultColExtr} | sed  's/\(^[a-zA-Z0-9]*\)/FALSE \1/g' ; 
 	}
@@ -2334,33 +2337,89 @@ function GkSuZenityLoader()
 		fi 
 		echo "${StrUserSelection}" ; 
 	}
+ function NotificationLdConfig()
+ {
+		local __call_locality=( NLC NotificationLdConfig ) ; 
+		local ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]} ;
+  
+  local StrTextNotification=${NLCNotifyText:=You will be prompted for password to load __APPS__ with __APPS__ user allowed: __USER__} 
+  local StrUser=${NLCAppsUser:=root} ; 
+  local StrApps=${NLCAppsName:=ldconfig} ; 
+  local StrTagUser=${NLCTagUser:=__USER__}
+  local StrTagApps=${NLCTagApps:=__APPS__}
+  StrTextNotification=${StrTextNotification//${StrTagUser}/${StrUser}} ;
+  StrTextNotification=${StrTextNotification//${StrTagApps}/${StrApps}} ;
+  
+  zenity --notification --text="${StrTextNotification}" ; 
+ }
+ function ScreenDisplayLdconfigHint()
+ {
+		local __call_locality=( SDLH ScreenDisplayLdconfigHint ) ; 
+		local ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]} ;
+  
+  echo -ne "${StrLdconfigGreeting}" > /dev/stderr ; 
+ }
+ function LdconfigNotification()
+ {
+		local __call_locality=( LN LdconfigNotification ) ; 
+		local ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]} ;
+  NotificationLdConfig ; gksu --user ${StrLdConfigUser} ldconfig
+ }
+ 
 	function Loader()
 	{
+		local __call_locality=( Loader Loader ) ; 
 		local ArrayArg=( $* ) ; 
-		local __call_locality=( Loader ) ; 
+  local Arg0=${ArrayArg[0]} ; 
+  eval $( BVTestVarName=StrAppsLd BVTestVarHold='StrLdconfigGreeting='${StrLdconfigGreeting}' ScreenDisplayLdconfigHint' BVTestBoolVarName=\${BoolUpdateLdconfig} BVTestBoolCase=True BVTestBoolAssertion='LdconfigNotification' BVTestScopeTest=local BoolVarTestVarCreation ) ; 
+  eval $( BVTestVarName=StrLdConfigLoad BVTestVarHold='$( eval ${StrAppsLd} )' BVTestBoolVarName=\${BoolUpdateLdconfig} BVTestBoolCase=True BVTestBoolAssertion='$( eval ${StrAppsLd} )' BVTestScopeTest=local BoolVarTestVarCreation ) ; 
 		gksu --user ${StrUser} ${StrApps} ${StrAppsOpt} 
 	}
-		local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
-	 if [ "${ArrayArg[0]}" = "--help" ] ; then 
-			GetVarReference ${__call_locality[0]} ; 
+ 
+ 
+ function __main_StartServices()
+ {
+		local __call_locality=( Main __main_StartServices ) ;
+		local Arg0=${ArrayArg[0]} ;
+		local ArrayArg=( $* ) ; 
+
+  local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\n" ;   
+  if [ "${StrUser:=none}" ==  "none" ] ; then 
+   StrUser=$( StrDefaultCSV=${StrDefaultCSV} IntDefaultColExtr=${IntDefaultColExtr} StrFileInfo=${StrFileInfo} StrTitle=${StrTitle} StrCol0=${StrCol0} StrCol1=${StrCol1} StrRegSearch=${StrRegSearch} BoolShowUserSelection=${BoolShowUserSelection} GetPwdUser ) ; 
+  fi 
+  if [ "${StrUser:=none}" == "none" ] ; then 
+   echo -ne "Warning Invalid user: ${StrUser}\n" > /dev/stderr ; 
+  else
+   StrUser=${StrUser}                         \
+   StrApps=${StrApps}                         \
+   StrAppsOpt=${StrAppsOpt}                   \
+   StrLdConfigUser=${StrLdConfigUser}         \
+   BoolUpdateLdconfig=${BoolUpdateLdconfig}   \
+   StrLdconfigGreeting='${StrLdconfigGreeting}' \ 
+   Loader ;
+  fi 
+  
+ }
+ 
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+			GetVarReference ${__call_locality[1]} ; 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-		elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-			echo -ne """${ArgGet}\n""" ; 
-		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval $( __GetVarReferenceList ) ;
-		else	
-			if [ "${StrUser:=none}" ==  "none" ] ; then 
-				StrUser=$( StrDefaultCSV=${StrDefaultCSV} IntDefaultColExtr=${IntDefaultColExtr} StrFileInfo=${StrFileInfo} StrTitle=${StrTitle} StrCol0=${StrCol0} StrCol1=${StrCol1} StrRegSearch=${StrRegSearch} BoolShowUserSelection=${BoolShowUserSelection} GetPwdUser ) ; 
-			fi 
-			if [ "${StrUser:=none}" == "none" ] ; then 
-				echo -ne "Warning Invalid user: ${StrUser}\n" > /dev/stderr ; 
-			else
-				StrUser=${StrUser} StrApps=${StrApps} StrAppsOpt=${StrAppsOpt} Loader ;
-			fi 
-			
+	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+		echo -ne """${ArgGet}\n""" ;
+	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+		eval $( __GetVarReferenceList ) ;
+ elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+			StrUser=${StrUser}                       \
+   StrApps=${StrApps}                       \
+   StrAppsOpt=${StrAppsOpt}                 \
+   StrLdConfigUser=${StrLdConfigUser}       \
+   BoolUpdateLdconfig=${BoolUpdateLdconfig} \
+   __main_StartServices
 	fi
-	
 }
 
 
