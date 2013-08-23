@@ -115,44 +115,41 @@ will show you actual value including uses of alias.
 	Example:
 	simple PackageRepositoryMgmt --help will show for variable 
 	PkgRepoMgmtRepository 
+
+	=> value: /media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64
 	
-::
-	
-	=> 
-	value: /media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64
- 
-	It's original design, developped under Mint-14_x86-64 realm, today
-	need evolute and required another Distribution like Mint-15_x86-64
-	Also, using PackageRepositoryMgmt --get PkgRepoMgmtRepository 
-	will show you similar value... 
-	
-	Except:
-	using following line imply having made another repository using 
-	Mint-15_x86-64 
-	or 
-	/media/COMST500GB/Linux-Debian/archives/Mint-15_x86-64/UnderscoreXDevlpt-001
-	- Include possibility to use a Level Higher because Acer-One-Travel is also 
-	- hook to this drive for feeding the repository of other package where this one
-	depend of Radeon and OpenCL infrastructure to made simple uses of GPU during
-	my leasure time... ( if it exist... )
- 
-	Using Alias...
-	Known to be a rubber-knife not depending from variable, but fixed informations
-	alias allow rewrite call from command line and Shell execution as well. 
- 
-	- To be really important to inspect alias-sanity before doing a script to 
-	manage a Server, some doing extra verboses from this aliasing technique and
-	generating excess of informations and sometime it reduce filtering possibilities 
-	and anhilate uses of grep, sed and awk ... 
-	
-	Assuming uses of alias is know, we can attach everyting to an allias.
-	- simple prefixed-Var
-	- test and execution on $? -eq 0 or 1 deppending how test was involved:
-	example: 
-		alias echo='test -e ${USER}/.echo_right && echo'
-		-> this powerfull thruth involve having impossibility to do an echo
-		on a terminal assuming .echo_right might be a deposed file from 
-		root-priviledge and can not be erased, it allow-you to echo on terminal.
+It's original design, developped under Mint-14_x86-64 realm, today
+need evolute and required another Distribution like Mint-15_x86-64
+Also, using PackageRepositoryMgmt --get PkgRepoMgmtRepository 
+will show you similar value... 
+
+Except:
+using following line imply having made another repository using 
+Mint-15_x86-64 
+or 
+/media/COMST500GB/Linux-Debian/archives/Mint-15_x86-64/UnderscoreXDevlpt-001
+- Include possibility to use a Level Higher because Acer-One-Travel is also 
+- hook to this drive for feeding the repository of other package where this one
+depend of Radeon and OpenCL infrastructure to made simple uses of GPU during
+my leasure time... ( if it exist... )
+
+Using Alias...
+Known to be a rubber-knife not depending from variable, but fixed informations
+alias allow rewrite call from command line and Shell execution as well. 
+
+- To be really important to inspect alias-sanity before doing a script to 
+manage a Server, some doing extra verboses from this aliasing technique and
+generating excess of informations and sometime it reduce filtering possibilities 
+and anhilate uses of grep, sed and awk ... 
+
+Assuming uses of alias is know, we can attach everyting to an allias.
+- simple prefixed-Var
+- test and execution on $? -eq 0 or 1 deppending how test was involved:
+example: 
+	alias echo='test -e ${USER}/.echo_right && echo'
+	-> this powerfull thruth involve having impossibility to do an echo
+	on a terminal assuming .echo_right might be a deposed file from 
+	root-priviledge and can not be erased, it allow-you to echo on terminal.
  
 	
 ::
