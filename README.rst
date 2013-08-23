@@ -193,7 +193,25 @@ PkgRepoMgmtReposIndex and PkgRepoMgmtRepository anymore .
 :Title: Usual Shell Chunk-Development.
 :function_name: ZenityShellEval
 
+
+ZenityShellEval
+---------------
+
+Full-length example : 
+Including 1 example :
+$> ZenityShellEval (Enter)
+
+- It Open Windows from Zenity with parameter for Text-info in editable
+mode.
+
+See the image 
+
+.. image:: http://4.bp.blogspot.com/-UGYpVcrcNxo/UhPOsCBfCaI/AAAAAAAAAFA/7VHwjDj1TsM/s1600/ZenityShellEval.png
+        :target: https://github.com/priendeau/Fnct.d#ZenityShellEval
+
+
 .. code:: shell
+
 
 	function test_expr()
 	{
