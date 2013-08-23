@@ -99,15 +99,16 @@ Paper Draft informations
 :Note: 2224fe88-0b6f-11e3-812b-001b3875b29
 :Title: Using Alias from Bash to replace setter and permanent Assignation in Prefixed-var .
 
-	An efficient way to replace Setter or active method to replace
-	Variable value from Prefixed-Var, using alias from shell enhance 
-	and allow in a simple .bashrc changing repository of 
-	PackageRepositoryMgmt, PackageRepositoryRest ... 
- 
-	While not acknoledged Bug from GetVarReference to filter a function
-	directly by using declare -f __FUNCTION__, the --help will display 
-	original internal Value of Prefixed var, uses of Getter with --get
-	will show you actual value including uses of alias. 
+
+An efficient way to replace Setter or active method to replace
+Variable value from Prefixed-Var, using alias from shell enhance 
+and allow in a simple .bashrc changing repository of 
+PackageRepositoryMgmt, PackageRepositoryRest ... 
+
+While not acknoledged Bug from GetVarReference to filter a function
+directly by using declare -f __FUNCTION__, the --help will display 
+original internal Value of Prefixed var, uses of Getter with --get
+will show you actual value including uses of alias. 
  
 ::
 	
