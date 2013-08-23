@@ -270,11 +270,11 @@ confirmation of your design work...
 
 	Level1 : ( fnct_lib or fnct_lib_tool )
 		|
-		+-----------> fnct_debian_lib ( Second Level )
-							 |
-							 +----------> { _sub_PackageRepository
-											_sub_Git
-											_sub_ssh_handler        } ( Third level and specialized chunk )
+		+---> fnct_debian_lib ( Second Level )
+				 |
+				 +---> { _sub_PackageRepository
+						_sub_Git
+						_sub_ssh_handler } ( Third level and specialized chunk )
 
 - Where fnct_lib shall have all mandatory function being Really Essential.
 - Where fnct_lib_tool shall have all common tools to create code and Interract
@@ -359,6 +359,183 @@ Step forward the ZenityShellEval sample
 	user and group, and might allow you to put it elsewhere like into 
 	localized-execution section..... 
 
+
+:Note: f5f7532c-0bac-11e3-999d-001b3875b29c
+:Title: Developping and Helper 
+
+	- Default Fast reference Helper. 
+	
+	Extracting current Prefixed variables from your function and show it on stdout( screen output ). 
+	The prefixed variable are indicated on decalation of __call_locality which usually had same name has 
+	top function. 
+	
+	
+	- Description : It actively look inside the function code and extract value prefixed with function name...
+	was initially developped on $0, but change by creating subFunction, and some code may be reserved for private
+	use or recurrent-code with recurrent variable name, may be show and alter your perception of functionality of 
+	the design ...
+
+Example to implement the body-helper. 
+
+.. code:: shell
+	
+	function Helper()
+	{
+		local __call_locality=( Hlp Helper ) ; 
+		local ArrayArg=( $* ) ; 
+		local Arg0=${ArrayArg[0]}; 
+		local StrHelperInvolved=${HelperQuestionInvolved:=Nothing} ; ### <---1a 
+		if [ "${Arg0:=--start}" == "--help" ] ; then 
+			GetVarReference ${__call_locality[0]} ; 
+		else	
+			---> Normal Body event and code. 
+			... 
+		fi 
+	}
+
+
+	- Note, In case your Helper --help be tested, if it does not output only Prefixed var definition.
+	retreive all your variable from your command and do like example StrHelperInvolved in 1a
+	Create specific local variable and associate the content of your Prefixed variables, help get 
+	better body definition and reduce complexity by reading it... 
+
+
+	- See PackageRepositoryMgmt / PackageRepositoryRest function helper will show
+	you more information in what resulting an helper to see Communication-Layer also
+	called Prefixed-Variable helping user to assign informations. 
+	
+
+:Note: 48acc93e-0bae-11e3-8e63-001b3875b29c
+:Title: Developping The BodyFunc, Reducing code complexity by creating pattern and disposable StartServices signature.
+
+function BodyFunc()
+- Like BoolVarTestVarCreation, is defined to create on-demand if-pattern based on True Statement-Initial affectation and 
+residual False statement as Assertive condition being another mechanism or either a branch this function BodyFunc
+will manage the switch condition from Arg0, know to be the Operator for finite and unique action. Actual Action are 
+Getter, List, Helper and StartServices. __Future__ view predict uses of Setter where it's actually tweaked with external
+Subset of command within Bash whole-list of command. Developped has Micro-Architecture expansion require several
+analysis and may depend of another compromised information related to Data. Data used from Setter Will stay out of the
+code and actual Pre-fixed Variable are unique Start-up information where ultimately all information will migrate to None after
+uniformisation and expansion of Exception into proper design. 
+
+BodyFunc Goal :
+To create an [ if / elif / n-elif / fi ] command from finite action required inside need of fnct_debian_lib to be wise information
+discovery . Wise-Discovery is not part of the function-type itself, but any coumpound will have Serious Notation and 
+minimal helper.  Actually it will cover Finite action of Listing Prefixed-Var or Transport-Layer signature and Getter will 
+extract entry from this Transport Layer, know to be actual Prefixed-Var. 
+
+BodyFunc and Expanded Entry inside Finite action, StartServices uses : 
+- Since Getter, Helper and List are simple finite action, a function body from this lib are the core of evolving multi-party-actor
+involving many sub-derivate. Example: 
+Inside PackageRepositoryMgmt, uses of GetOtherDate is crutial to leave a valid-footprint inside and index based on File-system
+information deposition. 
+
+- The StartServices being a function with Tiny Prefixed-Var internally be a Inter-transport-Layer, it should result into calling a 
+possible function inside the Function Body or Any good compound from this Lib with awarness of calling correctly any Pre-fixed
+var. 
+Exception in Internal design from Function to Sub-Function Transport-Layer this mechanism is not regulated, but will not work if 
+variable are not transfered. 
+
+Facility in External transport connection of BodyFunc. 
+- The prefixed-variable BFStackVariableList will accept a language operator known to be '+' sign to allow any conversion 
+from good appelation of working function inside fnct_debian_lib by calling it and extracting variable. uses of GetOtherDate will
+be use inside the example. 
+
+BFStackVariableList=$( GetOtherDate --list | sed 's/\([a-zA-Z]*\)/\1+,/g;s/\ //g;s/+,+,/+/g'  ) BF*=... BodyFunc 
+
+Will shorten the transfert mechanism from Outgoing Transport-Connection into automated StackList adding sequence, and 
+will also offer Glueing technique for several descendant  uses of BoolVarTestVarCreation / Function_from_fnct_debian_lib, and 
+BodyFunc, with consideration had possibilty to be a fixed if-elif-fi topology . 
+
+	-------------------
+	function BodyFunc()
+	-------------------
+	
+	- Like BoolVarTestVarCreation, is defined to create on-demand if-pattern based on True Statement-Initial affectation and 
+	residual False statement as Assertive condition being another mechanism or either a branch this function BodyFunc
+	will manage the switch condition from Arg0, know to be the Operator for finite and unique action. Actual Action are 
+	Getter, List, Helper and StartServices. __Future__ view predict uses of Setter where it's actually tweaked with external
+	Subset of command within Bash whole-list of command. Developped has Micro-Architecture expansion require several
+	analysis and may depend of another compromised information related to Data. Data used from Setter Will stay out of the
+	code and actual Pre-fixed Variable are unique Start-up information where ultimately all information will migrate to None after
+	uniformisation and expansion of Exception into proper design. 
+
+
+	- BodyFunc Goal :
+	To create an [ if / elif / n-elif / fi ] command from finite action required inside need of fnct_debian_lib to be wise information
+	discovery . Wise-Discovery is not part of the function-type itself, but any coumpound will have Serious Notation and 
+	minimal helper.  Actually it will cover Finite action of Listing Prefixed-Var or Transport-Layer signature and Getter will 
+	extract entry from this Transport Layer, know to be actual Prefixed-Var. 
+	
+	BodyFunc and Expanded Entry inside Finite action, StartServices uses : 
+	
+	- Since Getter, Helper and List are simple finite action, a function body from this lib are the core of evolving multi-party-actor
+	involving many sub-derivate. Example: 
+	Inside PackageRepositoryMgmt, uses of GetOtherDate is crutial to leave a valid-footprint inside and index based on File-system
+	information deposition. 
+
+	- The StartServices being a function with Tiny Prefixed-Var internally be a Inter-transport-Layer, it should result into calling a 
+	possible function inside the Function Body or Any good compound from this Lib with awarness of calling correctly any Pre-fixed
+	var. 
+ 
+	Exception in Internal design from Function to Sub-Function Transport-Layer this mechanism is not regulated, but will not work if 
+	variable are not transfered. 
+
+	Facility in External transport connection of BodyFunc. 
+	
+	- The prefixed-variable BFStackVariableList will accept a language operator known to be '+' sign to allow any conversion 
+	from good appelation of working function inside fnct_debian_lib by calling it and extracting variable. uses of GetOtherDate will
+	be used inside the example. 
+
+	BFStackVariableList=$( GetOtherDate --list | sed 's/\([a-zA-Z]*\)/\1+,/g;s/\ //g;s/+,+,/+/g'  ) BF*=... BodyFunc 
+
+	Will shorten the transfert mechanism from Outgoing Transport-Connection into automated StackList adding sequence, and 
+	will also offer Glueing technique for several descendant  uses of BoolVarTestVarCreation / Function_from_fnct_debian_lib, and 
+	BodyFunc, with consideration had possibilty to be a fixed if-elif-fi topology . 
+
+	- This is the actual development being tagged Prototyping, it show multiples 
+	part of a nominal function internal-body and allow presence of Getter, Setter, Listing
+	and StartServices which is the Core of a Function for a finite action. 
+
+.. code:: shell
+	
+	function BodyFunc()
+	{
+	 local __call_locality=( BF BodyFunc ) ;
+	 local ArrayArg=( $* ) ; 
+	 local Arg0=${ArrayArg[0]};
+
+	 local StrHelpCmd="GetVarReference ${__call_locality[1]} ;  echo -ne \"${StrSwitchMessages}\" > /dev/stderr ; " ;
+	 local StrGetCmd=" eval \"\"\"local ArgGet=\${\${ArrayArg[1]}}\"\"\" ;  echo -ne \"\"\"\${ArgGet}\n\"\"\" ; "
+	 local StrListCmd="eval \$( __GetVarReferenceList ) ;" ;
+	 local StrStartServicesCmd="__main_StartServices" ;
+	 local StrDefineHelp=${BFHelpSwRules:=Help:--help:__HELP__:StrHelpCmd} ;
+	 local StrDefineGet=${BFGetSwRules:=Get:--get:__GET__:StrGetCmd} ;
+	 local StrDefineList=${BFListSwRules:=List:--list:__LIST__:StrListCmd} ;
+	 local StrDefineStartServices=${BFStartServicesSwRules:=StartServices:--startservices:__ApplicationMain__:StrStartServicesCmd} ;
+	 local StrVarConvertOp=${BFVarTransfertOp:=+} ; 
+	 ###
+	 ### The Prefixed-var BFVarTransfertOp:
+	 ### - To reduce rewriting, using the Operator '+' inside the Prefixed-Var BFStartServicesSwRules using rule like
+	 ### BFStackVariableList=Var1+ will transform Var1=Value by Var1=${Var1} inside Template __Stack_Variable__
+	 ### - Assuming BodyFunc is mangling the bottom of a function inside fnct_debian_lib into protocolar function creation
+	 ### with self verification ability like transfert mechanism and assignation possibility.
+	 ###
+	 local StrStackVar=${BFStackVariableList:=StrFileTmp=+,StrTitle="A title",IntSleep=+,Size=IntFontSize,IsEditField=+,IntWidth=+,IntHeight=+,IntDefaultModeExec=+} ;
+	 local ArrayServicesSwitches=( ${StrDefineHelp} ${StrDefineGet} ${StrDefineList}  ${StrDefineStartServices} )
+	 
+	 local StrPatternIf="""if [ \"${Arg0:=--startservices}\" == \"--help\"	] ; then 
+	 __HELP__ 
+	elif [ \"${Arg0:=--startservices}\" == \"--get\" ] ; then 
+	 __GET__ 
+	elif [ \"${Arg0:=--startservices}\" == \"--list\" ] ; then 
+	 __LIST__ 
+	elif [ \"${Arg0:=--startservices}\" == \"--startservices\" ] ; then 
+	  __Stack_Variable__ 
+	  __ApplicationMain__ ; """ ;
+
+	echo -ne "BodyFunc Pattern\n\n--------------------------------------------------\n${StrPatternIf}\n--------------------------------------------------\n"
+	}
 
 
 Parameters
