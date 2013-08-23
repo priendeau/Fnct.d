@@ -261,7 +261,9 @@ confirmation of your design work...
 	feeling many slice of superposed image is just a matrix canonical-form
 	of code assembly to re-interpret into real execution... 
 	 
-	the sample to put inside the Zenity Text-Info in editable mode :
+
+
+the sample to put inside the Zenity Text-Info in editable mode :
 
 
 .. code:: shell
@@ -306,16 +308,24 @@ Transport Layer between Function.
 Uses of Universal switches.
 ---------------------------
 
+*
+------
 Getter
 ------
 
+*
+------
 Setter
 ------
-	Not Developped yet
+	- Not Developped yet
 
+*
+----
 List
 ----
 
+*
+-------------
 StartServices
 -------------
 
