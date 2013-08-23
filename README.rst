@@ -364,17 +364,17 @@ Step forward the ZenityShellEval sample
 :Title: Developping and Helper 
 
 
-	- Default Fast reference Helper. 
-	
-	Extracting current Prefixed variables from your function and show it on stdout( screen output ). 
-	The prefixed variable are indicated on decalation of __call_locality which usually had same name has 
-	top function. 
-	
-	
-	- Description : It actively look inside the function code and extract value prefixed with function name...
-	was initially developped on $0, but change by creating subFunction, and some code may be reserved for private
-	use or recurrent-code with recurrent variable name, may be show and alter your perception of functionality of 
-	the design ...
+- Default Fast reference Helper. 
+
+Extracting current Prefixed variables from your function and show it on stdout( screen output ). 
+The prefixed variable are indicated on decalation of __call_locality which usually had same name has 
+top function. 
+
+
+- Description : It actively look inside the function code and extract value prefixed with function name...
+was initially developped on $0, but change by creating subFunction, and some code may be reserved for private
+use or recurrent-code with recurrent variable name, may be show and alter your perception of functionality of 
+the design ...
 
 Example to implement the body-helper. 
 
