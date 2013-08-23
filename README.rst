@@ -395,15 +395,15 @@ Example to implement the body-helper.
 	}
 
 
-	- Note, In case your Helper --help be tested, if it does not output only Prefixed var definition.
-	retreive all your variable from your command and do like example StrHelperInvolved in 1a
-	Create specific local variable and associate the content of your Prefixed variables, help get 
-	better body definition and reduce complexity by reading it... 
+- Note, In case your Helper --help be tested, if it does not output only Prefixed var definition.
+retreive all your variable from your command and do like example StrHelperInvolved in 1a
+Create specific local variable and associate the content of your Prefixed variables, help get 
+better body definition and reduce complexity by reading it... 
 
 
-	- See PackageRepositoryMgmt / PackageRepositoryRest function helper will show
-	you more information in what resulting an helper to see Communication-Layer also
-	called Prefixed-Variable helping user to assign informations. 
+- See PackageRepositoryMgmt / PackageRepositoryRest function helper will show
+you more information in what resulting an helper to see Communication-Layer also
+called Prefixed-Variable helping user to assign informations. 
 	
 
 :Note: 48acc93e-0bae-11e3-8e63-001b3875b29c
