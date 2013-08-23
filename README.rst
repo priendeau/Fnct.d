@@ -212,9 +212,11 @@ get the parameter Name Being passed inside StrFileTmp.
      your specification, and not-warrented to be correct but designable. 
   
  
-- If the variable ZSEFileName is untouched, the content of StrFileTmp will
-hold value 'None' and belong to parsed BoolVarTestVarCreation it should 
-get it's uuid-like filename, see generated command from parameter below
+- If the variable ZSEFileName is untouched, the content of StrFileTmp will hold 
+value 'None' and belong to parsed BoolVarTestVarCreation it should  get it's 
+uuid-like filename, see generated command from parameter below :
+
+
 
 .. code:: shell
 	Command : BVTestVarName=StrFileTmp BVTestVarHold='${StrFileName}' BVTestBoolVarName=\${StrFileName} BVTestBoolCase=None BVTestBoolAssertion='$( uuidgen -t )' BVTestScopeTest=local BoolVarTestVarCreation
