@@ -159,7 +159,7 @@ Documentation
 	/media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64
 	
 	
-- 	effect on PackageRepositoryMgmt --get PkgRepoMgmtRepository
+	- effect on PackageRepositoryMgmt --get PkgRepoMgmtRepository
 	
 	will show : 
 	
