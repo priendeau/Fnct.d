@@ -209,6 +209,60 @@ See the image
 .. image:: http://4.bp.blogspot.com/-UGYpVcrcNxo/UhPOsCBfCaI/AAAAAAAAAFA/7VHwjDj1TsM/s1600/ZenityShellEval.png
         :target: https://github.com/priendeau/Fnct.d#ZenityShellEval
 
+It Open by default a uuid-like temporary file. There is no actual was
+to modify the name, but assuming the implementation of ZenityShellEval
+imply a limited acces to shell, you might recuper information from shell
+or futur adding to transfert a name or simple renaming the uuid-like
+file-name... This is to prevent auto-execution of a script from 
+canned-design by playing with without having all clearly create your 
+shell script and/or having fully pseudo-code explained and having 
+confirmation of your design work... 
+
+::
+	
+	Like ZenityShellEval, will reach first stage-maturity fast enought,
+	it's possible the followed function will move into fnct_lib or fnct_lib_tool,
+	being a method to control chuck of information like descendant script lib
+	where fnct_debian_lib should descent from:
+
+	Level1 : ( fnct_lib or fnct_lib_tool )
+		|
+		+-----------> fnct_debian_lib ( Second Level )
+							 |
+							 +----------> { _sub_PackageRepository
+											_sub_Git
+											_sub_ssh_handler        } ( Third level and specialized chunk )
+
+	Where fnct_lib shall have all mandatory function being Really Essential.
+	Where fnct_lib_tool shall have all common tools to create code and Interract
+	with UX ( User Experience. )
+
+	Note: UX, like HP-UX, for Home-Profesionnal User-eXperience, and not UX for Unix/*nix 
+	 
+	Example of code for ZenityShellEval
+	 
+	Assuming you are looking to link fastly unpacked .deb from File-manager into
+	Unusual path and wanting to link against correct uses nvidia-driver to 
+	possibly manage a fake instance of CUDA from not-wished Capable-Card like 
+	Geforce 7000M, where it can exist at leat 4 to 8 node of CUDA GPU which is
+	not enought because minimal number of node are 16 and higher and willing 
+	to create so-cheap demo card around 1999-2002 in displaced time-and-space
+	 
+	- So having to find all nvidia .so lib, it should be linked inside 
+	/usr/lib/nvidia-304.84 which is your memory having merely remember the 
+	automated design from version 295.xx . 
+	Following that you bring into /usr/lib/lib*.so.1, /usr/lib/lib*.so.[3-5]
+	all other linked lib found inside /usr/lib/nvidia-304.84,
+
+	In Other term it's
+	Also seed to uses X from Xorg with the nouveau driver and wich to use 
+	the entire GPU memory location and VDPAU reserved operation for GPUing.
+	Like a package allowing to store image into GPU memory card... Having
+	feeling many slice of superposed image is just a matrix canonical-form
+	of code assembly to re-interpret into real execution... 
+	 
+	the sample to put inside the Zenity Text-Info in editable mode :
+
 
 .. code:: shell
 
