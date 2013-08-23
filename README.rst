@@ -83,12 +83,134 @@ Invocation
 Definitions
 ===========
 
+Documentation
+-------------
+
+:Note:2224fe88-0b6f-11e3-812b-001b3875b29
+:Title:Using Alias from Bash to replace setter and permanent Assignation in Prefixed-var .
+
+	An efficient way to replace Setter or active method to replace
+	Variable value from Prefixed-Var, using alias from shell enhance 
+	and allow in a simple .bashrc changing repository of 
+	PackageRepositoryMgmt, PackageRepositoryRest ... 
+ 
+	While not acknoledged Bug from GetVarReference to filter a function
+	directly by using declare -f __FUNCTION__, the --help will display 
+	original internal Value of Prefixed var, uses of Getter with --get
+	will show you actual value including uses of alias. 
+ 
+::
+	example:
+	simple PackageRepositoryMgmt --help will show for variable 
+	PkgRepoMgmtRepository 
+	
+::
+	=> 
+	value: /media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64
+ 
+	It's original design, developped under Mint-14_x86-64 realm, today
+	need evolute and required another Distribution like Mint-15_x86-64
+	Also, using PackageRepositoryMgmt --get PkgRepoMgmtRepository 
+	will show you similar value... 
+	
+	Except:
+	using following line imply having made another repository using 
+	Mint-15_x86-64 
+	or 
+	/media/COMST500GB/Linux-Debian/archives/Mint-15_x86-64/UnderscoreXDevlpt-001
+	- Include possibility to use a Level Higher because Acer-One-Travel is also 
+	- hook to this drive for feeding the repository of other package where this one
+	depend of Radeon and OpenCL infrastructure to made simple uses of GPU during
+	my leasure time... ( if it exist... )
+ 
+	Using Alias...
+	Known to be a rubber-knife not depending from variable, but fixed informations
+	alias allow rewrite call from command line and Shell execution as well. 
+ 
+	- To be really important to inspect alias-sanity before doing a script to 
+	manage a Server, some doing extra verboses from this aliasing technique and
+	generating excess of informations and sometime it reduce filtering possibilities 
+	and anhilate uses of grep, sed and awk ... 
+	
+	Assuming uses of alias is know, we can attach everyting to an allias.
+	- simple prefixed-Var
+	- test and execution on $? -eq 0 or 1 deppending how test was involved:
+	example: 
+		alias echo='test -e ${USER}/.echo_right && echo'
+		-> this powerfull thruth involve having impossibility to do an echo
+		on a terminal assuming .echo_right might be a deposed file from 
+		root-priviledge and can not be erased, it allow-you to echo on terminal.
+ 
+	using alias : 
+	
+::
+	alias PackageRepositoryMgmt='PkgRepoMgmtAddPkgLst=True \
+	PkgRepoMgmtRepository=/media/COMST500GB/Linux-Debian/archives/Mint-15_x86-64/UnderscoreXDevlpt-001 \
+	PkgRepoMgmtReposIndex=/media/COMST500GB/Linux-Debian/archives/Mint-15_x86-64/UnderscoreXDevlpt-001/index \
+	PackageRepositoryMgmt'
+	
+	- Effect on PackageRepositoryMgmt --help 
+	  -> PkgRepoMgmtRepository will continue to show :
+	  
+	/media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64
+	
+	
+	- effect on PackageRepositoryMgmt --get PkgRepoMgmtRepository
+	
+	will show : 
+	
+		/media/COMST500GB/Linux-Debian/archives/Mint-15_x86-64/UnderscoreXDevlpt-001
+		
+	- Which give the correct value... 
+ 
+ 
+Of course a complex case of managing creation with md_cd will imply a test
+and result to a permanent verification of Repository path with :
+ 
+::
+	NewIndexRepository=/media/COMST500GB/Linux-Debian/archives/Mint-15_x86-64/UnderscoreXDevlpt-001/index
+	NewRepository=/media/COMST500GB/Linux-Debian/archives/Mint-15_x86-64/UnderscoreXDevlpt-001
+	
+	alias PackageRepositoryMgmt='test -e  $( PkgRepoMgmtReposIndex=${NewIndexRepository} PackageRepositoryMgmt --get PkgRepoMgmtReposIndex ) && /etc/init.d/Fnct.d/md_cd $( PkgRepoMgmtReposIndex=${NewIndexRepository} PackageRepositoryMgmt --get PkgRepoMgmtReposIndex ) && PkgRepoMgmtAddPkgLst=True PkgRepoMgmtRepository=${NewRepository} PkgRepoMgmtReposIndex=${NewIndexRepository} PackageRepositoryMgmt'
+ 
+- This case is also exceptionnal, Attempting to use the variable without having new declaration of it thru uses of get might cumbershot the call 
+- But next uses of PackageRepositoryMgmt will not depend of 
+PkgRepoMgmtReposIndex and PkgRepoMgmtRepository anymore .
+ 
+
+
 Parameters
 ==========
+
+Prefixed-Variable
+-----------------
+
+Transport Layer between Function. 
+---------------------------------
+
+Uses of Universal switches.
+---------------------------
+
+	Getter
+	------
+	
+	Setter
+	------
+		Not Developped yet
+
+	List
+	----
+	
+	StartServices
+	-------------
 
 Operator
 ========
 
+There is few Operator known inside the fnct_debian_lib from Fnct.D, but some 
+function depend of Prefixed-Variable Transport Mechanism and to prevent writing
+informations uselessly a specific Operator was developped during Pre-Fixed variable
+writing, known to be the '+' Operator. 
 
 
 
