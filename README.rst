@@ -91,6 +91,11 @@ Definitions
 Documentation
 -------------
 
+
+------------------------
+Paper Draft informations
+------------------------
+
 :Note:2224fe88-0b6f-11e3-812b-001b3875b29
 :Title:Using Alias from Bash to replace setter and permanent Assignation in Prefixed-var .
 
@@ -186,6 +191,44 @@ and result to a permanent verification of Repository path with :
 - This case is also exceptionnal, Attempting to use the variable without having new declaration of it thru uses of get might cumbershot the call 
 - But next uses of PackageRepositoryMgmt will not depend of 
 PkgRepoMgmtReposIndex and PkgRepoMgmtRepository anymore .
+ 
+
+:Note: f1161962-0ad8-11e3-b166-001b3875b29c
+:Title: Variable Forwarding Example in BoolVarTestVarCreation & mutation of BoolVarTestVarCreation from True/False test into *None* value
+
+BoolVarTestVarCreation for substitution of StrFileTmp has unidirectionnaly
+a uuid-like file name into Pre-fixed Var ZSEFileName:=None for 
+affectation inside StrFileName=None, where if this one != None, will 
+get the parameter Name Being passed inside StrFileTmp. 
+ 
+- Had consequence:
+ - if the file does not exist, an echo > StrFileTmp will be done . 
+ - if the file exist, content will be open by Zenity in text-info --editable
+ - Selected filename supplied, content will be overwritted and there is 
+ no protection mechanism and no verification against file-permission
+   - To this, a workaround will store all code generated from this application
+   - into sub-directory being made by the command and store-it inside user
+     respective home location which is safe and Pre-fixable into 
+     your specification, and not-warrented to be correct but designable. 
+  
+ 
+- If the variable ZSEFileName is untouched, the content of StrFileTmp will
+hold value 'None' and belong to parsed BoolVarTestVarCreation it should 
+get it's uuid-like filename, see generated command from parameter below
+
+.. code:: shell
+	Command : BVTestVarName=StrFileTmp BVTestVarHold='${StrFileName}' BVTestBoolVarName=\${StrFileName} BVTestBoolCase=None BVTestBoolAssertion='$( uuidgen -t )' BVTestScopeTest=local BoolVarTestVarCreation
+ 
+generated code:
+
+.. code:: shell
+
+	local StrFileTmp="${StrFileName}" ; 
+	if [ "${StrFileName}" == "None" ] ; then 
+	 StrFileTmp=$( uuidgen -t ) ; 
+	fi
+ 
+Which is making sense. 
  
 
 
@@ -294,6 +337,28 @@ the sample to put inside the Zenity Text-Info in editable mode :
 	 done
 	}
 	test_expr ; 
+
+
+---------------------------------------
+Step forward the ZenityShellEval sample
+---------------------------------------
+
+	You hit Enter or OK from the Window 'Shell Evaluation command', and 
+	Should not give you an error, if so the same code reapear and you 
+	have to find yourself the error if ZenityShellEval was not executed
+	from allowed Terminal or Windows-shell . 
+	If you do executed it from, you can read error and seemlesly seek for 
+	error... 
+ 
+	Later example might have support for error like puting into warning 
+	Windows, error. And possibly conversion between uuid-like file into 
+	finite name... 
+ 
+**PS Hint**
+	- Using AutoChown will also let use execute the script with your own
+	user and group, and might allow you to put it elsewhere like into 
+	localized-execution section..... 
+
 
 
 Parameters
