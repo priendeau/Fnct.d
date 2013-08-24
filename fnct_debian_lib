@@ -369,30 +369,15 @@ function AddPValueStore()
 }
 
 ### AnsiCodeTest 
-
+unset AnsiCodeTest
 . /etc/init.d/Fnct.d/6e063cbc-0ce2-11e3-8879-001b3875b29c 
 
+
+### GetStdPrefixName 
 unset GetStdPrefixName ; 
-function GetStdPrefixName()
-{
-	local ArrayArg=( $* ) ; 
-	local __call_locality=( GSPN GetStdPrefixName  ) ; 
- local Arg0=${ArrayArg[0]} ; 
- local StrSedDefFilter=${GSPNSedFilter:=s/[a-z\)\(\_\-]//g} ; 
-	local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
- 
-	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-	 GetVarReference ${__call_locality[1]} ;
-		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-		echo -ne """${ArgGet}\n""" ; 			
-	else
-		echo -ne "${Arg0}\n" | eval "sed '${StrSedDefFilter}'" ; 
-	fi 
- 
- 
-}
+. /etc/init.d/Fnct.d/69968204-0cf6-11e3-99bc-001b3875b29c 
+
+
 
 ### 
 ### Note, Existence of A-Range Boolean Purposes and B-Applied Boolean
