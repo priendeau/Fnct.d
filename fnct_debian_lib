@@ -368,7 +368,9 @@ function AddPValueStore()
 	fi 
 }
 
+### AnsiCodeTest 
 
+. /etc/init.d/Fnct.d/6e063cbc-0ce2-11e3-8879-001b3875b29c 
 
 unset GetStdPrefixName ; 
 function GetStdPrefixName()
@@ -652,8 +654,8 @@ function AutoChown()
  function __main_StartServices()
  {
 		local __call_locality=( Main __main_StartServices ) ;
-		local Arg0=${ArrayArg[0]};
 		local ArrayArg=( $* ) ; 
+		local Arg0=${ArrayArg[0]};
   local ArrayPath=( ${StrPathList//:/ } ) ; 
   
   eval $( BVTestVarName=StrRecurrent BVTestVarHold='-R' BVTestBoolVarName=\${IsPathRecurr} BVTestBoolCase=False BVTestBoolAssertion='' BVTestScopeTest=local BoolVarTestVarCreation ) ; 
