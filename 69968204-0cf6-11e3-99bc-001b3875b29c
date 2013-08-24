@@ -1,0 +1,40 @@
+###
+### FootPrint Added, see Prefixed-Var ZSEAddFootPrint from ZenityShellEval
+###
+
+###File:69968204-0cf6-11e3-99bc-001b3875b29c
+###UUID-TIME-MARKER:95d14cc2-0cf7-11e3-a70f-001b3875b29c
+###Date: ${StrDateFormat}
+###Sha1Sum: c2e5da195e3e8e96aafaae46db34df0136409d2f
+### Size:1218
+### NbWord: 127\n
+function GetStdPrefixName()
+{
+  local ArrayArg=( $* ) ; 
+  local __call_locality=( GSPN GetStdPrefixName  ) ; 
+  local Arg0=${ArrayArg[0]} ; 
+  local StrSedDefFilter=${GSPNSedFilter:=s/[a-z\)\(\_\-]//g} ; 
+  local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\n" ;
+		 
+function __main_StartServices()
+{
+  local __call_locality=( Main __main_StartServices ) ;
+  local ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]};
+  echo -ne "${Arg0}\n" | eval "sed '${StrSedDefFilter}'" ;
+}
+ 
+  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+   StrSedDefFilter=${StrSedDefFilter}    \
+   __main_StartServices                          ; 
+ fi
+
+}
