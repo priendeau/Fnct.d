@@ -202,7 +202,7 @@ this parameter like following statement
 	
 	BVTestVarName=StrReturn BVTestVarHold="0" BVTestBoolVarName=\${Arg0:=local} BVTestBoolCase="global" BVTestBoolAssertion="1" BoolVarTestVarCreation
 	
-	giving the following equivalent : 
+giving the following equivalent : 
 	
 .. code:: shell
 		
