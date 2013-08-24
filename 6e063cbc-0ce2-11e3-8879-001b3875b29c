@@ -1,0 +1,54 @@
+###
+### FootPrint Added, see Prefixed-Var ZSEAddFootPrint from ZenityShellEval
+###
+
+###File:6e063cbc-0ce2-11e3-8879-001b3875b29c
+###UUID-TIME-MARKER:6d7b22be-0cf4-11e3-a611-001b3875b29c
+###Date: ${StrDateFormat}
+###Sha1Sum: 637c4ea9c7c822f0b456e684e39d2d0bf412ea49
+### Size:1856
+### NbWord: 171\n
+function AnsiCodeTest()
+{
+  local ArrayArg=( $* ) ; 
+  local __call_locality=( ACT AnsiCodeTest  ) ; 
+  local Arg0=${ArrayArg[0]} ; 
+  local IntStartRange=${ACTStartRange:=10} ;
+  local IntEndRange=${ACTEndRange:=50} ;
+  local StrAnsiResetCode=${ACTResetCode:=033[00m} ; 
+  local StrStringSample=${ACTStringSample:=[TEST]} ;
+  local StrErrDev=${ACTErrDev:=/dev/stderr} ; 
+
+ 
+ function __main_StartServices()
+ {
+   local __call_locality=( Main __main_StartServices ) ;
+   local ArrayArg=( $* ) ; 
+   local Arg0=${ArrayArg[0]} ;
+   for (( x=${IntStartRange} ; x<= ${IntEndRange} ; x++ )) ; do 
+    local StrAnsiCode="\033[01;${x}m" ;
+    local StrAnsoCodeDisplay="""\\\033\[01;${x}m""" ;
+    local StrLineDisplay="\\${StrAnsiResetCode}Color no.${x}, Ansi Code '${StrAnsoCodeDisplay}' : ${StrAnsiCode}${StrStringSample}\\${StrAnsiResetCode}" ; 
+    echo -ne "${StrLineDisplay}\n" > ${StrErrDev} ; 
+   done   
+ }
+	
+ local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\n" ;
+
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+  GetVarReference ${__call_locality[1]} ; 
+  echo -ne "${StrSwitchMessages}" > ${StrErrDev} ; 
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ;
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( __GetVarReferenceList ) ;
+ elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  IntStartRange=${IntStartRange}                 \
+  IntEndRange=${IntEndRange}                     \
+  StrAnsiResetCode=${StrAnsiResetCode}   \
+  StrStringSample=${StrStringSample}       \
+  __main_StartServices                                  ; 
+ fi
+
+}
