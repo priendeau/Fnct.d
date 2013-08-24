@@ -191,6 +191,56 @@ and result to a permanent verification of Repository path with :
 PkgRepoMgmtReposIndex and PkgRepoMgmtRepository anymore .
  
 
+:Note: 748de708-0d0d-11e3-bb8a-001b3875b29c
+:Title: Generated IF in BoolVarTestVarCreation & Parameter do change it's nature with default assignation.
+
+Using BVTestBoolVarName, and supported case with uses of Bash version 2.0+ and higher 
+version the, Function BoolVarTestVarCreation had no problems and behave corretly using 
+this parameter like following statement 
+
+::
+	
+	BVTestVarName=StrReturn BVTestVarHold="0" BVTestBoolVarName=\${Arg0:=local} BVTestBoolCase="global" BVTestBoolAssertion="1" BoolVarTestVarCreation
+	
+	giving the following equivalent : 
+	
+.. code:: shell
+		
+		local StrReturn="0" ; 
+		if [ "${Arg0:=local}" == "global" ] ; then 
+			StrReturn=1 ; 
+		fi
+		
+This allow simplification of common case having no value to assign and some internal 
+test from function test and if, had several switches throwing error and reduce the 
+test into something not certains and generate ambiguity in important case. 
+
+::	
+	In test and if--then-[elif [ if - then - elif[ ... ] - fi] - fi ]-else-fi uses
+	of operator like 
+	
+	-eq, -ge, -gt, -le, -lt, -ne 
+	-eq => if [ ${value} -eq ${N} ] ; then ... ; fi
+	
+	- Does not support Nil value of No value. 
+
+Having possibility to use the Prefixed-Variable as 
+
+.. code:: shell
+	
+	BVTestBoolVarName=\${Arg0:=local}
+	
+allow a Generated test to own it's default value out of possible assignation from
+this pair << BVTestVarName=Var, BVTestVarHold=Value  >> being only one way test. 
+
+- This creating another effect, residual postaffective assignation, which involved
+having a subset to test. This case reserved the Final value to output to be '1' or '0'
+But using pair << BVTestBoolVarName, BVTestBoolCase >> , to manage the reversed test
+expression BVTestBoolCase, changing the result thru the BVTestBoolAssertion . 
+BVTestBoolVarName will hold the Common entry value and now it's explicitly assigned 
+to a know value, rather to hold nothing and generating a not-resistent if-test. 
+
+
 :Note: f1161962-0ad8-11e3-b166-001b3875b29c
 :Title: Variable Forwarding Example in BoolVarTestVarCreation & mutation of BoolVarTestVarCreation from True/False test into *None* value
 
