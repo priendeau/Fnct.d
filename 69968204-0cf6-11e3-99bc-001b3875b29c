@@ -3,26 +3,32 @@
 ###
 
 ###File:69968204-0cf6-11e3-99bc-001b3875b29c
-###UUID-TIME-MARKER:95d14cc2-0cf7-11e3-a70f-001b3875b29c
+###UUID-TIME-MARKER:c99337b2-0e70-11e3-98a2-e935ddfcfede
 ###Date: ${StrDateFormat}
-###Sha1Sum: c2e5da195e3e8e96aafaae46db34df0136409d2f
-### Size:1218
-### NbWord: 127\n
+###Sha1Sum: f0f21927a74a1fcfef97228ba18dd793f350cae8
+### Size:1547
+### NbWord: 154\n
 function GetStdPrefixName()
 {
   local ArrayArg=( $* ) ; 
   local __call_locality=( GSPN GetStdPrefixName  ) ; 
+  local StrPrefixEntry=${GSPNArg0:=None} ; 
   local Arg0=${ArrayArg[0]} ; 
+  
   local StrSedDefFilter=${GSPNSedFilter:=s/[a-z\)\(\_\-]//g} ; 
   local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\n" ;
 		 
-function __main_StartServices()
-{
-  local __call_locality=( Main __main_StartServices ) ;
-  local ArrayArg=( $* ) ; 
-  local Arg0=${ArrayArg[0]};
-  echo -ne "${Arg0}\n" | eval "sed '${StrSedDefFilter}'" ;
-}
+ function __main_StartServices()
+ {
+   local __call_locality=( Main __main_StartServices ) ;
+   local ArrayArg=( $* ) ; 
+   local Arg0=${ArrayArg[0]};
+   if [ ${StrPrefixEntry:=None} == "None" ] ; then 
+     echo -ne "${Arg0}\n" | eval "sed '${StrSedDefFilter}'" ;
+   else
+     echo -ne "${StrPrefixEntry:=None}\n" | eval "sed '${StrSedDefFilter}'" ;
+   fi 
+ }
  
   if [ "${Arg0:=--startservices}" == "--help"	] ; then 
    GetVarReference ${__call_locality[1]} ; 
@@ -34,7 +40,11 @@ function __main_StartServices()
    eval $( __GetVarReferenceList ) ;
   elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
    StrSedDefFilter=${StrSedDefFilter}    \
-   __main_StartServices                          ; 
+   StrPrefixEntry=${StrPrefixEntry}         \ 
+   __main_StartServices
+  else
+   StrSedDefFilter=${StrSedDefFilter}    \
+   __main_StartServices                          ${Arg0}; 
  fi
 
 }
