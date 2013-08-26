@@ -196,14 +196,15 @@ declare -a ArrayNotReUseLib=( fnct_debian_lib ) 2> /dev/null
 unset ValueParser ;
 function ValueParser()
 {
+		local __call_locality=( VP ValueParser );
 		local ArrayArg=( $* ) ; 
 		local Arg0=${ArrayArg[0]} ;
-		local __call_locality=( VP ValueParser );
-		local StrVarArgList=${VPVarArgList:=Str:AppsName,Str:AppsOpt} ; 
+		
+  local StrVarArgList=${VPVarArgList:=Str:AppsName,Str:AppsOpt} ; 
 		local StrValueList=${VPValueList:=echo,__VALUE__} ; 
 		local StrLocality=${VPCallLocalityName:=Default} ; 
-		local StrScope=${VPScopeList:=AppsName:local,AppsOpt:local}
-		local StrDefaultScope=${VPScopeDefault:=local};
+		local StrScope=${VPScopeList:=AppsName:local,AppsOpt:local} ; 
+		local StrDefaultScope=${VPScopeDefault:=local} ;
 		local ArrayScope=( ${StrScope//,/ } ) ; 
 		local ArrayVar=( ${StrVarArgList//,/ } ) ; 
 		local ArrayValue=( ${StrValueList//:/ } ) ;
@@ -213,25 +214,25 @@ function ValueParser()
 
 		function GetScope()
 		{
+				local __call_locality=( GS GetScope );
 				local ArrayArg=( $* ) ; 
-				local __call_locality=( GetScope );
-				local StrDebug=${GetScopeDebug:=False}
 				local Arg0=${ArrayArg[0]} ;
-				if [ "${Arg0:=local}" == "local" ] ; then 
-					echo -ne "0" ; 
-				elif [ "${Arg0:=local}" == "global" ] ; then 
-					echo -ne "1" ; 
-				fi 
+				local StrDebug=${GetScopeDebug:=False}
+    eval $( BVTestVarName=StrReturn BVTestVarHold="0" BVTestBoolVarName=\${Arg0:=local} BVTestBoolCase="global" BVTestBoolAssertion="1" BoolVarTestVarCreation ) ;
+				echo -ne "${StrReturn}" ; 
+
 		}
 		function VarInScopeList()
 		{
+			local __call_locality=( VISL VarInScopeList );
 			local ArrayArg=( $* ) ; 
-			local __call_locality=( VarInScopeList );
-			local StrDebug=${VarInScopeListDebug:=False}
-			local StrValue=${Value:=AppsName} ;
-			local StrIsScoped=False
+			local Arg0=${ArrayArg[0]} ;
+			local StrDebug=${VISLDebug:=False} ;
+			local StrValue=${VISLValue:=AppsName} ;
+			local StrIsScoped=False ;
 			local StrValueReturn="False" ;
-			for (( intx=0 ; intx <= ${#ArrayArg[@]}-1 ; intx++ )) ; do 
+			
+   for (( intx=0 ; intx <= ${#ArrayArg[@]}-1 ; intx++ )) ; do 
 				local ArrayValue=( ${ArrayArg[${intx}]//:/ } ) ;
 				local StrSuffix=${ArrayValue[0]} ; 
 				if [ "${StrSuffix}" == "${StrValue}" ] ; then 
@@ -242,66 +243,81 @@ function ValueParser()
 			done 
 			echo -ne "${StrValueReturn}" ; 
 		}
-		function MainHelper()
-		{
-			local ArrayVar=( $* ) ;
-			local __call_locality=( MainHelper )
-			local ArrayScope=( ${ArrayScope[@]//,/ } ) ; 
-			local StrDebug=${MainDebug:=False} ;
-			for (( intx=0 ; intx <= ${#ArrayVar[@]}-1 ; intx++ )) ; do 
-				local VarSeg=( ${ArrayVar[${intx}]//:/ } ) ; 
+ 
+ function VarReplace()
+ {
+		local __call_locality=( VR VarReplace ) ;
+		local ArrayArg=( $* ) ; 
+		local Arg0=${ArrayArg[0]};
+  local ArrayScoceA=(  __suffix__:${StrVarSuffix} __value__:${AValue} __prefix__:${StrVarSuffixType} __locality__:${StrLocality} ) ; 
+		local StrScoreResultParse ; 
+  if [ "${AscopeType}" == "True" ] ; then 
+   StrScoreResultParse= ${ArrayScopeIndex[${ArrayScopeTest[1]}]}
+  else
+   StrScoreResultParse = ${StrDefaultScope}
+  fi 
+  for (( intx=0 ; intx <= ${#ArrayScoceA[@]}-1 ; intx++ )) ; do 
+   local ArrayIScope=( ${ArrayScoceA[${intx}]//:/ } ) 
+   StrVarName=${StrVarName//${ArrayIScope[0]}/${ArrayIScope[1]}} ; 
+  done 
+		StrVarName=${StrVarName//__scope__/${StrScoreResultParse}} ;
+  
+ }
+ 
+ function VarHelper()
+ {
+		local __call_locality=( VH VarHelper ) ;
+		local ArrayArg=( $* ) ; 
+		local Arg0=${ArrayArg[0]};
+  local ArrayScope=( ${ArrayScope[@]//,/ } ) ; 
+  local StrDebug=${MainDebug:=False} ;
+  for (( intx=0 ; intx <= ${#ArrayArg[@]}-1 ; intx++ )) ; do 
+		  local VarSeg=( ${ArrayArg[${intx}]//:/ } ) ; 
 				local StrVarSuffixType="${VarSeg[0]}" ;
 				local StrVarSuffix="${VarSeg[1]}" ;
-				#local StrVarName="__scope__ __prefix____suffix__=\${__locality____suffix__:=__value__}" ;
 				local StrVarName="Variable __locality____suffix__,\n\tDefault Value __value__\n\tInternal variable: __prefix____suffix__\n" ;
 				
-				local ArrayScopeTest=( $( Value=${StrVarSuffix} VarInScopeList ${ArrayScope[@]} ) ) ; 
-				
-				if [ "${ArrayScopeTest[0]}" == "True" ] ; then 
-					StrVarName=${StrVarName//__scope__/${ArrayScopeIndex[${ArrayScopeTest[1]}]}} ;
-					StrVarName=${StrVarName//__suffix__/${StrVarSuffix}} ; 
-					StrVarName=${StrVarName//__value__/${ArrayValue[${intx}]}};
-					StrVarName=${StrVarName//__prefix__/${StrVarSuffixType}} ;
-					StrVarName=${StrVarName//__locality__/${StrLocality}} ;
-				else
-					StrVarName=${StrVarName//__scope__/${StrDefaultScope}} ;
-					StrVarName=${StrVarName//__suffix__/${StrVarSuffix}} ; 
-					StrVarName=${StrVarName//__value__/${ArrayValue[${intx}]}} 
-					StrVarName=${StrVarName//__prefix__/${StrVarSuffixType}} ;
-					StrVarName=${StrVarName//__locality__/${StrLocality}} ;
-				fi 
+				local ArrayScopeTest=( $( Value=${StrVarSuffix} \
+                              VarInScopeList        \
+                              ${ArrayScope[@]}    ) ) ; 
+				### __scope__ Tag is eclued, because it's the only one does not respect the
+    ### the looping sequence, explicitly needs a of Scope test to dismiss between
+    ### local scoping and global scoping. 
+    
+    StrVarSuffix=${StrVarSuffix}          \
+    AValue=${ArrayValue[${intx}]}         \
+    StrVarSuffixType=${StrVarSuffixType}  \
+    StrLocality=${StrLocality}            \
+    AscopeType=${ArrayScopeTest[0]}       \
+    VarReplace                            ;
 				StrValueReturn="${StrValueReturn} ${StrVarName}" ;
 			done 
 			echo -ne "${StrValueReturn}" ;
 			
 		}		
-		function Main()
+		function __main_StartServices()
 		{
-			local ArrayVar=( $* ) ;
-			local __call_locality=( Main )
+   local __call_locality=( Main __main_StartServices ) ;
+   local ArrayArg=( $* ) ;
+   local Arg0=${ArrayArg[0]};
 			local ArrayScope=( ${ArrayScope[@]//,/ } ) ; 
 			local StrDebug=${MainDebug:=False} ;
-			for (( intx=0 ; intx <= ${#ArrayVar[@]}-1 ; intx++ )) ; do 
-				local VarSeg=( ${ArrayVar[${intx}]//:/ } ) ; 
+			for (( intx=0 ; intx <= ${#ArrayArg[@]}-1 ; intx++ )) ; do 
+				local VarSeg=( ${ArrayArg[${intx}]//:/ } ) ; 
 				local StrVarSuffixType="${VarSeg[0]}" ;
 				local StrVarSuffix="${VarSeg[1]}" ;
 				local StrVarName="__scope__ __prefix____suffix__=\${__locality____suffix__:=\${__locality____suffix__:=__value__}}" ;
 				
-				local ArrayScopeTest=( $( Value=${StrVarSuffix} VarInScopeList ${ArrayScope[@]} ) ) ; 
+				local ArrayScopeTest=( $( Value=${StrVarSuffix} \
+                              VarInScopeList        \
+                              ${ArrayScope[@]}    ) ) ; 
 				
-				if [ "${ArrayScopeTest[0]}" == "True" ] ; then 
-					StrVarName=${StrVarName//__scope__/${ArrayScopeIndex[${ArrayScopeTest[1]}]}} ;
-					StrVarName=${StrVarName//__suffix__/${StrVarSuffix}} ; 
-					StrVarName=${StrVarName//__value__/${ArrayValue[${intx}]}};
-					StrVarName=${StrVarName//__prefix__/${StrVarSuffixType}} ;
-					StrVarName=${StrVarName//__locality__/${StrLocality}} ;
-				else
-					StrVarName=${StrVarName//__scope__/${StrDefaultScope}} ;
-					StrVarName=${StrVarName//__suffix__/${StrVarSuffix}} ; 
-					StrVarName=${StrVarName//__value__/${ArrayValue[${intx}]}} 
-					StrVarName=${StrVarName//__prefix__/${StrVarSuffixType}} ;
-					StrVarName=${StrVarName//__locality__/${StrLocality}} ;
-				fi 
+				StrVarSuffix=${StrVarSuffix}          \
+    AValue=${ArrayValue[${intx}]}         \
+    StrVarSuffixType=${StrVarSuffixType}  \
+    StrLocality=${StrLocality}            \
+    AscopeType=${ArrayScopeTest[0]}       \
+    VarReplace                            ;
 				StrValueReturn="${StrValueReturn} ${StrVarName} ; " ;
 			done 
 			echo -ne "${StrValueReturn}" ;
@@ -311,15 +327,24 @@ function ValueParser()
 		if [ "${Arg0:=--startservices}" == "--help"	] ; then 
 			GetVarReference ${__call_locality[1]} ; 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-		elif [ "${Arg0:=--startservices}" == "--startservices"	] ; then 
-			ArrayScope=${ArrayScope[@]// /,} StrVarSuffix=${StrVarSuffix} StrValueReturn=${StrValueReturn} StrDefaultScope=${StrDefaultScope} StrLocality=${StrLocality}  Main ${ArrayVar[@]} ; 
 		elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 			echo -ne """${ArgGet}\n""" ; 			
 		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
 			eval $( __GetVarReferenceList ) ;
 		elif [ "${Arg0:=--startservices}" == "--varhelper"	] ; then 
-			ArrayScope=${ArrayScope[@]// /,} StrVarSuffix=${StrVarSuffix} StrValueReturn=${StrValueReturn} StrDefaultScope=${StrDefaultScope} StrLocality=${StrLocality}  MainHelper ${ArrayVar[@]} ;
+			ArrayScope=${ArrayScope[@]// /,}      \
+   StrVarSuffix=${StrVarSuffix}          \
+   StrValueReturn=${StrValueReturn}      \
+   StrDefaultScope=${StrDefaultScope}    \
+   StrLocality=${StrLocality}            \
+   VarHelper   ${ArrayVar[@]} ;
+		elif [ "${Arg0:=--startservices}" == "--startservices"	] ; then 
+			ArrayScope=${ArrayScope[@]// /,} \
+   StrVarSuffix=${StrVarSuffix} \
+   StrValueReturn=${StrValueReturn} \
+   StrDefaultScope=${StrDefaultScope} \
+   StrLocality=${StrLocality}  Main ${ArrayVar[@]} ; 
 		fi 
 	
 }
@@ -499,11 +524,11 @@ function PropertyLibName()
 	
 	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\n" ;
 	
-	function __main_StartServices()
-	{
-		local __call_locality=( PLN PropertyLibName ) ;
-		local Arg0=${ArrayArg[0]};
+ function __main_StartServices()
+ {
+		local __call_locality=( Main __main_StartServices ) ;
 		local ArrayArg=( $* ) ; 
+		local Arg0=${ArrayArg[0]};
 					
 	}
 	

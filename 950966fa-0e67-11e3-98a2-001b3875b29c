@@ -1,0 +1,163 @@
+###
+### FootPrint Added, see Prefixed-Var ZSEAddFootPrint from ZenityShellEval
+###
+
+###File:950966fa-0e67-11e3-98a2-001b3875b29c
+###UUID-TIME-MARKER:9a2b8326-0e89-11e3-98a2-001b3875b29c
+###Date: ${StrDateFormat}
+###Sha1Sum: 7a822538a019aa0ea5aae23043bb6b71525e48d5
+### Size:7079
+### NbWord: 587\n
+function ZenityPythonInstaller()
+{
+  local __call_locality__=( ZPI ZenityPythonInstaller ) ; 
+  local ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]};
+  local StrCflags=${ZPICflags:=-g -O3 -march=bdver1 -m64 --param=ssp-buffer-size=8 --param=l1-cache-size=64 --param=l2-cache-size=256 -Wformat -Werror=format-security -D__PYTHON27__ -I /usr/lib/jvm/java-7-openjdk-amd64/include -I /usr/include} ;
+  local StrCppflags=${ZPICppflags:=-D_FORTIFY_SOURCE=2} ;
+  local StrCxxflags=${ZPICxxflags:=-g -O3 --param=ssp-buffer-size=8 --param=l1-cache-size=64 --param=l2-cache-size=256 -Wformat} ;
+  local StrFflags=${ZPIFflags:=-g -O3} ;
+  local StrLdflags=${ZPILdflags:=-O3 -D_FORTIFY_SOURCE=2 -Wl,-Bsymbolic-functions,-z,relro -fPIC -Xlinker -export-dynamic} ;
+  local StrJavaHome=${ZPIJavaHome:=/usr/lib/jvm/java-7-openjdk-amd64} ;
+  local StrJavaClasspath=${ZPIJavaClasspath:=/usr/java/packages/lib/amd64:/usr/lib/jni:/lib:/usr/lib} ;
+  local StrPythonSetupAct=${ZPIPythonSetupAct:=clean,build,install} ;
+  local StrpipAct=${ZPIpipAct:=--install} ;
+  local BoolPipUpgrade=${ZPIIsPipUpgrade:=False} ;
+  local BoolPipInstall=${ZPIIsPipInstall:=True} ;
+  local StrPythonScript=${ZPIPyScript:=setup.py}
+  local StrPythonVersion=${ZPIPythonVer:=2.7} ;
+  local StrPythonAppsPath=${ZPIPyPathBin:=/usr/bin} ;
+  local BoolUseZenityTextEntry=${ZPIZenityTextEntry:=False} ; 
+  local IntDefaultSleep=${ZPISleep:=5} ; 
+  local StrPythonPackage=${ZPIPackage:=https://pypi.python.org/packages/source/o/ouimeaux/ouimeaux-0.4.2.tar.gz,https://pypi.python.org/packages/source/i/iterpipes/iterpipes-0.4.tar.gz}
+
+  function ZenityTextPackageEntry()
+ { 
+   local __call_locality__=( ZTPE ZenityTextPackageEntry ) ; 
+   local ArrayArg=( $* ) ; 
+   local Arg0=${ArrayArg[0]};
+   local IntWidth=${ZTPEWidth:=500} ;
+   local IntHeight=${ZTPEHeight:=120} ;
+   local StrZenityTextTitle=${ZTPETitle:=Give the Package list, separated by ','}
+   local BoolZenityEntry=${ZTPEIsZenityEntry:=True} ; 
+   eval $( BVTestVarName=StrZenityAddEntry \
+         BVTestVarHold='--entry' \
+         BVTestBoolVarName=\${BoolZenityEntry} \
+         BVTestBoolCase='False' \
+         BVTestBoolAssertion='' BVTestScopeTest=local BoolVarTestVarCreation ) ; 
+
+    local StrEntry=$( zenity ${StrZenityAddEntry} --width=${IntWidth} --height=${IntHeight} --text="${StrZenityTextTitle}"  ) ; 
+    echo -ne "${StrEntry}\n" ; 
+ }
+
+ function __main_StartServices()
+ {
+   local __call_locality=( Main __main_StartServices ) ;
+   local ArrayArg=( $* ) ; 
+   local Arg0=${ArrayArg[0]};
+   local ArrayPackage=( ) ;
+   
+   ### Python Package Query, From where package should be extracted:
+   ### BoolUseZenityTextEntry is Set and Zenity should be use to extract a list of package. 
+   ### - Set by default to False, should seek for StrPythonPackage.
+   ### - While by default, BoolUseZenityTextEntry is set to False, StrPythonPackage may
+   ### feed the default content, leaving user to correct.
+   ### - Putting the result inside ArrayPackage
+   ### 
+   eval $( BVTestVarName=StrPackageExtract \
+         BVTestVarHold='${StrPythonPackage}' \
+         BVTestBoolVarName=\${BoolUseZenityTextEntry} \
+         BVTestBoolCase='False' \
+         BVTestBoolAssertion='$( ZenityTextPackageEntry )' BVTestScopeTest=local BoolVarTestVarCreation ) ; 
+
+   ### Python BoolVarTestVarCreation, creation of Application loader
+   ### Formely : __PATH__/python__VER__ 
+   ### at the end, it generate StrPythonLoader By default: /usr/bin/python2.7
+   ### From Var : StrPythonAppsPath StrPythonVersion
+   ### 
+   eval $( BVTestVarName=StrPythonLoader \
+         BVTestVarHold='${StrPythonVersion}' \
+         BVTestBoolVarName=\${BoolUseZenityTextEntry} \
+         BVTestBoolCase='${StrPythonVersion}' \
+         BVTestBoolAssertion='3.2' BVTestScopeTest=local BoolVarTestVarCreation ) ; 
+   StrPythonLoader="${StrPythonAppsPath}/python${StrPythonLoader}" ; 
+   ### End of creation of Application loader
+
+  
+   ### Python BoolVarTestVarCreation, creation of Application Installation . 
+   ### -> This test require 1 formal test and addition of Application loader. 
+   ### 
+   ### ----> |  Type of Installer  |
+   ###         +
+   ###         / \   pip
+   ###        |   |-----> should not use StrPythonLoader . --> | Add to StrAppsInstall, only pip |
+   ###         \ /                                                                       ++
+   ###         |                                                                            / \  Pip require --upgrade 
+   ###         |   Script                                                               |  |--->
+   ###         |                                                                            \ /
+   ###         |                                                                            +--Does not require --upgrade
+   ###         +-----> should use StrPythonLoader. --> | Add to StrAppsInstall, StrPythonLoader + StrPythonScript | (like python2.7 setup.py)
+
+   eval $( BVTestVarName=StrAppsInstall \
+         BVTestVarHold='pip' \
+         BVTestBoolVarName=\${BoolPipInstall} \
+         BVTestBoolCase=False \
+         BVTestBoolAssertion='${StrPythonLoader} ${StrPythonScript}' BVTestScopeTest=local BoolVarTestVarCreation ) ; 
+
+   ### End of creation of Application Installer
+
+   while [ ${res} -ne 0 ] ; do 
+    for item in ${AP[@]} ; do  
+      echo -ne "\n\n\n\n\tSetup python package ${item}\n\n\n\n" ; 
+      CFLAGS="${StrCflags} " \
+      CPPFLAGS="${StrCppflags}" \
+      CXXFLAGS="${StrCxxflags}" \
+      FFLAGS="${StrFflags}" \
+      LDFLAGS="${StrLdflags}" \
+      JAVA_HOME="${StrJavaHome}" \
+     CLASSPATH="${StrJavaClasspath}"
+      pip install ${item} ; 
+      res=$? ; 
+      if [ "${res}" != "0" ] ; then 
+       echo -ne "\n\n\n\n\n\n\n\n\tPIP installer Installing Package ${item} FAILED\n\n\n\n\n\n\n\n" ; 
+      fi ; 
+      sleep 5 ; 
+    done ; 
+   done
+ }
+
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+  GetVarReference ${__call_locality[1]} ; 
+  echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ;
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( __GetVarReferenceList ) ;
+ elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  StrCppflags=${StrCppflags} \
+  StrCflags=${StrCflags} \
+  StrCxxflags=${StrCxxflags} \
+  StrFflags=${StrFflags} \
+  StrLdflags=${StrLdflags} \
+  StrJavaHome=${StrJavaHome} \
+  StrJavaClasspath=${StrJavaClasspath} \
+  PythonSetupAct=${PythonSetupAct} \
+  pipAct=${pipAct} \
+  BoolPipInstall=${BoolPipInstall} \
+  BoolPipUpgrade=${BoolPipUpgrade} \
+  BoolPySetup=${BoolPySetup} \
+  StrPythonVersion=${StrPythonVersion} \
+  StrPythonAppsPath=${StrPythonAppsPath} \
+  StrPythonScript=${StrPythonScript} \
+  ZPIZenityTextEntry=${ZPIZenityTextEntry} \
+  IntDefaultSleep=${IntDefaultSleep} \
+  StrPythonPackage=${StrPythonPackage} \
+  BoolUseZenityTextEntry=${BoolUseZenityTextEntry} \
+  __main_StartServices             ; 
+ fi
+
+  
+
+}
+### =#md5=3382a9191121893448cb02e476fa7b8a
