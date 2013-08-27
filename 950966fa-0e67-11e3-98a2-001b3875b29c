@@ -2,12 +2,12 @@
 ### FootPrint Added, see Prefixed-Var ZSEAddFootPrint from ZenityShellEval
 ###
 
-###File:950966fa-0e67-11e3-98a2-001b3875b29c
-###UUID-TIME-MARKER:9a2b8326-0e89-11e3-98a2-001b3875b29c
+###File:/etc/init.d/Fnct.d/950966fa-0e67-11e3-98a2-001b3875b29c
+###UUID-TIME-MARKER:ce18f540-0ec7-11e3-98a2-001b3875b29c
 ###Date: ${StrDateFormat}
-###Sha1Sum: 7a822538a019aa0ea5aae23043bb6b71525e48d5
-### Size:7079
-### NbWord: 587\n
+###Sha1Sum: 78c79911f4efbfc34b1707c1c63674a48da11768
+### Size:7352
+### NbWord: 611\n
 function ZenityPythonInstaller()
 {
   local __call_locality__=( ZPI ZenityPythonInstaller ) ; 
@@ -29,7 +29,10 @@ function ZenityPythonInstaller()
   local StrPythonAppsPath=${ZPIPyPathBin:=/usr/bin} ;
   local BoolUseZenityTextEntry=${ZPIZenityTextEntry:=False} ; 
   local IntDefaultSleep=${ZPISleep:=5} ; 
-  local StrPythonPackage=${ZPIPackage:=https://pypi.python.org/packages/source/o/ouimeaux/ouimeaux-0.4.2.tar.gz,https://pypi.python.org/packages/source/i/iterpipes/iterpipes-0.4.tar.gz}
+  local StrPythonPackage=${ZPIPackage:=https://pypi.python.org/packages/source/o/ouimeaux/ouimeaux-0.4.2.tar.gz,https://pypi.python.org/packages/source/i/iterpipes/iterpipes-0.4.tar.gz};
+  local IntWidth=${ZPIZenWidth:=500};
+  local IntHeight=${ZPIZenHeight:=120};
+  local StrZenityTitle=${ZPIZenTitle:=Give the Package list to install, separated by ','} ;
 
   function ZenityTextPackageEntry()
  { 
@@ -38,7 +41,7 @@ function ZenityPythonInstaller()
    local Arg0=${ArrayArg[0]};
    local IntWidth=${ZTPEWidth:=500} ;
    local IntHeight=${ZTPEHeight:=120} ;
-   local StrZenityTextTitle=${ZTPETitle:=Give the Package list, separated by ','}
+   local StrZenityTextTitle=${ZTPETitle:=Give the Package list to install, separated by ','}
    local BoolZenityEntry=${ZTPEIsZenityEntry:=True} ; 
    eval $( BVTestVarName=StrZenityAddEntry \
          BVTestVarHold='--entry' \
@@ -115,8 +118,8 @@ function ZenityPythonInstaller()
       FFLAGS="${StrFflags}" \
       LDFLAGS="${StrLdflags}" \
       JAVA_HOME="${StrJavaHome}" \
-     CLASSPATH="${StrJavaClasspath}"
-      pip install ${item} ; 
+     CLASSPATH="${StrJavaClasspath}" \
+     pip install ${item} ; 
       res=$? ; 
       if [ "${res}" != "0" ] ; then 
        echo -ne "\n\n\n\n\n\n\n\n\tPIP installer Installing Package ${item} FAILED\n\n\n\n\n\n\n\n" ; 
@@ -154,6 +157,9 @@ function ZenityPythonInstaller()
   IntDefaultSleep=${IntDefaultSleep} \
   StrPythonPackage=${StrPythonPackage} \
   BoolUseZenityTextEntry=${BoolUseZenityTextEntry} \
+  StrZenityTitle=${StrZenityTitle} \
+  IntWidth=${IntWidth} \
+  IntHeight=${IntHeight} \ 
   __main_StartServices             ; 
  fi
 

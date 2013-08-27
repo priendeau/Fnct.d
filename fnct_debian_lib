@@ -402,6 +402,10 @@ unset AnsiCodeTest
 unset GetStdPrefixName ; 
 . /etc/init.d/Fnct.d/69968204-0cf6-11e3-99bc-001b3875b29c 
 
+### ZenityPythonInstaller 
+unset ZenityPythonInstaller ; 
+. /etc/init.d/Fnct.d/950966fa-0e67-11e3-98a2-001b3875b29c
+
 
 
 ### 

@@ -589,6 +589,87 @@ and StartServices which is the Core of a Function for a finite action.
 	}
 
 
+:Note: 5f218798-0ec6-11e3-98a2-001b3875b29c
+:Title: Complex Case of ZenityPythonInstaller, many Variable transfert example and many Input Entry.
+
+While the function own a Huge Table or Hudge Variable-Stacking, due to entry 
+method dependent from shell information and Zenity Window Manager in Text-Entry
+Mode, A BodyFunc will reduce the if-elif-else case from __main_StartServices.
+See the Code snippet to look what an normal hand-writing entry will look like.
+
+
+.. code:: shell
+	
+	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+	 GetVarReference ${__call_locality[1]} ; 
+     echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+    elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+     eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+     echo -ne """${ArgGet}\n""" ;
+    elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+     eval $( __GetVarReferenceList ) ;
+    elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+     StrCppflags=${StrCppflags} \
+     StrCflags=${StrCflags} \
+     StrCxxflags=${StrCxxflags} \
+     StrFflags=${StrFflags} \
+     StrLdflags=${StrLdflags} \
+     StrJavaHome=${StrJavaHome} \
+     StrJavaClasspath=${StrJavaClasspath} \
+     PythonSetupAct=${PythonSetupAct} \
+     pipAct=${pipAct} \
+     BoolPipInstall=${BoolPipInstall} \
+     BoolPipUpgrade=${BoolPipUpgrade} \
+     BoolPySetup=${BoolPySetup} \
+     StrPythonVersion=${StrPythonVersion} \
+     StrPythonAppsPath=${StrPythonAppsPath} \
+     StrPythonScript=${StrPythonScript} \
+     ZPIZenityTextEntry=${ZPIZenityTextEntry} \
+     IntDefaultSleep=${IntDefaultSleep} \
+     StrPythonPackage=${StrPythonPackage} \
+     BoolUseZenityTextEntry=${BoolUseZenityTextEntry} \
+     StrZenityTitle=${StrZenityTitle} \
+     IntWidth=${IntWidth} \
+     IntHeight=${IntHeight} \ 
+     __main_StartServices             ; 
+   fi
+
+
+Also this code sample will also be delivered with a pseudo-code to deliver 
+a functionnal-programmation stream behing show under many call from BoolVarTestVarCreation
+
+.. image:: https://github.com/priendeau/Fnct.d/raw/master/image`s/950966fa-0e67-11e3-98a2-001b3875b29c-pseudo-code-Main.svg
+        :target: https://github.com/priendeau/Fnct.d#5f218798-0ec6-11e3-98a2-001b3875b29c
+
+.. code:: shell
+	
+	function __main_StartServices()
+	{
+      local __call_locality=( Main __main_StartServices ) ;
+      local ArrayArg=( $* ) ; 
+      local Arg0=${ArrayArg[0]};
+      local ArrayPackage=( ) ;
+
+      eval $( BVTestVarName=StrPackageExtract \
+      BVTestVarHold='${StrPythonPackage}' \
+      BVTestBoolVarName=\${BoolUseZenityTextEntry} \
+      BVTestBoolCase='False' \
+      BVTestBoolAssertion='$( ZenityTextPackageEntry )' BVTestScopeTest=local BoolVarTestVarCreation ) ; 
+
+      eval $( BVTestVarName=StrPythonLoader \
+         BVTestVarHold='${StrPythonVersion}' \
+         BVTestBoolVarName=\${BoolUseZenityTextEntry} \
+         BVTestBoolCase='${StrPythonVersion}' \
+         BVTestBoolAssertion='3.2' BVTestScopeTest=local BoolVarTestVarCreation ) ; 
+         StrPythonLoader="${StrPythonAppsPath}/python${StrPythonLoader}" ;
+   
+      eval $( BVTestVarName=StrAppsInstall \
+         BVTestVarHold='pip' \
+         BVTestBoolVarName=\${BoolPipInstall} \
+         BVTestBoolCase=False \
+         BVTestBoolAssertion='${StrPythonLoader} ${StrPythonScript}' BVTestScopeTest=local BoolVarTestVarCreation ) ; 
+
+
 Parameters
 ==========
 
