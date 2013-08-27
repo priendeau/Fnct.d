@@ -638,7 +638,12 @@ See the Code snippet to look what an normal hand-writing entry will look like.
 Also this code sample will also be delivered with a pseudo-code to deliver 
 a functionnal-programmation stream behing show under many call from BoolVarTestVarCreation
 
+<SVG>
 .. image:: https://github.com/priendeau/Fnct.d/raw/master/images/950966fa-0e67-11e3-98a2-001b3875b29c-pseudo-code-Main.svg
+        :target: https://github.com/priendeau/Fnct.d#5f218798-0ec6-11e3-98a2-001b3875b29c
+
+<PNG>
+.. image:: https://github.com/priendeau/Fnct.d/raw/master/images/950966fa-0e67-11e3-98a2-001b3875b29c-pseudo-code-Main.png
         :target: https://github.com/priendeau/Fnct.d#5f218798-0ec6-11e3-98a2-001b3875b29c
 
 .. code:: shell
