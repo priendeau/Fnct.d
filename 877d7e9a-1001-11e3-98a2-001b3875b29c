@@ -1,0 +1,89 @@
+###
+### FootPrint Added, see Prefixed-Var ZSEAddFootPrint from ZenityShellEval
+###
+
+###File:877d7e9a-1001-11e3-98a2-001b3875b29c
+###UUID-TIME-MARKER:10139e3c-1012-11e3-98a2-d7da014878b5
+###Date: ${StrDateFormat}
+###Sha1Sum: e63b949fa770a9044f5949e141f2980c54be1208
+### Size:3076
+### NbWord: 292\n
+unset FileNameConversion ;
+function FileNameConversion()
+{
+   local __call_locality=( FNC FileNameConversion ) ;
+   local ArrayArg=( $* ) ; 
+   local Arg0=${ArrayArg[0]} ;
+   local StrFileNameSearch=${FNCMimeTypeEntry:=.tif} ;
+   local StrFileNameReplace=${FNCMimeTypeConv:=.pnm} ;
+   local BoolRemoveFileExt=${FNCRemoveExt:=True} ;
+   local StrTagList=${FNCTag:=__FILE__,__NEWFILE__} ;
+   local ArrayTagList=( ${StrTagList//,/ } ) ; 
+   ### +---> call was received here... Herein have not held to do TagList, but StrTagList. 
+   local StrTagAction=${FNCAppsConv:=mv ${ArrayTagList[0]} ${ArrayTagList[1]}} ;
+   local StrPath=${FNCPath:=./} ; 
+
+  function __LoopAction()
+ {
+   local __call_locality=( _LA __LoopAction ) ;
+   local ArrayArg=( $* ) ; 
+   local Arg0=${ArrayArg[0]} ;
+   local BoolRemoveFileExt=${_LAIsRemoveext:=True} ;
+   eval $( BVTestVarName=StrItem \
+         BVTestVarHold='${Item//${StrFileNameSearch}/}' \
+         BVTestBoolVarName=\${BoolRemoveFileExt}
+         BVTestBoolCase=False \
+         BVTestBoolAssertion='${Item}' BVTestScopeTest=local BoolVarTestVarCreation ) ; 
+   local StrCmdEval=${StrTagAction} ; 
+   local ArrayTagList=( ${StrTagList//,/ } ) ; 
+   local ArrayVarValue=( ${StrItem}${StrFileNameSearch} ${StrItem}${StrFileNameReplace} ) ;
+   for (( intx=0 ; intx <= ${#ArrayTagList[@]}-1 ; intx++ )) ; do
+    local Tag=${ArrayTagList[${intx}]} ;
+    local Value=${ArrayVarValue[${intx}]}
+    StrCmdEval=${StrCmdEval/${Tag}/${Value}} ; 
+   done
+   echo -ne "CmdEval: ${StrTagAction}\n" > /dev/stderr ; 
+ }
+
+ function __main_StartServices()
+ {
+   local __call_locality=( Main __main_StartServices ) ;
+   local ArrayArg=( $* ) ; 
+   local Arg0=${ArrayArg[0]} ;
+   local StrEval='find ./ -type f -iname "*${StrFileNameSearch}" -printf "%f "' ; 
+   echo -ne "Eval:${StrEval}\n" > /dev/stderr ; 
+   local ArrayFile=( $( eval ${StrEval} ) ) ;
+   echo -ne "NbFile: ${#ArrayFile[@]}\n" > /dev/stderr  ; 
+   for (( intx=0 ; intx <= ${#ArrayFile[@]}-1 ; intx++  )) ; do 
+    local Item=${ArrayFile[${intx}]} ; 
+    StrFileNameSearch=${StrFileNameSearch} \
+    StrFileNameReplace=${StrFileNameReplace} \
+    StrPath=${StrPath} \
+    Item=${Item} \
+    BoolRemoveFileExt=${BoolRemoveFileExt} \
+    StrTagAction=${StrTagAction} StrTagList=${StrTagList} \
+    __LoopAction ;
+   done 
+  
+ }
+
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+  GetVarReference ${__call_locality[1]} ; 
+  echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ;
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( __GetVarReferenceList ) ;
+ elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  StrFileNameSearch=${StrFileNameSearch} \
+  StrFileNameReplace=${StrFileNameReplace} \
+  StrPath=${StrPath} \
+  BoolRemoveFileExt=${BoolRemoveFileExt} \
+  StrTagAction=${StrTagAction} StrTagList=${StrTagList} \
+  __main_StartServices ; 
+ fi
+ 
+}
+
+FNCPath=./ FNCMimeTypeEntry=.tif FNCMimeTypeConv=.pnm FileNameConversion
