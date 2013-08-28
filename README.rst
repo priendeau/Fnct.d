@@ -677,6 +677,60 @@ a functionnal-programmation stream behing show under many call from BoolVarTestV
          BVTestBoolAssertion='${StrPythonLoader} ${StrPythonScript}' BVTestScopeTest=local BoolVarTestVarCreation ) ; 
 
 
+:Note: 9859f8da-1013-11e3-98a2-001b3875b29c
+:Title: Simple File Name conversion and action substitution example thru function FileNameConversion.
+
+Eversince the beginning, it was alway a pending question over most current action 
+done daily. Since Bash come from tinier subset shell like c-shell, csh, and simple
+oldest sh ( Stand for Shell from Unix ), most important action was to copy, move,
+rename, later comes the link and sync while the *Nix start to work's over many
+server networkly-binded. It was important to notice the need of having brace around
+a fixed method allowing to search and replace information due to its operability 
+beyond the basic operation. 
+
+Since than, appear uses of File-Extension name, where performed uniquely by the 
+system over .cfg name, Microsoft User were encouraged to uses common extension name
+for lacking File-type detection. Today's being totally ignored, Unix topology was 
+initially come with the application file where it's configration can perform a fast
+way to recognize the format... Having it on screen, it's detection behave with 
+on-sight display and were ignored from Scripter. Good Practice from this moment
+imply renaming file without extension into know one... 
+
+This FileNameConversion function had some root inside Original lib from fnct.d three
+years ago, and was inclued inside fnct_lib. Being a major in name conversion it 
+also include possibility to search for a type and convert it or simply pass extra command.
+
+
+Some extra command like Graphics Magik suite were hook to original script and were 
+performed from feeded path created to store Scaned images from scanimages application.
+A tool named Autotrace should enhance the output into vector to perform later a 
+faster recognition. But between uses of FileNameConversion and new version here, it
+depend from stronger integration and a [Main] action being parsed inside Pre-fixed variables
+FNCAppsConv. 
+
+See Variable List:
+
+::
+	
+	Help:
+
+	Function FileNameConversion
+	Default Variable Value:
+	Variable FNCMimeTypeEntry ,
+		Default Value:.tif
+	Variable FNCMimeTypeConv ,
+		Default Value:.pnm
+	Variable FNCRemoveExt ,
+		Default Value:True
+	Variable FNCTag ,
+		Default Value:__FILE__,__NEWFILE__
+	Variable FNCAppsConv ,
+		Default Value:mv ArrayTagList[0] ArrayTagList[1]
+	Variable FNCPath ,
+		Default Value:./
+
+
+
 Parameters
 ==========
 
