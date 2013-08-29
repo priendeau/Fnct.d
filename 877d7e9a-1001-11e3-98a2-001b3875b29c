@@ -3,25 +3,27 @@
 ###
 
 ###File:877d7e9a-1001-11e3-98a2-001b3875b29c
-###UUID-TIME-MARKER:10139e3c-1012-11e3-98a2-d7da014878b5
+###UUID-TIME-MARKER:c71f67b2-105a-11e3-98a2-001b3875b29c
 ###Date: ${StrDateFormat}
-###Sha1Sum: e63b949fa770a9044f5949e141f2980c54be1208
-### Size:3076
-### NbWord: 292\n
+###Sha1Sum: f0ca9d73b273e996472d5bc4910f05844fe5557e
+### Size:4494
+### NbWord: 391\n
 unset FileNameConversion ;
 function FileNameConversion()
 {
    local __call_locality=( FNC FileNameConversion ) ;
    local ArrayArg=( $* ) ; 
    local Arg0=${ArrayArg[0]} ;
-   local StrFileNameSearch=${FNCMimeTypeEntry:=.tif} ;
-   local StrFileNameReplace=${FNCMimeTypeConv:=.pnm} ;
+   local StrFileNameSearch=${FNCMimeTypeEntry:=tif} ;
+   local StrFileNameReplace=${FNCMimeTypeConv:=pnm} ;
    local BoolRemoveFileExt=${FNCRemoveExt:=True} ;
-   local StrTagList=${FNCTag:=__FILE__,__NEWFILE__} ;
-   local ArrayTagList=( ${StrTagList//,/ } ) ; 
-   ### +---> call was received here... Herein have not held to do TagList, but StrTagList. 
-   local StrTagAction=${FNCAppsConv:=mv ${ArrayTagList[0]} ${ArrayTagList[1]}} ;
-   local StrPath=${FNCPath:=./} ; 
+   local StrTagList=${FNCTag:=__FILE__,__NEWFILE__,__ENTRY__,__CONV__} ;
+   local StrTagAction=${FNCAppsConv:=mv __FILE__ __ENTRY__ __NEWFILE__ __CONV__} ;
+   local StrPath=${FNCPath:=./} ;
+   local BoolDisplayCmd=${FNCDisplayCmd:=False} ;
+   local StrFileListPrint=${FNCFindPrintf:=%f } ;
+   local StrFileListName=${FNCFindIname:=*\${StrFileNameSearch}} ;
+   local StrFileListFunc=${FNCFLFunc:=_FileList} ;
 
   function __LoopAction()
  {
@@ -36,13 +38,27 @@ function FileNameConversion()
          BVTestBoolAssertion='${Item}' BVTestScopeTest=local BoolVarTestVarCreation ) ; 
    local StrCmdEval=${StrTagAction} ; 
    local ArrayTagList=( ${StrTagList//,/ } ) ; 
-   local ArrayVarValue=( ${StrItem}${StrFileNameSearch} ${StrItem}${StrFileNameReplace} ) ;
-   for (( intx=0 ; intx <= ${#ArrayTagList[@]}-1 ; intx++ )) ; do
-    local Tag=${ArrayTagList[${intx}]} ;
-    local Value=${ArrayVarValue[${intx}]}
-    StrCmdEval=${StrCmdEval/${Tag}/${Value}} ; 
+   local ArrayVarValue=( ${StrItem} ${StrItem} ${StrFileNameSearch} ${StrFileNameReplace} ) ;
+   for (( intAx=0 ; intAx <= ${#ArrayTagList[@]}-1 ; intAx++ )) ; do
+    local Tag=${ArrayTagList[${intAx}]} ;
+    local Value=${ArrayVarValue[${intAx}]} ;
+    StrCmdEval=${StrCmdEval//${Tag}/${Value}} ; 
    done
-   echo -ne "CmdEval: ${StrTagAction}\n" > /dev/stderr ; 
+   eval $( BVTestVarName=StrCmdDisplay \
+         BVTestVarHold='echo -ne "CmdEval: ${StrCmdEval}\n" > /dev/stderr ' \
+         BVTestBoolVarName=\${BoolDisplayCmd}
+         BVTestBoolCase=True \
+         BVTestBoolAssertion='eval ${StrCmdEval}' BVTestScopeTest=local BoolVarTestVarCreation ) ; 
+ }
+ function _FileList()
+ {
+   local __call_locality=( _FL _FileList ) ;
+   local ArrayArg=( $* ) ; 
+   local Arg0=${ArrayArg[0]} ;
+   local StrCmdEval='find ${StrPath} -type f -iname \"${StrFileListName}\" -printf \"${StrFileListPrint}\"' ;
+   eval echo -ne "\n\n\tFind command: [${StrCmdEval}]\n\n" > /dev/stderr ; 
+   local StrReturn=$( eval ${StrCmdEval} ) ; 
+   echo -ne "${StrReturn}" ; 
  }
 
  function __main_StartServices()
@@ -50,23 +66,31 @@ function FileNameConversion()
    local __call_locality=( Main __main_StartServices ) ;
    local ArrayArg=( $* ) ; 
    local Arg0=${ArrayArg[0]} ;
-   local StrEval='find ./ -type f -iname "*${StrFileNameSearch}" -printf "%f "' ; 
-   echo -ne "Eval:${StrEval}\n" > /dev/stderr ; 
+   #local StrEval='find ./ -type f -iname "*${StrFileNameSearch}" -printf "%f "' ; 
+   local StrEval=$( eval StrPath=${StrPath} \
+                             StrFileNameSearch=${StrFileNameSearch} \
+                             StrFileListPrint=${StrFileListPrint} \
+                             ${StrFileListFunc} ) ; 
+
    local ArrayFile=( $( eval ${StrEval} ) ) ;
-   echo -ne "NbFile: ${#ArrayFile[@]}\n" > /dev/stderr  ; 
+   echo -ne "\n\tNbFile: ${#ArrayFile[@]}\n" > /dev/stderr  ; 
    for (( intx=0 ; intx <= ${#ArrayFile[@]}-1 ; intx++  )) ; do 
-    local Item=${ArrayFile[${intx}]} ; 
+    local Item=${ArrayFile[${intx}]//.${StrFileNameSearch}/} ; 
     StrFileNameSearch=${StrFileNameSearch} \
     StrFileNameReplace=${StrFileNameReplace} \
-    StrPath=${StrPath} \
-    Item=${Item} \
+    StrPath=${StrPath} Item=${Item} \
     BoolRemoveFileExt=${BoolRemoveFileExt} \
-    StrTagAction=${StrTagAction} StrTagList=${StrTagList} \
+    StrTagAction=${StrTagAction} \
+    StrTagList=${StrTagList} \
+    StrNewFile=${StrNewFile} \
+    BoolDisplayCmd=${BoolDisplayCmd} \
+    StrFileListName=${StrFileListName} \
+    StrFileListFunc=${StrFileListFunc} \
     __LoopAction ;
    done 
   
  }
-
+ local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\n" ;
  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
   GetVarReference ${__call_locality[1]} ; 
   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
@@ -80,10 +104,13 @@ function FileNameConversion()
   StrFileNameReplace=${StrFileNameReplace} \
   StrPath=${StrPath} \
   BoolRemoveFileExt=${BoolRemoveFileExt} \
-  StrTagAction=${StrTagAction} StrTagList=${StrTagList} \
+  StrTagAction=${StrTagAction} \
+  StrTagList=${StrTagList} \
+  StrNewFile=${StrNewFile} \
+  BoolDisplayCmd=${BoolDisplayCmd} \
   __main_StartServices ; 
  fi
  
 }
 
-FNCPath=./ FNCMimeTypeEntry=.tif FNCMimeTypeConv=.pnm FileNameConversion
+FNCPath=./ FNCMimeTypeEntry=tif FNCMimeTypeConv=pnm FileNameConversion

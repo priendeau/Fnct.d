@@ -286,7 +286,7 @@ Which is making sense.
 :Title: Usual Shell Chunk-Development.
 :function_name: ZenityShellEval
 
-
+---------------
 ZenityShellEval
 ---------------
 
@@ -680,6 +680,14 @@ a functionnal-programmation stream behing show under many call from BoolVarTestV
 :Note: 9859f8da-1013-11e3-98a2-001b3875b29c
 :Title: Simple File Name conversion and action substitution example thru function FileNameConversion.
 
+-------------------
+function FileNameConversion()
+-------------------
+
+Standing for a bulk operation, FileNameConversion, required more than one file to
+apply a *filter*, where the filter is an action. We will see the default action 
+later, fortcoming to see a simple mv ( Move action ), this is design by parameter.
+
 Eversince the beginning, it was alway a pending question over most current action 
 done daily. Since Bash come from tinier subset shell like c-shell, csh, and simple
 oldest sh ( Stand for Shell from Unix ), most important action was to copy, move,
@@ -689,29 +697,88 @@ a fixed method allowing to search and replace information due to its operability
 beyond the basic operation. 
 
 Since than, appear uses of File-Extension name, where performed uniquely by the 
-system over .cfg name, Microsoft User were encouraged to uses common extension name
-for lacking File-type detection. Today's being totally ignored, Unix topology was 
-initially come with the application file where it's configration can perform a fast
-way to recognize the format... Having it on screen, it's detection behave with 
-on-sight display and were ignored from Scripter. Good Practice at this moment it
-imply renaming file without extension into know one... 
+system over .cfg name, Microsoft User were encouraged to uses common extension 
+name for lacking File-type detection. Today's being totally ignored, Unix 
+topology was initially come with the application file where it's configration 
+can perform a fast way to recognize the format... Having it on screen, it's 
+detection behave with on-sight display and were ignored from Scripter. Good 
+Practice at this moment it imply renaming file without extension into know one... 
 
-This FileNameConversion function had some root inside Original lib from fnct.d three
-years ago, and was inclued inside fnct_lib. Being a major in name conversion it 
-also include possibility to search for a type and convert it or simply pass extra command.
+This FileNameConversion function had some root inside Original lib from fnct.d 
+three years ago, and was inclued inside fnct_lib. Being a major in name 
+conversion it  also include possibility to search for a type and convert it or 
+simply pass extra command.
 
 
-Some extra command like Graphics Magik suite were hook to original script and were 
-performed from feeded path created to store Scaned images from scanimages application.
-A tool named Autotrace should enhance the output into vector to perform later a 
-faster recognition. But between uses of FileNameConversion and new version here, it
-depend from stronger integration and a [Main] action being parsed inside Pre-fixed variables
-FNCAppsConv. 
+Some extra command like Graphics Magik suite were hook to  original script and 
+were  performed from feeded path created to store Scaned images from scanimages 
+application.A tool named Autotrace should enhance the output into vector 
+to perform later a faster recognition. But between uses of FileNameConversion 
+and new version here, it depend from stronger integration and a [Main] 
+action being parsed inside Pre-fixed variables FNCAppsConv. 
+
+The default function provide a _FileList function, which can be overrided with 
+Prefixed-Variable named FNCFLFunc for short ( FNC FileList Function). 
+
+Concrete action of a bulk-operator, FileNameConversion, require at least a 
+provider, explained early, _FileList is a wrapped find command with shell command
+to filter and output the name in a row called stream it should not come with any
+carriage. 
+
+Where Function _FileList can be preserved rather than providing any other 
+function name having equivalent operation, This internal function can also
+own couple of prefixed-var like FNCFindPrintf and FNCFindIname where important
+part of the find wrapped-command owning crited to define specific file-search
+filter thru FNCFindIname "find ... ( -iname )", while Variable FNCFindPrintf, 
+regulate the output, in find: find ... iname ** ( -printf ).
+See Example:
+
+::
+	FNCFindPrintf="%p" FNCDisplayCmd=True FileNameConversion 
+	will display :
+	- Full path name of a file name:
+	
+	Output:
+	mv /home/maxiste/Pictures/logo/outG100425.tif /home/maxiste/Pictures/logo/outG100425.pnm
+	mv /home/maxiste/Pictures/logo/outG268903.tif /home/maxiste/Pictures/logo/outG268903.pnm
+	mv /home/maxiste/Pictures/logo/outG272652.tif /home/maxiste/Pictures/logo/outG272652.pnm
+	mv /home/maxiste/Pictures/logo/outG100425.tif /home/maxiste/Pictures/logo/outG100425.pnm
+	mv /home/maxiste/Pictures/logo/outG268903.tif /home/maxiste/Pictures/logo/outG268903.pnm
+	mv /home/maxiste/Pictures/logo/outG272652.tif /home/maxiste/Pictures/logo/outG272652.pnm
+	mv /home/maxiste/Pictures/logo/outG136283.tif /home/maxiste/Pictures/logo/outG136283.pnm
+	mv /home/maxiste/Pictures/logo/outG100425.tif /home/maxiste/Pictures/logo/outG100425.pnm
+	mv /home/maxiste/Pictures/logo/outG268903.tif /home/maxiste/Pictures/logo/outG268903.pnm
+	mv /home/maxiste/Pictures/logo/outG272652.tif /home/maxiste/Pictures/logo/outG272652.pnm
+	mv /home/maxiste/Pictures/logo/outG136283.tif /home/maxiste/Pictures/logo/outG136283.pnm
+	mv /home/maxiste/Pictures/logo/outG136283.tif /home/maxiste/Pictures/logo/outG136283.pnm
+	
+	FNCFindPrintf="%f" FNCDisplayCmd=True FileNameConversion 
+	( Default value for FNCFindPrintf )
+	
+	will display :
+	- File Name only :
+	
+	Output:
+	mv G100425.tif G100425.pnm
+	mv G268903.tif G268903.pnm
+	mv G272652.tif G272652.pnm
+	mv G100425.tif G100425.pnm
+	mv G268903.tif G268903.pnm
+	mv G272652.tif G272652.pnm
+	mv G136283.tif G136283.pnm
+	mv G100425.tif G100425.pnm
+	mv G268903.tif G268903.pnm
+	mv G272652.tif G272652.pnm
+	mv G136283.tif G136283.pnm
+	mv G136283.tif G136283.pnm
+
 
 See Variable List:
 
 ::
 	
+Help:
+
 	Function FileNameConversion
 	Default Variable Value:
 	Variable FNCMimeTypeEntry ,
@@ -726,6 +793,14 @@ See Variable List:
 		Default Value:mv __FILE__ __ENTRY__ __NEWFILE__ __CONV__
 	Variable FNCPath ,
 		Default Value:./
+	Variable FNCDisplayCmd ,
+		Default Value:False
+	Variable FNCFindPrintf ,
+		Default Value:%f 
+	Variable FNCFindIname ,
+		Default Value:*StrFileNameSearch
+	Variable FNCFLFunc ,
+		Default Value:_FileList
 	Following switch are available:
 
 		--startservices	Start the application normally.
