@@ -734,10 +734,11 @@ regulate the output, in find: find ... iname ** ( -printf ).
 See Example:
 
 ::
+	
 	FNCFindPrintf="%p" FNCDisplayCmd=True FileNameConversion 
 	will display :
 	- Full path name of a file name:
-	
+
 	Output:
 	mv /home/maxiste/Pictures/logo/outG100425.tif /home/maxiste/Pictures/logo/outG100425.pnm
 	mv /home/maxiste/Pictures/logo/outG268903.tif /home/maxiste/Pictures/logo/outG268903.pnm
@@ -751,13 +752,13 @@ See Example:
 	mv /home/maxiste/Pictures/logo/outG272652.tif /home/maxiste/Pictures/logo/outG272652.pnm
 	mv /home/maxiste/Pictures/logo/outG136283.tif /home/maxiste/Pictures/logo/outG136283.pnm
 	mv /home/maxiste/Pictures/logo/outG136283.tif /home/maxiste/Pictures/logo/outG136283.pnm
-	
+
 	FNCFindPrintf="%f" FNCDisplayCmd=True FileNameConversion 
 	( Default value for FNCFindPrintf )
-	
+
 	will display :
 	- File Name only :
-	
+
 	Output:
 	mv G100425.tif G100425.pnm
 	mv G268903.tif G268903.pnm
