@@ -693,7 +693,7 @@ system over .cfg name, Microsoft User were encouraged to uses common extension n
 for lacking File-type detection. Today's being totally ignored, Unix topology was 
 initially come with the application file where it's configration can perform a fast
 way to recognize the format... Having it on screen, it's detection behave with 
-on-sight display and were ignored from Scripter. Good Practice from this moment
+on-sight display and were ignored from Scripter. Good Practice at this moment it
 imply renaming file without extension into know one... 
 
 This FileNameConversion function had some root inside Original lib from fnct.d three
@@ -712,22 +712,25 @@ See Variable List:
 
 ::
 	
-	Help:
-
 	Function FileNameConversion
 	Default Variable Value:
 	Variable FNCMimeTypeEntry ,
-		Default Value:.tif
+		Default Value:tif
 	Variable FNCMimeTypeConv ,
-		Default Value:.pnm
+		Default Value:pnm
 	Variable FNCRemoveExt ,
 		Default Value:True
 	Variable FNCTag ,
-		Default Value:__FILE__,__NEWFILE__
+		Default Value:__FILE__,__NEWFILE__,__ENTRY__,__CONV__
 	Variable FNCAppsConv ,
-		Default Value:mv ArrayTagList[0] ArrayTagList[1]
+		Default Value:mv __FILE__ __ENTRY__ __NEWFILE__ __CONV__
 	Variable FNCPath ,
 		Default Value:./
+	Following switch are available:
+
+		--startservices	Start the application normally.
+		--get		Return value of Internal Variable.
+		--list		List all Internal Pre-fixed Variable available to query or get.
 
 
 
