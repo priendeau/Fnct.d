@@ -778,36 +778,35 @@ See Variable List:
 
 ::
 	
-Help:
+	Help:
 
-	Function FileNameConversion
-	Default Variable Value:
-	Variable FNCMimeTypeEntry ,
-		Default Value:tif
-	Variable FNCMimeTypeConv ,
-		Default Value:pnm
-	Variable FNCRemoveExt ,
-		Default Value:True
-	Variable FNCTag ,
-		Default Value:__FILE__,__NEWFILE__,__ENTRY__,__CONV__
-	Variable FNCAppsConv ,
-		Default Value:mv __FILE__ __ENTRY__ __NEWFILE__ __CONV__
-	Variable FNCPath ,
-		Default Value:./
-	Variable FNCDisplayCmd ,
-		Default Value:False
-	Variable FNCFindPrintf ,
-		Default Value:%f 
-	Variable FNCFindIname ,
-		Default Value:*StrFileNameSearch
-	Variable FNCFLFunc ,
-		Default Value:_FileList
-	Following switch are available:
+		Function FileNameConversion
+		Default Variable Value:
+		Variable FNCMimeTypeEntry ,
+			Default Value:tif
+		Variable FNCMimeTypeConv ,
+			Default Value:pnm
+		Variable FNCRemoveExt ,
+			Default Value:True
+		Variable FNCTag ,
+			Default Value:__FILE__,__NEWFILE__,__ENTRY__,__CONV__
+		Variable FNCAppsConv ,
+			Default Value:mv __FILE__ __ENTRY__ __NEWFILE__ __CONV__
+		Variable FNCPath ,
+			Default Value:./
+		Variable FNCDisplayCmd ,
+			Default Value:False
+		Variable FNCFindPrintf ,
+			Default Value:%f 
+		Variable FNCFindIname ,
+			Default Value:*StrFileNameSearch
+		Variable FNCFLFunc ,
+			Default Value:_FileList
+		Following switch are available:
 
-		--startservices	Start the application normally.
-		--get		Return value of Internal Variable.
-		--list		List all Internal Pre-fixed Variable available to query or get.
-
+			--startservices	Start the application normally.
+			--get		Return value of Internal Variable.
+			--list		List all Internal Pre-fixed Variable available to query or get.
 
 
 Parameters
