@@ -774,39 +774,80 @@ See Example:
 	mv G136283.tif G136283.pnm
 
 
+::
+		
+	Note:
+	Example may differ and may be available with Prefixed-var FNCAppsConv having
+	following value, which is more valuable for function definition:
+	
+	FNCAppsConv -> /usr/bin/tifftopnm __PATH__/__FILE__.__ENTRY__ > __PATH__/__NEWFILE__.__CONV__
+
+	Which holding a file conversion from TIFF to PNM with application 
+	/usr/bin/tifftopnm
+	
+	available from package netpbm available thru apt-get:
+
+.. code:: shell
+	
+	$> sudo -s apt-get install netpbm
+
+	---> Hacker may be insterested to compile it's own package for *self* purposes.
+
+	$> sudo -s apt-src install netpbm -p 
+	$> sudo -s apt-src build netpbm
+
+
+Building your own way to update-and-or changing filename with proper program like 
+GraphicMagics will work on the same way:
+
+.. code:: shell
+	
+	FNCAppsConv="convert __ENTRY__:__PATH__/__FILE__.__ENTRY__ __CONV__:__PATH__/__FILE__.__CONV__" FNCDisplayCmd=True FileNameConversion 
+
+	### 
+	### Just amazing how convert from GraphicMagics suite was design to allow shell
+	### scripter to interact fast with minimal subset of informations.
+	### 
+	### 
+	
 See Variable List:
 
 ::
 	
 	Help:
 
-		Function FileNameConversion
-		Default Variable Value:
-		Variable FNCMimeTypeEntry ,
-			Default Value:tif
-		Variable FNCMimeTypeConv ,
-			Default Value:pnm
-		Variable FNCRemoveExt ,
-			Default Value:True
-		Variable FNCTag ,
-			Default Value:__FILE__,__NEWFILE__,__ENTRY__,__CONV__
-		Variable FNCAppsConv ,
-			Default Value:mv __FILE__ __ENTRY__ __NEWFILE__ __CONV__
-		Variable FNCPath ,
-			Default Value:./
-		Variable FNCDisplayCmd ,
-			Default Value:False
-		Variable FNCFindPrintf ,
-			Default Value:%f 
-		Variable FNCFindIname ,
-			Default Value:*StrFileNameSearch
-		Variable FNCFLFunc ,
-			Default Value:_FileList
-		Following switch are available:
+	Function FileNameConversion
+	Default Variable Value:
+	Variable FNCMimeTypeEntry ,
+		Default Value:tif
+	Variable FNCMimeTypeConv ,
+		Default Value:pnm
+	Variable FNCRemoveExt ,
+		Default Value:True
+	Variable FNCTag ,
+		Default Value:__FILE__,__NEWFILE__,__ENTRY__,__CONV__,__PATH__
+	Variable FNCAppsConv ,
+		Default Value:/usr/bin/tifftopnm __PATH__/__FILE__.__ENTRY__ > __PATH__/__NEWFILE__.__CONV__
+	Variable FNCPath ,
+		Default Value:./
+	Variable FNCDisplayCmd ,
+		Default Value:False
+	Variable FNCFindPrintf ,
+		Default Value:"%f "
+	Variable FNCFindIname ,
+		Default Value:*.StrFileNameSearch
+	Variable FNCFLFunc ,
+		Default Value:_FileList
+	Following switch are available:
 
-			--startservices	Start the application normally.
-			--get		Return value of Internal Variable.
-			--list		List all Internal Pre-fixed Variable available to query or get.
+		--startservices	Start the application normally.
+		--get		Return value of Internal Variable.
+		--list		List all Internal Pre-fixed Variable available to query or get.
+
+
+
+
+
 
 
 Parameters
