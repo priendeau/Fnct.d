@@ -734,7 +734,7 @@ the output rather than allowing execution.
 	the hand. ) And many more automate receiving jobs and chuck of code, even a
 	version of Fnct.D dealling with setter thru python RPC lib 
 	( Remote procedure call), with embedded Sqlite facility to change the default 
-	value in flavor or an RPC-Lib instance allowing many instance and many designable
+	value in flavor or an RPC-Lib instance allowing many instance and many design
 	living at once.
 
 Where Function _FileList can be preserved rather than providing any other 
