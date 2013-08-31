@@ -725,6 +725,18 @@ provider, explained early, _FileList is a wrapped find command with shell comman
 to filter and output the name in a row called stream it should not come with any
 carriage. 
 
+[Warning] the prefixed-variable FNCDisplayCmd is alway set to True in this function 
+and acceptable value is True/False, and will stay to FNCDisplayCmd=True to visualize
+the output rather than allowing execution. 
+
+	Future version will depend of generating the script and send it to a robot,
+	cron-dealer ( where it remain unsheduled at this moment, No admin job under 
+	the hand. ) And many more automate receiving jobs and chuck of code, even a
+	version of Fnct.D dealling with setter thru python RPC lib 
+	( Remote procedure call), with embedded Sqlite facility to change the default 
+	value in flavor or an RPC-Lib instance allowing many instance and many designable
+	living at once.
+
 Where Function _FileList can be preserved rather than providing any other 
 function name having equivalent operation, This internal function can also
 own couple of prefixed-var like FNCFindPrintf and FNCFindIname where important
@@ -802,7 +814,9 @@ GraphicMagics will work on the same way:
 
 .. code:: shell
 	
-	FNCAppsConv="convert __ENTRY__:__PATH__/__FILE__.__ENTRY__ __CONV__:__PATH__/__FILE__.__CONV__" FNCDisplayCmd=True FileNameConversion 
+	FNCAppsConv="convert __ENTRY__:__PATH__/__FILE__.__ENTRY__ __CONV__:__PATH__/__FILE__.__CONV__" \
+	FNCDisplayCmd=True \
+	FileNameConversion 
 
 	### 
 	### Just amazing how convert from GraphicMagics suite was design to allow shell
