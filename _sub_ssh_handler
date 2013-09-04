@@ -244,20 +244,25 @@ function GetKeyChoice()
 function GetPasswd()    
 { 
  local ArrayArg=( $*) ; 
- local __call_locality=( GetPasswd ) ; 
+ local __call_locality=( GP GetPasswd ) ; 
  local Arg0=${ArrayArg[0]} ; 
- local IntDefaultPwdSize=${GetPasswdSize:=16}
- local IntDefaultFactor=${GetPasswdFactor:=1000} ; 
- local IntRandomSeedFactor=${GetPasswdRandomSeed:=10} ; 
- local StrPasswordTypeForm=${GetPasswdArgType:=cnsB1,cysB1} ; 
- local ArrayFormPassword=( ${StrPasswordTypeForm//,/ } ) ;
- local IntPasswordType=${GetPasswdGenFormType:=0} ;
- local StrPwGenFormPassword=-${ArrayFormPassword[${IntPasswordType}]};
- local StrAppsPwdGenerator=${GetPasswdAppsGen:=pwgen} ;
  
- function MainProcess()
+ local IntDefaultPwdSize=${GPSize:=16}
+ local IntDefaultFactor=${GPFactor:=1000} ; 
+ local IntRandomSeedFactor=${GPRandomSeed:=10} ; 
+ local StrPasswordTypeForm=${GPArgType:=cnsB1,cysB1} ; 
+ local ArrayFormPassword=( ${StrPasswordTypeForm//,/ } ) ;
+ local IntPasswordType=${GPGenFormType:=0} ;
+ local StrPwGenFormPassword=-${ArrayFormPassword[${IntPasswordType}]};
+ local StrAppsPwdGenerator=${GPAppsGen:=pwgen} ;
+ 
+
+ function __main_StartServices()
  {
-		local __call_locality=( MainProcess )
+		local __call_locality=( Main __main_StartServices ) ;
+		local ArrayArg=( $* ) ; 
+		local Arg0=${ArrayArg[0]};
+
 		local x=0; 
 		local end=${IntDefaultFactor} ; 
 		local factor=$(( ${end} * $(( ( ${RANDOM} % ${IntRandomSeedFactor} ) + 1 )) )) ; 
@@ -267,14 +272,27 @@ function GetPasswd()
 			eval """value=\$( ${StrAppsPwdGenerator} ${StrPwGenFormPassword} ${IntDefaultPwdSize} )""" ; 
 			let x=$x+1 ; 
 		done ; 
-		echo -ne "\npasswd:[${value}]\n\n" > /dev/stderr  ; 		
-	}
-	 
- if [ "${Arg0:=--startservices}" == "--help" ] ; then 
-		GetVarReference ${__call_locality[0]} ; 
+		echo -ne "\npasswd:[${value}]\n\n" > /dev/stderr  ; 		  
+ }
+
+ local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\n" ;
+	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+			GetVarReference ${__call_locality[1]} ; 
+			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+		echo -ne """${ArgGet}\n""" ;
+	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+		eval $( __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
-		IntDefaultPwdSize=${IntDefaultPwdSize} IntDefaultFactor=${IntDefaultFactor} IntRandomSeedFactor=${IntRandomSeedFactor} IntPasswordType=${IntPasswordType} StrPwGenFormPassword=${StrPwGenFormPassword} StrAppsPwdGenerator=${StrAppsPwdGenerator} MainProcess ; 
- fi
+  IntDefaultPwdSize=${IntDefaultPwdSize} \
+  IntDefaultFactor=${IntDefaultFactor} \
+  IntRandomSeedFactor=${IntRandomSeedFactor} \
+  IntPasswordType=${IntPasswordType} \
+  StrPwGenFormPassword=${StrPwGenFormPassword} \
+  StrAppsPwdGenerator=${StrAppsPwdGenerator} \
+  __main_StartServices ;
+ fi	 
  
 
 }
