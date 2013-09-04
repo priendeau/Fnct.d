@@ -88,10 +88,8 @@ establish a __future__ development for integration inse loader and initrd for sh
 management and Integration. 
 
 
-
 Improvement
 ===========
-
 
 Now on latest relase ( 2013-09-04 ), the re-integration of /etc/init.d/Fnct.d/fnct_lib 
 was added to Git repository. so now inside a simple .bashrc the following line will 
@@ -100,17 +98,14 @@ call the Lib:
 .. code:: shell
 	
 	### Must be added inside ~/.bashrc 
-	
 	. /etc/init.d/Fnct.d/fnct_lib 
-	
-	
-	
-	
 
-Assuming the Git developpement branch was cloned inside /etc/init.d/Fnct.D
+
+	Assuming the Git developpement branch was cloned inside /etc/init.d/Fnct.D
 	
 
 .. code:: shell
+	
 	$> cd /etc/init.d
 	$> sudo -s git clone https://github.com/priendeau/Fnct.d 
 	
@@ -119,6 +114,7 @@ Assuming the Git developpement branch was cloned inside /etc/init.d/Fnct.D
 	### /etc/init.d . 
 	###
 	
+
 
 Definitions
 ===========
