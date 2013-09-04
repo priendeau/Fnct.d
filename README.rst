@@ -101,7 +101,7 @@ call the Lib:
 	. /etc/init.d/Fnct.d/fnct_lib 
 
 
-	Assuming the Git developpement branch was cloned inside /etc/init.d/Fnct.D
+Assuming the Git developpement branch was cloned inside /etc/init.d/Fnct.D
 	
 
 .. code:: shell
