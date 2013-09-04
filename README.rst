@@ -85,13 +85,13 @@ and desapear or move inside /usr This design exist inside /etc/init.d/Fnct.d to
 establish a __future__ development for integration inse loader and initrd for shell
 management and Integration. 
 
-	~~~~~~~~~~~~~~
-	Improvement
-	~~~~~~~~~~~~~~
-	
-	Now on latest relase ( 2013-09-04 ), the re-integration of /etc/init.d/Fnct.d/fnct_lib 
-	was added to Git repository. so now inside a simple .bashrc the following line will 
-	call the Lib:
+~~~~~~~~~~~
+Improvement
+~~~~~~~~~~~
+
+Now on latest relase ( 2013-09-04 ), the re-integration of /etc/init.d/Fnct.d/fnct_lib 
+was added to Git repository. so now inside a simple .bashrc the following line will 
+call the Lib:
 	
 .. code:: shell
 	
