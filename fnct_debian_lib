@@ -1,15 +1,4 @@
 
-##. /etc/init.d/fnct.d/fnct_lib
-
-declare -a ArrayMetaList=( Install Archives ) ; 
-declare -a ArrayCreator=( Debian Ubuntu Fedora Mint ) ;
-declare -a ArrayPackageType=( DPKG APT YUM RPM ) ;
-declare -a ArrayPackageAction=( install update remove fix compile certify verify ) ;
-declare -a ArrayLibPolicy=( ValueParser:True:fnct_debian_lib:master AddPValueStore:True:fnct_debian_lib:master BoolVarTestVarCreation:True:fnct_debian_lib:master __default_test:True:fnct_debian_lib:normal GetStdPrefixName:True:fnct_debian_lib:master PropertyLibName:True:fnct_debian_lib:master GetVarReference:True:fnct_debian_lib:master StartCoproc:True:fnct_debian_lib:normal PkgConfigQuery:True:fnct_debian_lib:normal pkg-config-all:True:fnct_debian_lib:normal GetUUID:True:fnct_debian_lib:master ObjFindFunction:True:fnct_debian_lib:normal GetOtherDate:True:fnct_debian_lib:master DefaultConfigure:True:fnct_debian_lib:normal IsPathName:True:fnct_debian_lib:normal kill_cmd:True:fnct_debian_lib:normal StartApps:True:fnct_debian_lib:normal Survey_kill_apps:True:fnct_debian_lib:normal DpkgGetInlineBuildFlags:True:fnct_debian_lib:normal fast_dpkg_build:True:fnct_debian_lib:normal DebianAptSrcCompiler:True:fnct_debian_lib:normal AptSrcChange:True:fnct_debian_lib:normal AptRebuild:True:fnct_debian_lib:normal find_edit_file:True:fnct_debian_lib:normal acquire_lan_ifconfig:True:fnct_debian_lib:normal GetBuildFlagsList:True:fnct_debian_lib:normal GetZenityText:True:fnct_debian_lib:normal GetZenityTextEntry:True:fnct_debian_lib:normal zenity_pip_installer:True:fnct_debian_lib:normal GkSuZenityLoader:True:normal GetMplayerStream:True:fnct_debian_lib:normal BuildOnFaultCompiler:True:fnct_debian_lib:normal RoundRobinSwapRealloc:True:fnct_debian_lib:normal ) ;
-
-declare -a ArrayLibName=( fnct_debian_lib ) ; 
-declare -a ArrayNotReUseLib=( fnct_debian_lib ) 2> /dev/null 
-
 
 
  ###	Specification : 
@@ -408,7 +397,7 @@ unset ZenityPythonInstaller ;
 
 ### FileNameConversion
 unset FileNameConversion ; 
-. /etc/init.d/Fnct.d/877d7e9a-1001-11e3-98a2-001b3875b29c
+#. /etc/init.d/Fnct.d/877d7e9a-1001-11e3-98a2-001b3875b29c
 
 
 ### 
@@ -1735,7 +1724,7 @@ function DebianAptSrcCompiler()
 {
 	local __call_locality=( DebianAptSrcCompiler ) ; 
 	local ArrayArg=$( $* ) ; 
-  local ArrayPackageName=( ${DebianAptSrcCompilerPackage//;/ } ) ;
+ local ArrayPackageName=( ${DebianAptSrcCompilerPackage//;/ } ) ;
 	local CompilerVersion=${DebianAptSrcCompilerVersion:=4.4} ; 
 	local StrAptProc=${DebianAptSrcCompilerPackageAptProc:=clean;install;build}
 	local AddPatch=${DebianAptSrcCompilerPatch:=True} ;
@@ -1744,42 +1733,42 @@ function DebianAptSrcCompiler()
 	local res_exec=0 ; 
 	local StrPath=${DebianAptSrcCompilerPath:=/usr/local/src/apt} ;
 	local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
- 	if [ "${ArrayArg[0]}" = "--help" ] ; then 
-			GetVarReference ${__call_locality[0]} ; 
-			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-		elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-			echo -ne """${ArgGet}\n""" ; 			
-		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval $( __GetVarReferenceList ) ;
- 	else	 	
-		if [ ${AddPatch:=True} == "True" ]; then 
-			StrPatchOpt="-p" ;
-		else
-			StrPatchOpt="" ;
-		fi 
-		for Package in ${ArrayPackageName[@]} ; do 
-			local old_dir=$( pwd )
-			test ! -d ${StrPath}/${Package} && mkdir -p ${StrPath}/${Package} ;
-			cd ${StrPath}/${Package} ; 
-			apt-src update ;
-			local UpdateState=$? ;
-			if [ ${UpdateState:=0} -eq 0 ] ; then 
-				echo -ne "\t\t----- Building -----\n\t\t\t${Package}\n\n" > /dev/stderr ; 
-				for item in ${ArrayAptSrcProc[@]} ; do 
-					echo -ne "\n\n\n\t\t----- APT-SRC STEP: -----\n\t\t\t${item}\n\n\n" > /dev/stderr ; 
-					CC=${DebianAptSrcCompilerCBaseName:=/usr/bin/x86_64-linux-gnu-gcc-}${CompilerVersion} \
-					CXX=${DebianAptSrcCompilerCXXBaseName:=/usr/bin/x86_64-linux-gnu-g++-}${CompilerVersion} \
-					apt-src ${item} ${Package} ${StrPatchOpt} ; 
-					res_exec=$? ; 
-					echo -ne "\n\n\t\t-----------------\n\t\t Error Status: ${res_exec}\n\t\t-----------------\n\n" > /dev/stderr  ;  
-				done ;
-			else
-				echo -ne "\n\n\t\t-------------------------------------------------------\n\t\t Error compilation/installation of ${Package}\n\t\t-------------------------------------------------------\n" > /dev/stderr 
-			fi 
-			cd ${old_dir}  ;
-		done 
-	fi
+ if [ "${ArrayArg[0]}" = "--help" ] ; then 
+  GetVarReference ${__call_locality[0]} ; 
+  echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ; 			
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( __GetVarReferenceList ) ;
+ else	 	
+  if [ ${AddPatch:=True} == "True" ]; then 
+   StrPatchOpt="-p" ;
+  else
+   StrPatchOpt="" ;
+  fi 
+ for Package in ${ArrayPackageName[@]} ; do 
+  local old_dir=$( pwd )
+  test ! -d ${StrPath}/${Package} && mkdir -p ${StrPath}/${Package} ;
+  cd ${StrPath}/${Package} ; 
+  apt-src update ;
+  local UpdateState=$? ;
+  if [ ${UpdateState:=0} -eq 0 ] ; then 
+   echo -ne "\t\t----- Building -----\n\t\t\t${Package}\n\n" > /dev/stderr ; 
+   for item in ${ArrayAptSrcProc[@]} ; do 
+    echo -ne "\n\n\n\t\t----- APT-SRC STEP: -----\n\t\t\t${item}\n\n\n" > /dev/stderr ; 
+    CC=${DebianAptSrcCompilerCBaseName:=/usr/bin/x86_64-linux-gnu-gcc-}${CompilerVersion} \
+    CXX=${DebianAptSrcCompilerCXXBaseName:=/usr/bin/x86_64-linux-gnu-g++-}${CompilerVersion} \
+    apt-src ${item} ${Package} ${StrPatchOpt} ; 
+    res_exec=$? ; 
+    echo -ne "\n\n\t\t-----------------\n\t\t Error Status: ${res_exec}\n\t\t-----------------\n\n" > /dev/stderr  ;  
+   done ;
+   else
+    echo -ne "\n\n\t\t-------------------------------------------------------\n\t\t Error compilation/installation of ${Package}\n\t\t-------------------------------------------------------\n" > /dev/stderr 
+   fi 
+   cd ${old_dir}  ;
+  done 
+  fi
 }
 
  ### AptRebuild :
@@ -2218,7 +2207,10 @@ function acquire_lan_ifconfig()
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
 		eval $( __GetVarReferenceList ) ;
 	elif [ "${Arg0:=--start-services}" == "--start-services" ] ; then 
-  GetIpaddrTagList=${StrTagNameList} GetIpaddrAppsIfconfig=${StrAppsNetConf} GetIpaddrAddr=${StrDefaultCard} GetIpaddr ; 
+  GetIpaddrTagList=${StrTagNameList} \
+  GetIpaddrAppsIfconfig=${StrAppsNetConf} \
+  GetIpaddrAddr=${StrDefaultCard} \
+  GetIpaddr ; 
  fi 
 }
 
@@ -2345,11 +2337,24 @@ function GkSuZenityLoader()
 	
  function ZenityFilter()
 	{
-			egrep -i ${StrRegSearch} ${StrFileInfo} | cut -d ${StrDefaultCSV} -f ${IntDefaultColExtr} | sed  's/\(^[a-zA-Z0-9]*\)/FALSE \1/g' ; 
+			egrep -i ${StrRegSearch} \
+   ${StrFileInfo} | \
+     cut -d ${StrDefaultCSV} \
+     -f ${IntDefaultColExtr} |\
+        sed  's/\(^[a-zA-Z0-9]*\)/FALSE \1/g' ; 
 	}
 	function GetPwdUser()
 	{
-		local StrUserSelection=$( zenity --list --title "${StrTitle}" --column="${StrCol0}" --column="${StrCol1}" --radiolist $( StrDefaultCSV=${StrDefaultCSV} StrFileInfo=${StrFileInfo} StrRegSearch=${StrRegSearch} IntDefaultColExtr=${IntDefaultColExtr} ZenityFilter ) ) ;
+		local StrUserSelection=$( zenity \
+  --list \
+  --title "${StrTitle}" \
+  --column="${StrCol0}" \
+  --column="${StrCol1}" \
+  --radiolist $( StrDefaultCSV=${StrDefaultCSV} \
+                 StrFileInfo=${StrFileInfo} \
+                 StrRegSearch=${StrRegSearch} \
+                 IntDefaultColExtr=${IntDefaultColExtr} \
+                 ZenityFilter ) ) ;
 		StrUserSelection=${StrUserSelection:=${StrUser}} ;
 		if [ "${BoolShowUserSelection}" == "True" ] ; then 
 			echo -ne "User selected: ${StrUserSelection}\n" > /dev/stderr ; 
@@ -2365,8 +2370,8 @@ function GkSuZenityLoader()
   local StrTextNotification=${NLCNotifyText:=You will be prompted for password to load __APPS__ with __APPS__ user allowed: __USER__} 
   local StrUser=${NLCAppsUser:=root} ; 
   local StrApps=${NLCAppsName:=ldconfig} ; 
-  local StrTagUser=${NLCTagUser:=__USER__}
-  local StrTagApps=${NLCTagApps:=__APPS__}
+  local StrTagUser=${NLCTagUser:=__USER__} ;
+  local StrTagApps=${NLCTagApps:=__APPS__} ;
   StrTextNotification=${StrTextNotification//${StrTagUser}/${StrUser}} ;
   StrTextNotification=${StrTextNotification//${StrTagApps}/${StrApps}} ;
   
@@ -2380,6 +2385,7 @@ function GkSuZenityLoader()
   
   echo -ne "${StrLdconfigGreeting}" > /dev/stderr ; 
  }
+ 
  function LdconfigNotification()
  {
 		local __call_locality=( LN LdconfigNotification ) ; 
@@ -2393,8 +2399,19 @@ function GkSuZenityLoader()
 		local __call_locality=( Loader Loader ) ; 
 		local ArrayArg=( $* ) ; 
   local Arg0=${ArrayArg[0]} ; 
-  eval $( BVTestVarName=StrAppsLd BVTestVarHold='StrLdconfigGreeting='${StrLdconfigGreeting}' ScreenDisplayLdconfigHint' BVTestBoolVarName=\${BoolUpdateLdconfig} BVTestBoolCase=True BVTestBoolAssertion='LdconfigNotification' BVTestScopeTest=local BoolVarTestVarCreation ) ; 
-  eval $( BVTestVarName=StrLdConfigLoad BVTestVarHold='$( eval ${StrAppsLd} )' BVTestBoolVarName=\${BoolUpdateLdconfig} BVTestBoolCase=True BVTestBoolAssertion='$( eval ${StrAppsLd} )' BVTestScopeTest=local BoolVarTestVarCreation ) ; 
+  eval $( BVTestVarName=StrAppsLd \ 
+          BVTestVarHold='StrLdconfigGreeting=\'${StrLdconfigGreeting}\' ScreenDisplayLdconfigHint' \
+          BVTestBoolVarName=\${BoolUpdateLdconfig} \
+          BVTestBoolCase=True \
+          BVTestBoolAssertion='LdconfigNotification' \
+          BVTestScopeTest=local \
+          BoolVarTestVarCreation ) ; 
+  eval $( BVTestVarName=StrLdConfigLoad \
+          BVTestVarHold='$( eval ${StrAppsLd} )' \
+          BVTestBoolVarName=\${BoolUpdateLdconfig} \
+          BVTestBoolCase=True BVTestBoolAssertion='$( eval ${StrAppsLd} )' \
+          BVTestScopeTest=local \
+          BoolVarTestVarCreation ) ; 
 		gksu --user ${StrUser} ${StrApps} ${StrAppsOpt} 
 	}
  
@@ -2407,7 +2424,14 @@ function GkSuZenityLoader()
 
   local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\n" ;   
   if [ "${StrUser:=none}" ==  "none" ] ; then 
-   StrUser=$( StrDefaultCSV=${StrDefaultCSV} IntDefaultColExtr=${IntDefaultColExtr} StrFileInfo=${StrFileInfo} StrTitle=${StrTitle} StrCol0=${StrCol0} StrCol1=${StrCol1} StrRegSearch=${StrRegSearch} BoolShowUserSelection=${BoolShowUserSelection} GetPwdUser ) ; 
+   StrUser=$( StrDefaultCSV=${StrDefaultCSV} \
+      IntDefaultColExtr=${IntDefaultColExtr} \
+      StrFileInfo=${StrFileInfo} \
+      StrTitle=${StrTitle} \
+      StrCol0=${StrCol0} \
+      StrCol1=${StrCol1} \
+      StrRegSearch=${StrRegSearch} \
+      BoolShowUserSelection=${BoolShowUserSelection} GetPwdUser ) ; 
   fi 
   if [ "${StrUser:=none}" == "none" ] ; then 
    echo -ne "Warning Invalid user: ${StrUser}\n" > /dev/stderr ; 
