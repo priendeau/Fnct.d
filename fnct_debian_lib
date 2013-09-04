@@ -2400,7 +2400,7 @@ function GkSuZenityLoader()
 		local ArrayArg=( $* ) ; 
   local Arg0=${ArrayArg[0]} ; 
   eval $( BVTestVarName=StrAppsLd \ 
-          BVTestVarHold='StrLdconfigGreeting=\'${StrLdconfigGreeting}\' ScreenDisplayLdconfigHint' \
+          BVTestVarHold='StrLdconfigGreeting='${StrLdconfigGreeting}' ScreenDisplayLdconfigHint' \
           BVTestBoolVarName=\${BoolUpdateLdconfig} \
           BVTestBoolCase=True \
           BVTestBoolAssertion='LdconfigNotification' \
