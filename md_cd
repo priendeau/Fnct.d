@@ -45,65 +45,96 @@ test $? -ne 0 && sudo chown ${USER}.${USER} ${StrFileStoreInfo} 2> /dev/null
 test "${USER}" != "root" && test -f ${StrFileStoreLock} && chown ${USER}.${USER} ${StrFileStoreLock} 2> /dev/null ; 
 test $? -ne 0 && sudo chown ${USER}.${USER} ${StrFileStoreLock} 2> /dev/null
 
+echo "" > /dev/stderr 2> /dev/null ; 
+res_err=$? ;
+if [ ${res_err:=0} -eq 1 ] ; then 
+ MDDevOut=${HOME}/md_cd.out ;
+else
+ MDDevOut=/dev/stderr ; 
+fi 
+
 
 function GetDateReportCreation()
 {
+	local ArrayArg=( $* ) ;
+	local __call_locality=( GDRC GetDateReportCreation ) ;
+ local Arg0=${ArrayArg[0]}; 
 	GetOtherDateFormat=%Y%m%d_%H%M%S GetOtherDate ; 
 }
 
-function md_cd()
+function MdCd()
 { 
 	local ArrayArg=( $* ) ;
-	local __call_locality=( MDCD ) ;
+	local __call_locality=( MD  MdCd ) ;
+ local Arg0=${ArrayArg[0]}; 
+ local StrDevOut=${MDDevOut:=/dev/stderr}
 
-	echo -ne "StrFileStoreInfo : ${StrFileStoreInfo}\n" > /dev/stderr ; 
-	echo -ne "StrFileStoreLock : ${StrFileStoreLock}\n" > /dev/stderr ; 
+	echo -ne "StrFileStoreInfo : ${StrFileStoreInfo}\n" > ${MDDevOut} ; 
+	echo -ne "StrFileStoreLock : ${StrFileStoreLock}\n" > ${MDDevOut} ; 
 
 	local UserTypeLocationModel="${StrBasePath}/NewPathModel.tar.bz2" ;
-	echo -ne "UserTypeLocationModel : ${UserTypeLocationModel}\n" > /dev/stderr ; 
+	echo -ne "UserTypeLocationModel : ${UserTypeLocationModel}\n" > ${MDDevOut} ; 
 	function GetFile()
 	{
+		local __call_locality=( GF GetFile )
+		local ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]}; 
 		test -f ${StrFileStoreInfo} && cat ${StrFileStoreInfo} ; 
 		test ! -f ${StrFileStoreInfo} && return 1 ; 
 	}	
 		
 	function getcol1()
 	{
+		local __call_locality=( GC1 getcol1 )
+		local ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]} ;
 		/usr/bin/cut -d ' ' -f 1 
 	}
 	
 	function sha1()
 	{
+		local __call_locality=( sha sha1 )
+		local ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]} ;
 		/usr/bin/sha1sum ;
 	}	
 	
 	function GetMemHeader()
 	{
+		local __call_locality=( GMH GetMemHeader )
+		local ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]} ;
 		echo "${ArrayMdCd[@]}" | sha1 | getcol1
 	}
 	
 	function GetMemContent()
 	{
+		local __call_locality=( GMC GetMemContent )
+		local ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]}; 
 		echo "${ArrayMdCd[@]}" ; 
 	}
 	
 	function GetterData()
 	{
+		local __call_locality=( GD GetterData )
 		local ArrayArg=( $* ) ; 
-		local __call_locality=( GetterData )
+  local Arg0=${ArrayArg[0]}; 
 		local Stream=$( GetFile ) ;
 		local vret=$? ; 
-  if [ ${vret:=-1} -eq 0 ] ; then 
+	if [ ${vret:=-1} -eq 0 ] ; then 
 			echo "${Stream}" | head -n${ArrayArg[0]} | tail -n1 ;
 			return 0 ; 
-	 else
+	else
 			return -1 ; 		
-		fi
+	fi
 
 	}
 	function GetHeader()
 	{
 		local __call_locality=( GetHeader )
+		local ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]}; 
 		local IntLineId=${GetHeaderId:=1} ; 
 		echo $( GetterData	${IntLineId} ) ; 
 		return $? ;
@@ -120,7 +151,7 @@ function md_cd()
 	local currentSHA=$( GetHeader ) ;
 
 	local StrContent=$( GetContent ) ; 
- local ErrContent=$? ; 
+	local ErrContent=$? ; 
 	if [ ${ErrContent:=-1} -eq 0 ] ; then 
 		declare -a ArrayMdCd=( ${StrContent} ${ArrayMdCd[@]} );
 	else
@@ -134,7 +165,7 @@ function md_cd()
 		test ! -d	${path_loc} && mkdir -p ${path_loc} ;
 		
 		cd ${path_loc} 
-		echo -ne "Cmd:[ tar xvjfC ${path_loc} ${UserTypeLocationModel}  ]\n" > /dev/stderr ; 
+		echo -ne "Cmd:[ tar xvjfC ${path_loc} ${UserTypeLocationModel}  ]\n" > ${MDDevOut} ; 
 		test -f ${UserTypeLocationModel} && tar xjfC ${UserTypeLocationModel} ${path_loc} 2> /dev/null ;
 		resultTar=$? ; 
   if [ ${resultTar:=1} -eq 0 ] ; then 
@@ -166,7 +197,7 @@ while [ $( eval "echo \${${evalName}:=0}" ) -ne 1  ] ; do
 			eval "echo \${${evalName}} > ${StrFileStoreLock} 2> /dev/null ";
 			test $? != 0 && sudo eval "echo \${${evalName}} > ${StrFileStoreLock} 2> /dev/null ";
 			echo -ne "loading $0\n" > /dev/stderr ;
-			eval $( md_cd $* ) ; 
+			eval $( MdCd $* ) ; 
 			echo -ne "Removing lock.\n" > /dev/stderr  ; 
 			echo 0 > ${StrFileStoreLock} 2> /dev/null ; 
 			valueRet=$? ; 
