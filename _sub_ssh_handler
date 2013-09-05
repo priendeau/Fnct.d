@@ -250,7 +250,7 @@ function GetPasswd()
  local IntDefaultPwdSize=${GPSize:=16}
  local IntDefaultFactor=${GPFactor:=1000} ; 
  local IntRandomSeedFactor=${GPRandomSeed:=10} ; 
- local StrPasswordTypeForm=${GPArgType:=cnsB1,cysB1} ; 
+ local StrPasswordTypeForm=${GPArgType:=cnsB1,cysB1,cnsyB1} ; 
  local ArrayFormPassword=( ${StrPasswordTypeForm//,/ } ) ;
  local IntPasswordType=${GPGenFormType:=0} ;
  local StrPwGenFormPassword=-${ArrayFormPassword[${IntPasswordType}]};
