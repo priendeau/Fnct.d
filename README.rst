@@ -336,6 +336,7 @@ Which is making sense.
 :Shell: Based on Execution of BVTestVarName and variable res returning Error Code.
 	
 ::	
+	
 	BVTestIfOp suggest a correct and known uses depending of BVTestIfType and no 
 	code verification is made and may leak. It's programmer uses after-all . 
 	
@@ -343,6 +344,7 @@ Which is making sense.
 	
 	BVTestIfType=String BVTestIfOp='==' ( Default Uses.)
 	
+	result:
 
 	
 
