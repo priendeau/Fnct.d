@@ -365,8 +365,27 @@ Which is making sense.
 		StrAttrHold="" ;
 	fi
 	
-	
-	
+	Ex2: Uses of Shell
+	BVTestBoolVarName='${IntValue:=0}' \
+	BVTestIfType=Shell \
+	BVTestIfOp='-eq' \
+	BVTestBoolCase=1 \
+	BoolVarTestVarCreation
+
+	result:
+	local StrAttrHold="CONTENT" ;
+	eval StrAttrHold ; res=$? ; if  [ ${res:=1} -eq 1 ]  ; then
+		StrAttrHold="" ;
+	fi	
+
+
+Assuming uses of shell is a complete evaluation line, lying between ';' will 
+execute the compound and returning the error inside the Variable res and the 
+dedicated test had default value of possible error. Behavior is fixed and will
+change probably into pre-emptive Assertion being part attended result having a 
+BVTestBoolCase worring on this If statement, is like controlling-twice a true
+exit.
+
 
 :Note: e2382694-0ba3-11e3-98a2-001b3875b29c
 :Title: Usual Shell Chunk-Development.
