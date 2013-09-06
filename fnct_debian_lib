@@ -476,19 +476,46 @@ function BoolVarTestVarCreation()
 	local __call_locality=( BVTest BoolVarTestVarCreation ) ;
 	local ArrayArg=( $* ) ; 
 	local Arg0=${ArrayArg[0]} ;
- local ArrayTypeTest=( False True )
+ local ArrayTypeTest=( False True ) ;
  local StrVarNamed=${BVTestVarName:=StrAttrHold} ; 
  local StrVarNamedHold=${BVTestVarHold:=CONTENT} ; 
  local StrVarBoolTest=${BVTestBoolVarName:=IsVarShould} ; 
  local StrDefaultBoolTest=${BVTestBoolCase:=False} ;
  local StrNotAsserted=${BVTestBoolAssertion:=\"\"} ;
- local StrScopeType=${BVTestScopeTest:=local}
+ local StrScopeType=${BVTestScopeTest:=local} ;
+ local StrIfTestType=${BVTestIfType:=String} ; 
+ local StrIfStringOp=${BVTestIfOp:===} ;
  
+ local ArrayTestType=( String File Test Int Shell ) ;
+ local StrIfPattern ; 
+ local ArrayIfPattern=(  ) ;
+ ArrayIfPattern[0]="if [ \"${StrVarBoolTest}\" __OP__ \"${StrDefaultBoolTest}\" ] " ;
+ ArrayIfPattern[1]="if [ \"__OP__ \"${StrDefaultBoolTest}\" ] " ;
+ ArrayIfPattern[2]="if \$( test \"__OP__ \"${StrDefaultBoolTest}\" ) " ;
+ ArrayIfPattern[3]="if [ ${StrVarBoolTest} __OP__ ${StrDefaultBoolTest} ] " ;
+ ArrayIfPattern[4]="eval ${StrVarNamed} ; res=$? ; if  [ ${res:=1} __OP__ ${StrDefaultBoolTest} ] " ;
+ 
+
+ ###
+ ### ArrayIfPattern, Loop and test to select proper 
+ ### StrIfTestType and it's Operator StrIfStringOp.
+ ###
+ for (( intx=0 ; intx <= ${#ArrayTestType[@]}-1 ; intx++ )) ; do 
+  if [ "${StrIfTestType}" == "${ArrayTestType[${intx}]}" ] ; then 
+   StrIfPattern=${ArrayIfPattern[${intx}]//__OP__/${StrIfStringOp}} ; 
+  fi 
+ done 
  local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\n" ;
  
  local StrTestTemplate=""" 
-  ${StrScopeType} ${StrVarNamed}=\"${StrVarNamedHold}\" ; if [ \"${StrVarBoolTest}\" == \"${StrDefaultBoolTest}\" ] ; then ${StrVarNamed}=${StrNotAsserted} ; fi"""
- 	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+  ${StrScopeType} ${StrVarNamed}=\"${StrVarNamedHold}\" ;
+  __IF_PATTERN__ ; then
+    ${StrVarNamed}=${StrNotAsserted} ;
+  fi
+  """
+  StrTestTemplate=${StrTestTemplate//__IF_PATTERN__/${StrIfPattern}} ; 
+  
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
 			GetVarReference ${__call_locality[1]} ; 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 

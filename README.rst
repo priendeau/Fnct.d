@@ -298,7 +298,10 @@ get the parameter Name Being passed inside StrFileTmp.
 
 
 .. code:: shell
-	Command : BVTestVarName=StrFileTmp BVTestVarHold='${StrFileName}' BVTestBoolVarName=\${StrFileName} BVTestBoolCase=None BVTestBoolAssertion='$( uuidgen -t )' BVTestScopeTest=local BoolVarTestVarCreation
+	Command : BVTestVarName=StrFileTmp BVTestVarHold='${StrFileName}' \
+	BVTestBoolVarName=\${StrFileName} BVTestBoolCase=None \
+	BVTestBoolAssertion='$( uuidgen -t )' \
+	BVTestScopeTest=local BoolVarTestVarCreation
  
 generated code:
 
@@ -311,7 +314,37 @@ generated code:
  
 Which is making sense. 
  
+:Note: 81685d48-16ac-11e3-98a2-001b3875b29c
+:Title: Evolution of If statement inside BoolVarTestVarCreation, use of specific If condition.
 
+	Following Pre-Fixed variables are added to allow uses of different type of 
+	If statement available thru shell-use. 
+	
+::
+	
+	BVTestIfType -> Used to specify a If-statement pattern.
+	- Default value is String
+	
+	List if possible value:
+
+:Value: Definition
+:String:	Apply a normal If-statement based on "STRING1" __OPERATOR1__ "STRING2"
+:File:  Apply a unique switches on variable present inside If Statement
+		Noted [ __OPERATOR1__ FILE1 ].
+:Test:	Braced with Execution Operator, form is $( test __OPERATOR1__ BVTestBoolCase )
+:Int:	Based on Normal Integer test like [ INTEGER1 __OPERATOR1__ INTEGER2 ]
+:Shell: Based on Execution of BVTestVarName and variable res returning Error Code.
+	
+::	
+	BVTestIfOp suggest a correct and known uses depending of BVTestIfType and no 
+	code verification is made and may leak. It's programmer uses after-all . 
+	
+	Ex:
+	
+	BVTestIfType=String BVTestIfOp='==' ( Default Uses.)
+	
+
+	
 
 :Note: e2382694-0ba3-11e3-98a2-001b3875b29c
 :Title: Usual Shell Chunk-Development.
