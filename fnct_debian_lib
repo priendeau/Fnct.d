@@ -493,7 +493,7 @@ function BoolVarTestVarCreation()
  ArrayIfPattern[1]="if [ \"__OP__ \"${StrDefaultBoolTest}\" ] " ;
  ArrayIfPattern[2]="if \$( test \"__OP__ \"${StrDefaultBoolTest}\" ) " ;
  ArrayIfPattern[3]="if [ ${StrVarBoolTest} __OP__ ${StrDefaultBoolTest} ] " ;
- ArrayIfPattern[4]="eval ${StrVarNamed} ; res=$? ; if  [ ${res:=1} __OP__ ${StrDefaultBoolTest} ] " ;
+ ArrayIfPattern[4]="eval ${StrVarNamed} ; res=\$? ; if  [ \${res:=1} __OP__ ${StrDefaultBoolTest} ] " ;
  
 
  ###
