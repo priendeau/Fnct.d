@@ -343,9 +343,29 @@ Which is making sense.
 	Ex:
 	
 	BVTestIfType=String BVTestIfOp='==' ( Default Uses.)
+	$>  BVTestIfType=String BVTestIfOp='==' BoolVarTestVarCreation
 	
 	result:
+	local StrAttrHold="CONTENT" ;
+	if [ "IsVarShould" == "False" ]  ; then
+		StrAttrHold="" ;
+	fi
+	
+	Ex1: Uses of Integer 
+	
+	BVTestBoolVarName='${IntValue:=0}' \
+	TestIfType=Int \
+	BVTestIfOp='-eq' \
+	BVTestBoolCase=1 \
+	BoolVarTestVarCreation
 
+	result:
+	local StrAttrHold="CONTENT" ;
+	if [ "${IntValue:=0}" -eq "1" ]  ; then
+		StrAttrHold="" ;
+	fi
+	
+	
 	
 
 :Note: e2382694-0ba3-11e3-98a2-001b3875b29c
