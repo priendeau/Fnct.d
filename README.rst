@@ -76,7 +76,7 @@ help developpement of functionnality implementation in fnct_list .
 
 Arguments
 =========
-
+	
 Are Mostly Prefixed-variable to be understand and replacing 90% of switched uses into
 Services declaration and Services Information. Services Establishement like --compword
 is a future feature available soon after 2013-09-08 where all function will own word
@@ -1003,7 +1003,12 @@ Uses of Universal switches.
 ----
 
 ----
+	CompWord
+----
+
+	-----------------------------
 	Complete Word thru --compword 
+	-----------------------------
 	
 	This services available in next version will allow to Enable the Word completion by 
 	calling function name __FUNCTION__ --compword 
@@ -1019,7 +1024,6 @@ Uses of Universal switches.
 	Function Lib render it valid to install this services inside /etc/init.d 
 	
 	
-----
 
 
 -------------
