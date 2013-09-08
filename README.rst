@@ -76,6 +76,7 @@ help developpement of functionnality implementation in fnct_list .
 
 Arguments
 =========
+
 Are Mostly Prefixed-variable to be understand and replacing 90% of switched uses into
 Services declaration and Services Information. Services Establishement like --compword
 is a future feature available soon after 2013-09-08 where all function will own word
