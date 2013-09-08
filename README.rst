@@ -76,7 +76,10 @@ help developpement of functionnality implementation in fnct_list .
 
 Arguments
 =========
-
+Are Mostly Prefixed-variable to be understand and replacing 90% of switched uses into
+Services declaration and Services Information. Services Establishement like --compword
+is a future feature available soon after 2013-09-08 where all function will own word
+completion activation. 
 
 
 Invocation
@@ -996,6 +999,25 @@ Uses of Universal switches.
 
 ----
 	List
+----
+
+----
+	Complete Word thru --compword 
+	
+	This services available in next version will allow to Enable the Word completion by 
+	calling function name __FUNCTION__ --compword 
+	
+	Since this is available upon delivery of __GetVarReferenceCompWord from delivery of
+	chunk 023102e0-1833-11e3-98a2-001b3875b29c after 2013-09-08. This is a way to maximize
+	uses of Function Prefixed Variable being show by typing the Function Name and 'Tab' .
+	
+	This is another services freeing memory from unused function. Not all function are 
+	enabling this feature being loaded by the /etc/init.d/Fnct.D/fnct_lib. 
+	
+	This nominal feature transform our API into active services and standard being this
+	Function Lib render it valid to install this services inside /etc/init.d 
+	
+	
 ----
 
 

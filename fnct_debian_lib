@@ -397,7 +397,12 @@ unset ZenityPythonInstaller ;
 
 ### FileNameConversion
 unset FileNameConversion ; 
-#. /etc/init.d/Fnct.d/877d7e9a-1001-11e3-98a2-001b3875b29c
+. /etc/init.d/Fnct.d/877d7e9a-1001-11e3-98a2-001b3875b29c
+
+### __GetVarReferenceCompWord
+unset __GetVarReferenceCompWord ; 
+. /etc/init.d/Fnct.d/023102e0-1833-11e3-98a2-001b3875b29c
+
 
 
 ### 

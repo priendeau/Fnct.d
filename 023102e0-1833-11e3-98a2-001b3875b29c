@@ -1,0 +1,31 @@
+###
+### FootPrint Added, see Prefixed-Var ZSEAddFootPrint from ZenityShellEval
+###
+
+###File:023102e0-1833-11e3-98a2-001b3875b29c
+###UUID-TIME-MARKER:8ade6550-1839-11e3-98a2-001b3875b29c
+###Date: ${StrDateFormat}
+###Sha1Sum: abbd94c4d12dcbdb49f5f3e1d211da8d7c9f0f55
+### Size:1071
+### NbWord: 96\n###
+### FootPrint Added, see Prefixed-Var ZSEAddFootPrint from ZenityShellEval
+###
+
+###File:023102e0-1833-11e3-98a2-001b3875b29c
+###UUID-TIME-MARKER:9e37c2e4-1835-11e3-98a2-001b3875b29c
+###Date: ${StrDateFormat}
+###Sha1Sum: ab0bdfe48b7dd6f5b5ec87ba26083849b1e500f3
+### Size:777
+### NbWord: 75\n
+
+unset __GetVarReferenceCompWord ;
+function __GetVarReferenceCompWord( )
+{
+  local StrFuncVar="${__call_locality[1]}" ;
+  local StrPVarStart=$( GetStdPrefixName ${__call_locality[1]} ) ; 
+  local template="unset ___CALL_LOCALITY__  ; function ___CALL_LOCALITY__()    { local PrefixedVar PrefixedItem ;  COMPREPLY=( \$( compgen -W __GUILL__\$( __CALL_LOCALITY__ --list ) __GUILL__ ) ) ; if ( \${COMP_WORDS}[1]} = +(__PVAR__) ) ; then PrefixedVar=__GUILL__ \${COMP_WORDS[\$(( COMP_CWORD-1 ))]} \${COMP_WORDS}__GUILL__ ; fi ; } ; complete -F ___CALL_LOCALITY__ __CALL_LOCALITY__ ; " ; 
+   template=${template//__CALL_LOCALITY__/${StrFuncVar}};
+   template=${template//__PVAR__/${StrPVarStart}} ;
+   template=${template//__GUIL__/\"}} ; 
+   echo -ne """eval ${template}"""" ;  
+}
