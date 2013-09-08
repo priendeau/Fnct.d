@@ -991,7 +991,30 @@ Uses of Universal switches.
 	Getter
 ------
 
+Getter is the switche --get from calling 
+convention :  __FUNCTION__ --get Prefixed-Variable
 
+In Term, it's the information services available by function allowing to 
+extract a componnent from the Communication Layer. Each Item from this 
+communication layer is a Prefixed-Variable commonly designed by the autor
+allowing to pass informations. In a layer you can virtually pass all Item
+and even not assigned item or not existing item and should not interfer 
+during Services initiation. Known and recognized one will be used and even
+not intended to be use due to switche nature will be ignored and might be 
+used if the user change the switches. 
+
+::
+	
+	### As example. 
+	### calling :
+	AFunc001=XXX __FUNCTION__ --help
+	### prefixed var AFunc001 is ignored 
+	
+	AFunc001=XXX __FUNCTION__ --get AFunc001
+	
+	### prefixed var AFunc001 is not ignored and output value XXX .
+	
+	
 ------
 	Setter
 ------
