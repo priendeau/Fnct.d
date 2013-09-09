@@ -1027,6 +1027,119 @@ Introducing connection-layer to a unicast-per-user group and bash interoperabili
 Parameters
 ==========
 
+Creating Helper Messages
+------------------------
+
+While a basic corpus is imply a function N(), an Array to implement a Calling 
+signature to be read from external function like . 
+
+::	
+	
+	GetVarReference, 
+	__GetVarReferenceCompWord  or
+	__GetVarReferenceList  
+
+
+It's name depend of something rational coded inside function GetStdPrefixName, and
+Shall not be used inside declaration of __call_locality for Unability of external 
+function to read un-evaluated value from hand-writted function name... But 
+function GetStdPrefixName can give you and Idea what will be a Root for 
+Prefixed-Variable. This is almost import for first level function accessible to 
+human of simple parser from shell from another level-1 function. See example to 
+see where is the Level-1 representation and where is the Calling signature. 
+
+Once the example is controlled or added to your shell if you want to try, the 
+rest of the body implement the switches-level. Shall be implemented with 
+BodyFunc, and another example somewhere should already show you this. For the 
+moment, The basic and understandable way imply a Switches level being settled at
+the end of the function to clearly show where is the services entry and may 
+rely from internal second-level function or external level like 
+__GetVarReferenceCompWord, __GetVarReferenceList. 
+
+
+.. code:: shell
+	
+	Example:
+	### 
+	### Fully functional example. 
+	###
+	### Basic Method showing you how it was splitted to allow many function 
+	### having same design, prior to settle this Lib into something higher into
+	### Wide-settlement services and steady-services and messages passing .
+	###
+	
+	    ###   +-------Level1 Function
+	    ###  +++
+	    ###   +
+		function EasyTestInRun()
+		{
+		
+		  ###   +---------> Calling signature. If you try GetStdPrefixName on 
+		  ###   +           function name EasyTestInRun, you will get ETIR
+		  ###	+
+		  local __call_locality=( ETIR EasyTestInRun ) ; 
+		  local StrInput=${ETIRArrayIn:=1,2,3,4}
+		
+		  ###   +-------Level2 Function
+		  ###  +++
+		  ###   +
+		  function __Loop()
+		  {
+		    local __call_locality=( _L __Loop ) ;
+		    local Arg0=${ArrayArg[0]} ;
+		    local ArrayArg=( $* ) ; 
+		
+		    echo -ne "\tMessage Is: ${Item}\n" ; 
+		  }
+		   
+		  function __main_StartServices()
+		  {
+			### 
+			### Example of non conformance of name because they are 
+			### deeper inside code and should not pass or communicate
+			### with more restriction... It's good to tell they still
+			### had the liberty to pass variable from Level-1 to level2
+			### and even specific distribution allow distribution from 
+			### A function Level2a to function Level2b and even
+			### a function Level1a to function Level2a where many problems
+			### exist and may depend from memory stacking being more limited
+			### between version and may be discarded or transformed into 
+			### global scope, where nash(from fedora) was one of them. 
+			### 
+		    local __call_locality=( Main __main_StartServices ) ;
+		    local Arg0=${ArrayArg[0]} ;
+		    local ArrayArg=( $* ) ; 
+		    local ArrayFromStr=( ${StrInput//,/ } ) ; 
+		    for(( intx=0; intx<= ${#ArrayFromStr[@]}-1 ; intx++ )); do 
+			  Item=${ArrayFromStr[${intx}]} __Loop ; 
+		    done 
+		
+		  }
+		   
+		   ### Normal Switches Messages introduction. 
+		   local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+		   ### 
+		   ### switches-level 
+		   ###
+		   if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+			GetVarReference ${__call_locality[1]} ; 
+			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+	       elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+		    eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+		    echo -ne """${ArgGet}\n""" ;
+	       elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+		    eval $( __GetVarReferenceList ) ;
+           elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
+		    eval $( __GetVarReferenceCompWord ) ;
+           elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+		    StrInput=${StrInput} \
+		    __main_StartServices ; 
+           fi
+		 }
+		 
+		 
+		 
+		 
 Prefixed-Variable
 -----------------
 
