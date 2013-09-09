@@ -1,6 +1,11 @@
+
 ============
 Fnct.D
 ============
+
+.. image:: https://raw.github.com/priendeau/Fnct.d/master/images/Fnct_D_Cover.png
+        :target: https://github.com/priendeau/Fnct.d#Fnct.D
+
 
 :Info: See `github <https://github.com/priendeau/Fnct.d/>`_ for the latest source.
 :Author: Patrick Riendeau
@@ -603,7 +608,9 @@ Facility in External transport connection of BodyFunc.
 from good appelation of working function inside fnct_debian_lib by calling it and extracting variable. uses of GetOtherDate will
 be use inside the example. 
 
-BFStackVariableList=$( GetOtherDate --list | sed 's/\([a-zA-Z]*\)/\1+,/g;s/\ //g;s/+,+,/+/g'  ) BF*=... BodyFunc 
+.. code:: shell
+	
+	BFStackVariableList=$( GetOtherDate --list | sed 's/\([a-zA-Z]*\)/\1+,/g;s/\ //g;s/+,+,/+/g'  ) BF*=... BodyFunc 
 
 Will shorten the transfert mechanism from Outgoing Transport-Connection into automated StackList adding sequence, and 
 will also offer Glueing technique for several descendant  uses of BoolVarTestVarCreation / Function_from_fnct_debian_lib, and 
@@ -649,7 +656,9 @@ Facility in External transport connection of BodyFunc.
 from good appelation of working function inside fnct_debian_lib by calling it and extracting variable. uses of GetOtherDate will
 be used inside the example. 
 
-BFStackVariableList=$( GetOtherDate --list | sed 's/\([a-zA-Z]*\)/\1+,/g;s/\ //g;s/+,+,/+/g'  ) BF*=... BodyFunc 
+.. code:: shell
+	
+	BFStackVariableList=$( GetOtherDate --list | sed 's/\([a-zA-Z]*\)/\1+,/g;s/\ //g;s/+,+,/+/g'  ) BF*=... BodyFunc 
 
 Will shorten the transfert mechanism from Outgoing Transport-Connection into automated StackList adding sequence, and 
 will also offer Glueing technique for several descendant  uses of BoolVarTestVarCreation / Function_from_fnct_debian_lib, and 
@@ -970,9 +979,17 @@ See Variable List:
 		--list		List all Internal Pre-fixed Variable available to query or get.
 
 
+:Note: 75411766-1969-11e3-98a2-001b3875b29c
+:Title: Permanent Sqlite Database to store crutial information introducing 
+connection-layer to a unicast-per-user group and bash interoperability
+
+-------------------
+Introducing 
+connection-layer to a unicast-per-user group and bash interoperability
+-------------------
 
 
-
+*** Not yet here *** 
 
 
 Parameters
@@ -1018,12 +1035,30 @@ used if the user change the switches.
 ------
 	Setter
 ------
+		
 		* Not Developped yet
 
+The draft section barely work this stage but outisde alternative are present. 
+The actual alternative remain uses of alias which is per-user alternative and 
+weak link being permanent configuration. This remain *Fragile* using a .bashrc
+to store information, can becoming sensitive to user personal settings, some
+future development might introduce the Key-ring example know in draft _sub_Git
+which is not usable at this moment. ( in draft mode ), and will be exported to 
+python to introduce uses of permanent Sqlite Database to store crutial 
+information introducing connection-layer to a unicast-per-user group and 
+bash interoperability
+
+for Setter-like information see note: 2224fe88-0b6f-11e3-812b-001b3875b29.
 
 ----
 	List
 ----
+List, a per function Pre-fixed Variables extraction services. For all function
+member of fnct_lib, and derivate, and mature function ; They have a corpus named
+BodyFunc call or self if-elif-fi branching analysing the switches entry of 
+function. the switche '--list' is a Extraction services, extractin the name in 
+CSV format. The Format is simply space between Prefixed-Variable name. This will
+also be changeable but being the draft stage show, it  should remaing space only.
 
 ----
 	CompWord
