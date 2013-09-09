@@ -1106,36 +1106,36 @@ __GetVarReferenceCompWord, __GetVarReferenceList.
 			### between version and may be discarded or transformed into 
 			### global scope, where nash(from fedora) was one of them. 
 			### 
-		    local __call_locality=( Main __main_StartServices ) ;
-		    local Arg0=${ArrayArg[0]} ;
-		    local ArrayArg=( $* ) ; 
-		    local ArrayFromStr=( ${StrInput//,/ } ) ; 
-		    for(( intx=0; intx<= ${#ArrayFromStr[@]}-1 ; intx++ )); do 
-			  Item=${ArrayFromStr[${intx}]} __Loop ; 
-		    done 
-		
-		  }
+            local __call_locality=( Main __main_StartServices ) ;
+            local Arg0=${ArrayArg[0]} ;
+            local ArrayArg=( $* ) ; 
+            local ArrayFromStr=( ${StrInput//,/ } ) ; 
+            for(( intx=0; intx<= ${#ArrayFromStr[@]}-1 ; intx++ )); do 
+              Item=${ArrayFromStr[${intx}]} __Loop ; 
+            done 
+           
+           }
 		   
 		   ### Normal Switches Messages introduction. 
 		   local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
 		   ### 
 		   ### switches-level 
 		   ###
-		   if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-			GetVarReference ${__call_locality[1]} ; 
-			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-	       elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-		    eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-		    echo -ne """${ArgGet}\n""" ;
-	       elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		    eval $( __GetVarReferenceList ) ;
+           if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+            GetVarReference ${__call_locality[1]} ; 
+            echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+           elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+            eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+            echo -ne """${ArgGet}\n""" ;
+           elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+            eval $( __GetVarReferenceList ) ;
            elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
-		    eval $( __GetVarReferenceCompWord ) ;
+            eval $( __GetVarReferenceCompWord ) ;
            elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
-		    StrInput=${StrInput} \
-		    __main_StartServices ; 
+            StrInput=${StrInput} \
+            __main_StartServices ; 
            fi
-		 }
+          }
 		 
 		 
 		 
