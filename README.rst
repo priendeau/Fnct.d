@@ -1092,20 +1092,20 @@ __GetVarReferenceCompWord, __GetVarReferenceList.
 		    echo -ne "\tMessage Is: ${Item}\n" ; 
 		  }
 		   
-		  function __main_StartServices()
-		  {
-			### 
-			### Example of non conformance of name because they are 
-			### deeper inside code and should not pass or communicate
-			### with more restriction... It's good to tell they still
-			### had the liberty to pass variable from Level-1 to level2
-			### and even specific distribution allow distribution from 
-			### A function Level2a to function Level2b and even
-			### a function Level1a to function Level2a where many problems
-			### exist and may depend from memory stacking being more limited
-			### between version and may be discarded or transformed into 
-			### global scope, where nash(from fedora) was one of them. 
-			### 
+           function __main_StartServices()
+           {
+            ### 
+            ### Example of non conformance of name because they are 
+            ### deeper inside code and should not pass or communicate
+            ### with more restriction... It's good to tell they still
+            ### had the liberty to pass variable from Level-1 to level2
+            ### and even specific distribution allow distribution from 
+            ### A function Level2a to function Level2b and even
+            ### a function Level1a to function Level2a where many problems
+            ### exist and may depend from memory stacking being more limited
+            ### between version and may be discarded or transformed into 
+            ### global scope, where nash(from fedora) was one of them. 
+            ### 
             local __call_locality=( Main __main_StartServices ) ;
             local Arg0=${ArrayArg[0]} ;
             local ArrayArg=( $* ) ; 
@@ -1113,14 +1113,14 @@ __GetVarReferenceCompWord, __GetVarReferenceList.
             for(( intx=0; intx<= ${#ArrayFromStr[@]}-1 ; intx++ )); do 
               Item=${ArrayFromStr[${intx}]} __Loop ; 
             done 
-           
+            
            }
 		   
-		   ### Normal Switches Messages introduction. 
-		   local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
-		   ### 
-		   ### switches-level 
-		   ###
+           ### Normal Switches Messages introduction. 
+           local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+           ### 
+           ### switches-level 
+           ###
            if [ "${Arg0:=--startservices}" == "--help"	] ; then 
             GetVarReference ${__call_locality[1]} ; 
             echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
