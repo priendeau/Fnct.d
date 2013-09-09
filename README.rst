@@ -3,9 +3,10 @@
 Fnct.D
 ============
 
-.. image:: https://raw.github.com/priendeau/Fnct.d/master/images/Fnct_D_Cover.png
-        :target: https://github.com/priendeau/Fnct.d#Fnct.D
 
+.. image:: https://raw.github.com/priendeau/Fnct.d/master/images/Fnct_D_Cover.png
+		:target: https://github.com/priendeau/Fnct.d#Fnct.D
+		
 
 :Info: See `github <https://github.com/priendeau/Fnct.d/>`_ for the latest source.
 :Author: Patrick Riendeau
