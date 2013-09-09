@@ -908,7 +908,7 @@ See Example:
 
 
 ::
-		
+	
 	Note:
 	Example may differ and may be available with Prefixed-var FNCAppsConv having
 	following value, which is more valuable for function definition:
@@ -981,13 +981,11 @@ See Variable List:
 
 
 :Note: 75411766-1969-11e3-98a2-001b3875b29c
-:Title: Permanent Sqlite Database to store crutial information introducing 
-connection-layer to a unicast-per-user group and bash interoperability
+:Title: Permanent Sqlite Database to store crutial information introducing connection-layer to a unicast-per-user group and bash interoperability
 
--------------------
-Introducing 
-connection-layer to a unicast-per-user group and bash interoperability
--------------------
+----------------------------------------------------------------------------------
+Introducing connection-layer to a unicast-per-user group and bash interoperability
+----------------------------------------------------------------------------------
 
 
 *** Not yet here *** 
