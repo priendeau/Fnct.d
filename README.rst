@@ -1064,7 +1064,7 @@ also be changeable but being the draft stage show, it  should remaing space only
 ----
 
 -----------------------------
-Complete Word thru --compword 
+Complete Word-completion thru --compword 
 -----------------------------
 
 This services available in next version will allow to Enable the Word completion by 
