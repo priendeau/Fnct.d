@@ -12,6 +12,12 @@ declare -a ArrayNotReUseLib=( fnct_debian_lib ) 2> /dev/null
 declare -a ArrayLib=( fnct_debian_lib _sub_Git _sub_ssh_handler ) ;
 declare -r FNCTDLIBPATH=/etc/init.d/Fnct.d 2> /dev/null ; 
 
+declare -r StrSwitchesShow="Following switch are available:\n\n" 2> /dev/null ; 
+declare -r StrCompWordMsgSwitches="\t--compword\tWord Completion Provide a services to Extract on Demand all Pre-fixed Variable\n\t\t\texisting inside this function.\n" 2> /dev/null ; 
+declare -r StrListMsgSwitches="\t--list\t\tList all Internal Pre-fixed Variable available to query or get." 2> /dev/null ; 
+declare -r StrGetMsgSwitches="\t--get\t\tReturn value of Internal Variable." 2> /dev/null ; 
+declare -r StrStartSwitches="\t--startservices\tStart the application normally." 2> /dev/null ; 
+
 function LibLoader()
 {
 	echo -ne "Testing Lib Fnct.D\n" > /dev/stderr ; 

@@ -46,7 +46,40 @@ Preface
 These are Common Bash-Object for Fnctlib _pre-Alpha-Init.d re-implementation 
 for services management in Ubuntu/Debian/Fedora, which pass secessfully some handy-test 
 in 3 years of developpement.
-	
+
+Post-Note
+=========
+
+Unlike old development of fnct_lib, such important function and design being 
+redesigned to simply work. Fnct_lib leave the function __call_locality where an 
+important overloading just corrupt the design. Also introduced the Getter and 
+Setter thru the __call_locality function was an echec and function does not 
+support '.' in their name at all, in any version also I beileive it's and event
+assembly export from many *nix design does not support '.' in their name... 
+Old Fnct_lib was also developping a dangerous concept, The Post-Fixed variables.
+Where totally not handled, it should be supported by the function core like 
+__call_locality or any __fnctCreateLocalityFuncParam and ... Also fnct_lib was
+trying to develop passing interface based on Base64 a uniform codec translation
+a bit slower and really slowing the function when assignement 
+__call_localityDisplayFunctionEntry=1 was made inside __call_locality function 
+and using mere __in_for, a Loop-wrapper for Array and function Array => F(x)
+execution. 
+
+Today we leaving __call_locality to implement external function reading the TAG.
+Now, __call_locality come back as Array, it accept the Root Named 
+Prefixed-Variable and the full-name of the function. This setup leave some 
+external function like  GetVarReference extracting almost anything and add a basic 
+helper. Where is was impossible to create convenient Helper inside the original 
+fnct_lib, GetVarReference had several acheivement... Weak and simple, but 
+still work corretly. Two derivate from this external function, 
+__GetVarReferenceList __GetVarReferenceCompWord  are also good candidate 
+to produce steady services, Prefixed-Variable extraction and automation of 
+Word Completion, a lacking design after hearing some group asking  to put on the 
+thumb important reference while Network admin from late 1990 should have 
+to administrate World and world of network by hand... There is no evolution 
+between implementation of this services and methodonomy to implement it on safe
+basic design.
+
 
 Description
 ===========
