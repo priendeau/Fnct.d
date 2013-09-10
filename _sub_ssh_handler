@@ -241,67 +241,83 @@ function GetKeyChoice()
 
 
 ### yet Another Password generator.
+unset GetPasswd ;
 function GetPasswd()    
 { 
- local ArrayArg=( $*) ; 
+ local ArrayArg=( $* ) ; 
  local __call_locality=( GP GetPasswd ) ; 
  local Arg0=${ArrayArg[0]} ; 
  
- local IntDefaultPwdSize=${GPSize:=16}
+ local IntDefaultPwdSize=${GPSize:=16} ;
  local IntDefaultFactor=${GPFactor:=1000} ; 
  local IntRandomSeedFactor=${GPRandomSeed:=10} ; 
  local StrPasswordTypeForm=${GPArgType:=cnsB1,cysB1,cnsyB1} ; 
- local ArrayFormPassword=( ${StrPasswordTypeForm//,/ } ) ;
  local IntPasswordType=${GPGenFormType:=0} ;
- local StrPwGenFormPassword=-${ArrayFormPassword[${IntPasswordType}]};
+ 
  local StrAppsPwdGenerator=${GPAppsGen:=pwgen} ;
  local BoolEvalCmdExit=${GPShowCmdEvalAndExit:=False} ; 
- 
+
+ unset __Loop ;
  function __Loop( )
  {
 		local __call_locality=( _L __Loop  ) ;
 		local ArrayArg=( $* ) ; 
-		local Arg0=${ArrayArg[0]};
-		echo -ne "Crunching for a factor of ${factor} password.\n" ; 
+		local Arg0=${ArrayArg[0]} ;
+  local x=0; 
+		echo -ne "Crunching for a factor of ${factor} password.\n" > /dev/stderr  ; 
+  local value ; 
   while [ ${x} -ne ${factor} ] ; do 
-			eval ${StrCmdEval} ; 
+   value=$( ${StrAppsPwdGenerator} ${StrPwGenFormPassword} ${IntDefaultPwdSize} );
 			let x=$x+1 ; 
 		done ; 
   echo -ne "\npasswd:[${value}]\n\n" > /dev/stderr  ; 
  }
+ 
+ unset __Display ;
  function __Display()
  {
 		local __call_locality=( _D __Display  ) ;
 		local ArrayArg=( $* ) ; 
-		local Arg0=${ArrayArg[0]};
-  echo -ne "\nCMD Eval:[ ${StrCmdEval} ]\n" > /dev/stderr ; 
+		local Arg0=${ArrayArg[0]} ;
+  eval "local value=\"${StrAppsPwdGenerator} ${StrPwGenFormPassword} ${IntDefaultPwdSize}\"" ;
+  echo -ne "\nCMD Eval:[ ${value} ]\n" > /dev/stderr ; 
   
  }
+ unset __main_StartServices ;
  function __main_StartServices()
  {
 		local __call_locality=( Main __main_StartServices ) ;
 		local ArrayArg=( $* ) ; 
-		local Arg0=${ArrayArg[0]};
-
-		local x=0; 
+		local Arg0=${ArrayArg[0]} ;
+  local ArrayFormPassword=( ${StrPasswordTypeForm//,/ } ) ;
+  local StrPwGenFormPassword=-${ArrayFormPassword[${IntPasswordType}]} ;
 		local end=${IntDefaultFactor} ; 
 		local factor=$(( ${end} * $(( ( ${RANDOM} % ${IntRandomSeedFactor} ) + 1 )) )) ; 
 		
 		local value="" ;
-  local StrCmdEval="""value=\$( ${StrAppsPwdGenerator} ${StrPwGenFormPassword} ${IntDefaultPwdSize} )""" ; 
-  eval $( BVTestVarName=StrFuncExec \
-          BVTestVarHold='StrCmdEval=${StrCmdEval} x=${x} factor=${factor} StrAppsPwdGenerator=${StrAppsPwdGenerator} StrPwGenFormPassword=${StrPwGenFormPassword} IntDefaultPwdSize=${IntDefaultPwdSize} __Loop' \
-          BVTestBoolVarName=\${BoolEvalCmdExit} \
-          BVTestBoolCase=True \
-          BVTestBoolAssertion='StrCmdEval=${StrCmdEval} __Display' \
-          BVTestScopeTest=local \
-          BoolVarTestVarCreation ) ; 
-		
-  #while [ ${x} -ne ${factor} ] ; do 
-		#	eval """value=\$( ${StrAppsPwdGenerator} ${StrPwGenFormPassword} ${IntDefaultPwdSize} )""" ; 
-		#	let x=$x+1 ; 
-		#done ; 
-		 		  
+  ### 
+  ### Password Line execution ( needed both in display and Loop command. )
+  ### 
+  local StrCmdPwdEval="""StrAppsPwdGenerator=${StrAppsPwdGenerator} StrPwGenFormPassword=${StrPwGenFormPassword} IntDefaultPwdSize=${IntDefaultPwdSize}""" ; 
+  local StrLoopCmd="""${StrCmdPwdEval} factor=\${factor}""" ; 
+  local StrDisplayCmd="""${StrCmdPwdEval}""" ; 
+  
+  #local IfCmd="BVTestVarName='StrFuncExec' BVTestVarHold='\$( StrCmdEval=\${StrCmdEval} factor=\${factor} __Loop )' BVTestBoolVarName='\${BoolEvalCmdExit}' BVTestBoolCase=True BVTestBoolAssertion='StrCmdEval=\${StrCmdEval} __Display' BVTestScopeTest=local BoolVarTestVarCreation "
+  eval $( BVTestVarName='StrFuncExec'          \
+  BVTestVarHold="${StrDisplayCmd} __Display"   \
+  BVTestBoolVarName='${BoolEvalCmdExit}'       \
+  BVTestBoolCase=False                         \
+  BVTestBoolAssertion="${StrLoopCmd} __Loop" \
+  BVTestScopeTest=local BoolVarTestVarCreation  ) ;
+  
+  eval $( BVTestVarName='StrFuncIsLoop'          \
+  BVTestVarHold="${StrFuncExec}"   \
+  BVTestBoolVarName='${BoolEvalCmdExit}'       \
+  BVTestBoolCase=True                         \
+  BVTestBoolAssertion="$( eval ${StrFuncExec} )" \
+  BVTestScopeTest=local BoolVarTestVarCreation  ) ;
+  
+		  
  }
 
  local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\n" ;
@@ -314,12 +330,13 @@ function GetPasswd()
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
 		eval $( __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
-  IntDefaultPwdSize=${IntDefaultPwdSize} \
-  IntDefaultFactor=${IntDefaultFactor} \
-  IntRandomSeedFactor=${IntRandomSeedFactor} \
-  IntPasswordType=${IntPasswordType} \
+  IntDefaultPwdSize=${IntDefaultPwdSize}       \
+  IntDefaultFactor=${IntDefaultFactor}         \
+  IntRandomSeedFactor=${IntRandomSeedFactor}   \
+  IntPasswordType=${IntPasswordType}           \
   StrPwGenFormPassword=${StrPwGenFormPassword} \
-  StrAppsPwdGenerator=${StrAppsPwdGenerator} \
+  StrPasswordTypeForm=${StrPasswordTypeForm}   \
+  StrAppsPwdGenerator=${StrAppsPwdGenerator}   \
   __main_StartServices ;
  fi	 
  
