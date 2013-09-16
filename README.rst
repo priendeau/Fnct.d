@@ -162,6 +162,124 @@ Assuming the Git developpement branch was cloned inside /etc/init.d/Fnct.D
 Definitions
 ===========
 
+Part of Imaginary symptoms, a wide concept called efficiency is a key and a lost
+dream in the today dream. Having multiplicity of design and a restricted goal, 
+many distribution come to a day where is become heavy and slow and start stinking.
+Sinking the source into all faith, telling what slowing the wage is more an Imaginary
+symptoms like Freudian regression of psychiatric ill.
+
+:Note: fb7831a4-1e3a-11e3-98a2-001b3875b29c
+:Title: Pumping performance problems, 
+
+.. image:: https://raw.github.com/priendeau/Fnct.d/master/images/Pumping_Performance.png
+		:target: https://github.com/priendeau/Fnct.d#Definitions
+(The desire to be pitied and surrounded some childishness and the continual use of enemas are, in some respects, of a narcissistic hypochondriac who declined to anal stage of psychoanalysis, concerned about the control of its I / O and everything about his person (Freudian quote) )
+
+
+An important definition in shell execution is time efficiency. Un-compiled 
+Higher-Level script / language like Python, PHP,  and many other are not satisfying 
+efficiency requirement like time execution. Simple script may own better readeability
+and will give higher execution time. Mostly for being read from the interpreter and 
+being executed after. While Bash is present while a command-line "is open", a nestled
+brace with a find, an Array to store the information extracted by find and simple loop
+to sum collected size will take almost 3 times more to accomplish almost same task. 
+
+Example in Python : 
+
+.. code:: python
+	### File: 19e15224-1e3b-11e3-98a2-001b3875b29c.py  
+	import os, sys 
+	from os.path import join,getsize
+
+	def get_total_size( path ):
+	total=0
+	for root,dirs,files in os.walk( path ):
+		for name in files:
+			total+=getsize( join( root,name) )
+	return total
+
+	print "Total:{}".format( get_total_size( sys.argv[1] ) )
+
+
+.. code:: shell
+	
+	### having Performance based on this type of CPU ( not the Acer-One A0725, but Acer aspire 5520 )
+	###
+	### Following line is to compare actual processor speed vs. uses of time. 
+	cat /pro/cpuinfo
+	--------------------------------------------
+	processor	: 0
+	vendor_id	: AuthenticAMD
+	cpu family	: 15
+	model		: 104
+	model name	: AMD Athlon(tm) 64 X2 Dual-Core Processor TK-57
+	stepping	: 2
+	cpu MHz		: 1900.000
+	cache size	: 256 KB
+	bogomips	: 3800.51
+	...
+	processor	: 1
+	vendor_id	: AuthenticAMD
+	cpu family	: 15
+	model		: 104
+	model name	: AMD Athlon(tm) 64 X2 Dual-Core Processor TK-57
+	stepping	: 2
+	cpu MHz		: 1900.000
+	cache size	: 256 KB
+	bogomips	: 3800.51
+	...
+	--------------------------------------------
+	
+	### From command line:
+	
+	
+	$> time \
+	{ 
+	  local ArrayFsize=( $( find ./ -printf "%s " ) ) ; 
+	  local  intsize=0 ; 
+	  for item in ${ArrayFsize[@]} ; do 
+	   intsize=$(( ${intsize} + ${item} )) ; 
+	  done ; 
+	  echo "Path Size:${intsize}" ; 
+	}
+	
+	### Notice. 
+	### Uses of time  does give multiple answer. It give real time execution,
+	### and important time like User time, which is merely the time it take to 
+	### your machine to open a windows under your username and execute following
+	### code statement... And finally the system time, which is the time to open
+	### a section inside higher level of Bash-Memory section to allocate memory, 
+	### heap and lot's of protection and loggin facility as well . 
+	
+	### So this samplig from nestled-brace give us three information :
+	### real	0m0.046s
+	### user	0m0.009s
+	### sys		0m0.008s
+	### Total of 0.063s to execute a find to look inside all tree starting from a 
+	### location and digging into it's last leaf... 
+
+	### From Python file ( 19e15224-1e3b-11e3-98a2-001b3875b29c.py ), 
+	###
+	### time 19e15224-1e3b-11e3-98a2-001b3875b29c.py ### <--- This will work only 
+	###
+	### if chmod 775 was applied on file 19e15224-1e3b-11e3-98a2-001b3875b29c.py
+
+
+	$> time 19e15224-1e3b-11e3-98a2-001b3875b29c.py
+	### real	0m0.144s
+	### user	0m0.033s
+	### sys		0m0.026s
+	### for a total of 0.203s to applied same algorithm .
+	
+	### Notice, python os.walk was considered more idiomatic and can calculate
+	### useless informations like link and symbolink link which merely not 
+	### consuming space on a disk, and somes systems it give you an arbritrary
+	### size between 1 block of ( 512 to 4096 bytes ) and/or fixed size which is 
+	### usually a virtual size. 
+	
+	###
+
+
 Documentation
 -------------
 
