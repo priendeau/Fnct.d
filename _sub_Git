@@ -52,19 +52,21 @@ function GetSelectedFile()
  if [ "${Arg0:=--startservices}" == "--help" ] ; then 
 				GetVarReference ${__call_locality[1]} ; 
 				echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-	#elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-  #eval """local ArgGet=\${${ArrayArg[1]}}""" ;  
-		#echo -ne """${ArgGet}\n""" ; 
-	#elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-  #eval $( __GetVarReferenceList ) ; 
- #elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then
-  #IntWidth=${IntWidth}                               \
-  #IntHeight=${IntHeight}                             \
-  #StrTitle=${StrTitle}                               \
-  #StrZenityMainAction=${StrZenityMainAction}         \
-  #StrSep=${StrSep}                                   \
-  #StrZenityFSMultipleFile=${StrZenityFSMultipleFile} \
-  #__main_StartServices ; 
+	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ;  
+		echo -ne """${ArgGet}\n""" ; 
+  ### Test Ok, passed Sat Sep 28 21:18:23 EDT 2013 
+	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( __GetVarReferenceList ) ; 
+  ### Test Ok, passed, Sat Sep 28 21:17:45 EDT 2013
+ elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then
+  IntWidth=${IntWidth}                               \
+  IntHeight=${IntHeight}                             \
+  StrTitle=${StrTitle}                               \
+  StrZenityMainAction=${StrZenityMainAction}         \
+  StrSep=${StrSep}                                   \
+  StrZenityFSMultipleFile=${StrZenityFSMultipleFile} \
+  __main_StartServices ; 
  fi 
 
 } 
