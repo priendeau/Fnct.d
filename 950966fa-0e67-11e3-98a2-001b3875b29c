@@ -3,12 +3,13 @@
 ###
 
 ###File:/etc/init.d/Fnct.d/950966fa-0e67-11e3-98a2-001b3875b29c
-###UUID-TIME-MARKER:ce18f540-0ec7-11e3-98a2-001b3875b29c
+###UUID-TIME-MARKER:9d4f9fd6-28c1-11e3-98a2-001b3875b29c
 ###Date: ${StrDateFormat}
-###Sha1Sum: 78c79911f4efbfc34b1707c1c63674a48da11768
-### Size:7352
-### NbWord: 611\n
-function ZenityPythonInstaller()
+###Sha1Sum: 223715eeac461ce63984fd5f9f0ddb749dc3909d
+### Size:7301
+### NbWord: 608\n
+
+ZenityPythonInstaller()
 {
   local __call_locality__=( ZPI ZenityPythonInstaller ) ; 
   local ArrayArg=( $* ) ; 
@@ -166,4 +167,3 @@ function ZenityPythonInstaller()
   
 
 }
-### =#md5=3382a9191121893448cb02e476fa7b8a

@@ -677,6 +677,70 @@ Step forward the ZenityShellEval sample
 	user and group, and might allow you to put it elsewhere like into 
 	localized-execution section..... 
 
+---------------------------------------
+Integrity of chunk With ZenityShellEval Checksum algorithm .
+---------------------------------------
+
+	Supplying a Checksum algorithm verification with a developping tools
+	does not need to be strengthened and storing the information localy and 
+	ciphered. The will was to establish a tools to corretly identify a chunck
+	being followed or not. Simply mean it's possible you do have edited the 
+	chunck without using the ZenityShellEval, and did not do a new footprint 
+	to it. This meaning see from the editor that might had no right to see 
+	under the hood the permission, file attribute and time of modification will
+	rely on this engine to analyse the information. This also great for ensuring 
+	code did not suffer to unexpectedly modification, which is barely hard to 
+	see if you do had no remember of last modification and had no tool to notice 
+	it. ... A cyclic check to ensure you do it right... 
+	
+	Supplied with Parameter ZSECheckSumTest=True, and following parameter 
+	to identify the file and it's location will do a simple checksum 
+	verification of the content. It will look also for the match inside the 
+	file... 
+	
+	The Checksum is also a Prefixed-Variable that alter the common path of the 
+	execution and did not load the editor after... It's not commming as services
+	du to it's exception and might be listed in different structure to alter 
+	normal comportement... Assuming giving an answer to unique request shall be 
+	not part or a services like --get and --list where uniformely return member
+	part like Prefixed-Variable and or content of Prefixed-Variable, a Sha1sum
+	is a steady algorithm and is applied in goal to extract identity... As long
+	there is no services on identity as services it should not be see as an actor
+	of the transport layer or any communication realm for this moment... 
+
+::	
+	
+	Example:
+	
+	### on command shell to call the checksum of ZenityShellEval will be see like 
+	### this.
+	
+	### Note, Chunk 950966fa-0e67-11e3-98a2-001b3875b29c is the ZenityPythonInstaller
+	### which was modified recently and will show a faillure . 
+	
+	$> ZSECheckSumTest=True \
+	   ZSEPathStorage=/etc/init.d/Fnct.d/ \
+	   ZSEFileName=950966fa-0e67-11e3-98a2-001b3875b29c
+
+	### On screen it report the information 
+	File: 57eaab74b095e5d374cf15d5923fef2fb02eaab7
+	Footprint: fa3cd4782aa56e9c1725a06904af3293a6b5c532
+	file-shasum:/etc/init.d/Fnct.d/950966fa-0e67-11e3-98a2-001b3875b29c:FAILED
+	
+	# Re-editing the file with ZenityShellEval and removing the FOOTPRINT will save
+	### it with newest information... Or possibly need to come back to original file
+	### version due to error-insertion with another application and was not analysed
+	### by ZenityShellEval and might report error execution. 
+	
+	### Another Edition with ZenityShellEval and it change the shasum , doing the same
+	### command ; now it report the correct information . 
+	
+	File: 223715eeac461ce63984fd5f9f0ddb749dc3909d
+	Footprint: 223715eeac461ce63984fd5f9f0ddb749dc3909d
+	file-shasum:/etc/init.d/Fnct.d/950966fa-0e67-11e3-98a2-001b3875b29c:MATCH
+
+***NOTE***, ZenityShellEval, IS changing the SHA1SUM header in any circumstance,
+having the chunk conform or not, correct or not...
 
 :Note: f5f7532c-0bac-11e3-999d-001b3875b29c
 :Title: Developping and Helper 
