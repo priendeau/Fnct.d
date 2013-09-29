@@ -1,6 +1,74 @@
 
 # . /etc/init.d/Fnct.d/fnct_debian_lib
 
+function GetSelectedFile()    
+{ 
+ local __call_locality=( GSF GetSelectedFile )
+ local ArrayArg=( $* ) ;
+ local Arg0=${ArrayArg[0]} ; 
+ local IntWidth=${GSFZenityWidth:=640} ; 
+ local IntHeight=${GSFZenityHeight:=200} ; 
+ local StrTitle=${GSFZenityTitle:=GetSelectedFile, Zenity File-Shell Selection} ; 
+ local StrZenityMainAction=${GSFZenityMainAction:=--file-selection} ;
+ local StrSep=${GSFZenitySep:=,}
+ local StrZenityFSMultipleFile=${GSFZenitySetMultiple:=True} ; 
+ 
+ function __main_StartServices()
+ {
+		local __call_locality=( Main __main_StartServices ) ;
+		local Arg0=${ArrayArg[0]} ;
+		local ArrayArg=( $* ) ; 
+
+  ###->local StrFileToCommit=${GitHubCommitFilePath:=/home/maxiste/github/Technical-PorteFolio/Python}
+  ### Saving Current Path
+  
+  ### See BoolVarTestVarCreation from fnct_debian_lib .
+  ### This replacement is intended to supply a Boolean test and Value Association, done in one line, 
+  ### it allow to generate a range of variable being Transited from Prefixed-Var and value
+  ### passed in a query, which is sometimes had no value and give extra code that might trigger error. 
+  ### local StrMultipleFileSelectionAttr="--multiple"
+  ### if [ "${StrZenityFSMultipleFile}" == "False" ] ; then 
+  ###  StrMultipleFileSelectionAttr="" ; 
+  ### fi 
+  $( eval BVTestVarName=StrMultipleFileSelectionAttr BVTestVarHold="--multiple" BVTestBoolVarName="\${StrZenityFSMultipleFile}" BoolVarTestVarCreation ) ; 
+  local StrCurrentPath=$( pwd ) ; 
+  cd ${GSFPath} ; 
+  local FileSelection=$( zenity --title="${StrTitle}" --width=${IntWidth} --height=${GSFZenityHeight} ${StrZenityMainAction} ${StrMultipleFileSelectionAttr} --filename="${StrFileToCommit}" --separator='${StrSep}' ) ;
+
+  cd ${StrCurrentPath} ; 
+  local ArrayReturnedFile=( ) ;
+  local FileCommit=( $( echo ${FileSelection//,/ } ) ) ; 
+  
+  for (( intx=0 ; intx <= ${#FileCommit[@]} ; intx++ )) ; do 
+   local FileName=( ${FileCommit[${intx}]//\// } ) ;
+   ArrayReturnedFile[${#ArrayReturnedFile[@]}]="${FileName[ $(( ${#FileName[@]} - 1 ))]}" ;
+  done 
+  #local FileCommited=${FileCommit[$(( ${#FileCommit[@]}-1 ))]} ; 
+  echo "${ArrayReturnedFile[@]// /,}" ; 
+	}
+ 
+ local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
+ 
+ if [ "${Arg0:=--startservices}" == "--help" ] ; then 
+				GetVarReference ${__call_locality[1]} ; 
+				echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+	#elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  #eval """local ArgGet=\${${ArrayArg[1]}}""" ;  
+		#echo -ne """${ArgGet}\n""" ; 
+	#elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  #eval $( __GetVarReferenceList ) ; 
+ #elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then
+  #IntWidth=${IntWidth}                               \
+  #IntHeight=${IntHeight}                             \
+  #StrTitle=${StrTitle}                               \
+  #StrZenityMainAction=${StrZenityMainAction}         \
+  #StrSep=${StrSep}                                   \
+  #StrZenityFSMultipleFile=${StrZenityFSMultipleFile} \
+  #__main_StartServices ; 
+ fi 
+
+} 
+ 
 function GitHubCommit()
 { 
  local ArrayArg=( $* ) ; 
@@ -29,44 +97,7 @@ function GitHubCommit()
 		
 	}
  
- function GetSelectedFile()    
- { 
-  local __call_locality=( GSF GetSelectedFile )
-  local ArrayArg=( $* ) ; 
-  local IntWidth=${GSFZenityWidth:=640} ; 
-  local IntWidth=${GSFZenityHeight:=200} ; 
-  local StrTitle=${GSFZenityTitle:="GetSelectedFile, Zenity File-Shell Selection"} ; 
-  local StrZenityMainAction=${GSFZenityMainAction:=--file-selection}
-  local StrSep=${GSFZenitySep:=,}
-  local StrZenityFSMultipleFile=${GSFZenitySetMultiple:=True} ; 
 
- 	###->local StrFileToCommit=${GitHubCommitFilePath:=/home/maxiste/github/Technical-PorteFolio/Python}
-  ### Saving Current Path
-  
-  ### See BoolVarTestVarCreation from fnct_debian_lib .
-  ### This replacement is intended to supply a Boolean test and Value Association, done in one line, 
-  ### it allow to generate a range of variable being Transited from Prefixed-Var and value
-  ### passed in a query, which is sometimes had no value and give extra code that might trigger error. 
-  ### local StrMultipleFileSelectionAttr="--multiple"
-  ### if [ "${StrZenityFSMultipleFile}" == "False" ] ; then 
-  ###  StrMultipleFileSelectionAttr="" ; 
-  ### fi 
-  $( eval BVTestVarName=StrMultipleFileSelectionAttr BVTestVarHold="--multiple" BVTestBoolVarName=StrZenityFSMultipleFile BoolVarTestVarCreation ) 
-  local StrCurrentPath=$( pwd ) ; 
-  cd ${GSFPath} ; 
-  local FileSelection=$( zenity --title="${StrTitle}" --width=${IntWidth} --height=${GSFZenityHeight} ${StrZenityMainAction} ${StrMultipleFileSelectionAttr} --filename="${StrFileToCommit}" --separator='${StrSep}' ) ; 
-  cd ${StrCurrentPath} ; 
-  local ArrayReturnedFile=( ) ;
-  local FileCommit=( $( echo ${FileSelection//,/ } ) ) ; 
-  
-  for (( intx=0 ; intx <= ${#FileCommit[@]} ; intx++ )) ; do 
-  	local FileName=( ${FileCommit[${intx}]//\// } ) ;
-  	ArrayReturnedFile[${#ArrayReturnedFile[@]}]="${FileName[ $(( ${#FileName[@]} - 1 ))]}" ;
-  done 
-  #local FileCommited=${FileCommit[$(( ${#FileCommit[@]}-1 ))]} ; 
-  echo "${ArrayReturnedFile[@]// /,}" ; 
- } 
- 
  function GitCommit( )
  {
   echo -ne "Function:GitCommit\n" > /dev/stderr ; 
@@ -76,10 +107,23 @@ function GitHubCommit()
   local StrGitCommitPAT="" ;
   for (( intx=0 ; intx <= $(( ${#ArrayFileCommit[@]}-1 )) ; intx++ )) ; do 
   	local StrFile="${ArrayFileCommit[${intx}]}" ;
-		 local CommitMessage=$( zenity --title="GitHub, commiting file ${StrFile}" --width=640 --height=200 --ok-label="commit" --text-info --editable --text="${StrMessageCommit}" ) ; 
+		 local CommitMessage=$( zenity \
+                          --title="GitHub, commiting file ${StrFile}" \
+                          --width=640 \
+                          --height=200 \
+                          --ok-label="commit" \
+                          --text-info \
+                          --editable \
+                          --text="${StrMessageCommit}" ) ; 
 		 local ErrorCommit=$? ;
 		 local IntLenMessage=${#CommitMessage} ;
-   GitCPActionIs=${GitCommitAction} GitCPActionPoint=${GitCommitBranchLocation} GitCPActionBranch=${GitCommitBranchName} GitCPActionLength=${IntLenMessage} GitCPActionCommitMessage=${CommitMessage} GitCPActionFile=${StrFile} GitCommitPushAction ;
+   GitCPActionIs=${GitCommitAction}            \
+   GitCPActionPoint=${GitCommitBranchLocation} \
+   GitCPActionBranch=${GitCommitBranchName}    \
+   GitCPActionLength=${IntLenMessage}          \
+   GitCPActionCommitMessage=${CommitMessage}   \
+   GitCPActionFile=${StrFile}                  \
+   GitCommitPushAction ;
   done 
  }
  
@@ -87,14 +131,14 @@ function GitHubCommit()
 	### Main Body 
 	### ############################################# 
  
- local StrGFSPrefixT=StrFileToCommit=${StrFileToCommit} \
-                     GSFZenityTitle=${StrZenityTitle} \
-                     GSFPath=${StrFileToCommit} ; 
- local StrGitCommitFileShellT=GitCommitBranchLocation=${StrBranchLocation} \
-                              GitCommitBranchName=${StrBranchName}         \
-                              GitCommitAction=${StrCommitAction}           \
-                              GitCommitFileList="${StrFileCommit}"         \
-                              StrMessageCommit=${StrMessageCommit}
+ #local StrGFSPrefixT="StrFileToCommit=${StrFileToCommit} \
+                     #GSFZenityTitle=${StrZenityTitle} \
+                     #GSFPath=${StrFileToCommit} " ; 
+ #local StrGitCommitFileShellT="GitCommitBranchLocation=${StrBranchLocation} \
+                              #GitCommitBranchName=${StrBranchName}         \
+                              #GitCommitAction=${StrCommitAction}           \
+                              #GitCommitFileList="${StrFileCommit}"         \
+                              #StrMessageCommit=${StrMessageCommit} "
 	if [ "${Arg0:=--startservices}" == "--help" ] ; then 
 				GetVarReference ${__call_locality[1]} ; 
 				echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
