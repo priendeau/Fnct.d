@@ -478,6 +478,7 @@ function BoolVarTestVarCreation()
 ### 
 ### 
 
+ unset ArrayTypeTest StrVarNamed StrVarNamedHold StrVarBoolTest StrDefaultBoolTest StrNotAsserted StrScopeType StrIfTestType StrIfStringOp IsDisplayIfStatement ; 
 	local __call_locality=( BVTest BoolVarTestVarCreation ) ;
 	local ArrayArg=( $* ) ; 
 	local Arg0=${ArrayArg[0]} ;
@@ -490,6 +491,7 @@ function BoolVarTestVarCreation()
  local StrScopeType=${BVTestScopeTest:=local} ;
  local StrIfTestType=${BVTestIfType:=String} ; 
  local StrIfStringOp=${BVTestIfOp:===} ;
+ local IsDisplayIfStatement=${BVTestDisplayIf:=False} ; 
  
  local ArrayTestType=( String File Test Int Shell ) ;
  local StrIfPattern ; 
@@ -530,6 +532,9 @@ function BoolVarTestVarCreation()
 		eval $( __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
   echo -ne "${StrTestTemplate}" ; 
+  if [ "${IsDisplayIfStatement}" == "True" ] ; then 
+   echo -ne "\nFunction ${__call_locality[1]}, Display Result:\n ${StrTestTemplate}\n" > /dev/stderr ; 
+  fi 
  fi
  
 }
@@ -2385,8 +2390,9 @@ function GkSuZenityLoader()
 	local BoolShowUserSelection=${GSZLSUS:=False} ;
  local BoolUpdateLdconfig=${GSZLUpdadeLdconfig:=True} ;
  local StrLdConfigUser=${GSZLLdconfigUser:=root} ;
- local StrLdconfigGreeting=${GSZLLdconfigGreeting:='\n\nHint\nLoading ldconfig on need if some module require to be loaded from ldconfig ( from pip installation of easy_setup.py ) It can be accessible thru Prefixed-var GSZLUpdadeLdconfig=True from GkSuZenityLoader.\n\n'}
-	
+ local StrLdconfigGreeting=${GSZLLdconfigGreeting:='\n\nHint\nLoading ldconfig on need if some module require to be loaded from ldconfig ( ex: from pip installation or easy_setup.py ) It can be accessible thru Prefixed-var GSZLUpdadeLdconfig=True from GkSuZenityLoader.\n\n'}
+	local BoolShowFGSZ=${GSZShowFuncGSZ:=True} ; 
+ 
  function ZenityFilter()
 	{
 			egrep -i ${StrRegSearch} \
