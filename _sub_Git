@@ -1,9 +1,10 @@
 
 # . /etc/init.d/Fnct.d/fnct_debian_lib
-
+unset GetSelectedFile ;
 function GetSelectedFile()    
 { 
  local __call_locality=( GSF GetSelectedFile )
+ unset ArrayArg Arg0 IntWidth IntHeight StrTitle StrZenityMainAction StrSep StrZenFSMFile; 
  local ArrayArg=( $* ) ;
  local Arg0=${ArrayArg[0]} ; 
  local IntWidth=${GSFZenityWidth:=640} ; 
@@ -11,14 +12,14 @@ function GetSelectedFile()
  local StrTitle=${GSFZenityTitle:=GetSelectedFile, Zenity File-Shell Selection} ; 
  local StrZenityMainAction=${GSFZenityMainAction:=--file-selection} ;
  local StrSep=${GSFZenitySep:=,}
- local StrZenityFSMultipleFile=${GSFZenitySetMultiple:=True} ; 
+ local StrZenFSMFile=${GSFZenitySetMultiple:=True} ; 
  
  function __main_StartServices()
  {
 		local __call_locality=( Main __main_StartServices ) ;
 		local Arg0=${ArrayArg[0]} ;
 		local ArrayArg=( $* ) ; 
-
+  local ArrayReturnedFile=( ) ; 
   ###->local StrFileToCommit=${GitHubCommitFilePath:=/home/maxiste/github/Technical-PorteFolio/Python}
   ### Saving Current Path
   
@@ -30,10 +31,22 @@ function GetSelectedFile()
   ### if [ "${StrZenityFSMultipleFile}" == "False" ] ; then 
   ###  StrMultipleFileSelectionAttr="" ; 
   ### fi 
-  $( eval BVTestVarName=StrMultipleFileSelectionAttr BVTestVarHold="--multiple" BVTestBoolVarName="\${StrZenityFSMultipleFile}" BoolVarTestVarCreation ) ; 
+
+  eval $( BVTestVarName=StrMFileAttr \
+          BVTestVarHold="--multiple" \
+          BVTestBoolVarName="${StrZenFSMFile}" \
+          BoolVarTestVarCreation ) ; 
+  
   local StrCurrentPath=$( pwd ) ; 
   cd ${GSFPath} ; 
-  local FileSelection=$( zenity --title="${StrTitle}" --width=${IntWidth} --height=${GSFZenityHeight} ${StrZenityMainAction} ${StrMultipleFileSelectionAttr} --filename="${StrFileToCommit}" --separator='${StrSep}' ) ;
+  local Cmd="zenity --title=\"${StrTitle}\" \
+                    --width=${IntWidth} \
+                    --height=${GSFZenityHeight} \
+                    ${StrZenityMainAction} \
+                    ${StrMFileAttr} \
+                    --filename=\"${StrFileToCommit}\" \
+                    --separator='${StrSep}'" ; 
+  local FileSelection=$( ${Cmd} ) ;
 
   cd ${StrCurrentPath} ; 
   local ArrayReturnedFile=( ) ;
@@ -60,12 +73,12 @@ function GetSelectedFile()
   eval $( __GetVarReferenceList ) ; 
   ### Test Ok, passed, Sat Sep 28 21:17:45 EDT 2013
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then
-  IntWidth=${IntWidth}                               \
-  IntHeight=${IntHeight}                             \
-  StrTitle=${StrTitle}                               \
-  StrZenityMainAction=${StrZenityMainAction}         \
-  StrSep=${StrSep}                                   \
-  StrZenityFSMultipleFile=${StrZenityFSMultipleFile} \
+  IntWidth="${IntWidth}"                               \
+  IntHeight="${IntHeight}"                             \
+  StrTitle="${StrTitle}"                               \
+  StrZenityMainAction="${StrZenityMainAction}"         \
+  StrSep="${StrSep}"                                   \
+  StrZenityFSMultipleFile="${StrZenityFSMultipleFile}" \
   __main_StartServices ; 
  fi 
 
