@@ -984,7 +984,7 @@ function ZenityShellEval()
     
     echo """${StrFootPrintMark}\n${CmdEval}""" > ${StrFileTmp} ; 
     chmod 775 ${StrFileTmp} ; 
-    . ./${StrFileTmp} ; 
+    . ${StrFileTmp} ; 
     shell_res=$?
     if [ ${shell_res} -eq 1 ] ; then 
      echo -ne "\n\n\tUser Shell evaluation reported error\n\n" > /dev/stderr ; 
