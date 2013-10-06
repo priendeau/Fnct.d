@@ -3,11 +3,78 @@
 ###
 
 ###File:/etc/init.d/Fnct.d/50ccda66-2ebb-11e3-98a2-001b3875b29c
-###UUID-TIME-MARKER:f265daec-2ebd-11e3-98a2-001b3875b29c
+###UUID-TIME-MARKER:3181a0cc-2ec7-11e3-98a2-001b3875b29c
 ###Date: ${StrDateFormat}
-###Sha1Sum: 7a49dc789e7b4a0736956d321bb6737d10ad5e5a
-### Size:2818
-### NbWord: 291\n
+###Sha1Sum: 3b85ebb66fe450929c4519e1a72793e64eb1ef0b
+### Size:4990
+### NbWord: 482\n
+
+unset ZenityLibPolicyList
+function ZenityLibPolicyList()
+{
+ local __call_locality=( ZLPL ZenityLibPolicyList ) ;
+ local ArrayArg=( $* ) ;
+ local Arg0=${ArrayArg[0]};  
+ local StrPolicyFunctionStream="" ; 
+ local StrFuncPolicyF=${ZLPLPolicytoFunc:=__get_PolicyFunctionList}
+ local StrDefaultSelectValue=${ZLPLPolicyFuncSelectionV:=FALSE}
+ 
+ function __get_PolicyFunctionList()
+ {
+   
+   for (( intx=0 ; intx <= ${#ArrayLibPolicy[@]}-1; intx++ )) ; do 
+    local ArrayItem=( "${ArrayLibPolicy[${intx}]//:/ }" ) ; 
+    echo -ne "${StrDefaultSelectValue} ${ArrayItem[@]} " ; 
+   done
+ }
+
+ 
+ 
+ function __Header()
+ {
+  local __call_locality=( Header __Header ) ;
+  local ArrayArg=( $* ) ;
+  local Arg0=${ArrayArg[0]};   
+  local StrContentList=${HeaderPolicyParsedContent:=FALSE DebianAptSrcCompiler True fnct_debian_lib normal}
+  zenity --list \
+         --text="Function List Entry" \
+         --column="Selected" \
+         --column="Function Name" \
+         --column="Usability" \
+         --column="Lib origin" \
+         --column="Priority" \
+         --checklist --multiple ${StrContentList}
+ }
+ 
+ local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
+ function __main_StartServices()
+ {
+  local __call_locality=( Main __main_StartServices ) ;
+  local ArrayArg=( $* ) ;
+  local Arg0=${ArrayArg[0]};
+  local StrPolicyFunctionStream=$( StrDefaultSelectValue=${StrDefaultSelectValue} ${StrFuncPolicyF} ) ; 
+  HeaderPolicyParsedContent=${StrPolicyFunctionStream} __Header 
+
+ }
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+  GetVarReference ${__call_locality[1]} ; 
+  echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ;
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( __GetVarReferenceList ) ;
+ elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  StrFuncPolicyF=${StrFuncPolicyF} \
+  StrDefaultSelectValue=${StrDefaultSelectValue} \
+  StrPolicyFunctionStream=${StrPolicyFunctionStream} \
+  __main_StartServices       ${Arg0} ; 
+ fi
+
+}
+
+
+
 unset ZenityRadioOptionConfig
 function ZenityRadioOptionConfig()
 {

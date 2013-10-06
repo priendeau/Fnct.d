@@ -1194,7 +1194,62 @@ See Variable List:
 		--get		Return value of Internal Variable.
 		--list		List all Internal Pre-fixed Variable available to query or get.
 
+:Note: 7bd8c582-2ebe-11e3-98a2-001b3875b29c
+:Title: Introducing, Zenity Interface to manage Prefixed-Variable.
 
+
+Theses metodes with follow name, ZenityRadioOptionConfig, ZenityListOptionConfig,
+ZenityPrefixedVarBuilder are specialy developped to handle Prefixed-Variable from 
+Function name from fnct_lib, and especially fnct_debian_lib. Theses functions  work 
+in common Loop to allow, preparing a stetement for any present prefixed-variable to
+induce and correct the default value into usefull parameter. 
+
+Starting-Up with ZenityPrefixedVarBuilder. 
+
+ZenityPrefixedVarBuilder is the master function rolling over and over criteron choosed
+by the User/Developper. Having A first list of function to select, you might also 
+be interested in writing down thru a prefixed-variable Value the selected function desired
+to configure a prefixed-variable Statement. 
+
+Before entering in details in this management, I introduce this chunk  development , 
+chunk 50ccda66-2ebb-11e3-98a2-001b3875b29c. I will resume with management of 
+ZenityPrefixedVarBuilder by giving such important mechanism involved in selection of
+content and rolling function allowing you to change more than one function at the 
+time.
+
+Having different possibility to acces to member, ZenityPrefixedVarBuilder will also 
+start in GUI mode rather using the value from ZLPL ( ZenityLibPolicyList ) which 
+extract all function from a Policy Array configured from fnct_lib->ArrayLibPolicy 
+hold major function but not all function. Later an engine will update the 
+ArrayLibPolicy based on unset command yield at every new function. A  safety mechanism 
+to ensure altered function might come back as library is reloading. 
+
+ZenityLibPolicyList obey to an internal command named __get_PolicyFunctionList controled
+with Pre-fixed variable ZLPLPolicytoFunc which can be changed by yourself and allowing
+rolling the ZenityPrefixedVarBuilder into your own Function Roll-up management... 
+The one only note is to respect the common Policy-format:
+
+::	
+	# ----------------- inside fnct_lib ------------------------
+	### Example of ArrayPolicy 
+	declare -a ArrayLibPolicy=(  ValueParser:True:fnct_debian_lib:master ... 
+    ###                          |           |     |               |
+	### Format                   |           |     |               |
+	###                          |           |     |               +
+	###                          |           |     +               Importance
+	###                          |           +     Library Origin
+	###                          |           Usuability(true/false)
+	###                          +Function Name
+	
+	# For this moment Importance is a steady value but might change later with
+	# introduction of ArrayLibPolicy Parser from fnct_lib. Allowing to scan 
+	# the library and extracting information about function name and it's usuability/
+	# Origin, and it's importance... usuability and importance column will become
+	# statistical information. 
+	
+
+
+	
 :Note: 75411766-1969-11e3-98a2-001b3875b29c
 :Title: Permanent Sqlite Database to store crutial information introducing connection-layer to a unicast-per-user group and bash interoperability
 
