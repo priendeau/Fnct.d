@@ -1229,7 +1229,8 @@ with Pre-fixed variable ZLPLPolicytoFunc which can be changed by yourself and al
 rolling the ZenityPrefixedVarBuilder into your own Function Roll-up management... 
 The one only note is to respect the common Policy-format:
 
-::	
+.. code:: shell
+	
 	# ----------------- inside fnct_lib ------------------------
 	### Example of ArrayPolicy 
 	declare -a ArrayLibPolicy=(  ValueParser:True:fnct_debian_lib:master ... 
@@ -1247,7 +1248,7 @@ The one only note is to respect the common Policy-format:
 	# Origin, and it's importance... usuability and importance column will become
 	# statistical information. 
 	
-
+	
 
 	
 :Note: 75411766-1969-11e3-98a2-001b3875b29c
