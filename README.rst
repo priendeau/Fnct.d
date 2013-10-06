@@ -1234,7 +1234,7 @@ The one only note is to respect the common Policy-format:
 	# ----------------- inside fnct_lib ------------------------
 	### Example of ArrayPolicy 
 	declare -a ArrayLibPolicy=(  ValueParser:True:fnct_debian_lib:master ... 
-    ###                          |           |     |               |
+	###                          |           |     |               |
 	### Format                   |           |     |               |
 	###                          |           |     |               +
 	###                          |           |     +               Importance
