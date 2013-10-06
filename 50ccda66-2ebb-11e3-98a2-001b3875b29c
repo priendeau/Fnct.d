@@ -1,0 +1,98 @@
+###
+### FootPrint Added, see Prefixed-Var ZSEAddFootPrint from ZenityShellEval
+###
+
+###File:/etc/init.d/Fnct.d/50ccda66-2ebb-11e3-98a2-001b3875b29c
+###UUID-TIME-MARKER:f265daec-2ebd-11e3-98a2-001b3875b29c
+###Date: ${StrDateFormat}
+###Sha1Sum: 7a49dc789e7b4a0736956d321bb6737d10ad5e5a
+### Size:2818
+### NbWord: 291\n
+unset ZenityRadioOptionConfig
+function ZenityRadioOptionConfig()
+{
+ local __call_locality=( ZROC ZenityRadioOptionConfig ) ;
+ local ArrayArg=( $* ) ;
+ local Arg0=${ArrayArg[0]};  
+ 
+ local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
+ function __main_StartServices()
+ {
+  local __call_locality=( Main __main_StartServices ) ;
+  local ArrayArg=( $* ) ;
+  local Arg0=${ArrayArg[0]};
+  
+
+ }
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+  GetVarReference ${__call_locality[1]} ; 
+  echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ;
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( __GetVarReferenceList ) ;
+ elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  __main_StartServices       ${Arg0} ; 
+ fi
+
+}
+
+unset ZenityListOptionConfig
+function ZenityListOptionConfig()
+{
+ local __call_locality=( ZLOC ZenityListOptionConfig ) ;
+ local ArrayArg=( $* ) ;
+ local Arg0=${ArrayArg[0]};  
+ 
+ local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
+ function __main_StartServices()
+ {
+  local __call_locality=( Main __main_StartServices ) ;
+  local ArrayArg=( $* ) ;
+  local Arg0=${ArrayArg[0]};
+ 
+
+ }
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+  GetVarReference ${__call_locality[1]} ; 
+  echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ;
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( __GetVarReferenceList ) ;
+ elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  __main_StartServices       ${Arg0} ; 
+fi
+}
+
+unset ZenityPrefixedVarBuilder
+function ZenityPrefixedVarBuilder()
+{
+ local __call_locality=( ZPVB ZenityPrefixedVarBuilder ) ;
+ local ArrayArg=( $* ) ;
+ local Arg0=${ArrayArg[0]};  
+ 
+ local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
+ function __main_StartServices()
+ {
+  local __call_locality=( Main __main_StartServices ) ;
+  local ArrayArg=( $* ) ;
+  local Arg0=${ArrayArg[0]};
+
+
+ }
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+  GetVarReference ${__call_locality[1]} ; 
+  echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ;
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( __GetVarReferenceList ) ;
+ elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  __main_StartServices       ${Arg0} ; 
+ fi
+
+}
