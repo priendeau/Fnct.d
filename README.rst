@@ -1248,8 +1248,25 @@ The one only note is to respect the common Policy-format:
 	# Origin, and it's importance... usuability and importance column will become
 	# statistical information. 
 	
-	
 
+.. image:: https://raw.github.com/priendeau/Fnct.d/master/images/ZenityLibPolicyList.png
+		:target: https://github.com/priendeau/Fnct.d#7bd8c582-2ebe-11e3-98a2-001b3875b29c	
+
+
+::	
+	
+	An Example of ZenityLibPolicyList Gui interface displayed while calling the function 
+	ZenityPrefixedVarBuilder. This method required at least you select couple of function
+	from ArrayLibPolicy. All selected function will loop succesively and will prompt you 
+	all Prefixed-Variable from each function. Selecting them will prompt you another
+	entry interface to change the value and/or entering other information like Variable 
+	and/or function result. 
+	
+	Once you stop supplying information like selecting nothing it will show you the function 
+	interface selected by your choice and later be glued to a Function interface definition 
+	helping you to develop some services based on Fnct.D library standard almost eyes closed.
+	
+	
 	
 :Note: 75411766-1969-11e3-98a2-001b3875b29c
 :Title: Permanent Sqlite Database to store crutial information introducing connection-layer to a unicast-per-user group and bash interoperability
