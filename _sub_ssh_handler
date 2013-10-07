@@ -311,10 +311,10 @@ function GetPasswd()
   BVTestScopeTest=local BoolVarTestVarCreation  ) ;
   
   eval $( BVTestVarName='StrFuncIsLoop'          \
-  BVTestVarHold="${StrFuncExec}"   \
+  BVTestVarHold="$( eval ${StrFuncExec} )"   \
   BVTestBoolVarName='${BoolEvalCmdExit}'       \
   BVTestBoolCase=True                         \
-  BVTestBoolAssertion="$( eval ${StrFuncExec} )" \
+  BVTestBoolAssertion="" \
   BVTestScopeTest=local BoolVarTestVarCreation  ) ;
   
 		  

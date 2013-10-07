@@ -2,21 +2,13 @@
 ### FootPrint Added, see Prefixed-Var ZSEAddFootPrint from ZenityShellEval
 ###
 
-###File:877d7e9a-1001-11e3-98a2-001b3875b29c
-###UUID-TIME-MARKER:84971f1e-11e7-11e3-98a2-001b3875b29c
+###File:/etc/init.d/Fnct.d//877d7e9a-1001-11e3-98a2-001b3875b29c
+###UUID-TIME-MARKER:7761bf9e-2eba-11e3-98a2-001b3875b29c
 ###Date: ${StrDateFormat}
-###Sha1Sum: 4d8e8146db4fa756a5a91387085009963c0b34dc
-### Size:5036
-### NbWord: 418\n###
-### FootPrint Added, see Prefixed-Var ZSEAddFootPrint from ZenityShellEval
-###
-
-###File:877d7e9a-1001-11e3-98a2-001b3875b29c
-###UUID-TIME-MARKER:47b9bee4-11e7-11e3-98a2-001b3875b29c
-###Date: ${StrDateFormat}
-###Sha1Sum: 398b16a0be6e81bfea09910f8084c947fedb25b5
-### Size:4740
+###Sha1Sum: 1911ec7c93c4b38469f4a9048343ce36adf4ccf7
+### Size:4741
 ### NbWord: 397\n
+
 unset FileNameConversion ;
 function FileNameConversion()
 {
