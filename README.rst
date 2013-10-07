@@ -1249,9 +1249,6 @@ The one only note is to respect the common Policy-format:
 	# statistical information. 
 	
 
-.. image:: https://raw.github.com/priendeau/Fnct.d/master/images/ZenityLibPolicyList.png
-		:target: https://github.com/priendeau/Fnct.d#7bd8c582-2ebe-11e3-98a2-001b3875b29c	
-
 
 ::	
 	
@@ -1266,6 +1263,12 @@ The one only note is to respect the common Policy-format:
 	interface selected by your choice and later be glued to a Function interface definition 
 	helping you to develop some services based on Fnct.D library standard almost eyes closed.
 	
+
+
+.. image:: https://raw.github.com/priendeau/Fnct.d/master/images/ZenityLibPolicyList.png
+		:target: https://github.com/priendeau/Fnct.d#7bd8c582-2ebe-11e3-98a2-001b3875b29c	
+
+
 	
 	
 :Note: 75411766-1969-11e3-98a2-001b3875b29c
