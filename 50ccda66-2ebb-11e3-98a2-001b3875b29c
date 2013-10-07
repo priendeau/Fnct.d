@@ -3,11 +3,11 @@
 ###
 
 ###File:/etc/init.d/Fnct.d/50ccda66-2ebb-11e3-98a2-001b3875b29c
-###UUID-TIME-MARKER:3181a0cc-2ec7-11e3-98a2-001b3875b29c
+###UUID-TIME-MARKER:7bd963ec-2efb-11e3-98a2-001b3875b29c
 ###Date: ${StrDateFormat}
-###Sha1Sum: 3b85ebb66fe450929c4519e1a72793e64eb1ef0b
-### Size:4990
-### NbWord: 482\n
+###Sha1Sum: 2bf10cc7bdfd39051f744a50428fad82cd02ac4b
+### Size:5129
+### NbWord: 490\n
 
 unset ZenityLibPolicyList
 function ZenityLibPolicyList()
@@ -37,6 +37,9 @@ function ZenityLibPolicyList()
   local Arg0=${ArrayArg[0]};   
   local StrContentList=${HeaderPolicyParsedContent:=FALSE DebianAptSrcCompiler True fnct_debian_lib normal}
   zenity --list \
+         --height=700 \
+         --width=600 \
+         --separator=',' \
          --text="Function List Entry" \
          --column="Selected" \
          --column="Function Name" \
@@ -140,6 +143,9 @@ function ZenityPrefixedVarBuilder()
  local __call_locality=( ZPVB ZenityPrefixedVarBuilder ) ;
  local ArrayArg=( $* ) ;
  local Arg0=${ArrayArg[0]};  
+ local StrFunctionBuildVar=${ZPVBFunctionBuuildList:=None}
+ 
+ 
  
  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
  function __main_StartServices()
@@ -147,7 +153,7 @@ function ZenityPrefixedVarBuilder()
   local __call_locality=( Main __main_StartServices ) ;
   local ArrayArg=( $* ) ;
   local Arg0=${ArrayArg[0]};
-
+  
 
  }
  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
