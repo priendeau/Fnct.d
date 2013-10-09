@@ -801,6 +801,22 @@ you more information in what resulting an helper to see Communication-Layer also
 called Prefixed-Variable helping user to assign informations. 
 	
 
+:Note: 363cbfd8-308a-11e3-98a2-001b3875b29c
+:Title: Prior to BodyFunc, Internal Steady Pre-Variable Loader is...
+
+
+BodyFunc is ultimately the next code re-writing action for actual code need to be
+sustained and other function to stay in actual form to compare and leave observer
+understanding the concept... Unfortunately it leave student doing homework and 
+will have to convert a If-elif-(n-elif)-fi at end of function with BodyFunc. 
+
+BodyFunc engine in Short is a simple widget in code conception for automated 
+scription and scriptlet to own a living compound mastering an execution statement.
+In a Self-services a function should had a member worrying about user switches, 
+but have to hold behavior as well... Switches are only the human action while the
+finite-automate should understand what to do with the human inquiry. 
+
+
 :Note: 48acc93e-0bae-11e3-8e63-001b3875b29c
 :Title: Developping The BodyFunc, Reducing code complexity by creating pattern and disposable StartServices signature.
 

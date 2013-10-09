@@ -730,6 +730,7 @@ function ValueToVariable( )
  local IsValueToAssignSame=${VTVIsValueReAssign:=False} ;
  local IsValueIndTransform=${VTVIsTransformed:=False} ;
  local IsValueTransScript=${VTVIsTransHadScript:=False} ;
+ local IsDisplayDebug=${VTVIsDebugDisplay:=False} ; 
  local StrDefaultTransScript=${VTVITransformScript:=None} ;
  local StrDefaultTransform=${VTVDefaultTransform:='s/([SIB][tno][tro][a-zA-Z0-9]+)/\\$\{\1\}/g'} ;
  local StrAppsName=${VTVAppsName:=/bin/sed} ; 
@@ -740,15 +741,15 @@ function ValueToVariable( )
  local StrSedAction=None ; 
  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrTestSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
  
-
- 
  function __Action()
  {
   local __call_locality=(  ASC ActionSimpleConvert ) ;
   local Arg0=${ArrayArg[0]} ;
   local ArrayArg=( $* ) ;
   local CmdLine="echo \"${StrValueParser}\" | ${StrAppsName} ${StrAppsOpt} '${StrSedAction}'" ; 
-  echo -ne "CmdLine:\n[ ${CmdLine} ]\n" > /dev/stderr ; 
+  if [ ${IsDisplayDebug} == "True" ] ; then
+   echo -ne "CmdLine:\n[ ${CmdLine} ]\n" > /dev/stderr ; 
+  fi 
   eval ${CmdLine} ; 
   
  }
@@ -765,7 +766,9 @@ function ValueToVariable( )
    BVTestBoolCase=True \
    BoolVarTestVarCreation ) 
   done  
-  echo -ne "StrAppsName : ${StrAppsName}\nStrAppsOpt : ${StrAppsOpt}\nStrSedAction : ${StrSedAction}\n" > /dev/stderr ; 
+  if [ ${IsDisplayDebug} == "True" ] ; then
+   echo -ne "StrAppsName : ${StrAppsName}\nStrAppsOpt : ${StrAppsOpt}\nStrSedAction : ${StrSedAction}\n" > /dev/stderr ; 
+  fi 
   StrAppsName=${StrAppsName}   \
   StrAppsOpt=${StrAppsOpt}     \
   StrSedAction=${StrSedAction} \
@@ -793,6 +796,7 @@ function ValueToVariable( )
   StrDefaultAssignScript=${StrDefaultAssignScript} \
   StrSedAction=${StrSedAction}                     \
   StrValueParser=${StrValueParser}                 \
+  IsDisplayDebug=${IsDisplayDebug}                 \
   __main_StartServices                             ; 
  fi
 
