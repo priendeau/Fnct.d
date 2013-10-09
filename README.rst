@@ -835,8 +835,8 @@ See Help :
 
 .. code:: shell
 	
-Help:
-
+	Help:
+	
 	Function ValueToVariable
 	Default Variable Value:
 	Variable VTVValueEntry ,
@@ -936,7 +936,11 @@ to create a paired assignation and Entry=StrTest,Strtest1 will produce
 
 .. code:: shell
 	
-	$> Entry=StrTest,Strtest1 ValueToVariable
+	$> 	VTVIsArrayStyleInsert=True \
+		VTVValueEntry=StrTest,Strtest1 \
+		VTVIsValueReAssign=True \
+		VTVIsValueToConvert=False \
+		ValueToVariable
 	### output : StrTest=${StrTest} Strtest1=${Strtest1} 
 	
 	
