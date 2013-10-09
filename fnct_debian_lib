@@ -741,7 +741,7 @@ function ValueToVariable( )
  local StrSedAction=None ; 
  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrTestSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
  
- 
+
  function __Action()
  {
   local __call_locality=(  Action __Action ) ;

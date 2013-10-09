@@ -816,6 +816,19 @@ In a Self-services a function should had a member worrying about user switches,
 but have to hold behavior as well... Switches are only the human action while the
 finite-automate should understand what to do with the human inquiry. 
 
+~~~~~~~~~~~~~~~
+	ValueToVariable
+~~~~~~~~~~~~~~~
+
+This function will be inclued inside the BodyFunc development and shall had an 
+interest in simple Load transfer inside internal function layer... Managed on 
+top of a Master Function, derived and unique-function held inside the function 
+like some had default Main named __main_StartServices, having specialized 
+part of __main_StartServices like __Action, __Loop ... those function in some
+way to call them require a Load of Prefixed-Variable which is sometime long to
+re-transcript for passing argument like variable flow... Explained in 
+Transfert-layer, we improve with a Steady mechanism on Definition of BodyFunc, 
+it should had a auto-transcription layer... 
 
 :Note: 48acc93e-0bae-11e3-8e63-001b3875b29c
 :Title: Developping The BodyFunc, Reducing code complexity by creating pattern and disposable StartServices signature.
