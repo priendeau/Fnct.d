@@ -868,6 +868,76 @@ See Help :
 		--list		List all Internal Pre-fixed Variable available to query or get.
 
 
+And Code update Like ZenityShellEval will have a Inner region managing switches 
+tinier than expected, easier to transform and observe a BodyFunc model more 
+adapted. Seems to defeat the law, based on October 8 2013, _sub_jack_script 
+delayed for a year since no big move was done toward Jack Served application named
+jackd had better implementation from the Shell, A total rewrite let switches 
+--testservices, --stopservices having it's origin and updating the fnct_lib with 
+switche message StrStopSwitches StrTestSwitches. 
+
+
+.. code:: shell
+	
+	### Before upcoming of ValueToVariable
+	
+	### Version A
+	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+	 GetVarReference ${__call_locality[1]} ; 
+	echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+	 elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+	 eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+	 echo -ne """${ArgGet}\n""" ;
+	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+	 eval $( __GetVarReferenceList ) ;
+	elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
+	 eval $( __GetVarReferenceCompWord ) ;
+	elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+	### Section A to compare with section B
+	 StrFileTmp=${StrFileTmp}                 \
+	 StrTitle=${StrTitle}                     \
+	 StrDateFormat=${StrDateFormat}           \
+	 IntSleep=${IntSleep}                     \
+	 IntFontSize=${IntFontSize}               \
+	 IsEditField=${IsEditField}               \
+	 IntWidth=${IntWidth}                     \
+	 IntHeight=${IntHeight}                   \
+	 IntDefaultModeExec=${IntDefaultModeExec} \
+	 IsEditField=${IsEditField}               \
+	 IsAddFootPrint=${IsAddFootPrint}         \
+	 IsLoopOnSucc=${IsLoopOnSucc}             \
+	 IsCheckSumOnly=${IsCheckSumOnly}         \
+	 __main_StartServices                     ; 
+	fi
+	### End Section a to compare with section B
+	
+	### Possible evolution while ValueToVariable will be implented permanently
+	
+	### Version B
+	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+	 GetVarReference ${__call_locality[1]} ; 
+	echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+	 elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+	 eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+	 echo -ne """${ArgGet}\n""" ;
+	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+	 eval $( __GetVarReferenceList ) ;
+	elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
+	 eval $( __GetVarReferenceCompWord ) ;
+	elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+	### Section B to compare with section A
+	 $( VTVIsArrayStyleInsert=True \
+	 VTVValueEntry=StrFileTmp,StrTitle,StrDateFormat,IntSleep,IntFontSize,IsEditField,IntWidth,IntHeight,IntDefaultModeExec,IsEditField,IsAddFootPrint,IsLoopOnSucc,IsCheckSumOnly \
+	 VTVIsValueReAssign=True \
+	 VTVIsValueToConvert=False \
+	 ValueToVariable ) __main_StartServices
+	fi
+	### End of Section B to compare with section A
+	
+
+This producing in the in Section A 579 caracter to verify and inside the 
+section B it require 299 , a diminution of more than 50% of the code coverage.
+
 
 :Note: 48acc93e-0bae-11e3-8e63-001b3875b29c
 :Title: Developping The BodyFunc, Reducing code complexity by creating pattern and disposable StartServices signature.
