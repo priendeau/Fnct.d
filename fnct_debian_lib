@@ -733,11 +733,11 @@ function ValueToVariable( )
  local IsValueTransScript=${VTVIsTransHadScript:=False} ;
  local IsDisplayDebug=${VTVIsDebugDisplay:=False} ; 
  local StrDefaultTransScript=${VTVITransformScript:=None} ;
- local StrDefaultTransform=${VTVDefaultTransform:='s/([SIB][tno][tro][a-zA-Z0-9]+)/\\$\{\1\}/g'} ;
+ local StrDefaultTransform=${VTVDefaultTransform:='s/([SIB][tnos][tro][a-zA-Z0-9]+)/\\$\{\1\}/g'} ;
  local StrAppsName=${VTVAppsName:=/bin/sed} ; 
  local StrAppsOpt=${VTVAppsOpt:=-r} ;
- local StrDefaultSedScript='s/([SIB][tno][tro][a-zA-Z0-9]+)/\$\{\1\}/g' ;
- local StrDefaultAssignScript='s/([SIB][tno][tro][a-zA-Z0-9]+)/\1=\$\{\1\}/g' ;
+ local StrDefaultSedScript='s/([SIB][tnos][tro]*[a-zA-Z0-9]+)/\$\{\1\}/g' ;
+ local StrDefaultAssignScript='s/([SIB][tnos][tro]*[a-zA-Z0-9]+)/\1=\$\{\1\}/g' ;
 
  local StrSedAction=None ; 
  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
@@ -1152,20 +1152,25 @@ function ZenityShellEval()
   if [ "${IsCheckSumOnly}" == "True" ] ; then 
    StrFilePath=${StrFilePath} StrFileName=${StrFileName} __main_CheckSum ; 
   else
-   StrFileTmp=${StrFileTmp}                 \
-   StrTitle=${StrTitle}                     \
-   StrDateFormat=${StrDateFormat}           \
-   IntSleep=${IntSleep}                     \
-   IntFontSize=${IntFontSize}               \
-   IsEditField=${IsEditField}               \
-   IntWidth=${IntWidth}                     \
-   IntHeight=${IntHeight}                   \
-   IntDefaultModeExec=${IntDefaultModeExec} \
-   IsEditField=${IsEditField}               \
-   IsAddFootPrint=${IsAddFootPrint}         \
-   IsLoopOnSucc=${IsLoopOnSucc}             \
-   IsCheckSumOnly=${IsCheckSumOnly}         \
-   __main_Editor                            ; 
+  eval $( VTVValueEntry=StrFileTmp,StrTitle,StrDateFormat,IntSleep,IntFontSize,IsEditField,IntWidth,IntHeight,IntDefaultModeExec,IsEditField,IsAddFootPrint,IsLoopOnSucc,IsCheckSumOnly\
+          VTVIsValueReAssign=True \
+          VTVIsValueToConvert=False \
+          VTVIsArrayStyleInsert=True \
+          ValueToVariable ) __main_Editor 
+   #StrFileTmp=${StrFileTmp}                 \
+   #StrTitle=${StrTitle}                     \
+   #StrDateFormat=${StrDateFormat}           \
+   #IntSleep=${IntSleep}                     \
+   #IntFontSize=${IntFontSize}               \
+   #IsEditField=${IsEditField}               \
+   #IntWidth=${IntWidth}                     \
+   #IntHeight=${IntHeight}                   \
+   #IntDefaultModeExec=${IntDefaultModeExec} \
+   #IsEditField=${IsEditField}               \
+   #IsAddFootPrint=${IsAddFootPrint}         \
+   #IsLoopOnSucc=${IsLoopOnSucc}             \
+   #IsCheckSumOnly=${IsCheckSumOnly}         \
+   #__main_Editor                            ; 
   fi
 
 
@@ -1182,20 +1187,12 @@ function ZenityShellEval()
  elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
 		eval $( __GetVarReferenceCompWord ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
-   StrFileTmp=${StrFileTmp}                 \
-   StrTitle=${StrTitle}                     \
-   StrDateFormat=${StrDateFormat}           \
-   IntSleep=${IntSleep}                     \
-   IntFontSize=${IntFontSize}               \
-   IsEditField=${IsEditField}               \
-   IntWidth=${IntWidth}                     \
-   IntHeight=${IntHeight}                   \
-   IntDefaultModeExec=${IntDefaultModeExec} \
-   IsEditField=${IsEditField}               \
-   IsAddFootPrint=${IsAddFootPrint}         \
-   IsLoopOnSucc=${IsLoopOnSucc}             \
-   IsCheckSumOnly=${IsCheckSumOnly}         \
-   __main_StartServices                     ; 
+  eval $( VTVIsArrayStyleInsert=True \
+  VTVValueEntry=StrFileTmp,StrTitle,StrDateFormat,IntSleep,IntFontSize,IsEditField,IntWidth,IntHeight,IntDefaultModeExec,IsAddFootPrint,IsLoopOnSucc,IsCheckSumOnly \
+  VTVIsValueReAssign=True \
+  VTVIsValueToConvert=False \
+  VTVIsArrayStyleInsert=True \
+  ValueToVariable ) __main_StartServices
  fi
 
 

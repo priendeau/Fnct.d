@@ -926,17 +926,17 @@ switche message StrStopSwitches StrTestSwitches.
 	 eval $( __GetVarReferenceCompWord ) ;
 	elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
 	### Section B to compare with section A
-	 $( VTVIsArrayStyleInsert=True \
-	 VTVValueEntry=StrFileTmp,StrTitle,StrDateFormat,IntSleep,IntFontSize,IsEditField,IntWidth,IntHeight,IntDefaultModeExec,IsEditField,IsAddFootPrint,IsLoopOnSucc,IsCheckSumOnly \
-	 VTVIsValueReAssign=True \
-	 VTVIsValueToConvert=False \
-	 ValueToVariable ) __main_StartServices
+	eval $( VTVIsArrayStyleInsert=True \
+	VTVValueEntry=StrFileTmp,StrTitle,StrDateFormat,IntSleep,IntFontSize,IsEditField,IntWidth,IntHeight,IntDefaultModeExec,IsAddFootPrint,IsLoopOnSucc,IsCheckSumOnly \
+	VTVIsValueReAssign=True \
+	VTVIsValueToConvert=False \
+	ValueToVariable ) __main_StartServices
 	fi
 	### End of Section B to compare with section A
 	
 
 This producing in the in Section A 579 caracter to verify and inside the 
-section B it require 299 , a diminution of more than 50% of the code coverage.
+section B it require 303 , a diminution of 50% of the code coverage.
 
 
 :Note: 48acc93e-0bae-11e3-8e63-001b3875b29c
