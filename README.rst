@@ -157,6 +157,19 @@ Assuming the Git developpement branch was cloned inside /etc/init.d/Fnct.D
 	### /etc/init.d . 
 	###
 	
+Remark
+======
+
+- And all effort to ValueToVariable to ... 
+
+To Steve, Network admin from college rosemont... Was probably the Network survey
+from TELUS, already studied as police **Factory**, was the guys behing the 35th 
+mondial of Work-fair including 2 student building stage for compitor contest... 
+During he drive he was asking couple of question behind this (probale 
+ValueToVariable ) about something "gellyide" it's mind about double dot... 
+It should not be used to separate item in an array... There probably a 
+transforming action allowed by Bash I answer, but it's really far in future and 
+try under Slackware did never work... I think... this was in 1999. 
 
 
 Definitions
