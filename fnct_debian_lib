@@ -739,7 +739,7 @@ function ValueToVariable( )
  local StrDefaultAssignScript='s/([SIB][tno][tro][a-zA-Z0-9]+)/\1=\$\{\1\}/g' ;
 
  local StrSedAction=None ; 
- local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrTestSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
+ local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
  
 
  function __Action()
