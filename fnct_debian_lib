@@ -743,7 +743,7 @@ function ValueToVariable( )
  
  function __Action()
  {
-  local __call_locality=(  ASC ActionSimpleConvert ) ;
+  local __call_locality=(  Action __Action ) ;
   local Arg0=${ArrayArg[0]} ;
   local ArrayArg=( $* ) ;
   local CmdLine="echo \"${StrValueParser}\" | ${StrAppsName} ${StrAppsOpt} '${StrSedAction}'" ; 
