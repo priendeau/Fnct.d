@@ -725,20 +725,20 @@ function ValueToVariable( )
 	local ArrayArg=( $* ) ; 
 	local Arg0=${ArrayArg[0]}  
  
- 
+ local StrValueParser=${VTVValueEntry:=StrTest}
  local IsValueSimpleConvert=${VTVIsValueToConvert:=True} ;
  local IsValueToAssignSame=${VTVIsValueReAssign:=False} ;
  local IsValueIndTransform=${VTVIsTransformed:=False} ;
  local IsValueTransScript=${VTVIsTransHadScript:=False} ;
  local StrDefaultTransScript=${VTVITransformScript:=None} ;
- local StrDefaultTransform=${VTVDefaultTransform:=s/([SIB][tno][tro][a-zA-Z]+)/\$\{\1\}/g} ;
+ local StrDefaultTransform=${VTVDefaultTransform:='s/([SIB][tno][tro][a-zA-Z0-9]+)/\\$\{\1\}/g'} ;
  local StrAppsName=${VTVAppsName:=/bin/sed} ; 
  local StrAppsOpt=${VTVAppsOpt:=-r} ;
- local StrDefaultSedScript='s/([SIB][tno][tro][a-zA-Z]+)/\$\{\1\}/g' ;
- local StrDefaultAssignScript='s/([SIB][tno][tro][a-zA-Z]+)/\1=\$\{\1\}/g' ;
+ local StrDefaultSedScript='s/([SIB][tno][tro][a-zA-Z0-9]+)/\$\{\1\}/g' ;
+ local StrDefaultAssignScript='s/([SIB][tno][tro][a-zA-Z0-9]+)/\1=\$\{\1\}/g' ;
 
  local StrSedAction=None ; 
- 
+ local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrTestSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
  
 
  
@@ -747,24 +747,27 @@ function ValueToVariable( )
   local __call_locality=(  ASC ActionSimpleConvert ) ;
   local Arg0=${ArrayArg[0]} ;
   local ArrayArg=( $* ) ;
-  eval "${StrAppsName} ${StrAppsOpt} '${StrSedAction}'"
+  local CmdLine="echo \"${StrValueParser}\" | ${StrAppsName} ${StrAppsOpt} '${StrSedAction}'" ; 
+  echo -ne "CmdLine:\n[ ${CmdLine} ]\n" > /dev/stderr ; 
+  eval ${CmdLine} ; 
   
  }
-
+ 
  function __main_StartServices()
  {
   local ArrayVarTest=( IsValueSimpleConvert:StrDefaultSedScript IsValueToAssignSame:StrDefaultAssignScript IsValueTransScript:StrDefaultTransform ) ; 
   for item in ${ArrayVarTest[@]} ; do 
    local ArraySubItem=( ${item//:/ } ) ; 
-   BVTestVarName=StrSedAction \
-   BVTestVarHold='\${StrSedAction}' \
+   eval $( BVTestVarName=StrSedAction \
+   BVTestVarHold=\${StrSedAction} \
    BVTestBoolVarName="\${${ArraySubItem[0]}}" \
    BVTestBoolAssertion="\${${ArraySubItem[1]}}" \
    BVTestBoolCase=True \
-   BoolVarTestVarCreation
-  done   
-  StrAppsName=${StrAppsName} \
-  StrAppsOpt=${StrAppsOpt} \
+   BoolVarTestVarCreation ) 
+  done  
+  echo -ne "StrAppsName : ${StrAppsName}\nStrAppsOpt : ${StrAppsOpt}\nStrSedAction : ${StrSedAction}\n" > /dev/stderr ; 
+  StrAppsName=${StrAppsName}   \
+  StrAppsOpt=${StrAppsOpt}     \
   StrSedAction=${StrSedAction} \
   __Action ; 
  }
@@ -789,6 +792,7 @@ function ValueToVariable( )
   StrDefaultSedScript=${StrDefaultSedScript}       \
   StrDefaultAssignScript=${StrDefaultAssignScript} \
   StrSedAction=${StrSedAction}                     \
+  StrValueParser=${StrValueParser}                 \
   __main_StartServices                             ; 
  fi
 
