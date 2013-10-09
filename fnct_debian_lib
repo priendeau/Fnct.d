@@ -1157,20 +1157,6 @@ function ZenityShellEval()
           VTVIsValueToConvert=False \
           VTVIsArrayStyleInsert=True \
           ValueToVariable ) __main_Editor 
-   #StrFileTmp=${StrFileTmp}                 \
-   #StrTitle=${StrTitle}                     \
-   #StrDateFormat=${StrDateFormat}           \
-   #IntSleep=${IntSleep}                     \
-   #IntFontSize=${IntFontSize}               \
-   #IsEditField=${IsEditField}               \
-   #IntWidth=${IntWidth}                     \
-   #IntHeight=${IntHeight}                   \
-   #IntDefaultModeExec=${IntDefaultModeExec} \
-   #IsEditField=${IsEditField}               \
-   #IsAddFootPrint=${IsAddFootPrint}         \
-   #IsLoopOnSucc=${IsLoopOnSucc}             \
-   #IsCheckSumOnly=${IsCheckSumOnly}         \
-   #__main_Editor                            ; 
   fi
 
 
