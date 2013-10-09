@@ -833,7 +833,8 @@ it should had a auto-transcription layer...
 
 See Help :
 
-::	
+.. code:: shell
+	
 	Help:
 
 	Function ValueToVariable
