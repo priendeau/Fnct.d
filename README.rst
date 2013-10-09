@@ -830,6 +830,42 @@ re-transcript for passing argument like variable flow... Explained in
 Transfert-layer, we improve with a Steady mechanism on Definition of BodyFunc, 
 it should had a auto-transcription layer... 
 
+
+See Help :
+
+::	
+	Help:
+
+	Function ValueToVariable
+	Default Variable Value:
+	Variable VTVValueEntry ,
+		Default Value:StrTest
+	Variable VTVIsValueToConvert ,
+		Default Value:True
+	Variable VTVIsValueReAssign ,
+		Default Value:False
+	Variable VTVIsTransformed ,
+		Default Value:False
+	Variable VTVIsTransHadScript ,
+		Default Value:False
+	Variable VTVIsDebugDisplay ,
+		Default Value:False
+	Variable VTVITransformScript ,
+		Default Value:None
+	Variable VTVDefaultTransform ,
+		Default Value:'s/([SIB][tno][tro][a-zA-Z0-9]+)/$1/g'
+	Variable VTVAppsName ,
+		Default Value:/bin/sed
+	Variable VTVAppsOpt ,
+		Default Value:-r
+	Following switch are available:
+
+		--startservices	Start the application normally.
+		--get		Return value of Internal Variable.
+		--list		List all Internal Pre-fixed Variable available to query or get.
+
+
+
 :Note: 48acc93e-0bae-11e3-8e63-001b3875b29c
 :Title: Developping The BodyFunc, Reducing code complexity by creating pattern and disposable StartServices signature.
 
