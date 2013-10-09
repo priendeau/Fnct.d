@@ -1,91 +1,108 @@
 
-loop_jack_connection()
-{
-  local ArrayArg=( $* ) ;
-  local __call_locality=( "LJC" ) ;
-  ### Should Use Prefix-option LJC -> LoopJackConnection before calling the function if you want to change any
-  ### options inside this function. 
-  ###
-  ###
-  function DisplayErrDev()
-  {
-   local ArrayArg=( $* ) ; 
-   local __call_locality=( "DisplayErrDev" ) ;
-   echo -ne "${ArrayArg[@]}\n" > /dev/stderr ;
-  }  
 
-		local StrDefaultServerNamelist=${LJCDefaultServerName:=NONE} ;
-		local StrOptionList="${LJCDefaultHardwareOption:=}" ;
-		local StrOpenPortList="${LJCNbOpenPort:=512}" ;
-		local StrAudioInterfaceList="${LJCAudioInterface:=alsa}" ;
-		local StrRateList="${LJCRate:=44100}" ;
-		local StrPeriodLenList="${LJCPeriodLen:=1024}" ;
-		local StrNbPeriodsList="${LJCNbPeriods:=4}" ;
-		local StrInputChannelList="${LJCInputChannel:=2}" ;
-		local StrOutputChannelList="${LJCOutputChannel:=2}" ;
-		local StrInputLatencyList="${LJCInputLatency:=8}" ;
-		local StrOutputLatencyList="${LJCOutputLatency:=8}" ;
-		local StrDefaultOptionList="${LJCDefaultOption:=--playback}" ;
-		local StrDeviceList="${LJCDevice:=default}" ;
-		local StrInterfaceOptionList="${LJCInterfaceOption:=}" ;
-		if [ "${StrDefaultServerNamelist:=NONE}" == "NONE" ] ; then 
-			local CmdLine=( ${LJCDefaultJackServer:=/usr/local/bin/jackd} ${StrOptionList}  --port-max ${StrOpenPortList} -d ${StrAudioInterfaceList} --rate ${StrRateList} --period ${StrPeriodLenList} --nperiods ${StrNbPeriodsList} --inchannels ${StrInputChannelList} --outchannels ${StrOutputChannelList} --input-latency ${StrInputLatencyList} --output-latency ${StrOutputLatencyList} ${StrDefaultOptionList} --device ${StrDeviceList} ${StrInterfaceOptionList} ) ; 		
-		else
-			local CmdLine=( ${LJCDefaultJackServer:=/usr/local/bin/jackd} ${StrOptionList} --name ${StrDefaultServerNamelist} --port-max ${StrOpenPortList} -d ${StrAudioInterfaceList} --rate ${StrRateList} --period ${StrPeriodLenList} --nperiods ${StrNbPeriodsList} --inchannels ${StrInputChannelList} --outchannels ${StrOutputChannelList} --input-latency ${StrInputLatencyList} --output-latency ${StrOutputLatencyList} ${StrDefaultOptionList} --device ${StrDeviceList} ${StrInterfaceOptionList} ) ; 		
-		fi
+
+### LoopJackConnection
+unset LoopJackConnection
+. /etc/init.d/Fnct.d/aa49dbce-3079-11e3-98a2-001b3875b29c 
+
+#unset LoopJackConnection ;
+#function LoopJackConnection()
+#{
+ #local ArrayArg=( $* ) ;
+ #local __call_locality=( LJC LoopJackConnection ) ;
+ #local TypeUUID=$( uuidgen -t ) ;
+	#local ArrayArg=( $* ) ; 
+	#local Arg0=${ArrayArg[0]}    
+
+ #local StrDefaultServerNamelist=${LJCDefaultServerName:=NONE} ;
+ #local StrDefaultServer=${LJCDefaultJackServer:=/usr/local/bin/jackd} ; 
+ #local StrOptionList=${LJCDefaultHardwareOption:=} ;
+ #local StrOpenPortList=${LJCNbOpenPort:=512} ;
+ #local StrAudioInterfaceList=${LJCAudioInterface:=alsa} ;
+ #local StrRateList=${LJCRate:=44100} ;
+ #local StrPeriodLenList=${LJCPeriodLen:=1024} ;
+ #local StrNbPeriodsList=${LJCNbPeriods:=4} ;
+ #local StrInputChannelList=${LJCInputChannel:=2} ;
+ #local StrOutputChannelList=${LJCOutputChannel:=2} ;
+ #local StrInputLatencyList=${LJCInputLatency:=8} ;
+ #local StrOutputLatencyList=${LJCOutputLatency:=8} ;
+ #local StrDefaultOptionList=${LJCDefaultOption:=--playback} ;
+ #local StrDeviceList=${LJCDevice:=default} ;
+ #local StrInterfaceOptionList=${LJCInterfaceOption:=} ;
+ #local IntDefaultSleepTime=${LJCDefaultSleep:=2};
+ #local StrPidFile=${__call_locality}-${TypeUUID}.pid 
+ 
+ 
+ #local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrTestSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
+ 
+ #if [ "${StrDefaultServerNamelist:=NONE}" == "NONE" ] ; then 
+  #local CmdLine=( ${StrDefaultServer} ${StrOptionList}  --port-max ${StrOpenPortList} -d ${StrAudioInterfaceList} --rate ${StrRateList} --period ${StrPeriodLenList} --nperiods ${StrNbPeriodsList} --inchannels ${StrInputChannelList} --outchannels ${StrOutputChannelList} --input-latency ${StrInputLatencyList} --output-latency ${StrOutputLatencyList} ${StrDefaultOptionList} --device ${StrDeviceList} ${StrInterfaceOptionList} ) ; 		
+ #else
+  #local CmdLine=( ${StrDefaultServer} ${StrOptionList} --name ${StrDefaultServerNamelist} --port-max ${StrOpenPortList} -d ${StrAudioInterfaceList} --rate ${StrRateList} --period ${StrPeriodLenList} --nperiods ${StrNbPeriodsList} --inchannels ${StrInputChannelList} --outchannels ${StrOutputChannelList} --input-latency ${StrInputLatencyList} --output-latency ${StrOutputLatencyList} ${StrDefaultOptionList} --device ${StrDeviceList} ${StrInterfaceOptionList} ) ; 		
+ #fi   
+ #### Should Use Prefix-option LJC -> LoopJackConnection before calling the function if you want to change any
+ #### options inside this function. 
+ ####
+ ####
+ #function DisplayErrDev()
+ #{
+  #local ArrayArg=( $* ) ; 
+  #local __call_locality=( DED DisplayErrDev ) ;
+  #echo -ne "${ArrayArg[@]}\n" > /dev/stderr ;
+ #}  
+
+ #function __main_StartServices()
+ #{
+		#local __call_locality=( Main __main_StartServices ) ;
+		#local Arg0=${ArrayArg[0]} ;
+		#local ArrayArg=( $* ) ;
+  #local CmdLine=( ${InlineCmdLine//<SPACE>/ } ) ; 
+  
+  #while [ 1 ] ; do
+   #echo -ne "CmdLine:[${CmdLine[@]}]\n" > /dev/stderr ; 
+   #eval ${CmdLine[@]} 2>&1 /dev/null ;
+   #echo $! > ~/${StrPidFile}.pid ;
+   #sleep ${IntDefaultSleepTime} ;
+  #done ;
+ #}
+
 		
-		if [ "${ArrayArg[0]}" = "--help" ] ; then 
-			GetVarReference ${__call_locality[0]} ; 
-		else	 		
-		 
-		 #eval $( __call_locality ) ;
-		 if [ ${LJCDefaultAction:="startserver"} != "help" ] ; then
-		   DisplayErrDev "Loop Jack Connection:\n\t Help Interface is available by typing following prefix command to the function:\nLJCDefaultAction=help "    
-		 fi 
-		 local IntDefaultSleepTime=${LJCDefaultSleep:=2};
-		 if [ ${LJCDefaultAction:="startserver"} == "help" ] ; then
-		  DisplayErrDev "Loop Jack Connection:" 
-		  DisplayErrDev "\tPrefix Options:" 
-		  DisplayErrDev "\tLJCDefaultOption\t: Include jackd option:\n\t\t\t( --capture --playback --duplex )" 
-		  DisplayErrDev "\tLJCDefaultJackServer \t: default set to /usr/local/bin/jackd" 
-		  DisplayErrDev "\tLJCDefaultServerName \t: default set to NONE" 
-		  DisplayErrDev "\tLJCNbOpenPort\t\t: default set to 512                    ( --port-max 512   )" 
-		  DisplayErrDev "\tLJCAudioInterface\t: audio interface name, default is alsa ( -d               )" 
-		  DisplayErrDev "\tLJCRate\t\t\t: default is 44100                      ( --rate           )" 
-		  DisplayErrDev "\tLJCPeriodLen\t\t: default set to 1024                   ( --period         )" 
-		  DisplayErrDev "\tLJCNbPeriods\t\t: defaut set to 4                       ( --nperiods       )" 
-		  DisplayErrDev "\tLJCInputChannel\t\t: default set to 2                      ( --inchannels     )" 
-		  DisplayErrDev "\tLJCOutputChannel\t: default set to 2                      ( --outchannels    )" 
-		  DisplayErrDev "\tLJCInputLatency\t\t: default set to 8                      ( --input-latency  )" 
-		  DisplayErrDev "\tLJCOutputLatency\t: default set to 8                      ( --output-latency )" 
-		  DisplayErrDev "\tLJCDevice\t\t: default set to (default)                     ( --device )" 
-		  DisplayErrDev "Other JackOption Option\n" 
-		  DisplayErrDev "\tLJCHardwareOption\t: to add any other option not initialized." 
-		  DisplayErrDev "\tLJCInterfaceOption\t: to add any interface related options not used." 
-		  DisplayErrDev "Other Loop Jack Connection Semantic Action\n" 
-		  DisplayErrDev "\tLLJCDefaultAction\t: default is set to startserver ( startserver/help/test/jackoption )" 
-		  DisplayErrDev "\tLJCDefaultSleep\t: Internal sleep times, set to ${IntDefaultSleepTime} second(s)." 
-		 elif [ ${LJCDefaultAction:="startserver"} == "test" ] ; then
-		  DisplayErrDev "Following command line will be executed:\n\tCmd:[ ${CmdLine[@]} ]\n" ;
-		  DisplayErrDev "Waiting ${IntDefaultSleepTime} sec..."; 
-		  sleep ${IntDefaultSleepTime} ; 
-		  eval ${CmdLine[@]} ; 
-		 elif [ ${LJCDefaultAction:="startserver"} == "stopserver" ] ; then
-		 	kill -9 $( cat ~/${__call_locality[0]}.pid )  ;
-		 elif [ ${LJCDefaultAction:="startserver"} == "jackoption" ] ; then
-		  DisplayErrDev "Main Jackd Option:" 
-		  ${LJCDefaultJackServer:=/usr/local/bin/jackd} --help
-		  DisplayErrDev "Main Jackd Option for Default Interface ( see help to see default Interface set ):"
-		  ${LJCDefaultJackServer:=/usr/local/bin/jackd} -d ${LJCAudioInterface:=alsa} --help
-		 else
-		  while [ 1 ] ; do
-		    eval ${CmdLine[@]} 2>&1 /dev/null ;
-		    echo $! > ~/${__call_locality[0]}.pid ;
-		    sleep ${IntDefaultSleepTime} ;
-		  done ;
-		 fi
-		fi 
-}
+ #if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+			#GetVarReference ${__call_locality[1]} ; 
+			#echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+	#elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+		#eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+		#echo -ne """${ArgGet}\n""" ;
+	#elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+		#eval $( __GetVarReferenceList ) ;
+ #elif [ "${Arg0:=--startservices}" == "--testservices" ] ; then 
+  #DisplayErrDev "Following command line will be executed:\n\tCmd:[ ${CmdLine[@]} ]\n" ;
+  #DisplayErrDev "Waiting ${IntDefaultSleepTime} sec..." ; 
+  #sleep ${IntDefaultSleepTime} ; 
+  #eval ${CmdLine[@]} ; 
+ #elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
+  #kill -9 $( cat ~/${__call_locality[0]}.pid )  ;
+ #elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  #StrDefaultServerNamelist=${StrDefaultServerNamelist} \
+  #StrOptionList=${StrOptionList}                       \
+  #StrOpenPortList=${StrOpenPortList}                   \
+  #StrAudioInterfaceList=${StrAudioInterfaceList}       \
+  #StrRateList=${StrRateList}                           \
+  #StrPeriodLenList=${StrPeriodLenList}                 \
+  #StrNbPeriodsList=${StrNbPeriodsList}                 \
+  #StrInputChannelList=${StrInputChannelList}           \
+  #StrOutputChannelList=${StrOutputChannelList}         \
+  #StrInputLatencyList=${StrInputLatencyList}           \
+  #StrOutputLatencyList=${StrOutputLatencyList}         \
+  #StrDefaultOptionList=${StrDefaultOptionList}         \
+  #StrDeviceList=${StrDeviceList}                       \
+  #StrInterfaceOptionList=${StrInterfaceOptionList}     \
+  #StrPidFile=${StrPidFile}                             \
+  #InlineCmdLine=${CmdLine[@]//\ /<SPACE>}               \
+  #__main_StartServices                                 ; 
+ #fi
+
+#}
 
 loop_jack_plumbing()
 {

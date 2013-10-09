@@ -688,7 +688,76 @@ echo -ne "BodyFunc Pattern\n\n--------------------------------------------------
 ################################## End             ########################
 
 
+ ### ValueToVariable :
+ ###
+ ###
+ ###	Full-length example : 
+ ### Including 1 example :
+ ###
+ ### $> 
+ ### 
+ ### - It Open Windows from Zenity with parameter for Text-info in editable
+ ### mode.
+ ### 
+ ### It Open by default a uuid-like temporary file. There is no actual was
+ ### to modify the name, but assuming the implementation of ZenityShellEval
+ ### imply a limited acces to shell, you might recuper information from shell
+ ### or futur adding to transfert a name or simple renaming the uuid-like
+ ### file-name... This is to prevent auto-execution of a script from 
+ ### canned-design by playing with without having all clearly create your 
+ ### shell script and/or having fully pseudo-code explained and having 
+ ### confirmation of your design work... 
 
+unset ValueToVariable
+function ValueToVariable( )
+{
+ local ArrayArg=( $* ) ;
+ local __call_locality=( VTV ValueToVariable ) ;
+	local ArrayArg=( $* ) ; 
+	local Arg0=${ArrayArg[0]}  
+ 
+ 
+ local IsValueSimpleConvert=${VTVIsValueToConvert:=True} ;
+ local IsValueToAssignSame=${VTVIsValueReAssign:=False} ;
+ local IsValueIndTransform=${VTVIsTransformed:=False} ;
+ local IsValueTransScript=${VTVIsTransHadScript:=False} ;
+ local StrDefaultTransScript=${VTVITransformScript:=None} ;
+ local StrDefaultTransform=${VTVDefaultTransform:=(s/[SIB][tno][tro][a-zA-Z]+)/\$\{\1\}/g} ;
+ local StrAppsName=${VTVAppsName:=sed} ; 
+ local StrAppsOpt=${VTVAppsOpt:=-r} ;
+ local StrDefaultSedScript='s/([SIB][tno][tro][a-zA-Z]+)/\$\{\1\}/g' ;
+ local StrDefaultAssignScript='s/([SIB][tno][tro][a-zA-Z]+)/\1=\$\{\1\}/g' ;
+ function __main_StartServices()
+ {
+  local __call_locality=( Main __main_StartServices ) ;
+  local Arg0=${ArrayArg[0]} ;
+  local ArrayArg=( $* ) ;
+  eval ${StrAppsName} ${StrAppsOpt} '' 
+ }
+
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+			GetVarReference ${__call_locality[1]} ; 
+			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+		echo -ne """${ArgGet}\n""" ;
+	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+		eval $( __GetVarReferenceList ) ;
+ elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  IsValueSimpleConvert=${IsValueSimpleConvert}     \
+  IsValueToAssignSame=${IsValueToAssignSame}       \
+  IsValueIndTransform=${IsValueIndTransform}       \
+  IsValueTransScript=${IsValueTransScript}         \
+  StrDefaultTransScript=${StrDefaultTransScript}   \
+  StrDefaultTransform=${StrDefaultTransform}       \
+  StrAppsName=${StrAppsName}                       \
+  StrAppsOpt=${StrAppsOpt}                         \
+  StrDefaultSedScript=${StrDefaultSedScript}       \
+  StrDefaultAssignScript=${StrDefaultAssignScript} \
+  __main_StartServices                             ; 
+ fi
+
+}
 
 unset AutoChown ;
 function AutoChown()    

@@ -1,0 +1,108 @@
+###
+### FootPrint Added, see Prefixed-Var ZSEAddFootPrint from ZenityShellEval
+###
+
+###File:/etc/init.d/Fnct.d/aa49dbce-3079-11e3-98a2-001b3875b29c
+###UUID-TIME-MARKER:d506ac16-3079-11e3-98a2-001b3875b29c
+###Date: ${StrDateFormat}
+###Sha1Sum: 22f2cd35a31d7d792f4e065bb9375a113231f23c
+### Size:4808
+### NbWord: 381\n
+unset LoopJackConnection ;
+function LoopJackConnection()
+{
+ local ArrayArg=( $* ) ;
+ local __call_locality=( LJC LoopJackConnection ) ;
+ local TypeUUID=$( uuidgen -t ) ;
+ local ArrayArg=( $* ) ; 
+ local Arg0=${ArrayArg[0]}    
+
+ local StrDefaultServerNamelist=${LJCDefaultServerName:=NONE} ;
+ local StrDefaultServer=${LJCDefaultJackServer:=/usr/local/bin/jackd} ; 
+ local StrOptionList=${LJCDefaultHardwareOption:=} ;
+ local StrOpenPortList=${LJCNbOpenPort:=512} ;
+ local StrAudioInterfaceList=${LJCAudioInterface:=alsa} ;
+ local StrRateList=${LJCRate:=44100} ;
+ local StrPeriodLenList=${LJCPeriodLen:=1024} ;
+ local StrNbPeriodsList=${LJCNbPeriods:=4} ;
+ local StrInputChannelList=${LJCInputChannel:=2} ;
+ local StrOutputChannelList=${LJCOutputChannel:=2} ;
+ local StrInputLatencyList=${LJCInputLatency:=8} ;
+ local StrOutputLatencyList=${LJCOutputLatency:=8} ;
+ local StrDefaultOptionList=${LJCDefaultOption:=--playback} ;
+ local StrDeviceList=${LJCDevice:=default} ;
+ local StrInterfaceOptionList=${LJCInterfaceOption:=} ;
+ local IntDefaultSleepTime=${LJCDefaultSleep:=2};
+ local StrPidFile=${__call_locality}-${TypeUUID}.pid 
+ 
+ 
+ local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrTestSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
+ 
+ if [ "${StrDefaultServerNamelist:=NONE}" == "NONE" ] ; then 
+  local CmdLine=( ${StrDefaultServer} ${StrOptionList}  --port-max ${StrOpenPortList} -d ${StrAudioInterfaceList} --rate ${StrRateList} --period ${StrPeriodLenList} --nperiods ${StrNbPeriodsList} --inchannels ${StrInputChannelList} --outchannels ${StrOutputChannelList} --input-latency ${StrInputLatencyList} --output-latency ${StrOutputLatencyList} ${StrDefaultOptionList} --device ${StrDeviceList} ${StrInterfaceOptionList} ) ; 		
+ else
+  local CmdLine=( ${StrDefaultServer} ${StrOptionList} --name ${StrDefaultServerNamelist} --port-max ${StrOpenPortList} -d ${StrAudioInterfaceList} --rate ${StrRateList} --period ${StrPeriodLenList} --nperiods ${StrNbPeriodsList} --inchannels ${StrInputChannelList} --outchannels ${StrOutputChannelList} --input-latency ${StrInputLatencyList} --output-latency ${StrOutputLatencyList} ${StrDefaultOptionList} --device ${StrDeviceList} ${StrInterfaceOptionList} ) ; 		
+ fi   
+ ### Should Use Prefix-option LJC -> LoopJackConnection before calling the function if you want to change any
+ ### options inside this function. 
+ ###
+ ###
+ function DisplayErrDev()
+ {
+  local ArrayArg=( $* ) ; 
+  local __call_locality=( DED DisplayErrDev ) ;
+  echo -ne "${ArrayArg[@]}\n" > /dev/stderr ;
+ }  
+
+ function __main_StartServices()
+ {
+  local __call_locality=( Main __main_StartServices ) ;
+  local Arg0=${ArrayArg[0]} ;
+  local ArrayArg=( $* ) ;
+  local CmdLine=( ${InlineCmdLine//<SPACE>/ } ) ; 
+  
+  while [ 1 ] ; do
+   echo -ne "CmdLine:[${CmdLine[@]}]\n" > /dev/stderr ; 
+   eval ${CmdLine[@]} 2>&1 /dev/null ;
+   echo $! > ~/${StrPidFile}.pid ;
+   sleep ${IntDefaultSleepTime} ;
+  done ;
+ }
+
+		
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+  GetVarReference ${__call_locality[1]} ; 
+  echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ;
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( __GetVarReferenceList ) ;
+ elif [ "${Arg0:=--startservices}" == "--testservices" ] ; then 
+  DisplayErrDev "Following command line will be executed:\n\tCmd:[ ${CmdLine[@]} ]\n" ;
+  DisplayErrDev "Waiting ${IntDefaultSleepTime} sec..." ; 
+  sleep ${IntDefaultSleepTime} ; 
+  eval ${CmdLine[@]} ; 
+ elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
+  kill -9 $( cat ~/${__call_locality[0]}.pid )  ;
+ elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  StrDefaultServerNamelist=${StrDefaultServerNamelist} \
+  StrOptionList=${StrOptionList}                               \
+  StrOpenPortList=${StrOpenPortList}                       \
+  StrAudioInterfaceList=${StrAudioInterfaceList}      \
+  StrRateList=${StrRateList}                                     \
+  StrPeriodLenList=${StrPeriodLenList}                  \
+  StrNbPeriodsList=${StrNbPeriodsList}                 \
+  StrInputChannelList=${StrInputChannelList}           \
+  StrOutputChannelList=${StrOutputChannelList}         \
+  StrInputLatencyList=${StrInputLatencyList}           \
+  StrOutputLatencyList=${StrOutputLatencyList}         \
+  StrDefaultOptionList=${StrDefaultOptionList}         \
+  StrDeviceList=${StrDeviceList}                       \
+  StrInterfaceOptionList=${StrInterfaceOptionList}     \
+  StrPidFile=${StrPidFile}                             \
+  InlineCmdLine=${CmdLine[@]//\ /<SPACE>}               \
+  __main_StartServices                                 ; 
+ fi
+
+}
