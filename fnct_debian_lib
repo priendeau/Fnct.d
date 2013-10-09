@@ -726,6 +726,7 @@ function ValueToVariable( )
 	local Arg0=${ArrayArg[0]}  
  
  local StrValueParser=${VTVValueEntry:=StrTest}
+ local IsEntryInComaSep=${VTVIsArrayStyleInsert:=False} ; 
  local IsValueSimpleConvert=${VTVIsValueToConvert:=True} ;
  local IsValueToAssignSame=${VTVIsValueReAssign:=False} ;
  local IsValueIndTransform=${VTVIsTransformed:=False} ;
@@ -740,14 +741,20 @@ function ValueToVariable( )
 
  local StrSedAction=None ; 
  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
- 
 
  function __Action()
  {
   local __call_locality=(  Action __Action ) ;
   local Arg0=${ArrayArg[0]} ;
   local ArrayArg=( $* ) ;
-  local CmdLine="echo \"${StrValueParser}\" | ${StrAppsName} ${StrAppsOpt} '${StrSedAction}'" ; 
+  
+  eval $( BVTestVarName=StrParsedVar \
+  BVTestVarHold=\${StrValueParser} \
+  BVTestBoolVarName="\${IsEntryInComaSep}" \
+  BVTestBoolAssertion="\${StrValueParser//,/ }" \
+  BVTestBoolCase=True \
+  BoolVarTestVarCreation )
+  local CmdLine="echo \"${StrParsedVar}\" | ${StrAppsName} ${StrAppsOpt} '${StrSedAction}'" ; 
   if [ ${IsDisplayDebug} == "True" ] ; then
    echo -ne "CmdLine:\n[ ${CmdLine} ]\n" > /dev/stderr ; 
   fi 
@@ -770,9 +777,11 @@ function ValueToVariable( )
   if [ ${IsDisplayDebug} == "True" ] ; then
    echo -ne "StrAppsName : ${StrAppsName}\nStrAppsOpt : ${StrAppsOpt}\nStrSedAction : ${StrSedAction}\n" > /dev/stderr ; 
   fi 
-  StrAppsName=${StrAppsName}   \
-  StrAppsOpt=${StrAppsOpt}     \
-  StrSedAction=${StrSedAction} \
+  StrAppsName=${StrAppsName}           \
+  StrAppsOpt=${StrAppsOpt}             \
+  StrSedAction=${StrSedAction}         \
+  IsEntryInComaSep=${IsEntryInComaSep} \
+  StrValueParser=${StrValueParser}     \
   __Action ; 
  }
 
@@ -798,6 +807,7 @@ function ValueToVariable( )
   StrSedAction=${StrSedAction}                     \
   StrValueParser=${StrValueParser}                 \
   IsDisplayDebug=${IsDisplayDebug}                 \
+  IsEntryInComaSep=${IsEntryInComaSep}             \
   __main_StartServices                             ; 
  fi
 
