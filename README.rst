@@ -835,12 +835,14 @@ See Help :
 
 .. code:: shell
 	
-	Help:
+Help:
 
 	Function ValueToVariable
 	Default Variable Value:
 	Variable VTVValueEntry ,
 		Default Value:StrTest
+	Variable VTVIsArrayStyleInsert ,
+		Default Value:False
 	Variable VTVIsValueToConvert ,
 		Default Value:True
 	Variable VTVIsValueReAssign ,
