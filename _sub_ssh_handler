@@ -1,43 +1,180 @@
 
-. /etc/init.d/Fnct.d/fnct_debian_lib 
+#. /etc/init.d/Fnct.d/fnct_debian_lib 
 
-
-SSH_ENV="$HOME/.ssh/environment"
-
-function start_agent 
+function ZenityPassPhrase()
 {
-  local ArrayArg=( $* ) ;
-  echo "Initializing new SSH agent..."
-  /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
-  echo succeeded
-  chmod 600 "${SSH_ENV}"
-  . "${SSH_ENV}" > /dev/null
-  /usr/bin/ssh-add;
+ local StrReturn=$( zenity --entry --text="Please insert the SSH Passphrase" --hide-text ) ; 
+ echo "${StrReturn}" ; 
+ return 0; 
+ 
 }
 
-function Stub_Start_Agent()
+#export SSH_ENV="$HOME/.ssh/environment"
+export SSH_ASKPASS="ZenityPassPhrase" 
+
+function StartAgentSSH 
 {
- local ArrayArg=( $* ) ;
- start_agent;
+	local __call_locality=( SASSH StartAgentSSH ) ;
+	local ArrayArg=( $* ) ; 
+	local Arg0=${ArrayArg[0]} ; 
+ local StrAgentEnvFile=${SASSHEvFile:=environment} ; 
+ local IsHomeUser=${SASSHIsUserBasedHome:=True};
+ local StrPathBase=${SASSHRootPathNoneUser:=/root} ; 
+ local StrAgentPathFile=${SASSHPathStorage:=.ssh};
+ local IsSetSSHENV=${SASSHIsSetSSHENV:=False};
+ local IsDeregSSHENV=${SASSHUnregisterSSHENV:=False};
+ 
+ 
+ ### Create StrPathSSH and if IsHomeUser==False, StrPathSSH will own
+ ### the StrPathBase value (default set to /root )
+ eval $( BVTestVarName="StrPathSSH" \
+         BVTestVarHold=${HOME} \
+         BVTestBoolVarName=\${IsHomeUser} \
+         BVTestBoolAssertion=\${StrPathBase} \
+         BoolVarTestVarCreation )
+ 
+ ### Appending to StrPathSSH , the .ssh path.
+ StrPathSSH=${StrPathSSH}/${StrAgentPathFile} 
+ 
+ function __main_StopServices()
+ {
+		local __call_locality=( Stop __main_StopServices ) ;
+		local Arg0=${ArrayArg[0]} ;
+		local ArrayArg=( $* ) ;   
+  echo -ne "\n\t\033[01;31mDe-Register SSH agent...\033[00m\n\n" ; 
+  test -f ${StrPathSSH}/${StrAgentEnvFile} && rm -f ${StrPathSSH}/${StrAgentEnvFile} ; 
+  if [ "${IsDeregSSHENV:=False}" == "True" ] ; then 
+   echo -ne "\n\t\033[01;31mDe-Register SSH_ENV...\033[00m\n\n" ; 
+   unset SSH_ENV ; 
+  fi 
+  local IntPidAgent=${SSH_AGENT_PID:=-1}
+  if [ ${IntPidAgent} -ne -1 ] ; then 
+   echo -ne "\n\t\033[01;31mKilling SSH-Agent on PID:${IntPidAgent}\033[00m\n\n" ; 
+   sudo kill -11 ${IntPidAgent} ; 
+   test ! -d /proc/${IntPidAgent} && unset SSH_AGENT_PID
+  fi 
+ }
+ 
+ function __main_StartServices()
+ {
+		local __call_locality=( Main __main_StartServices ) ;
+		local Arg0=${ArrayArg[0]} ;
+		local ArrayArg=( $* ) ; 
+ 
+  if [ "${IsSetSSHENV:=False}" == "True" ] ; then 
+   if [ "${IsDeregSSHENV:=False}" == "True" ] ; then 
+    echo -ne "\n\tDe-Register SSH_ENV...\n\n" ; 
+    unset SSH_ENV ; 
+   else
+    echo -ne "\n\tRegistering SSH_ENV to file : ${StrPathSSH}/${StrAgentEnvFile}\n\n" ; 
+    export SSH_ENV=${StrPathSSH}/${StrAgentEnvFile} ; 
+   fi 
+  fi
+  
+  if [ "${IsSetSSHENV:=False}" == "False" ] ; then 
+   echo -ne "\n\t\033[01;33mInitializing new SSH agent...\033[00m\n\n"
+   test -f /home/maxiste/.ssh/environment && rm -f 
+   /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
+   echo succeeded
+   chmod 600 "${SSH_ENV}"
+   . "${SSH_ENV}" > /dev/null
+   /usr/bin/ssh-add -c ;
+  fi
+ }
+ 
+ local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+			GetVarReference ${__call_locality[1]} ; 
+			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+		echo -ne """${ArgGet}\n""" ;
+	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+		eval $( __GetVarReferenceList ) ;
+ elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
+ eval $( VTVIsArrayStyleInsert=True \
+  VTVValueEntry=StrAgentEnvFile,IsHomeUser,StrPathBase,StrAgentPathFile,IsSetSSHENV,IsDeregSSHENV \
+  VTVIsValueReAssign=True    \
+  VTVIsValueToConvert=False  \
+  VTVIsArrayStyleInsert=True \
+  ValueToVariable ) __main_StopServices ; 
+ elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  eval $( VTVIsArrayStyleInsert=True \
+  VTVValueEntry=StrAgentEnvFile,IsHomeUser,StrPathBase,StrAgentPathFile,IsSetSSHENV,IsDeregSSHENV \
+  VTVIsValueReAssign=True    \
+  VTVIsValueToConvert=False  \
+  VTVIsArrayStyleInsert=True \
+  ValueToVariable ) __main_StartServices
+ fi
+ 
 }
 
-function PS_SSH_Agent()
+function StubStartAgent()
 {
+	local __call_locality=( SSA StubStartAgent ) ;
+	local ArrayArg=( $* ) ; 
+	local Arg0=${ArrayArg[0]} ; 
+ 
  local ArrayArg=( $* ) ;
- ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null ;
+ StartAgentSSH;
+}
+
+function SSHAgentMemoryInfo()
+{
+	local __call_locality=( SSHAMI SSHAgentMemoryInfo ) ;
+	local ArrayArg=( $* ) ; 
+	local Arg0=${ArrayArg[0]} ; 
+ 
+ ps -ef | grep ${SSH_AGENT_PID} | grep 'ssh-agent$' > /dev/null ;
 }
 
 function AgentLoader()
 {
- local ArrayArg=( $* ) ;
- # Source SSH settings, if applicable
- if [ -f "${SSH_ENV}" ]; then
-   . "${SSH_ENV}" > /dev/null
-   #ps ${SSH_AGENT_PID} doesn't work under cygwin
-   PS_SSH_Agent || { Stub_Start_Agent ; } ;
- else
-   start_agent;
- fi 
+	local __call_locality=( AL AgentLoader ) ;
+	local ArrayArg=( $* ) ; 
+	local Arg0=${ArrayArg[0]} ;  
+
+ function __main_StopServices()
+ {
+		local __call_locality=( Stop __main_StopServices ) ;
+		local Arg0=${ArrayArg[0]} ;
+		local ArrayArg=( $* ) ;  
+  SASSHUnregisterSSHENV=True SASSHIsSetSSHENV=True StartAgentSSH --stopservices
+ }
+ 
+ function __main_StartServices()
+ {
+		local __call_locality=( Main __main_StartServices ) ;
+		local Arg0=${ArrayArg[0]} ;
+		local ArrayArg=( $* ) ; 
+  ### Create environment for SSH_ENV 
+  SASSHIsSetSSHENV=True StartAgentSSH ; 
+  
+  # Source SSH settings, if applicable
+  if [ -f "${SSH_ENV}" ]; then
+    . "${SSH_ENV}" > /dev/null
+    #ps ${SSH_AGENT_PID} doesn't work under cygwin
+    SSHAgentMemoryInfo || { StartAgentSSH ; } ;
+  else
+    StartAgentSSH ;
+  fi 
+ }
+
+ local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+			GetVarReference ${__call_locality[1]} ; 
+			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+		echo -ne """${ArgGet}\n""" ;
+	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+		eval $( __GetVarReferenceList ) ;
+ elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
+  __main_StopServices ; 
+ elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  __main_StartServices ;
+ fi
+
 }
 
 function GetGitHubKey()
