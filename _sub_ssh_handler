@@ -78,7 +78,7 @@ function StartAgentSSH
    echo succeeded
    chmod 600 "${SSH_ENV}"
    . "${SSH_ENV}" > /dev/null
-   /usr/bin/ssh-add -c ;
+   /usr/bin/ssh-add ;
   fi
  }
  
