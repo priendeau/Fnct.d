@@ -21,8 +21,14 @@ function StartAgentSSH
  local IsHomeUser=${SASSHIsUserBasedHome:=True};
  local StrPathBase=${SASSHRootPathNoneUser:=/root} ; 
  local StrAgentPathFile=${SASSHPathStorage:=.ssh};
+ local IntDefaultSSHEnvChmod=${SASSHDefaultChmod:=600} ;
  local IsSetSSHENV=${SASSHIsSetSSHENV:=False};
  local IsDeregSSHENV=${SASSHUnregisterSSHENV:=False};
+ local StrChmodApps=${SASSHChmodApps:=/bin/chmod}
+ local StrSSHAddApps=${SASSHSSHADDApp:=/usr/bin/ssh-add} ; 
+ local StrSSHAddAppsOpt=${SASSHSSHADDOpt:=} ; 
+ local StrSSHAgentApps=${SASSHSSHAgentApp:=/usr/bin/ssh-agent} ; 
+ local StrSSHAgentAppsOpt=${SASSHSSHAgentOpt:=} ; 
  
  
  ### Create StrPathSSH and if IsHomeUser==False, StrPathSSH will own
@@ -73,12 +79,14 @@ function StartAgentSSH
   
   if [ "${IsSetSSHENV:=False}" == "False" ] ; then 
    echo -ne "\n\t\033[01;33mInitializing new SSH agent...\033[00m\n\n"
-   test -f /home/maxiste/.ssh/environment && rm -f 
-   /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
-   echo succeeded
-   chmod 600 "${SSH_ENV}"
+   test -f ${StrPathSSH}/${StrAgentEnvFile} && rm -f ${StrPathSSH}/${StrAgentEnvFile}
+   echo -ne "\n\t\033[01;33mLoading ${StrSSHAgentApps}...\033[00m\n\n"
+   eval ${StrSSHAgentApps} ${StrSSHAgentAppsOpt} | sed 's/^echo/#echo/' > "${SSH_ENV}"
+   echo -ne "SSHAgent\t\t\t\t\033[01;32m[ succeeded ]\033[00m\n" ; 
+   eval ${StrChmodApps} ${IntDefaultSSHEnvChmod} "${SSH_ENV}"
    . "${SSH_ENV}" > /dev/null
-   /usr/bin/ssh-add ;
+   echo -ne "\n\t\033[01;33mLoading ${StrSSHAddApps}...\033[00m\n\n"
+   eval ${StrSSHAddApps} ;
   fi
  }
  
@@ -93,14 +101,14 @@ function StartAgentSSH
 		eval $( __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
  eval $( VTVIsArrayStyleInsert=True \
-  VTVValueEntry=StrAgentEnvFile,IsHomeUser,StrPathBase,StrAgentPathFile,IsSetSSHENV,IsDeregSSHENV \
+  VTVValueEntry=StrAgentEnvFile,IsHomeUser,StrPathBase,StrAgentPathFile,IsSetSSHENV,IsDeregSSHENV,StrSSHAddApps,StrSSHAddAppsOpt,StrSSHAgentApps,StrSSHAgentAppsOpt \
   VTVIsValueReAssign=True    \
   VTVIsValueToConvert=False  \
   VTVIsArrayStyleInsert=True \
   ValueToVariable ) __main_StopServices ; 
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
   eval $( VTVIsArrayStyleInsert=True \
-  VTVValueEntry=StrAgentEnvFile,IsHomeUser,StrPathBase,StrAgentPathFile,IsSetSSHENV,IsDeregSSHENV \
+  VTVValueEntry=StrAgentEnvFile,IsHomeUser,StrPathBase,StrAgentPathFile,IsSetSSHENV,IsDeregSSHENV,IntDefaultSSHEnvChmod,StrChmodApps,StrSSHAddApps,StrSSHAddAppsOpt,StrSSHAgentApps,StrSSHAgentAppsOpt \
   VTVIsValueReAssign=True    \
   VTVIsValueToConvert=False  \
   VTVIsArrayStyleInsert=True \
