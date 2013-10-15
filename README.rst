@@ -138,11 +138,14 @@ available inside the /etc/init.d/Fnct.d Path .
 
 Example :
 
+
 .. image:: https://raw.github.com/priendeau/Fnct.d/master/images/fnct_lib_loading.png
 		:target: https://github.com/priendeau/Fnct.d#Invocation
 
 
-	This is a result from loading /etc/init.d/Fnct.d/fnct_lib from a .bashrc 
+
+This is a result from loading /etc/init.d/Fnct.d/fnct_lib from a .bashrc 
+
 	
 Example of .bashrc configuration file with fnct_lib and some usefull widget 
 configured thru uses of alias. 
