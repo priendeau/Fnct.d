@@ -1420,7 +1420,7 @@ GraphicMagics will work on the same way:
 	
 See Variable List:
 
-::
+.. code:: shell
 	
 	Help:
 
@@ -1527,11 +1527,122 @@ The one only note is to respect the common Policy-format:
 		:target: https://github.com/priendeau/Fnct.d#7bd8c582-2ebe-11e3-98a2-001b3875b29c	
 
 
-	
-	
 :Note: 75411766-1969-11e3-98a2-001b3875b29c
 :Title: Permanent Sqlite Database to store crutial information introducing connection-layer to a unicast-per-user group and bash interoperability
 
+	
+	
+:Note: 6e61bab0-35eb-11e3-98a2-001b3875b29c
+:Title: An effective AgentLoader and StartAgentSSH as sub-componnent. 
+
+SSH shell connection grew in importance with time and sometimes it goes clumsy to
+simply configure it from bare-bottom... Many script-shell from Ubuntu and RedHat 
+are using bare calling convention of an AgentLoader, a Stub to start it, 
+sub-member to store PID when this one is created... but does not offer themself, 
+varaible handling, user creation exception like user root does have to set SSH_ENV
+to kill other instance. This mechanism is just plain-universal, having one like 
+Fnct.D AgentLoader is somewhat easy to use, configurable, and effective to manage
+
+Here old and Plain-Universal example:
+
+.. code:: shell
+	SSH_ENV="$HOME/.ssh/environment"
+	
+	function start_agent
+	{
+	  local ArrayArg=( $* ) ;
+	  echo "Initializing new SSH agent..."
+	  /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
+	echo succeeded
+	chmod 600 "${SSH_ENV}"
+	. "${SSH_ENV}" > /dev/null
+	/usr/bin/ssh-add;
+	}
+
+	function Stub_Start_Agent()
+	{
+	local ArrayArg=( $* ) ;
+	start_agent;
+	}
+
+	function PS_SSH_Agent()
+	{
+	local ArrayArg=( $* ) ;
+	ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null ;
+	}
+
+	function AgentLoader()
+	{
+	local ArrayArg=( $* ) ;
+	# Source SSH settings, if applicable
+	if [ -f "${SSH_ENV}" ]; then
+	. "${SSH_ENV}" > /dev/null
+	#ps ${SSH_AGENT_PID} doesn't work under cygwin
+	   PS_SSH_Agent || { Stub_Start_Agent ; } ;
+	 else
+	   start_agent;
+	 fi
+	}
+
+AgentLoader Helper :
+
+.. code:: shell
+	
+	Help:
+
+	Function AgentLoader
+	Default Variable Value:
+	Following switch are available:
+
+		--startservices	Start the application normally.
+		--stopservices	Stop the application normally.
+		--get		Return value of Internal Variable.
+		--list		List all Internal Pre-fixed Variable available to query or get.
+
+
+StartAgentSSH Helper:
+
+.. code:: shell
+	
+	Help:
+
+	Function StartAgentSSH
+	Default Variable Value:
+	Variable SASSHEvFile ,
+		Default Value:environment
+	Variable SASSHIsUserBasedHome ,
+		Default Value:True
+	Variable SASSHRootPathNoneUser ,
+		Default Value:/root
+	Variable SASSHPathStorage ,
+		Default Value:.ssh
+	Variable SASSHDefaultChmod ,
+		Default Value:600
+	Variable SASSHIsSetSSHENV ,
+		Default Value:False
+	Variable SASSHUnregisterSSHENV ,
+		Default Value:False
+	Variable SASSHChmodApps ,
+		Default Value:/bin/chmod
+	Variable SASSHSSHADDApp ,
+		Default Value:/usr/bin/ssh-add
+	Variable SASSHSSHADDOpt ,
+		Default Value:
+	Variable SASSHSSHAgentApp ,
+		Default Value:/usr/bin/ssh-agent
+	Variable SASSHSSHAgentOpt ,
+		Default Value:
+	Following switch are available:
+
+		--startservices	Start the application normally.
+		--stopservices	Stop the application normally.
+		--get		Return value of Internal Variable.
+		--list		List all Internal Pre-fixed Variable available to query or get.
+
+*** Still in pending ***
+
+	Delayed until Mid-November 2013. 
+	
 ----------------------------------------------------------------------------------
 Introducing connection-layer to a unicast-per-user group and bash interoperability
 ----------------------------------------------------------------------------------
@@ -1696,7 +1807,7 @@ switche nature will be ignored and might be used if the user change the switches
 	Setter
 ------
 		
-		* Not Developped yet
+		* Not Developped yet *
 
 The draft section barely work this stage but outisde alternative are present. 
 The actual alternative remain uses of alias which is per-user alternative and 
@@ -1751,13 +1862,13 @@ Main Function or main definition started first.
 
 This switches is also implicit switche, if no one is called between --get, --list,
 ( --set  in later version ), --stopservices or even --help; --startservices will 
-take effect. Belong to if-n-elif clause or BodyFunc controller specified at the 
-end of a Fnct.D services/function, it should mandatory call __start_services() 
-sub function or should have a first sub-function being called or it should 
-remain  between --start-services switche detection inside if-n-elif, which is big 
-and not correctly formed. You may loose your point of view calling everything 
-that have not less than 5 line of code inside an if-n-elif clause from your 
-first function. 
+take effect. Belong to an  [ if / elif / n-elif / fi ] clause or BodyFunc 
+controller specified at the end of a Fnct.D services/function, it should mandatory 
+call __start_services() sub function or should have a first sub-function being 
+called or it should remain  between --start-services switche detection inside 
+[ if / elif / n-elif / fi ], which is big and not correctly formed. You may loose 
+your point of view calling everything that have not less than 5 line of code 
+inside an if-n-elif clause from your first function. 
 
 
 -------------
