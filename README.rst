@@ -1646,6 +1646,13 @@ StartAgentSSH Helper:
 		--list		List all Internal Pre-fixed Variable available to query or get.
 
 
+Schema relative dependency relation of AgentLoader and StartAgentSSH.
+
+
+.. image:: https://raw.github.com/priendeau/Fnct.d/master/images/AgentLoaderRelation.png
+		:target: https://github.com/priendeau/Fnct.d#6e61bab0-35eb-11e3-98a2-001b3875b29c
+
+
 	
 ----------------------------------------------------------------------------------
 Introducing connection-layer to a unicast-per-user group and bash interoperability
