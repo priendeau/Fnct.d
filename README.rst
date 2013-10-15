@@ -1530,9 +1530,13 @@ The one only note is to respect the common Policy-format:
 :Note: 75411766-1969-11e3-98a2-001b3875b29c
 :Title: Permanent Sqlite Database to store crutial information introducing connection-layer to a unicast-per-user group and bash interoperability
 
+
+
 	*** Still in pending ***
 
 	Delayed until Mid-November 2013. 
+
+
 	
 :Note: 6e61bab0-35eb-11e3-98a2-001b3875b29c
 :Title: An effective AgentLoader and StartAgentSSH as sub-componnent. 
