@@ -1556,20 +1556,20 @@ signature to be read from external function like .
 	__GetVarReferenceList  
 
 
-It's name depend of something rational coded inside function GetStdPrefixName, and
-Shall not be used inside declaration of __call_locality for Unability of external 
-function to read un-evaluated value from hand-writted function name... But 
-function GetStdPrefixName can give you and Idea what will be a Root for 
+It's name depend of something rational coded inside function GetStdPrefixName, 
+and Shall not be used inside declaration of __call_locality for Unability of 
+external  function to read un-evaluated value from hand-writted function name... 
+But function GetStdPrefixName can give you and Idea what will be a Root for 
 Prefixed-Variable. This is almost import for first level function accessible to 
 human of simple parser from shell from another level-1 function. See example to 
 see where is the Level-1 representation and where is the Calling signature. 
 
-Once the example is controlled or added to your shell if you want to try, the 
-rest of the body implement the switches-level. Shall be implemented with 
+Once the example is controlled or added to your shell if you want to try,  the 
+rest of the body  implement the  switches-level.  Shall be implemented  with  
 BodyFunc, and another example somewhere should already show you this. For the 
 moment, The basic and understandable way imply a Switches level being settled at
-the end of the function to clearly show where is the services entry and may 
-rely from internal second-level function or external level like 
+the end of the function to clearly show where is the services entry and may rely 
+from internal second-level function or external level like 
 __GetVarReferenceCompWord, __GetVarReferenceList. 
 
 
@@ -1672,14 +1672,13 @@ Uses of Universal switches.
 Getter is the switche --get from calling 
 convention :  __FUNCTION__ --get Prefixed-Variable
 
-In Term, it's the information services available by function allowing to 
-extract a componnent from the Communication Layer. Each Item from this 
-communication layer is a Prefixed-Variable commonly designed by the autor
-allowing to pass informations. In a layer you can virtually pass all Item
-and even not assigned item or not existing item and should not interfer 
-during Services initiation. Known and recognized one will be used and even
-not intended to be use due to switche nature will be ignored and might be 
-used if the user change the switches. 
+In Term, it's the information services available by function allowing to extract 
+a componnent from the Communication Layer. Each Item from this communication 
+layer is a Prefixed-Variable commonly designed by the autor allowing to pass 
+informations. In a layer you can virtually pass all Item and even not assigned 
+item or not existing item and should not interfer during Services initiation. 
+Known and recognized one will be used and even not intended to be use due to 
+switche nature will be ignored and might be used if the user change the switches. 
 
 ::
 	
@@ -1732,20 +1731,55 @@ Complete Word-completion thru --compword
 This services available in next version will allow to Enable the Word completion by 
 calling function name __FUNCTION__ --compword 
 
-Since this is available upon delivery of __GetVarReferenceCompWord from delivery of
-chunk 023102e0-1833-11e3-98a2-001b3875b29c after 2013-09-08. This is a way to maximize
-uses of Function Prefixed Variable being show by typing the Function Name and 'Tab' .
+Since this is available upon delivery of __GetVarReferenceCompWord from delivery 
+of chunk 023102e0-1833-11e3-98a2-001b3875b29c after 2013-09-08. This is a way 
+to maximize uses of Function Prefixed Variable being show by typing the Function 
+Name and 'Tab' .
 
-This is another services freeing memory from unused function. Not all function are 
-enabling this feature being loaded by the /etc/init.d/Fnct.D/fnct_lib. 
+This is another services freeing memory from unused function. Not all function 
+are enabling this feature being loaded by the /etc/init.d/Fnct.D/fnct_lib. 
 
-This nominal feature transform our API into active services and standard being this
-Function Lib render it valid to install this services inside /etc/init.d 
+This nominal feature transform our API into active services and standard being 
+this Function Lib render it valid to install this services inside /etc/init.d 
 	
 
 -------------
 	StartServices
 -------------
+
+Main Function or main definition started first. 
+
+This switches is also implicit switche, if no one is called between --get, --list,
+( --set  in later version ), --stopservices or even --help; --startservices will 
+take effect. Belong to if-n-elif clause or BodyFunc controller specified at the 
+end of a Fnct.D services/function, it should mandatory call __start_services() 
+sub function or should have a first sub-function being called or it should 
+remain  between --start-services switche detection inside if-n-elif, which is big 
+and not correctly formed. You may loose your point of view calling everything 
+that have not less than 5 line of code inside an if-n-elif clause from your 
+first function. 
+
+
+-------------
+	StopServices
+-------------
+
+Simply stop a services... asking to uses --compword as example with 
+ZenityShellEval because you alway use it and did not remember all the function 
+Pre-fixed variables, activating --compword from ZenityShellEval --compword should 
+be disabled with --stopservices to cancel the Compword engine... Another 
+example LoopJackConnection should have a --stopservices as it's original design 
+to start a Jack-deamon and  should manage it... Probably in near future this 
+Readme.rst will own much detail. Also AgentLoader being a wrap-up around 
+StartAgentSSH, StartAgentSSH had --stopservices but use Prefixed-Variable to 
+disable SSH environment from ssh-agent and ssh-add and are not mandatory 
+hard-presented to offer an effective management. StartAgentSSH had possibility 
+to kill pid of ssh-agent and might also unset variable too to fully disable an
+SSH-Agent prior to re-install a certificate of an ssh entry. This is also
+why you might be prompted to enter a super-user password to stop an AgentLoader.
+
+
+
 
 Operator
 ========
