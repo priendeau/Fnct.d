@@ -1532,12 +1532,12 @@ The one only note is to respect the common Policy-format:
 
 
 
-	*** Still in pending ***
+*** Still in pending ***
 
-	Delayed until Mid-November 2013. 
+Delayed until Mid-November 2013. 
 
 
-	
+
 :Note: 6e61bab0-35eb-11e3-98a2-001b3875b29c
 :Title: An effective AgentLoader and StartAgentSSH as sub-componnent. 
 
