@@ -130,6 +130,69 @@ and desapear or move inside /usr This design exist inside /etc/init.d/Fnct.d to
 establish a __future__ development for integration inse loader and initrd for shell
 management and Integration. 
 
+** Updated **
+
+The original mechanism /etc/init.d/Fnct.d/fnct_lib allow loading of sub library. 
+Most important are fnct_debian_lib _sub_jack_script _sub_Git _sub_ssh_handler all
+available inside the /etc/init.d/Fnct.d Path .
+
+Example :
+
+.. image:: https://raw.github.com/priendeau/Fnct.d/master/images/fnct_lib_loading.png
+		:target: https://github.com/priendeau/Fnct.d#Invocation
+
+
+	This is a result from loading /etc/init.d/Fnct.d/fnct_lib from a .bashrc 
+	
+Example of .bashrc configuration file with fnct_lib and some usefull widget 
+configured thru uses of alias. 
+
+.. code:: python
+	
+	### Found on Top of my .bashrc 
+	. /etc/init.d/Fnct.d/fnct_lib 
+
+
+	export PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[01;36m\]@\[\033[01;32m\]\h\[\033[01;34m\] \W \$\[\033[00m\] '
+
+	### 
+	### Some common thing found inside a .bashrc example
+	### 
+	alias ls='ls -AlSr --color=tty' ; 
+	alias mkdir='/etc/init.d/Fnct.d/md_cd' ;
+	
+	
+	### 
+	### My Creation-Path Services, adding information inside ${HOME}/.ArrayMdCd
+	### effective enough to create one at the time Path and store the information
+	### of date-creation and location created and dumping file .gitignore, README.rst
+	### MANIFEST.in inside every creation... Useful to store story-board, File-list
+	### and avoiding to concurrent temporary file or useless file...  Also 
+	### /etc/init.d/Fnct.d/md_cd own an quantomic action, many selfuser may use 
+	### different terminal and will have to wait until first one had done to use
+	### the mkdir, md... Before another user can use it... so ${HOME}/.ArrayMdCd
+	### can not hold uncoherent information or incomplete one . 
+	### 
+	alias md='/etc/init.d/Fnct.d/md_cd' ;
+	alias iptables-list='iptables -L --numeric --line-numbers' ;
+	alias synaptic-search='sudo -s synaptic-search' ;
+	alias synaptic-up='sudo -s /usr/sbin/synaptic --update-at-startup'
+	alias apt-src-install='sudo -s apt-src-install' ;
+	alias gedit='/usr/bin/pluma' 
+	
+	### 
+	### This is example is famous about configuring the ZenityShellEval Windows Resolution.
+	### 
+	alias ZenityShellEval='ZSEWindowWidth=1000 ZSEWindowHeight=700 ZenityShellEval'
+
+	
+	### 
+	### This is example know to be effective, adding a snapshoot every time the 
+	### application is called to store Debian package into my personal storage.
+	### 
+	alias PackageRepositoryMgmt='PkgRepoMgmtAddPkgLst=True PkgRepoMgmtRepository=/media/COMST500GB/Linux-Debian/archives/Mint-15_x86-64/UnderscoreXDevlpt-001 PkgRepoMgmtReposIndex=/media/COMST500GB/Linux-Debian/archives/Mint-15_x86-64/UnderscoreXDevlpt-001/index PackageRepositoryMgmt'
+	alias PackageRepositoryRest='PRRBackupPath=/media/COMST500GB/Linux-Debian/archives/Mint-15_x86-64/UnderscoreXDevlpt-001 PkgRepoMgmtReposIndex=/media/COMST500GB/Linux-Debian/archives/Mint-15_x86-64/UnderscoreXDevlpt-001 PackageRepositoryRest' ;
+
 
 Improvement
 ===========
