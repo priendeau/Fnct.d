@@ -813,6 +813,74 @@ function ValueToVariable( )
 
 }
 
+
+### Note: MakeLink
+### - While I'm making rezound work without linking libsoundtouch.0 to 
+### libsoundtouch.1 and linking libaudiofile.so.1 with libaudiofile.so.0 for 
+### installing the rezound_0.12.3beta-2.3_amd64.deb from dpkg --install
+### it report error but does installing the debian package... Between this 
+### work-around and compiling the rezound_0.12.3 from launchpad distribution it 
+### come with many error or untelled warning to add inside the Makefile.am... 
+### Having it compiling from my github 
+### ( https://github.com/priendeau/Technical-PorteFolio/tree/master/C/rezound/rezound-0.12.3beta ) 
+### it may occurs sometimes correction I did not add and are blind to actual 
+### repository... re-linking one-by-one erronous file and working file I do need to 
+### do a tiny MakeLink function where the SRC location is stored inside 
+### MLLocationRoot and may call make after linking with prefixed variable 
+### MLMainActionAfterLink ... 
+
+unset MakeLink
+function MakeLink() 
+{ 
+ local ArrayArg=($*);
+ local __call_locality=( ML MakeLink );
+ alias find='find -iname ';
+ 
+ local StrRootOrigin=${MLLocationRoot:=/home/maxiste/github/Technical-PorteFolio/C/rezound/rezound-0.12.3beta/src} ;
+ local StrAction=${MLMainActionAfterLink:=make} ;
+ local StrFile=$( find ${ArrayArg[0]} );
+ IsMake=${MLBoolDoMake:=True};
+ 
+ function __main_StartServices()
+ {
+		local __call_locality=( Main __main_StartServices ) ;
+		local ArrayArg=( $* ) ; 
+		local Arg0=${ArrayArg[0]};
+  StrFile=${StrFile//\.\//} ; 
+  ln -s ${StrRootOrigin}/${StrFile} ${src};
+  
+  eval $( BVTestVarName=StrRecurrent \
+          BVTestVarHold='' \
+          BVTestBoolVarName=\${IsMake} \
+          BVTestBoolCase=True \
+          BVTestBoolAssertion='$( ${StrAction} )' \
+          BVTestScopeTest=declare \
+          BoolVarTestVarCreation ) ; 
+	}
+ 
+ local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
+ 
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+			GetVarReference ${__call_locality[1]} ; 
+			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+		echo -ne """${ArgGet}\n""" ;
+	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+		eval $( __GetVarReferenceList ) ;
+ elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  eval $( VTVIsArrayStyleInsert=True \
+  VTVValueEntry=StrRootOrigin,StrFile,IsMake,StrAction \
+  VTVIsValueReAssign=True \
+  VTVIsValueToConvert=False \
+  VTVIsArrayStyleInsert=True \
+  ValueToVariable ) __main_StartServices
+ fi
+ unalias find
+ 
+}
+
+
 unset AutoChown ;
 function AutoChown()    
 { 
