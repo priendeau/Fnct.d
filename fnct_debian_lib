@@ -898,17 +898,21 @@ function MakeLink()
   eval alias find='${StrAliasFind}';
   local StrFile=$( find ${StrFileSearch} );
 		local Arg0=${ArrayArg[0]};
-  StrFile=${StrFile//\.\//} ; 
-  local ArrayLayerVar=( StrRootOrigin,StrFile,StrLinkApps,StrLinkFormat,StrLinkOpt,StrDebugLink,IsRenameDest,StrMoveSuffix IsMake,StrAction ) ;
-  local ArrayFunction=( __Link __PostAction )
-  for (( intx=0 ; intx <= ${#ArrayLayerVar[@]}-1; intx++ )) ; do 
-   eval $( VTVIsArrayStyleInsert=True \
-   VTVValueEntry=${ArrayLayerVar[${intx}]} \
-   VTVIsValueReAssign=True \
-   VTVIsValueToConvert=False \
-   VTVIsArrayStyleInsert=True \
-   ValueToVariable ) ${ArrayFunction[${intx}]} ; 
-  done
+  if [ "${StrFile:=None}" != "None" ] ; then 
+   StrFile=${StrFile//\.\//} ; 
+   local ArrayLayerVar=( StrRootOrigin,StrFile,StrLinkApps,StrLinkFormat,StrLinkOpt,StrDebugLink,IsRenameDest,StrMoveSuffix IsMake,StrAction ) ;
+   local ArrayFunction=( __Link __PostAction )
+   for (( intx=0 ; intx <= ${#ArrayLayerVar[@]}-1; intx++ )) ; do 
+    eval $( VTVIsArrayStyleInsert=True \
+    VTVValueEntry=${ArrayLayerVar[${intx}]} \
+    VTVIsValueReAssign=True \
+    VTVIsValueToConvert=False \
+    VTVIsArrayStyleInsert=True \
+    ValueToVariable ) ${ArrayFunction[${intx}]} ; 
+   done
+  else
+   echo -ne "Can not continue linking, no existing file:\n\tResult:${StrFile:=None}\n\tQuery:${StrFileSearch}\n" > /dev/stderr ; 
+  fi 
 
   unalias find ;
  }
