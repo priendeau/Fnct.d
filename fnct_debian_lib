@@ -855,19 +855,20 @@ function MakeLink()
   local StrEval=${StrLinkFormat} ; 
   
   local StrFileReplace=$( echo "${StrFile}" | sed 's/\(\.[a-z]*\)/${StrMoveSuffix}\1/g' ) ; 
-  eval $( BVTestVarName=StrToMove \
-          BVTestVarHold='' \
-          BVTestBoolVarName=\${IsRenameDest} \
-          BVTestBoolCase=True \
-          BVTestBoolAssertion='$( mv ${StrFile} ${StrFileReplace} )' \
-          BVTestScopeTest=local \
-          BoolVarTestVarCreation ) ;
+
           
   StrEval=${StrEval//__LINK__/${StrLinkApps}} ;
   StrEval=${StrEval//__OPT__/${StrLinkOpt}} ; 
   StrEval=${StrEval//__SRC__/${StrVarSrc}} ; 
   StrEval=${StrEval//__DEST__/${StrFile}}
   if [ ${StrDebugLink} == "False" ] ; then 
+   eval $( BVTestVarName=StrToMove \
+           BVTestVarHold='' \
+           BVTestBoolVarName=\${IsRenameDest} \
+           BVTestBoolCase=True \
+           BVTestBoolAssertion='$( mv ${StrFile} ${StrFileReplace} )' \
+           BVTestScopeTest=local \
+           BoolVarTestVarCreation ) ;   
    eval "${StrEval}" ;
   else
    echo -ne "Eval:[ ${StrEval} ]\n" > /dev/stderr ; 
