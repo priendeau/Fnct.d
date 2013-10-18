@@ -898,7 +898,7 @@ function MakeLink()
   local StrFile=$( find ${StrFileSearch} );
 		local Arg0=${ArrayArg[0]};
   StrFile=${StrFile//\.\//} ; 
-  local ArrayLayerVar=( StrRootOrigin,StrFile,StrLinkApps,StrLinkFormat,StrLinkOpt,StrDebugLink,IsRenameDest IsMake,StrAction ) ;
+  local ArrayLayerVar=( StrRootOrigin,StrFile,StrLinkApps,StrLinkFormat,StrLinkOpt,StrDebugLink,IsRenameDest,StrMoveSuffix IsMake,StrAction ) ;
   local ArrayFunction=( __Link __PostAction )
   for (( intx=0 ; intx <= ${#ArrayLayerVar[@]}-1; intx++ )) ; do 
    eval $( VTVIsArrayStyleInsert=True \
@@ -924,7 +924,7 @@ function MakeLink()
 		eval $( __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
   eval $( VTVIsArrayStyleInsert=True \
-  VTVValueEntry=StrRootOrigin,IsMake,StrAction,StrFileSearch,StrAliasFind,StrLinkFormat,StrLinkApps,StrLinkOpt,StrDebugLink,IsRenameDest \
+  VTVValueEntry=StrRootOrigin,IsMake,StrAction,StrFileSearch,StrAliasFind,StrLinkFormat,StrLinkApps,StrLinkOpt,StrDebugLink,IsRenameDest,StrMoveSuffix \
   VTVIsValueReAssign=True \
   VTVIsValueToConvert=False \
   VTVIsArrayStyleInsert=True \
