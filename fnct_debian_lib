@@ -832,19 +832,22 @@ function ValueToVariable( )
 unset MakeLink
 function MakeLink() 
 { 
- local ArrayArg=($*);
+ local ArrayArg=( $* );
  local __call_locality=( ML MakeLink );
- alias find='find -iname ';
- 
+ local Arg0=${ArrayArg[0]} ;
  local StrRootOrigin=${MLLocationRoot:=/home/maxiste/github/Technical-PorteFolio/C/rezound/rezound-0.12.3beta/src} ;
  local StrAction=${MLMainActionAfterLink:=make} ;
- local StrFile=$( find ${ArrayArg[0]} );
- IsMake=${MLBoolDoMake:=True};
+ local StrFileSearch=${MLFileSearch:=None.cpp} ;
+ local StrAliasFind=${MLAliasFind:=find -type f -iname } ;
+ local IsMake=${MLBoolDoMake:=True};
+ 
  
  function __main_StartServices()
  {
 		local __call_locality=( Main __main_StartServices ) ;
 		local ArrayArg=( $* ) ; 
+  eval alias find='${StrAliasFind}';
+  local StrFile=$( find ${StrFileSearch} );
 		local Arg0=${ArrayArg[0]};
   StrFile=${StrFile//\.\//} ; 
   ln -s ${StrRootOrigin}/${StrFile} ${src};
@@ -856,7 +859,8 @@ function MakeLink()
           BVTestBoolAssertion='$( ${StrAction} )' \
           BVTestScopeTest=declare \
           BoolVarTestVarCreation ) ; 
-	}
+   unalias find ;
+ }
  
  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
  
@@ -870,13 +874,13 @@ function MakeLink()
 		eval $( __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
   eval $( VTVIsArrayStyleInsert=True \
-  VTVValueEntry=StrRootOrigin,StrFile,IsMake,StrAction \
+  VTVValueEntry=StrRootOrigin,IsMake,StrAction,StrFileSearch,StrAliasFind \
   VTVIsValueReAssign=True \
   VTVIsValueToConvert=False \
   VTVIsArrayStyleInsert=True \
   ValueToVariable ) __main_StartServices
  fi
- unalias find
+
  
 }
 
