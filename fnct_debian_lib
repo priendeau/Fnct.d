@@ -939,6 +939,23 @@ function MakeLink()
  
 }
 
+### ************************************************************************
+### **** Exception                                                      ****
+### ************************************************************************
+### This is just a Fast-loader, reconverting ArrayArg[n] taked from inline 
+### command, this also what will create ZenityRadioOptionConfig, 
+### ZenityListOptionConfig, ZenityPrefixedVarBuilder suite, a series of 
+### fast-loader, to manage more easily pre-fixed variables... 
+
+function FMakeLink() 
+{ 
+ local __call_locality=(FML FMakeLink);
+ local ArrayArg=( $* );
+ local Arg0=${ArrayArg[0]} ;
+ MLDoPostAction=False MLLinkDisplayDebug=True MLFileSearch=${Arg0} MakeLink;
+ MLDoPostAction=True MLLinkDisplayDebug=False MLFileSearch=${Arg0} MakeLink
+}
+
 
 unset AutoChown ;
 function AutoChown()    
