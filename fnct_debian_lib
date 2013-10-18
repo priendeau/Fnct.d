@@ -839,10 +839,10 @@ function MakeLink()
  local StrAction=${MLMainActionAfterLink:=make} ;
  local StrFileSearch=${MLFileSearch:=None.cpp} ;
  local StrAliasFind=${MLAliasFind:=find -type f -iname } ;
- local IsMake=${MLBoolDoMake:=True};
+ local IsMake=${MLBoolDoMake:=True} ;
  local StrLinkApps=${MLLinkApps:=/bin/ln} ; 
  local StrLinkOpt=${MLLinkopt:=-s} ; 
- local StrLinkFormat=${MLLinkFormat:=__LINK__ __OPT__ __SRC__ __DEST__};
+ local StrLinkFormat=${MLLinkFormat:=__LINK__ __OPT__ __SRC__ __DEST__} ;
  
  function __Link()
  {
@@ -856,21 +856,10 @@ function MakeLink()
   
  }
  
- function __main_StartServices()
+ function __PostAction()
  {
-		local __call_locality=( Main __main_StartServices ) ;
+		local __call_locality=( __PA __PostAction ) ;
 		local ArrayArg=( $* ) ; 
-  eval alias find='${StrAliasFind}';
-  local StrFile=$( find ${StrFileSearch} );
-		local Arg0=${ArrayArg[0]};
-  StrFile=${StrFile//\.\//} ; 
-  
-  eval $( VTVIsArrayStyleInsert=True \
-  VTVValueEntry=StrRootOrigin,StrFile,StrLinkApps,StrLinkFormat,StrLinkOpt \
-  VTVIsValueReAssign=True \
-  VTVIsValueToConvert=False \
-  VTVIsArrayStyleInsert=True \
-  ValueToVariable ) __Link ; 
   
   eval $( BVTestVarName=StrRecurrent \
           BVTestVarHold='' \
@@ -879,7 +868,29 @@ function MakeLink()
           BVTestBoolAssertion='$( ${StrAction} )' \
           BVTestScopeTest=declare \
           BoolVarTestVarCreation ) ; 
-   unalias find ;
+  
+ }
+ 
+ function __main_StartServices()
+ {
+		local __call_locality=( Main __main_StartServices ) ;
+		local ArrayArg=( $* ) ; 
+  eval alias find='${StrAliasFind}';
+  local StrFile=$( find ${StrFileSearch} );
+		local Arg0=${ArrayArg[0]};
+  StrFile=${StrFile//\.\//} ; 
+  local ArrayLayerVar=( StrRootOrigin,StrFile,StrLinkApps,StrLinkFormat,StrLinkOpt IsMake,StrAction ) ;
+  local ArrayFunction=( __Link __PostAction )
+  for (( intx=0 ; intx <= ${#ArrayLayerVar[@]}-1; intx++ )) ; do 
+   eval $( VTVIsArrayStyleInsert=True \
+   VTVValueEntry=${ArrayLayerVar[${intx}]} \
+   VTVIsValueReAssign=True \
+   VTVIsValueToConvert=False \
+   VTVIsArrayStyleInsert=True \
+   ValueToVariable ) ${ArrayFunction[${intx}]} ; 
+  done 
+
+  unalias find ;
  }
  
  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
