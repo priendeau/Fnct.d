@@ -840,19 +840,33 @@ function MakeLink()
  local StrFileSearch=${MLFileSearch:=None.cpp} ;
  local StrAliasFind=${MLAliasFind:=find -type f -iname } ;
  local IsMake=${MLDoPostAction:=True} ;
+ local IsRenameDest=${MLBoolReplaceDest:=True} ; 
  local StrLinkApps=${MLLinkApps:=/bin/ln} ; 
  local StrLinkOpt=${MLLinkopt:=-s} ; 
  local StrLinkFormat=${MLLinkFormat:=__LINK__ __OPT__ __SRC__ __DEST__} ;
  local StrDebugLink=${MLLinkDisplayDebug:=False} ;
+ local StrMoveSuffix=${MLMoveSuffixName:=-old} ; 
  
  function __Link()
  {
 		local __call_locality=( _L __Link ) ;
 		local ArrayArg=( $* ) ; 
-  local StrEval=${StrLinkFormat//__LINK__/${StrLinkApps}} ;
-  StrEval=${StrEval//__SRC__/${StrRootOrigin}/${StrFile}} ; 
-  StrEval=${StrEval//__DEST__/${src}}
+  local StrVarSrc=${StrRootOrigin}/${StrFile} ;
+  local StrEval=${StrLinkFormat} ; 
+  
+  local StrFileReplace=$( echo "${StrFile}" | sed 's/\(\.[a-z]*\)/${StrMoveSuffix}\1/g' ) ; 
+  eval $( BVTestVarName=StrToMove \
+          BVTestVarHold='' \
+          BVTestBoolVarName=\${IsRenameDest} \
+          BVTestBoolCase=True \
+          BVTestBoolAssertion='$( mv ${StrFile} ${StrFileReplace} )' \
+          BVTestScopeTest=local \
+          BoolVarTestVarCreation ) ;
+          
+  StrEval=${StrEval//__LINK__/${StrLinkApps}} ;
   StrEval=${StrEval//__OPT__/${StrLinkOpt}} ; 
+  StrEval=${StrEval//__SRC__/${StrVarSrc}} ; 
+  StrEval=${StrEval//__DEST__/${StrFile}}
   if [ ${StrDebugLink} == "False" ] ; then 
    eval "${StrEval}" ;
   else
@@ -871,7 +885,7 @@ function MakeLink()
           BVTestBoolVarName=\${IsMake} \
           BVTestBoolCase=True \
           BVTestBoolAssertion='$( ${StrAction} )' \
-          BVTestScopeTest=declare \
+          BVTestScopeTest=local \
           BoolVarTestVarCreation ) ; 
   
  }
@@ -884,7 +898,7 @@ function MakeLink()
   local StrFile=$( find ${StrFileSearch} );
 		local Arg0=${ArrayArg[0]};
   StrFile=${StrFile//\.\//} ; 
-  local ArrayLayerVar=( StrRootOrigin,StrFile,StrLinkApps,StrLinkFormat,StrLinkOpt,StrDebugLink IsMake,StrAction ) ;
+  local ArrayLayerVar=( StrRootOrigin,StrFile,StrLinkApps,StrLinkFormat,StrLinkOpt,StrDebugLink,IsRenameDest IsMake,StrAction ) ;
   local ArrayFunction=( __Link __PostAction )
   for (( intx=0 ; intx <= ${#ArrayLayerVar[@]}-1; intx++ )) ; do 
    eval $( VTVIsArrayStyleInsert=True \
@@ -910,7 +924,7 @@ function MakeLink()
 		eval $( __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
   eval $( VTVIsArrayStyleInsert=True \
-  VTVValueEntry=StrRootOrigin,IsMake,StrAction,StrFileSearch,StrAliasFind,StrLinkFormat,StrLinkApps,StrLinkOpt,StrDebugLink \
+  VTVValueEntry=StrRootOrigin,IsMake,StrAction,StrFileSearch,StrAliasFind,StrLinkFormat,StrLinkApps,StrLinkOpt,StrDebugLink,IsRenameDest \
   VTVIsValueReAssign=True \
   VTVIsValueToConvert=False \
   VTVIsArrayStyleInsert=True \
