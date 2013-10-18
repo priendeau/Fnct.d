@@ -839,20 +839,25 @@ function MakeLink()
  local StrAction=${MLMainActionAfterLink:=make} ;
  local StrFileSearch=${MLFileSearch:=None.cpp} ;
  local StrAliasFind=${MLAliasFind:=find -type f -iname } ;
- local IsMake=${MLBoolDoMake:=True} ;
+ local IsMake=${MLDoPostAction:=True} ;
  local StrLinkApps=${MLLinkApps:=/bin/ln} ; 
  local StrLinkOpt=${MLLinkopt:=-s} ; 
  local StrLinkFormat=${MLLinkFormat:=__LINK__ __OPT__ __SRC__ __DEST__} ;
+ local StrDebugLink=${MLLinkDisplayDebug:=False} ;
  
  function __Link()
  {
 		local __call_locality=( _L __Link ) ;
 		local ArrayArg=( $* ) ; 
-  local StrEval=${StrLinkFormat//__LINK__/} ;
+  local StrEval=${StrLinkFormat//__LINK__/${StrLinkApps}} ;
   StrEval=${StrEval//__SRC__/${StrRootOrigin}/${StrFile}} ; 
   StrEval=${StrEval//__DEST__/${src}}
   StrEval=${StrEval//__OPT__/${StrLinkOpt}} ; 
-  eval "${StrEval}" ;
+  if [ ${StrDebugLink} == "False" ] ; then 
+   eval "${StrEval}" ;
+  else
+   echo -ne "Eval:[ ${StrEval} ]\n" > /dev/stderr ; 
+  fi
   
  }
  
@@ -879,7 +884,7 @@ function MakeLink()
   local StrFile=$( find ${StrFileSearch} );
 		local Arg0=${ArrayArg[0]};
   StrFile=${StrFile//\.\//} ; 
-  local ArrayLayerVar=( StrRootOrigin,StrFile,StrLinkApps,StrLinkFormat,StrLinkOpt IsMake,StrAction ) ;
+  local ArrayLayerVar=( StrRootOrigin,StrFile,StrLinkApps,StrLinkFormat,StrLinkOpt,StrDebugLink IsMake,StrAction ) ;
   local ArrayFunction=( __Link __PostAction )
   for (( intx=0 ; intx <= ${#ArrayLayerVar[@]}-1; intx++ )) ; do 
    eval $( VTVIsArrayStyleInsert=True \
@@ -888,7 +893,7 @@ function MakeLink()
    VTVIsValueToConvert=False \
    VTVIsArrayStyleInsert=True \
    ValueToVariable ) ${ArrayFunction[${intx}]} ; 
-  done 
+  done
 
   unalias find ;
  }
@@ -905,7 +910,7 @@ function MakeLink()
 		eval $( __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
   eval $( VTVIsArrayStyleInsert=True \
-  VTVValueEntry=StrRootOrigin,IsMake,StrAction,StrFileSearch,StrAliasFind,StrLinkFormat,StrLinkApps,StrLinkOpt \
+  VTVValueEntry=StrRootOrigin,IsMake,StrAction,StrFileSearch,StrAliasFind,StrLinkFormat,StrLinkApps,StrLinkOpt,StrDebugLink \
   VTVIsValueReAssign=True \
   VTVIsValueToConvert=False \
   VTVIsArrayStyleInsert=True \
