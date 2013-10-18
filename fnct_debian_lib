@@ -840,7 +840,21 @@ function MakeLink()
  local StrFileSearch=${MLFileSearch:=None.cpp} ;
  local StrAliasFind=${MLAliasFind:=find -type f -iname } ;
  local IsMake=${MLBoolDoMake:=True};
+ local StrLinkApps=${MLLinkApps:=/bin/ln} ; 
+ local StrLinkOpt=${MLLinkopt:=-s} ; 
+ local StrLinkFormat=${MLLinkFormat:=__LINK__ __OPT__ __SRC__ __DEST__};
  
+ function __Link()
+ {
+		local __call_locality=( _L __Link ) ;
+		local ArrayArg=( $* ) ; 
+  local StrEval=${StrLinkFormat//__LINK__/} ;
+  StrEval=${StrEval//__SRC__/${StrRootOrigin}/${StrFile}} ; 
+  StrEval=${StrEval//__DEST__/${src}}
+  StrEval=${StrEval//__OPT__/${StrLinkOpt}} ; 
+  eval "${StrEval}" ;
+  
+ }
  
  function __main_StartServices()
  {
@@ -850,7 +864,13 @@ function MakeLink()
   local StrFile=$( find ${StrFileSearch} );
 		local Arg0=${ArrayArg[0]};
   StrFile=${StrFile//\.\//} ; 
-  ln -s ${StrRootOrigin}/${StrFile} ${src};
+  
+  eval $( VTVIsArrayStyleInsert=True \
+  VTVValueEntry=StrRootOrigin,StrFile,StrLinkApps,StrLinkFormat,StrLinkOpt \
+  VTVIsValueReAssign=True \
+  VTVIsValueToConvert=False \
+  VTVIsArrayStyleInsert=True \
+  ValueToVariable ) __Link ; 
   
   eval $( BVTestVarName=StrRecurrent \
           BVTestVarHold='' \
@@ -874,7 +894,7 @@ function MakeLink()
 		eval $( __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
   eval $( VTVIsArrayStyleInsert=True \
-  VTVValueEntry=StrRootOrigin,IsMake,StrAction,StrFileSearch,StrAliasFind \
+  VTVValueEntry=StrRootOrigin,IsMake,StrAction,StrFileSearch,StrAliasFind,StrLinkFormat,StrLinkApps,StrLinkOpt \
   VTVIsValueReAssign=True \
   VTVIsValueToConvert=False \
   VTVIsArrayStyleInsert=True \
