@@ -35,7 +35,7 @@ Copyright
 About
 =====
 
-This is a Library for managing function a permanent subset for cleaning 
+This is a Library for managing function a permanent subset for a clean 
 /etc/init.d and many distribution shell with doubtfull feature and poor
 verbosity and documentation. 
 
