@@ -1239,7 +1239,7 @@ function ZenityShellEval()
         local StrSha1Sum=$( echo "${CmdEval}" | sha1sum | cut -d ' ' -f 1)
         local StrSize=$( echo "${CmdEval}" | wc -c ) ; 
         local StrNbWord=$( echo "${CmdEval}" | wc -w ) ; 
-        local StrDateConfirm=$( GetOtherDateFormat='${StrDateFormat}' GetOtherDate )
+        local StrDateConfirm=$( GODFormat='${StrDateFormat}' GetOtherDate )
         echo -ne "###\n### FootPrint Added, see Prefixed-Var ZSEAddFootPrint from ZenityShellEval\n###\n\n###File:${StrFileTmp}\n###UUID-TIME-MARKER:${StrUUID}\n###Date: ${StrDateConfirm}\n###Sha1Sum: ${StrSha1Sum}\n### Size:${StrSize}\n### NbWord: ${StrNbWord}\n\n" ; 
       }
       function _DetectFootPrint()
@@ -1811,11 +1811,11 @@ function IsPathName()
  ###
  ### hint:
  ### - Having to check 1 day before and 1 day after need to combine 
- ### settign GetOtherDateReferenceFormat="__INT__ day" , and not "__INT__ day ago", give you positive forward in time
- ### setting GetOtherDateIsLoop=True 
- ### setting GetOtherDateLoop=-1,1 ( tricky but work ) , create interleave between -1 to 1, so it's -1 day in futur, 0 day in futur and 1 day in futur... 
+ ### settign GODReferenceFormat="__INT__ day" , and not "__INT__ day ago", give you positive forward in time
+ ### setting GODIsLoop=True 
+ ### setting GODLoop=-1,1 ( tricky but work ) , create interleave between -1 to 1, so it's -1 day in futur, 0 day in futur and 1 day in futur... 
  
- ### GetOtherDateReferenceFormat="__INT__ day ago"  GetOtherDateFormat="%Y%m%d" GetOtherDateIsLoop=True GetOtherDateLoop=1,4 GetOtherDateVerbose=True  GetOtherDate
+ ### GODReferenceFormat="__INT__ day ago"  GODFormat="%Y%m%d" GODIsLoop=True GODLoop=1,4 GODVerbose=True  GetOtherDate
  ### Will display :
  ### 
  ### 20121010
@@ -1829,7 +1829,7 @@ function IsPathName()
  ###
  ### 20121011
  ###
- ### GetOtherDateReferenceFormat="__INT__ day ago"
+ ### GODReferenceFormat="__INT__ day ago"
  ###
  ###
 
@@ -1837,9 +1837,16 @@ function IsPathName()
 unset GetOtherDate ;
 function GetOtherDate()
 {
-		local __call_locality=( GetOtherDate GetOtherDate );
+		local __call_locality=( GOD GetOtherDate );
 		local ArrayArg=( $* ) ; 
-		
+		local Arg0=${ArrayArg[0]}; 
+		local StrDateIndicatorFormat=${GODReferenceFormat:='__INT__ day'};
+  local IntDayDiff=${GODReference:=0} ; 
+		local StrDateFormat=${GODFormat:=%Y%m%d} ;
+		local isLoop=${GODIsLoop:=False} ;
+		local LoopRange=${GODLoop:=0,3} ;
+		local IsVerbose=${GODVerbose=False} ;
+  		
 		function Verbosis()
 		{
 			local __call_locality=( Verbosis );
@@ -1859,19 +1866,14 @@ function GetOtherDate()
 			eval """date +"${DateFuncFormat:=%Y%m%d}" -d '${DateFuncIndicator:=0 day}'""" ; 
 		}
 		
-		local StrDateIndicatorFormat=${GetOtherDateReferenceFormat:='__INT__ day'}
-		local StrDateIndicator=${StrDateIndicatorFormat/__INT__/${GetOtherDateReference:=0}}  ;
-		local StrDateFormat=${GetOtherDateFormat:=%Y%m%d} ;
-		local isLoop=${GetOtherDateIsLoop:=False} ;
-		local LoopRange=${GetOtherDateLoop:=0,3} ;
+		local StrDateIndicator=${StrDateIndicatorFormat/__INT__/${IntDayDiff:=0}}  ;
 		local ArrayRange=( ${LoopRange/,/ } ) ;
 		local OperRange="<=" ;  
 		local OperRangeIn="Intx++" ;
 		local OperBaseStart=${ArrayRange[0]} ;
-		local IsVerbose=${GetOtherDateVerbose=False} ;
 		local IntEndLoop=$(( ${ArrayRange[$((${#ArrayRange[@]}-1))]} ));
 		
-		local Arg0=${ArrayArg[0]}; 
+
 		#local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
   local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
 		
