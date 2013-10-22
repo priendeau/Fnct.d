@@ -362,6 +362,21 @@ Example in Python :
 Documentation
 -------------
 
+*** Still relying on Paper Draft informations ***
+
+The main documentation is not available, but you can read all Paper Draft informations
+Note. 
+
+Noted by UUID, and Title, every Note is entitled by UUID-Time-based randomness, 
+and clever and advised developper can use High-level API within C++, Python, C#
+to expand to real date and time when the Paper Draft informations Notice was 
+labelled. Where recent UUID sufix from ********-****-****-****-001b3875b29 will
+indicate at least this year ( 2013 ) date of development and entitled this lib
+to own Paper Draft informations with Unique ID of development, impossible to re-
+produce by copying the content and leaving the UUID-date like this they will 
+always bring the user to this time of creation... A good way to prevent monkey-
+coder to re-introduce a project of a living person ... 
+
 
 ------------------------
 Paper Draft informations
