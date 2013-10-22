@@ -21,6 +21,11 @@ declare -r StrStartSwitches="\t--startservices\tStart the application normally."
 declare -r StrStopSwitches="\t--stopservices\tStop the application normally." 2> /dev/null ; 
 declare -r StrTestSwitches="\t--testservices\tTest the application, (dry-run)." 2> /dev/null ; 
 
+### General Array and Helper.
+declare -a ArrayDateFormat=( "%F %H:%M:%S(UNIX(sec,ns):%s.%N)" "%F %H:%M:%S<%s.%N>" "%F %H:%M:%S.%s.%N" "%Y%m%d_%s" "%Y%m%d" "%s.%N" ) ;
+
+### Loader 
+
 function LibLoader()
 {
 	echo -ne "Testing Lib Fnct.D\n" > /dev/stderr ; 

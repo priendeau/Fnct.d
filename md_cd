@@ -1,6 +1,12 @@
 #!/bin/bash
 
-. /etc/init.d/Fnct.d/fnct_debian_lib ; 
+# . /etc/init.d/Fnct.d/fnct_debian_lib ; 
+
+test -d ${FNCTDLIBPATH} && declare LoadedFnctLib=True
+
+if [ "${LoadedFnctLib}" != "True" ] ; then 
+ . /etc/init.d/Fnct.d/fnct_lib ; 
+fi
 
 ### Use of md_cd 
 ### This an example that use Lib /etc/init.d/Fnct.d/fnct_debian_lib
@@ -58,8 +64,8 @@ function GetDateReportCreation()
 {
 	local ArrayArg=( $* ) ;
 	local __call_locality=( GDRC GetDateReportCreation ) ;
- local Arg0=${ArrayArg[0]}; 
-	GetOtherDateFormat=%Y%m%d_%H%M%S GetOtherDate ; 
+	local Arg0=${ArrayArg[0]}; 
+	GODFormat=%Y%m%d_%H%M%S GetOtherDate ; 
 }
 
 function MdCd()

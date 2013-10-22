@@ -304,12 +304,12 @@ function PackageRepositoryMgmt()
  echo -ne "Reserved ID for COMMIT:${StrUUID}\nReserved ID for Listing:${StrSnapShotUUID}\n\n" > /dev/stderr ;
 
 
-	### Explained in GetOtherDate, GetOtherDateReference can be negative and report yesterday date too. and not null will
+	### Explained in GetOtherDate, GODReference can be negative and report yesterday date too. and not null will
   ### give n-day after today... 	
 	local IntDefaultDayIndexName=${PkgRepoMgmtReposIndexDay:=0} ;
 	local StrBackupAction=${PkgRepoMgmtReposBkpAct:=mv __SRC__/__FILE__ __DEST__ __VIRG__ ln -s __DEST__/__FILE__ __SRC__/__FILE__} ;
-	local StrTransactionStart=$( GetOtherDateFormat="%Y%m%d\ %H:%M:%S" GetOtherDate ) ; 
-	local StrTodatDateTransfert=$( GetOtherDateReference=${IntDefaultDayIndexName} GetOtherDate ) ; 
+	local StrTransactionStart=$( GODFormat="%Y%m%d\ %H:%M:%S" GetOtherDate ) ; 
+	local StrTodatDateTransfert=$( GODReference=${IntDefaultDayIndexName} GetOtherDate ) ; 
 	local StrIndexFile=${StrPathReposIndex}/${StrTodatDateTransfert} ;
 	
 	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--add-snapshoot\tAdd DPKG Listing inside Current Index File.\n\t\t\tOnly Store an ID in the index-file and the content into UUID-name from index path.\n\n" ;
@@ -566,7 +566,7 @@ function PackageRepositoryFilter()
  local StrPkgLstExt=${PkgRepoFilterPkgExt:=bz2.base64} ;
 	local StrDateIndex=${PkgRepoFilterDateIndex:=} ;
  local IntDefaultDayIndexName=${PkgRepoFilterDayRef:=0}
- local StrTodaytDateTransfert=$( GetOtherDateReference=${IntDefaultDayIndexName} GetOtherDate ) ;
+ local StrTodaytDateTransfert=$( GODReference=${IntDefaultDayIndexName} GetOtherDate ) ;
  local StrSnapshootId=${PkgRepoFilterSnapID:=None} ;
  
  local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\n" ;
