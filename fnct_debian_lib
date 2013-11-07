@@ -1214,6 +1214,8 @@ function ZenityShellEval()
           BVTestScopeTest=local \
           BoolVarTestVarCreation ) ; 
   
+  echo -ne "\n\nNote: New FileName : ${StrFileTmp} \n\n" > /dev/stderr ; 
+  test -e ${StrFileTmp} && echo -ne "\n\n### FileName: ${StrFileTmp}\n\n" > ${StrFileTmp} ; 
   
   while [ ${res} -eq 1 -a ${shell_quit} -eq 0 ] ; do 
    CmdEval=$( zenity \
