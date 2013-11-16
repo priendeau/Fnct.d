@@ -2665,31 +2665,25 @@ function zenity_pip_installer()
 		done ; 
 }
 
-
-
-unset GkSuZenityLoader ; 
-function GkSuZenityLoader()
+unset ZenityUserListing ; 
+function ZenityUserListing( )
 {
-	local __call_locality=( GSZ GkSuZenityLoader ) ; 
+	local __call_locality=( ZUL ZenityUserListing ) ; 
 	local ArrayArg=( $* ) ; 
  local Arg0=( ${ArrayArg[0]} ) ;
 
-	local StrUser=${GSZLUser:=none}
-	local StrApps=${GSZLLApps:=/usr/local/bin/idlex}
-	local StrAppsOpt=${GSZLLAppsOpt:=''} ;
-	local StrTitle=${GSZLTitle:="Select a user for Idlex"} ;
-	local StrFileInfo=${GSZLFile:=/etc/passwd} ;
-	local StrCol0=${GSZLCol0:="selection"} ;
-	local StrCol1=${GSZLCol1:="user"} ;
-	local StrRegSearch=${GSZLLrReg:="\/bin\/bash"}
-	local StrDefaultCSV=${GSZLLCSV:=':'} ;
-	local IntDefaultColExtr=${GSZLColExtr:=1} ;
-	local BoolShowUserSelection=${GSZLSUS:=False} ;
- local BoolUpdateLdconfig=${GSZLUpdadeLdconfig:=True} ;
- local StrLdConfigUser=${GSZLLdconfigUser:=root} ;
- local StrLdconfigGreeting=${GSZLLdconfigGreeting:='\n\nHint\nLoading ldconfig on need if some module require to be loaded from ldconfig ( ex: from pip installation or easy_setup.py ) It can be accessible thru Prefixed-var GSZLUpdadeLdconfig=True from GkSuZenityLoader.\n\n'}
-	local BoolShowFGSZ=${GSZShowFuncGSZ:=True} ; 
- 
+ local StrTitle=${ZULTitle:="Select a user for __APPS__"} ;
+	local StrCol0=${ZULCol0:="selection"} ;
+	local StrCol1=${ZULCol1:="user"} ; 
+ local StrDefaultCSV=${ZULCSV:=':'} ;
+ local IntDefaultColExtr=${ZULColExtr:=1} ;
+ local StrFileInfo=${ZULFilePasswd:=/etc/passwd} ;
+	local StrRegSearch=${ZULRegSearch:="\/bin\/bash"}
+	local BoolShowUserSelection=${ZULSUS:=False} ;
+  
+ ### Uses current variable 
+ ### StrRegSearch,StrFileInfo,StrDefaultCSV,IntDefaultColExtr
+ ### 
  function ZenityFilter()
 	{
 			egrep -i ${StrRegSearch} \
@@ -2698,7 +2692,11 @@ function GkSuZenityLoader()
      -f ${IntDefaultColExtr} |\
         sed  's/\(^[a-zA-Z0-9]*\)/FALSE \1/g' ; 
 	}
-	function GetPwdUser()
+	
+ ### Uses current variable 
+ ### StrTitle,StrCol0,StrCol1,StrDefaultCSV,StrFileInfo,StrRegSearch,IntDefaultColExtr,StrUser,BoolShowUserSelection,,,
+ ### 
+ function GetPwdUser()
 	{
 		local StrUserSelection=$( zenity \
   --list \
@@ -2710,12 +2708,79 @@ function GkSuZenityLoader()
                  StrRegSearch=${StrRegSearch} \
                  IntDefaultColExtr=${IntDefaultColExtr} \
                  ZenityFilter ) ) ;
-		StrUserSelection=${StrUserSelection:=${StrUser}} ;
+		StrUserSelection=${StrUserSelection:=${StrUser}} ; 
 		if [ "${BoolShowUserSelection}" == "True" ] ; then 
 			echo -ne "User selected: ${StrUserSelection}\n" > /dev/stderr ; 
 		fi 
 		echo "${StrUserSelection}" ; 
 	}
+
+ function __main_StartServices()
+ {
+		local __call_locality=( Main __main_StartServices ) ; 
+		local Arg0=${ArrayArg[0]} ; 
+		local ArrayArg=( $* ) ; 
+  
+  eval $( VTVIsArrayStyleInsert=True \
+  VTVValueEntry=StrRegSearch,StrFileInfo,StrDefaultCSV,IntDefaultColExtr,StrTitle,StrCol0,StrCol1,StrDefaultCSV,StrFileInfo,StrRegSearch,IntDefaultColExtr,StrUser,BoolShowUserSelection \
+  VTVIsValueReAssign=True  \
+  VTVIsValueToConvert=False \
+  VTVIsArrayStyleInsert=True \
+  ValueToVariable ) GetPwdUser
+  
+ }
+ 
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+			GetVarReference ${__call_locality[1]} ; 
+			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+		echo -ne """${ArgGet}\n""" ;
+	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+		eval $( __GetVarReferenceList ) ;
+ elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  eval $( VTVIsArrayStyleInsert=True \
+  VTVValueEntry= \
+  VTVIsValueReAssign=True \
+  VTVIsValueToConvert=False \
+  VTVIsArrayStyleInsert=True \
+  ValueToVariable ) __main_StartServices
+	fi
+ 
+}
+
+
+unset GkSuZenityLoader ; 
+function GkSuZenityLoader()
+{
+	local __call_locality=( GSZL GkSuZenityLoader ) ; 
+	local ArrayArg=( $* ) ; 
+ local Arg0=( ${ArrayArg[0]} ) ;
+
+	local StrUser=${GSZLUser:=none}
+	local StrApps=${GSZLApps:=/usr/local/bin/idlex}
+	local StrAppsOpt=${GSZLAppsOpt:=''} ;
+	local StrTitle=${GSZLTitle:="Select a user for Idlex"} ;
+	local StrFileInfo=${GSZLFile:=/etc/passwd} ;
+	local StrCol0=${GSZLCol0:="selection"} ;
+	local StrCol1=${GSZLCol1:="user"} ;
+	local StrRegSearch=${GSZLRegSearch:="\/bin\/bash"}
+	local StrDefaultCSV=${GSZLCSV:=':'} ;
+	local IntDefaultColExtr=${GSZLColExtr:=1} ;
+	local BoolShowUserSelection=${GSZLSUS:=False} ;
+ local BoolUpdateLdconfig=${GSZLUpdadeLdconfig:=True} ;
+ local StrLdConfigUser=${GSZLLdconfigUser:=root} ;
+ local StrLdconfigGreeting=${GSZLLdconfigGreeting:='\n\nHint\nLoading ldconfig on need if some module require to be loaded from ldconfig ( ex: from pip installation or easy_setup.py ) It can be accessible thru Prefixed-var GSZLUpdadeLdconfig=True from GkSuZenityLoader.\n\n'}
+	local BoolShowFGSZ=${GSZShowFuncGSZ:=True} ; 
+ 
+  eval $( VTVIsArrayStyleInsert=True \
+  VTVValueEntry= \
+  VTVIsValueReAssign=True \
+  VTVIsValueToConvert=False \
+  VTVIsArrayStyleInsert=True \
+  ValueToVariable ) ZenityUserListing 
+ 
+  
  function NotificationLdConfig()
  {
 		local __call_locality=( NLC NotificationLdConfig ) ; 
@@ -2732,6 +2797,7 @@ function GkSuZenityLoader()
   
   zenity --notification --text="${StrTextNotification}" ; 
  }
+ 
  function ScreenDisplayLdconfigHint()
  {
 		local __call_locality=( SDLH ScreenDisplayLdconfigHint ) ; 
