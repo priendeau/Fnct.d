@@ -77,8 +77,43 @@ to produce steady services, Prefixed-Variable extraction and automation of
 Word Completion, a lacking design after hearing some group asking  to put on the 
 thumb important reference while Network admin from late 1990 should have 
 to administrate World and world of network by hand... There is no evolution 
-between implementation of this services and methodonomy to implement it on safe
+between implementation of this services and methodology to implement it on safe
 basic design.
+
+Convention
+==========
+
+In this documentation some convention are used to explicitly name some element 
+as it was definied by author and what the author definied inside this library.
+According to this Library, following term :
+
+- Evalutative brace is : equivalent to ' eval $( ... ) '
+- Executive   brace is : equivalent to ' $( ... ) '
+
+
+Convention in Example showed 
+----------------------------
+
+Almost all example without note or trace of existence inside the code are ideal
+example and are denoted from proof of existence inside the Library . 
+
+A plausible case will also own function that merely look-like library development
+but does not own same structure are slightly different. If they are not denoted 
+before exposition of the example, a Corpus from this library will show the 
+function name and the revision in SHA-format and date can be added to revision 
+information and YOU MUST rely on the period of exposition of the function and 
+understanding the Library is evolving in term of functionality and the document 
+only increasing in mass not considered to evolve by showing correction inside 
+example function. This according to presentation of a draft example from a 
+function case, demonstration or exception to show, including the revision and 
+the name of the function you can check inside the Github to seek for the revision 
+and it's evolution after the revision date. Which is possible to happen is a case
+showing a footprint of a function and useless part removed or simply replaced 
+by '...' inside example to save time and focus on line concerned. All other 
+example are free like precendent to be a free-form of exposition, old draft and 
+prototype and might be absent from current development. 
+
+
 
 
 Description
