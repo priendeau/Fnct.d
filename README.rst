@@ -2190,13 +2190,12 @@ and lower.
 
 	}
 
-	
+
+It clearly show the VTVValueEntry from ValueToVariable having an Array Insertion 
+based on ',' <virgule> comma separated .
+
 .. code:: shell
 	
-	###
-	### It clearly show the VTVValueEntry from ValueToVariable having an 
-	### Array Insertion based on ',' <virgule> comma separated .
-	### 
 	eval $( VTVIsArrayStyleInsert=True \
 	VTVValueEntry=StrRootOrigin,IsMake,StrAction,StrFileSearch,StrAliasFind,StrLinkFormat,StrLinkApps,StrLinkOpt,StrDebugLink,IsRenameDest,StrMoveSuffix \
 	VTVIsValueReAssign=True \
