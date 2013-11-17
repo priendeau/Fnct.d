@@ -2143,7 +2143,7 @@ function depend of Prefixed-Variable Transport Mechanism and to prevent writing
 informations uselessly a specific Operator was developped during Pre-Fixed variable
 writing, known to be the '+' Operator. 
 
-Array Case
+	Array Case
 ~~~~~~~~~~
 
 Since implementation of Array Insertion state being comma separated value, an 
