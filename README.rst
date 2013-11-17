@@ -1775,7 +1775,7 @@ Extracting information based on Unique Key, case of Report file from PackageRepo
 
 	ZCLRegSearch="^ffb20698-0bbe-11e3-98a2-001b3875b29c" ZCLCSV=':' ZCLColExtr=2 ZCLFilePasswd=20130823 ZenityContentListing
 
-.. image:: https://raw.github.com/priendeau/Fnct.d/master/images/ZenityContentListing.png
+.. image:: https://raw.github.com/priendeau/Fnct.d/master/images/ZenityContentListing-001.png
 		:target: https://github.com/priendeau/Fnct.d#3d46895a-4f41-11e3-98a2-001b3875b29c
 
 Example 2:
