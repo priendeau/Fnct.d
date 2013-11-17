@@ -1949,7 +1949,7 @@ name for every switche need to be developped inside the function.
 
 See example :
 	
-	.. code:: shell
+.. code:: shell
 	
 	Example:
 	### 
@@ -1997,7 +1997,7 @@ See example :
 	   ###
 
 
-	::
+.. code:: shell
 	
 	Variable:					Message:
 	${StrSwitchesShow} 			Following switch are available:
