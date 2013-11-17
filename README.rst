@@ -2145,7 +2145,7 @@ writing, known to be the '+' Operator.
 
 
 Array Case
-~~~~~~~~~~
+~~~~~~~~~
 
 
 Since implementation of Array Insertion state being comma separated value, an 
