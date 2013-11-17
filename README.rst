@@ -1932,8 +1932,84 @@ __GetVarReferenceCompWord, __GetVarReferenceList.
           }
 		 
 		 
+Declaring Switches Helper inside function
+-----------------------------------------
+
+Since revision 6d75717ff2c69d3a14ac05f6e084e23c40d83646 or simple based on latest
+revision of fnct_lib from Sep 09, 2013. Fnct.D was now equiped with Standard 
+Switches messages. Comming from rule inside the Library to not develop useless 
+swicthes because it drastically change to view-point of a services-level. Most
+of action inside a regular mechanism called --start-services are configured and 
+scheduled based on Pre-fixed Variables uses on function declaration. This leave
+few switche to be developped and a common standard to develop same behavior for 
+same switche. This lead to a Steady message being printed inside Helper. Since 
+this revision I shall adopt a methodology presented inside previous example to
+name a Unique Variable responsible of showing switches and using common Variable
+name for every switche need to be developped inside the function. 
+
+See example :
+	
+	.. code:: shell
+	
+	Example:
+	### 
+	### Fully functional example. 
+	###
+	### Basic Method showing you how it was splitted to allow many function 
+	### having same design, prior to settle this Lib into something higher into
+	### Wide-settlement services and steady-services and messages passing .
+	###
+	
+
 		 
-		 
+	    ###   +-------Level1 Function
+	    ###  +++
+	    ###   +
+		function EasyTestInRun()
+		{
+		
+		  ###   +---------> Calling signature. If you try GetStdPrefixName on 
+		  ###   +           function name EasyTestInRun, you will get ETIR
+		  ###	+
+		  local __call_locality=( ETIR EasyTestInRun ) ; 
+		  local StrInput=${ETIRArrayIn:=1,2,3,4}
+		
+		  ###   +-------Level2 Function
+		  ###  +++
+		  ###   +
+		  function __Loop()
+		  {		 
+			...
+		  }
+		  
+		   function __main_StartServices()
+           {
+             ### ... 
+           }
+       }
+
+	   ### Normal Switches Messages introduction. 
+	   ### 
+	   ###
+	   local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+	   ### 
+	   ### switches-level 
+	   ###
+
+
+	::
+	
+	Variable:					Message:
+	${StrSwitchesShow} 			Following switch are available:
+	${StrCompWordMsgSwitches}	--compword	Word Completion Provide a services to Extract on Demand all Pre-fixed Variable
+											texisting inside this function. 
+	${StrListMsgSwitches}		--list		List all Internal Pre-fixed Variable available to query or get.
+	${StrGetMsgSwitches}		--get		Return value of Internal Variable.
+	${StrStartSwitches}			--startservices	Start the application normally.
+	${StrStopSwitches}			--stopservices	Stop the application normally.
+	${StrTestSwitches}			--testservices	Test the application, (dry-run).
+	
+           
 Prefixed-Variable
 -----------------
 
