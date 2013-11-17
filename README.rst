@@ -2208,10 +2208,40 @@ based on ',' <virgule> comma separated .
 	
 Escaped Dollar Sign Exception.
 
-Unlike case for \$ being noted inside an important function it's more important to
+Unlike case for \\$ being noted inside an important function it's more important to
 talk about this idiom like a SHALL-TO apply correctly and named inside exception 
 to save time if error occur in debugging scene to let you discover and important 
 part in uses of Escaped-Dollard sign inside case BoolVarTestVarCreation. 
+
+note:
+Assuming A variable named IsRenameDest hold following value : 
+
+.. code:: shell
+	
+	IsRenameDest = 'Value_From_IsRenameDest'
+	### A common error, to not respect a Variable named Is... or Bool... to 
+	### own True/False Value... 
+
+The Specific reason to uses \\${Variable} inside the BoolVarTestVarCreation by
+attribuying a value to BVTestBoolVarName is logically a process structure to 
+respect... The interpreted value from this Fabbed-If statement is :
+
+.. code:: shell
+	
+	if [ "\${IsRenameDest}" == "True" ] ; ... ; fi 
+	
+And not 
+
+.. code:: shell
+	
+	if [ "Value_From_IsRenameDest" == "True" ] ; ... ; fi 
+
+
+It show in what a Evaluation brace was located at the beginning of the 
+BoolVarTestVarCreation, to allow entry of information thru a Variable present 
+inside the function BoolVarTestVarCreation... Having fixe information mean we 
+can remove an arbritrary eval $( ) executive brase from this function and should 
+return the same answer if there is nothing to interpret. 
 
 
 example from function MakeLink() from revision db848dcd15d771cb5d3b369783aa54e4339f6b98
@@ -2250,5 +2280,34 @@ and lower.
 
 	}	
 	
+Extracted from this Code following line include a \\$ Escaped Dollar sign to 
+prevent Shell and eval brace to evaluate this value for a specific reason...
+	
+.. code:: shell
+	
+	eval $( BVTestVarName=StrToMove \
+			BVTestVarHold='' \
+			BVTestBoolVarName=\${IsRenameDest} \
+			BVTestBoolCase=True \
+			BVTestBoolAssertion='$( mv ${StrFile} ${StrFileReplace} )' \
+			BVTestScopeTest=local \
+			BoolVarTestVarCreation ) ; 
+			
 
+Noticed the searched value was \\${IsRenameDest} to prevent the Bash to interpret 
+it directly . 
+
+executing this BoolVarTestVarCreation independently will report this to your 
+shell terminal ... 
+
+.. code:: shell
+	
+	local StrToMove="CONTENT" ;
+	if [ "${IsRenameDest}" == "True" ]  ; then
+	  StrToMove=$( mv ${StrFile} ${StrFileReplace} ) ;
+	fi
+
+
+... And now the "CONTENT" problem will be explain or be corrected in later 
+revision... Nothing is perfect in a draft-definition Shell-Library.
 
