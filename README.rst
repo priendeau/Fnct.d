@@ -1999,7 +1999,7 @@ See example :
 
 .. code:: shell
 	
-	Variable:				Message:
+	Variable:			Message:
 	${StrSwitchesShow} 		Following switch are available:
 	${StrCompWordMsgSwitches}	--compword	Word Completion Provide a services to Extract on Demand all Pre-fixed Variable
 										texisting inside this function. 
