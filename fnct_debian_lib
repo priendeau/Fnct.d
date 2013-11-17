@@ -2680,6 +2680,7 @@ function ZenityContentListing( )
  local StrFileInfo=${ZCLFilePasswd:=/etc/passwd} ;
 	local StrRegSearch=${ZCLRegSearch:="\/bin\/bash"} ;
 	local BoolShowUserSelection=${ZCLSUS:=False} ;
+ local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
   
  ### Uses current variable 
  ### StrRegSearch,StrFileInfo,StrDefaultCSV,IntDefaultColExtr
