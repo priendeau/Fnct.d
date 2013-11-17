@@ -712,9 +712,9 @@ unset ValueToVariable
 function ValueToVariable( )
 {
   ### To steve, Network admin from college rosemont... Was probably the Network survey
-  ### from TELUS, already studied as police **Factory**, was the guys behing the 
-  ### 35th mondial of Work-fair including 2 student building stage for compitor 
-  ### contest... During he drive he was asking couple of question behind this (probale ValueToVariable)
+  ### from TELUS, already studied as police **Back-Office Administration**, was the guys behing the 
+  ### 35th mondial of Work-fair including 2 student building stage for computer 
+  ### contest... During he drive he was asking couple of question behind this (probably ValueToVariable)
   ### about something "gellyide" it's mind about double dot... 
   ### It should not be used to separate item in an array... There probably a transforming action
   ### allowed by Bash I answer, but it's really far in future and try under Slackware did never
@@ -2665,32 +2665,35 @@ function zenity_pip_installer()
 		done ; 
 }
 
-unset ZenityUserListing ; 
-function ZenityUserListing( )
+unset ZenityContentListing ; 
+function ZenityContentListing( )
 {
-	local __call_locality=( ZUL ZenityUserListing ) ; 
+	local __call_locality=( ZCL ZenityContentListing ) ; 
 	local ArrayArg=( $* ) ; 
  local Arg0=( ${ArrayArg[0]} ) ;
 
- local StrTitle=${ZULTitle:="Select a user for __APPS__"} ;
-	local StrCol0=${ZULCol0:="selection"} ;
-	local StrCol1=${ZULCol1:="user"} ; 
- local StrDefaultCSV=${ZULCSV:=':'} ;
- local IntDefaultColExtr=${ZULColExtr:=1} ;
- local StrFileInfo=${ZULFilePasswd:=/etc/passwd} ;
-	local StrRegSearch=${ZULRegSearch:="\/bin\/bash"}
-	local BoolShowUserSelection=${ZULSUS:=False} ;
+ local StrTitle=${ZCLTitle:="Select a user for __APPS__"} ;
+	local StrCol0=${ZCLCol0:="selection"} ;
+	local StrCol1=${ZCLCol1:="user"} ; 
+ local StrDefaultCSV=${ZCLCSV:=':'} ;
+ local IntDefaultColExtr=${ZCLColExtr:=1} ;
+ local StrFileInfo=${ZCLFilePasswd:=/etc/passwd} ;
+	local StrRegSearch=${ZCLRegSearch:="\/bin\/bash"} ;
+	local BoolShowUserSelection=${ZCLSUS:=False} ;
   
  ### Uses current variable 
  ### StrRegSearch,StrFileInfo,StrDefaultCSV,IntDefaultColExtr
  ### 
  function ZenityFilter()
 	{
-			egrep -i ${StrRegSearch} \
-   ${StrFileInfo} | \
-     cut -d ${StrDefaultCSV} \
-     -f ${IntDefaultColExtr} |\
-        sed  's/\(^[a-zA-Z0-9]*\)/FALSE \1/g' ; 
+  local __call_locality=( ZF ZenityFilter ) ; 
+  local ArrayArg=( $* ) ; 
+  local Arg0=( ${ArrayArg[0]} ) ;			egrep -i ${StrRegSearch} \
+  ${StrFileInfo} | \
+    /usr/bin/cut \
+    -d ${StrDefaultCSV} \
+    -f ${IntDefaultColExtr} |\
+       sed  's/\(^[a-zA-Z0-9]*\)/FALSE \1/g' ; 
 	}
 	
  ### Uses current variable 
@@ -2698,7 +2701,10 @@ function ZenityUserListing( )
  ### 
  function GetPwdUser()
 	{
-		local StrUserSelection=$( zenity \
+  local __call_locality=( GPU GetPwdUser ) ; 
+  local ArrayArg=( $* ) ; 
+  local Arg0=( ${ArrayArg[0]} ) ;		
+  local StrUserSelection=$( zenity \
   --list \
   --title "${StrTitle}" \
   --column="${StrCol0}" \
@@ -2740,8 +2746,8 @@ function ZenityUserListing( )
 		eval $( __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
   eval $( VTVIsArrayStyleInsert=True \
-  VTVValueEntry= \
-  VTVIsValueReAssign=True \
+  VTVValueEntry=StrTitle,StrCol0,StrDefaultCSV,IntDefaultColExtr,StrFileInfo,StrRegSearch,BoolShowUserSelection \
+  VTVIsValueReAssign=True  \
   VTVIsValueToConvert=False \
   VTVIsArrayStyleInsert=True \
   ValueToVariable ) __main_StartServices
@@ -2772,15 +2778,7 @@ function GkSuZenityLoader()
  local StrLdConfigUser=${GSZLLdconfigUser:=root} ;
  local StrLdconfigGreeting=${GSZLLdconfigGreeting:='\n\nHint\nLoading ldconfig on need if some module require to be loaded from ldconfig ( ex: from pip installation or easy_setup.py ) It can be accessible thru Prefixed-var GSZLUpdadeLdconfig=True from GkSuZenityLoader.\n\n'}
 	local BoolShowFGSZ=${GSZShowFuncGSZ:=True} ; 
- 
-  eval $( VTVIsArrayStyleInsert=True \
-  VTVValueEntry= \
-  VTVIsValueReAssign=True \
-  VTVIsValueToConvert=False \
-  VTVIsArrayStyleInsert=True \
-  ValueToVariable ) ZenityUserListing 
- 
-  
+   
  function NotificationLdConfig()
  {
 		local __call_locality=( NLC NotificationLdConfig ) ; 
@@ -2842,18 +2840,18 @@ function GkSuZenityLoader()
 		local __call_locality=( Main __main_StartServices ) ;
 		local Arg0=${ArrayArg[0]} ;
 		local ArrayArg=( $* ) ; 
-
+ 
   #local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\n" ;   
   local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
   if [ "${StrUser:=none}" ==  "none" ] ; then 
-   StrUser=$( StrDefaultCSV=${StrDefaultCSV} \
-      IntDefaultColExtr=${IntDefaultColExtr} \
-      StrFileInfo=${StrFileInfo} \
-      StrTitle=${StrTitle} \
-      StrCol0=${StrCol0} \
-      StrCol1=${StrCol1} \
-      StrRegSearch=${StrRegSearch} \
-      BoolShowUserSelection=${BoolShowUserSelection} GetPwdUser ) ; 
+   StrUser=$( ZCLCSV=${StrDefaultCSV} \
+      ZCLColExtr=${IntDefaultColExtr} \
+      ZCLFilePasswd=${StrFileInfo} \
+      ZCLTitle=${StrTitle} \
+      ZCLCol0=${StrCol0} \
+      ZCLCol1=${StrCol1} \
+      ZCLRegSearch=${StrRegSearch} \
+      ZCLSUS=${BoolShowUserSelection} ZenityUserListing ) ; 
   fi 
   if [ "${StrUser:=none}" == "none" ] ; then 
    echo -ne "Warning Invalid user: ${StrUser}\n" > /dev/stderr ; 
