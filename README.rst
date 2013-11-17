@@ -143,6 +143,56 @@ engine are considered like configuration segment and shall return nothing if the
 content is accidently executed. Configuration segment are also to be stored in 
 per-user uses. 
 
+Note on temporary Function
+--------------------------
+
+Are allowed, while code coming from generation from executed code inside member
+of Fnct.D and not externally if they are not coming from Python execution of 
+Python-Code or coming from mechanism from SQlite to extract arbitrary stored
+Shell-code conserved in TEXT format. SHALL HAVE a unique-ID in form or UUID 
+generated in time based format. Application uuidgen with option '-t' is FLAVOURED
+to produce UUID Time-based Temporary ID. Python with following syntax is ACCEPTED, 
+And at a future stage requesting from RPC Call implicitly using Socket to server
+will be used. 
+
+.. code:: shell
+	
+	echo 'from uuid import uuid1 ; print uuid1()' | python2.7
+
+Typically temporary function will own structure like this : 
+
+.. code:: shell
+	
+	### Temporary ID requested from python: 
+	echo 'from uuid import uuid1 ; print uuid1()' | python2.7
+	### 63bff8cc-4fc9-11e3-98a2-001b3875b29c
+	
+	### Temporary Function name Look-like. 
+	__63bff8cc4fc911e398a2001b3875b29c() { echo "Test"; }
+	
+This bring a << propos >>, and Mechanism Generating Temporary Function name SHALL
+1 - Having name in memory and/or mechanism to store and retreive temporary function
+name 
+2 - Managing function name and HAVE-TO erase it's temporary function name existence 
+after the end of it's life cycle. 
+
+According to a life-cycle it's open proposition and enhave it's endocrinement of 
+this library being part of /etc/init.d position. Having switches --start-services
+also mean a part of a work like following application AgentLoader are active and
+setup correctly a services telled SSH piped instruction onto external access 
+indeed to promote a mechanism to stop it's fellow action with --stopservices. 
+
+In this conformance willing to agree a presence of a life-cycle mean at the end 
+of a life cycle ( action to stop a fellow action to take end ) by removing 
+data, variable, open-transaction-layer out of this terminal shell and consider 
+the end of this services. 
+
+According to a Short-Action meaning Start-Services is only one-shoot or also 
+promoted by uses of --compword a second-state of services and Active-derivated 
+Helper may own temporary function end. Ending It's life and ending any living 
+temporary function, data, structure and mechanism to end on --stopservices call . 
+
+
 Description
 ===========
 
