@@ -2144,7 +2144,7 @@ informations uselessly a specific Operator was developped during Pre-Fixed varia
 writing, known to be the '+' Operator. 
 
 
-	Array Case
+Array Case
 ----------
 
 
