@@ -2002,7 +2002,7 @@ See example :
 	Variable:			Message:
 	${StrSwitchesShow} 		Following switch are available:
 	${StrCompWordMsgSwitches}	--compword	Word Completion Provide a services to Extract on Demand all Pre-fixed Variable
-										texisting inside this function. 
+										String inside this function. 
 	${StrListMsgSwitches}		--list		List all Internal Pre-fixed Variable available to query or get.
 	${StrGetMsgSwitches}		--get		Return value of Internal Variable.
 	${StrStartSwitches}		--startservices	Start the application normally.
