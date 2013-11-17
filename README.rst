@@ -2144,8 +2144,7 @@ informations uselessly a specific Operator was developped during Pre-Fixed varia
 writing, known to be the '+' Operator. 
 
 
-----------
-	Array Case
+Array Case
 ----------
 
 Since implementation of Array Insertion state being comma separated value, an 
@@ -2155,6 +2154,7 @@ key in extruding function from an inside context to an external context. This
 function uses a Pre-fixed Variable named VTVValueEntry and using another variables
 to activate an Array Insertion state named VTVIsArrayStyleInsert, when set to True
 all entry are comma separated or 'virgule' char is required to insert valu in chain.
+
 
 example from function MakeLink() from revision db848dcd15d771cb5d3b369783aa54e4339f6b98
 and lower. 
