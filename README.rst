@@ -172,8 +172,8 @@ Typically temporary function will own structure like this :
 	
 This bring a << propos >>, and Mechanism Generating Temporary Function name SHALL
 
-1 - Having name in memory and/or mechanism to store and retreive temporary function name .
-2 - Managing function name and HAVE-TO erase it's temporary function name existence after the end of it's life cycle. 
+1-	Having name in memory and/or mechanism to store and retreive temporary function name .
+2-	Managing function name and HAVE-TO erase it's temporary function name existence after the end of it's life cycle. 
 
 According to a life-cycle it's open proposition and enhave it's endocrinement of 
 this library being part of /etc/init.d position. Having switches --start-services
