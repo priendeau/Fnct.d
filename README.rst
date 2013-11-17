@@ -2034,7 +2034,7 @@ item or not existing item and should not interfer during Services initiation.
 Known and recognized one will be used and even not intended to be use due to 
 switche nature will be ignored and might be used if the user change the switches. 
 
-::
+.. code:: shell
 	
 	### As example. 
 	### calling :
@@ -2143,8 +2143,68 @@ function depend of Prefixed-Variable Transport Mechanism and to prevent writing
 informations uselessly a specific Operator was developped during Pre-Fixed variable
 writing, known to be the '+' Operator. 
 
+Array Case
+==========
+
+Since implementation of Array Insertion state being comma separated value, an 
+example named ValueToVariable, a mechanism to perform an action to create a string
+based on declaration of value before transfering them inside a function play a 
+key in extruding function from an inside context to an external context. This 
+function uses a Pre-fixed Variable named VTVValueEntry and using another variables
+to activate an Array Insertion state named VTVIsArrayStyleInsert, when set to True
+all entry are comma separated or 'virgule' char is required to insert valu in chain.
+
+example from function MakeLink() from revision db848dcd15d771cb5d3b369783aa54e4339f6b98
+and lower. 
+
+.. code:: shell
+	
+	unset MakeLink
+	function MakeLink() 
+	{ 
+	 local ArrayArg=( $* );
+	 local __call_locality=( ML MakeLink );
+	 local Arg0=${ArrayArg[0]} ;
+	
+	...
+		
+	local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
+
+	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+	  GetVarReference ${__call_locality[1]} ; 
+	  echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+	  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+	  echo -ne """${ArgGet}\n""" ;
+	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+	  eval $( __GetVarReferenceList ) ;
+	elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+	  eval $( VTVIsArrayStyleInsert=True \
+	  VTVValueEntry=StrRootOrigin,IsMake,StrAction,StrFileSearch,StrAliasFind,StrLinkFormat,StrLinkApps,StrLinkOpt,StrDebugLink,IsRenameDest,StrMoveSuffix \
+	  VTVIsValueReAssign=True \
+	  VTVIsValueToConvert=False \
+	  VTVIsArrayStyleInsert=True \
+	  ValueToVariable ) __main_StartServices
+	fi
 
 
+	}
 
+	
+.. code:: shell
+	
+	###
+	### It clearly show the VTVValueEntry from ValueToVariable having an 
+	### Array Insertion based on ',' <virgule> comma separated .
+	### 
+	eval $( VTVIsArrayStyleInsert=True \
+	VTVValueEntry=StrRootOrigin,IsMake,StrAction,StrFileSearch,StrAliasFind,StrLinkFormat,StrLinkApps,StrLinkOpt,StrDebugLink,IsRenameDest,StrMoveSuffix \
+	VTVIsValueReAssign=True \
+	VTVIsValueToConvert=False \
+	VTVIsArrayStyleInsert=True \
+	ValueToVariable ) __main_StartServices
 
+	
+	
+	
 
