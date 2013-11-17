@@ -1549,7 +1549,7 @@ The one only note is to respect the common Policy-format:
 
 *** Still in pending ***
 
-Delayed until Mid-November 2013. 
+Delayed until End-December 2013. 
 
 
 
@@ -1668,6 +1668,147 @@ Schema relative dependency relation of AgentLoader and StartAgentSSH.
 		:target: https://github.com/priendeau/Fnct.d#6e61bab0-35eb-11e3-98a2-001b3875b29c
 
 
+:Note: 3d46895a-4f41-11e3-98a2-001b3875b29c
+:Title: ZenityContentListing, not only a CSV with UI
+
+ZenityContentListing was initially a user extraction function used inside 
+GkSuZenityLoader to render and extract all USER using a shell of type /bin/bash 
+to  be selected while a default application is loaded... Initially Used to load 
+my favorite Shell developper for Python, called IDLE, it's the most standard, 
+cost less and usually NOBODY WILL COMPLAIN AND OR COMMENT about this application 
+being installed. Once this wrapper was completed, it merely use an old function 
+moved inside ZenityContentListing called GetPwdUser and ZenityFilter, where both
+acting like file called and regular expression macthing sequence thru egrep 
+command called internally. Only thoses 2 function where enought to create a 
+CSV + Regular matching information... Assuming CSV is working in a column, it's
+hard-stuff mangling content inside a column and buffering result... Keeping it
+simple we are dealing with seamless line... Sometime usefull to extract content 
+if you doubt having to had no criteron, a seach with '[A-Za-z0-9\-\_]+:' will 
+give to application to search for a first valid column having data which is not 
+bad after all ... 
+
+
+
+Default GUI when calling ZenityContentListing alone. 
+
+.. image:: https://raw.github.com/priendeau/Fnct.d/master/images/ZenityContentListing.png
+		:target: https://github.com/priendeau/Fnct.d#3d46895a-4f41-11e3-98a2-001b3875b29c
+
+
+Help from ZenityContentListing
+
+.. code:: shell
+	
+	Help:
+
+	Function ZenityContentListing
+	Default Variable Value:
+	Variable ZCLTitle ,
+		Default Value:"Select a user for __APPS__"
+	Variable ZCLCol0 ,
+		Default Value:"selection"
+	Variable ZCLCol1 ,
+		Default Value:"user"
+	Variable ZCLCSV ,
+		Default Value:':'
+	Variable ZCLColExtr ,
+		Default Value:1
+	Variable ZCLFilePasswd ,
+		Default Value:/etc/passwd
+	Variable ZCLRegSearch ,
+		Default Value:"/bin/bash"
+	Variable ZCLSUS ,
+		Default Value:False
+	Following switch are available:
+
+		--startservices	Start the application normally.
+		--get		Return value of Internal Variable.
+		--list		List all Internal Pre-fixed Variable available to query or get.
+
+Example 1:
+
+Extracting information based on Unique Key, case of Report file from PackageRepositoryMgmt.
+
+
+- Having a file called 20130823
+
+.. code:: shell
+
+	ADD SNAPSHOT
+	DATE:20130823 02:41:11:ID:ffb2f0b2-0bbe-11e3-98a2-001b3875b29c
+	SNAPSHOT:SHA1SUM:
+	SNAPSHOT END
+	NEW TRANSACTION:20130823 02:41:11
+	COMMIT TRANSACTION:ID:ffb20698-0bbe-11e3-98a2-001b3875b29c:NB_FILE:134:SHA1SUM:9ff5cb441b7f7946eef9c8d4a98a6b573ae41f14:20130823 02:41:11
+	ffb20698-0bbe-11e3-98a2-001b3875b29c:libatk-bridge2.0-dev_2.8.1-1_amd64.deb
+	ffb20698-0bbe-11e3-98a2-001b3875b29c:libxt-dev_1%3a1.1.3-1ubuntu0.13.04.1_amd64.deb
+	ffb20698-0bbe-11e3-98a2-001b3875b29c:libcogl-doc_1.14.0-0ubuntu1_all.deb
+	ffb20698-0bbe-11e3-98a2-001b3875b29c:libgladeui-dev_3.14.2-0ubuntu1_amd64.deb
+	ffb20698-0bbe-11e3-98a2-001b3875b29c:libftgl2_2.1.3~rc5-4_amd64.deb
+	ffb20698-0bbe-11e3-98a2-001b3875b29c:libgnomecanvas2-dev_2.30.3-1ubuntu2_amd64.deb
+	ffb20698-0bbe-11e3-98a2-001b3875b29c:libart-2.0-dev_2.3.21-2_amd64.deb
+	ffb20698-0bbe-11e3-98a2-001b3875b29c:libgcrypt11-dev_1.5.0-3ubuntu2.2_amd64.deb
+	ffb20698-0bbe-11e3-98a2-001b3875b29c:x11proto-dri2-dev_2.8-1_all.deb
+	ffb20698-0bbe-11e3-98a2-001b3875b29c:gegl_0.2.0-2+nmu1ubuntu1_amd64.deb
+	ffb20698-0bbe-11e3-98a2-001b3875b29c:libgles2-mesa-dev_9.2.0~git20130729+9.2.9b8ad643-0ubuntu0sarvatt~raring_amd64.deb
+	ffb20698-0bbe-11e3-98a2-001b3875b29c:apitrace-gl-frontend_3.0+git20121018.d1c301f7-0ubuntu1_amd64.deb
+	ffb20698-0bbe-11e3-98a2-001b3875b29c:freeglut3-dev_2.6.0-4ubuntu1_amd64.deb
+	ffb20698-0bbe-11e3-98a2-001b3875b29c:conglomerate_0.9.1-3.3ubuntu1_amd64.deb
+	ffb20698-0bbe-11e3-98a2-001b3875b29c:gir1.2-cogl-1.0_1.14.0-0ubuntu1_amd64.deb
+	ffb20698-0bbe-11e3-98a2-001b3875b29c:libpopt-dev_1.16-7ubuntu3_amd64.deb
+	ffb20698-0bbe-11e3-98a2-001b3875b29c:libgladeui-doc_3.14.2-0ubuntu1_all.deb
+	ffb20698-0bbe-11e3-98a2-001b3875b29c:libgtk-3-doc_3.6.4-0ubuntu8_all.deb
+	ffb20698-0bbe-11e3-98a2-001b3875b29c:libgnome2-dev_2.32.1-2ubuntu4_amd64.deb
+	ffb20698-0bbe-11e3-98a2-001b3875b29c:libgnomeprint2.2-0_2.18.8-3ubuntu1_amd64.deb
+	ffb20698-0bbe-11e3-98a2-001b3875b29c:libgnomecups1.0-1_0.2.3-5ubuntu1_amd64.deb
+	ffb20698-0bbe-11e3-98a2-001b3875b29c:libbonobo2-dev_2.32.1-0ubuntu3_amd64.deb
+	ffb20698-0bbe-11e3-98a2-001b3875b29c:libegl1-mesa-dev_9.2.0~git20130729+9.2.9b8ad643-0ubuntu0sarvatt~raring_amd64.deb
+	ffb20698-0bbe-11e3-98a2-001b3875b29c:gir1.2-gladeui-2.0_3.14.2-0ubuntu1_amd64.deb
+
+	
+.. code:: shell
+
+	### This ZenityContentListing example will search for all line starting with Regular
+	### Expression '^ffb20698-0bbe-11e3-98a2-001b3875b29c' and will extract the column
+	### number 2... ZenityContentListing will show you all file from COMMIT ID
+	### ffb20698-0bbe-11e3-98a2-001b3875b29c
+
+	ZCLRegSearch="^ffb20698-0bbe-11e3-98a2-001b3875b29c" ZCLCSV=':' ZCLColExtr=2 ZCLFilePasswd=20130823 ZenityContentListing
+
+.. image:: https://raw.github.com/priendeau/Fnct.d/master/images/ZenityContentListing.png
+		:target: https://github.com/priendeau/Fnct.d#3d46895a-4f41-11e3-98a2-001b3875b29c
+
+Example 2:
+
+.. code:: shell
+	
+	### 
+	### This one will give you active commit-ID inside the current date from a 
+	### PackageRepositoryMgmt index file. 
+	
+	ZCLRegSearch="^COMMIT TRANSACTION" ZCLCSV=':' ZCLColExtr=4 ZCLFilePasswd=20130823 ZenityContentListing	
+
+.. image:: https://raw.github.com/priendeau/Fnct.d/master/images/ZenityContentListing-001.png
+		:target: https://github.com/priendeau/Fnct.d#3d46895a-4f41-11e3-98a2-001b3875b29c
+
+Example 3:
+
+		
+It's a Push-ahead in « Why no GUI » for PackageRepositoryMgmt and PackageRepositoryRest, 
+PackageRepositoryFilter... in One command you can acheive a ID-Grab and Package 
+Listing of what was installed in last commit, getting them and do a checkup or 
+even a dpkg --install.... 
+
+.. code:: shell
+	
+	### 
+	### All in One Zenity List Commit-ID and package-lookup from index created by 
+	### PackageRepositoryMgmt 
+	### 
+	ZCLRegSearch="^$( ZCLRegSearch="^COMMIT TRANSACTION" ZCLCSV=':' ZCLColExtr=4 ZCLFilePasswd=20130823 ZenityContentListing )" ZCLCSV=':' ZCLColExtr=2 ZCLFilePasswd=20130823 ZenityContentListing
+
+And many-more wisdom $( ... ) are coming once stateful-design for Zenity UI will be 
+completed... 
 	
 ----------------------------------------------------------------------------------
 Introducing connection-layer to a unicast-per-user group and bash interoperability
