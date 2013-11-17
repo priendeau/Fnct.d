@@ -2206,6 +2206,49 @@ based on ',' <virgule> comma separated .
 	ValueToVariable ) __main_StartServices
 
 	
+Escaped Dollar Sign Exception.
+
+Unlike case for \$ being noted inside an important function it's more important to
+talk about this idiom like a SHALL-TO apply correctly and named inside exception 
+to save time if error occur in debugging scene to let you discover and important 
+part in uses of Escaped-Dollard sign inside case BoolVarTestVarCreation. 
+
+
+example from function MakeLink() from revision db848dcd15d771cb5d3b369783aa54e4339f6b98
+and lower. 
+
+.. code:: shell
 	
+	unset MakeLink
+	function MakeLink() 
+	{
+	 ...
+	 function __Link()
+	 {
+	  local __call_locality=( _L __Link ) ;
+	  local ArrayArg=( $* ) ; 
+	  local StrVarSrc=${StrRootOrigin}/${StrFile} ;
+	  local StrEval=${StrLinkFormat} ; 
+	  
+	  local StrFileReplace=$( echo "${StrFile}" | sed 's/\(\.[a-z]*\)/${StrMoveSuffix}\1/g' ) ; 
+
+			  
+	  StrEval=${StrEval//__LINK__/${StrLinkApps}} ;
+	  StrEval=${StrEval//__OPT__/${StrLinkOpt}} ; 
+	  StrEval=${StrEval//__SRC__/${StrVarSrc}} ; 
+	  StrEval=${StrEval//__DEST__/${StrFile}}
+	  if [ ${StrDebugLink} == "False" ] ; then 
+	   eval $( BVTestVarName=StrToMove \
+			   BVTestVarHold='' \
+			   BVTestBoolVarName=\${IsRenameDest} \
+			   BVTestBoolCase=True \
+			   BVTestBoolAssertion='$( mv ${StrFile} ${StrFileReplace} )' \
+			   BVTestScopeTest=local \
+			   BoolVarTestVarCreation ) ;   
+	   eval "${StrEval}" ;
+	   
+
+	}	
 	
+
 
