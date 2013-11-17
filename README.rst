@@ -1951,48 +1951,48 @@ See example :
 	
 .. code:: shell
 	
-Example:
-### 
-### Fully functional example. 
-###
-### Basic Method showing you how it was splitted to allow many function 
-### having same design, prior to settle this Lib into something higher into
-### Wide-settlement services and steady-services and messages passing .
-###
-
-###   +-------Level1 Function
-###  +++
-###   +
-function EasyTestInRun()
-{
-
-  ###   +---------> Calling signature. If you try GetStdPrefixName on 
-  ###   +           function name EasyTestInRun, you will get ETIR
-  ###	+
-  local __call_locality=( ETIR EasyTestInRun ) ; 
-  local StrInput=${ETIRArrayIn:=1,2,3,4}
-
-  ###   +-------Level2 Function
-  ###  +++
-  ###   +
-  function __Loop()
-  {		 
-	...
-  }
-  
-   function __main_StartServices()
-   {
-	 ### ... 
-   }
-}
-
-### Normal Switches Messages introduction. 
-### 
-###
-local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
-### 
-### switches-level 
-###
+	Example:
+	### 
+	### Fully functional example. 
+	###
+	### Basic Method showing you how it was splitted to allow many function 
+	### having same design, prior to settle this Lib into something higher into
+	### Wide-settlement services and steady-services and messages passing .
+	###
+	
+	###   +-------Level1 Function
+	###  +++
+	###   +
+	function EasyTestInRun()
+	{
+	
+	 ###   +---------> Calling signature. If you try GetStdPrefixName on 
+	 ###   +           function name EasyTestInRun, you will get ETIR
+	 ###	+
+	 local __call_locality=( ETIR EasyTestInRun ) ; 
+	 local StrInput=${ETIRArrayIn:=1,2,3,4}
+	
+	 ###   +-------Level2 Function
+	 ###  +++
+	 ###   +
+	 function __Loop()
+	 {		 
+	  ...
+	 }
+	  
+	 function __main_StartServices()
+	 {
+	  ### ... 
+	 }
+    }
+	
+   ### Normal Switches Messages introduction. 
+   ### 
+   ###
+   local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+   ### 
+   ### switches-level 
+   ###
 	
 	
 
