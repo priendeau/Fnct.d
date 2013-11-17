@@ -2315,7 +2315,7 @@ revision... Nothing is perfect in a draft-definition Shell-Library.
 
 having eyes of a falcon, you may seek for another exception, the mv statement
 passed without interpreting the StrFile and StrFileReplace... this mean
-the single-apostrophe "'" work too like interpret as-is the content of what 
+the single-apostrophe " ' " work too like interpret as-is the content of what 
 single-apostrophe hold... This is good in some case, bad in all other, it may
 prevent it to be interpreted at all if no eval was used to interpret which is
 avoided here because all case from BoolVarTestVarCreation since no code 
