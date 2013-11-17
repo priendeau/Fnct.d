@@ -114,7 +114,34 @@ example are free like precendent to be a free-form of exposition, old draft and
 prototype and might be absent from current development. 
 
 
+Convention Structure generated 
+------------------------------
 
+There is no function here generating temporary member inside called Service-state 
+directory. From /etc/init.d/Fnct.D only function, script and accessible member 
+are allowed. Storing information are per-user like .ArrayMdCd and .ArrayMdCd_Lock
+are per-user indice. Index from PackageRepositoryMgmt are external and are simple
+wasting the /etc/init.d/Fnct.D if 1-from cloning this project and decide to 
+configure itself from it's branch and it's itself fault to corrupt it's own 
+sample of Fnct.D with temporary information. 
+
+There is not temporary code generated here inside a temporary buffer to execute 
+after it's execution. While GetVarReference are self-worked to use live memory 
+information to extract member and transform them into an Helper, the Low-Level
+Bash-to-Bash shall not own mechanism to create temporary file in /tmp, /temp, 
+or any \${USER} forlder to execute it after it's generation. Having future
+version of Fnct.D in design to integrate Python-to-Bash and Bash-from-SQL and 
+those are only exception and are using Outlet, pluglet, socket and RPC to extract
+information and create temporary function in memory only. It SHALL NOT had deposed
+information temporary of any. 
+
+Data are qualifed for permanent storage are elligible for storage and shall not 
+contains executable code... This does not mean owning Taggable information and 
+semantic-prone information to be re-interpreted. Storing function name, function
+Prefixed-variables and possible structure to form many function call from derivated
+engine are considered like configuration segment and shall return nothing if the 
+content is accidently executed. Configuration segment are also to be stored in 
+per-user uses. 
 
 Description
 ===========
