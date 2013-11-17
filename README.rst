@@ -2009,12 +2009,14 @@ See example :
 	${StrStopSwitches}		--stopservices	Stop the application normally.
 	${StrTestSwitches}		--testservices	Test the application, (dry-run).
 	
-           
+-----------------           
 Prefixed-Variable
 -----------------
 
+---------------------------------
 Transport Layer between Function. 
 ---------------------------------
+
 
 Uses of Universal switches.
 ---------------------------
@@ -2143,8 +2145,8 @@ function depend of Prefixed-Variable Transport Mechanism and to prevent writing
 informations uselessly a specific Operator was developped during Pre-Fixed variable
 writing, known to be the '+' Operator. 
 
-
-Array Case
+----------
+	Array Case
 ----------
 
 
