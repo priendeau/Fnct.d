@@ -2852,7 +2852,7 @@ function GkSuZenityLoader()
       ZCLCol0=${StrCol0} \
       ZCLCol1=${StrCol1} \
       ZCLRegSearch=${StrRegSearch} \
-      ZCLSUS=${BoolShowUserSelection} ZenityUserListing ) ; 
+      ZCLSUS=${BoolShowUserSelection} ZenityContentListing ) ; 
   fi 
   if [ "${StrUser:=none}" == "none" ] ; then 
    echo -ne "Warning Invalid user: ${StrUser}\n" > /dev/stderr ; 
