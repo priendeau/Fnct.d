@@ -2207,6 +2207,7 @@ based on ',' <virgule> comma separated .
 
 	
 Escaped Dollar Sign Exception.
+------------------------------
 
 Unlike case for \\$ being noted inside an important function it's more important to
 talk about this idiom like a SHALL-TO apply correctly and named inside exception 
@@ -2311,3 +2312,46 @@ shell terminal ...
 ... And now the "CONTENT" problem will be explain or be corrected in later 
 revision... Nothing is perfect in a draft-definition Shell-Library.
 
+
+having eyes of a falcon, you may seek for another exception, the mv statement
+passed without interpreting the StrFile and StrFileReplace... this mean
+the single-apostrophe "'" work too like interpret as-is the content of what 
+single-apostrophe hold... This is good in some case, bad in all other, it may
+prevent it to be interpreted at all if no eval was used to interpret which is
+avoided here because all case from BoolVarTestVarCreation since no code 
+generation inside file is allowed, from Bash-To-Bash Level. Python-to-Bash and 
+Sqlite-To-Bash or Bash-from-Sqlite are exception for having their own memory 
+support to hold temporary code. ZenityShellEval is developping chunk of code out
+of the /etc/init.d/Fnct.D and imply being called from fnct_lib or fnct_debian_lib
+of any fnct_... or _sub_... and future revision of fnct_debian_lib will force 
+checking integrity of a developped chunk deposed inside /etc/init.d/Fnct.D 
+
+
+Single-apostrophe case 
+----------------------
+
+Are simply usefull in generating Low-Level nested function aggregation from one
+line only... Always used inside Pre-fixed Variable to add an exrta line or 
+executive brace to allo passing a future code to be execute at the end of 
+evaluation brace it was agreed inside Bash since version 2.99 to allow passing 
+and passing code in between Single-apostrophe until a evaluation statement ( or 
+called here evaluation brace implementing  eval and \$( ) altogether ). 
+
+Noted from know error-prone essay, having no evaluation statement will show at 
+the end presence of Single-apostrophe in the output... Some dislike it and 
+remove uses of Single-apostrophe in some declaration, will see affected result 
+by looses of space and Un-Interpreted result if a Prefixed-Variable are used 
+in the way :
+
+.. code:: shell
+	
+	### From calling function ATest. 
+	ATValue=A Stream or a Flow Information ATest
+	
+	### will throw error and display from variable ATValue
+	### will probably only own 'A'
+	
+	### From calling function ATest on good way .
+	ATValue='A Stream or a Flow Information' ATest
+	### variable ATValue will own 'A Stream or a Flow Information'
+	
