@@ -159,6 +159,13 @@ will be used.
 	
 	echo 'from uuid import uuid1 ; print uuid1()' | python2.7
 
+OR
+
+.. code:: shell
+	
+	uuidgen -t
+
+
 Typically temporary function will own structure like this : 
 
 .. code:: shell
