@@ -116,7 +116,7 @@ own a Unique-ID per transaction and this have to be unique and will communicate
 the Unique ID facility which is not an PkID made from integer but from 
 UUID random number based on time.  
 
-This is also invite Strutural design to own memory by design componnent having 
+This is also invite Structural design to own memory by design componnent having 
 inherent cache instruction being storing complete list of Prefixed-Variable being
 stored under Unique-ID and be accessible from SQLite Storage Engine facility to 
 ouput initial herited value from this Unique-ID. 
@@ -316,7 +316,7 @@ Convention in Paper Draft informations
 Every Paper Draft informations is coming with a note, and a title. A Function name 
 can follow a Paper Draft informations. The note is a UUID made by required type  
 of UUID ( Time-based UUID. ). Might optionnally mentioning the Function being 
-related, or Methodology being applied or any Strutural Design from Basic 
+related, or Methodology being applied or any Structural Design from Basic 
 Programmtion rule being know from developper.
 
 Paper Draft information Are information illegible after aggregation , correction
@@ -1137,6 +1137,8 @@ called Prefixed-Variable helping user to assign informations.
 
 :Note: 363cbfd8-308a-11e3-98a2-001b3875b29c
 :Title: Prior to BodyFunc, Internal Steady Pre-Variable Loader is...
+:Function: BodyFunc
+:Structural: Definition
 
 
 BodyFunc is ultimately the next code re-writing action for actual code need to be
@@ -1275,6 +1277,8 @@ section B it require 303 , a diminution of 50% of the code coverage.
 
 :Note: 48acc93e-0bae-11e3-8e63-001b3875b29c
 :Title: Developping The BodyFunc, Reducing code complexity by creating pattern and disposable StartServices signature.
+:Function: BodyFunc
+:Structural: Definition
 
 function BodyFunc()
 - Like BoolVarTestVarCreation, is defined to create on-demand if-pattern based 
@@ -1453,6 +1457,8 @@ and StartServices which is the Core of a Function for a finite action.
 
 :Note: 5f218798-0ec6-11e3-98a2-001b3875b29c
 :Title: Complex Case of ZenityPythonInstaller, many Variable transfert example and many Input Entry.
+:Function: ZenityPythonInstaller
+
 
 While the function own a Huge Table or Hudge Variable-Stacking, due to entry 
 method dependent from shell information and Zenity Window Manager in Text-Entry
