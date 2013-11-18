@@ -90,6 +90,108 @@ According to this Library, following term :
 - Evalutative brace is : equivalent to ' eval $( ... ) '
 - Executive   brace is : equivalent to ' $( ... ) '
 
+Unicity Convention
+==================
+
+A unicity convention allow a action or an in-memory ID to be totally unique by 
+it's implementation and it uses somewhere inside an services instanciation from 
+--startservices switche or short-action services with no need to call a 
+--stopservices switche a value being
+
+1-	Printed, stored permanently or keeped in memory SHALL be revealed to be a 
+	UUID random number based on time. 
+	
+2-	Transfered from and to the Higher Communication Layer from Internal Storage
+	External Storage, Engine Storage and API Communication level and Function 
+	from Prefixed-Variable Level being Unique and respecting uses of 
+	UUID random number based on time. 
+	
+This mean a function from the Communication Layer communicating with other function
+will have to own Unique Prefixed-Variable attribute to transfert, redundant uses 
+of same Prefixed-Variable with different value cause one of them being overwritted 
+and cause an abnormal behavior to not corresponding to initial design. 
+
+This also mean, communicating with Higher level like API and SQlite Engine will 
+own a Unique-ID per transaction and this have to be unique and will communicate 
+the Unique ID facility which is not an PkID made from integer but from 
+UUID random number based on time.  
+
+This is also invite Strutural design to own memory by design componnent having 
+inherent cache instruction being storing complete list of Prefixed-Variable being
+stored under Unique-ID and be accessible from SQLite Storage Engine facility to 
+ouput initial herited value from this Unique-ID. 
+
+This will also implement a WILL of HAVING TO talk to API or SQLite Storage Engine 
+facility by emitting a Unique-ID SHALL BE and Imperatively Be used by the facility 
+and be automatically stored. 
+
+Naming Convention
+=================
+
+Uses of some term to explicitly reffer to a specific definition is also used 
+inside this Library and Documentation. 
+
+- Prefixed-Variable
+	Stand for First Listed and Showed by GetVarReference Variables inside a Top
+	function definition. Some other sub-function can include the same mechanism, 
+	assuming their role can grow and be extruded from function . 
+	
+- Internal-Variable
+	Stand for Any variable not declared properly or implicitly not respecting the
+	Naming convention site in __call_locality declaration 
+
+- __call_locality
+	Stand for First Identifiant inside a function, naming the function Argument or
+	member 0 hold the Prefixed-Variable Prefixed-Name and Argument 1 hold the name
+	of the function. 
+	
+- Arg0 
+	Stand for first Element from a list of parameter obtained from function call .
+	Usually $* hold everything it was definied to not use it as strong reference
+	and might be shorted or extended with uses of pop action and pushing function 
+	adding to function argument list extra information during a normal uses of 
+	the Shell-Bash . Called ArrayArg it hold on declaration of the function 
+	all incoming argument. 
+	
+- If-statement
+- If-elif-(n-elif)-f
+- If-n-elif statement 
+	Refer for a hard-stated Bash-Shell If statement or a BoolVarTestVarCreation
+	result which depend of the result but once executed produce an hard-stated 
+	Bash-Shell If statement. 
+	
+Example of Bash-Shell If statement
+	
+.. code:: shell
+	
+	if [ TEST -eq VALUE ] ; then 
+	 ...
+	else
+	 ...
+	fi
+
+OR
+
+.. code:: shell
+	
+	if [ TEST -eq VALUE ] ; then 
+	 ...
+	elif [ TEST -eq VALUE ]; then 
+	 ...
+	fi
+
+OR
+
+.. code:: shell
+	
+	if [ TEST -eq VALUE ] ; then 
+	 ...
+	elif [ TEST -eq VALUE ]; then 
+	 ...
+	else
+	 ... 
+	fi
+
 
 Convention in Example showed 
 ----------------------------
@@ -201,6 +303,15 @@ promoted by uses of --compword a second-state of services and Active-derivated
 Helper may own temporary function end. Ending It's life and ending any living 
 temporary function, data, structure and mechanism to end on --stopservices call . 
 
+And naming and convention from Temporary Function for Internal Communication layer
+a.k.a. Prefixed-Variable
+
+Convention in Paper Draft informations
+--------------------------------------
+
+Every Paper Draft informations is coming with a note, and a title. A Function name
+can follow a Paper Draft informations. The note is a UUID made by required type 
+od UUID ( Time-based UUID. )
 
 Description
 ===========
