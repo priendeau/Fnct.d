@@ -1547,6 +1547,7 @@ a functionnal-programmation stream behing show under many call from BoolVarTestV
 
 :Note: 9859f8da-1013-11e3-98a2-001b3875b29c
 :Title: Simple File Name conversion and action substitution example thru function FileNameConversion.
+:Function: FileNameConversion
 
 -------------------
 function FileNameConversion()
