@@ -1729,7 +1729,10 @@ See Variable List:
 
 :Note: 7bd8c582-2ebe-11e3-98a2-001b3875b29c
 :Title: Introducing, Zenity Interface to manage Prefixed-Variable.
-
+:Function: ZenityRadioOptionConfig
+:Function: ZenityListOptionConfig
+:Function: ZenityPrefixedVarBuilder
+:Structural: Definition
 
 Theses metodes with follow name, ZenityRadioOptionConfig, ZenityListOptionConfig,
 ZenityPrefixedVarBuilder are specialy developped to handle Prefixed-Variable from 
@@ -1804,7 +1807,7 @@ The one only note is to respect the common Policy-format:
 
 :Note: 75411766-1969-11e3-98a2-001b3875b29c
 :Title: Permanent Sqlite Database to store crutial information introducing connection-layer to a unicast-per-user group and bash interoperability
-
+:Structural: Definition
 
 
 *** Still in pending ***
