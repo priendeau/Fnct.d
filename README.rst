@@ -728,6 +728,7 @@ PkgRepoMgmtReposIndex and PkgRepoMgmtRepository anymore .
 
 :Note: 748de708-0d0d-11e3-bb8a-001b3875b29c
 :Title: Generated IF in BoolVarTestVarCreation & Parameter do change it's nature with default assignation.
+:Function: BoolVarTestVarCreation
 
 Using BVTestBoolVarName, and supported case with uses of Bash version 2.0+ and higher 
 version the, Function BoolVarTestVarCreation had no problems and behave corretly using 
@@ -778,6 +779,7 @@ to a know value, rather to hold nothing and generating a not-resistent if-test.
 
 :Note: f1161962-0ad8-11e3-b166-001b3875b29c
 :Title: Variable Forwarding Example in BoolVarTestVarCreation & mutation of BoolVarTestVarCreation from True/False test into *None* value
+:Function: BoolVarTestVarCreation
 
 BoolVarTestVarCreation for substitution of StrFileTmp has unidirectionnaly
 a uuid-like file name into Pre-fixed Var ZSEFileName:=None for 
@@ -820,6 +822,7 @@ Which is making sense.
  
 :Note: 81685d48-16ac-11e3-98a2-001b3875b29c
 :Title: Evolution of If statement inside BoolVarTestVarCreation, use of specific If condition.
+:Function: BoolVarTestVarCreation
 
 	Following Pre-Fixed variables are added to allow uses of different type of 
 	If statement available thru shell-use. 
@@ -895,7 +898,7 @@ exit.
 
 :Note: e2382694-0ba3-11e3-98a2-001b3875b29c
 :Title: Usual Shell Chunk-Development.
-:function_name: ZenityShellEval
+:Function: ZenityShellEval
 
 ---------------
 ZenityShellEval
@@ -1087,7 +1090,8 @@ having the chunk conform or not, correct or not...
 
 :Note: f5f7532c-0bac-11e3-999d-001b3875b29c
 :Title: Developping and Helper 
-
+:Function: GetVarReference
+:Methodology: Structure
 
 - Default Fast reference Helper. 
 
