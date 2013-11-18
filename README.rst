@@ -315,6 +315,15 @@ od UUID ( Time-based UUID. ). Might optionnally mentioning the Function being re
 or Methodology being applied or any Strutural Design from Basic Programmtion rule being
 know from developper. 
 
+Paper Draft informations Are information elligible after aggregation , correction 
+and standardisation to be elligible for Documentation... Paper Draft informations
+will allow to talk about implementation inside Documentation, but not Documentation
+to reffer to a Paper Draft informations. Also being cleaned from joke and story ,
+Documentation will not own any of these story-line of what creator inherit from
+this contribution. Finally Paper Draft informations will stay in last-page from 
+Fnct.D like a section to read in spare time and leisure from what time had 
+consolidate to offer so strong attribute to this methodology.... 
+
 Description
 ===========
 
