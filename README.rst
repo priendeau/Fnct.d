@@ -311,7 +311,9 @@ Convention in Paper Draft informations
 
 Every Paper Draft informations is coming with a note, and a title. A Function name
 can follow a Paper Draft informations. The note is a UUID made by required type 
-od UUID ( Time-based UUID. )
+od UUID ( Time-based UUID. ). Might optionnally mentioning the Function being related,
+or Methodology being applied or any Strutural Design from Basic Programmtion rule being
+know from developper. 
 
 Description
 ===========
