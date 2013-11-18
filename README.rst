@@ -131,6 +131,10 @@ Naming Convention
 Uses of some term to explicitly reffer to a specific definition is also used 
 inside this Library and Documentation. 
 
+- Communication Layer
+	Stand for Prefixed-Variable to use to call a common function equiped from 
+	Fnct.D functionality . 
+
 - Prefixed-Variable
 	Stand for First Listed and Showed by GetVarReference Variables inside a Top
 	function definition. Some other sub-function can include the same mechanism, 
@@ -493,6 +497,7 @@ symptoms like Freudian regression of psychiatric ill.
 
 :Note: fb7831a4-1e3a-11e3-98a2-001b3875b29c
 :Title: Pumping performance problems, 
+:Method: Python Application versus Bash Shell. 
 
 .. image:: https://raw.github.com/priendeau/Fnct.d/master/images/Pumping_Performance.png
 		:target: https://github.com/priendeau/Fnct.d#Definitions
