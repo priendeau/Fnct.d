@@ -141,7 +141,10 @@ function AgentLoader()
 	local __call_locality=( AL AgentLoader ) ;
 	local ArrayArg=( $* ) ; 
 	local Arg0=${ArrayArg[0]} ;  
-
+ local StrStartServicesName=${ALStartServices:=__main_StartServices} ;
+ local StrStopServicesName=${ALStopServices:=__main_StopServices} ;
+ 
+ 
  function __main_StopServices()
  {
 		local __call_locality=( Stop __main_StopServices ) ;
@@ -168,7 +171,7 @@ function AgentLoader()
   fi 
  }
 
- local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
+ StrSwitchMessages="""${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n""" ; 
  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
 			GetVarReference ${__call_locality[1]} ; 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
@@ -178,9 +181,11 @@ function AgentLoader()
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
 		eval $( __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
-  __main_StopServices ; 
+  # __main_StopServices ; ### replaced 
+  eval ${StrStopServicesName} ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
-  __main_StartServices ;
+  # __main_StartServices ; ### replaced
+  eval ${StrStartServicesName} ; 
  fi
 
 }
