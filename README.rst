@@ -17,7 +17,7 @@ Copyright
 
 ::
 	
-	Copyright (c) 2009-2013 << Patrick. Riendeau, Maxiste Deams >>.
+	Copyright (c) 2009-2015 << Patrick. Riendeau, Maxiste Deams >>.
 	All rights reserved.
 	
 	Redistribution and use in source and binary forms are permitted
@@ -1873,9 +1873,13 @@ AgentLoader Helper :
 .. code:: shell
 	
 	Help:
-
+	
 	Function AgentLoader
 	Default Variable Value:
+	Variable ALStartServices ,
+		Default Value:__main_StartServices
+	Variable ALStopServices ,
+		Default Value:__main_StopServices
 	Following switch are available:
 
 		--startservices	Start the application normally.
