@@ -660,6 +660,37 @@ function BodyFunc()
  local StrDefineList=${BFListSwRules:=List:--list:__LIST__:StrListCmd} ;
  local StrDefineStartServices=${BFStartServicesSwRules:=StartServices:--startservices:__ApplicationMain__:StrStartServicesCmd} ;
  local StrVarConvertOp=${BFVarTransfertOp:=+} ; 
+ local StrUUIDBoolRegistration=${BFBoolUUIDRegistered:=False} ; 
+ local StrUUIDRegister=${BFUUID:=""} ; 
+ local StrUUIDFormat=${BFUUIDFmt:=XXXXXXXX_XXXX_XXXX_XXXX_XXXXXXXXXXXX} ; 
+ ### planning to register an UUID, will imply a transformation of the dashes to pass the lexer. 
+ local StrUUIDRegistered="" ;
+
+ if [ "${StrUUIDBoolRegistration}" == "True" ] ; then 
+  if [ "${StrUUIDRegister}" == "" ] ; then 
+   ### Situation of Blank registration and not yet registered Mechanism. 
+    echo -ne "Asked for registration and missing UUID\n " ; 
+    StrUUIDRegistered="${StrUUIDFormat}" ; 
+  else
+   ### This situation will imply implementation of post stored UUID into
+   ### local data ( database / file, in memory, from collected info )
+   ### and merely had only the UUID lexer to change dashes for underscore.  
+   ### A test situation that will always return an error is to use
+   ### BodyFunc with BFUUID=$( uuidgen -t ) or $( uuidgen -r ) which
+   ### will not exist in 11 or 22 years before having an old candidate
+   ### stored being revamp from data collection . 
+   StrUUIDRegistered=${StrUUIDRegister//-/_} ; 
+   ### ... 
+  fi
+ elif [ "${StrUUIDBoolRegistration}" == "False" ] ; then 
+  if [ "${StrUUIDRegister}" != "" ] ; then 
+   StrUUIDRegistered=${StrUUIDRegister//-/_} ; 
+  fi
+ fi
+ ### removing dash and changing it for underscore. 
+ 
+
+   
  ###
  ### The Prefixed-var BFVarTransfertOp:
  ### - To reduce rewriting, using the Operator '+' inside the Prefixed-Var BFStartServicesSwRules using rule like
@@ -671,16 +702,16 @@ function BodyFunc()
  local ArrayServicesSwitches=( ${StrDefineHelp} ${StrDefineGet} ${StrDefineList}  ${StrDefineStartServices} )
  
  local StrPatternIf="""if [ \"${Arg0:=--startservices}\" == \"--help\"	] ; then 
- __HELP__ 
+ __HELP__${StrUUIDRegistered} 
 elif [ \"${Arg0:=--startservices}\" == \"--get\" ] ; then 
- __GET__ 
+ __GET__${StrUUIDRegistered} 
 elif [ \"${Arg0:=--startservices}\" == \"--list\" ] ; then 
- __LIST__ 
+ __LIST__${StrUUIDRegistered} 
 elif [ \"${Arg0:=--startservices}\" == \"--startservices\" ] ; then 
-  __Stack_Variable__ 
-  __ApplicationMain__ ; """ ;
+  __Stack_Variable__${StrUUIDRegistered} 
+  __ApplicationMain__${StrUUIDRegistered} ; """ ;
 
-echo -ne "###BodyFunc Pattern\n\n###--------------------------------------------------\n${StrPatternIf}\n###--------------------------------------------------\n"
+echo -ne "###BodyFunc Pattern\n\n###Based on UUID Registered: (${StrUUIDRegistered})\n\n###--------------------------------------------------\n${StrPatternIf}\n###--------------------------------------------------\n"
 }
 
 ##################################                 ########################
