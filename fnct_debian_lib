@@ -680,7 +680,7 @@ elif [ \"${Arg0:=--startservices}\" == \"--startservices\" ] ; then
   __Stack_Variable__ 
   __ApplicationMain__ ; """ ;
 
-echo -ne "BodyFunc Pattern\n\n--------------------------------------------------\n${StrPatternIf}\n--------------------------------------------------\n"
+echo -ne "###BodyFunc Pattern\n\n###--------------------------------------------------\n${StrPatternIf}\n###--------------------------------------------------\n"
 }
 
 ##################################                 ########################
@@ -2689,7 +2689,8 @@ function ZenityContentListing( )
 	{
   local __call_locality=( ZF ZenityFilter ) ; 
   local ArrayArg=( $* ) ; 
-  local Arg0=( ${ArrayArg[0]} ) ;			egrep -i ${StrRegSearch} \
+  local Arg0=( ${ArrayArg[0]} ) ;			
+  egrep -i ${StrRegSearch} \
   ${StrFileInfo} | \
     /usr/bin/cut \
     -d ${StrDefaultCSV} \
