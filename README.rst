@@ -1316,6 +1316,33 @@ calling correctly any Pre-fixed var. Exception in Internal design from
 Function to Sub-Function Transport-Layer this mechanism is not regulated, 
 but will not work if variable are not transfered. 
 
+:Note: d438ba78-c3ec-11e5-98a2-001e4c8856d6
+:Title: Evolution of multi-party-actor involving many sub-derivate imply uses of UUID in BodyFunc
+:Function: BodyFunc
+:Structural: Definition
+
+- While approving following pattern inside BodyFunc , __HELP__, __GET__, __LIST__, 
+__Stack_Variable__, __ApplicationMain__ having a behavior to create a unique-ID 
+to promote extraction of many Descendant form of BodyFunc without loosing any other
+pre-registered informations. 
+
+Discovered in many sub-function over 3 nested function or simply having more than 
+ont __main_StartServices for somes imbricated function, a possibility to call 
+efficiently Bodyfunc with registered ID will allow to avoid recall all other 
+Variable member in a pre-declared sub-function . Uses of UUID will be implemented
+and will required having Variable BFRegister to enhance pattern __HELP__, __GET__, 
+__LIST__, __Stack_Variable__, __ApplicationMain__ into :
+
+__HELP__XXXXXXXX_XXXX_XXXX_XXXX_XXXXXXXXXXXX
+__GET__XXXXXXXX_XXXX_XXXX_XXXX_XXXXXXXXXXXX
+__LIST__XXXXXXXX_XXXX_XXXX_XXXX_XXXXXXXXXXXX
+__Stack_Variable__XXXXXXXX_XXXX_XXXX_XXXX_XXXXXXXXXXXX
+__ApplicationMain__XXXXXXXX_XXXX_XXXX_XXXX_XXXXXXXXXXXX
+
+Leaving possibility to call BodyFunc with no register and having a clean new 
+pattern to fill the information. 
+
+
 ~~~~~~~~~~~~~~~~~
 	Strictly talking in hypothesis model.
 ~~~~~~~~~~~~~~~~~
