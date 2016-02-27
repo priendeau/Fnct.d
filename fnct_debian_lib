@@ -1873,33 +1873,53 @@ function GetOtherDate()
 		local __call_locality=( GOD GetOtherDate );
 		local ArrayArg=( $* ) ; 
 		local Arg0=${ArrayArg[0]}; 
-		local StrDateIndicatorFormat=${GODReferenceFormat:='__INT__ day'};
-  local IntDayDiff=${GODReference:=0} ; 
+		local StrDateUnitPattern=${GODDateUnitPatrn:=__DATEUNIT__};
+		local StrDateUnitReference=${GODDateUnit:="day"};
 		local StrDateFormat=${GODFormat:=%Y%m%d} ;
+		local StrDateIndicatorFormat=${GODReferenceFormat:=__INT__ ${StrDateUnitPattern}};
+  local IntDayDiff=${GODReference:=0} ; 
+		local StrDateApps=${GODMainApp:=/bin/date} ; 
 		local isLoop=${GODIsLoop:=False} ;
 		local LoopRange=${GODLoop:=0,3} ;
-		local IsVerbose=${GODVerbose=False} ;
+		local IsVerbose=${GODVerbose:=False} ;
+		
   		
 		function Verbosis()
 		{
-			local __call_locality=( Verbosis );
+			local __call_locality=( Verbosis Verbosis );
 			local StrMsg=${VerbosisMsg:=__TEXT__} ; 
 			local StrDevOut=${VerbosisDev:=/dev/stderr} ; 
 			local ArrayArg=( $* ) ; 
-			if [ ${ArrayArg[0]} == "True" ] ; then 
-				echo -ne "${StrMsg}" > ${StrDevOut} ;
+			if [ "${VerboseState:=False}" == "True" ] ; then 
+				echo -ne "VERBOSE:[ ${StrMsg} ]\n" > ${StrDevOut} ;
 			fi
 			
 		}
 		
 		function DateFunc()
 		{
-			local __call_locality=( DateFunc ) ;
+			local __call_locality=( DateFunc DateFunc ) ;
 			local ArrayArg=( $* ) ; 
-			eval """date +"${DateFuncFormat:=%Y%m%d}" -d '${DateFuncIndicator:=0 day}'""" ; 
+			local StrEval="""${DateFuncApp} +"${DateFuncFormat:=%Y%m%d}" -d '${DateFuncIndicator}'""" ; 
+			if [ "${DateFuncVerbose:=False}" == "True" ] ; then 
+			 VerbosisMsg=${StrEval} VerboseState=${IsVerbose} Verbosis ;
+			fi 
+			eval ${StrEval}
 		}
 		
-		local StrDateIndicator=${StrDateIndicatorFormat/__INT__/${IntDayDiff:=0}}  ;
+		### First Step, applying Incremental Unit to application Date:
+		local StrDateIndicator=${StrDateIndicatorFormat} ;
+		StrDateIndicator=${StrDateIndicator/${StrDateUnitPattern}/${StrDateUnitReference}} ;
+		if [ "${isLoop:=False}" == "False" ] ; then 
+			StrDateIndicator=${StrDateIndicator/__INT__/${IntDayDiff:=0}} 
+		fi
+		### Temporary debug removed after found the bug.
+		### local StrDbg="Content of StrDateIndicator: [${StrDateIndicator}]\nContent of StrDateUnitReference: [${StrDateUnitReference}]" ; 
+		### VerbosisMsg=${StrDbg} VerboseState=${IsVerbose} Verbosis ;
+			
+		#local StrDateIndicator=${StrDateIndicatorFormat/__INT__/${IntDayDiff:=0}}  ;
+		#StrDateIndicator=${StrDateIndicator/${StrDateUnitPattern}/${StrDateUnitReference}} ;
+		
 		local ArrayRange=( ${LoopRange/,/ } ) ;
 		local OperRange="<=" ;  
 		local OperRangeIn="Intx++" ;
@@ -1911,7 +1931,7 @@ function GetOtherDate()
   local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
 		
  	if [ "${Arg0:=--start}" == "--help" ] ; then 
-			GetVarReference ${__call_locality[0]} ; 
+			GetVarReference ${__call_locality[1]} ; 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 		elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
@@ -1920,19 +1940,28 @@ function GetOtherDate()
 			eval $( __GetVarReferenceList ) ;
 	 else	 
 	 	if [ "${isLoop:=False}" == "True" ] ; then 
-				VerbosisMsg="ArrayRange, nb-element:${#ArrayRange[@]}, hold [ ${ArrayRange[@]} ]\n" Verbosis ${IsVerbose} ;
+	 	 local StrDebugMsg="ArrayRange, nb-element:${#ArrayRange[@]}, hold [ ${ArrayRange[@]} ]\n" ;
+				VerbosisMsg=${StrDebugMsg} VerboseState=${IsVerbose} Verbosis  ;
 				if (( ${ArrayRange[0]} > ${IntEndLoop} )) ; then 
 					OperRange=">=" ;
 					OperRangeIn="Intx--" ; 
 					OperBaseStart=${ArrayRange[$((${#ArrayRange[@]-1))}]} ;
 				fi		
-	 		VerbosisMsg="Looping from ${OperBaseStart} to ${IntEndLoop} \n" Verbosis ${IsVerbose} ;
+				local StrDebugMsg="Looping from ${OperBaseStart} to ${IntEndLoop} \n" ;
+	 		VerbosisMsg=${StrDebugMsg} VerboseState=${IsVerbose} Verbosis  ;
 	 		for (( Intx=${OperBaseStart} ;  Intx ${OperRange} ${IntEndLoop} ; ${OperRangeIn} )) ; do 
-		 			StrDateIndicator="${StrDateIndicatorFormat/__INT__/${Intx}}" ; 
-		 			DateFuncFormat=${StrDateFormat} DateFuncIndicator=${StrDateIndicator} DateFunc ;
+		 			#StrDateIndicator="${StrDateIndicatorFormat/__INT__/${Intx}}" ; 
+		 			local StrDateParsed=${StrDateIndicator};
+		 			StrDateParsed=${StrDateParsed/__INT__/${Intx}} ;
+		 			DateFuncVerbose=${IsVerbose} \
+		 			DateFuncApp=${StrDateApps} \
+		 			DateFuncFormat=${StrDateFormat} \
+		 			DateFuncIndicator=${StrDateParsed} DateFunc ;
 	 		done
 	 	else 
-	 		DateFuncFormat=${StrDateFormat} DateFuncIndicator=${StrDateIndicator} DateFunc ;
+ 			DateFuncApp=${StrDateApps} \
+ 			DateFuncFormat=${StrDateFormat} \
+	 		DateFuncIndicator=${StrDateIndicator} DateFunc ;
 			fi
  	fi 
 }
