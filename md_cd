@@ -1,6 +1,11 @@
 #!/bin/bash
 
 # . /etc/init.d/Fnct.d/fnct_debian_lib ; 
+### note : 3937035a-dcff-11e5-98a2-001e4c8856d6 problems of GetOtherDate and md_cd 
+### testing if fnct_debian_lib is loaded , Generally based on presence of GetVarReference, 
+### working for a better algo . 
+
+test $( declare -f GetVarReference | egrep -c GetVarReference ) -eq 0 && . /etc/init.d/Fnct.d/fnct_debian_lib ;  
 
 test -d ${FNCTDLIBPATH} && declare LoadedFnctLib=True
 
@@ -65,7 +70,7 @@ function GetDateReportCreation()
 	local ArrayArg=( $* ) ;
 	local __call_locality=( GDRC GetDateReportCreation ) ;
 	local Arg0=${ArrayArg[0]}; 
-	GODFormat=%Y%m%d_%H%M%S GetOtherDate ; 
+	GODFormat="%Y%m%d_%H%M%S" GetOtherDate ; 
 }
 
 function MdCd()
