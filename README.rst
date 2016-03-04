@@ -481,12 +481,36 @@ Assuming the Git developpement branch was cloned inside /etc/init.d/Fnct.D
 	
 	$> cd /etc/init.d
 	$> sudo -s git clone https://github.com/priendeau/Fnct.d 
+
+:Note: f4391e08-e1ba-11e5-98a2-001e4c8856d6
+:Title: Unilateraly developing corpus, not shell equivalent.
+:Method: Abstraction of development, uses of Idiom and UUID
+
+Notice : ca66ef20-e187-11e5-98a2-001e4c8856d6
+======
+
+In near future, usues of GetUUID will be subject to a permanent survery this one 
+will be called, both a mechanism of storage, view and cleaning will be hook to this
+function, aka MD_CD. MD_CD have possibility to store creation date of path. wheres 
+some successive development will lead to read the file and or media invested for 
+storage of this information. This will also appear inside GetUUID and integrity
+test of the helper will reveal to start the storage. Future definition will start
+testing if GetUHelperName is UUIDHelper to start the storage and collection of 
+information. This notice did not mention if new development will imply uses of 
+sqlite for MD_CD data storage and shallow not mention if this GetUUID will either 
+get one two storage method. A basic work based on file collection will start be 
+will probably move to sqlite to render data parsible thru other tools to observe 
+uses of this function. 
+ 
+Notice : 282b59c0-e188-11e5-98a2-001e4c8856d6
+======
+
+Will also invite to uses the Helper  directly if  some other  alternative  are 
+inquirying  the uses of UUID. Goal of GetUUID is also to aggregate a  function 
+UUIDRegistration  which uses of  BodyFunct will depend on.  Other alternative 
+like ShortRegistration of  Pattern, variable-set  will also own it's registration. 
 	
-	###
-	### Don't forget, only God can ask you to put something inside 
-	### /etc/init.d . 
-	###
-	
+ 
 Remark
 ======
 
