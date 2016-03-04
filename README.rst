@@ -125,6 +125,12 @@ This will also implement a WILL of HAVING TO talk to API or SQLite Storage Engin
 facility by emitting a Unique-ID SHALL BE and Imperatively Be used by the facility 
 and be automatically stored. 
 
+Convention use in this development
+==================================
+	By calling 'Idiom' I will refer to a current sequence obtained by promoted output of an
+ application and/or result of the system itself. Having property to be unique it also 
+ refer to it's unique family called sequenced-data. 
+ 
 Naming Convention
 =================
 
