@@ -364,6 +364,18 @@ creating wrapper for un-accessible Gpl-services or fast-implementation prototypi
 switch for DTD extraction of Shell-Application program and XML Verbosis and XML object induction to
 help developpement of functionnality implementation in fnct_list .
 
+This Function-Library is sensitive to uses of UUID, current and future development will own 
+critical application with simple name. Called GetUUID this application will issue UUID and will manage 
+it's presence by storing it properly. 
+ 
+Using a specific type of mechanism to store the informations, second-hand function will invoke and 
+or query the informations toward this created idoms inside this library. 
+ 
+As example BodyFunc function will depend of registration of the body and it's root require uses of
+UUID. Managing the idiom is important to store definition of many IF/ELSE condition used in conjunction
+of BoolVarTestVarCreation and will create registration sequence where any new sequences will give another
+new body for execution. 
+
 
 Arguments
 =========
