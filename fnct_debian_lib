@@ -2947,16 +2947,30 @@ function GkSuZenityLoader()
 	fi
 }
 
-
-unset GetUUID 
-function GetUUID()
+unset UUIDHelper 
+function UUIDHelper()
 {
-	local __call_locality=( GetU GetUUID ) ;
-	local StrDefaultSwitches=${GetUSwitches:=-t}
+	local __call_locality=( UUIDH UUIDHelper ) ;
+	local StrDefaultSwitches=${UUIDHSwitches:=-t}
+ local StrDefaultApps=${UUIDHApps:=/usr/bin/uuidgen} ;
+ local IsVerbosis=${UUIDHVerbose:=False} ; 
 	local ArrayArg=( $* ) ; 
 	local Arg0=${ArrayArg[0]} ;
 	#local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n" ;
  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+ 
+ function __main_StartServices()
+ {
+		local __call_locality=( Main __main_StartServices ) ;
+		local Arg0=${ArrayArg[0]} ;
+		local ArrayArg=( $* ) ; 
+  local CmdEval="${StrDefaultApps} ${StrDefaultSwitches}"	; 
+  if [ "${IsVerbosis:=False}" == "True" ] ; then
+   echo -ne "UUIDHelper:\n__main_StartServices:\nCMD:[${CmdEval}]\n" > /dev/stderr ; 
+  fi 
+  eval "${CmdEval}" ; 
+ }
+  
 	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
 			GetVarReference ${__call_locality[1]} ; 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
@@ -2966,10 +2980,148 @@ function GetUUID()
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
 		eval $( __GetVarReferenceList ) ;	
 	else
-		uuidgen ${StrDefaultSwitches}	; 
+  eval $( VTVIsArrayStyleInsert=True VTVIsValueReAssign=True VTVIsValueToConvert=False \
+  VTVValueEntry=IsVerbosis,StrDefaultSwitches,StrDefaultApps ValueToVariable ) __main_StartServices 
 	fi 
 } 
 
+
+ ### Notice : ca66ef20-e187-11e5-98a2-001e4c8856d6
+ ### In near future, usues of GetUUID will be subject to a permanent survery this one 
+ ### will be called, both a mechanism of storage, view and cleaning will be hook to this
+ ### function, aka MD_CD. MD_CD have possibility to store creation date of path. wheres 
+ ### some successive development will lead to read the file and or media invested for 
+ ### storage of this information. This will also appear inside GetUUID and integrity
+ ### test of the helper will reveal to start the storage. Future definition will start
+ ### testing if GetUHelperName is UUIDHelper to start the storage and collection of information.
+ ### This notice did not mention if new development will imply uses of sqlite for MD_CD
+ ### data storage and shallow not mention if this GetUUID will either get one two storage 
+ ### method. A basic work based on file collection will start be will probably move to 
+ ### sqlite to render data parsible thru other tools to observe uses of this function. 
+ ### 
+ ### Notice : 282b59c0-e188-11e5-98a2-001e4c8856d6
+ ### Will also invite to uses the Helper directly if some other alternative are inquirying 
+ ### the uses of UUID. Goal of GetUUID is also to aggregate a function UUIDRegistration 
+ ### which uses of BodyFunct will depend on. Other alternative like ShortRegistration of 
+ ### Pattern, variable-set will also own it's registration . 
+
+unset GetUUID 
+function GetUUID ()
+{
+	local __call_locality=( GetU GetUUID ) ;
+	local ArrayArg=( $* ) ; 
+	local Arg0=${ArrayArg[0]} ;
+	local BoolTimeBased=${GetUTimeBased:=True}
+ local BoolLoop=${GetULoop:=False} ;
+ local IntSeqLoop=${GetUSeq:=1} ; 
+ local StrGetHelperName=${GetUHelperName:=UUIDHelper} ;
+ local StrUUIDHelperStream=${GetUHelper:=UUIDHApps= UUIDHSwitches= __HELPERNAME__} ; 
+ local TypeAppsName=${GetUAppsDef:=__HELPERNAME__ --get UUIDHApps}
+ local StrUUIDActionName=${GetUActionFunc:=UUIDNoLoop,UUIDLoop} ;
+ local IsVerbosis=${GetUVerbosis:=False} ;
+ local StrAppsNameCall=${TypeAppsName//__HELPERNAME__/${StrGetHelperName}} ; 
+ local StrAppsName=$( ${StrAppsNameCall} ) ; 
+
+	function Verbosis()
+	{
+		local __call_locality=( Verbosis Verb );
+		local StrMsg=${VerbMsg:=__TEXT__} ; 
+		local StrDevOut=${VerbDev:=/dev/stderr} ; 
+  local VerboseState=${VerbState:=False} ;
+		local ArrayArg=( $* ) ; 
+		if [ "${VerbState:=False}" == "True" ] ; then 
+			echo -ne "VERBOSE:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+		fi
+	}
+ ArrayMsg[1]="UUID StrAppsName: ${StrAppsName}" ; 
+ VerbState=${IsVerbosis} VerbMsg=${ArrayMsg[1]} Verbosis;
+
+ StrUUIDHelperStream=${StrUUIDHelperStream//__HELPERNAME__/${StrGetHelperName}} ;
+ StrUUIDHelperStream=${StrUUIDHelperStream//UUIDHApps=/UUIDHApps=${StrAppsName}} ; 
+ 
+	#local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n" ;
+ local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+ 
+ function UUIDNoLoop()
+ {
+   #eval $( ${StrUUIDHelper} ) ;
+   local StrMsg="UUID HELPER: ${StrUUIDHelper}" ;
+   VerbState=${IsVerbosis} VerbMsg=${StrMsg} Verbosis;
+   eval ${StrUUIDHelper} ;
+ }
+ 
+ function UUIDLoop()
+ {
+  local ArrayMsg=( ) ;
+  ArrayMsg[0]="UUID LOOPSEQ: ${IntSeqLoop}";
+  ArrayMsg[1]="UUID HELPER: ${StrUUIDHelper}\n" ;
+  
+  VerbState=${IsVerbosis} VerbMsg=${ArrayMsg[0]} Verbosis;
+  for (( intX=0 ; intX <= $(( ${IntSeqLoop}-1 )) ; intX++ )) ; do
+   VerbState=${IsVerbosis} VerbMsg=${ArrayMsg[1]} Verbosis;
+   eval ${StrUUIDHelper} ;
+  done 
+ }
+ 
+ function __main_StartServices()
+ {
+		local __call_locality=( Main __main_StartServices ) ;
+		local Arg0=${ArrayArg[0]} ;
+		local ArrayArg=( $* ) ; 
+  local IntUUIDHelperIndex=0 ;
+  local StrUUIDOption="" ;
+  local StrUUIDHelper=""
+  local StrAction=""
+  local ArrayMsg=( ) ;
+  ### Array conversion from StrUUIDActionName, using string delimiter char ',' ; 
+  local ArrayUUIDAction=( ${StrUUIDActionName//,/ } ) ; 
+  local IntUUIDActionIndex=0 ; 
+
+  if [ "${BoolTimeBased:=True}" == "True" ] ; then 
+   StrUUIDOption="-t"
+  else 
+   StrUUIDOption="-r"
+  fi 
+  StrUUIDHelper=${StrUUIDHelperStream} ; 
+  StrUUIDHelper=${StrUUIDHelper//UUIDHSwitches=/UUIDHSwitches=${StrUUIDOption}}  ;
+  #StrUUIDHelper=$( eval ${StrUUIDHelperStream} ) ; 
+  ArrayMsg[1]="UUID __main_StartServices: content of StrUUIDHelper:[${StrUUIDHelper}]" ; 
+  VerbState=${IsVerbosis} VerbMsg=${ArrayMsg[1]} Verbosis;
+  #echo -ne "[UUID __main_StartServices: content of StrUUIDHelper:[${StrUUIDHelper}]]\n" > /dev/stderr 
+
+  if [ "${BoolLoop:=False}" == "True" ] ; then 
+   IntUUIDHelperIndex=1 ;
+   IntUUIDActionIndex=1 ; 
+  else 
+   IntUUIDHelperIndex=0 ; 
+   IntUUIDActionIndex=0 ; 
+  fi 
+  StrAction=${ArrayUUIDAction[${IntUUIDActionIndex}]} ; 
+  ArrayMsg[2]="UUID ACTION: ${StrAction}" ; 
+  VerbState=${IsVerbosis} VerbMsg=${ArrayMsg[2]} Verbosis;
+  #echo -ne "[UUID ACTION: ${StrAction}]\n" > /dev/stderr  ;
+  eval $( VTVIsArrayStyleInsert=True \
+          VTVIsValueReAssign=True \
+          VTVIsValueToConvert=False \
+          VTVValueEntry=IsVerbosis,StrAction,StrUUIDHelper,IntSeqLoop ValueToVariable ) ${StrAction} ; 
+ } 
+ 
+	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+			GetVarReference ${__call_locality[1]} ; 
+			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+		echo -ne """${ArgGet}\n""" ;
+	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+		eval $( __GetVarReferenceList ) ;	
+	else
+  eval $( VTVIsArrayStyleInsert=True \
+          VTVIsValueReAssign=True \
+          VTVIsValueToConvert=False \
+          VTVValueEntry=IsVerbosis,BoolTimeBased,BoolLoop,IntSeqLoop,StrGetHelperName,StrUUIDHelperStream,StrUUIDActionName ValueToVariable ) __main_StartServices 
+	fi 
+
+}
 
 
 ### Function : GetMplayerStream()
