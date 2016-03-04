@@ -38,7 +38,12 @@ Preface
 		These are Common Bash-Object for Fnctlib _pre-Alpha-Init.d re-implementation 
 	for services management in Ubuntu/Debian/Fedora, which pass secessfully some handy-test 
 	in 3 years of developpement.
-	
+
+Convention use in this development
+==================================
+	By calling 'Idiom' I will refer to a current sequence obtained by promoted output of an
+ application and/or result of the system itself. Having property to be unique it also 
+ refer to it's unique family called sequenced-data. 
 
 Description
 ===========
@@ -70,6 +75,17 @@ Synopsis
 	switch for DTD extraction of Shell-Application program and XML Verbosis and XML object induction to
 	help developpement of functionnality implementation in fnct_list .
 
+ Because this Function-Library is sensitive to uses of UUID, current and future development will own 
+ critical application with simple name. Called GetUUID this application will issue UUID and will manage 
+ it's presence by storing it properly. 
+ 
+ Using a specific type of mechanism to store the informations, second-hand function will invoke and 
+ or query the informations toward this created idoms inside this library. 
+ 
+ As example BodyFunc function will depend of registration of the body and it's root require uses of
+ UUID. Managing the idiom is important to store definition of many IF/ELSE condition used in conjunction
+ of BoolVarTestVarCreation and will create registration sequence where any new sequences will give another
+ new body for execution. 
 
 Arguments
 =========
