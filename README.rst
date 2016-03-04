@@ -127,9 +127,7 @@ and be automatically stored.
 
 Convention use in this development
 ==================================
-	By calling 'Idiom' I will refer to a current sequence obtained by promoted output of an
- application and/or result of the system itself. Having property to be unique it also 
- refer to it's unique family called sequenced-data. 
+By calling 'Idiom' I will refer to a current sequence obtained by promoted output of an application and/or result of the system itself. Having property to be unique it also refer to it's unique family called sequenced-data. 
  
 Naming Convention
 =================
