@@ -175,8 +175,14 @@ function MdCd()
 		local StrStoreStream="" ; 
 		test ! -d	${path_loc} && mkdir -p ${path_loc} ;
 		
-		cd ${path_loc} 
-		echo -ne "Cmd:[ tar xvjfC ${path_loc} ${UserTypeLocationModel}  ]\n" > ${MDDevOut} ; 
+  ### Notice : 917a3c2a-e331-11e5-98a2-001e4c8856d6 
+  ### Note : Problems in tar command fixed. Tar command works in different way
+  ### unless somes libs where updated. 
+  ######
+		# cd ${path_loc} ###---> No longer needed, tar problems some account did not 
+  # drop de model-default file inside the path. 
+  ######
+		echo -ne "Cmd:[ tar xvjfC ${UserTypeLocationModel} ${path_loc} ]\n" > ${MDDevOut} ; 
 		test -f ${UserTypeLocationModel} && tar xjfC ${UserTypeLocationModel} ${path_loc} 2> /dev/null ;
 		resultTar=$? ; 
   if [ ${resultTar:=1} -eq 0 ] ; then 
@@ -185,7 +191,7 @@ function MdCd()
 			StrStoreStream="${StrDate}:${path_loc}:${UserTypeLocationModel}:No" ; 
 		fi 
 		ArrayMdCd[${#ArrayMdCd[@]}]=${StrStoreStream} ;  
-		echo "cd ${path_loc} ;" ;
+		#echo "cd ${path_loc} ;" ;
 	done 
 	GetMemHeader > ${StrFileStoreInfo} ; 
 	GetMemContent >> ${StrFileStoreInfo} ; 
