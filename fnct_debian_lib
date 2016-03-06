@@ -770,7 +770,7 @@ function ValueToVariable( )
  local StrDefaultSedScript='s/([SIB][tnos][tro]*[a-zA-Z0-9]+)/\$\{\1\}/g' ;
  local StrDefaultAssignScript='s/([SIB][tnos][tro]*[a-zA-Z0-9]+)/\1=\$\{\1\}/g' ;
 
- local StrSedAction=None ; 
+ local StrAppsAction=${VTVAppsAction:='None'} ; 
  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
 
  function __Action()
@@ -785,7 +785,7 @@ function ValueToVariable( )
   BVTestBoolAssertion="\${StrValueParser//,/ }" \
   BVTestBoolCase=True \
   BoolVarTestVarCreation )
-  local CmdLine="echo \"${StrParsedVar}\" | ${StrAppsName} ${StrAppsOpt} '${StrSedAction}'" ; 
+  local CmdLine="echo \"${StrParsedVar}\" | ${StrAppsName} ${StrAppsOpt} '${StrAppsAction}'" ; 
   if [ ${IsDisplayDebug} == "True" ] ; then
    echo -ne "CmdLine:\n[ ${CmdLine} ]\n" > /dev/stderr ; 
   fi 
@@ -798,19 +798,19 @@ function ValueToVariable( )
   local ArrayVarTest=( IsValueSimpleConvert:StrDefaultSedScript IsValueToAssignSame:StrDefaultAssignScript IsValueTransScript:StrDefaultTransform ) ; 
   for item in ${ArrayVarTest[@]} ; do 
    local ArraySubItem=( ${item//:/ } ) ; 
-   eval $( BVTestVarName=StrSedAction \
-   BVTestVarHold=\${StrSedAction} \
+   eval $( BVTestVarName=StrAppsAction \
+   BVTestVarHold=\${StrAppsAction} \
    BVTestBoolVarName="\${${ArraySubItem[0]}}" \
    BVTestBoolAssertion="\${${ArraySubItem[1]}}" \
    BVTestBoolCase=True \
    BoolVarTestVarCreation ) 
   done  
   if [ ${IsDisplayDebug} == "True" ] ; then
-   echo -ne "StrAppsName : ${StrAppsName}\nStrAppsOpt : ${StrAppsOpt}\nStrSedAction : ${StrSedAction}\n" > /dev/stderr ; 
+   echo -ne "StrAppsName : ${StrAppsName}\nStrAppsOpt : ${StrAppsOpt}\nStrAppsAction : ${StrAppsAction}\n" > /dev/stderr ; 
   fi 
   StrAppsName=${StrAppsName}           \
   StrAppsOpt=${StrAppsOpt}             \
-  StrSedAction=${StrSedAction}         \
+  StrAppsAction=${StrAppsAction}       \
   IsEntryInComaSep=${IsEntryInComaSep} \
   StrValueParser=${StrValueParser}     \
   __Action ; 
@@ -835,7 +835,7 @@ function ValueToVariable( )
   StrAppsOpt=${StrAppsOpt}                         \
   StrDefaultSedScript=${StrDefaultSedScript}       \
   StrDefaultAssignScript=${StrDefaultAssignScript} \
-  StrSedAction=${StrSedAction}                     \
+  StrAppsAction=${StrAppsAction}                     \
   StrValueParser=${StrValueParser}                 \
   IsDisplayDebug=${IsDisplayDebug}                 \
   IsEntryInComaSep=${IsEntryInComaSep}             \
