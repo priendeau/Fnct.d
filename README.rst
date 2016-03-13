@@ -1237,8 +1237,10 @@ md_cd command to transform its call :
  prefixed_var=__PATH__ MdCd
  
 
+
 Variable WPIListTransformFunc
 -----------------------------
+
 
 Will also allow a third-party function being [kc]rafted depending of ListToArray
 this one will also possible to not use it by specifying your own function 
