@@ -1253,6 +1253,13 @@ Variable WPIListTransformFunc
 
 .. code:: shell
 	
+ Fnct.D $> WrapPathIntegration --help
+ 
+ Help:
+
+ Function WrapPathIntegration
+ Default Variable Value:
+
  Function WrapPathIntegration
  Default Variable Value:
  Variable WPIPathList ,
