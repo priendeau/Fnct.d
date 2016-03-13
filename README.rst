@@ -1253,22 +1253,22 @@ Variable WPIListTransformFunc
 
 .. code:: shell
 	
-Function WrapPathIntegration
-Default Variable Value:
-Variable WPIPathList ,
-Default Value:''
-Variable WPIListTransformFunc ,
-Default Value:ListToArray
-Variable WPIListCSV ,
-Default Value:','
-Variable WPILstFuncCall ,
-
-      +---------------------------------------------------------------+
-  	   | Default Value:LTAComma='__CSV__' LTAEntry=__LIST__ __FNCT__   |
-      +---------------------------------------------------------------+
-
-Variable WPIVerbose ,
-Default Value:False
+ Function WrapPathIntegration
+ Default Variable Value:
+ Variable WPIPathList ,
+ Default Value:''
+ Variable WPIListTransformFunc ,
+ Default Value:ListToArray
+ Variable WPIListCSV ,
+ Default Value:','
+ Variable WPILstFuncCall ,
+ 
+ #      +---------------------------------------------------------------+
+ #  	   | Default Value:LTAComma='__CSV__' LTAEntry=__LIST__ __FNCT__   |
+ #      +---------------------------------------------------------------+
+ 
+ Variable WPIVerbose ,
+ Default Value:False
 
 
   
