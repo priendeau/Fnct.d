@@ -767,8 +767,8 @@ function ValueToVariable( )
  local StrDefaultTransform=${VTVDefaultTransform:='s/([SIB][tnos][tro][a-zA-Z0-9]+)/\\$\{\1\}/g'} ;
  local StrAppsName=${VTVAppsName:=/bin/sed} ; 
  local StrAppsOpt=${VTVAppsOpt:=-r} ;
- local StrDefaultSedScript='s/([SIB][tnos][tro]*[a-zA-Z0-9]+)/\$\{\1\}/g' ;
- local StrDefaultAssignScript='s/([SIB][tnos][tro]*[a-zA-Z0-9]+)/\1=\$\{\1\}/g' ;
+ local StrDefaultSedScript='s/([SIBA][tnosr][tror]*[a-zA-Z0-9]+)/\$\{\1\}/g' ;
+ local StrDefaultAssignScript='s/([SIBA][tnosr][tror]*[a-zA-Z0-9]+)/\1=\$\{\1\}/g' ;
 
  local StrAppsAction=${VTVAppsAction:='None'} ; 
  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
@@ -842,6 +842,233 @@ function ValueToVariable( )
   __main_StartServices                             ; 
  fi
 
+}
+
+
+### 
+### function WrapPathIntegration()
+###
+### As Path Accessor in some internal development and first integrated to 
+### md_cd command to transform its call :
+### -> from ( md_cd __PATH__ ) in to 
+### -> prefixed_var=__PATH__ md_cd 
+###
+### -- Allowing addition of --startservices to set a possible cumulation of informations
+### -- Allowing addition of --get , --list . 
+### -- Implicitly develop a filter for relativistic path added to the command and 
+### or adding default mechanism to filter and inform of explicit action like 
+### disallowing uses of relativistic path or inversly disallow uses of absolut
+### path...  [ /ekivɔk/-ly /kætʃ/ the /nɑt/ /ɪnˈtɛnt/ /ˈækʃən/ ]
+
+###
+### WrapPathIntegration
+### Will also allow a third-party function being [kc]rafted depending of ListToArray
+### this one will also possible to not use it by specifying your own function 
+### thru WPIListTransformFunc and its method to call it internally. Using the
+### function WPILstFuncCall .
+### Helper own its own example of calling the internal function: 
+###
+### see: (pre-note, not the official pre-fixed var are definied here )
+###
+###
+###  Function WrapPathIntegration
+###  Default Variable Value:
+###  Variable WPIPathList ,
+###  	Default Value:''
+###  Variable WPIListTransformFunc ,
+###  	Default Value:ListToArray
+###  Variable WPIListCSV ,
+###  	Default Value:','
+###  Variable WPILstFuncCall ,
+###   
+###      +---------------------------------------------------------------+
+###  	   | Default Value:LTAComma='__CSV__' LTAEntry=__LIST__ __FNCT__   |
+###      +---------------------------------------------------------------+
+###
+###
+###  Variable WPIVerbose ,
+###  	Default Value:False
+###
+### By Default, LTAComma and LTAEntry are provided by default and should not 
+### interfer with your own function. Despite having few report based before the
+### Fnct.D appear, it's idea to own at least the required TAG such __CSV__ and 
+### __LIST__ is mandatory if you do collect information thru the command-line.
+### Some other thinking may developt a in file data-collection or from Database
+### query to extract your data, but initially provided a in-hand and in-command
+### line provider is essential. Some may forget the uses of concept of 
+### Comma separeted value like passing a full-length Base64 Line like precedent
+### development of __fnctCreateLocalityFuncParam with uses of FParamBase64 
+### to identifie the variable as Base64 codec and having extra accessor 
+### decoding and encoding... All rejected for getter and setter problems near
+### 2011/2012 after discovering a development problems in uses of variable
+### parsing and be unable to acheive a better algorith. 
+### 
+### Note: ed0719fe-e959-11e5-98a2-001e4c8856d6
+### Evolution of Variable with pre-designed called like ValueToVariable
+### and presence of unified Getter .
+### While some effort toward __fnctCreateLocalityFuncParam owning ability
+### to interpret uses of __call_locality , predecessor from old_fnct.D does
+### owning specificity of variable . Today having unified call of variable 
+### thru uses of Array called __call_locality( Member-call Function-Name ), 
+### the function __GetVarReferenceList and apparatus :
+### 
+### eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+### echo -ne """${ArgGet}\n""" ;
+### 
+### found in '--get' , filter from Arg0 does report information about 
+### value inside the function and allow them having different action. 
+### - Totally Unified the declaration of Inside-member like Verbosis 
+### exemple in WPI, show:
+### 
+### IsVerbose=${WPIVerbose:=False} ;
+### 
+### - Presence of variable formating and will be inserted inside 
+### __GetVarReferenceList action because it start with Is or Bool,
+### or Array or Str or even Int. 
+###
+### While Uses of Base64 is not definied Here, a presence of 
+### Variable like WPIBase64=True/False will let other function 
+### query them with this form :
+### __FUNCTION__ --get WPIBase64 
+### and if this report thru, we guess we can start thinking using 
+### this way to enable codec... This improve speed and reduce code .
+### Known to be heavy old __fnctCreateLocalityFuncParam, and 
+### __call_locality as Function not Array does pump +/- 200 line 
+### of code per call... Having discovered a problem, in calling 
+### sequence, or problems between Real Unix/Solarix uses of function
+### accepting dot ( . )  inside function name it's not scheduled in 
+### bash anymore and did not comment anything over this choice... 
+### Its purely « acknowledgible » ... 
+### 
+### Because Sets of main new function __GetVarReferenceList, GetVarReference, 
+### ValueToVariable , It start to unravel a steady way to respect some decent 
+### coding adding <Plus> in way to affirm passthru of pre-fixed variable does 
+### work and does not leak. 
+### GetVarReference being glued inside ZenityEditFile Idiom integrity test leave
+### a bad breath in home-made third-party eavesdroping ... Free development
+### is also subject to be altered and being hack directly to github server 
+### and prone development should depend of at least a codec to infirm in safe
+### test being done because some arbitrary code are summed, and ZenityEditFile
+### had property to affirm if a today code work or not after testing the 
+### integrity. Which is bad in auto-development tool observed being able to 
+### alter sub-set of code but not really helping in development. Based on 
+### CRAN statistics tools, comming alone this auto-development widget is only
+### to let beleive there is work toward a project, while real project path look
+### like heratic. Time is something we spend on and it's not counted when it's
+### afformentionned finited goal. 
+### 
+### Resume in, some part are fixed for good, some other like ValueToVariable
+### are not finished but give good result and will continue to help the loosed 
+### development left as example on what to not follow, help definition of standing
+### component inside a function rather to implement lost variable and nestled 
+### function . 
+### 
+### 
+### 
+
+
+
+
+
+### Dedicated for md_cd
+### While ValueToVariable is under verification, an alternative is deployed to 
+### allow function MdCd  from this Fnct.D project to work with Path Listed 
+### from normal unix like command calling and be decoyed and parsed into a 
+### prefixed-variable. Some effort toward ValueToVariable was defined but not 
+### yet ported or tested. Somes effort in the past are mildly report some exception
+### between different version of bash and all test are not concluent at this step.
+### 
+### But for sure, MdCd should join back fnct_debian_lib by integrating it's lock 
+### mechanism that prevent many acces at the time. A Wonderfull effort to allow 
+### contigous interaction like Unicity lock or permanent survey. Theses type of 
+### mechanism avoid accessing to a file index storing precious data and rewrite
+### them to prevent visible trace of temporary path being made, being used and 
+### wipe before a Main or higher process open the file and did not report presence 
+### of that action. A big problem in HAL, access in time is Heavy and action in 
+### local are slowed while important process are using it to detect presence of 
+### alteration. Just install usb-image-creator of gtk-usb-imagewriter are slow
+### updating re-formated disk . 
+### 
+
+
+function WrapPathIntegration()
+{
+	local __call_locality=( WPI WrapPathIntegration ) ;
+	local ArrayArg=( $* ) ; 
+	local Arg0=${ArrayArg[0]} 
+ local StrEntryListPath=${WPIPathList:=''} ;
+ local StrListFnct=${WPIListTransformFunc:=ListToArray}
+ local StrCommaValue=${WPIListCSV:=','} ;
+ local StrListArgCall=${WPILstFuncCall:=LTAComma=\'__CSV__\' LTAEntry=__LIST__ __FNCT__}  ;
+ local IsVerbose=${WPIVerbose:=False} ; 
+
+	function Verbosis()
+	{
+		local __call_locality=( Verbosis Verb );
+		local StrMsg=${VerbMsg:=__TEXT__} ; 
+		local StrDevOut=${VerbDev:=/dev/stderr} ; 
+  local VerboseState=${VerbState:=False} ;
+		local ArrayArg=( $* ) ; 
+		if [ "${VerbState:=False}" == "True" ] ; then 
+			echo -ne "VERBOSE:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+		fi
+	}
+  
+ function ListToArray()
+ {
+		local __call_locality=( LTA ListToArray ) ;
+		local Arg0=${ArrayArg[0]} ;
+		local ArrayArg=( $* ) ;
+  local StrCommaConverted=${LTAComma//[\"\']/} ;
+   local StrDebugMsg="\tIn Func:${__call_locality[1]}\n\t\tContent of LTAEntry:[${LTAEntry}]\n\t\tContent of LTAComma:[${LTAComma}]\n\t\tContent of StrCommaConverted:[${StrCommaConverted}]" ; 
+  VerbState=${IsVerbose} VerbMsg=${StrDebugMsg} Verbosis ; 
+  local StrEntryFilter="\"${LTAEntry//${StrCommaConverted}/\" \"}\"" ;
+  StrDebugMsg="\tIn Func:${__call_locality[1]}\n\t\tContent of StrEntryFilter:[${StrEntryFilter}]" ; 
+  VerbState=${IsVerbose} VerbMsg=${StrDebugMsg} Verbosis ; 
+  
+ }
+ 
+ function __main_StartServices()
+ {
+		local __call_locality=( Main __main_StartServices ) ;
+		local Arg0=${ArrayArg[0]} ;
+		local ArrayArg=( $* ) ;
+  local StrCmd=${StrListArgCall//__CSV__/\\\'${StrCommaValue}\\\'} ;
+  StrEntryListPath=${StrEntryListPath//}
+  StrCmd=${StrCmd//__LIST__/${StrEntryListPath}} ;
+  StrCmd=${StrCmd//__FNCT__/${StrListFnct}} ;
+  
+  local StrDebugMsg="In Func:${__call_locality[1]}\n\tContent of StrCmd:[${StrCmd}]" ; 
+  VerbState=${IsVerbose} VerbMsg=${StrDebugMsg} Verbosis ; 
+  
+  eval $( VTVIsArrayStyleInsert=True \
+       VTVIsValueReAssign=True \
+       VTVIsValueToConvert=False \
+       VTVValueEntry=IsVerbose ValueToVariable ) ${StrCmd} ;  
+                       
+  StrDebugMsg="In Func:${__call_locality[1]}\n\tContent of ArrayPath :[${ArrayPath[@]}]"
+  VerbState=${IsVerbose} VerbMsg=${StrDebugMsg} Verbosis ; 
+  #eval local ArrayPath=( $( ${StrCmd} ) ) ; 
+  #echo -ne "${ArrayPath[@]}"
+ }
+
+	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+			GetVarReference ${__call_locality[1]} ; 
+			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+		echo -ne """${ArgGet}\n""" ;
+	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+		eval $( __GetVarReferenceList ) ;	
+	else
+  eval $( VTVIsArrayStyleInsert=True \
+          VTVIsValueReAssign=True \
+          VTVIsValueToConvert=False \
+          VTVValueEntry=StrEntryListPath,StrListFnct,StrCommaValue,StrListArgCall,IsVerbose ValueToVariable ) __main_StartServices 
+	fi 
+ 
+ 
+ 
 }
 
 
