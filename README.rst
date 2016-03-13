@@ -1327,17 +1327,22 @@ variable parsing and be unable to acheive a better algorithm.
 
 ::
 
- - Presence of variable formating and will be inserted inside 
- __GetVarReferenceList action because it start with Is or Bool,
- or Array or Str or even Int. 
+ - Presence of variable notation is present inside __GetVarReferenceList and all
+ variables like the example starting with Is or Bool will own a priority and 
+ being treated . This is also applied to variable that start with Array or Str or 
+ even Int.
  
- While Uses of Base64 is not definied Here, a presence of 
+
+ By Uses of Base64 is not definied Here, a presence of 
  Variable like WPIBase64=True/False will let other function 
  query them with this form :
 
 .. code:: shell
 
-
+ ### Following is suggestion and not real action.
+ ### It represent a candidate owning variable named WPIBase64
+ ### which is not for real WrapPathIntegration for the moment. 
+ 
  __FUNCTION__ --get WPIBase64 
 
 ::
