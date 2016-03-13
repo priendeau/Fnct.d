@@ -1310,6 +1310,7 @@ variable parsing and be unable to acheive a better algorithm.
 
 .. code:: shell
 	
+
 eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 echo -ne """${ArgGet}\n""" ;
 
