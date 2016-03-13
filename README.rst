@@ -1264,7 +1264,7 @@ Variable WPIListTransformFunc
  Variable WPILstFuncCall ,
  
  #      +---------------------------------------------------------------+
- #   | Default Value:LTAComma='__CSV__' LTAEntry=__LIST__ __FNCT__   |
+ #    | Default Value:LTAComma='__CSV__' LTAEntry=__LIST__ __FNCT__   |
  #      +---------------------------------------------------------------+
  
  Variable WPIVerbose ,
