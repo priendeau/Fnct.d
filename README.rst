@@ -1186,7 +1186,10 @@ md_cd command to transform its call :
 
 .. code:: shell
 
-from ( md_cd __PATH__ ) in to 
+
+### from 
+md_cd __PATH__
+### to 
 prefixed_var=__PATH__ md_cd 
 
 
