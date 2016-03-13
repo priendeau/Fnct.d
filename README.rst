@@ -1282,19 +1282,31 @@ Corpus of WPIListTransformFunc -> WPILstFuncCall
 
 ::
 
- By Default, LTAComma and LTAEntry are provided by default and should not 
- interfer with your own function. Despite having few report based before the
- Fnct.D appear, it's idea to own at least the required TAG such __CSV__ and 
- __LIST__ is mandatory if you do collect information thru the command-line.
- Some other thinking may developt a in file data-collection or from Database
- query to extract your data, but initially provided a in-hand and in-command
- line provider is essential. Some may forget the uses of concept of 
- Comma separeted value like passing a full-length Base64 Line like precedent
- development of __fnctCreateLocalityFuncParam with uses of FParamBase64 
- to identifie the variable as Base64 codec and having extra accessor 
- decoding and encoding... All rejected for getter and setter problems near
- 2011/2012 after discovering a development problems in uses of variable
- parsing and be unable to acheive a better algorith. 
+By Default, LTAComma and LTAEntry are provided by default and should not  interfer
+with your own function. Despite having few report based before the Fnct.D appear, it's idea
+to own at least the required TAG such __CSV__ and  __LIST__ is mandatory if you do
+collect information thru the command-line. Some other thinking may developt a in file
+data-collection or from Database query to extract your data, but initially provided a in-hand
+and in-command line provider is essential. Some may forget the uses of concept of
+Comma separeted value like passing a full-length Base64 Line like precedent development
+of __fnctCreateLocalityFuncParam with uses of FParamBase64  to identifie the variable as
+Base64 codec and having extra accessor  decoding and encoding... All rejected for getter
+and setter problems near 2011/2012 after discovering a development problems in uses of
+variable parsing and be unable to acheive a better algorithm. 
+
+:Note: ed0719fe-e959-11e5-98a2-001e4c8856d6
+:Title: toward __fnctCreateLocalityFuncParam
+:Function: Old __fnctCreateLocalityFuncParam, Old __call_locality
+
+::
+
+ Evolution of Variable with pre-designed called like ValueToVariable
+ and presence of unified Getter .
+ While some effort toward __fnctCreateLocalityFuncParam owning ability
+ to interpret uses of __call_locality , predecessor from old_fnct.D does
+ owning specificity of variable . Today having unified call of variable 
+ thru uses of Array called __call_locality( Member-call Function-Name ), 
+ the function __GetVarReferenceList and apparatus :
 
 
 
