@@ -127,8 +127,23 @@ and be automatically stored.
 
 Convention use in this development
 ==================================
-By calling 'Idiom' I will refer to a current sequence obtained by promoted output of an application and/or result of the system itself. Having property to be unique it also refer to it's unique family called sequenced-data. 
+By calling '*Idiom*' I will refer to a current sequence obtained by promoted output 
+of an application and/or result of the system itself. Having property to be unique 
+it also refer to it's unique family called sequenced-data. 
  
+By calling '*Functor*' I  will refer to a  transient way  to call  conventionnal 
+function and / or application with really general function statement. To use 
+as simplification of statement and to simplify uses in End-Users test and uses. 
+
+Term '*general function statement*', stand for nominal function with less than 
+3 lines of code or only to hide End-User usuability out of conventionnal method
+describe in Fnct.D to uses Variable direct re-definition in function call to 
+allow reduction of Bash or similar shell to apply a ulimit and other mechanism to
+reduce lenght of element or limit of memory to acheive a debugging statement 
+decoy similar problem in future bash - Sub command domain know to be function 
+script language. 
+
+
 Naming Convention
 =================
 
@@ -1187,9 +1202,9 @@ md_cd command to transform its call :
 .. code:: shell
 	
  ### from 
- md_cd __PATH__
+ MdCd __PATH__
  ### to 
- prefixed_var=__PATH__ md_cd 
+ prefixed_var=__PATH__ MdCd 
 
 ::
 	
@@ -1201,6 +1216,27 @@ md_cd command to transform its call :
  path...  [ /ekivɔk/-ly /kætʃ/ the /nɑt/ /ɪnˈtɛnt/ /ˈækʃən/ ]
 
 
+::
+
+ While some may doubt about uses and lack of operability, using a function 
+ to factorize the data-collection entry is *Package sensibility* and therefore
+ example in code sample stay valid except we are not doubting about elements
+ such $* inside functor :
+ 
+.. code:: shell
+	
+ ### Previously defined Functor. 
+ function md_cd()
+ {
+  prefixed_var=$* MdCd ; 
+ }
+ 
+ ### from 
+ MdCd __PATH__
+ ### to 
+ prefixed_var=__PATH__ MdCd
+ 
+ 
   
 :Note: 363cbfd8-308a-11e3-98a2-001b3875b29c
 :Title: Prior to BodyFunc, Internal Steady Pre-Variable Loader is...
