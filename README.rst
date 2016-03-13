@@ -1383,6 +1383,16 @@ Strength Affinity, securing with ZenityEditFile.
  like heratic. Time is something we spend on and it's not counted when it's
  afformentionned finited goal. 
  
+End, What missing in __fnctCreateLocalityFuncParam
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+::
+   
+  Resume in, some part are fixed for good ( require ZenityEditFile to re-apply a new 
+  checksum ), some other like ValueToVariable are not finished but give good result 
+  and will continue to help the loosed development left as example on what to not 
+  follow, help definition of standing component inside a function rather to implement 
+  lost variable and nestled function . 
 
   
 :Note: 363cbfd8-308a-11e3-98a2-001b3875b29c
@@ -1816,7 +1826,7 @@ a functionnal-programmation stream behing show under many call from BoolVarTestV
          StrPythonLoader="${StrPythonAppsPath}/python${StrPythonLoader}" ;
    
       eval $( BVTestVarName=StrAppsInstall \
-         BVTestVarHold='pip' \
+         BVTestVarHo|d='pip' \
          BVTestBoolVarName=\${BoolPipInstall} \
          BVTestBoolCase=False \
          BVTestBoolAssertion='${StrPythonLoader} ${StrPythonScript}' BVTestScopeTest=local BoolVarTestVarCreation ) ; 
