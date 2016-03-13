@@ -1295,7 +1295,7 @@ and setter problems near 2011/2012 after discovering a development problems in u
 variable parsing and be unable to acheive a better algorithm. 
 
 :Note: ed0719fe-e959-11e5-98a2-001e4c8856d6
-:Title: toward __fnctCreateLocalityFuncParam
+:Title: Toward __fnctCreateLocalityFuncParam
 :Function: Old __fnctCreateLocalityFuncParam, Old __call_locality
 
 ::
