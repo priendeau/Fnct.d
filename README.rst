@@ -1240,9 +1240,6 @@ md_cd command to transform its call :
 Variable WPIListTransformFunc
 -----------------------------
 
-::
-	
-WrapPathIntegration
 Will also allow a third-party function being [kc]rafted depending of ListToArray
 this one will also possible to not use it by specifying your own function 
 thru WPIListTransformFunc and its method to call it internally. Using the
