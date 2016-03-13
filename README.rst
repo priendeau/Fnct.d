@@ -1358,6 +1358,32 @@ variable parsing and be unable to acheive a better algorithm.
  Its purely « acknowledgible » ... 
 
 
+Strength Affinity, securing with ZenityEditFile.
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+::
+
+ Because Sets of main new function __GetVarReferenceList, GetVarReference, 
+ ValueToVariable , It start to unravel a steady way to respect some decent 
+ coding adding <Plus> in way to affirm passthru of pre-fixed variable does 
+ work and does not leak. 
+ 
+::
+ 
+ GetVarReference being glued inside ZenityEditFile Idiom integrity test leave
+ a bad breath in home-made third-party eavesdroping ... Free development
+ is also subject to be altered and being hack directly to github server 
+ and prone development should depend of at least a codec to infirm in safe
+ test being done because some arbitrary code are summed, and ZenityEditFile
+ had property to affirm if a today code work or not after testing the 
+ integrity. Which is bad in auto-development tool observed being able to 
+ alter sub-set of code but not really helping in development. Based on 
+ CRAN statistics tools, comming alone this auto-development widget is only
+ to let beleive there is work toward a project, while real project path look
+ like heratic. Time is something we spend on and it's not counted when it's
+ afformentionned finited goal. 
+ 
+
   
 :Note: 363cbfd8-308a-11e3-98a2-001b3875b29c
 :Title: Prior to BodyFunc, Internal Steady Pre-Variable Loader is...
