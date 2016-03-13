@@ -1277,6 +1277,26 @@ Variable WPIListTransformFunc
  Variable WPIVerbose ,
  Default Value:False
 
+Corpus of WPIListTransformFunc -> WPILstFuncCall
+------------------------------------------------
+
+::
+
+  By Default, LTAComma and LTAEntry are provided by default and should not 
+  interfer with your own function. Despite having few report based before the
+  Fnct.D appear, it's idea to own at least the required TAG such __CSV__ and 
+  __LIST__ is mandatory if you do collect information thru the command-line.
+  Some other thinking may developt a in file data-collection or from Database
+  query to extract your data, but initially provided a in-hand and in-command
+  line provider is essential. Some may forget the uses of concept of 
+  Comma separeted value like passing a full-length Base64 Line like precedent
+  development of __fnctCreateLocalityFuncParam with uses of FParamBase64 
+  to identifie the variable as Base64 codec and having extra accessor 
+  decoding and encoding... All rejected for getter and setter problems near
+  2011/2012 after discovering a development problems in uses of variable
+  parsing and be unable to acheive a better algorith. 
+
+
 
   
 :Note: 363cbfd8-308a-11e3-98a2-001b3875b29c
