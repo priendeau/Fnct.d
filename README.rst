@@ -1308,7 +1308,22 @@ variable parsing and be unable to acheive a better algorithm.
  thru uses of Array called __call_locality( Member-call Function-Name ), 
  the function __GetVarReferenceList and apparatus :
 
+.. code:: shell
+	
+eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+echo -ne """${ArgGet}\n""" ;
 
+::
+ 
+  found in '--get' , filter from Arg0 does report information about 
+  value inside the function and allow them having different action. 
+  - Totally Unified the declaration of Inside-member like Verbosis 
+  exemple in WPI, show:
+  
+
+.. code:: shell
+
+IsVerbose=${WPIVerbose:=False} ;
 
   
 :Note: 363cbfd8-308a-11e3-98a2-001b3875b29c
