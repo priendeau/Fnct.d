@@ -1236,6 +1236,42 @@ md_cd command to transform its call :
  ### to 
  prefixed_var=__PATH__ MdCd
  
+
+Variable WPIListTransformFunc
+-----------------------------
+
+::
+	
+  WrapPathIntegration
+  Will also allow a third-party function being [kc]rafted depending of ListToArray
+  this one will also possible to not use it by specifying your own function 
+  thru WPIListTransformFunc and its method to call it internally. Using the
+  function WPILstFuncCall .
+  Helper own its own example of calling the internal function: 
+  
+  see: (pre-note, not the official pre-fixed var are definied here )
+
+
+.. code:: shell
+	
+Function WrapPathIntegration
+Default Variable Value:
+Variable WPIPathList ,
+Default Value:''
+Variable WPIListTransformFunc ,
+Default Value:ListToArray
+Variable WPIListCSV ,
+Default Value:','
+Variable WPILstFuncCall ,
+
+      +---------------------------------------------------------------+
+  	   | Default Value:LTAComma='__CSV__' LTAEntry=__LIST__ __FNCT__   |
+      +---------------------------------------------------------------+
+
+Variable WPIVerbose ,
+Default Value:False
+
+
  
   
 :Note: 363cbfd8-308a-11e3-98a2-001b3875b29c
