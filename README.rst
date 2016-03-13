@@ -1185,12 +1185,11 @@ As Path Accessor in some internal development and first integrated to
 md_cd command to transform its call :
 
 .. code:: shell
-
-### from 
-md_cd __PATH__
-### to 
-prefixed_var=__PATH__ md_cd 
-
+	
+ ### from 
+ md_cd __PATH__
+ ### to 
+ prefixed_var=__PATH__ md_cd 
 
 ::
 	
