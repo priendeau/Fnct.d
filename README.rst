@@ -1186,7 +1186,6 @@ md_cd command to transform its call :
 
 .. code:: shell
 
-
 ### from 
 md_cd __PATH__
 ### to 
