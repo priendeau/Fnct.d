@@ -1251,6 +1251,25 @@ Variable WPIListTransformFunc
   
  see: (pre-note, not the official pre-fixed var are definied here )
 
+.. code:: shell
+	
+Function WrapPathIntegration
+Default Variable Value:
+Variable WPIPathList ,
+Default Value:''
+Variable WPIListTransformFunc ,
+Default Value:ListToArray
+Variable WPIListCSV ,
+Default Value:','
+Variable WPILstFuncCall ,
+
+      +---------------------------------------------------------------+
+  	   | Default Value:LTAComma='__CSV__' LTAEntry=__LIST__ __FNCT__   |
+      +---------------------------------------------------------------+
+
+Variable WPIVerbose ,
+Default Value:False
+
 
   
 :Note: 363cbfd8-308a-11e3-98a2-001b3875b29c
