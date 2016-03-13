@@ -1278,7 +1278,7 @@ Variable WPIListTransformFunc
  Default Value:False
 
 Corpus of WPIListTransformFunc -> WPILstFuncCall
-------------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ::
 
