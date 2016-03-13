@@ -1325,6 +1325,34 @@ variable parsing and be unable to acheive a better algorithm.
 
  IsVerbose=${WPIVerbose:=False} ;
 
+::
+
+ - Presence of variable formating and will be inserted inside 
+ __GetVarReferenceList action because it start with Is or Bool,
+ or Array or Str or even Int. 
+ 
+ While Uses of Base64 is not definied Here, a presence of 
+ Variable like WPIBase64=True/False will let other function 
+ query them with this form :
+
+.. code:: shell
+
+
+ __FUNCTION__ --get WPIBase64 
+
+::
+
+ and if this report thru, we guess we can start thinking using 
+ this way to enable codec... This improve speed and reduce code .
+ Known to be heavy old __fnctCreateLocalityFuncParam, and 
+ __call_locality as Function not Array does pump +/- 200 line 
+ of code per call... Having discovered a problem, in calling 
+ sequence, or problems between Real Unix/Solarix uses of function
+ accepting dot ( . )  inside function name it's not scheduled in 
+ bash anymore and did not comment anything over this choice... 
+ Its purely « acknowledgible » ... 
+
+
   
 :Note: 363cbfd8-308a-11e3-98a2-001b3875b29c
 :Title: Prior to BodyFunc, Internal Steady Pre-Variable Loader is...
