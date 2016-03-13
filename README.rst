@@ -1239,7 +1239,7 @@ md_cd command to transform its call :
 
 
 Variable WPIListTransformFunc
------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 Will also allow a third-party function being [kc]rafted depending of ListToArray
