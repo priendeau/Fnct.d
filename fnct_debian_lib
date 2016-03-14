@@ -1000,8 +1000,9 @@ function WrapPathIntegration()
  local StrListFnct=${WPIListTransformFunc:=ListToArray}
  local StrCommaValue=${WPIListCSV:=','} ;
  local IsPathIncludeSemantic=${WPIPathSemantic:=True} ; 
- local StrListArgCall=${WPILstFuncCall:=LTAComma=\'__CSV__\' LTASemanticTag=__TAG__ LTAEntry=__LIST__ __FNCT__}  ;
+ local StrListArgCall=${WPILstFuncCall:=LTAComma=\'__CSV__\' LTAMatchRelative=__REG__ LTASemanticTag=__TAG__ LTAEntry=__LIST__ __FNCT__}  ;
  local IsVerbose=${WPIVerbose:=False} ; 
+ local StrFilterRelativePath=${WPIRelativeMatch:='^[\.]+[\/]?[A-Za-z0-9_]+|^\w+[\/]?'}
  local StrSemanticPathTag=${WPISemanticTag:=R,A}
 
 	function Verbosis()
@@ -1027,6 +1028,27 @@ function WrapPathIntegration()
   local StrEntryFilter="\"${LTAEntry//${StrCommaConverted}/\" \"}\"" ;
   local StrFilterRelative='^[\.]+[\/]?[A-Za-z0-9_]+|^\w+[\/]?' ; 
   local StrTagSemList=${LTASemanticTag:=R,A}
+  
+  ### According to arbitrary value 
+  ###             R -> Relative Path and 
+  ###             A -> Absolut Path 
+  ### These values are stocked into an array where value 0 and 1 are pointing 
+  ### on linear correspondance. 
+  ### Array[0] -> point on value R
+  ### Array[1] -> point on value A .
+  ### Why it's important to developt a regular expression matchin Value 0 on 
+  ### Array[0] of transformed LTASemanticTag or WPISemanticTag because 
+  ### for a positive match like finding
+  ### ./path or ../path or path/other_path will report 1 count by the egrep .
+  ### After hiting once it is associate to 0 and if there is no hit, associate
+  ### to an Absolut path . 
+  ### About LTASemanticTag, it taking value from WPISemanticTag, if information
+  ### are specified from WrapPathIntegration ( like WPISemanticTag=R,A WrapPathIntegration)
+  ### it is automatically reported inside Section 2 of __main_StartServices .
+  ### It basically developt StrCmd, parsing __TAG__ and adding the definition or
+  ### Ordered information about Semantic . Being added to section 3 of __main_StartServices
+  ### Thru ValueToVariable
+  
   local ArrayPathSemantic=( ${StrTagSemList/,/ } ) ; 
   
   
@@ -1066,18 +1088,29 @@ function WrapPathIntegration()
  
  function __main_StartServices()
  {
-		local __call_locality=( Main __main_StartServices ) ;
+  ###
+  ### Section 1
+  ###
+  local __call_locality=( Main __main_StartServices ) ;
 		local Arg0=${ArrayArg[0]} ;
 		local ArrayArg=( $* ) ;
   local StrCmd=${StrListArgCall//__CSV__/\'${StrCommaValue}\'} ;
+
+  ###
+  ### Section 2
+  ###
   StrEntryListPath=${StrEntryListPath//}
   StrCmd=${StrCmd//__LIST__/${StrEntryListPath}} ;
   StrCmd=${StrCmd//__FNCT__/${StrListFnct}} ;
-  StrCmd=${StrCmd//__TAG__/${StrSemanticPathTag}}
+  StrCmd=${StrCmd//__TAG__/${StrSemanticPathTag}} ;
+  StrCmd=${StrCmd//__REG__/${StrFilterRelativePath}} ;
   
   local StrDebugMsg="In Func:${__call_locality[1]}\n\tContent of StrCmd:[${StrCmd}]" ; 
   VerbState=${IsVerbose} VerbMsg=${StrDebugMsg} Verbosis ; 
   
+  ###
+  ### Section 3
+  ###
   local ArrayPath=( $( \
        eval $( VTVIsArrayStyleInsert=True \
        VTVIsValueReAssign=True \
@@ -1087,10 +1120,11 @@ function WrapPathIntegration()
   StrDebugMsg="In Func:${__call_locality[1]}\n\tContent of ArrayPath :[${ArrayPath[@]}]"
   
   VerbState=${IsVerbose} VerbMsg=${StrDebugMsg} Verbosis ; 
-  #eval local ArrayPath=( $( ${StrCmd} ) ) ; 
-  #echo -ne "${ArrayPath[@]}"
  }
 
+  ###
+  ### Section 4
+  ###
 	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
 			GetVarReference ${__call_locality[1]} ; 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
@@ -1103,7 +1137,7 @@ function WrapPathIntegration()
   eval $( VTVIsArrayStyleInsert=True \
           VTVIsValueReAssign=True \
           VTVIsValueToConvert=False \
-          VTVValueEntry=StrEntryListPath,StrListFnct,StrCommaValue,StrListArgCall,IsVerbose,IsPathIncludeSemantic,StrSemanticPathTag ValueToVariable ) __main_StartServices 
+          VTVValueEntry=StrEntryListPath,StrListFnct,StrCommaValue,StrListArgCall,IsVerbose,IsPathIncludeSemantic,StrSemanticPathTag,StrFilterRelativePath ValueToVariable ) __main_StartServices 
 	fi 
  
  
