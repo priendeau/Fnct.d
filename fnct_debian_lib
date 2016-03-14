@@ -1019,8 +1019,8 @@ function WrapPathIntegration()
 		local __call_locality=( LTA ListToArray ) ;
 		local Arg0=${ArrayArg[0]} ;
 		local ArrayArg=( $* ) ;
-  local StrCommaConverted=${LTAComma//[\"\']/} ;
-   local StrDebugMsg="\tIn Func:${__call_locality[1]}\n\t\tContent of LTAEntry:[${LTAEntry}]\n\t\tContent of LTAComma:[${LTAComma}]\n\t\tContent of StrCommaConverted:[${StrCommaConverted}]" ; 
+  local StrCommaConverted=${LTAComma//\'/} ;
+  local StrDebugMsg="\tIn Func:${__call_locality[1]}\n\t\tContent of LTAEntry:[${LTAEntry}]\n\t\tContent of LTAComma:[${LTAComma}]\n\t\tContent of StrCommaConverted:[${StrCommaConverted}]" ; 
   VerbState=${IsVerbose} VerbMsg=${StrDebugMsg} Verbosis ; 
   local StrEntryFilter="\"${LTAEntry//${StrCommaConverted}/\" \"}\"" ;
   StrDebugMsg="\tIn Func:${__call_locality[1]}\n\t\tContent of StrEntryFilter:[${StrEntryFilter}]" ; 
@@ -1033,7 +1033,7 @@ function WrapPathIntegration()
 		local __call_locality=( Main __main_StartServices ) ;
 		local Arg0=${ArrayArg[0]} ;
 		local ArrayArg=( $* ) ;
-  local StrCmd=${StrListArgCall//__CSV__/\\\'${StrCommaValue}\\\'} ;
+  local StrCmd=${StrListArgCall//__CSV__/\'${StrCommaValue}\'} ;
   StrEntryListPath=${StrEntryListPath//}
   StrCmd=${StrCmd//__LIST__/${StrEntryListPath}} ;
   StrCmd=${StrCmd//__FNCT__/${StrListFnct}} ;
