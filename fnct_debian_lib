@@ -1000,8 +1000,9 @@ function WrapPathIntegration()
  local StrListFnct=${WPIListTransformFunc:=ListToArray}
  local StrCommaValue=${WPIListCSV:=','} ;
  local IsPathIncludeSemantic=${WPIPathSemantic:=True} ; 
- local StrListArgCall=${WPILstFuncCall:=LTAComma=\'__CSV__\' LTAEntry=__LIST__ __FNCT__}  ;
+ local StrListArgCall=${WPILstFuncCall:=LTAComma=\'__CSV__\' LTASemanticTag=__TAG__ LTAEntry=__LIST__ __FNCT__}  ;
  local IsVerbose=${WPIVerbose:=False} ; 
+ local StrSemanticPathTag=${WPISemanticTag:=R,A}
 
 	function Verbosis()
 	{
@@ -1025,7 +1026,8 @@ function WrapPathIntegration()
   VerbState=${IsVerbose} VerbMsg=${StrDebugMsg} Verbosis ; 
   local StrEntryFilter="\"${LTAEntry//${StrCommaConverted}/\" \"}\"" ;
   local StrFilterRelative="^\/" ; 
-  local ArrayPathSemantic=( R A )
+  local StrTagSemList=${LTASemanticTag:=R,A}
+  local ArrayPathSemantic=( ${StrTagSemList/,/ } ) ; 
   
   
   local StrPath ; 
@@ -1034,7 +1036,7 @@ function WrapPathIntegration()
   for (( i=0 ; i <= (( ${#ArrayLocalList[@]} -1 )) ; i++ )) ; do 
    local StrPath=${ArrayLocalList[${i}]} ; 
    local IntFilterTest=1  ; 
-   IntResultRelative=1 ;
+   local IntResultRelative=1 ;
    if [ ${IsPathIncludeSemantic:=True} == "True" ] ; then 
     StrDebugMsg="\tIn Func:${__call_locality[1]}\n\t\tContent of StrPath:[${StrPath}]" ; 
     VerbState=${IsVerbose} VerbMsg=${StrDebugMsg} Verbosis ; 
@@ -1063,6 +1065,7 @@ function WrapPathIntegration()
   StrEntryListPath=${StrEntryListPath//}
   StrCmd=${StrCmd//__LIST__/${StrEntryListPath}} ;
   StrCmd=${StrCmd//__FNCT__/${StrListFnct}} ;
+  StrCmd=${StrCmd//__TAG__/${StrSemanticPathTag}}
   
   local StrDebugMsg="In Func:${__call_locality[1]}\n\tContent of StrCmd:[${StrCmd}]" ; 
   VerbState=${IsVerbose} VerbMsg=${StrDebugMsg} Verbosis ; 
@@ -1092,7 +1095,7 @@ function WrapPathIntegration()
   eval $( VTVIsArrayStyleInsert=True \
           VTVIsValueReAssign=True \
           VTVIsValueToConvert=False \
-          VTVValueEntry=StrEntryListPath,StrListFnct,StrCommaValue,StrListArgCall,IsVerbose,IsPathIncludeSemantic ValueToVariable ) __main_StartServices 
+          VTVValueEntry=StrEntryListPath,StrListFnct,StrCommaValue,StrListArgCall,IsVerbose,IsPathIncludeSemantic,StrSemanticPathTag ValueToVariable ) __main_StartServices 
 	fi 
  
  
