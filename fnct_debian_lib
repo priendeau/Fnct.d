@@ -1026,7 +1026,7 @@ function WrapPathIntegration()
   local StrDebugMsg="\tIn Func:${__call_locality[1]}\n\t\tContent of LTAEntry:[${LTAEntry}]\n\t\tContent of LTAComma:[${LTAComma}]\n\t\tContent of StrCommaConverted:[${StrCommaConverted}]\n\t\tContent of IsPathIncludeSemantic:[${IsPathIncludeSemantic}]" ; 
   VerbState=${IsVerbose} VerbMsg=${StrDebugMsg} Verbosis ; 
   local StrEntryFilter="\"${LTAEntry//${StrCommaConverted}/\" \"}\"" ;
-  local StrFilterRelative='^[\.]+[\/]?[A-Za-z0-9_]+|^\w+[\/]?' ; 
+  local StrFilterRelative=${LTAMatchRelative:='^[\.]+[\/]?[A-Za-z0-9_]+|^\w+[\/]?'} ; 
   local StrTagSemList=${LTASemanticTag:=R,A}
   
   ### According to arbitrary value 
