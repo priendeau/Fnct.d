@@ -12,7 +12,7 @@ function ZenityPassPhrase()
 #export SSH_ENV="$HOME/.ssh/environment"
 export SSH_ASKPASS="ZenityPassPhrase" 
 
-function StartAgentSSH 
+function StartAgentSSH()
 {
 	local __call_locality=( SASSH StartAgentSSH ) ;
 	local ArrayArg=( $* ) ; 
@@ -29,6 +29,9 @@ function StartAgentSSH
  local StrSSHAddAppsOpt=${SASSHSSHADDOpt:=} ; 
  local StrSSHAgentApps=${SASSHSSHAgentApp:=/usr/bin/ssh-agent} ; 
  local StrSSHAgentAppsOpt=${SASSHSSHAgentOpt:=} ; 
+ local StrProcMemory=${SASSHProcessLink:=/proc} ;
+ local StrStartServicesName=${SASSHStartServices:=__main_StartServices} ;
+ local StrStopServicesName=${SASSHStopServices:=__main_StopServices} ;
  
  
  ### Create StrPathSSH and if IsHomeUser==False, StrPathSSH will own
@@ -57,7 +60,7 @@ function StartAgentSSH
   if [ ${IntPidAgent} -ne -1 ] ; then 
    echo -ne "\n\t\033[01;31mKilling SSH-Agent on PID:${IntPidAgent}\033[00m\n\n" ; 
    sudo kill -11 ${IntPidAgent} ; 
-   test ! -d /proc/${IntPidAgent} && unset SSH_AGENT_PID
+   test ! -d ${StrProcMemory}/${IntPidAgent} && unset SSH_AGENT_PID
   fi 
  }
  
@@ -105,15 +108,22 @@ function StartAgentSSH
   VTVIsValueReAssign=True    \
   VTVIsValueToConvert=False  \
   VTVIsArrayStyleInsert=True \
-  ValueToVariable ) __main_StopServices ; 
+  ValueToVariable ) ${StrStopServicesName} ; 
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
   eval $( VTVIsArrayStyleInsert=True \
-  VTVValueEntry=StrAgentEnvFile,IsHomeUser,StrPathBase,StrAgentPathFile,IsSetSSHENV,IsDeregSSHENV,IntDefaultSSHEnvChmod,StrChmodApps,StrSSHAddApps,StrSSHAddAppsOpt,StrSSHAgentApps,StrSSHAgentAppsOpt \
+  VTVValueEntry=StrAgentEnvFile,IsHomeUser,StrPathBase,StrAgentPathFile,IsSetSSHENV,IsDeregSSHENV,IntDefaultSSHEnvChmod,StrChmodApps,StrSSHAddApps,StrSSHAddAppsOpt,StrSSHAgentApps,StrSSHAgentAppsOpt,StrProcMemory \
   VTVIsValueReAssign=True    \
   VTVIsValueToConvert=False  \
   VTVIsArrayStyleInsert=True \
-  ValueToVariable ) __main_StartServices
+  ValueToVariable ) ${StrStartServicesName}
  fi
+ unset __main_StopServices __main_StopServices ;
+ ### Discover StartAgentSSH function did leave it's sub-function out and living.
+ ### While StartAgentSSH did not own Brace after function declaration its better
+ ### to unset internal function and/or rewriting 
+ ### function StartAgentSSH
+ ### into 
+ ### function StartAgentSSH() 
  
 }
 

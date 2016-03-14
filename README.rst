@@ -87,8 +87,32 @@ In this documentation some convention are used to explicitly name some element
 as it was definied by author and what the author definied inside this library.
 According to this Library, following term :
 
-- Evalutative brace is : equivalent to ' eval $( ... ) '
-- Executive   brace is : equivalent to ' $( ... ) '
+- Evalutative brace is      : equivalent to ' eval $( ... ) '
+- Executive   brace is      : equivalent to ' $( ... ) '
+- Scoped  Variable  is      : equivalent to local Varname 
+                                            global Varname 
+                                            
+- Intrinsic   Function call : equivalent to Var1=Value Var2=Value VarN. FunctionName
+  - Intrinsically abstract most os Var1, Var2, VarN are not existing inside FunctionName
+  but does present manipulation and or query. 
+- Prefixed    Function Call : equivalent to FNa=Value FNb=Value FNz=Value FunctionName
+  - Does exist in First part of the function Name and are mostly query with 
+  __GetVarReferenceList a manager used with switch --help 
+
+- Boolean Var Test          : equivalent to  BVTestVarName="StrPathAttribute" 
+                                             BVTestVarHold=${HOME} 
+                                             BVTestBoolVarName=\${IsHomeUser} 
+                                             BVTestBoolAssertion=\${StrPathBase} 
+                                             BoolVarTestVarCreation
+
+.. code:: shell
+
+ ### Will also produce this normal If/Else brace . 
+ local StrPathSSH="/home/user" ;
+  if [ "${IsHomeUser}" == "False" ]  ; then
+    StrPathAttribute=${StrPathBase} ;
+  fi
+
 
 Unicity Convention
 ==================
@@ -105,6 +129,21 @@ it's implementation and it uses somewhere inside an services instanciation from
 	External Storage, Engine Storage and API Communication level and Function 
 	from Prefixed-Variable Level being Unique and respecting uses of 
 	UUID random number based on time. 
+ 
+3- All this should be readeable. By mean, we expect not using example in bash 
+to let itself generating script, but python-layer will help improving database 
+access by interposing some generated code made by python script. This will also
+be human redeable or at least part-extractible to let the processor parse the 
+syntax. We do imaginate having to parse some high volume of section like 
+application vault and retain some tangible information while we developping 
+function or applicative oclusion while some already depend of it's presence 
+inside Unix/Linux environment. This should be revertible and offert alternative.
+Or either having restrictive application oclusionning some artefact. Like  in 
+virtualisation AgentLoader, not owning the right of calling ssh-add, ssh-agent.
+Or simply function StartAgentSSH should never call something out of encryption 
+package to call as example hacker-stuff independent package.  This is why 
+everything should be readeable. 
+
 	
 This mean a function from the Communication Layer communicating with other function
 will have to own Unique Prefixed-Variable attribute to transfert, redundant uses 
@@ -134,6 +173,15 @@ it also refer to it's unique family called sequenced-data.
 By calling '*Functor*' I  will refer to a  transient way  to call  conventionnal 
 function and / or application with really general function statement. To use 
 as simplification of statement and to simplify uses in End-Users test and uses. 
+
+By calling '*Stub*' I will refer to a function ancestor replaced by a modern 
+Fnct.D function name and or any Short-Named Function to replace a long function 
+name. It's also used in one way function uses. Like BoolVarTestVarCreation is 
+becoming versatile and will not only offer a one if / fi template, but some 
+stub will be generated to render easy to understand and use it . We do predict
+upcoming BoolVarTestVarCreation showing entering in higher mangling and will 
+cover [ if - elif ], [ elif, elif ], [ elif , fi ] logical pair and will not 
+only generate simple assertion based on scoped variable. 
 
 Term '*general function statement*', stand for nominal function with less than 
 3 lines of code or only to hide End-User usuability out of conventionnal method
@@ -215,7 +263,18 @@ OR
 	 ... 
 	fi
 
+OR
 
+.. code:: shell
+
+ BVTestBoolVarName=TEST BVTestIfOp=-eq BVTestBoolCase=VALUE  BVTestVarName=... BoolVarTestVarCreation
+ 
+ ### Will also produce this normal If .
+ local ...="CONTENT" ;
+  if [ "TEST" -eq "VALUE" ]  ; then
+    ...="" ;
+  fi
+  
 Convention in Example showed 
 ----------------------------
 
@@ -1826,7 +1885,7 @@ a functionnal-programmation stream behing show under many call from BoolVarTestV
          StrPythonLoader="${StrPythonAppsPath}/python${StrPythonLoader}" ;
    
       eval $( BVTestVarName=StrAppsInstall \
-         BVTestVarHo|d='pip' \
+         BVTestVarHold='pip' \
          BVTestBoolVarName=\${BoolPipInstall} \
          BVTestBoolCase=False \
          BVTestBoolAssertion='${StrPythonLoader} ${StrPythonScript}' BVTestScopeTest=local BoolVarTestVarCreation ) ; 
