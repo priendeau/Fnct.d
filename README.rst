@@ -170,8 +170,7 @@ Term '**general function statement**', stand for nominal function with less than
 Naming Convention
 =================
 
-Uses of some term to explicitly reffer to a specific definition is also used inside this Library and Documentation. 
-
+ Uses of some term to explicitly reffer to a specific definition is also used inside this Library and Documentation. 
  - *Communication Layer* Stand for Prefixed-Variable to use to call a common function equiped from Fnct.D functionality . 
  - *Prefixed-Variable* Stand for First Listed and Showed by GetVarReference Variables inside a Top function definition. Some other sub-function can include the same mechanism, assuming their role can grow and be extruded from function . 
  - *Internal-Variable* Stand for Any variable not declared properly or implicitly not respecting the Naming convention site in __call_locality declaration 
