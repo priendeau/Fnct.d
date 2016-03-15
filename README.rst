@@ -89,30 +89,25 @@ According to this Library, following term :
 
 - Evalutative brace is      : equivalent to 
 .. code:: shell
- 
  ' eval $( ... ) '
  
 - Executive   brace is      : equivalent to 
 .. code:: shell
-
  ' $( ... ) '
 
 - Scoped  Variable  is      : equivalent to 
 .. code:: shell
-
  local Varname 
  global Varname 
                                             
 - Intrinsic   Function call : equivalent to 
 .. code:: shell
-
  Var1=Value Var2=Value VarN. FunctionName
   
   - Intrinsically abstract most os Var1, Var2, VarN are not existing inside FunctionName
   but does present manipulation and or query. 
 - Prefixed    Function Call : equivalent to 
 .. code:: shell
-
  FNa=Value FNb=Value FNz=Value FunctionName
   
   - Does exist in First part of the function Name and are mostly query with 
@@ -120,7 +115,6 @@ According to this Library, following term :
 
 - Boolean Var Test          : equivalent to  
 .. code:: shell
-
  BVTestVarName="NewVariable" 
  BVTestVarHold=${ExistingVariable} 
  BVTestBoolVarName=\${ReusedVariable-by-parsing} 
@@ -128,7 +122,6 @@ According to this Library, following term :
  BoolVarTestVarCreation
 
 .. code:: shell
-
  ### Will also produce this normal If/Else brace . 
  local StrPathSSH="/home/user" ;
   if [ "${IsHomeUser}" == "False" ]  ; then
@@ -188,15 +181,15 @@ and be automatically stored.
 
 Convention use in this development
 ==================================
-By calling '*Idiom*' I will refer to a current sequence obtained by promoted output 
+By calling '**Idiom**' I will refer to a current sequence obtained by promoted output 
 of an application and/or result of the system itself. Having property to be unique 
 it also refer to it's unique family called sequenced-data. 
  
-By calling '*Functor*' I  will refer to a  transient way  to call  conventionnal 
+By calling '**Functor**' I  will refer to a  transient way  to call  conventionnal 
 function and / or application with really general function statement. To use 
 as simplification of statement and to simplify uses in End-Users test and uses. 
 
-By calling '*Stub*' I will refer to a function ancestor replaced by a modern 
+By calling '**Stub**' I will refer to a function ancestor replaced by a modern 
 Fnct.D function name and or any Short-Named Function to replace a long function 
 name. It's also used in one way function uses. Like BoolVarTestVarCreation is 
 becoming versatile and will not only offer a one if / fi template, but some 
@@ -205,7 +198,7 @@ upcoming BoolVarTestVarCreation showing entering in higher mangling and will
 cover [ if - elif ], [ elif, elif ], [ elif , fi ] logical pair and will not 
 only generate simple assertion based on scoped variable. 
 
-Term '*general function statement*', stand for nominal function with less than 
+Term '**general function statement**', stand for nominal function with less than 
 3 lines of code or only to hide End-User usuability out of conventionnal method
 describe in Fnct.D to uses Variable direct re-definition in function call to 
 allow reduction of Bash or similar shell to apply a ulimit and other mechanism to
@@ -220,25 +213,25 @@ Naming Convention
 Uses of some term to explicitly reffer to a specific definition is also used 
 inside this Library and Documentation. 
 
-- Communication Layer
+- *Communication Layer*
 	Stand for Prefixed-Variable to use to call a common function equiped from 
 	Fnct.D functionality . 
 
-- Prefixed-Variable
+- *Prefixed-Variable*
 	Stand for First Listed and Showed by GetVarReference Variables inside a Top
 	function definition. Some other sub-function can include the same mechanism, 
 	assuming their role can grow and be extruded from function . 
 	
-- Internal-Variable
+- *Internal-Variable*
 	Stand for Any variable not declared properly or implicitly not respecting the
 	Naming convention site in __call_locality declaration 
 
-- __call_locality
+- *__call_locality*
 	Stand for First Identifiant inside a function, naming the function Argument or
 	member 0 hold the Prefixed-Variable Prefixed-Name and Argument 1 hold the name
 	of the function. 
 	
-- Arg0 
+- *Arg0*
 	Stand for first Element from a list of parameter obtained from function call .
 	Usually $* hold everything it was definied to not use it as strong reference
 	and might be shorted or extended with uses of pop action and pushing function 
@@ -246,9 +239,9 @@ inside this Library and Documentation.
 	the Shell-Bash . Called ArrayArg it hold on declaration of the function 
 	all incoming argument. 
 	
-- If-statement
-- If-elif-(n-elif)-f
-- If-n-elif statement 
+- *If-statement*
+- *If-elif-(n-elif)-f*
+- *If-n-elif statement *
 	Refer for a hard-stated Bash-Shell If statement or a BoolVarTestVarCreation
 	result which depend of the result but once executed produce an hard-stated 
 	Bash-Shell If statement. 
