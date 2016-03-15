@@ -9,7 +9,7 @@ function ZenityPassPhrase()
  
 }
 
-#export SSH_ENV="$HOME/.ssh/environment"
+export SSH_ENV="$HOME/.ssh/environment"
 export SSH_ASKPASS="ZenityPassPhrase" 
 
 function StartAgentSSH()
@@ -32,15 +32,32 @@ function StartAgentSSH()
  local StrProcMemory=${SASSHProcessLink:=/proc} ;
  local StrStartServicesName=${SASSHStartServices:=__main_StartServices} ;
  local StrStopServicesName=${SASSHStopServices:=__main_StopServices} ;
+ local IsVerbosis=${SASSHVerbosis:=True} ;
+
+	function Verbosis()
+	{
+		local __call_locality=( Verbosis Verb );
+		local StrMsg=${VerbMsg:=__TEXT__} ; 
+		local StrDevOut=${VerbDev:=/dev/stderr} ; 
+  local VerboseState=${VerbState:=False} ;
+		local ArrayArg=( $* ) ; 
+		if [ "${VerbState:=False}" == "True" ] ; then 
+			echo -ne "VERBOSE:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+		fi
+	}
  
  
  ### Create StrPathSSH and if IsHomeUser==False, StrPathSSH will own
  ### the StrPathBase value (default set to /root )
- eval $( BVTestVarName="StrPathSSH" \
+ local StrEvalCmdUserHome=$( BVTestVarName="StrPathSSH" \
          BVTestVarHold=${HOME} \
          BVTestBoolVarName=\${IsHomeUser} \
          BVTestBoolAssertion=\${StrPathBase} \
-         BoolVarTestVarCreation )
+         BVTestConclude='' \
+         BoolVarTestVarCreation ) ; 
+ StrDbgMsg="In Funct:${__call_locality[1]}\n\t\tContent of StrEvalCmdUserHome:[${StrEvalCmdUserHome}]" ;
+ VerbMsg=${StrDbgMsg} VerbState=${IsVerbosis} Verbosis ; 
+ eval "${StrEvalCmdUserHome}" ; 
  
  ### Appending to StrPathSSH , the .ssh path.
  StrPathSSH=${StrPathSSH}/${StrAgentPathFile} 
@@ -143,7 +160,7 @@ function SSHAgentMemoryInfo()
 	local ArrayArg=( $* ) ; 
 	local Arg0=${ArrayArg[0]} ; 
  
- ps -ef | grep ${SSH_AGENT_PID} | grep 'ssh-agent$' > /dev/null ;
+ ps -ef | egrep ${SSH_AGENT_PID} | egrep 'ssh-agent$' | egrep -v "<defunct>" > /dev/null ;
 }
 
 function AgentLoader()
@@ -160,7 +177,8 @@ function AgentLoader()
 		local __call_locality=( Stop __main_StopServices ) ;
 		local Arg0=${ArrayArg[0]} ;
 		local ArrayArg=( $* ) ;  
-  SASSHUnregisterSSHENV=True SASSHIsSetSSHENV=True StartAgentSSH --stopservices
+  SASSHUnregisterSSHENV=True SASSHIsSetSSHENV=True StartAgentSSH --stopservices 
+  unset SSH_AGENT_PID SSH_ENV ; 
  }
  
  function __main_StartServices()
@@ -180,6 +198,18 @@ function AgentLoader()
     StartAgentSSH ;
   fi 
  }
+	function Verbosis()
+	{
+		local __call_locality=( Verbosis Verb );
+		local StrMsg=${VerbMsg:=__TEXT__} ; 
+		local StrDevOut=${VerbDev:=/dev/stderr} ; 
+  local VerboseState=${VerbState:=False} ;
+		local ArrayArg=( $* ) ; 
+		if [ "${VerbState:=False}" == "True" ] ; then 
+			echo -ne "VERBOSE:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+		fi
+	}
+ 
 
  StrSwitchMessages="""${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n""" ; 
  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
@@ -192,10 +222,10 @@ function AgentLoader()
 		eval $( __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
   # __main_StopServices ; ### replaced 
-  eval ${StrStopServicesName} ;
+  eval "${StrStopServicesName}" ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
   # __main_StartServices ; ### replaced
-  eval ${StrStartServicesName} ; 
+  eval "${StrStartServicesName}" ; 
  fi
 
 }

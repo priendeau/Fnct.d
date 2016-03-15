@@ -501,16 +501,36 @@ function BoolVarTestVarCreation()
  local StrScopeType=${BVTestScopeTest:=local} ;
  local StrIfTestType=${BVTestIfType:=String} ; 
  local StrIfStringOp=${BVTestIfOp:===} ;
+ local IsPreambule=${BVTestIsPreambule:=True}; 
+ ### Section ValueToVariable in Preambule 
+ local IsTypePreamb=${BVTestIsValueToVar:=False};
+ local StrVTRPrbTpl=${BVTestVTVTPL:=eval __TES__  __REGISTRY_PRE__ VTVValueEntry=__VAR_ENTRY_PRE__ ValueToVariable __TEE__ __FNCT_PRE__} ;
+ local StrVTRPrbVar=${BVTestVTVVar:=IsVerbose,IsDebug};
+ local StrVTRPrbVTReg=${BVTestVTReg:=VTVIsArrayStyleInsert=True VTVIsValueReAssign=True VTVIsValueToConvert=False}
+ local StrVTRPrbVTFnct=${BVTestVTFnct:=__FNCT__}
+ ### Section ValueToVariable in Assertion .
+ local IsTypeAssert=${BVTestIsValueToVarAssert:=False};
+ local StrVTRAsrtTpl=${BVTestVTVTPLA:=eval __TES__  __REGISTRY_ASRT__ VTVValueEntry=__VAR_ENTRY_ASRT__ ValueToVariable __TEE__ __FNCT_ASRT__} ;
+ local StrVTRAsrtVar=${BVTestVTVVarA:=IsVerbose,IsDebug};
+ local StrVTRAsrtVTReg=${BVTestVTRegA:=VTVIsArrayStyleInsert=True VTVIsValueReAssign=True VTVIsValueToConvert=False}
+ local StrVTRAsrtVTFnct=${BVTestVTFnctA:=__FNCT__}
+ 
+ local StrKeyTestType=${BVTestType:=if:fi,if:elif,elif:elif,elif:else,if:else,else:fi} ;
+ local IntDefautlType=${BVIdTest:=0} ; 
+ local StrDefaultEndTest=${BVTestConclude=;} ;
  local IsDisplayIfStatement=${BVTestDisplayIf:=False} ; 
+ 
+ local ArrayTestType=( ${StrKeyTestType//,/ } ) ; 
+ local ArrayTestSection=( ${ArrayTestType[${IntDefautlType}]//:/ } ) ; 
  
  local ArrayTestType=( String File Test Int Shell ) ;
  local StrIfPattern ; 
  local ArrayIfPattern=(  ) ;
- ArrayIfPattern[0]="if [ \"${StrVarBoolTest}\" __OP__ \"${StrDefaultBoolTest}\" ] " ;
- ArrayIfPattern[1]="if [ \"__OP__ \"${StrDefaultBoolTest}\" ] " ;
- ArrayIfPattern[2]="if \$( test \"__OP__ \"${StrDefaultBoolTest}\" ) " ;
- ArrayIfPattern[3]="if [ ${StrVarBoolTest} __OP__ ${StrDefaultBoolTest} ] " ;
- ArrayIfPattern[4]="eval ${StrVarNamed} ; res=\$? ; if  [ \${res:=1} __OP__ ${StrDefaultBoolTest} ] " ;
+ ArrayIfPattern[0]="__START_TEST__ [ \"${StrVarBoolTest}\" __OP__ \"${StrDefaultBoolTest}\" ] " ;
+ ArrayIfPattern[1]="__START_TEST__ [ \"__OP__ \"${StrDefaultBoolTest}\" ] " ;
+ ArrayIfPattern[2]="__START_TEST__ \$( test \"__OP__ \"${StrDefaultBoolTest}\" ) " ;
+ ArrayIfPattern[3]="__START_TEST__ [ ${StrVarBoolTest} __OP__ ${StrDefaultBoolTest} ] " ;
+ ArrayIfPattern[4]="eval ${StrVarNamed} ; res=\$? ; __START_TEST__  [ \${res:=1} __OP__ ${StrDefaultBoolTest} ] " ;
  
 
  ###
@@ -523,14 +543,88 @@ function BoolVarTestVarCreation()
   fi 
  done 
  local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\n" ;
- 
- local StrTestTemplate=""" 
-  ${StrScopeType} ${StrVarNamed}=\"${StrVarNamedHold}\" ;
-  __IF_PATTERN__ ; then
-    ${StrVarNamed}=${StrNotAsserted} ;
+ local ArrayPreambule=( ) ; 
+ ArrayPreambule[0]="__SCOPE__ __VAR_NAME__=__VALUE__" ;
+ local ArrayAssertion=( ) ; 
+ local ArrayAssertion[0]="__ASRT_VAR__NAME__=__ASRT_VAR_VALUE__" ;
+ ### Old Preambule : ${StrScopeType} ${StrVarNamed}=\"${StrVarNamedHold}\"" 
+ ### Old Assertion : \${StrVarNamed}=\${StrNotAsserted} ; 
+ local StrTestTemplate="""
+ __PREAMBULE__
+ __IF_PATTERN__ ; then
+   __ASSERTION__
+ __END_TEST__ __END_MARK__""" ; 
+  
+  if [ "${IsTypeAssert:=False}" == "True" ] ; then 
+   StrTestTemplate=${StrTestTemplate//__ASSERTION__/${StrVTRAsrtTpl}} ;
+   StrTestTemplate=${StrTestTemplate//__REGISTRY_ASRT__/${StrVTRAsrtVTReg}} ;
+   StrTestTemplate=${StrTestTemplate//__VAR_ENTRY_ASRT__/${StrVTRAsrtVar}} ;
+   StrTestTemplate=${StrTestTemplate//__TES__/\$(} ;
+   StrTestTemplate=${StrTestTemplate//__TEE__/)} ;
+   StrTestTemplate=${StrTestTemplate//__FNCT_ASRT__/${StrVTRAsrtVTFnct}} ;
+  else
+   StrTestTemplate=${StrTestTemplate//__ASSERTION__/${ArrayAssertion[0]}} ;
+   StrTestTemplate=${StrTestTemplate//__ASRT_VAR__NAME__/${StrVarNamed}} ;
+   StrTestTemplate=${StrTestTemplate//__ASRT_VAR_VALUE__/${StrNotAsserted}} ;
+  fi 
+  
+  if [ "${IsPreambule:=True}" == "True" ] ; then 
+    if [ "${IsTypePreamb:=False}" == "True" ] ; then 
+     StrTestTemplate=${StrTestTemplate//__PREAMBULE__/${StrVTRPrbTpl}} ; 
+     StrTestTemplate=${StrTestTemplate//__VAR_ENTRY_PRE__/${StrVTRPrbVar}} ; 
+     StrTestTemplate=${StrTestTemplate//__REGISTRY_PRE__/${StrVTRPrbVTReg}} ; 
+     StrTestTemplate=${StrTestTemplate//__TES__/\$(} ; 
+     StrTestTemplate=${StrTestTemplate//__TEE__/)} ; 
+     StrTestTemplate=${StrTestTemplate//__FNCT_PRE__/${StrVTRPrbVTFnct}} ; 
+    else
+     StrTestTemplate=${StrTestTemplate//__PREAMBULE__/${StrScopeType} ${StrVarNamed}=\"${StrVarNamedHold}\" ;} ; 
+    fi 
+  else
+    StrTestTemplate=${StrTestTemplate//__PREAMBULE__/} ; 
   fi
-  """
   StrTestTemplate=${StrTestTemplate//__IF_PATTERN__/${StrIfPattern}} ; 
+  
+  StrTestTemplate=${StrTestTemplate//__START_TEST__/${ArrayTestSection[0]}} ; 
+  StrTestTemplate=${StrTestTemplate//__END_TEST__/${ArrayTestSection[1]}} ; 
+  
+  StrTestTemplate=${StrTestTemplate//__END_MARK__/${StrDefaultEndTest}} ;  
+  
+  ### 
+  ### Section We transform StrTestTemplate into 
+  ### IF 
+  ### ...
+  ### FI 
+  ### IF  
+  ### ...
+  ### ELIF 
+  ### ELIF 
+  ### ...
+  ### ELSE, 
+  ### ... --> See BVTestType for all choice made by default. It's a 2 choice 
+  ### method and don't forget, it cover only One test at the time, 
+  ### Either to not execute it after parsing you can call BoolVarTestVarCreation
+  ### many time and glueing result_BVT1 + result_BVT2 + result_BVT3
+  ### to form a complete 
+  ### 
+  ### if   +
+  ### ...  +--> Made by BVTestType=1 BoolVarTestVarCreation Stored in Var1
+  ### elif +
+  ### ...
+  ### elif +
+  ### ...  +--> Made by BVTestType=2 BoolVarTestVarCreation Stored in Var2
+  ### elif +
+  ### ...
+  ### else +
+  ### ...  +--> Made by BVTestType=5 BoolVarTestVarCreation Stored in Var3
+  ### fi   +
+  ### And A new variable NewVarTEst=${Var1}${Var2}${Var3} will hold the entire 
+  ### test ...
+  ### Notice there is odd sequence where the last line of your test SHOULD
+  ### END with FI, like BVTestType=4 BoolVarTestVarCreation
+  ### with if-else marker. This Boolean test does include a TAG named __END_MARK__
+  ### with help you changing it for a 'fi' or either a semi-colon ';' 
+  ### See BVTestConclude where is default is semi-colon ';', but may old
+  ### value like BVTestConclude='fi ;' , BVTestConclude='fi' 
   
  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
 			GetVarReference ${__call_locality[1]} ; 
