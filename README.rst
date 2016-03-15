@@ -182,10 +182,10 @@ Uses of some term to explicitly reffer to a specific definition is also used ins
 	
  - *Arg0* Stand for first Element from a list of parameter obtained from function call. Usually $* hold everything it was definied to not use it as strong reference and might be shorted or extended with uses of pop action and pushing function adding to function argument list extra information during a normal uses of the Shell-Bash . Called ArrayArg it hold on declaration of the function all incoming argument. 
 	
- - |*If-statement*
-   |*If-elif-(n-elif)-f*
-   |*If-n-elif statement *
-   |Refer for a hard-stated Bash-Shell If statement or a BoolVarTestVarCreation result which depend of the result but once executed produce an hard-stated Bash-Shell If statement. 
+ - *If-statement*
+   *If-elif-(n-elif)-f*
+   *If-n-elif statement *
+   Refer for a hard-stated Bash-Shell If statement or a BoolVarTestVarCreation result which depend of the result but once executed produce an hard-stated Bash-Shell If statement. 
 	
 Example of Bash-Shell If statement
 	
