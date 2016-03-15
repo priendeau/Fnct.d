@@ -139,48 +139,20 @@ According to this Library, following term :
 Unicity Convention
 ==================
 
-A unicity convention allow a action or an in-memory ID to be totally unique by 
-it's implementation and it uses somewhere inside an services instanciation from 
---startservices switche or short-action services with no need to call a 
---stopservices switche a value being
+A unicity convention allow a action or an in-memory ID to be totally unique by it's implementation and it uses somewhere inside an services instanciation from --startservices switche or short-action services with no need to call a  --stopservices switche a value being
 
-1-	Printed, stored permanently or keeped in memory SHALL be revealed to be a 
-	UUID random number based on time. 
+1-	Printed, stored permanently or keeped in memory SHALL be revealed to be a UUID random number based on time. 
 	
-2-	Transfered from and to the Higher Communication Layer from Internal Storage
-	External Storage, Engine Storage and API Communication level and Function 
-	from Prefixed-Variable Level being Unique and respecting uses of 
-	UUID random number based on time. 
+2-	Transfered from and to the Higher Communication Layer from Internal StorageExternal Storage, Engine Storage and API Communication level and Function from Prefixed-Variable Level being Unique and respecting uses of UUID random number based on time. 
  
-3- All this should be readeable. By mean, we expect not using example in bash 
-to let itself generating script, but python-layer will help improving database 
-access by interposing some generated code made by python script. This will also
-be human redeable or at least part-extractible to let the processor parse the 
-syntax. We do imaginate having to parse some high volume of section like 
-application vault and retain some tangible information while we developping 
-function or applicative oclusion while some already depend of it's presence 
-inside Unix/Linux environment. This should be revertible and offert alternative.
-Or either having restrictive application oclusionning some artefact. Like  in 
-virtualisation AgentLoader, not owning the right of calling ssh-add, ssh-agent.
-Or simply function StartAgentSSH should never call something out of encryption 
-package to call as example hacker-stuff independent package.  This is why 
-everything should be readeable. 
+3- All this should be readeable. By mean, we expect not using example in bash to let itself generating script, but python-layer will help improving database access by interposing some generated code made by python script. This will alsobe human redeable or at least part-extractible to let the processor parse the syntax. We do imaginate having to parse some high volume of section like application vault and retain some tangible information while we developping function or applicative oclusion while some already depend of it's presence inside Unix/Linux environment. This should be revertible and offert alternative.Or either having restrictive application oclusionning some artefact. Like  in virtualisation AgentLoader, not owning the right of calling ssh-add, ssh-agent.Or simply function StartAgentSSH should never call something out of encryption package to call as example hacker-stuff independent package.  This is why everything should be readeable. 
 
 	
-This mean a function from the Communication Layer communicating with other function
-will have to own Unique Prefixed-Variable attribute to transfert, redundant uses 
-of same Prefixed-Variable with different value cause one of them being overwritted 
-and cause an abnormal behavior to not corresponding to initial design. 
+This mean a function from the Communication Layer communicating with other function will have to own Unique Prefixed-Variable attribute to transfert, redundant uses of same Prefixed-Variable with different value cause one of them being overwritted and cause an abnormal behavior to not corresponding to initial design. 
 
-This also mean, communicating with Higher level like API and SQlite Engine will 
-own a Unique-ID per transaction and this have to be unique and will communicate 
-the Unique ID facility which is not an PkID made from integer but from 
-UUID random number based on time.  
+This also mean, communicating with Higher level like API and SQlite Engine will own a Unique-ID per transaction and this have to be unique and will communicate the Unique ID facility which is not an PkID made from integer but from UUID random number based on time.  
 
-This is also invite Structural design to own memory by design componnent having 
-inherent cache instruction being storing complete list of Prefixed-Variable being
-stored under Unique-ID and be accessible from SQLite Storage Engine facility to 
-ouput initial herited value from this Unique-ID. 
+This is also invite Structural design to own memory by design componnent having inherent cache instruction being storing complete list of Prefixed-Variable being stored under Unique-ID and be accessible from SQLite Storage Engine facility to ouput initial herited value from this Unique-ID. 
 
 This will also implement a WILL of HAVING TO talk to API or SQLite Storage Engine 
 facility by emitting a Unique-ID SHALL BE and Imperatively Be used by the facility 
