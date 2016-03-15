@@ -87,10 +87,23 @@ In this documentation some convention are used to explicitly name some element
 as it was definied by author and what the author definied inside this library.
 According to this Library, following term :
 
-- Evalutative brace is      : equivalent to ' eval $( ... ) '
-- Executive   brace is      : equivalent to ' $( ... ) '
-- Scoped  Variable  is      : equivalent to local Varname 
-                                            global Varname 
+- Evalutative brace is      : equivalent to 
+
+.. code:: shell
+ ' eval $( ... ) '
+ 
+- Executive   brace is      : equivalent to 
+
+.. code:: shell
+
+ ' $( ... ) '
+
+- Scoped  Variable  is      : equivalent to 
+
+.. code:: shell
+
+ local Varname 
+ global Varname 
                                             
 - Intrinsic   Function call : equivalent to Var1=Value Var2=Value VarN. FunctionName
   - Intrinsically abstract most os Var1, Var2, VarN are not existing inside FunctionName
@@ -99,11 +112,15 @@ According to this Library, following term :
   - Does exist in First part of the function Name and are mostly query with 
   __GetVarReferenceList a manager used with switch --help 
 
-- Boolean Var Test          : equivalent to  BVTestVarName="StrPathAttribute" 
-                                             BVTestVarHold=${HOME} 
-                                             BVTestBoolVarName=\${IsHomeUser} 
-                                             BVTestBoolAssertion=\${StrPathBase} 
-                                             BoolVarTestVarCreation
+- Boolean Var Test          : equivalent to  
+
+.. code:: shell
+
+ BVTestVarName="NewVariable" 
+ BVTestVarHold=${ExistingVariable} 
+ BVTestBoolVarName=\${ReusedVariable-by-parsing} 
+ BVTestBoolAssertion=\${NewVariable-by-parsing} 
+ BoolVarTestVarCreation
 
 .. code:: shell
 
