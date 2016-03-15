@@ -229,66 +229,24 @@ OR
 Convention in Example showed 
 ----------------------------
 
-Almost all example without note or trace of existence inside the code are ideal
-example and are denoted from proof of existence inside the Library . 
+Almost all example without note or trace of existence inside the code are ideal example and are denoted from proof of existence inside the Library . 
 
-A plausible case will also own function that merely look-like library development
-but does not own same structure are slightly different. If they are not denoted 
-before exposition of the example, a Corpus from this library will show the 
-function name and the revision in SHA-format and date can be added to revision 
-information and YOU MUST rely on the period of exposition of the function and 
-understanding the Library is evolving in term of functionality and the document 
-only increasing in mass not considered to evolve by showing correction inside 
-example function. This according to presentation of a draft example from a 
-function case, demonstration or exception to show, including the revision and 
-the name of the function you can check inside the Github to seek for the revision 
-and it's evolution after the revision date. Which is possible to happen is a case
-showing a footprint of a function and useless part removed or simply replaced 
-by '...' inside example to save time and focus on line concerned. All other 
-example are free like precendent to be a free-form of exposition, old draft and 
-prototype and might be absent from current development. 
+A plausible case will also own function that merely look-like library development but does not own same structure are slightly different. If they are not denoted before exposition of the example, a Corpus from this library will show the function name and the revision in SHA-format and date can be added to revision information and YOU MUST rely on the period of exposition of the function and understanding the Library is evolving in term of functionality and the document only increasing in mass not considered to evolve by showing correction inside example function. This according to presentation of a draft example from a function case, demonstration or exception to show, including the revision and the name of the function you can check inside the Github to seek for the revision and it's evolution after the revision date. Which is possible to happen is a case showing a footprint of a function and useless part removed or simply replaced by '...' inside example to save time and focus on line concerned. All other example are free like precendent to be a free-form of exposition, old draft and prototype and might be absent from current development. 
 
 
 Convention Structure generated 
 ------------------------------
 
-There is no function here generating temporary member inside called Service-state 
-directory. From /etc/init.d/Fnct.D only function, script and accessible member 
-are allowed. Storing information are per-user like .ArrayMdCd and .ArrayMdCd_Lock
-are per-user indice. Index from PackageRepositoryMgmt are external and are simple
-wasting the /etc/init.d/Fnct.D if 1-from cloning this project and decide to 
-configure itself from it's branch and it's itself fault to corrupt it's own 
-sample of Fnct.D with temporary information. 
+There is no function here generating temporary member inside called Service-state directory. From /etc/init.d/Fnct.D only function, script and accessible member  are allowed. Storing information are per-user like .ArrayMdCd and .ArrayMdCd_Lock are per-user indice. Index from PackageRepositoryMgmt are external and are simple wasting the /etc/init.d/Fnct.D if 1-from cloning this project and decide to configure itself from it's branch and it's itself fault to corrupt it's own sample of Fnct.D with temporary information. 
 
-There is not temporary code generated here inside a temporary buffer to execute 
-after it's execution. While GetVarReference are self-worked to use live memory 
-information to extract member and transform them into an Helper, the Low-Level
-Bash-to-Bash shall not own mechanism to create temporary file in /tmp, /temp, 
-or any \${USER} forlder to execute it after it's generation. Having future
-version of Fnct.D in design to integrate Python-to-Bash and Bash-from-SQL and 
-those are only exception and are using Outlet, pluglet, socket and RPC to extract
-information and create temporary function in memory only. It SHALL NOT had deposed
-information temporary of any. 
+There is not temporary code generated here inside a temporary buffer to execute after it's execution. While GetVarReference are self-worked to use live memory information to extract member and transform them into an Helper, the Low-Level Bash-to-Bash shall not own mechanism to create temporary file in /tmp, /temp, or any \${USER} forlder to execute it after it's generation. Having future version of Fnct.D in design to integrate Python-to-Bash and Bash-from-SQL and  those are only exception and are using Outlet, pluglet, socket and RPC to extract information and create temporary function in memory only. It SHALL NOT had deposed information temporary of any. 
 
-Data are qualifed for permanent storage are elligible for storage and shall not 
-contains executable code... This does not mean owning Taggable information and 
-semantic-prone information to be re-interpreted. Storing function name, function
-Prefixed-variables and possible structure to form many function call from derivated
-engine are considered like configuration segment and shall return nothing if the 
-content is accidently executed. Configuration segment are also to be stored in 
-per-user uses. 
+Data are qualifed for permanent storage are elligible for storage and shall not contains executable code... This does not mean owning Taggable information and semantic-prone information to be re-interpreted. Storing function name, function Prefixed-variables and possible structure to form many function call from derivated engine are considered like configuration segment and shall return nothing if the content is accidently executed. Configuration segment are also to be stored in per-user uses. 
 
 Note on temporary Function
 --------------------------
 
-Are allowed, while code coming from generation from executed code inside member
-of Fnct.D and not externally if they are not coming from Python execution of 
-Python-Code or coming from mechanism from SQlite to extract arbitrary stored
-Shell-code conserved in TEXT format. SHALL HAVE a unique-ID in form or UUID 
-generated in time based format. Application uuidgen with option '-t' is FLAVOURED
-to produce UUID Time-based Temporary ID. Python with following syntax is ACCEPTED, 
-And at a future stage requesting from RPC Call implicitly using Socket to server
-will be used. 
+Are allowed, while code coming from generation from executed code inside member of Fnct.D and not externally if they are not coming from Python execution of Python-Code or coming from mechanism from SQlite to extract arbitrary stored Shell-code conserved in TEXT format. SHALL HAVE a unique-ID in form or UUID generated in time based format. Application uuidgen with option '-t' is FLAVOURED to produce UUID Time-based Temporary ID. Python with following syntax is ACCEPTED, And at a future stage requesting from RPC Call implicitly using Socket to server will be used. 
 
 .. code:: shell
 	
@@ -320,110 +278,58 @@ This bring a << propos >>, and Mechanism Generating Temporary Function name SHAL
 2-	Managing function name and HAVE-TO erase it's temporary function name existence 
 	after the end of it's life cycle. 
 
-According to a life-cycle it's open proposition and enhave it's endocrinement of 
-this library being part of /etc/init.d position. Having switches --start-services
-also mean a part of a work like following application AgentLoader are active and
-setup correctly a services telled SSH piped instruction onto external access 
-indeed to promote a mechanism to stop it's fellow action with --stopservices. 
+According to a life-cycle it's open proposition and enhave it's endocrinement of this library being part of /etc/init.d position. Having switches --start-services also mean a part of a work like following application AgentLoader are active and setup correctly a services telled SSH piped instruction onto external access indeed to promote a mechanism to stop it's fellow action with --stopservices. 
 
-In this conformance willing to agree a presence of a life-cycle mean at the end 
-of a life cycle ( action to stop a fellow action to take end ) by removing 
-data, variable, open-transaction-layer out of this terminal shell and consider 
-the end of this services. 
+In this conformance willing to agree a presence of a life-cycle mean at the end of a life cycle ( action to stop a fellow action to take end ) by removing data, variable, open-transaction-layer out of this terminal shell and consider the end of this services. 
 
-According to a Short-Action meaning Start-Services is only one-shoot or also 
-promoted by uses of --compword a second-state of services and Active-derivated 
-Helper may own temporary function end. Ending It's life and ending any living 
-temporary function, data, structure and mechanism to end on --stopservices call . 
+According to a Short-Action meaning Start-Services is only one-shoot or also promoted by uses of --compword a second-state of services and Active-derivated Helper may own temporary function end. Ending It's life and ending any living temporary function, data, structure and mechanism to end on --stopservices call . 
 
-And naming and convention from Temporary Function for Internal Communication layer
-a.k.a. Prefixed-Variable
+And naming and convention from Temporary Function for Internal Communication layer a.k.a. Prefixed-Variable
 
 Convention in Paper Draft informations
 --------------------------------------
 
-Every Paper Draft informations is coming with a note, and a title. A Function name 
-can follow a Paper Draft informations. The note is a UUID made by required type  
-of UUID ( Time-based UUID. ). Might optionnally mentioning the Function being 
-related, or Methodology being applied or any Structural Design from Basic 
-Programmtion rule being know from developper.
+Every Paper Draft informations is coming with a note, and a title. A Function name can follow a Paper Draft informations. The note is a UUID made by required type  of UUID ( Time-based UUID. ). Might optionnally mentioning the Function being related, or Methodology being applied or any Structural Design from Basic Programmtion rule being know from developper.
 
-Paper Draft information Are information illegible after aggregation , correction
-
-and standardisation to be elligible for Documentation... Paper Draft informations 
-will allow to talk about implementation inside Documentation, but not 
-Documentation to reffer to a Paper Draft informations. Also being cleaned from 
-joke and story , Documentation will not own any of these story-line of what creator 
-inherit from this contribution. Finally Paper Draft informations will stay in 
-last-page from  Fnct.D like a section to read in spare time and leisure from what 
-time had  consolidate to offer so strong attribute to this methodology....  
+Paper Draft information Are information illegible after aggregation , correction and standardisation to be elligible for Documentation... Paper Draft informations will allow to talk about implementation inside Documentation, but not Documentation to reffer to a Paper Draft informations. Also being cleaned from joke and story , Documentation will not own any of these story-line of what creator inherit from this contribution. Finally Paper Draft informations will stay in last-page from  Fnct.D like a section to read in spare time and leisure from what time had  consolidate to offer so strong attribute to this methodology....  
 
 Description
 ===========
 
-While bash start to offer more than conventional Shell, memory start to be very affordable, many
-Boot-loader start to offer socket for Bash-like behavior and will be soon be part of Posix
-conformance. Pre-Development from Command-line automation, and creation of Fnct_lib 
-was a moderated Sub-API, a Wrapping in shell automate management and lead to well written version
-introduced with fnct_debian_lib and linked sub-shell lib.
+While bash start to offer more than conventional Shell, memory start to be very affordable, many Boot-loader start to offer socket for Bash-like behavior and will be soon be part of Posix conformance. Pre-Development from Command-line automation, and creation of Fnct_lib was a moderated Sub-API, a Wrapping in shell automate management and lead to well written version introduced with fnct_debian_lib and linked sub-shell lib.
 
 
 Synopsis
 ========
-This will serve to generate development script and auto-creation-script for test purposes and automated
-services for many U*nix and Linux environment. 
+This will serve to generate development script and auto-creation-script for test purposes and automated services for many U*nix and Linux environment. 
 
-By The design, it will offer safe-container and safe method of transfering information in management
-of services and will be able to perform gain in check-up in stable envirronement by skipping check
-in Read-only mode of certains loading... Like, If RO-File-system is older than creation date, it will
-be able to query OS to add trigger to perform less operation and load information faster in subsequent
-startup... Idem with services with less touched file configuration. It will be able also to increase
-oeuvrability of uncommon option like Disk-To-Stream accesibility and Memory-To-Stream Uses, aka
-Network-Booting, Network Memory Pool and Network Application Ground-up.
+By The design, it will offer safe-container and safe method of transfering information in management of services and will be able to perform gain in check-up in stable envirronement by skipping check in Read-only mode of certains loading... Like, If RO-File-system is older than creation date, it will be able to query OS to add trigger to perform less operation and load information faster in subsequent startup... Idem with services with less touched file configuration. It will be able also to increase oeuvrability of uncommon option like Disk-To-Stream accesibility and Memory-To-Stream Uses, aka Network-Booting, Network Memory Pool and Network Application Ground-up.
 
-Also , Methodology of implementation is strict and observe Object-oriented transcription in
-transformation of many available Byte-coded of IDL re-interpretation in super-tiny scalling...
+Also , Methodology of implementation is strict and observe Object-oriented transcription in transformation of many available Byte-coded of IDL re-interpretation in super-tiny scalling...
 
-Certains option will be implemented in second-stage of developpement, and
-creating wrapper for un-accessible Gpl-services or fast-implementation prototyping,
-switch for DTD extraction of Shell-Application program and XML Verbosis and XML object induction to
-help developpement of functionnality implementation in fnct_list .
+Certains option will be implemented in second-stage of developpement, and creating wrapper for un-accessible Gpl-services or fast-implementation prototyping, switch for DTD extraction of Shell-Application program and XML Verbosis and XML object induction to help developpement of functionnality implementation in fnct_list .
 
-This Function-Library is sensitive to uses of UUID, current and future development will own 
-critical application with simple name. Called GetUUID this application will issue UUID and will manage 
-it's presence by storing it properly. 
+This Function-Library is sensitive to uses of UUID, current and future development will own critical application with simple name. Called GetUUID this application will issue UUID and will manage it's presence by storing it properly. 
  
-Using a specific type of mechanism to store the informations, second-hand function will invoke and 
-or query the informations toward this created idoms inside this library. 
+Using a specific type of mechanism to store the informations, second-hand function will invoke and  or query the informations toward this created idoms inside this library. 
  
-As example BodyFunc function will depend of registration of the body and it's root require uses of
-UUID. Managing the idiom is important to store definition of many IF/ELSE condition used in conjunction
-of BoolVarTestVarCreation and will create registration sequence where any new sequences will give another
-new body for execution. 
+As example BodyFunc function will depend of registration of the body and it's root require uses of UUID. Managing the idiom is important to store definition of many IF/ELSE condition used in conjunction of BoolVarTestVarCreation and will create registration sequence where any new sequences will give another new body for execution. 
 
 
 Arguments
 =========
 	
-Are Mostly Prefixed-variable to be understand and replacing 90% of switched uses into
-Services declaration and Services Information. Services Establishement like --compword
-is a future feature available soon after 2013-09-08 where all function will own word
-completion activation. 
+Are Mostly Prefixed-variable to be understand and replacing 90% of switched uses into Services declaration and Services Information. Services Establishement like --compword is a future feature available soon after 2013-09-08 where all function will own word completion activation. 
 
 
 Invocation
 ==========
 
-Likewise Bsd Middle-age, a sub-entity was existing inside /etc/init or /etc/init.d
-and desapear or move inside /usr This design exist inside /etc/init.d/Fnct.d to 
-establish a __future__ development for integration inse loader and initrd for shell
-management and Integration. 
+Likewise Bsd Middle-age, a sub-entity was existing inside /etc/init or /etc/init.d and desapear or move inside /usr This design exist inside /etc/init.d/Fnct.d to  establish a __future__ development for integration inse loader and initrd for shell management and Integration. 
 
 ** Updated **
 
-The original mechanism /etc/init.d/Fnct.d/fnct_lib allow loading of sub library. 
-Most important are fnct_debian_lib _sub_jack_script _sub_Git _sub_ssh_handler all
-available inside the /etc/init.d/Fnct.d Path .
+The original mechanism /etc/init.d/Fnct.d/fnct_lib allow loading of sub library.  Most important are fnct_debian_lib _sub_jack_script _sub_Git _sub_ssh_handler all available inside the /etc/init.d/Fnct.d Path .
 
 Example :
 
@@ -436,8 +342,7 @@ Example :
 This is a result from loading /etc/init.d/Fnct.d/fnct_lib from a .bashrc 
 
 	
-Example of .bashrc configuration file with fnct_lib and some usefull widget 
-configured thru uses of alias. 
+Example of .bashrc configuration file with fnct_lib and some usefull widget  configured thru uses of alias. 
 
 .. code:: python
 	
