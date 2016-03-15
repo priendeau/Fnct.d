@@ -108,9 +108,7 @@ According to this Library, following term :
 
  Var1=Value Var2=Value VarN. FunctionName
   
-- Intrinsically abstract most of Var1, Var2, VarN are not existing inside FunctionName
-but does own presence for manipulation and or query. Is somewhat Object Approach realized
-with ValueToVariable, it serialize the Variable by using it appropriately.
+- Intrinsically abstract most of Var1, Var2, VarN are not existing inside FunctionName but does own presence for manipulation and or query. Is somewhat Object Approach realized with ValueToVariable, it serialize the Variable by using it appropriately.
 
 - Prefixed    Function Call : equivalent to 
 .. code-block:: shell
