@@ -88,30 +88,30 @@ as it was definied by author and what the author definied inside this library.
 According to this Library, following term :
 
 - Evalutative brace is      : equivalent to 
-.. code:: shell
+.. code-block:: shell
 
  ' eval $( ... ) '
  
 - Executive   brace is      : equivalent to 
-.. code:: shell
+.. code-block:: shell
 
  ' $( ... ) '
 
 - Scoped  Variable  is      : equivalent to 
-.. code:: shell
+.. code-block:: shell
 
  local Varname 
  global Varname 
                                             
 - Intrinsic   Function call : equivalent to 
-.. code:: shell
+.. code-block:: shell
 
  Var1=Value Var2=Value VarN. FunctionName
   
   - Intrinsically abstract most os Var1, Var2, VarN are not existing inside FunctionName
   but does present manipulation and or query. 
 - Prefixed    Function Call : equivalent to 
-.. code:: shell
+.. code-block:: shell
 
  FNa=Value FNb=Value FNz=Value FunctionName
   
@@ -119,7 +119,7 @@ According to this Library, following term :
   __GetVarReferenceList a manager used with switch --help 
 
 - Boolean Var Test          : equivalent to  
-.. code:: shell
+.. code-block:: shell
 
  BVTestVarName="NewVariable" 
  BVTestVarHold=${ExistingVariable} 
@@ -127,7 +127,7 @@ According to this Library, following term :
  BVTestBoolAssertion=\${NewVariable-by-parsing} 
  BoolVarTestVarCreation
 
-.. code:: shell
+.. code-block:: shell
 
  ### Will also produce this normal If/Else brace . 
  local StrPathSSH="/home/user" ;
