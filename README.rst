@@ -141,11 +141,11 @@ Unicity Convention
 
 A unicity convention allow a action or an in-memory ID to be totally unique by it's implementation and it uses somewhere inside an services instanciation from --startservices switche or short-action services with no need to call a  --stopservices switche a value being
 
-1-	Printed, stored permanently or keeped in memory SHALL be revealed to be a UUID random number based on time. 
+1. Printed, stored permanently or keeped in memory SHALL be revealed to be a UUID random number based on time. 
 	
-2-	Transfered from and to the Higher Communication Layer from Internal StorageExternal Storage, Engine Storage and API Communication level and Function from Prefixed-Variable Level being Unique and respecting uses of UUID random number based on time. 
+2. Transfered from and to the Higher Communication Layer from Internal StorageExternal Storage, Engine Storage and API Communication level and Function from Prefixed-Variable Level being Unique and respecting uses of UUID random number based on time. 
  
-3- All this should be readeable. By mean, we expect not using example in bash to let itself generating script, but python-layer will help improving database access by interposing some generated code made by python script. This will alsobe human redeable or at least part-extractible to let the processor parse the syntax. We do imaginate having to parse some high volume of section like application vault and retain some tangible information while we developping function or applicative oclusion while some already depend of it's presence inside Unix/Linux environment. This should be revertible and offert alternative.Or either having restrictive application oclusionning some artefact. Like  in virtualisation AgentLoader, not owning the right of calling ssh-add, ssh-agent.Or simply function StartAgentSSH should never call something out of encryption package to call as example hacker-stuff independent package.  This is why everything should be readeable. 
+3. All this should be readeable. By mean, we expect not using example in bash to let itself generating script, but python-layer will help improving database access by interposing some generated code made by python script. This will alsobe human redeable or at least part-extractible to let the processor parse the syntax. We do imaginate having to parse some high volume of section like application vault and retain some tangible information while we developping function or applicative oclusion while some already depend of it's presence inside Unix/Linux environment. This should be revertible and offert alternative.Or either having restrictive application oclusionning some artefact. Like  in virtualisation AgentLoader, not owning the right of calling ssh-add, ssh-agent.Or simply function StartAgentSSH should never call something out of encryption package to call as example hacker-stuff independent package.  This is why everything should be readeable. 
 
 	
 This mean a function from the Communication Layer communicating with other function will have to own Unique Prefixed-Variable attribute to transfert, redundant uses of same Prefixed-Variable with different value cause one of them being overwritted and cause an abnormal behavior to not corresponding to initial design. 
@@ -154,76 +154,38 @@ This also mean, communicating with Higher level like API and SQlite Engine will 
 
 This is also invite Structural design to own memory by design componnent having inherent cache instruction being storing complete list of Prefixed-Variable being stored under Unique-ID and be accessible from SQLite Storage Engine facility to ouput initial herited value from this Unique-ID. 
 
-This will also implement a WILL of HAVING TO talk to API or SQLite Storage Engine 
-facility by emitting a Unique-ID SHALL BE and Imperatively Be used by the facility 
-and be automatically stored. 
+This will also implement a WILL of HAVING TO talk to API or SQLite Storage Engine facility by emitting a Unique-ID SHALL BE and Imperatively Be used by the facility and be automatically stored. 
 
 Convention use in this development
 ==================================
-By calling '**Idiom**' I will refer to a current sequence obtained by promoted output 
-of an application and/or result of the system itself. Having property to be unique 
-it also refer to it's unique family called sequenced-data. 
+By calling '**Idiom**' I will refer to a current sequence obtained by promoted output of an application and/or result of the system itself. Having property to be unique it also refer to it's unique family called sequenced-data. 
  
-By calling '**Functor**' I  will refer to a  transient way  to call  conventionnal 
-function and / or application with really general function statement. To use 
-as simplification of statement and to simplify uses in End-Users test and uses. 
+By calling '**Functor**' I  will refer to a  transient way  to call  conventionnal function and / or application with really general function statement. To use as simplification of statement and to simplify uses in End-Users test and uses. 
 
-By calling '**Stub**' I will refer to a function ancestor replaced by a modern 
-Fnct.D function name and or any Short-Named Function to replace a long function 
-name. It's also used in one way function uses. Like BoolVarTestVarCreation is 
-becoming versatile and will not only offer a one if / fi template, but some 
-stub will be generated to render easy to understand and use it . We do predict
-upcoming BoolVarTestVarCreation showing entering in higher mangling and will 
-cover [ if - elif ], [ elif, elif ], [ elif , fi ] logical pair and will not 
-only generate simple assertion based on scoped variable. 
+By calling '**Stub**' I will refer to a function ancestor replaced by a modern Fnct.D function name and or any Short-Named Function to replace a long function name. It's also used in one way function uses. Like BoolVarTestVarCreation is becoming versatile and will not only offer a one if / fi template, but some  stub will be generated to render easy to understand and use it . We do predict upcoming BoolVarTestVarCreation showing entering in higher mangling and will cover [ if - elif ], [ elif, elif ], [ elif , fi ] logical pair and will not only generate simple assertion based on scoped variable. 
 
-Term '**general function statement**', stand for nominal function with less than 
-3 lines of code or only to hide End-User usuability out of conventionnal method
-describe in Fnct.D to uses Variable direct re-definition in function call to 
-allow reduction of Bash or similar shell to apply a ulimit and other mechanism to
-reduce lenght of element or limit of memory to acheive a debugging statement 
-decoy similar problem in future bash - Sub command domain know to be function 
-script language. 
+Term '**general function statement**', stand for nominal function with less than 3 lines of code or only to hide End-User usuability out of conventionnal method describe in Fnct.D to uses Variable direct re-definition in function call to allow reduction of Bash or similar shell to apply a ulimit and other mechanism to reduce lenght of element or limit of memory to acheive a debugging statement decoy similar problem in future bash - Sub command domain know to be function script language. 
 
 
 Naming Convention
 =================
 
-Uses of some term to explicitly reffer to a specific definition is also used 
-inside this Library and Documentation. 
+Uses of some term to explicitly reffer to a specific definition is also used inside this Library and Documentation. 
 
-- *Communication Layer*
-	Stand for Prefixed-Variable to use to call a common function equiped from 
-	Fnct.D functionality . 
+ - *Communication Layer* Stand for Prefixed-Variable to use to call a common function equiped from Fnct.D functionality . 
 
-- *Prefixed-Variable*
-	Stand for First Listed and Showed by GetVarReference Variables inside a Top
-	function definition. Some other sub-function can include the same mechanism, 
-	assuming their role can grow and be extruded from function . 
+ - *Prefixed-Variable* Stand for First Listed and Showed by GetVarReference Variables inside a Top function definition. Some other sub-function can include the same mechanism, assuming their role can grow and be extruded from function . 
 	
-- *Internal-Variable*
-	Stand for Any variable not declared properly or implicitly not respecting the
-	Naming convention site in __call_locality declaration 
+ - *Internal-Variable* Stand for Any variable not declared properly or implicitly not respecting the Naming convention site in __call_locality declaration 
 
-- *__call_locality*
-	Stand for First Identifiant inside a function, naming the function Argument or
-	member 0 hold the Prefixed-Variable Prefixed-Name and Argument 1 hold the name
-	of the function. 
+ - *__call_locality* Stand for First Identifiant inside a function, naming the function Argument or member 0 hold the Prefixed-Variable Prefixed-Name and Argument 1 hold the name of the function. 
 	
-- *Arg0*
-	Stand for first Element from a list of parameter obtained from function call .
-	Usually $* hold everything it was definied to not use it as strong reference
-	and might be shorted or extended with uses of pop action and pushing function 
-	adding to function argument list extra information during a normal uses of 
-	the Shell-Bash . Called ArrayArg it hold on declaration of the function 
-	all incoming argument. 
+ - *Arg0* Stand for first Element from a list of parameter obtained from function call. Usually $* hold everything it was definied to not use it as strong reference and might be shorted or extended with uses of pop action and pushing function adding to function argument list extra information during a normal uses of the Shell-Bash . Called ArrayArg it hold on declaration of the function all incoming argument. 
 	
-- *If-statement*
-- *If-elif-(n-elif)-f*
-- *If-n-elif statement *
-	Refer for a hard-stated Bash-Shell If statement or a BoolVarTestVarCreation
-	result which depend of the result but once executed produce an hard-stated 
-	Bash-Shell If statement. 
+ - |*If-statement*
+   |*If-elif-(n-elif)-f*
+   |*If-n-elif statement *
+   |Refer for a hard-stated Bash-Shell If statement or a BoolVarTestVarCreation result which depend of the result but once executed produce an hard-stated Bash-Shell If statement. 
 	
 Example of Bash-Shell If statement
 	
