@@ -90,6 +90,7 @@ According to this Library, following term :
 - Evalutative brace is      : equivalent to 
 
 .. code:: shell
+ 
  ' eval $( ... ) '
  
 - Executive   brace is      : equivalent to 
