@@ -108,8 +108,9 @@ According to this Library, following term :
 
  Var1=Value Var2=Value VarN. FunctionName
   
-  - Intrinsically abstract most os Var1, Var2, VarN are not existing inside FunctionName
-  but does present manipulation and or query. 
+- Intrinsically abstract most os Var1, Var2, VarN are not existing inside FunctionName
+but does present manipulation and or query. 
+
 - Prefixed    Function Call : equivalent to 
 .. code-block:: shell
 
