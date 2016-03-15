@@ -170,16 +170,17 @@ Term '**general function statement**', stand for nominal function with less than
 Naming Convention
 =================
 
- Uses of some term to explicitly reffer to a specific definition is also used inside this Library and Documentation. 
- - *Communication Layer* Stand for Prefixed-Variable to use to call a common function equiped from Fnct.D functionality . 
- - *Prefixed-Variable* Stand for First Listed and Showed by GetVarReference Variables inside a Top function definition. Some other sub-function can include the same mechanism, assuming their role can grow and be extruded from function . 
- - *Internal-Variable* Stand for Any variable not declared properly or implicitly not respecting the Naming convention site in __call_locality declaration 
- - *__call_locality* Stand for First Identifiant inside a function, naming the function Argument or member 0 hold the Prefixed-Variable Prefixed-Name and Argument 1 hold the name of the function. 
- - *Arg0* Stand for first Element from a list of parameter obtained from function call. Usually $* hold everything it was definied to not use it as strong reference and might be shorted or extended with uses of pop action and pushing function adding to function argument list extra information during a normal uses of the Shell-Bash . Called ArrayArg it hold on declaration of the function all incoming argument. 
- - *If-statement*
-   *If-elif-(n-elif)-f*
-   *If-n-elif statement *
-   Refer for a hard-stated Bash-Shell If statement or a BoolVarTestVarCreation result which depend of the result but once executed produce an hard-stated Bash-Shell If statement. 
+Uses of some term to explicitly reffer to a specific definition is also used inside this Library and Documentation. 
+
+- *Communication Layer* Stand for Prefixed-Variable to use to call a common function equiped from Fnct.D functionality . 
+- *Prefixed-Variable* Stand for First Listed and Showed by GetVarReference Variables inside a Top function definition. Some other sub-function can include the same mechanism, assuming their role can grow and be extruded from function . 
+- *Internal-Variable* Stand for Any variable not declared properly or implicitly not respecting the Naming convention site in __call_locality declaration 
+- *__call_locality* Stand for First Identifiant inside a function, naming the function Argument or member 0 hold the Prefixed-Variable Prefixed-Name and Argument 1 hold the name of the function. 
+- *Arg0* Stand for first Element from a list of parameter obtained from function call. Usually $* hold everything it was definied to not use it as strong reference and might be shorted or extended with uses of pop action and pushing function adding to function argument list extra information during a normal uses of the Shell-Bash . Called ArrayArg it hold on declaration of the function all incoming argument. 
+- *If-statement*
+  *If-elif-(n-elif)-f*
+  *If-n-elif statement*
+  Refer for a hard-stated Bash-Shell If statement or a BoolVarTestVarCreation result which depend of the result but once executed produce an hard-stated Bash-Shell If statement. 
 	
 Example of Bash-Shell If statement
 	
