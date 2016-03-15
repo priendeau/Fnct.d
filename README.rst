@@ -89,25 +89,30 @@ According to this Library, following term :
 
 - Evalutative brace is      : equivalent to 
 .. code:: shell
+
  ' eval $( ... ) '
  
 - Executive   brace is      : equivalent to 
 .. code:: shell
+
  ' $( ... ) '
 
 - Scoped  Variable  is      : equivalent to 
 .. code:: shell
+
  local Varname 
  global Varname 
                                             
 - Intrinsic   Function call : equivalent to 
 .. code:: shell
+
  Var1=Value Var2=Value VarN. FunctionName
   
   - Intrinsically abstract most os Var1, Var2, VarN are not existing inside FunctionName
   but does present manipulation and or query. 
 - Prefixed    Function Call : equivalent to 
 .. code:: shell
+
  FNa=Value FNb=Value FNz=Value FunctionName
   
   - Does exist in First part of the function Name and are mostly query with 
@@ -115,6 +120,7 @@ According to this Library, following term :
 
 - Boolean Var Test          : equivalent to  
 .. code:: shell
+
  BVTestVarName="NewVariable" 
  BVTestVarHold=${ExistingVariable} 
  BVTestBoolVarName=\${ReusedVariable-by-parsing} 
@@ -122,6 +128,7 @@ According to this Library, following term :
  BoolVarTestVarCreation
 
 .. code:: shell
+
  ### Will also produce this normal If/Else brace . 
  local StrPathSSH="/home/user" ;
   if [ "${IsHomeUser}" == "False" ]  ; then
