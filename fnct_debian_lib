@@ -453,7 +453,6 @@ unset __GetVarReferenceCompWord ;
 ### sum and give any other information thru course traversal. 
 
 
-
 unset BoolVarTestVarCreation ; 
 function BoolVarTestVarCreation()
 {
@@ -487,6 +486,24 @@ function BoolVarTestVarCreation()
 ### Note reference : f1161962-0ad8-11e3-b166-001b3875b29c  
 ### 
 ### 
+###  Warning : 
+###  Note reference : 7236e956-f6cf-11e5-98a2-001e4c8856d6
+###  - Recurrent call in BoolVarTestVarCreation
+###  and avoid uses of  ValueToVariable . 
+###  While BoolVarTestVarCreation is a low-level call indirectly call
+###  by ValueToVariable it's hard to define first will end having 
+###  good sub-body to acheive a strict identity and be able to 
+###  parse all variable before BoolVarTestVarCreation 'will' have to 
+###  end a possible __main_start_services if this one is implemented 
+###  with normal body-topology  .  So it's not recommended to use 
+###  ValueToVariable inside BoolVarTestVarCreation has long there is 
+###  a better mechanisms correcting this problems in bash of recurrent  
+###  function call recurently a lower level function will simply loop
+###  and not finishing the work . 
+### 
+### 
+### 
+
 ### Factory Section 
  unset StrVarBoolTest StrDefaultBoolTest StrNotAsserted StrScopeType StrIfTestType StrIfStringOp IsPreambule StrDefaultEndTest IsTypePreamb StrVTRPrbTpl StrVTRPrbVar StrVTRPrbVTReg StrVTRPrbVTFnct IsTypeAssert StrVTRAsrtTpl StrVTRAsrtVar StrVTRAsrtVTReg StrVTRAsrtVTFnct StrKeyTestType IntDefautlType IsDisplayIfStatement StrIfPattern ArrayIfPattern ArrayAssertion StrTestTemplate ;
  local __call_locality=( BVTest BoolVarTestVarCreation ) ;
@@ -648,7 +665,6 @@ function BoolVarTestVarCreation()
  fi
  
 }
-
 
 ##################################                 ########################
 ################################## In Prototyping  ########################
