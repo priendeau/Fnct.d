@@ -12,6 +12,7 @@ function ZenityPassPhrase()
 export SSH_ENV="$HOME/.ssh/environment"
 export SSH_ASKPASS="ZenityPassPhrase" 
 
+unset StartAgentSSH ; 
 function StartAgentSSH()
 {
 	local __call_locality=( SASSH StartAgentSSH ) ;
@@ -50,14 +51,13 @@ function StartAgentSSH()
  ### Create StrPathSSH and if IsHomeUser==False, StrPathSSH will own
  ### the StrPathBase value (default set to /root )
  local StrEvalCmdUserHome=$( BVTestVarName="StrPathSSH" \
-         BVTestVarHold=${HOME} \
-         BVTestBoolVarName=\${IsHomeUser} \
-         BVTestBoolAssertion=\${StrPathBase} \
-         BVTestConclude='' \
-         BoolVarTestVarCreation ) ; 
+       BVTestVarHold=${HOME} \
+       BVTestBoolVarName=\${IsHomeUser} \
+       BVTestBoolAssertion=\${StrPathBase} \
+       BVTestConclude=' ' BoolVarTestVarCreation ) ; 
  StrDbgMsg="In Funct:${__call_locality[1]}\n\t\tContent of StrEvalCmdUserHome:[${StrEvalCmdUserHome}]" ;
  VerbMsg=${StrDbgMsg} VerbState=${IsVerbosis} Verbosis ; 
- eval "${StrEvalCmdUserHome}" ; 
+ eval ${StrEvalCmdUserHome} ; 
  
  ### Appending to StrPathSSH , the .ssh path.
  StrPathSSH=${StrPathSSH}/${StrAgentPathFile} 
@@ -144,6 +144,7 @@ function StartAgentSSH()
  
 }
 
+unset StubStartAgent ;
 function StubStartAgent()
 {
 	local __call_locality=( SSA StubStartAgent ) ;
@@ -154,6 +155,7 @@ function StubStartAgent()
  StartAgentSSH;
 }
 
+unset SSHAgentMemoryInfo ;
 function SSHAgentMemoryInfo()
 {
 	local __call_locality=( SSHAMI SSHAgentMemoryInfo ) ;
@@ -163,6 +165,7 @@ function SSHAgentMemoryInfo()
  ps -ef | egrep ${SSH_AGENT_PID} | egrep 'ssh-agent$' | egrep -v "<defunct>" > /dev/null ;
 }
 
+unset AgentLoader;
 function AgentLoader()
 {
 	local __call_locality=( AL AgentLoader ) ;
@@ -228,8 +231,10 @@ function AgentLoader()
   eval "${StrStartServicesName}" ; 
  fi
 
+ unset __main_StartServices __main_StopServices ; 
 }
 
+unset GetGitHubKey ; 
 function GetGitHubKey()
 {
  ### List of Key:
@@ -266,6 +271,7 @@ function GetGitHubKey()
  echo -ne "Key from ${DisplayKeyName}:\n[${KeyOutput}]\n"  > /dev/stderr ; 
 }
 
+unset GetKeyChoice ; 
 function GetKeyChoice()
 {
 

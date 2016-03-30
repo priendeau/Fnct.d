@@ -487,12 +487,16 @@ function BoolVarTestVarCreation()
 ### Note reference : f1161962-0ad8-11e3-b166-001b3875b29c  
 ### 
 ### 
-
- unset ArrayTypeTest StrVarNamed StrVarNamedHold StrVarBoolTest StrDefaultBoolTest StrNotAsserted StrScopeType StrIfTestType StrIfStringOp IsDisplayIfStatement ; 
-	local __call_locality=( BVTest BoolVarTestVarCreation ) ;
+### Factory Section 
+ unset StrVarBoolTest StrDefaultBoolTest StrNotAsserted StrScopeType StrIfTestType StrIfStringOp IsPreambule StrDefaultEndTest IsTypePreamb StrVTRPrbTpl StrVTRPrbVar StrVTRPrbVTReg StrVTRPrbVTFnct IsTypeAssert StrVTRAsrtTpl StrVTRAsrtVar StrVTRAsrtVTReg StrVTRAsrtVTFnct StrKeyTestType IntDefautlType IsDisplayIfStatement StrIfPattern ArrayIfPattern ArrayAssertion StrTestTemplate ;
+ local __call_locality=( BVTest BoolVarTestVarCreation ) ;
 	local ArrayArg=( $* ) ; 
 	local Arg0=${ArrayArg[0]} ;
+ local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\n" ;
+### End of Factory Section.
  local ArrayTypeTest=( False True ) ;
+ local ArrayPreambule=( ) ; 
+
  local StrVarNamed=${BVTestVarName:=StrAttrHold} ; 
  local StrVarNamedHold=${BVTestVarHold:=CONTENT} ; 
  local StrVarBoolTest=${BVTestBoolVarName:=IsVarShould} ; 
@@ -500,29 +504,38 @@ function BoolVarTestVarCreation()
  local StrNotAsserted=${BVTestBoolAssertion:=\"\"} ;
  local StrScopeType=${BVTestScopeTest:=local} ;
  local StrIfTestType=${BVTestIfType:=String} ; 
- local StrIfStringOp=${BVTestIfOp:===} ;
- local IsPreambule=${BVTestIsPreambule:=True}; 
+ local StrIfStringOp=${BVTestIfOp:='=='} ;
+ local IsPreambule=${BVTestIsPreambule:=True} ; 
+ local StrDefaultEndTest=${BVTestConclude:=";"} ;
  ### Section ValueToVariable in Preambule 
- local IsTypePreamb=${BVTestIsValueToVar:=False};
+ local IsTypePreamb=${BVTestIsValueToVar:=False} ;
  local StrVTRPrbTpl=${BVTestVTVTPL:=eval __TES__  __REGISTRY_PRE__ VTVValueEntry=__VAR_ENTRY_PRE__ ValueToVariable __TEE__ __FNCT_PRE__} ;
- local StrVTRPrbVar=${BVTestVTVVar:=IsVerbose,IsDebug};
- local StrVTRPrbVTReg=${BVTestVTReg:=VTVIsArrayStyleInsert=True VTVIsValueReAssign=True VTVIsValueToConvert=False}
- local StrVTRPrbVTFnct=${BVTestVTFnct:=__FNCT__}
+ local StrVTRPrbVar=${BVTestVTVVar:=IsVerbose,IsDebug} ;
+ local StrVTRPrbVTReg=${BVTestVTReg:=VTVIsArrayStyleInsert=True VTVIsValueReAssign=True VTVIsValueToConvert=False} ;
+ local StrVTRPrbVTFnct=${BVTestVTFnct:=__FNCT__} ;
  ### Section ValueToVariable in Assertion .
  local IsTypeAssert=${BVTestIsValueToVarAssert:=False};
  local StrVTRAsrtTpl=${BVTestVTVTPLA:=eval __TES__  __REGISTRY_ASRT__ VTVValueEntry=__VAR_ENTRY_ASRT__ ValueToVariable __TEE__ __FNCT_ASRT__} ;
  local StrVTRAsrtVar=${BVTestVTVVarA:=IsVerbose,IsDebug};
  local StrVTRAsrtVTReg=${BVTestVTRegA:=VTVIsArrayStyleInsert=True VTVIsValueReAssign=True VTVIsValueToConvert=False}
  local StrVTRAsrtVTFnct=${BVTestVTFnctA:=__FNCT__}
- 
- local StrKeyTestType=${BVTestType:=if:fi,if:elif,elif:elif,elif:else,if:else,else:fi} ;
- local IntDefautlType=${BVIdTest:=0} ; 
- local StrDefaultEndTest=${BVTestConclude=;} ;
+ local StrKeyTestType=${BVTestType:='if:fi,if:elif,elif:elif,elif:else,if:else,else:fi'} ;
+ local IntDefautlType=${BVTestIdType:=0} ; 
  local IsDisplayIfStatement=${BVTestDisplayIf:=False} ; 
+ 
+ local StrTestTemplate="""__PREAMBULE__
+ __IF_PATTERN__ ; then 
+  __ASSERTION__ 
+  __END_TEST__ __END_MARK__""" ;
  
  local ArrayTestType=( ${StrKeyTestType//,/ } ) ; 
  local ArrayTestSection=( ${ArrayTestType[${IntDefautlType}]//:/ } ) ; 
  
+ ### Note : ArrayTestSection should test if value end with 'fi' and will require an extra semi-colon
+ ### before adding element 'fi' --> 'else ... (;) fi ' 
+ if [ ${ArrayTestSection[1]} == "fi" ] ; then 
+  ArrayTestSection[1]="; ${ArrayTestSection[1]}" ; 
+ fi 
  local ArrayTestType=( String File Test Int Shell ) ;
  local StrIfPattern ; 
  local ArrayIfPattern=(  ) ;
@@ -542,18 +555,11 @@ function BoolVarTestVarCreation()
    StrIfPattern=${ArrayIfPattern[${intx}]//__OP__/${StrIfStringOp}} ; 
   fi 
  done 
- local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\n" ;
- local ArrayPreambule=( ) ; 
  ArrayPreambule[0]="__SCOPE__ __VAR_NAME__=__VALUE__" ;
  local ArrayAssertion=( ) ; 
  local ArrayAssertion[0]="__ASRT_VAR__NAME__=__ASRT_VAR_VALUE__" ;
  ### Old Preambule : ${StrScopeType} ${StrVarNamed}=\"${StrVarNamedHold}\"" 
  ### Old Assertion : \${StrVarNamed}=\${StrNotAsserted} ; 
- local StrTestTemplate="""
- __PREAMBULE__
- __IF_PATTERN__ ; then
-   __ASSERTION__
- __END_TEST__ __END_MARK__""" ; 
   
   if [ "${IsTypeAssert:=False}" == "True" ] ; then 
    StrTestTemplate=${StrTestTemplate//__ASSERTION__/${StrVTRAsrtTpl}} ;
