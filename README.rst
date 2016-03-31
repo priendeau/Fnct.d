@@ -860,9 +860,12 @@ change probably into pre-emptive Assertion being part attended result having a
 BVTestBoolCase worring on this If statement, is like controlling-twice a true
 exit.
 
+.. role:: raw-html(raw)
+   :format: html
+
 :Note: 7236e956-f6cf-11e5-98a2-001e4c8856d6
 :Title: Recurrent call in BoolVarTestVarCreation and avoid uses of ValueToVariable .  
-:Reference: :literal:`&#x1F53A;`Warning
+:Reference: :raw-html:`<li style="color:red">Warning</li>`
 :Function: BoolVarTestVarCreation
 
 While BoolVarTestVarCreation is a low-level call indirectly call by ValueToVariable it's hard to define first will end having good sub-body to acheive a strict identity and be able to parse all variable before BoolVarTestVarCreation 'will' have to end a possible __main_start_services if this one is implemented with normal body-topology  .  So it's not recommended to use ValueToVariable inside BoolVarTestVarCreation has long there is a better mechanisms correcting this problems in bash of recurrent  function call recurently a lower level function will simply loop and not finishing the work . 
