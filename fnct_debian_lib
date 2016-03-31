@@ -544,6 +544,19 @@ function BoolVarTestVarCreation()
  __IF_PATTERN__ ; then 
   __ASSERTION__ 
   __END_TEST__ __END_MARK__""" ;
+
+ function Verbosis()
+	{
+		local __call_locality=( Verbosis Verb );
+		local StrMsg=${VerbMsg:=__TEXT__} ; 
+		local StrDevOut=${VerbDev:=/dev/stderr} ; 
+  local VerboseState=${VerbState:=False} ;
+		local ArrayArg=( $* ) ; 
+		if [ "${VerboseState:=False}" == "True" ] ; then 
+			echo -ne "VERBOSE:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+		fi
+	}
+ 
  
  local ArrayTestType=( ${StrKeyTestType//,/ } ) ; 
  local ArrayTestSection=( ${ArrayTestType[${IntDefautlType}]//:/ } ) ; 
@@ -658,10 +671,10 @@ function BoolVarTestVarCreation()
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
 		eval $( __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+ 
+  local StrMsg="\nFunction ${__call_locality[1]}, Display Result:\n ${StrTestTemplate}\n" ; 
+  VerbState=${IsDisplayIfStatement} VerbDev=/dev/stderr VerbMsg=${StrMsg} Verbosis
   echo -ne "${StrTestTemplate}" ; 
-  if [ "${IsDisplayIfStatement}" == "True" ] ; then 
-   echo -ne "\nFunction ${__call_locality[1]}, Display Result:\n ${StrTestTemplate}\n" > /dev/stderr ; 
-  fi 
  fi
  
 }
