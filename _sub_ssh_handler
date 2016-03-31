@@ -33,7 +33,7 @@ function StartAgentSSH()
  local StrProcMemory=${SASSHProcessLink:=/proc} ;
  local StrStartServicesName=${SASSHStartServices:=__main_StartServices} ;
  local StrStopServicesName=${SASSHStopServices:=__main_StopServices} ;
- local IsVerbosis=${SASSHVerbosis:=True} ;
+ local IsVerbosis=${SASSHVerbosis:=False} ;
 
 	function Verbosis()
 	{
@@ -42,7 +42,7 @@ function StartAgentSSH()
 		local StrDevOut=${VerbDev:=/dev/stderr} ; 
   local VerboseState=${VerbState:=False} ;
 		local ArrayArg=( $* ) ; 
-		if [ "${VerbState:=False}" == "True" ] ; then 
+		if [ "${VerboseState:=False}" == "True" ] ; then 
 			echo -ne "VERBOSE:[ ${StrMsg} ]\n" > ${StrDevOut} ;
 		fi
 	}
@@ -51,6 +51,7 @@ function StartAgentSSH()
  ### Create StrPathSSH and if IsHomeUser==False, StrPathSSH will own
  ### the StrPathBase value (default set to /root )
  local StrEvalCmdUserHome=$( BVTestVarName="StrPathSSH" \
+       BVTestDisplayIf=${IsVerbosis} \
        BVTestVarHold=${HOME} \
        BVTestBoolVarName=\${IsHomeUser} \
        BVTestBoolAssertion=\${StrPathBase} \
@@ -164,6 +165,60 @@ function SSHAgentMemoryInfo()
  
  ps -ef | egrep ${SSH_AGENT_PID} | egrep 'ssh-agent$' | egrep -v "<defunct>" > /dev/null ;
 }
+
+### Notice : 208d465e-f6d4-11e5-98a2-001e4c8856d6 
+### Uses of Prefixed-Variable in AgentLoader Might work.
+### 
+### Belong to topology, all prefixed-variable are by default assigned to 
+### a candidate value if there is no representation of it in Higher level 
+### like command line: 
+### 
+### Explicitly mean : following command will output all 
+### virtual test being handled by BoolVarTestVarCreation if there is not 
+### explicitly assigned value to is original command line, IsDisplayIfStatement
+### is the Verbosis example following the output inside BoolVarTestVarCreation. 
+### 
+### But subject line fully working in date of 2016-03-30 belong to notice 
+### 208d465e-f6d4-11e5-98a2-001e4c8856d6 and after token notice, example :
+### 
+### BVTestDisplayIf=True AgentLoader --stopservices
+### BVTestDisplayIf=True AgentLoader --startservices 
+### will display the current BoolVarTestVarCreation listing of if-fi statement.
+### 
+### reference : 
+### 
+### BVTestDisplayIf=True AgentLoader --stopservices 
+### VERBOSE:[ 
+### Function BoolVarTestVarCreation, Display Result:
+### local StrAppsAction="${StrAppsAction}" ;
+###  if [ "${IsValueSimpleConvert}" == "True" ]  ; then 
+###   StrAppsAction=${StrDefaultSedScript} 
+###   ; fi ;
+###  ]
+### VERBOSE:[ 
+### Function BoolVarTestVarCreation, Display Result:
+###  local StrAppsAction="${StrAppsAction}" ;
+###  if [ "${IsValueToAssignSame}" == "True" ]  ; then 
+###   StrAppsAction=${StrDefaultAssignScript} 
+###   ; fi ;
+###  ]
+### VERBOSE:[ 
+### Function BoolVarTestVarCreation, Display Result:
+###  local StrAppsAction="${StrAppsAction}" ;
+###  if [ "${IsValueTransScript}" == "True" ]  ; then 
+###   StrAppsAction=${StrDefaultTransform} 
+###   ; fi ;
+###  ]
+### VERBOSE:[ 
+### Function BoolVarTestVarCreation, Display Result:
+###  local StrParsedVar="${StrValueParser}" ;
+###  if [ "${IsEntryInComaSep}" == "True" ]  ; then 
+###   StrParsedVar=${StrValueParser//,/ } 
+###   ; fi ;
+###  ]
+### 
+### 
+
 
 unset AgentLoader;
 function AgentLoader()
