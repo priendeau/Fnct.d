@@ -885,15 +885,16 @@ Having used the crontab to allow a laptop to automatically configure a gorvernor
 
 .. code:: shell
 
-###
-### test dependent. Require A file in /root/sysctl to allow test to perform the rest of the command line . 
-### 
-*/2  *   *      *    *     test -f /root/sysctl/.cpusetgov_0 && cpufreq-set --cpu 0 --governor performance
-*/2  *   *      *    *     test -f /root/sysctl/.cpusetgov_1 && cpufreq-set --cpu 1 --governor performance
-*/2  *   *      *    *     test ! -f /root/sysctl/.cpusetgov_0 && cpufreq-set --cpu 0 --governor ondemand
-*/2  *   *      *    *     test ! -f /root/sysctl/.cpusetgov_1 && cpufreq-set --cpu 1 --governor ondemand
-*/2  *   *      *    *     test -f /root/sysctl/.cpusetfreq_0 && cpufreq-set --cpu 0 --min 1900000 --max 1900000
-*/2  *   *      *    *     test -f /root/sysctl/.cpusetfreq_1 && cpufreq-set --cpu 1 --min 1900000 --max 1900000
+
+ ###
+ ### test dependent. Require A file in /root/sysctl to allow test to perform the rest of the command line . 
+ ### 
+ */2  *   *      *    *     test -f /root/sysctl/.cpusetgov_0 && cpufreq-set --cpu 0 --governor performance
+ */2  *   *      *    *     test -f /root/sysctl/.cpusetgov_1 && cpufreq-set --cpu 1 --governor performance
+ */2  *   *      *    *     test ! -f /root/sysctl/.cpusetgov_0 && cpufreq-set --cpu 0 --governor ondemand
+ */2  *   *      *    *     test ! -f /root/sysctl/.cpusetgov_1 && cpufreq-set --cpu 1 --governor ondemand
+ */2  *   *      *    *     test -f /root/sysctl/.cpusetfreq_0 && cpufreq-set --cpu 0 --min 1900000 --max 1900000
+ */2  *   *      *    *     test -f /root/sysctl/.cpusetfreq_1 && cpufreq-set --cpu 1 --min 1900000 --max 1900000
 
 
 .. role:: raw-html(raw)
