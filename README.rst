@@ -933,7 +933,7 @@ The leaky method, it formely require something out of the crontab to not permit 
     ### Suggested replacement :
     eval $( BVTestScopeTest=declare BVTestBoolVarName=\${inty} BVTestBoolCase=0  BVTestVarName=IntFileRef BVTestVarHold=0  BVTestBoolAssertion=1 BVTestIdType=4  BoolVarTestVarCreation ; BVTestScopeTest=declare BVTestBoolVarName=\${inty} BVTestBoolCase=0  BVTestVarName=IntFileRef BVTestVarHold=0  BVTestBoolAssertion=0 BVTestIdType=5  BVTestIsPreambule=False BoolVarTestVarCreation ) ;
 
-Declared thru the Shell it produce that sequence which is merely identical to the previous line 
+Declared thru the Shell it produce that sequence which it is  ""merely identical"" to the previous line 
 
 .. code:: shell
 
