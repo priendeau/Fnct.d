@@ -896,6 +896,52 @@ Having used the crontab to allow a laptop to automatically configure a gorvernor
  */2  *   *      *    *     test -f /root/sysctl/.cpusetfreq_0 && cpufreq-set --cpu 0 --min 1900000 --max 1900000
  */2  *   *      *    *     test -f /root/sysctl/.cpusetfreq_1 && cpufreq-set --cpu 1 --min 1900000 --max 1900000
 
+The leaky method is called intrinsic, it formely require something out of the crontab to not permit this achievement. In some way it wished because we have designed to not allow the modification of the crontab every-time we do doubt changing the CPU gorvernor . And secondly it's stored being /root/sysctl only accessible thru root-user and related to high order role. Tersely defined a script where it might require to log in to change the cpu governor. Like mailman, spooler, and many designed role I do suggest to follow this action because it does not require to Install insane application dependent of Heavy componnent. The one deserved by Mint is called Mate which is a derivative friend of Gnome I beleive. So baically the script have a section a simple section where a test is required and showing the contrast to how developping if-else-fi condition with Fnct.D is demonstrated.
+.. code:: shell
+
+
+ ### Script is called change_cpu_state, it's goal mentionned early does depend of file presence inside /root/sysctl/.cpuXXXXX , The investigator have found 2 cores inside /sys/devices/system/cpu and properly declare them having governor changeable and frequency changeable. Notice Logged inside this user it only start that script ( with properly configured fnct.D ). Afterall it's mainstream, you do test or final test-case, Like my python user it load idle over stripped-down mate or gnome or enriched xfce and python script are simply going faster . 
+ #!/bin/bash 
+
+ ROOT_PWD_MAIN=/root/sysctl
+ FILE_PREFIX=( _ . )
+ FILE_COMPONNENT=( cpusetgov cpufreq )
+ INTNBMEMBER=2 ; 
+
+ ###########
+
+ ### Important Shell Task, Change PWD to this location. 
+ ### Require To hold information temporary inside a file-buffer . 
+ cd ${ROOT_PWD_MAIN} ; 
+ echo > .filechangename ; 
+ 
+ for Member in ${FILE_COMPONNENT[@]}  ; do 
+  for (( inty=0 ; inty <= $(( ${#FILE_PREFIX[@]}-1)) ; inty++ )) ; do 
+   for (( intz=0 ; intz <= $(( ${INTNBMEMBER}-1 )) ; intz++ )) ; do
+    
+    IntFileRef=0 ; 
+    if [ ${inty} == 0 ] ; then 
+     IntFileRef=1 ; 
+    else
+     IntFileRef=0 ; 
+    fi
+    
+    ### Suggested replacement :
+    eval $( BVTestScopeTest=declare BVTestBoolVarName=\${inty} BVTestBoolCase=0  BVTestVarName=IntFileRef BVTestVarHold=0  BVTestBoolAssertion=1 BVTestIdType=4  BoolVarTestVarCreation ; BVTestScopeTest=declare BVTestBoolVarName=\${inty} BVTestBoolCase=0  BVTestVarName=IntFileRef BVTestVarHold=0  BVTestBoolAssertion=0 BVTestIdType=5  BVTestIsPreambule=False BoolVarTestVarCreation ) ;
+
+Declared thru the Shell it produce that sequence which is merely identical to the previous line 
+
+.. code:: shell
+
+ declare IntFileRef=0 ;
+  if [ "${inty}" == "0" ]  ; then  
+   IntFileRef=1 
+   else 
+    
+   IntFileRef=0 
+   ; fi
+
+
 
 .. role:: raw-html(raw)
    :format: html
