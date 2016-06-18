@@ -40,6 +40,19 @@ This is a Library for managing function a permanent subset for a clean
 verbosity and documentation. 
 
 
+Function Management is especially important in this era, having important 
+function or operator being mashed into one Lib ; They defined all appropriate 
+exceptions and allow fews or fewers action if they are not correctly used. 
+Starting from Declaration of variable to uses of simple command like let, uses 
+of operator or even the test internal command equivalent to if [ ... ] ; then ... fi
+
+A Common quote :
+
+::
+
+Bash Big Line, It's especially important to declare it correctly and conceive a type definition if your function uses rather to not filtering the input at start and have many messages having problems to handle variable. Especially in Bash is actor or builtin/function/shell script to generate error on type not correctly handled. If the variable is designe as Integer and hold String-like information, if you do notthing with that variable or called-it future-design, it won't tell you problems until the day you start to use it.
+
+
 Preface
 =======
 
@@ -859,6 +872,29 @@ dedicated test had default value of possible error. Behavior is fixed and will
 change probably into pre-emptive Assertion being part attended result having a 
 BVTestBoolCase worring on this If statement, is like controlling-twice a true
 exit.
+
+:Note: 86e842ce-34f4-11e6-98a2-001e4c8856d6
+:Title: Many Successive BoolVarTestVarCreation To acheive one Big If-Else condition
+:Function: BoolVarTestVarCreation
+
+While some effort are made to keep the code clean, clear, and clarified, this latest version commited after this UUID are doing some pervasive test like assuming we are pushing correct Polish-Notation designed coercive network. Beside BoolVarTestVarCreation which is a Tools to create a multiple conditionnal test like for forming instant shell-script and/or evaluation on demand. This tools will create inheritance part-function . This also mean a this stage to be ready to talk about a future function name not named at this moment but will use this tools into a correct way to form a Correct IF-ELSE-FI compound elements. 
+
+The topic. 
+
+Having used the crontab to allow a laptop to automatically configure a gorvernor to it's most appropriate way, a crontab uses a leaked-design to allow a time based script to test if a file is present. It's deduction will call an application cpufreq-set with appropriate caracteristic. 
+
+.. code
+
+###
+### test dependent. Require A file in /root/sysctl to allow test to perform the rest of the command line . 
+### 
+*/2  *   *      *    *     test -f /root/sysctl/.cpusetgov_0 && cpufreq-set --cpu 0 --governor performance
+*/2  *   *      *    *     test -f /root/sysctl/.cpusetgov_1 && cpufreq-set --cpu 1 --governor performance
+*/2  *   *      *    *     test ! -f /root/sysctl/.cpusetgov_0 && cpufreq-set --cpu 0 --governor ondemand
+*/2  *   *      *    *     test ! -f /root/sysctl/.cpusetgov_1 && cpufreq-set --cpu 1 --governor ondemand
+*/2  *   *      *    *     test -f /root/sysctl/.cpusetfreq_0 && cpufreq-set --cpu 0 --min 1900000 --max 1900000
+*/2  *   *      *    *     test -f /root/sysctl/.cpusetfreq_1 && cpufreq-set --cpu 1 --min 1900000 --max 1900000
+
 
 .. role:: raw-html(raw)
    :format: html
