@@ -879,11 +879,12 @@ exit.
 
 While some effort are made to keep the code clean, clear, and clarified, this latest version commited after this UUID are doing some pervasive test like assuming we are pushing correct Polish-Notation designed coercive network. Beside BoolVarTestVarCreation which is a Tools to create a multiple conditionnal test like for forming instant shell-script and/or evaluation on demand. This tools will create inheritance part-function . This also mean a this stage to be ready to talk about a future function name not named at this moment but will use this tools into a correct way to form a Correct IF-ELSE-FI compound elements. 
 
+~~~~~~~~~~
 The topic. 
 
 Having used the crontab to allow a laptop to automatically configure a gorvernor to it's most appropriate way, a crontab uses a leaked-design to allow a time based script to test if a file is present. It's deduction will call an application cpufreq-set with appropriate caracteristic. 
 
-.. code
+.. code:: shell
 
 ###
 ### test dependent. Require A file in /root/sysctl to allow test to perform the rest of the command line . 
