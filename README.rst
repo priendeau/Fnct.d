@@ -921,12 +921,12 @@ The leaky method is called intrinsic, it formely require something out of the cr
   for (( inty=0 ; inty <= $(( ${#FILE_PREFIX[@]}-1)) ; inty++ )) ; do 
    for (( intz=0 ; intz <= $(( ${INTNBMEMBER}-1 )) ; intz++ )) ; do
     
-    IntFileRef=0 ; 
-    if [ ${inty} == 0 ] ; then 
-     IntFileRef=1 ; 
-    else
-     IntFileRef=0 ; 
-    fi
+    #IntFileRef=0 ; 
+    #if [ ${inty} == 0 ] ; then 
+    # IntFileRef=1 ; 
+    #else
+    # IntFileRef=0 ; 
+    #fi
     
     ### Suggested replacement :
     eval $( BVTestScopeTest=declare BVTestBoolVarName=\${inty} BVTestBoolCase=0  BVTestVarName=IntFileRef BVTestVarHold=0  BVTestBoolAssertion=1 BVTestIdType=4  BoolVarTestVarCreation ; BVTestScopeTest=declare BVTestBoolVarName=\${inty} BVTestBoolCase=0  BVTestVarName=IntFileRef BVTestVarHold=0  BVTestBoolAssertion=0 BVTestIdType=5  BVTestIsPreambule=False BoolVarTestVarCreation ) ;
