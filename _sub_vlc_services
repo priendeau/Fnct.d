@@ -1,0 +1,365 @@
+
+unset ActivatSeServerBuffer ; 
+
+function ActivateServerBuffer()
+{
+ local __call_locality=( ASB ActivateServerBuffer ) ;
+ local ArrayArg=( $* ) ; 
+ local Arg0=${ArrayArg[0]} ;
+ local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart a new FIFO-Buffer Association.\n\t--stopservices\tStop a FIFO-Buffer Association.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\n" ;
+ 
+ local StrFifoDevice=${ASBFIFO:=NONE} ;
+ ### Make Symbolink link from UUID-Named fifo to ASBFIFO Name. 
+ ### Important for Management and later work with DoCtrlHandler.
+ local BoolUUIDNaming=${ABSUUIDSymLink:=False};
+ local UUID="XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX" ; 
+ local BoolVerbose=${ASBVerbose:=False};
+ local IsFifoMode=${ASBFIFOMode:=False} ; 
+ local IsFifoContext=${ASBFIFOCtx:=False} ; 
+ local StrTestApps=${ASBTestApps:=/usr/bin/test} ; 
+ local StrFifoApps=${ASBFIFOApps:=/usr/bin/mkfifo};
+ local StrFifoModeParam=${ASBFIFOModParam:=--mode=644};
+ local StrFifoCtxParam=${ASBFIFOCtxParam:=--context=USER}
+ local StrTestPatrn=${ASBAppsOptPatrn:=__FILE__}
+ local StrTestSwitche=${ASBAppsOpt:=-f {StrTestPatrn}} ; 
+ local StrCmdFifo="${StrFifoApps} {FIFOMODE} {FIFOCTX} {StrFifoDevice}" ;
+ ### UUID Section it's not mandatory and information can come from Shell by
+ ### calling with GetULoop=... GetUSeq=... GetUTimeBased=... ActivateServerBuffer 
+ ### 
+
+ function Verbosis()
+	{
+		local __call_locality=( Verbosis Verb );
+		local StrMsg=${VerbMsg:=__TEXT__} ; 
+		local StrDevOut=${VerbDev:=/dev/stderr} ; 
+  local VerboseState=${VerbState:=False} ;
+		local ArrayArg=( $* ) ; 
+		if [ "${VerboseState:=False}" == "True" ] ; then 
+			echo -ne "VERBOSE:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+		fi
+	}
+ 
+ function __main_StartServices()
+ {
+		local __call_locality=( Main __main_StartServices ) ;
+		local Arg0=${ArrayArg[0]} ;
+		local ArrayArg=( $* ) ; 
+
+  local GetUTimeBased=${GetUTimeBased:=True} ; 
+  local GetUSeq=${GetUSeq:=1}
+  local GetULoop=${GetULoop:=False}
+  local ArrayMsg=( ); 
+  
+  ArrayMsg[0]="New UUID Value issued, UUID:\${UUID} "
+  
+  if [ "${BoolUUIDNaming:=False}" == "True" ] ; then 
+   eval UUID=$( VTVIsArrayStyleInsert=True \
+    VTVValueEntry=GetUTimeBased,GetUSeq,GetULoop \
+    VTVIsValueReAssign=True  \
+    VTVIsValueToConvert=False \
+    VTVIsArrayStyleInsert=True \
+    ValueToVariable ) GetUUID
+    
+   eval VerbMsg=${ArrayMsg[0]} VerboseState=${BoolVerbose} Verbosis
+  fi
+
+  eval $( VTVIsArrayStyleInsert=True \
+  VTVValueEntry=IsFifoMode,StrCmdFifo,StrFifoModeParam,IsFifoContext,StrFifoDevice,StrTestCmd,StrTestPatrn  \
+  VTVIsValueReAssign=True  \
+  VTVIsValueToConvert=False \
+  VTVIsArrayStyleInsert=True \
+  ValueToVariable ) CreateSocketBuffer
+ }
+ 
+ function __main_StopServices()
+ {
+		local __call_locality=( Main __main_StopServices ) ;
+		local Arg0=${ArrayArg[0]} ;
+		local ArrayArg=( $* ) ; 
+  
+  eval $( VTVIsArrayStyleInsert=True \
+  VTVValueEntry=  \
+  VTVIsValueReAssign=True  \
+  VTVIsValueToConvert=False \
+  VTVIsArrayStyleInsert=True \
+  ValueToVariable ) DestroySocketBuffer
+ 
+ }
+ 
+ function CreateSocketBuffer()
+ {
+		local __call_locality=( CSB CreateSocketBuffer ) ;
+		local Arg0=${ArrayArg[0]} ;
+		local ArrayArg=( $* ) ; 
+  ###IsFifoMode,StrCmdFifo,StrFifoModeParam,IsFifoContext,StrFifoDevice,StrTestCmd,StrTestPatrn,,,,,,,,,,,,
+  if [ ${IsFifoMode:=True} == "True" ] ; then 
+   StrCmdFifo=${StrCmdFifo//{FIFOMODE}/${StrFifoModeParam}}
+  else
+   StrCmdFifo=${StrCmdFifo//{FIFOMODE}/}
+  fi 
+
+  if [ ${IsFifoContext:=True} == "True" ] ; then 
+   StrCmdFifo=${StrCmdFifo//{FIFOCTX}/${StrFifoCtxParam}} ;
+  else
+   StrCmdFifo=${StrCmdFifo//{FIFOCTX}/} ;
+  fi 
+
+  StrCmdFifo=${StrCmdFifo//{StrFifoDevice}/${StrFifoDevice}} ;
+  local StrTestCmd="${StrTestApps} ${StrTestSwitche}" ;
+  StrTestCmd=${StrTestCmd//{StrTestPatrn}/${StrTestPatrn}} ;
+  StrTestCmd=${StrTestCmd/${StrTestPatrn}/${StrFifoDevice}} ;
+  
+ }
+ 
+ function DestroySocketBuffer()
+ {
+		local __call_locality=( DSB DestroySocketBuffer ) ;
+		local Arg0=${ArrayArg[0]} ;
+		local ArrayArg=( $* ) ; 
+  
+ }
+ 
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+  GetVarReference ${__call_locality[1]} ; 
+  echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ;
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( __GetVarReferenceList ) ;
+ elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  eval $( VTVIsArrayStyleInsert=True \
+  VTVValueEntry=IsFifoMode,StrCmdFifo,StrFifoModeParam,IsFifoContext,StrFifoDevice,StrTestCmd,StrTestPatrn \
+  VTVIsValueReAssign=True  \
+  VTVIsValueToConvert=False \
+  VTVIsArrayStyleInsert=True \
+  ValueToVariable ) __main_StartServices
+ elif [ "${Arg0:=--stopservices}" == "--stopservices" ] ; then 
+  eval $( VTVIsArrayStyleInsert=True \
+  VTVValueEntry= \
+  VTVIsValueReAssign=True  \
+  VTVIsValueToConvert=False \
+  VTVIsArrayStyleInsert=True \
+  ValueToVariable ) __main_StopServices
+ fi
+
+ 
+ #eval echo """${StrTestCmd} && rm -f ${StrFifoDevice} && ${StrTestApps} ${StrTestSwitche}-f ${StrFifoDevice} && rm -f ${StrFifoDevice} && mkfifo ${StrFifoDevice}""" ;    
+}
+
+unset DoCtrlHandler ;
+function DoCtrlHandler()
+{
+ local __call_locality=( DCH DoCtrlHandler) ;
+	local ArrayArg=( $* ) ; 
+	local Arg0=${ArrayArg[0]} ;
+ local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\n" ;
+ 
+ local GetUTimeBased=${GetUTimeBased:=True} ; 
+ local GetUSeq=${GetUSeq:=1}
+ local GetULoop=${GetULoop:=False}
+ 
+ function Verbosis()
+	{
+		local __call_locality=( Verbosis Verb );
+		local StrMsg=${VerbMsg:=__TEXT__} ; 
+		local StrDevOut=${VerbDev:=/dev/stderr} ; 
+  local VerboseState=${VerbState:=False} ;
+		local ArrayArg=( $* ) ; 
+		if [ "${VerboseState:=False}" == "True" ] ; then 
+			echo -ne "VERBOSE:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+		fi
+	}
+
+ eval local UUID=$( VTVIsArrayStyleInsert=True \
+  VTVValueEntry=GetUTimeBased,GetUSeq,GetULoop \
+  VTVIsValueReAssign=True  \
+  VTVIsValueToConvert=False \
+  VTVIsArrayStyleInsert=True \
+  ValueToVariable ) GetUUID
+  
+}
+
+unset VlcServer ;
+
+function VLCServer()
+{
+ local __call_locality=( VLCS VLCServer ) ;
+	local ArrayArg=( $* ) ; 
+	local Arg0=${ArrayArg[0]} ;
+ local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--stopservices\tStop the application or service side relation.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\n" ;
+ 
+ 
+ ### Prefixed Variable List
+ local StrFifoRoot=${VLCSFIFORoot:=HOME} ;
+ local IsFifoRootVar=${VLCSFIFORootVar:=True} 
+ local StrFifoName=${VLCSFIFOName:=.vlc-server} ;
+ local StrVLCCaller=${VLCSBIN:=\${HOME}/bin/vlc-terminal.sh} ;
+ 
+ ### Loading playlist <--- Depedent of StrVLCCaller and this script verify the playlist parameter --->
+ local StrVLCPlayList=${VLCSBINPl:=\${HOME}/Music/playlist_20160606.m3u} ;
+ 
+ 
+ ### Information toward network / socket transfert 
+ ### Example of Socket Handler and it's parameter 
+ ### nc -4 -n -k -i 1 -I $((2 * 1024 * 1024)) -l 127.0.1.1 5080 > ${HOME}.vlc-server
+ #StrAppsSocket,StrAppsCmdCaller,StrAppsParam,StrAppsBuffer,StrAppsAddrSvr,StrAppsAddrPrt,,,,,,,,,,,,,,,,
+ local StrAppsSocket=${VLCSSocketHndlr:=/bin/nc} ;
+ local StrAppsCmdCaller=${VLCSSocketCmd:=__APPS__ __PARAM__ -I __BUFFER__ -l __ADDR__ __PORT__} ;
+ local StrAppsParam=${VLCSSocketParam:=-4 -n -k -i 1} ;
+ local StrAppsBuffer=${VLCSSocketBuffer:=2097152} ;
+ local StrAppsAddrSvr=${VLCSSocketAddr:=127.0.1.1} ;
+ local StrAppsAddrPrt=${VLCSSocketPort:=5080} ;
+ #local =${VLCS:=} ;
+ #local =${VLCS:=} ;
+ #local =${VLCS:=} ;
+ #local =${VLCS:=} ;
+ 
+ function Verbosis()
+	{
+		local __call_locality=( Verbosis Verb );
+		local StrMsg=${VerbMsg:=__TEXT__} ; 
+		local StrDevOut=${VerbDev:=/dev/stderr} ; 
+  local VerboseState=${VerbState:=False} ;
+		local ArrayArg=( $* ) ; 
+		if [ "${VerboseState:=False}" == "True" ] ; then 
+			echo -ne "VERBOSE:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+		fi
+	}
+ 
+ function __main_StartServices()
+ {
+		local __call_locality=( Main __main_StartServices ) ;
+		local Arg0=${ArrayArg[0]} ;
+		local ArrayArg=( $* ) ; 
+ 
+  eval $( VTVIsArrayStyleInsert=True \
+  VTVValueEntry=StrFifoDevice,IsFifoMode,IsFifoContext,StrTestApps,StrFifoApps,StrFifoModeParam,StrFifoCtxParam  \
+  VTVIsValueReAssign=True  \
+  VTVIsValueToConvert=False \
+  VTVIsArrayStyleInsert=True \
+  ValueToVariable ) ActivateServerBuffer
+ }
+ 
+ function __main_StopServices()
+ {
+		local __call_locality=( Main __main_StopServices ) ;
+		local Arg0=${ArrayArg[0]} ;
+		local ArrayArg=( $* ) ; 
+ 
+ }
+ 
+ 
+ local StrMsg="" ; 
+ local StrFIFODev="" ; 
+ ### This section explain how the group 
+ ### VLCSFIFORootVar, VLCSFIFORoot, VLCSFIFOName, is handled, 
+ ###  
+ ### How StrFIFODev Will Be see here to hold the 
+ ### Server Services ?
+ ###  ------+
+ ###        /\
+ ###       /  \
+ ###      /    \
+ ###     /      \
+ ###    /        \ 
+ ###   / VLCSFIFO \  FALSE
+ ###   \  RootVar /----------> Not to be evaluated and hold respectively 
+ ###    \ True ? /             StrFIFODev=${StrFifoRoot}/${StrFifoName}
+ ###     \      /
+ ###      \    /
+ ###       \  /
+ ###        \/
+ ###        |
+ ###        | TRUE
+ ###        |
+ ###        |
+ ###        +---------> Evaluate Element like this {StrFifoRoot} is a Variable Name 
+ ###                    ${StrFifoName} is the content of the ServerBuffer Name 
+ ###                    and StrFIFODev will Hold a [Variable]/[And FifoName Content]
+ ###  
+ 
+ if [ ${IsFifoRootVar:=True} == "True" ] ; then 
+  eval """StrFIFODev=\$${StrFifoRoot}/${StrFifoName}""" ; 
+ else
+  StrFIFODev=${StrFifoRoot}/${StrFifoName};
+ fi 
+ 
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+			GetVarReference ${__call_locality[1]} ; 
+			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+		echo -ne """${ArgGet}\n""" ;
+	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+		eval $( __GetVarReferenceList ) ;
+ elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  eval $( VTVIsArrayStyleInsert=True \
+  VTVValueEntry=StrFifoRoot,IsFifoRootVar,StrFifoName,StrVLCCaller,StrVLCPlayList,StrAppsSocket,StrAppsCmdCaller,StrAppsParam,StrAppsBuffer,StrAppsAddrSvr,StrAppsAddrPrt \
+  VTVIsValueReAssign=True  \
+  VTVIsValueToConvert=False \
+  VTVIsArrayStyleInsert=True \
+  ValueToVariable ) __main_StartServices
+ elif [ "${Arg0:=--stopservices}" == "--stopservices" ] ; then 
+  eval $( VTVIsArrayStyleInsert=True \
+  VTVValueEntry=StrFifoRoot,IsFifoRootVar,StrFifoName,StrVLCCaller,StrVLCPlayList,StrAppsSocket,StrAppsCmdCaller,StrAppsParam,StrAppsBuffer,StrAppsAddrSvr,StrAppsAddrPrt \
+  VTVIsValueReAssign=True  \
+  VTVIsValueToConvert=False \
+  VTVIsArrayStyleInsert=True \
+  ValueToVariable ) __main_StopServices
+	fi
+
+ 
+ ### ---> Final Lines ${StrFIFODev} ; cat /home/maxiste/.vlc-server | ./bin/vlc-terminal.sh /home/maxiste/Music/playlist_20160606.m3u | nc -lk -i 1 -I $((2 * 1024 * 1024)) -p 5080 127.0.0.1 > /home/maxiste/.vlc-server
+}
+
+unset __vlc_rate ; 
+
+function __vlc_rate()    
+{ 
+
+ function Verbosis()
+	{
+		local __call_locality=( Verbosis Verb );
+		local StrMsg=${VerbMsg:=__TEXT__} ; 
+		local StrDevOut=${VerbDev:=/dev/stderr} ; 
+  local VerboseState=${VerbState:=False} ;
+		local ArrayArg=( $* ) ; 
+		if [ "${VerboseState:=False}" == "True" ] ; then 
+			echo -ne "VERBOSE:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+		fi
+	}
+ local StrMsg="" ; 
+
+ local ArrayRateLevel=( ); 
+ ### determining the range of random rate. 
+ local IntRandRange=$(( ( ${RANDOM} % ${VLCRATE:=30} ) + 1  )) ; 
+ local IntRateInsert=0 ; 
+ local IntRateGet=0 ;
+ local StrRandomFormat="" ; 
+ local IntSleep=0 ; 
+ local StrVLCCmd="${VLCCLICMD:=rate __RATE__}" ; 
+ local StrSentCmd="" ; 
+ ### Create the random-field olding N-range of Possible Rate.  
+ for (( intx=0 ; intx <= ${IntRandRange} ; intx++ )) ; do 
+  IntRateInsert=$(( 100 - ( ${RANDOM} %  ${IntRandRange} ) )) ;
+  ArrayRateLevel[${#ArrayRateLevel[@]}]=${IntRateInsert} ;  
+ done  ;
+ echo "List or range [ ${ArrayRateLevel[@]} ] " > /dev/stderr ; 
+ while [ 1 ] ; do 
+  IntRateGet=$(( ${ArrayRateLevel[${RANDOM} % ${#ArrayRateLevel[@]}]} )) ; 
+  if [ ${IntRateGet:=100} -eq 100 ] ; then 
+   StrRandomFormat="1" ;
+  else
+   StrRandomFormat="0.${IntRateGet}" ;
+  fi 
+  IntSleep=$(( ( ${RANDOM} % ${VLCRATEDURATION:=10} ) + 1 )) ; 
+  echo "Rate Fixed to ${StrRandomFormat}, for ${IntSleep} seconds " > /dev/stderr ;  
+  StrSentCmd=${StrVLCCmd//__RATE__/${StrRandomFormat}} ; 
+  echo "Pushing cmd:[ ${StrSentCmd} ]" > /dev/stderr ; 
+  echo "${StrSentCmd}" | nc ${VLCSERVER:=192.168.0.72} ${VLCSRVPORT:=5080} 2>&1 /dev/null  ; 
+  sleep ${IntSleep} ; 
+ done ; 
+  
+}
+
