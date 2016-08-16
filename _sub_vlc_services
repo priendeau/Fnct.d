@@ -363,3 +363,174 @@ function __vlc_rate()
   
 }
 
+###
+### Old Section, the improvement are previous lines, all the stuff under this comment 
+### are port from theses prototypes.
+### 
+
+unset OldVLCServer ;
+function OldVLCServer()
+{
+ local __call_locality=( OVLCS OldVLCServer ) ;
+	local ArrayArg=( $* ) ; 
+	local Arg0=${ArrayArg[0]} ;
+ local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\n" ;
+ ### vlc-terminal.sh is simply a vlc loading sheet and other meter, replacing 
+ ### OVLCSAppsLunch={/usr/bin/vlc OR /usr/local/bin/vlc} can just let use
+ ### it for test purposes.
+  
+ local StrVLCApps=${OVLCSAppsLunch:=${HOME}/bin/vlc-terminal.sh}
+ local StrVLCAppsPlaylist=${OVLCSAppsPlaylist:=/home/maxiste/Music/playlist_20160606.m3u} ; 
+ ### It uses /bin/nc inside socket management to receive incoming vlc-cli command and 
+ ### /bin/nc is a bind to /bin/nc.openbsd in Linux-Mint Distribution, depend what other 
+ ### own ...
+ local StrSocketApps=${OVLCSAppsSock:=/bin/nc};
+ local StrSocketOption=${OVLCSAppsSockOpt:=-4 -n -k -i 1};
+ local StrSocketBufferOption=${OVLCSAppsSockBuffer:=2097152};
+ local StrAppsBufferOption=${OVLCSAppsBuffer:=-I};
+ local StrAppsListenOption=${OVLCSAppsLiten:=-l}
+ local StrSocketAddr=${OVLCSSockAddr:=127.0.1.1};
+ local StrSocketPort=${OVLCSSockPort:=5080};
+ 
+ function __main_StartServices()
+ {
+		local __call_locality=( Main __main_StartServices ) ;
+		local Arg0=${ArrayArg[0]} ;
+		local ArrayArg=( $* ) ; 
+  ### StrVLCApps,StrVLCAppsPlaylist,StrSocketApps,StrSocketOption,StrAppsBufferOption,StrSocketBufferOption,StrAppsListenOption,StrSocketAddr
+  test -e rm -f ${HOME}/.vlc-server ; 
+  mkfifo ${HOME}/.vlc-server ; 
+  
+  cat ${HOME}/.vlc-server | \
+    ${StrVLCApps} ${StrVLCAppsPlaylist} | \
+    ${StrSocketApps} ${StrSocketOption} \
+    ${StrAppsBufferOption} ${StrSocketBufferOption} \
+    ${StrAppsListenOption} ${StrSocketAddr} ${StrSocketPort} > ${HOME}/.vlc-server 
+
+ }
+ 
+ function __main_StopServices()
+ {
+		local __call_locality=( Main __main_StartServices ) ;
+		local Arg0=${ArrayArg[0]} ;
+		local ArrayArg=( $* ) ; 
+  echo -ne "\n\n\tLike you see there is an application to destroy and socket to stop.\nStay tuned to see how we can manage it with CtrlHandler methodology.\n\n" ; 
+ }
+ 
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+			GetVarReference ${__call_locality[1]} ; 
+			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+		echo -ne """${ArgGet}\n""" ;
+	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+		eval $( __GetVarReferenceList ) ;
+ elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  eval $( VTVIsArrayStyleInsert=True \
+  VTVValueEntry=StrVLCApps,StrVLCAppsPlaylist,StrSocketApps,StrSocketOption,StrAppsBufferOption,StrSocketBufferOption,StrAppsListenOption,StrSocketAddr \
+  VTVIsValueReAssign=True  \
+  VTVIsValueToConvert=False \
+  VTVIsArrayStyleInsert=True \
+  ValueToVariable ) __main_StartServices
+ elif [ "${Arg0:=--stopservices}" == "--stopservices" ] ; then 
+  eval $( VTVIsArrayStyleInsert=True \
+  VTVValueEntry=StrVLCApps,StrVLCAppsPlaylist,StrSocketApps,StrSocketOption,StrAppsBufferOption,StrSocketBufferOption,StrAppsListenOption,StrSocketAddr \
+  VTVIsValueReAssign=True  \
+  VTVIsValueToConvert=False \
+  VTVIsArrayStyleInsert=True \
+  ValueToVariable ) __main_StopServices
+ fi
+
+}
+
+unset __old_vlc_rate ; 
+function __old_vlc_rate()    
+{ 
+ local ArrayRateLevel=( ); 
+ ### determining the range of random rate. 
+ ### VLCCHUNKRATE -> Number of Possible Rate Level inside ArrayRateLevel
+ ### And it is not fixed, the application should remain Random-Result returned 
+ ### It short, it should sound-like old turn-table having 15-12 or 33 turn and 
+ ### should had problem to keep-it constant... Also another suggested reason to
+ ### produce this effect, to keep human listening and  having problem to guess
+ ### instantly the couple note inside a music... Even by singing in a karaoke
+ ### we should ear more the person rather than the voice of the singer.
+ 
+ local IntRandRange=$(( ( ${RANDOM} % ${VLCCHUNKRATE:=30} ) + 1  )) ; 
+ local IntRateInsert=0 ; 
+ local IntRateGet=0 ;
+ local StrRandomFormat="" ; 
+ local IntSleep=0 ; 
+ local StrVLCCmd="${VLCRATECMD:=rate __RATE__}" ; 
+ local StrSentCmd="" ;
+ local IntHighestRate=${VLCRATEHIGHESTRATE:=100} ;    
+ local BoolVerb=${Verbose:=True} ;
+ local ArrayMsg=( )
+ local StrDisplayHeader="DEBUG" ; 
+ ArrayMsg[0]="List or range [ __ARRAY__ ], Nb Item: __ITEM__" ;
+ ArrayMsg[1]="Rate Fixed to __RATE__, for __SEC__ seconds" ;
+ ArrayMsg[2]="Pushing VLC-Cli comand:[ __CMD__ ]"
+ 
+ function Verbosis()
+	{
+		local __call_locality=( Verbosis Verb );
+		local StrMsg=${VerbMsg:=__TEXT__} ; 
+		local StrDevOut=${VerbDev:=/dev/stderr} ; 
+  local IsVerboseState=${VerbState:=False} ;
+  local StrVerboseHeader=${VerbHeader:=VERBOSE}
+		local ArrayArg=( $* ) ; 
+		if [ "${IsVerboseState:=False}" == "True" ] ; then 
+			echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+		fi
+	}
+ 
+ ### Create the random-field olding N-range of Possible Rate.  
+ for (( intx=0 ; intx <= ${IntRandRange} ; intx++ )) ; do 
+  IntRateInsert=$(( ${IntHighestRate} - ( ${RANDOM} %  ${IntRandRange} ) )) ;
+  ### A Direct convertion of rate 0-100 to 0.0 to 1.0 is performed. 
+  StrRateFmt=$( echo "scale=2 ;${IntRateInsert} / 100" | bc ) ;
+  ArrayRateLevel[${#ArrayRateLevel[@]}]="${StrRateFmt}" ;  
+ done  ;
+ StrMsg=${ArrayMsg[0]//__ARRAY__/${ArrayRateLevel[@]}}
+ StrMsg=${StrMsg//__ITEM__/${#ArrayRateLevel[@]}}
+ ### Forced Message
+ VerbHeader=${StrDisplayHeader} VerbMsg=${StrMsg} VerbState=True VerbDev=/dev/stderr Verbosis
+ #echo "List or range [ ${ArrayRateLevel[@]} ] " > /dev/stderr ; 
+ while [ 1 ] ; do 
+
+  local IntModulo=$(( ${RANDOM} % ${#ArrayRateLevel[@]}  ))
+  StrMsg="Query Size of Array ArrayRateLevel, get ${#ArrayRateLevel[@]}" ;
+  VerbMsg=${StrMsg} VerbState=${BoolVerb} VerbDev=/dev/stderr Verbosis
+  
+  StrMsg="Query Random number inside Arrayfr from IntModulo, Item number ${IntModulo} will be choosed " ;
+  VerbMsg=${StrMsg} VerbState=${BoolVerb} VerbDev=/dev/stderr Verbosis
+  StrRateGet=${ArrayRateLevel[${IntModulo}]}; 
+  
+  
+  #if [ ${IntRateGet:=100} -ge 100 ] ; then 
+  ###StrRandomFormat=$( echo "scale=2 ;${IntRateGet} / 100" | bc ) ;
+  ### Previous line required to perform a format where is no longer needed but later option can
+  ### perform adaptation.
+  StrRandomFormat=${StrRateGet} ; 
+  #else
+  # StrRandomFormat="0.${IntRateGet}" ;
+  #fi 
+  IntSleep=$(( ( ${RANDOM} % ${VLCRATEDURATION:=10} ) + 1 )) ; 
+  #echo "Rate Fixed to ${StrRandomFormat}, for ${IntSleep} seconds " > /dev/stderr ;  
+  StrMsg=${ArrayMsg[1]//__RATE__/${StrRandomFormat}}
+  StrMsg=${StrMsg//__SEC__/${IntSleep}}
+  ### Forced Message
+  VerbHeader=${StrDisplayHeader} VerbMsg=${StrMsg} VerbState=True VerbDev=/dev/stderr Verbosis
+  
+  StrSentCmd=${StrVLCCmd//__RATE__/${StrRandomFormat}} ; 
+  
+  StrMsg=${ArrayMsg[2]//__CMD__/${StrSentCmd}}
+  ### Forced Message
+  VerbHeader=${StrDisplayHeader} VerbMsg=${StrMsg} VerbState=True VerbDev=/dev/stderr Verbosis
+  #echo "Pushing VLC-Cli comand:[ ${StrSentCmd} ]" > /dev/stderr ; 
+  ### Forced Message
+  echo "${StrSentCmd}" | nc -4 -n ${VLCSERVER:=192.168.0.72} ${VLCSRVPORT:=5080} -Treliability 2>&1 /dev/null  ; 
+  sleep ${IntSleep} ; 
+ done ; 
+  
+}
