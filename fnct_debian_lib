@@ -1739,7 +1739,7 @@ function ZenityShellEval()
  local IntHeight=${ZSEWindowHeight:=400} ;
  local IsLoopOnSucc=${ZSELoopOnSucc:=True} ; 
  local IsCheckSumOnly=${ZSECheckSumTest:=False} ; 
- 
+ local TmpUUIDEdit=$( GetUIDRegister=True GetUAppsRegisterName=${__call_locality[1]} GetUUID )
  ### Note: f1161962-0ad8-11e3-b166-001b3875b29c 
  ### 
  ### Title : Variable Forwarding Example in BoolVarTestVarCreation & mutation 
@@ -1807,14 +1807,20 @@ function ZenityShellEval()
           BVTestScopeTest=local \
           BoolVarTestVarCreation ) ; 
   
-  echo -ne "\n\nNote: New FileName : ${StrFileTmp} \n\n" > /dev/stderr ; 
-  test -e ${StrFileTmp} && echo -ne "\n\n### FileName: ${StrFileTmp}\n\n" > ${StrFileTmp} ; 
+  test ! -e ${StrFileTmp} && echo -ne "\n\nNote: New FileName : ${StrFileTmp} \n\n" > /dev/stderr ; 
+  test ! -e ${StrFileTmp} && echo -ne "\n\n### FileName: ${StrFileTmp}\n\n" > ${StrFileTmp} ; 
+  test -e ${StrFileTmp} && echo -ne "\n\nRe-opening File : ${StrFileTmp} \n\n" > /dev/stderr ; 
   
+  ### Copy File into Local HOME/path and removing the header and avoid to overwrite the initial 
+  ### Protected file 
+  local IntNbLineInFile=$( wc -l ${StrFileTmp} | cut -d ' ' -f1  ) ; 
+  local IntNbLineNoHeader=$(( ${IntNbLineInFile} - 9 ))
+  test -e ${StrFileTmp} && tail -n ${IntNbLineNoHeader} ${StrFileTmp} > ${HOME}/${TmpUUIDEdit} 
   while [ ${res} -eq 1 -a ${shell_quit} -eq 0 ] ; do 
    CmdEval=$( zenity \
               --text-info ${StrEditableAttr} \
               --font=${IntFontSize} \
-              --filename=${StrFileTmp} \
+              --filename=${HOME}/${TmpUUIDEdit} \
               --title="${StrTitle}" \
               --width=${IntWidth} \
               --height=${IntHeight} ) ; 
@@ -1867,7 +1873,10 @@ function ZenityShellEval()
    test ${res} -eq 0 -a ${shell_res} -eq 0 && eval $( BVTestVarName=res BVTestVarHold='0' BVTestBoolVarName=\${IsLoopOnSucc} BVTestBoolCase=False BVTestBoolAssertion='1' BVTestScopeTest=local BoolVarTestVarCreation ) ; 
   done
   echo -ne "\n\tQuitting Function :${__call_locality[1]}\n\n" > /dev/stderr ;  
+  echo -ne "\n\tRemoving temporary UUID Holder : \n\tFile: ${HOME}/${TmpUUIDEdit}\n\n" > /dev/stderr ; 
+  rm -f ${HOME}/${TmpUUIDEdit}
  }
+ 
  function __main_CheckSum()
  {
 		local __call_locality=( CheckSum __main_CheckSum ) ;
@@ -2444,6 +2453,7 @@ function GetOtherDate()
 		local isLoop=${GODIsLoop:=False} ;
 		local LoopRange=${GODLoop:=0,3} ;
 		local IsVerbose=${GODVerbose:=False} ;
+		local StrNameHelper="A way to get a date already marshalled" 
 		
   		
 		function Verbosis()
@@ -2491,9 +2501,9 @@ function GetOtherDate()
 
 		#local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
   local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
-		
+  
  	if [ "${Arg0:=--start}" == "--help" ] ; then 
-			GetVarReference ${__call_locality[1]} ; 
+			GVRIsName=True StrNameHelper=${StrNameHelper} GetVarReference ${__call_locality[1]} ; 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 		elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
@@ -3581,8 +3591,24 @@ function GetUUID ()
  local TypeAppsName=${GetUAppsDef:=__HELPERNAME__ --get UUIDHApps}
  local StrUUIDActionName=${GetUActionFunc:=UUIDNoLoop,UUIDLoop} ;
  local IsVerbosis=${GetUVerbosis:=False} ;
+ local IsUUIDDbCreation=${GetUDBCreation:=False};
+ local IsUUIDDbImport=${GetUDbImport:=False};
+ local StrDbURI=${GetUDBPath:=/var/cache/fnct.D/db/sqlite/GetUUID.sqlite}
+ local StrDbSchema=${GetUDBSchema:=/etc/init.d/Fnct.d/getUUID.schema}
+ local BoolCallRegistered=${GetUIDRegister:=False}; 
+ local StrAppsRegister=${GetUAppsRegisterName:=None};
+ local StrUUIDIndexName=${GetUIDName=.GetUUID};
  local StrAppsNameCall=${TypeAppsName//__HELPERNAME__/${StrGetHelperName}} ; 
  local StrAppsName=$( ${StrAppsNameCall} ) ; 
+
+ function ApplicationRegistrationIndex()
+ {
+	 local __call_locality=( ARI ApplicationRegistrationIndex ) ;
+	 local ArrayArg=( $* ) ; 
+	 local Arg0=${ArrayArg[0]} ;
+ 
+  
+ }
 
 	function Verbosis()
 	{

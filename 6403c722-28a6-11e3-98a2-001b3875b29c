@@ -2,22 +2,67 @@
 ### FootPrint Added, see Prefixed-Var ZSEAddFootPrint from ZenityShellEval
 ###
 
-###File:6403c722-28a6-11e3-98a2-001b3875b29c
-###UUID-TIME-MARKER:53aa2f64-28a7-11e3-98a2-001b3875b29c
+###File:/home/maxiste/github/Fnct.D/6403c722-28a6-11e3-98a2-001b3875b29c
+###UUID-TIME-MARKER:52d9681a-636f-11e6-98a2-53b252ad1153
 ###Date: ${StrDateFormat}
-###Sha1Sum: fe19a10f7d9e8bc154cec88e685c67f9ab1be0ff
-### Size:1018
-### NbWord: 138\n
+###Sha1Sum: de20e9a78f1d8ebb7af47da19774943f1581253d
+### Size:2559
+### NbWord: 273\n
+
 function GetVarReference( )
 {
  local ArrayArg=( $* ) ;
+ local __call_locality=( GVR GetVarReference ) ;
+ local BoolsSynopsis${GVRIsSynopsis:=True} ;
+ local BoolsName${GVRIsName:=True} ;
+ local BoolsSummary${GVRIsSummary:=True} ;
+ local BoolsDesc${GVRIsDesc:=True} ;
+ local TextDescFunc="\t_NameHelp__Synopsis__Summary__Description_" ; 
+ 
+ if  [ "${BoolsName}" == "True" ]  ; then 
+  echo "Status of StrNameHelper: ${#StrNameHelper} char(s): [ ${StrNameHelper}] " ; 
+  if [ ${#StrNameHelper} -gt 0 ] ; then 
+    TextDescFunc=${TextDescFunc//_NameHelp_/Name\n\t${StrNameHelper}\n\n} ; 
+  else 
+    TextDescFunc=${TextDescFunc//_NameHelp_/""} ; 
+  fi
+ else
+  TextDescFunc=${TextDescFunc//_NameHelp_/""} ;
+ fi
+ if  [ "${BoolsSynopsis}" == "True" ]  ; then 
+  if [ ${#StrSynopsis} -gt 0 ] ; then
+    TextDescFunc=${TextDescFunc//_Synopsis_/Synopsis\n\t${StrSynopsis}\n\n} ; 
+  else
+    TextDescFunc=${TextDescFunc//_Synopsis_/""} ; 
+  fi 
+ else
+   TextDescFunc=${TextDescFunc//_Synopsis_/""} ; 
+ fi 
+ if  [ "${BoolsSummary}" == "True" ]  ; then 
+   if [ ${#StrSummary} -gt 0 ] ; then
+    TextDescFunc=${TextDescFunc//_Summary_/Summary\n\t${StrSummary}\n\n}
+   else
+     TextDescFunc=${TextDescFunc//_Summary_/""} ;
+  fi
+ else
+   TextDescFunc=${TextDescFunc//_Summary_/""} ;
+ fi
+ if  [ "${BoolsDesc}" == "True" ]  ; then 
+   if [ ${#StrDescription} -gt 0 ] ; then
+    TextDescFunc=${TextDescFunc//_Description_/Description\n\t${StrDescription}\n\n}
+   else
+     TextDescFunc=${TextDescFunc//_Description_/""} ;
+   fi
+ else
+  TextDescFunc=${TextDescFunc//_Description_/""} ;
+ fi
  # date: Sat Sep 28 21:27:21 EDT 2013
  # Adding filter of comment line in possible temporary left PrefixedVariable not
  # removed from function declaration, pattern  : "^[\t\ ]*#+" 
  function ParseInternalVar( )
  {
    local ArrayArg=( $* ) ;
-   local __call_locality=( ParseInternalVar ) ;
+   local __call_locality=( PIV ParseInternalVar ) ;
    egrep -i ":=" |\
    grep -v "^[\t\ ]*#+" |\
    sed -r 's/(^[\ \t]*)//g;s/=\$/ \$/g;s/;//g' |\
@@ -28,10 +73,10 @@ function GetVarReference( )
  function ParseLocalityVar()
  {
    local ArrayArg=( $* ) ;
-   local __call_locality=( ParseLocalityVar ) ;
+   local __call_locality=( PLV ParseLocalityVar ) ;
    egrep "__call_locality" | sed 's/[\)\(]/ /g;s/;//g' | cut -d ' ' -f 7 ;	
  }
- echo -ne "Help:\n\nFunction ${ArrayArg[0]}\nDefault Variable Value:\n";
+ echo -ne "Help:\n\nFunction ${ArrayArg[0]}${TextDescFunc}\nDefault Variable Value:\n";
  local CallLocalityInternalName=$( declare -f ${ArrayArg[0]} | ParseLocalityVar ) ;
  declare -f ${ArrayArg[0]} | egrep "${CallLocalityInternalName}" | ParseInternalVar ;
 }
