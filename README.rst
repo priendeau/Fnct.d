@@ -321,7 +321,6 @@ Since Tuesday 16 august 2016, Twisted module had come out, magically for my firs
  :width: 25%
  :scale: 25% 
  :align: left
- :target: http://bit.ly/XSARm5
   
 
 Description
