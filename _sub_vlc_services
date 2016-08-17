@@ -379,8 +379,8 @@ function OldVLCServer()
  ### OVLCSAppsLunch={/usr/bin/vlc OR /usr/local/bin/vlc} can just let use
  ### it for test purposes.
   
- local StrVLCApps=${OVLCSAppsLunch:=${HOME}/bin/vlc-terminal.sh}
- local StrVLCAppsPlaylist=${OVLCSAppsPlaylist:=/home/maxiste/Music/playlist_20160606.m3u} ; 
+ local StrVLCApps=${OVLCSAppsLunch:="""${HOME}/bin/vlc-terminal.sh"""}
+ local StrVLCAppsPlaylist=${OVLCSAppsPlaylist:="""${HOME}/Music/playlist_20160606.m3u"""} ; 
  ### It uses /bin/nc inside socket management to receive incoming vlc-cli command and 
  ### /bin/nc is a bind to /bin/nc.openbsd in Linux-Mint Distribution, depend what other 
  ### own ...

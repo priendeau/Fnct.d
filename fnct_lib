@@ -10,7 +10,7 @@ declare -a ArrayLibPolicy=( ValueParser:True:fnct_debian_lib:master AddPValueSto
 declare -a ArrayLibName=( fnct_debian_lib ) ; 
 declare -a ArrayNotReUseLib=( fnct_debian_lib ) 2> /dev/null 
 
-declare -a ArrayLib=( fnct_debian_lib _sub_jack_script _sub_Git _sub_ssh_handler ) ;
+declare -a ArrayLib=( fnct_debian_lib _sub_jack_script _sub_Git _sub_ssh_handler _sub_vlc_services ) ;
 declare -r FNCTDLIBPATH=/etc/init.d/Fnct.d 2> /dev/null ; 
 
 declare -r StrSwitchesShow="Following switch are available:\n\n" 2> /dev/null ; 
