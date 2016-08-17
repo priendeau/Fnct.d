@@ -318,7 +318,9 @@ This Document rely on uses of Bash. Uniformely implemented in Unix/Linux world, 
 Since Tuesday 16 august 2016, Twisted module had come out, magically for my first SSHFunctionController. Twisted version 16.3.1 being present to implement a DoController functionnality in second stage, to render easier the SQlite3 Access by sending a PostCard registration during connection, the pre-draft version will soon only require the public and private key segment to avoid uses of password and will have ssh access with option to send command line. Praised long by Network Administrator, SSH with sending command are most wanted knowledge to access to a specific problems when this one have to be stopped. Eliminating need to connect, brow and type, ssh with one command embedded in the connection is just perfect. To visit Twisted please visit 
 
 .. image:: https://raw.github.com/priendeau/Fnct.d/master/images/Twisted.png
- :scale: 50 % 
+ :height: 50px
+ :width: 50px
+ :scale: 25% 
  :target: http://bit.ly/XSARm5
   
 
