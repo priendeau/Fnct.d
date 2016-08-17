@@ -306,6 +306,21 @@ Every Paper Draft informations is coming with a note, and a title. A Function na
 
 Paper Draft information Are information illegible after aggregation , correction and standardisation to be elligible for Documentation... Paper Draft informations will allow to talk about implementation inside Documentation, but not Documentation to reffer to a Paper Draft informations. Also being cleaned from joke and story , Documentation will not own any of these story-line of what creator inherit from this contribution. Finally Paper Draft informations will stay in last-page from  Fnct.D like a section to read in spare time and leisure from what time had  consolidate to offer so strong attribute to this methodology....  
 
+What You'll need
+================
+
+This Document rely on uses of Bash. Uniformely implemented in Unix/Linux world, some OS like OSX does own equivalent and may support addition of bash. Development already reach almost 7 years and do Jump across  version 4.0 to 4.2 but latest version 4.2 is freeing limits toward Variables passing between function to standard variable and does limit local variable to grow or stay alive. Also requiring uses of python it stay on 2.7 minimalistic version. Also registration process require SSH and netcat to demonstrate evolution of CLI interaction with tools. Twisted have been streched to operable and is planned to be used. Twisted is python module and does extend safe communication is Fnct.D does extend it's management over network. Do people haven't experimented Terminal Jam or screen overflow with recurrent call during Shell development, experience have found usefull to log into a SSH or telnet to send kill signal. Which is constantly an object debatted here to not kill a procedure if our module respond to a Precise Dilectic to turn-it off on need. 
+
+:Note: ae5dee26-6424-11e6-98a2-001e4c8856d6
+:Title: Alternative to Netcat, Twisted module with SSHFunctionController 
+:Method: Python Application to Deserve important bottle-neck not to create pumping problems
+
+Since Tuesday 16 august 2016, Twisted module had come out, magically for my first SSHFunctionController. Twisted version 16.3.1 being present to implement a DoController functionnality in second stage, to render easier the SQlite3 Access by sending a PostCard registration during connection, the pre-draft version will soon only require the public and private key segment to avoid uses of password and will have ssh access with option to send command line. Praised long by Network Administrator, SSH with sending command are most wanted knowledge to access to a specific problems when this one have to be stopped. Eliminating need to connect, brow and type, ssh with one command embedded in the connection is just perfect. To visit Twisted please visit 
+
+.. image:: https://raw.github.com/priendeau/Fnct.d/master/images/Twisted.png
+		:target: http://bit.ly/XSARm5
+  
+
 Description
 ===========
 
