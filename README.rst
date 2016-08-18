@@ -989,46 +989,46 @@ While GetUUID will demonstrate TWO Mechanism to accheive registration requires i
 
 .. code:: shell
 
-### Part of the beginning of the GetUUID Function
+ ### Part of the beginning of the GetUUID Function
 
-unset GetUUID 
-function GetUUID ()
-{
- local __call_locality=( GetU GetUUID ) ;
- local ArrayArg=( $* ) ; 
- local Arg0=${ArrayArg[0]} ;
+ unset GetUUID 
+ function GetUUID ()
+ {
+  local __call_locality=( GetU GetUUID ) ;
+  local ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]} ;
 
- ### Section for GetUUID generation of UUID uniquely.
- local BoolTimeBased=${GetUTimeBased:=True}
- local BoolLoop=${GetULoop:=False} ;
- local IntSeqLoop=${GetUSeq:=1} ; 
- local IsVerbosis=${GetUVerbosis:=False} ;
- local StrUUIDActionName=${GetUActionFunc:=UUIDNoLoop,UUIDLoop} ;
+  ### Section for GetUUID generation of UUID uniquely.
+  local BoolTimeBased=${GetUTimeBased:=True}
+  local BoolLoop=${GetULoop:=False} ;
+  local IntSeqLoop=${GetUSeq:=1} ; 
+  local IsVerbosis=${GetUVerbosis:=False} ;
+  local StrUUIDActionName=${GetUActionFunc:=UUIDNoLoop,UUIDLoop} ;
 
- ### Section for GetUUID Registration with UUID.
- local StrDbURI=${GetUDBPath:=/var/cache/fnct.D/db/sqlite/GetUUID.sqlite}
- local StrDbSchema=${GetUDBSchema:=/etc/init.d/Fnct.d/getUUID.schema}
- local BoolCallRegistered=${GetUIDRegister:=False}; 
- local StrAppsRegister=${GetUAppsRegisterName:=None};
- local StrUUIDIndexName=${GetUIDName=.GetUUID};
+  ### Section for GetUUID Registration with UUID.
+  local StrDbURI=${GetUDBPath:=/var/cache/fnct.D/db/sqlite/GetUUID.sqlite}
+  local StrDbSchema=${GetUDBSchema:=/etc/init.d/Fnct.d/getUUID.schema}
+  local BoolCallRegistered=${GetUIDRegister:=False}; 
+  local StrAppsRegister=${GetUAppsRegisterName:=None};
+  local StrUUIDIndexName=${GetUIDName=.GetUUID};
 
- local StrGetHelperName=${GetUHelperName:=UUIDHelper} ;
- local StrUUIDHelperStream=${GetUHelper:=UUIDHApps= UUIDHSwitches= __HELPERNAME__} ; 
- local TypeAppsName=${GetUAppsDef:=__HELPERNAME__ --get UUIDHApps}
- local IsUUIDDbCreation=${GetUDBCreation:=False};
- local IsUUIDDbImport=${GetUDbImport:=False};
- local StrAppsNameCall=${TypeAppsName//__HELPERNAME__/${StrGetHelperName}} ; 
- local StrAppsName=$( ${StrAppsNameCall} ) ; 
- local StrMsg ; 
- local ArrayMsg=( ) ; 
+  local StrGetHelperName=${GetUHelperName:=UUIDHelper} ;
+  local StrUUIDHelperStream=${GetUHelper:=UUIDHApps= UUIDHSwitches= __HELPERNAME__} ; 
+  local TypeAppsName=${GetUAppsDef:=__HELPERNAME__ --get UUIDHApps}
+  local IsUUIDDbCreation=${GetUDBCreation:=False};
+  local IsUUIDDbImport=${GetUDbImport:=False};
+  local StrAppsNameCall=${TypeAppsName//__HELPERNAME__/${StrGetHelperName}} ; 
+  local StrAppsName=$( ${StrAppsNameCall} ) ; 
+  local StrMsg ; 
+  local ArrayMsg=( ) ; 
 
- ArrayMsg[0]="UUID StrAppsName: __NAME__" ;
- ArrayMsg[1]="UUID LOOPSEQ: __SEQ__" ;
- ArrayMsg[2]="UUID HELPER: __UUIDHELPER__\n"
- ArrayMsg[3]="UUID __main_StartServices: content of StrUUIDHelper:[__UUIDHELPER__]" ; 
- ArrayMsg[4]="UUID ACTION: __ACTION__" ;
-...
-} 
+  ArrayMsg[0]="UUID StrAppsName: __NAME__" ;
+  ArrayMsg[1]="UUID LOOPSEQ: __SEQ__" ;
+  ArrayMsg[2]="UUID HELPER: __UUIDHELPER__\n"
+  ArrayMsg[3]="UUID __main_StartServices: content of StrUUIDHelper:[__UUIDHELPER__]" ; 
+  ArrayMsg[4]="UUID ACTION: __ACTION__" ;
+ ...
+ } 
  
  Last line consacred to the Array, show some StringText with TAG. And mabe later retreiving the whole Array of text into Converged system to provide language conversion will start in this way to centralize and provide a Getter. But Where is the promised Getter ? 
  
@@ -2792,9 +2792,10 @@ Like notice *822d36e2-6517-11e6-98a2-001e4c8856d6, from title  Recurrent call in
 
 .. code:: shell
 
-### From Same date at the development, the GetUUID 	was owning such Getter
-### and does use it well. It's located at the end of function 
-### __main_StartServices()
+
+ ### From Same date at the development, the GetUUID 	was owning such Getter
+ ### and does use it well. It's located at the end of function 
+ ### __main_StartServices()
                                     ###       
                                    ###         #####      #####
                                   ###          #####      #####
@@ -2813,6 +2814,8 @@ Like notice *822d36e2-6517-11e6-98a2-001e4c8856d6, from title  Recurrent call in
           VTVIsValueReAssign=True \            #####      #####    ##########  ###           ##########
           VTVIsValueToConvert=False \
           VTVValueEntry=IsVerbosis,StrAction,StrUUIDHelper,IntSeqLoop ValueToVariable ) ${StrAction} ; 
+
+
 ------
 	Setter
 ------
