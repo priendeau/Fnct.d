@@ -979,6 +979,118 @@ Declared thru the Shell it produce that sequence which it is  ""merely identical
 
 While BoolVarTestVarCreation is a low-level call indirectly call by ValueToVariable it's hard to define first will end having good sub-body to acheive a strict identity and be able to parse all variable before BoolVarTestVarCreation 'will' have to end a possible __main_start_services if this one is implemented with normal body-topology  .  So it's not recommended to use ValueToVariable inside BoolVarTestVarCreation has long there is a better mechanisms correcting this problems in bash of recurrent  function call recurently a lower level function will simply loop and not finishing the work . 
 
+
+:Note: 822d36e2-6517-11e6-98a2-001e4c8856d6
+:Title: Recurrent call in GetUUID Not dangerous and uses isolated Arrays formation 
+:Reference: A must in saving memory. 
+:Function: GetUUID
+
+While GetUUID will demonstrate TWO Mechanism to accheive registration requires in uses of fifo for talking engine and  command socket used soon by Python Twisted module develpped under SSHServices-request.py ; Mechanism from apriori goal to provide UUID and ultimately to register it, will provide it by connect to a socket server and ask UUID with automagically registration thru ssh command lunching . Will own mechanism to do itself the registration wityh SQlite3 database access, and really provide like essential UUID data as required. Notice since that UUID-TAG added, the interface provide a Verbosis sub function where it's possible to provide a fainth and painless String of Text from an Array inside a sub-function where the connection to the Array is not possible to access.
+
+.. code:: shell
+
+### Part of the beginning of the GetUUID Function
+
+unset GetUUID 
+function GetUUID ()
+{
+ local __call_locality=( GetU GetUUID ) ;
+ local ArrayArg=( $* ) ; 
+ local Arg0=${ArrayArg[0]} ;
+
+ ### Section for GetUUID generation of UUID uniquely.
+ local BoolTimeBased=${GetUTimeBased:=True}
+ local BoolLoop=${GetULoop:=False} ;
+ local IntSeqLoop=${GetUSeq:=1} ; 
+ local IsVerbosis=${GetUVerbosis:=False} ;
+ local StrUUIDActionName=${GetUActionFunc:=UUIDNoLoop,UUIDLoop} ;
+
+ ### Section for GetUUID Registration with UUID.
+ local StrDbURI=${GetUDBPath:=/var/cache/fnct.D/db/sqlite/GetUUID.sqlite}
+ local StrDbSchema=${GetUDBSchema:=/etc/init.d/Fnct.d/getUUID.schema}
+ local BoolCallRegistered=${GetUIDRegister:=False}; 
+ local StrAppsRegister=${GetUAppsRegisterName:=None};
+ local StrUUIDIndexName=${GetUIDName=.GetUUID};
+
+ local StrGetHelperName=${GetUHelperName:=UUIDHelper} ;
+ local StrUUIDHelperStream=${GetUHelper:=UUIDHApps= UUIDHSwitches= __HELPERNAME__} ; 
+ local TypeAppsName=${GetUAppsDef:=__HELPERNAME__ --get UUIDHApps}
+ local IsUUIDDbCreation=${GetUDBCreation:=False};
+ local IsUUIDDbImport=${GetUDbImport:=False};
+ local StrAppsNameCall=${TypeAppsName//__HELPERNAME__/${StrGetHelperName}} ; 
+ local StrAppsName=$( ${StrAppsNameCall} ) ; 
+ local StrMsg ; 
+ local ArrayMsg=( ) ; 
+
+ ArrayMsg[0]="UUID StrAppsName: __NAME__" ;
+ ArrayMsg[1]="UUID LOOPSEQ: __SEQ__" ;
+ ArrayMsg[2]="UUID HELPER: __UUIDHELPER__\n"
+ ArrayMsg[3]="UUID __main_StartServices: content of StrUUIDHelper:[__UUIDHELPER__]" ; 
+ ArrayMsg[4]="UUID ACTION: __ACTION__" ;
+...
+} 
+ 
+ Last line consacred to the Array, show some StringText with TAG. And mabe later retreiving the whole Array of text into Converged system to provide language conversion will start in this way to centralize and provide a Getter. But Where is the promised Getter ? 
+ 
+.. code:: shell
+
+ function __main_StartServices()
+ {
+		local __call_locality=( Main __main_StartServices ) ;
+		local Arg0=${ArrayArg[0]} ;
+		local ArrayArg=( $* ) ; 
+  local IntUUIDHelperIndex=0 ;
+  local StrUUIDOption="" ;
+  local StrUUIDHelper=""
+  local StrAction=""
+  local ArrayMsg=( ) ;
+  ### Array conversion from StrUUIDActionName, using string delimiter char ',' ; 
+  local ArrayUUIDAction=( ${StrUUIDActionName//,/ } ) ; 
+  local IntUUIDActionIndex=0 ; 
+
+  if [ "${BoolTimeBased:=True}" == "True" ] ; then 
+   StrUUIDOption="-t"
+  else 
+   StrUUIDOption="-r"
+  fi 
+  StrUUIDHelper=${StrUUIDHelperStream} ; 
+  StrUUIDHelper=${StrUUIDHelper//UUIDHSwitches=/UUIDHSwitches=${StrUUIDOption}}  ;
+  #StrUUIDHelper=$( eval ${StrUUIDHelperStream} ) ; 
+  ###ArrayMsg[1]="UUID __main_StartServices: content of StrUUIDHelper:[${StrUUIDHelper}]" ; 
+  StrMsg=${ArrayMsg[3]//__UUIDHELPER__/${StrUUIDHelper}}
+  VerbState=${IsVerbosis} VerbMsg=${StrMsg} Verbosis;
+  #echo -ne "[UUID __main_StartServices: content of StrUUIDHelper:[${StrUUIDHelper}]]\n" > /dev/stderr 
+
+  if [ "${BoolLoop:=False}" == "True" ] ; then 
+   IntUUIDHelperIndex=1 ;
+   IntUUIDActionIndex=1 ; 
+  else 
+   IntUUIDHelperIndex=0 ; 
+   IntUUIDActionIndex=0 ; 
+  fi 
+  StrAction=${ArrayUUIDAction[${IntUUIDActionIndex}]} ; 
+  #ArrayMsg[2]="UUID ACTION: ${StrAction}" ;
+  StrMsg=$( GetUUID --get ArrayMsg[4] )
+  StrMsg=${StrMsg//__ACTION__/${StrAction}} ;
+  ### VerbState=${IsVerbosis} 
+  VerbHeader="DEBUG" VerbState=True VerbMsg=${StrMsg} Verbosis;
+
+It start from sub-function __main_StartServices, we see, old comment where the old ArrayMsg was used and we do see something like this :
+
+.. code:: shell
+  StrMsg=$( GetUUID --get ArrayMsg[4] )
+  StrMsg=${StrMsg//__ACTION__/${StrAction}} ;
+  ### VerbState=${IsVerbosis} 
+  VerbHeader="DEBUG" VerbState=True VerbMsg=${StrMsg} Verbosis;
+
+The Getter is the whole function. Notice it important to reduce heading from beginning of the function, but The Fnct.D design does include a one pass IF-ELIF-ELIF at the beginnin
+
+:Note: ed9452da-6517-11e6-98a2-001e4c8856d6
+:Title: Talk about Attribution of Twisted Network Programming Essentials 
+:Function: SSHServices-request.py
+
+It's Essential to talk about Attribution of Second Edition by Jessia McKellar and Abe Fettig (O'reilly) Copright 2013 Jessica McKellar using ISBN 978-1-4493-2611-1, to provide information on HowTo Start your engine correctly. There is ton of other starter for initiating engine simply and this is why I do beleive retreive information from and Open Standars rather prettenting copying informations . I do implement my decorator and my staticclass and my own topology to code essential of Shell command used by half automated-finite engine have strict goal to acheive and having later tools to inspect information. It's important to find good Network Programming Source-of-interest to evolve in compuware and diags-middle-ware. My README for Fnct.D for God is nothing more than a CRAN diagnostic quoted remark to develop a real important JOKE in real life. We do develop ironic statement out Ingenior work and asking why our stuff is falling down. It's important to prone for clear Dialectic inward to reduce problems for ever... 
+
 :Note: e2382694-0ba3-11e3-98a2-001b3875b29c
 :Title: Usual Shell Chunk-Development.
 :Function: ZenityShellEval
@@ -2675,7 +2787,32 @@ switche nature will be ignored and might be used if the user change the switches
 	
 	### prefixed var AFunc001 is not ignored and output value XXX .
 	
-	
+
+Like notice *822d36e2-6517-11e6-98a2-001e4c8856d6, from title  Recurrent call in GetUUID Not dangerous and uses isolated Arrays formation, text parsing is NUmber One uses of Getter to provide Finite-Location in function design to provide a easy way to acces to better translation and or wiser mechanism in text mangling, data mangling. It also deal with fact that Getter and Object accessible in second and not in priori. Which mean there is finite and easy path inside a Function Getter-supplied and will exit after it's job done and recurrent call will not repeat itself for it's well designed pseudo-code.  
+
+.. code:: shell
+
+### From Same date at the development, the GetUUID 	was owning such Getter
+### and does use it well. It's located at the end of function 
+### __main_StartServices()
+                                    ###       
+                                   ###         #####      #####
+                                  ###          #####      #####
+                                 ###           #####      #####
+                       ####     ###    ####    #####      #####
+                        ####   ###  ####       #####      ##### 
+                         ############          #####      #####
+                           #######             ################
+                            ###                ################   ##########   ###    ####  ##########   
+  StrMsg=$( GetUUID --get ArrayMsg[4] )        #####      #####  #####  #####  ###  ###### #####  #####  
+  StrMsg=${StrMsg//__ACTION__/${StrAction}} ;  #####      #####  #####  #####  #######     #####  #####  
+  ### VerbState=${IsVerbosis}                  #####      #####  #####  #####  #####       #####  #####  
+  VerbHeader="DEBUG" VerbState=True VerbMsg=${StrMsg} Verbosis;  ###########   ###         ###########
+  #echo -ne "[UUID ACTION: ${StrAction}]\n" > /dev/stderr;#####  #####         ###         #####
+  eval $( VTVIsArrayStyleInsert=True \         #####      #####   ####   ####  ###          ####   ####
+          VTVIsValueReAssign=True \            #####      #####    ##########  ###           ##########
+          VTVIsValueToConvert=False \
+          VTVValueEntry=IsVerbosis,StrAction,StrUUIDHelper,IntSeqLoop ValueToVariable ) ${StrAction} ; 
 ------
 	Setter
 ------
