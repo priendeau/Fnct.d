@@ -10,7 +10,17 @@ declare -a ArrayLibPolicy=( ValueParser:True:fnct_debian_lib:master AddPValueSto
 declare -a ArrayLibName=( fnct_debian_lib ) ; 
 declare -a ArrayNotReUseLib=( fnct_debian_lib ) 2> /dev/null 
 
+### Loaded Services of Fnct.D
 declare -a ArrayLib=( fnct_debian_lib _sub_jack_script _sub_Git _sub_ssh_handler _sub_vlc_services ) ;
+### Agreed project under many Services declared file:
+SubGitCommitTransaction="True"
+SubSSHAgentLoader="True"
+SubSSHGetPasswd="True"
+VarOldsubGit="False"
+### note GitHubCommitAlpha, since somes functions depends of __fnctCreateLocalityFuncParam,FParamDefaultValue and become too heavy and had problems paring information it was stop and requiert to isolated the code until a good hand can draw a clever Management tools.
+GitHubCommitAlpha="False"
+
+
 declare -r FNCTDLIBPATH=/etc/init.d/Fnct.d 2> /dev/null ; 
 
 declare -r StrSwitchesShow="Following switch are available:\n\n" 2> /dev/null ; 
@@ -22,7 +32,7 @@ declare -r StrStopSwitches="\t--stopservices\tStop the application normally." 2>
 declare -r StrTestSwitches="\t--testservices\tTest the application, (dry-run)." 2> /dev/null ; 
 
 ### General Array and Helper.
-declare -a ArrayDateFormat=( "%F %H:%M:%S(UNIX(sec,ns):%s.%N)" "%F %H:%M:%S<%s.%N>" "%F %H:%M:%S.%s.%N" "%Y%m%d_%s" "%Y%m%d" "%s.%N" ) ;
+declare -a ArrayDateFormat=( "%Y%m%d_%H:%M:%S(UNIX(sec,ns):%s.%N)" "%Y%m%d_%H:%M:%S<%s.%N>" "%Y%m%d_%H:%M:%S.%s.%N" "%Y%m%d_%s" "%Y%m%d" "%s.%N" ) ;
 
 ### Loader 
 
