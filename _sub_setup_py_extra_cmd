@@ -1,3 +1,68 @@
+
+if [ "${SubSEPDownloadMgmt:=False}" == "True" ] ; then 
+### DwnLinkCommitID Notice :
+### 
+### This example is a by-hand on command prompt made-it easier to read many development version of 
+### a project un-tarred from bitbucket.org . it does support the .bz2 version but akin to extends
+### the file discovery rather than addding another parameter and generate error. 
+### 
+### 
+### 
+### Example of command , used to download series of version between 0.6.6 to 0.7.2
+### 
+### URL=https://bitbucket.org/wxglade/wxglade/get/rel_0.7.1RC1.tar.bz2 StartPath=wxGladeAllVersion CommitID=a5b57a51e924 Version=0.7.1RC1 DwnLinkCommitID
+### URL=https://bitbucket.org/wxglade/wxglade/get/rel_0.7.1RC2.tar.bz2 StartPath=wxGladeAllVersion CommitID=27d9766606a8 Version=0.7.1RC2 DwnLinkCommitID
+### URL=https://bitbucket.org/wxglade/wxglade/get/rel_0.7.2.tar.bz2    StartPath=wxGladeAllVersion CommitID=1975497b63c6 Version=0.7.2 DwnLinkCommitID
+### 
+### Example : 
+### - Strating the application on following base-path : /usr/local/lib/python2.7/dist-packages/src/wxGlade
+### 
+### - Extrating all commit required from page : https://bitbucket.org/wxglade/wxglade/downloads?tab=tags
+### - Url and CommitID are present. I suggest to copy CommitID of link rather than displayed one. They 
+### display 7 first chars of the CommitID and full-length of commit is 12 chars longs. 
+### 
+### Every download for this distribution of wxGlade is recorded on following pattern: 
+### Prefix :[rel] _ Version :[ 0.7.1RC1 ] File Format [.tar.bz2]
+### giving : 
+###        rel_0.7.2.tar.bz2      ] Content of tar archives are deploying a tree under following form
+###        rel_0.7.1RC2.tar.bz2   ] Project : [ wxglade ] branch [ wxglade ] CommitID[ a5b57a51e924 ]
+###        rel_0.7.1RC1.tar.bz2   ] like following 
+###                                                one : wxglade-wxglade-a5b57a51e924/...
+###                                                      wxglade-wxglade-27d9766606a8/...
+###                                                      wxglade-wxglade-1975497b63c6/...
+### - To make things more readeable, Adding Variable CommitID= and Version= let make possible 
+### to make a link from this example 
+### 
+### total 16
+### -rw-r--r--  1 maxiste python27   34 Sep 20  2013 MANIFEST.in
+### lrwxrwxrwx  1 maxiste python27   47 Aug 20 22:50 0.7.0 -> wxGladeAllVersion/wxglade-wxglade-98fb6cee1545/
+### lrwxrwxrwx  1 maxiste python27   47 Aug 20 22:51 0.6.8 -> wxGladeAllVersion/wxglade-wxglade-80fb1637a216/
+### lrwxrwxrwx  1 maxiste python27   47 Aug 20 22:51 0.6.7 -> wxGladeAllVersion/wxglade-wxglade-09ab5dec05ce/
+### lrwxrwxrwx  1 maxiste python27   47 Aug 20 22:51 0.6.6 -> wxGladeAllVersion/wxglade-wxglade-9ee81dcd0dc1/
+### lrwxrwxrwx  1 maxiste python27   49 Aug 23 02:39 0.7.2 -> ./wxGladeAllVersion/wxglade-wxglade-1975497b63c6/
+### lrwxrwxrwx  1 maxiste python27   49 Aug 23 02:26 0.7.1RC2 -> ./wxGladeAllVersion/wxglade-wxglade-27d9766606a8/
+### lrwxrwxrwx  1 maxiste python27   49 Aug 20 22:57 0.7.1RC1 -> ./wxGladeAllVersion/wxglade-wxglade-a5b57a51e924/
+### -rw-r--r--  1 maxiste python27   50 Sep 20  2013 .gitignore
+### -rw-r--r--  1 maxiste python27 2833 Sep 18  2013 README.rst
+### drwxr-sr-x 10 maxiste python27 4096 Aug 23 02:37 wxGladeAllVersion
+### maxiste@UnderscoreXDevlpt wxGlade $ pwd
+### /usr/local/lib/python2.7/dist-packages/src/wxGlade
+### 
+###  Which is a bit more readeable
+### 
+
+unset DwnLinkCommitID;
+function DwnLinkCommitID()    
+{ 
+  curl ${URL:=None} | tar xvjC ./${StartPath:=wxGladeAllVersion} ; 
+  ln -sf ./${StartPath:=wxGladeAllVersion}/wxglade-wxglade-${CommitID:=None}/ ${Version} ; 
+}
+
+
+fi 
+
+
+if [ "${SubOldSetupExtraPy:=False}" == "True" ] ; then 
 EasyInstallKit()
 {
   ### Function : EasyInstallKit
@@ -777,3 +842,4 @@ function eval_pip_install()
  eval $( __in_for ArrayEggModule _EvalCmd ) ;
  
 }
+fi

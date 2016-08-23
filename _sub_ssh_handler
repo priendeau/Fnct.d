@@ -12,6 +12,8 @@ function ZenityPassPhrase()
 export SSH_ENV="$HOME/.ssh/environment"
 export SSH_ASKPASS="ZenityPassPhrase" 
 
+if [ ${SubSSHAgentLoader:="False"} == "True" ] ; then 
+
 unset StartAgentSSH ; 
 function StartAgentSSH()
 {
@@ -220,74 +222,75 @@ function SSHAgentMemoryInfo()
 ### 
 
 
-unset AgentLoader;
-function AgentLoader()
-{
-	local __call_locality=( AL AgentLoader ) ;
-	local ArrayArg=( $* ) ; 
-	local Arg0=${ArrayArg[0]} ;  
- local StrStartServicesName=${ALStartServices:=__main_StartServices} ;
- local StrStopServicesName=${ALStopServices:=__main_StopServices} ;
- 
- 
- function __main_StopServices()
+ unset AgentLoader;
+ function AgentLoader()
  {
-		local __call_locality=( Stop __main_StopServices ) ;
-		local Arg0=${ArrayArg[0]} ;
-		local ArrayArg=( $* ) ;  
-  SASSHUnregisterSSHENV=True SASSHIsSetSSHENV=True StartAgentSSH --stopservices 
-  unset SSH_AGENT_PID SSH_ENV ; 
- }
- 
- function __main_StartServices()
- {
-		local __call_locality=( Main __main_StartServices ) ;
-		local Arg0=${ArrayArg[0]} ;
-		local ArrayArg=( $* ) ; 
-  ### Create environment for SSH_ENV 
-  SASSHIsSetSSHENV=True StartAgentSSH ; 
+  local __call_locality=( AL AgentLoader ) ;
+  local ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]} ;  
+  local StrStartServicesName=${ALStartServices:=__main_StartServices} ;
+  local StrStopServicesName=${ALStopServices:=__main_StopServices} ;
   
-  # Source SSH settings, if applicable
-  if [ -f "${SSH_ENV}" ]; then
-    . "${SSH_ENV}" > /dev/null
-    #ps ${SSH_AGENT_PID} doesn't work under cygwin
-    SSHAgentMemoryInfo || { StartAgentSSH ; } ;
-  else
-    StartAgentSSH ;
-  fi 
+  
+  function __main_StopServices()
+  {
+   local __call_locality=( Stop __main_StopServices ) ;
+   local Arg0=${ArrayArg[0]} ;
+   local ArrayArg=( $* ) ;  
+   SASSHUnregisterSSHENV=True SASSHIsSetSSHENV=True StartAgentSSH --stopservices 
+   unset SSH_AGENT_PID SSH_ENV ; 
+  }
+  
+  function __main_StartServices()
+  {
+   local __call_locality=( Main __main_StartServices ) ;
+   local Arg0=${ArrayArg[0]} ;
+   local ArrayArg=( $* ) ; 
+   ### Create environment for SSH_ENV 
+   SASSHIsSetSSHENV=True StartAgentSSH ; 
+   
+   # Source SSH settings, if applicable
+   if [ -f "${SSH_ENV}" ]; then
+     . "${SSH_ENV}" > /dev/null
+     #ps ${SSH_AGENT_PID} doesn't work under cygwin
+     SSHAgentMemoryInfo || { StartAgentSSH ; } ;
+   else
+     StartAgentSSH ;
+   fi 
+  }
+  function Verbosis()
+  {
+   local __call_locality=( Verbosis Verb );
+   local StrMsg=${VerbMsg:=__TEXT__} ; 
+   local StrDevOut=${VerbDev:=/dev/stderr} ; 
+   local VerboseState=${VerbState:=False} ;
+   local ArrayArg=( $* ) ; 
+   if [ "${VerbState:=False}" == "True" ] ; then 
+    echo -ne "VERBOSE:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+   fi
+  }
+  
+
+  StrSwitchMessages="""${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n""" ; 
+  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+    GetVarReference ${__call_locality[1]} ; 
+    echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;
+  elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
+   # __main_StopServices ; ### replaced 
+   eval "${StrStopServicesName}" ;
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+   # __main_StartServices ; ### replaced
+   eval "${StrStartServicesName}" ; 
+  fi
+
+  unset __main_StartServices __main_StopServices ; 
  }
-	function Verbosis()
-	{
-		local __call_locality=( Verbosis Verb );
-		local StrMsg=${VerbMsg:=__TEXT__} ; 
-		local StrDevOut=${VerbDev:=/dev/stderr} ; 
-  local VerboseState=${VerbState:=False} ;
-		local ArrayArg=( $* ) ; 
-		if [ "${VerbState:=False}" == "True" ] ; then 
-			echo -ne "VERBOSE:[ ${StrMsg} ]\n" > ${StrDevOut} ;
-		fi
-	}
- 
-
- StrSwitchMessages="""${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n""" ; 
- if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-			GetVarReference ${__call_locality[1]} ; 
-			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-		echo -ne """${ArgGet}\n""" ;
-	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( __GetVarReferenceList ) ;
- elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
-  # __main_StopServices ; ### replaced 
-  eval "${StrStopServicesName}" ;
- elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
-  # __main_StartServices ; ### replaced
-  eval "${StrStartServicesName}" ; 
- fi
-
- unset __main_StartServices __main_StopServices ; 
-}
+fi 
 
 unset GetGitHubKey ; 
 function GetGitHubKey()
@@ -492,107 +495,110 @@ function GetKeyChoice()
 
 
 ### yet Another Password generator.
-unset GetPasswd ;
-function GetPasswd()    
-{ 
- local ArrayArg=( $* ) ; 
- local __call_locality=( GP GetPasswd ) ; 
- local Arg0=${ArrayArg[0]} ; 
- 
- local IntDefaultPwdSize=${GPSize:=16} ;
- local IntDefaultFactor=${GPFactor:=1000} ; 
- local IntRandomSeedFactor=${GPRandomSeed:=10} ; 
- local StrPasswordTypeForm=${GPArgType:=cnsB1,cysB1,cnsyB1} ; 
- local IntPasswordType=${GPGenFormType:=0} ;
- 
- local StrAppsPwdGenerator=${GPAppsGen:=pwgen} ;
- local BoolEvalCmdExit=${GPShowCmdEvalAndExit:=False} ; 
+if [ ${SubSSHGetPasswd:="False"} == "True" ] ; then 
 
- unset __Loop ;
- function __Loop( )
- {
-		local __call_locality=( _L __Loop  ) ;
-		local ArrayArg=( $* ) ; 
-		local Arg0=${ArrayArg[0]} ;
-  local x=0; 
-		echo -ne "Crunching for a factor of ${factor} password.\n" > /dev/stderr  ; 
-  local value ; 
-  while [ ${x} -ne ${factor} ] ; do 
-   value=$( ${StrAppsPwdGenerator} ${StrPwGenFormPassword} ${IntDefaultPwdSize} );
-			let x=$x+1 ; 
-		done ; 
-  echo -ne "\npasswd:[${value}]\n\n" > /dev/stderr  ; 
- }
- 
- unset __Display ;
- function __Display()
- {
-		local __call_locality=( _D __Display  ) ;
-		local ArrayArg=( $* ) ; 
-		local Arg0=${ArrayArg[0]} ;
-  eval "local value=\"${StrAppsPwdGenerator} ${StrPwGenFormPassword} ${IntDefaultPwdSize}\"" ;
-  echo -ne "\nCMD Eval:[ ${value} ]\n" > /dev/stderr ; 
+ unset GetPasswd ;
+ function GetPasswd()    
+ { 
+  local ArrayArg=( $* ) ; 
+  local __call_locality=( GP GetPasswd ) ; 
+  local Arg0=${ArrayArg[0]} ; 
   
- }
- unset __main_StartServices ;
- function __main_StartServices()
- {
-		local __call_locality=( Main __main_StartServices ) ;
-		local ArrayArg=( $* ) ; 
-		local Arg0=${ArrayArg[0]} ;
-  local ArrayFormPassword=( ${StrPasswordTypeForm//,/ } ) ;
-  local StrPwGenFormPassword=-${ArrayFormPassword[${IntPasswordType}]} ;
-		local end=${IntDefaultFactor} ; 
-		local factor=$(( ${end} * $(( ( ${RANDOM} % ${IntRandomSeedFactor} ) + 1 )) )) ; 
-		
-		local value="" ;
-  ### 
-  ### Password Line execution ( needed both in display and Loop command. )
-  ### 
-  local StrCmdPwdEval="""StrAppsPwdGenerator=${StrAppsPwdGenerator} StrPwGenFormPassword=${StrPwGenFormPassword} IntDefaultPwdSize=${IntDefaultPwdSize}""" ; 
-  local StrLoopCmd="""${StrCmdPwdEval} factor=\${factor}""" ; 
-  local StrDisplayCmd="""${StrCmdPwdEval}""" ; 
+  local IntDefaultPwdSize=${GPSize:=16} ;
+  local IntDefaultFactor=${GPFactor:=1000} ; 
+  local IntRandomSeedFactor=${GPRandomSeed:=10} ; 
+  local StrPasswordTypeForm=${GPArgType:=cnsB1,cysB1,cnsyB1} ; 
+  local IntPasswordType=${GPGenFormType:=0} ;
   
-  #local IfCmd="BVTestVarName='StrFuncExec' BVTestVarHold='\$( StrCmdEval=\${StrCmdEval} factor=\${factor} __Loop )' BVTestBoolVarName='\${BoolEvalCmdExit}' BVTestBoolCase=True BVTestBoolAssertion='StrCmdEval=\${StrCmdEval} __Display' BVTestScopeTest=local BoolVarTestVarCreation "
-  eval $( BVTestVarName='StrFuncExec'          \
-  BVTestVarHold="${StrDisplayCmd} __Display"   \
-  BVTestBoolVarName='${BoolEvalCmdExit}'       \
-  BVTestBoolCase=False                         \
-  BVTestBoolAssertion="${StrLoopCmd} __Loop" \
-  BVTestScopeTest=local BoolVarTestVarCreation  ) ;
-  
-  eval $( BVTestVarName='StrFuncIsLoop'          \
-  BVTestVarHold="$( eval ${StrFuncExec} )"   \
-  BVTestBoolVarName='${BoolEvalCmdExit}'       \
-  BVTestBoolCase=True                         \
-  BVTestBoolAssertion="" \
-  BVTestScopeTest=local BoolVarTestVarCreation  ) ;
-  
-		  
- }
+  local StrAppsPwdGenerator=${GPAppsGen:=pwgen} ;
+  local BoolEvalCmdExit=${GPShowCmdEvalAndExit:=False} ; 
 
- local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\n" ;
-	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-			GetVarReference ${__call_locality[1]} ; 
-			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-		echo -ne """${ArgGet}\n""" ;
-	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( __GetVarReferenceList ) ;
- elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
-  IntDefaultPwdSize=${IntDefaultPwdSize}       \
-  IntDefaultFactor=${IntDefaultFactor}         \
-  IntRandomSeedFactor=${IntRandomSeedFactor}   \
-  IntPasswordType=${IntPasswordType}           \
-  StrPwGenFormPassword=${StrPwGenFormPassword} \
-  StrPasswordTypeForm=${StrPasswordTypeForm}   \
-  StrAppsPwdGenerator=${StrAppsPwdGenerator}   \
-  __main_StartServices ;
- fi	 
- 
+  unset __Loop ;
+  function __Loop( )
+  {
+   local __call_locality=( _L __Loop  ) ;
+   local ArrayArg=( $* ) ; 
+   local Arg0=${ArrayArg[0]} ;
+   local x=0; 
+   echo -ne "Crunching for a factor of ${factor} password.\n" > /dev/stderr  ; 
+   local value ; 
+   while [ ${x} -ne ${factor} ] ; do 
+    value=$( ${StrAppsPwdGenerator} ${StrPwGenFormPassword} ${IntDefaultPwdSize} );
+    let x=$x+1 ; 
+   done ; 
+   echo -ne "\npasswd:[${value}]\n\n" > /dev/stderr  ; 
+  }
+  
+  unset __Display ;
+  function __Display()
+  {
+   local __call_locality=( _D __Display  ) ;
+   local ArrayArg=( $* ) ; 
+   local Arg0=${ArrayArg[0]} ;
+   eval "local value=\"${StrAppsPwdGenerator} ${StrPwGenFormPassword} ${IntDefaultPwdSize}\"" ;
+   echo -ne "\nCMD Eval:[ ${value} ]\n" > /dev/stderr ; 
+   
+  }
+  unset __main_StartServices ;
+  function __main_StartServices()
+  {
+   local __call_locality=( Main __main_StartServices ) ;
+   local ArrayArg=( $* ) ; 
+   local Arg0=${ArrayArg[0]} ;
+   local ArrayFormPassword=( ${StrPasswordTypeForm//,/ } ) ;
+   local StrPwGenFormPassword=-${ArrayFormPassword[${IntPasswordType}]} ;
+   local end=${IntDefaultFactor} ; 
+   local factor=$(( ${end} * $(( ( ${RANDOM} % ${IntRandomSeedFactor} ) + 1 )) )) ; 
+   
+   local value="" ;
+   ### 
+   ### Password Line execution ( needed both in display and Loop command. )
+   ### 
+   local StrCmdPwdEval="""StrAppsPwdGenerator=${StrAppsPwdGenerator} StrPwGenFormPassword=${StrPwGenFormPassword} IntDefaultPwdSize=${IntDefaultPwdSize}""" ; 
+   local StrLoopCmd="""${StrCmdPwdEval} factor=\${factor}""" ; 
+   local StrDisplayCmd="""${StrCmdPwdEval}""" ; 
+   
+   #local IfCmd="BVTestVarName='StrFuncExec' BVTestVarHold='\$( StrCmdEval=\${StrCmdEval} factor=\${factor} __Loop )' BVTestBoolVarName='\${BoolEvalCmdExit}' BVTestBoolCase=True BVTestBoolAssertion='StrCmdEval=\${StrCmdEval} __Display' BVTestScopeTest=local BoolVarTestVarCreation "
+   eval $( BVTestVarName='StrFuncExec'          \
+   BVTestVarHold="${StrDisplayCmd} __Display"   \
+   BVTestBoolVarName='${BoolEvalCmdExit}'       \
+   BVTestBoolCase=False                         \
+   BVTestBoolAssertion="${StrLoopCmd} __Loop" \
+   BVTestScopeTest=local BoolVarTestVarCreation  ) ;
+   
+   eval $( BVTestVarName='StrFuncIsLoop'          \
+   BVTestVarHold="$( eval ${StrFuncExec} )"   \
+   BVTestBoolVarName='${BoolEvalCmdExit}'       \
+   BVTestBoolCase=True                         \
+   BVTestBoolAssertion="" \
+   BVTestScopeTest=local BoolVarTestVarCreation  ) ;
+   
+     
+  }
 
-}
+  local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\n" ;
+  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+    GetVarReference ${__call_locality[1]} ; 
+    echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+   IntDefaultPwdSize=${IntDefaultPwdSize}       \
+   IntDefaultFactor=${IntDefaultFactor}         \
+   IntRandomSeedFactor=${IntRandomSeedFactor}   \
+   IntPasswordType=${IntPasswordType}           \
+   StrPwGenFormPassword=${StrPwGenFormPassword} \
+   StrPasswordTypeForm=${StrPasswordTypeForm}   \
+   StrAppsPwdGenerator=${StrAppsPwdGenerator}   \
+   __main_StartServices ;
+  fi	 
+  
+
+ }
+fi
 
 ###     Not Needed anymore, see GetKeyChoice for a clever choice... Must be with XWindows or any Kde, gtk, gnome, Mate interface. 
 #if [ -e "${HOME}/.ssh/environment" ] ; then 
