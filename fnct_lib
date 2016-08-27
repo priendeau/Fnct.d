@@ -23,7 +23,7 @@ SubSEPDownloadMgmt="True"
 GitHubCommitAlpha="False"
 
 
-declare -r FNCTDLIBPATH=/etc/init.d/Fnct.d 2> /dev/null ; 
+declare -r FNCTDLIBPATH=${FNCTDLIBPATH:=/etc/init.d/Fnct.D} 2> /dev/null ; 
 
 declare -r StrSwitchesShow="Following switch are available:\n\n" 2> /dev/null ; 
 declare -r StrCompWordMsgSwitches="\t--compword\tWord Completion Provide a services to Extract on Demand all Pre-fixed Variable\n\t\t\String inside this function.\n" 2> /dev/null ; 

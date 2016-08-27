@@ -3,7 +3,7 @@
 
 ### LoopJackConnection
 unset LoopJackConnection
-. /etc/init.d/Fnct.d/aa49dbce-3079-11e3-98a2-001b3875b29c 
+. /etc/init.d/Fnct.D/aa49dbce-3079-11e3-98a2-001b3875b29c 
 
 #unset LoopJackConnection ;
 #function LoopJackConnection()
