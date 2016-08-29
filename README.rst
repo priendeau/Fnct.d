@@ -2933,7 +2933,7 @@ Many reason exist, possibly of mixing code and mixing file with presence of EOF 
     VerbHeader="DEBUG" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbState=${IsVerbose} Verbosis 
     
     StrListVar=$( GetListRec --get StrVarListTransfert ) ;
-    CmdLine=$( BVTestVarName=StrEditableAttr BVTestVarHold='' BVTestBoolVarName=\${${StrPairLeft}} BVTestBoolCase=True BVTestBoolAssertion='' BVTestIsPreambule=False BVTestScopeTest=local BVTestVTVVarA=${StrListVar} BVTestVTFnctA=${StrPairRight} BVTestIsValueToVar=True BVTestIsValueToVarAssert=True BoolVarTestVarCreation )  ; 
+    CmdLine=$( BVTestVarHold='' BVTestBoolVarName=\${${StrPairLeft}} BVTestBoolCase=True BVTestBoolAssertion='' BVTestIsPreambule=False BVTestScopeTest=local BVTestVTVVarA=${StrListVar} BVTestVTFnctA=${StrPairRight} BVTestIsValueToVar=True BVTestIsValueToVarAssert=True BoolVarTestVarCreation )  ; 
     eval ${CmdLine} ; 
     
    done   ; 
