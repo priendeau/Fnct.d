@@ -2957,6 +2957,22 @@ Many reason exist, possibly of mixing code and mixing file with presence of EOF 
 
  }
 
+
+Overflowing a function like GetMemberRec, is described by last line of GetNbRec,
+
+.. code:: shell
+
+ ...
+  local IntNbRec=$( eval """${StrCmd}""" ) ; 
+  eval """GLRIntNbRec=${IntNbRec} GetListRec --get IntNbRec """  ; 
+ }
+
+This line allow transmission of the Number of record being taked back inside the not finished function GetMemberRec. Testing the recipe to see if the transfert making sense, removing last line from eval line doest not allow to function GetMemberRec to display the Number at all. We also Do Agile preemptive essay here to filter out the result and adding code after, but we do require to know the amount of file to query on of them and to not getting file that not exist. 
+  
+So Overflowing to correct value are not A setter definition but Acute design to transfert the finite informations into this application where finally hold the correct informations du to a correct procedure. We also know it can not change until you change from another file. But we do agree by calling main function GetListRec will definitively change the content of IntNbRec is changed and because GetNbRec will be called many times the function has it type re-defining existing and allowing the rest of the application to work with correct informations. 
+
+
+
 ------
 	Setter
 ------
