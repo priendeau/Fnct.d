@@ -2822,6 +2822,141 @@ Like notice *822d36e2-6517-11e6-98a2-001e4c8856d6, from title  Recurrent call in
           VTVValueEntry=IsVerbosis,StrAction,StrUUIDHelper,IntSeqLoop ValueToVariable ) ${StrAction} ; 
 
 
+
+:Note: 834204aa-6e12-11e6-8f55-15357d0f8ed3
+:Title: Recurrent Getter and overflowing Application Value. 
+:Reference: Warning. 
+:Function: --get and uses of Getter
+
+- We are discussing of this bundle of function, made to play with a lost Archives required 
+bzip2recover to inspect a Big volume, too Big to be handle with syntax :
+
+.. code:: shell
+
+ tar cv | bzip2 -9c > File-destination.tar.bz2 
+
+Many reason exist, possibly of mixing code and mixing file with presence of EOF inside machine code, binary code even picture can old eof like symbols used in their internal dictionnary. This piped tar inside a bzip2 application filter to create dictionnary of approximated 900K symbols will some day pass away and put EOF inside the file. Modern Piped does support holding EOF and does produce strange action. The whole file is handled and does not produce error on creation. Un-tarring does produce error and maintainer of Tar applciation does explicitly added switches like not worring of EOF internal file and the application bzip2recover made from another group does filtering the file and splitting it into huge number of sub-file. Hard to be handled inside one array Index to sometimes overflow and not handling it properly, even shell-command does have explicit limit on nomber of char on command line and also limited in number of syntaxic command per line of command. This required to deal with other tools to inspect and keep information after manipulation. This code expliclitly uses and reuses find application and Word Cound called wc where options of this command does support line counting. This set bundled also own a pattern file to count file from same splitted archives. As example file.tar.bz2 uses with bzip2recover will be split into 5000 other subfile from following name rec0001file.tar.bz2 to rec5000file.tar.bz2 and first parameter of GetListRec invite putting Intelligent parsing parameter to recognize whole 5000 file at the time. 
+
+.. code:: shell
+
+ unset GetListRec ; 
+ function GetListRec()
+ {
+  local __call_locality=( GLR GetListRec ) ;
+  local ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]} ;
+  
+  local StrPath=${GLRPath:=/home/maxiste/recover} ;
+  local StrFileRecover=${GLRFile:=2016-08-25-0128-backup.tar.bz2} ;
+  local StrPrefixPatrn=${GLRFilePrefixPatrn:=rec[0-9]*__FILE__} ;
+  local IsDisplayLength=${GLRDisplayNbItem:=False} ;
+  local IsDisplayMember=${GLRDisplayMember:=False} ;
+  local IntDisplayMember=${GLRDisplayIntMember:=0} ;
+  local StrFileFinderApps=${GLRFindApps:=/usr/bin/find} ; 
+  local StrLCApps=${GLRWcApps:=/usr/bin/wc} ;
+  local StrLCAppsOpt=${GLRWcOpt:=-l} ;
+
+  ### For any Variable Assigned to True inside IsDisplayLength, will run the associated function
+  local ArrayFuncCall=( IsDisplayLength:GetNbRec IsDisplayMember:GetMemberRec ) ;
+  local IntFuncCall=${#ArrayFuncCall[@]} ; 
+  local StrVarListTransfert="StrPath,StrFileRecover,StrPrefixPatrn,IsDisplayLength,IntFuncCall,IsVerbose,StrLCApps,StrLCAppsOpt,IntDisplayMember" ; 
+  local IsVerbose=${GLRVerbose:=True} ; 
+  local IntNbRec=${GLRIntNbRec=0}; 
+  
+  function Verbosis()
+  {
+   local __call_locality=( Verbosis Verb );
+   local StrMsg=${VerbMsg:=__TEXT__} ; 
+   local StrDevOut=${VerbDev:=/dev/stderr} ; 
+   local IsVerboseState=${VerbState:=False} ;
+   local StrVerboseHeader=${VerbHeader:=VERBOSE}
+   local ArrayArg=( $* ) ; 
+   if [ "${IsVerboseState:=False}" == "True" ] ; then 
+    echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+   fi
+  }
+  ### Model : VerbHeader="DEBUG" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbState=True
+  
+   
+  function GetNbRec( )
+  {
+   local __call_locality=( GNR GetNbRec ) ;
+   local Arg0=${ArrayArg[0]} ;
+   local ArrayArg=( $* ) ; 
+   local StrFilePrefix=$( GetListRec --get StrPrefixPatrn ) ;
+   local StrFileName=$( GetListRec --get StrFileRecover ) ;
+   local StrPath=$( GetListRec --get StrPath ) ;
+   local StrLookUpFile=${StrFilePrefix//__FILE__/$( GetListRec --get StrFileName )} ;
+   local StrCmd="""__APPS__ __PATH__ -type f -iname \"__FILE__\" | __WC__ __WC_OPT__""" ; 
+   StrCmd=${StrCmd//__WC__/$( GetListRec --get StrLCApps )} ; 
+   StrCmd=${StrCmd//__WC_OPT__/$( GetListRec --get StrLCAppsOpt )} ; 
+   StrCmd=${StrCmd//__PATH__/${StrPath}} ; 
+   StrCmd=${StrCmd//__FILE__/${StrLookUpFile}} ; 
+   StrCmd=${StrCmd//__APPS__/${StrFileFinderApps}} ; 
+   
+   VerbHeader="CMD" VerbMsg=${StrCmd}  VerbDev=/dev/stderr VerbState=${IsVerbose} Verbosis ;
+   
+   local IntNbRec=$( eval """${StrCmd}""" ) ; 
+   eval """GLRIntNbRec=${IntNbRec} GetListRec --get IntNbRec """  ; 
+  }
+  
+  function GetMemberRec()
+  {
+   local __call_locality=( GNR GetNbRec ) ;
+   local Arg0=${ArrayArg[0]} ;
+   local ArrayArg=( $* ) ; 
+   IntValue=$(  GLRIntNbRec=$( GetNbRec ) GetListRec --get IntNbRec )
+   VerbHeader="DEBUG" VerbMsg="New Value IntNbRec, ${IntValue}"  VerbDev=/dev/stderr VerbState=${IsVerbose} Verbosis ;
+  }
+  
+  function __main_StartServices()
+  {
+   local __call_locality=( Main __main_StartServices ) ;
+   local Arg0=${ArrayArg[0]} ;
+   local ArrayArg=( $* ) ; 
+  
+   ### Example of Assertion inside an IF-FI clause using BoolVarTestVarCreation who is wrapping an  
+   ### ValueToVariable call . It's important to ( set to True BVTestIsValueToVarAssert and 
+   ### BVTestIsPreambule=False ) or Assertion will be inserted the preambule at the number 2 line ;  
+   ### after first preambule if this one also own set of variable BVTestVTVTPL ,BVTestVTVVar ,BVTestVTFnct 
+   ### are for preAmbule definition to wrap a call with affiliated function ValueToVariable , Set 
+   ### of BVTestVTVTPLA ,BVTestVTVVarA ,BVTestVTFnctA are for the inside call of if-fi clause. Called 
+   ### Assertion, it's the result of creating an if clause on demand. 
+   local StrItemEvalCode="" ;
+   local CmdLine="" 
+   for (( intx=0; intx <= ${IntFuncCall}-1 ; intx++ )) ; do 
+    StrItemEvalCode=$( GetListRec --get ArrayFuncCall[${intx}] )
+   
+    StrPairLeft=${StrItemEvalCode/%:[A-Za-z0-9]*/}
+    StrPairRight=${StrItemEvalCode/#[A-Za-z0-9]*:/} ;
+    StrMsg="Pair « ${StrPairLeft} ; ${StrPairRight} » " ; 
+    VerbHeader="DEBUG" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbState=${IsVerbose} Verbosis 
+    
+    StrListVar=$( GetListRec --get StrVarListTransfert ) ;
+    CmdLine=$( BVTestVarName=StrEditableAttr BVTestVarHold='' BVTestBoolVarName=\${${StrPairLeft}} BVTestBoolCase=True BVTestBoolAssertion='' BVTestIsPreambule=False BVTestScopeTest=local BVTestVTVVarA=${StrListVar} BVTestVTFnctA=${StrPairRight} BVTestIsValueToVar=True BVTestIsValueToVarAssert=True BoolVarTestVarCreation )  ; 
+    eval ${CmdLine} ; 
+    
+   done   ; 
+  }
+
+  
+  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+    GetVarReference ${__call_locality[1]} ; 
+    echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;	
+  else
+   eval $( VTVIsArrayStyleInsert=True \
+           VTVIsValueReAssign=True \
+           VTVIsValueToConvert=False \
+           VTVValueEntry=${StrVarListTransfert} ValueToVariable ) __main_StartServices 
+  fi 
+
+ }
+
 ------
 	Setter
 ------
