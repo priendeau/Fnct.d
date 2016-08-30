@@ -511,6 +511,7 @@ if [ ${SubSSHGetPasswd:="False"} == "True" ] ; then
   local StrPasswordTypeForm=${GPArgType:=cnsB1,cysB1,cnsyB1} ; 
   local IntPasswordType=${GPGenFormType:=0} ;
   local IsAutoInstallPwgen=${GPAutoInstallDependency:=False} ; 
+  local StrUrlManager=${GPDownloadManager:=/usr/bin/wget};
   local StrDebInstallMethod=${GPDebianMethodInst:=apt,gdebi}
   local IntDebianInstallerType=${GPPwGenPackager:=0}
   local StrAptLineCmd=${GPPwgenAptCmd:=sudo apt-get install pwgen};
@@ -520,9 +521,17 @@ if [ ${SubSSHGetPasswd:="False"} == "True" ] ; then
   local StrGdebiDownloadPack=${GPPwgenPackageURL:=http://launchpadlibrarian.net/124865523/__PACKAGE__} ;
   local BoolEvalCmdExit=${GPShowCmdEvalAndExit:=False} ; 
   
-  local StrVarListTransfert="BoolEvalCmdExit,StrAppsPwdGenerator,IntDefaultPwdSize,IntDefaultFactor,IntRandomSeedFactor,StrPasswordTypeForm,IntPasswordType,IsAutoInstallPwgen,StrDebInstallMethod,StrDebianInstallerType,StrAptLineCmd,StrGdebiPackageName,StrGdebiDownloadPack" ;
+  local StrVarListTransfert="StrUrlGetter,BoolEvalCmdExit,StrAppsPwdGenerator,IntDefaultPwdSize,IntDefaultFactor,IntRandomSeedFactor,StrPasswordTypeForm,IntPasswordType,IsAutoInstallPwgen,StrDebInstallMethod,StrDebianInstallerType,StrAptLineCmd,StrGdebiPackageName,StrGdebiDownloadPack" ;
   local ArrayInstalChoice=( "apt:StrAptLineCmd" "gdebi:StrGdebiLineCmd" ) ;
-
+  local ArrayMsg=( ) 
+  ArrayMsg[0]="executing following line: __CMD__"
+  ArrayMsg[1]="Installtion with __MANAGER__ cmdline:[ __CMD__ ]." ; 
+  ArrayMsg[2]="Installtion with __MANAGER__ require Downloading the package." ;
+  ArrayMsg[3]="Crunching for a factor of __FACTOR__ password. " ;
+  ArrayMsg[4]="Eval:[ __EVAL__ ]" ;
+  ArrayMsg[5]="Application __APPS__ still not present."  ;
+  ArrayMsg[6]="" ;
+  
   ### Notice: c064ce9e-6e4e-11e6-abb3-001e4c8856d6, August 29 2016 , 21:12 pm. 
   ### For those beleiving adding the Function Execution inside ArrayInstalChoice like :
   ### apt:AutoInstallPackage:StrAptLineCmd, gdebi:DownloadFilePackage:StrGdebiLineCmd and 
@@ -557,12 +566,12 @@ if [ ${SubSSHGetPasswd:="False"} == "True" ] ; then
    local StrMsg="" ; 
    local StrUrl=$( GetPasswd --get StrGdebiDownloadPack )   ;
    local StrPackage=$( GetPasswd --get StrGdebiPackageName )  ;
-   local StrURLDownload=${StrUrl} ;
-   StrURLDownload=${StrURLDownload//__PACKAGE__/${StrPackage}}
-   local StrCmdDownload="""/usr/bin/wget \"${StrURLDownload}\"""" ;
-   StrMsg="executing following line: ${StrCmdDownload}" ;
-   VerbHeader="DOWNLOAD" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbState=True Verbosis ;
-   eval ${StrCmdDownload} ; 
+   local StrDownloadManager=$( GetPasswd --get StrUrlManager )
+   local StrURLDownload="""${StrDownloadManager} \"${StrUrl}\"""" ;
+   StrURLDownload=${StrURLDownload//__PACKAGE__/${StrPackage}} ;
+   StrMsg=$( GetPasswd --get ArrayMsg[0] );
+   VerbHeader="DOWNLOAD" VerbMsg=${StrMsg//__CMD__/${StrURLDownload}}  VerbDev=/dev/stderr VerbState=True Verbosis ;
+   eval ${StrURLDownload} ; 
   
   }
   
@@ -586,17 +595,22 @@ if [ ${SubSSHGetPasswd:="False"} == "True" ] ; then
     VerbHeader="INSTALL" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbState=True Verbosis ; 
     
     if [ "${StrPairLeft}" == ${ArrayInstForm[0]} ] ; then 
-     StrMsg="Installtion with ${StrPairLeft} cmdline:[ ${StrParserCmd} ]." 
+     StrMsg=$( GetPasswd --get ArrayMsg[1] );
+     StrMsg=${StrMsg//__MANAGER__/${StrPairLeft}} ;
+     StrMsg=${StrMsg//__CMD__/${StrParserCmd}} ;
      VerbHeader="INSTALL" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbState=True Verbosis ;
      eval ${StrParserCmd} ; 
     elif [ "${StrPairLeft}" == ${ArrayInstForm[1]} ] ; then 
-     StrMsg="Installtion with ${StrPairLeft} require Downloading the package." ;
+     StrMsg=$( GetPasswd --get ArrayMsg[2] );
+     StrMsg=${StrMsg//__MANAGER__/${StrPairLeft}} ;
      VerbHeader="INSTALL" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbState=True Verbosis ;
      DownloadFilePackage ;
      StrParserCmd=${StrParserCmd//__OPTION__/$( GetPasswd --get StrGdebiLineOpt )} ; 
      StrParserCmd=${StrParserCmd//__PACKAGE__/$( GetPasswd --get StrGdebiPackageName )} ; 
      
-     StrMsg="Installtion with ${StrPairLeft} cmdline:[ ${StrParserCmd} ]." 
+     StrMsg=$( GetPasswd --get ArrayMsg[1] );
+     StrMsg=${StrMsg//__MANAGER__/${StrPairLeft}} ;
+     StrMsg=${StrMsg//__CMD__/${StrParserCmd}} ;
      VerbHeader="INSTALL" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbState=True Verbosis ;
      eval ${StrParserCmd}
     fi 
@@ -613,7 +627,8 @@ if [ ${SubSSHGetPasswd:="False"} == "True" ] ; then
    local Arg0=${ArrayArg[0]} ;
    local StrMsg ;
    local x=0;
-   StrMsg="Crunching for a factor of ${factor} password. " ; 
+   StrMsg=$( GetPasswd --get ArrayMsg[3] ) ;
+   StrMsg=${StrMsg//__FACTOR__/${factor}} ; 
    VerbHeader="GetPasswd" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbState=True Verbosis ;
    local value ; 
    while [ ${x} -ne ${factor} ] ; do 
@@ -622,7 +637,7 @@ if [ ${SubSSHGetPasswd:="False"} == "True" ] ; then
    done ; 
    StrMsg="${value}" ; 
    VerbHeader="GetPasswd" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbState=True Verbosis ;
-   #echo -ne "\npasswd:[${value}]\n\n" > /dev/stderr  ; 
+
   }
   
   unset __Display ;
@@ -632,9 +647,9 @@ if [ ${SubSSHGetPasswd:="False"} == "True" ] ; then
    local ArrayArg=( $* ) ; 
    local Arg0=${ArrayArg[0]} ;
    eval "local value=\"${StrAppsPwdGenerator} ${StrPwGenFormPassword} ${IntDefaultPwdSize}\"" ;
-   local StrMsg="Eval:[ ${value} ]" ;
+   StrMsg=$( GetPasswd --get ArrayMsg[4] ) ;
+   StrMsg=${StrMsg//__EVAL__/${value}} ; 
    VerbHeader="CMDLINE" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbState=True Verbosis ;
-   #echo -ne "\nCMD Eval:[ ${value} ]\n" > /dev/stderr ; 
    
   }
   unset __main_StartServices ;
@@ -662,7 +677,8 @@ if [ ${SubSSHGetPasswd:="False"} == "True" ] ; then
    fi  
    
    if [ ! -e ${StrAppsPwdGenerator} ] ; then 
-    StrMsg="Application ${StrAppsPwdGenerator} still not present." ;
+    StrMsg=$( GetPasswd --get ArrayMsg[5] );
+    StrMsg=${StrMsg//__APPS__/${StrAppsPwdGenerator}} ; 
     VerbHeader="PWGEN" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbState=True Verbosis
    else 
     local ArrayFormPassword=( ${StrPasswordTypeForm//,/ } ) ;
@@ -694,20 +710,7 @@ if [ ${SubSSHGetPasswd:="False"} == "True" ] ; then
      BVTestDisplayIf=False             \
      BoolVarTestVarCreation            )
      
-    #local IfCmd="BVTestVarName='StrFuncExec' BVTestVarHold='\$( StrCmdEval=\${StrCmdEval} factor=\${factor} __Loop )' BVTestBoolVarName='\${BoolEvalCmdExit}' BVTestBoolCase=True BVTestBoolAssertion='StrCmdEval=\${StrCmdEval} __Display' BVTestScopeTest=local BoolVarTestVarCreation "
-    #eval $( BVTestVarName='StrFuncExec'           \
-    #BVTestVarHold="${StrDisplayCmd} __Display"    \
-    #BVTestBoolVarName='${BoolEvalCmdExit}'        \
-    #BVTestBoolCase=False                          \
-    #BVTestBoolAssertion="${StrLoopCmd} __Loop"    \
-    #BVTestScopeTest=local BoolVarTestVarCreation  ) ;
-    
-    #eval $( BVTestVarName='StrFuncIsLoop'         \
-    #BVTestVarHold="$( eval ${StrFuncExec} )"      \
-    #BVTestBoolVarName='${BoolEvalCmdExit}'        \
-    #BVTestBoolCase=True                           \
-    #BVTestBoolAssertion=""                        \
-    #BVTestScopeTest=local BoolVarTestVarCreation  ) ;
+
    fi
      
   }
