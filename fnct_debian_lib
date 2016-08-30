@@ -384,34 +384,34 @@ function AddPValueStore()
 
 ### GetVarReference
 unset GetVarReference
-. /etc/init.d/Fnct.d/6403c722-28a6-11e3-98a2-001b3875b29c
+. ${FNCTDLIBPATH}/6403c722-28a6-11e3-98a2-001b3875b29c
 
 ### AnsiCodeTest 
 unset AnsiCodeTest
-. /etc/init.d/Fnct.d/6e063cbc-0ce2-11e3-8879-001b3875b29c 
+. ${FNCTDLIBPATH}/6e063cbc-0ce2-11e3-8879-001b3875b29c 
 
 
 ### ZenityRadioOptionConfig, ZenityListOptionConfig, ZenityPrefixedVarBuilder 
 unset ZenityRadioOptionConfig
 unset ZenityListOptionConfig
 unset ZenityPrefixedVarBuilder
-. /etc/init.d/Fnct.d/50ccda66-2ebb-11e3-98a2-001b3875b29c
+. ${FNCTDLIBPATH}/50ccda66-2ebb-11e3-98a2-001b3875b29c
 
 ### GetStdPrefixName 
 unset GetStdPrefixName ; 
-. /etc/init.d/Fnct.d/69968204-0cf6-11e3-99bc-001b3875b29c 
+. ${FNCTDLIBPATH}/69968204-0cf6-11e3-99bc-001b3875b29c 
 
 ### ZenityPythonInstaller 
 unset ZenityPythonInstaller ; 
-. /etc/init.d/Fnct.d/950966fa-0e67-11e3-98a2-001b3875b29c
+. ${FNCTDLIBPATH}/950966fa-0e67-11e3-98a2-001b3875b29c
 
 ### FileNameConversion
 unset FileNameConversion ; 
-. /etc/init.d/Fnct.d/877d7e9a-1001-11e3-98a2-001b3875b29c
+. ${FNCTDLIBPATH}/877d7e9a-1001-11e3-98a2-001b3875b29c
 
 ### __GetVarReferenceCompWord
 unset __GetVarReferenceCompWord ; 
-. /etc/init.d/Fnct.d/023102e0-1833-11e3-98a2-001b3875b29c
+. ${FNCTDLIBPATH}/023102e0-1833-11e3-98a2-001b3875b29c
 ### This is first pragma. BodyFunc Should manage it. 
 
 
@@ -602,7 +602,8 @@ function BoolVarTestVarCreation()
    StrTestTemplate=${StrTestTemplate//__VAR_ENTRY_ASRT__/${StrVTRAsrtVar}} ;
    StrTestTemplate=${StrTestTemplate//__TES__/\$(} ;
    StrTestTemplate=${StrTestTemplate//__TEE__/)} ;
-   StrTestTemplate=${StrTestTemplate//__FNCT_ASRT__/${StrVTRAsrtVTFnct}} ;
+     ### 2016-08-29, require a ';' at the end of a command or an error will occur after the preambule or near the end after assertion
+   StrTestTemplate=${StrTestTemplate//__FNCT_ASRT__/${StrVTRAsrtVTFnct} } ;
   else
    StrTestTemplate=${StrTestTemplate//__ASSERTION__/${ArrayAssertion[0]}} ;
    StrTestTemplate=${StrTestTemplate//__ASRT_VAR__NAME__/${StrVarNamed}} ;
@@ -616,7 +617,8 @@ function BoolVarTestVarCreation()
      StrTestTemplate=${StrTestTemplate//__REGISTRY_PRE__/${StrVTRPrbVTReg}} ; 
      StrTestTemplate=${StrTestTemplate//__TES__/\$(} ; 
      StrTestTemplate=${StrTestTemplate//__TEE__/)} ; 
-     StrTestTemplate=${StrTestTemplate//__FNCT_PRE__/${StrVTRPrbVTFnct}} ; 
+     ### 2016-08-29, require a ';' at the end of a command or an error will occur after the preambule or near the end after assertion
+     StrTestTemplate=${StrTestTemplate//__FNCT_PRE__/${StrVTRPrbVTFnct} ; } ; 
     else
      ### Missing, Initially we have defined here some Polish notation and we 
      ### don't have any test related to Integer, String and so forth... 
@@ -1975,7 +1977,7 @@ function StartCoproc()
 	             AppsName:local,
 	             AppsPrVar:local,
 	             AppsOpt:local,
-	VPValueList=DefaultCoprocName:True:__VAR__ -ne 1:__VAR__=\$( __CMD__ ):GitHubCommit:GitHubCommitFilePath=/etc/init.d/Fnct.d:fnct_debian_lib
+	VPValueList=DefaultCoprocName:True:__VAR__ -ne 1:__VAR__=\$( __CMD__ ):GitHubCommit:GitHubCommitFilePath=${FNCTDLIBPATH}:fnct_debian_lib
 	""" ;
 	
 	eval $( eval "${StrValueParserInfo} ValueParser " ) ;
@@ -3157,7 +3159,7 @@ function acquire_lan_ifconfig()
  local __call_locality=( AWI ) ; 
  local StrDefaultCard=${AWICardName:=wlan0} ;
  local StrAppsNetConf=${AWIAppsIfconf:=/sbin/ifconfig} ; 
- local StrAwkFilter=${AWIAwkScript:=/etc/init.d/Fnct.d/awk-script/ifconfig_tag_detection.awk} ; 
+ local StrAwkFilter=${AWIAwkScript:=${FNCTDLIBPATH}/awk-script/ifconfig_tag_detection.awk} ; 
  local StrTagNameList=${AWIAwkTagInspect:=HWaddr,inet addr,inet6\ addr};
  
  function IfconfigGetter()
@@ -3174,7 +3176,7 @@ function acquire_lan_ifconfig()
   local __call_locality=( GetIpaddr ) ;
   local StrAddr=${GetIpaddrAddr:=local} ; 
   local StrAppsIfconfig=${GetIpaddrAppsIfconfig:=/sbin/ifconfig} ;
-  local StrAwkFilter=${GetIpaddrFilterMatch:=/etc/init.d/Fnct.d/awk-script/ifconfig_tag_detection.awk} ;   
+  local StrAwkFilter=${GetIpaddrFilterMatch:=/etc/init.d/Fnct.D/awk-script/ifconfig_tag_detection.awk} ;   
   local StrTagList=${GetIpaddrTagList:=HWaddr,inet addr,inet6\ addr} ; 
   local StrTagCleanFilter=${StrTagList//\\ / } ;
   local StrReturn=$( IfconfigGetterApps=${StrAppsIfconfig} IfconfigGetterAddr=${StrAddr} IfconfigGetter awk -vTagName="${StrTagCleanFilter}"  -f StrAwkFilter ) ; 
@@ -3594,7 +3596,7 @@ function GetUUID ()
  local IsUUIDDbCreation=${GetUDBCreation:=False};
  local IsUUIDDbImport=${GetUDbImport:=False};
  local StrDbURI=${GetUDBPath:=/var/cache/fnct.D/db/sqlite/GetUUID.sqlite}
- local StrDbSchema=${GetUDBSchema:=/etc/init.d/Fnct.d/getUUID.schema}
+ local StrDbSchema=${GetUDBSchema:=/etc/init.d/Fnct.D/getUUID.schema}
  local BoolCallRegistered=${GetUIDRegister:=False}; 
  local StrAppsRegister=${GetUAppsRegisterName:=None};
  local StrUUIDIndexName=${GetUIDName=.GetUUID};
@@ -3727,7 +3729,7 @@ function GetMplayerStream()
 {
 	local ArrayArg=( $* ) ; 
 	local __call_locality=( GetMplayerStream ) ;
-	local StrAwkPath=${GetMplayerStreamAwkPath:=/etc/init.d/Fnct.d/awk-script/} ;
+	local StrAwkPath=${GetMplayerStreamAwkPath:=/etc/init.d/Fnct.D/awk-script/} ;
 	local StrAwkScriptName=${GetMplayerStreamScriptName:=MplayerStreamTransfert.awk}
 	local StrAwkApps=${GetMplayerStreamAwkApps:=/usr/bin/awk} ;
 	local StrGrepApps=${GetMplayerStreamGrepApps:=/bin/egrep};
@@ -3930,18 +3932,18 @@ function RoundRobinSwapRealloc()
 
 
 ### Loading External Lib
-. /etc/init.d/Fnct.d/_sub_PackageRepository
+. /etc/init.d/Fnct.D/_sub_PackageRepository
 
 
 ########### ###################################################################
 ########### 
 ########### End of normal Devlopment, upcoming devlopment or missing code from 
 ########### old lib Devlopment was put after, Enabling it on call of 
-########### /etc/init.d/Fnct.d/fnct_debian_lib imply having VarFnctLib=True 
+########### /etc/init.d/Fnct.D/fnct_debian_lib imply having VarFnctLib=True 
 ########### before
 ########### 
 ########### like :
-########### VarFnctLib=True /etc/init.d/Fnct.d/fnct_debian_lib . 
+########### VarFnctLib=True /etc/init.d/Fnct.D/fnct_debian_lib . 
 ########### 
 ########### Warning Not supported and may cause problems. 
 ########### 
@@ -4054,7 +4056,7 @@ if [ ${VarFnctLib:=False} == "True" ] ; then
       {
         #eval $( __InitFunc PostFilter ) ;
         eval $( __call_localityLocalName=PostFilter __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
-        awk -vGrepReturn=${GrepReturn} -f /etc/init.d/fnct.d/awk-script/DpKgQueryPackage.awk ; 
+        awk -vGrepReturn=${GrepReturn} -f /etc/init.d/Fnct.D/awk-script/DpKgQueryPackage.awk ; 
       }  
       local CmdEval=( ${Program:=apt-file} ${ProgramOption:=search} ${ProgramQuery:=lirc/lirc_client.h} ProgramQueryIs64=${ProgramQueryIs64:=false} "|" ${FilterProgram:=PostFilter} GrepReturn=${GrepReturn:=false} ${FilterProgramQuery:=""} ) ;
       echo "CmdLine:[${CmdEval[@]}]" ;
@@ -4084,7 +4086,7 @@ if [ ${VarFnctLib:=False} == "True" ] ; then
         
       
       local ProgramParserRecurrentTemplate=${StrReturnBase64DecodeTry} ;
-      local CmdEval=( ${Program:=apt-file} ${ProgramOption:=search} ${StrQuerySearch} "|" ${ProgramParser:=awk} -vTemplateContent=${StrRecurrentTemplateSearch} -vVarNameOut=CmdEval -f /etc/init.d/fnct.d/awk-script/DpKgQueryPackage.awk ) ;
+      local CmdEval=( ${Program:=apt-file} ${ProgramOption:=search} ${StrQuerySearch} "|" ${ProgramParser:=awk} -vTemplateContent=${StrRecurrentTemplateSearch} -vVarNameOut=CmdEval -f /etc/init.d/Fnct.D/awk-script/DpKgQueryPackage.awk ) ;
       echo "CmdLine:[${CmdEval[@]}]" ; 
     }
 
@@ -4156,8 +4158,8 @@ if [ ${VarFnctLib:=False} == "True" ] ; then
         function SedFilterConversionDpkgToZenityList()
         {
           eval $( __call_localityLocalName=DpkgSortedByInstall __call_localityDisplayFunctionEntry=1 __call_locality  ) ; 
-          #sed -r -f /etc/init.d/fnct.d/sed-script/FilterConversionDpkgToZenityList.sed ;
-          local CmdEval=( "sed" "-r" "-f" "/etc/init.d/fnct.d/sed-script/FilterConversionDpkgToZenityList.sed" ) ;
+          #sed -r -f /etc/init.d/Fnct.D/sed-script/FilterConversionDpkgToZenityList.sed ;
+          local CmdEval=( "sed" "-r" "-f" "/etc/init.d/Fnct.D/sed-script/FilterConversionDpkgToZenityList.sed" ) ;
           #DisplayEvalCmd ;
           #ExecEvalCmd ;
           LFuncAction0=DisplayEvalCmd LFuncAction1=ExecEvalCmd localLinkFuncRetOkA_B ;
@@ -4315,13 +4317,13 @@ if [ ${VarFnctLib:=False} == "True" ] ; then
      function RightColDisplay()
      {
       eval $( __call_localityLocalName=ColDisplay __call_locality ); 
-      awk -vColName=${StrBranchShow:=""} -f /etc/init.d/fnct.d/awk-script/dpkg-col-display.awk 
+      awk -vColName=${StrBranchShow:=""} -f /etc/init.d/Fnct.D/awk-script/dpkg-col-display.awk 
      }
      
      function LeftColDisplay()
      {
       eval $( __call_localityLocalName=ColDisplay __call_locality ); 
-      awk -vColName=${StrBranchShow:=""} -f /etc/init.d/fnct.d/awk-script/dpkg-col-display.awk 
+      awk -vColName=${StrBranchShow:=""} -f /etc/init.d/Fnct.D/awk-script/dpkg-col-display.awk 
      }
      
      local CmdEval=( ${CommandCall:=""} "|" ${StrFuncColDisplay:=""} ) ;

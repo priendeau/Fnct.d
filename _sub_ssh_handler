@@ -504,14 +504,106 @@ if [ ${SubSSHGetPasswd:="False"} == "True" ] ; then
   local __call_locality=( GP GetPasswd ) ; 
   local Arg0=${ArrayArg[0]} ; 
   
+  local StrAppsPwdGenerator=${GPAppsGen:="/usr/bin/pwgen"} ;
   local IntDefaultPwdSize=${GPSize:=16} ;
   local IntDefaultFactor=${GPFactor:=1000} ; 
   local IntRandomSeedFactor=${GPRandomSeed:=10} ; 
   local StrPasswordTypeForm=${GPArgType:=cnsB1,cysB1,cnsyB1} ; 
   local IntPasswordType=${GPGenFormType:=0} ;
-  
-  local StrAppsPwdGenerator=${GPAppsGen:=pwgen} ;
+  local IsAutoInstallPwgen=${GPAutoInstallDependency:=False} ; 
+  local StrDebInstallMethod=${GPDebianMethodInst:=apt,gdebi}
+  local IntDebianInstallerType=${GPPwGenPackager:=0}
+  local StrAptLineCmd=${GPPwgenAptCmd:=sudo apt-get install pwgen};
+  local StrGdebiLineCmd=${GPPwgenGdebiCmd:=sudo gdebi __OPTION__ __PACKAGE__}
+  local StrGdebiLineOpt=${GPPwgenGdebiOpt:="""--option=Get::Assume-Yes=\"true\""""} ; 
+  local StrGdebiPackageName=${GPPwgenPackaName:=pwgen_2.06-1ubuntu4_amd64.deb} ; 
+  local StrGdebiDownloadPack=${GPPwgenPackageURL:=http://launchpadlibrarian.net/124865523/__PACKAGE__} ;
   local BoolEvalCmdExit=${GPShowCmdEvalAndExit:=False} ; 
+  
+  local StrVarListTransfert="BoolEvalCmdExit,StrAppsPwdGenerator,IntDefaultPwdSize,IntDefaultFactor,IntRandomSeedFactor,StrPasswordTypeForm,IntPasswordType,IsAutoInstallPwgen,StrDebInstallMethod,StrDebianInstallerType,StrAptLineCmd,StrGdebiPackageName,StrGdebiDownloadPack" ;
+  local ArrayInstalChoice=( "apt:StrAptLineCmd" "gdebi:StrGdebiLineCmd" ) ;
+
+  ### Notice: c064ce9e-6e4e-11e6-abb3-001e4c8856d6, August 29 2016 , 21:12 pm. 
+  ### For those beleiving adding the Function Execution inside ArrayInstalChoice like :
+  ### apt:AutoInstallPackage:StrAptLineCmd, gdebi:DownloadFilePackage:StrGdebiLineCmd and 
+  ### providing a Getter for AutoInstallPackage for only parse or getting few things out of 
+  ### a single command that does not need to download the package, i'm still thinking hard
+  ### about it, even for 13 years of thinking... It's because apt-get install can issues out 
+  ### problems like end-of term and sometimes even archives.ubuntu.org does not respond while
+  ### some effort are made actually to find a place to download it and make it installable. 
+  ### Also, make it clear to see it and simply provide good-waty to make it visible. 
+   
+ function Verbosis()
+	{
+		local __call_locality=( Verbosis Verb );
+		local StrMsg=${VerbMsg:=__TEXT__} ; 
+		local StrDevOut=${VerbDev:=/dev/stderr} ; 
+  local IsVerboseState=${VerbState:=False} ;
+  local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+		local ArrayArg=( $* ) ; 
+		if [ "${IsVerboseState:=False}" == "True" ] ; then 
+			echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+		fi
+	}
+ ### Model : VerbHeader="DEBUG" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbState=True Verbosis
+ 
+
+  unset DownloadFilePackage ;
+  function DownloadFilePackage()
+  {
+   local __call_locality=( AutoInstallPackage API  ) ;
+   local ArrayArg=( $* ) ; 
+   local Arg0=${ArrayArg[0]} ;   
+   local StrMsg="" ; 
+   local StrUrl=$( GetPasswd --get StrGdebiDownloadPack )   ;
+   local StrPackage=$( GetPasswd --get StrGdebiPackageName )  ;
+   local StrURLDownload=${StrUrl} ;
+   StrURLDownload=${StrURLDownload//__PACKAGE__/${StrPackage}}
+   local StrCmdDownload="""/usr/bin/wget \"${StrURLDownload}\"""" ;
+   StrMsg="executing following line: ${StrCmdDownload}" ;
+   VerbHeader="DOWNLOAD" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbState=True Verbosis ;
+   eval ${StrCmdDownload} ; 
+  
+  }
+  
+  unset AutoInstallPackage
+  function AutoInstallPackage()
+  {
+   local __call_locality=( AutoInstallPackage API  ) ;
+   local ArrayArg=( $* ) ; 
+   local Arg0=${ArrayArg[0]} ;
+   local StrChoiceRank=$( GetPasswd --get StrDebInstallMethod ) ;
+   local ArrayInstForm=( ${StrChoiceRank//,/ } ) ;
+   local StrMsg="" ; 
+   local IntChoiceInstaller=$( GetPasswd --get IntDebianInstallerType ) ;
+   local CmdParserOpt=$( GetPasswd --get ArrayInstalChoice[${IntDebianInstallerType}] ) ;
+   local StrPairLeft=${CmdParserOpt/%:[a-zA-Z0-9]*} ;
+   local StrPairRight=${CmdParserOpt/#[a-zA-Z0-9]*:} ; 
+   local StrParserCmd=$( GetPasswd --get ${StrPairRight} )  ; 
+      
+   if [ "${StrPairLeft}" == "${ArrayInstForm[${IntChoiceInstaller}]}" ] ; then 
+    StrMsg="Installing using ${StrPairLeft} method." ; 
+    VerbHeader="INSTALL" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbState=True Verbosis ; 
+    
+    if [ "${StrPairLeft}" == ${ArrayInstForm[0]} ] ; then 
+     StrMsg="Installtion with ${StrPairLeft} cmdline:[ ${StrParserCmd} ]." 
+     VerbHeader="INSTALL" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbState=True Verbosis ;
+     eval ${StrParserCmd} ; 
+    elif [ "${StrPairLeft}" == ${ArrayInstForm[1]} ] ; then 
+     StrMsg="Installtion with ${StrPairLeft} require Downloading the package." ;
+     VerbHeader="INSTALL" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbState=True Verbosis ;
+     DownloadFilePackage ;
+     StrParserCmd=${StrParserCmd//__OPTION__/$( GetPasswd --get StrGdebiLineOpt )} ; 
+     StrParserCmd=${StrParserCmd//__PACKAGE__/$( GetPasswd --get StrGdebiPackageName )} ; 
+     
+     StrMsg="Installtion with ${StrPairLeft} cmdline:[ ${StrParserCmd} ]." 
+     VerbHeader="INSTALL" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbState=True Verbosis ;
+     eval ${StrParserCmd}
+    fi 
+   
+   fi 
+  }
+  
 
   unset __Loop ;
   function __Loop( )
@@ -519,14 +611,18 @@ if [ ${SubSSHGetPasswd:="False"} == "True" ] ; then
    local __call_locality=( _L __Loop  ) ;
    local ArrayArg=( $* ) ; 
    local Arg0=${ArrayArg[0]} ;
-   local x=0; 
-   echo -ne "Crunching for a factor of ${factor} password.\n" > /dev/stderr  ; 
+   local StrMsg ;
+   local x=0;
+   StrMsg="Crunching for a factor of ${factor} password. " ; 
+   VerbHeader="GetPasswd" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbState=True Verbosis ;
    local value ; 
    while [ ${x} -ne ${factor} ] ; do 
     value=$( ${StrAppsPwdGenerator} ${StrPwGenFormPassword} ${IntDefaultPwdSize} );
     let x=$x+1 ; 
    done ; 
-   echo -ne "\npasswd:[${value}]\n\n" > /dev/stderr  ; 
+   StrMsg="${value}" ; 
+   VerbHeader="GetPasswd" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbState=True Verbosis ;
+   #echo -ne "\npasswd:[${value}]\n\n" > /dev/stderr  ; 
   }
   
   unset __Display ;
@@ -536,7 +632,9 @@ if [ ${SubSSHGetPasswd:="False"} == "True" ] ; then
    local ArrayArg=( $* ) ; 
    local Arg0=${ArrayArg[0]} ;
    eval "local value=\"${StrAppsPwdGenerator} ${StrPwGenFormPassword} ${IntDefaultPwdSize}\"" ;
-   echo -ne "\nCMD Eval:[ ${value} ]\n" > /dev/stderr ; 
+   local StrMsg="Eval:[ ${value} ]" ;
+   VerbHeader="CMDLINE" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbState=True Verbosis ;
+   #echo -ne "\nCMD Eval:[ ${value} ]\n" > /dev/stderr ; 
    
   }
   unset __main_StartServices ;
@@ -545,34 +643,72 @@ if [ ${SubSSHGetPasswd:="False"} == "True" ] ; then
    local __call_locality=( Main __main_StartServices ) ;
    local ArrayArg=( $* ) ; 
    local Arg0=${ArrayArg[0]} ;
-   local ArrayFormPassword=( ${StrPasswordTypeForm//,/ } ) ;
-   local StrPwGenFormPassword=-${ArrayFormPassword[${IntPasswordType}]} ;
-   local end=${IntDefaultFactor} ; 
-   local factor=$(( ${end} * $(( ( ${RANDOM} % ${IntRandomSeedFactor} ) + 1 )) )) ; 
+   local StrMsg="" ; 
    
-   local value="" ;
-   ### 
-   ### Password Line execution ( needed both in display and Loop command. )
-   ### 
-   local StrCmdPwdEval="""StrAppsPwdGenerator=${StrAppsPwdGenerator} StrPwGenFormPassword=${StrPwGenFormPassword} IntDefaultPwdSize=${IntDefaultPwdSize}""" ; 
-   local StrLoopCmd="""${StrCmdPwdEval} factor=\${factor}""" ; 
-   local StrDisplayCmd="""${StrCmdPwdEval}""" ; 
+   ### In Case we do require to install the package :
+   if [ ! -e ${StrAppsPwdGenerator} ] ; then 
+     eval $( BVTestVarHold='' \
+       BVTestBoolVarName=\${IsAutoInstallPwgen:=False}  \
+       BVTestBoolCase=True               \
+       BVTestBoolAssertion=''            \
+       BVTestIsPreambule=False           \
+       BVTestScopeTest=local             \
+       BVTestVTVVarA=${StrListVar}       \
+       BVTestVTFnctA=AutoInstallPackage  \
+       BVTestIsValueToVar=True           \
+       BVTestIsValueToVarAssert=True     \
+       BVTestDisplayIf=False             \
+       BoolVarTestVarCreation            )
+   fi  
    
-   #local IfCmd="BVTestVarName='StrFuncExec' BVTestVarHold='\$( StrCmdEval=\${StrCmdEval} factor=\${factor} __Loop )' BVTestBoolVarName='\${BoolEvalCmdExit}' BVTestBoolCase=True BVTestBoolAssertion='StrCmdEval=\${StrCmdEval} __Display' BVTestScopeTest=local BoolVarTestVarCreation "
-   eval $( BVTestVarName='StrFuncExec'          \
-   BVTestVarHold="${StrDisplayCmd} __Display"   \
-   BVTestBoolVarName='${BoolEvalCmdExit}'       \
-   BVTestBoolCase=False                         \
-   BVTestBoolAssertion="${StrLoopCmd} __Loop" \
-   BVTestScopeTest=local BoolVarTestVarCreation  ) ;
-   
-   eval $( BVTestVarName='StrFuncIsLoop'          \
-   BVTestVarHold="$( eval ${StrFuncExec} )"   \
-   BVTestBoolVarName='${BoolEvalCmdExit}'       \
-   BVTestBoolCase=True                         \
-   BVTestBoolAssertion="" \
-   BVTestScopeTest=local BoolVarTestVarCreation  ) ;
-   
+   if [ ! -e ${StrAppsPwdGenerator} ] ; then 
+    StrMsg="Application ${StrAppsPwdGenerator} still not present." ;
+    VerbHeader="PWGEN" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbState=True Verbosis
+   else 
+    local ArrayFormPassword=( ${StrPasswordTypeForm//,/ } ) ;
+    local StrPwGenFormPassword=-${ArrayFormPassword[${IntPasswordType}]} ;
+    local end=${IntDefaultFactor} ; 
+    local factor=$(( ${end} * $(( ( ${RANDOM} % ${IntRandomSeedFactor} ) + 1 )) )) ; 
+    
+    local value="" ;
+    ### 
+    ### Password Line execution ( needed both in display and Loop command. )
+    ### 
+    local StrCmdPwdEval="""StrAppsPwdGenerator=${StrAppsPwdGenerator} StrPwGenFormPassword=${StrPwGenFormPassword} IntDefaultPwdSize=${IntDefaultPwdSize}""" ; 
+    local StrLoopCmd="""${StrCmdPwdEval} factor=\${factor}""" ; 
+    local StrDisplayCmd="""${StrCmdPwdEval}""" ; 
+    
+    ### Decide to display the command-line and exit or do the work. 
+    eval $( BVTestVarHold=''           \
+     BVTestVTVVar=${StrVarListTransfert}       \
+     BVTestVTFnct=__Display            \
+     BVTestBoolVarName=\${BoolEvalCmdExit:=False}  \
+     BVTestBoolCase=False              \
+     BVTestBoolAssertion=''            \
+     BVTestIsPreambule=True            \
+     BVTestScopeTest=local             \
+     BVTestVTVVarA=${StrVarListTransfert}       \
+     BVTestVTFnctA=__Loop              \
+     BVTestIsValueToVar=True           \
+     BVTestIsValueToVarAssert=True     \
+     BVTestDisplayIf=False             \
+     BoolVarTestVarCreation            )
+     
+    #local IfCmd="BVTestVarName='StrFuncExec' BVTestVarHold='\$( StrCmdEval=\${StrCmdEval} factor=\${factor} __Loop )' BVTestBoolVarName='\${BoolEvalCmdExit}' BVTestBoolCase=True BVTestBoolAssertion='StrCmdEval=\${StrCmdEval} __Display' BVTestScopeTest=local BoolVarTestVarCreation "
+    #eval $( BVTestVarName='StrFuncExec'           \
+    #BVTestVarHold="${StrDisplayCmd} __Display"    \
+    #BVTestBoolVarName='${BoolEvalCmdExit}'        \
+    #BVTestBoolCase=False                          \
+    #BVTestBoolAssertion="${StrLoopCmd} __Loop"    \
+    #BVTestScopeTest=local BoolVarTestVarCreation  ) ;
+    
+    #eval $( BVTestVarName='StrFuncIsLoop'         \
+    #BVTestVarHold="$( eval ${StrFuncExec} )"      \
+    #BVTestBoolVarName='${BoolEvalCmdExit}'        \
+    #BVTestBoolCase=True                           \
+    #BVTestBoolAssertion=""                        \
+    #BVTestScopeTest=local BoolVarTestVarCreation  ) ;
+   fi
      
   }
 
@@ -586,14 +722,11 @@ if [ ${SubSSHGetPasswd:="False"} == "True" ] ; then
   elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
    eval $( __GetVarReferenceList ) ;
   elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
-   IntDefaultPwdSize=${IntDefaultPwdSize}       \
-   IntDefaultFactor=${IntDefaultFactor}         \
-   IntRandomSeedFactor=${IntRandomSeedFactor}   \
-   IntPasswordType=${IntPasswordType}           \
-   StrPwGenFormPassword=${StrPwGenFormPassword} \
-   StrPasswordTypeForm=${StrPasswordTypeForm}   \
-   StrAppsPwdGenerator=${StrAppsPwdGenerator}   \
-   __main_StartServices ;
+  eval $( VTVValueEntry=${StrVarListTransfert} \
+          VTVIsValueReAssign=True              \ 
+          VTVIsValueToConvert=False            \
+          VTVIsArrayStyleInsert=True           \
+          ValueToVariable ) __main_StartServices
   fi	 
   
 
