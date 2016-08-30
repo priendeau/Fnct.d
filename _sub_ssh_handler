@@ -530,7 +530,6 @@ if [ ${SubSSHGetPasswd:="False"} == "True" ] ; then
   ArrayMsg[3]="Crunching for a factor of __FACTOR__ password. " ;
   ArrayMsg[4]="Eval:[ __EVAL__ ]" ;
   ArrayMsg[5]="Application __APPS__ still not present."  ;
-  ArrayMsg[6]="" ;
   
   ### Notice: c064ce9e-6e4e-11e6-abb3-001e4c8856d6, August 29 2016 , 21:12 pm. 
   ### For those beleiving adding the Function Execution inside ArrayInstalChoice like :
