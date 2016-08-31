@@ -6,7 +6,7 @@ from twisted.conch            import avatar, recvline
 from twisted.conch.interfaces import IConchUser, ISession
 from twisted.conch.ssh        import factory, keys, session
 from twisted.cred             import portal, checkers
-from twited.internet          import reactor
+from twisted.internet         import reactor
 from zope.interface           import implements
 
 
@@ -176,7 +176,7 @@ class SSHClassDefinition( object ):
   def ResetFunctionPrefix( self ):
     self.TypeOperationVar = None
 
-  FunctionPrefixHelper = property( GetFunctionPrefix, SetFunctionPrefix, ResetOperationType)
+  FunctionPrefixHelper = property( GetFunctionPrefix, SetFunctionPrefix, ResetFunctionPrefix)
 
   def GetRSA_ID( self, value ):
     return self.RSA_ID_NAME
@@ -194,7 +194,7 @@ class SSHClassDefinition( object ):
   def GetRSA_File( self, value ):
     return self.RSA_ID_FILE
 
-  def SetRSA_FIlw( self , value ):
+  def SetRSA_File( self , value ):
     if self.RSA_ID_FILE == "":
       raise RSAFileExeption, value 
     self.RSA_ID_FILE = value
@@ -205,7 +205,7 @@ class SSHClassDefinition( object ):
   RSA_File = property( GetRSA_File, SetRSA_File, ResetRSA_File)
 
   
-class SSHFunctionController( recvline.HistoricRecvline ):
+class SSHFunctionController( recvline.HistoricRecvLine ):
   def __init__( self, user ):
     self.user = user
     self.SSHServicesDef = SSHClassDefinition()
