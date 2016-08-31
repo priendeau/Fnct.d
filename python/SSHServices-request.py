@@ -161,9 +161,9 @@ class SSHClassDefinition( object ):
   functionPrefix  = None
   RSA_ID_NAME     = None
   RSA_ID_FILE     = None
-  
-  def __init__( self, Definition ):
-    self.Definition = Definition
+
+  def __init__( self ):
+    print "Add Current Object Attribute inside class: %s" % self.__class__.__name__
 
   def GetFunctionPrefix( self ):
     return self.TypeOperationVar
@@ -206,11 +206,9 @@ class SSHClassDefinition( object ):
 
   
 class SSHFunctionController( recvline.HistoricRecvLine ):
+
   def __init__( self, user ):
     self.user = user
-    self.SSHServicesDef = SSHClassDefinition()
-    self.SSHServicesDef.FunctionPrefixHelper = "Fnct_"
-    self.SSHServicesDef.RSA_IDName = "RSA_ID"
     
   def connectionInitiator( self ):
     recvline.HistoricRecvLine.connectionMade( self )
@@ -276,7 +274,7 @@ class SSHFunctionControllerAvatar(avatar.ConchUser):
     self.channelLookup.update({'session': session.SSHSession})
 
   def openShell(self, protocol):
-    serverProtocol = insults.ServerProtocol(SSHDemoProtocol, self)
+    serverProtocol = insults.ServerProtocol(SSHFunctionController, self)
     serverProtocol.makeConnection(protocol)
     protocol.makeConnection(session.wrapProtocol(serverProtocol))
 
@@ -292,6 +290,14 @@ class SSHFunctionControllerAvatar(avatar.ConchUser):
 class SSHFunctionControllerRealm(object):
   implements(portal.IRealm)
 
+  @AttributeGenerationDecor.Kargs2Attr( SSHClassDefinition )
+  def __init__( self, **Kargs ):
+    self = SSHClassDefinition
+    if hasattr( self, 'RSA_IDName' ):
+      print "RSA-Key ID name was defined:[ name=%s ]" % ( self.RSA_IDName ) 
+    if hasattr( self, 'RSA_File' ):
+      print "RSA-Key File name was defined:[ name=%s ]" % ( self.RSA_File ) 
+
   def requestAvatar(self, avatarId, mind, *interfaces):
     if IConchUser in interfaces:
       return interfaces[0], SSHDemoAvatar(avatarId), lambda: None
@@ -299,8 +305,8 @@ class SSHFunctionControllerRealm(object):
       raise NotImplementedError("No supported interfaces found.")
 
 def getRSAKeys():
-  valuRSAName = SSHFunctionController.SSHServicesDef.RSA_IDName
-  valuRSAFile = SSHFunctionController.SSHServicesDef.RSA_IDFile
+  valuRSAName = SSHClassDefinition.RSA_IDName
+  valuRSAFile = SSHClassDefinition.RSA_File
     
   with open( valuRSAName ) as privateBlobFile:
     privateBlob = privateBlobFile.read()
@@ -313,8 +319,11 @@ def getRSAKeys():
   return publicKey, privateKey
 
 if __name__ == "__main__":
+  AttributeGenerationDecor.AttrName = 'SSHDict'
   sshFactory = factory.SSHFactory()
-  sshFactory.portal = portal.Portal( SSHFunctionControllerRealm() )
+  sshFactory.portal = portal.Portal( SSHFunctionControllerRealm( FunctionPrefixHelper= "Fnct_",
+                                                                 RSA_IDName="rsa_id",
+                                                                 RSA_File="rsa_id.pub" ) )
   users = {'admin': 'admin', 'fnct.d': ''}
 
   sshFactory.portal.registerChecker( checkers.InMemoryUsernamePasswordDatabaseDontUse(**users) )
@@ -322,7 +331,7 @@ if __name__ == "__main__":
   sshFactory.publicKeys = {'ssh-rsa': pubKey}
   sshFactory.privateKeys = {'ssh-rsa': privKey}
 
-  reactor.listenTCP(2222, sshFactory)
+  reactor.listenTCP(5082, sshFactory)
   reactor.run()
 
   
