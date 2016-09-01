@@ -11,19 +11,31 @@ from zope.interface           import implements
 
 
 class PrefixFunctionOperationtypeExeption( Exception ):
-  msg                             = 'Exception raised for missing Prefixed Value For Function Helper Discovery required inside Definition Class: value:{}'
+  msg = 'Exception raised for missing Prefixed Value For Function Helper Discovery required inside Definition Class: value:{}'
   def __init__( self, value ):
     Exception.__init__( self, self.msg.format( value ) )
 
 class RSAOperationtypeExeption( Exception ):
-  msg                             = 'RSA_ID Name challenge should be specified and can not be "" or None as value. '
+  msg = 'RSA_ID Name challenge should be specified and can not be "" or None as value. '
   def __init__( self, value ):
     Exception.__init__( self, self.msg.format( value ) )
 
 class RSAFileOperationExeption( Exception ):
-  msg                             = 'RSA_ID File Information should be specified and can not be"" or None as value. '
+  msg = 'RSA_ID File Information should be specified and can not be"" or None as value. '
   def __init__( self, value ):
     Exception.__init__( self, self.msg.format( value ) )
+    
+class RSAPathExeption( Exception ):
+  msg = 'RSA File Realm need a Path specified to read Key. Present Start-PAth :[ %s ]'
+  def __init__( self, value ):
+    Exception.__init__( self, self.msg.format( value ) )
+
+class RSAPathWarning( Warning ):
+  msg = 'Use of property dependant of RSA_Path, querying them without use of Path specification is subject to an error.'
+  def __init__( self, attrname, funcname ):
+    Warning.__init__( self, self.msg )
+    
+
   
 
 
@@ -161,48 +173,130 @@ class SSHClassDefinition( object ):
   functionPrefix  = None
   RSA_ID_NAME     = None
   RSA_ID_FILE     = None
-
+  RSA_ID_PATH     = None
+  privateKey      = None 
+  publicKey       = None 
+  privateBlobFile = None
+  publicBlobFile  = None 
+  RPropertyPrivateKey = None
+  RPropertyPublicKey  = None 
+  
   def __init__( self ):
     print "Add Current Object Attribute inside class: %s" % self.__class__.__name__
 
   def GetFunctionPrefix( self ):
-    return self.TypeOperationVar
+    return self.functionPrefix
 
   def SetFunctionPrefix( self, value):
     if self.functionPrefix == "":
       raise PrefixFunctionOperationtypeExeption, value 
-    self.TypeOperationVar = value
+    self.functionPrefix = value
 
   def ResetFunctionPrefix( self ):
-    self.TypeOperationVar = None
+    self.functionPrefix = None
 
   FunctionPrefixHelper = property( GetFunctionPrefix, SetFunctionPrefix, ResetFunctionPrefix)
 
+  def GetAttrPrivateKey( self ):
+    return self.RPropertyPrivateKey
+
+  def SetAttrPrivateKey( self, value ):
+    setattr( self, RPropertyPrivateKey, value )
+  
+  def ResetAttrPrivateKey( self ):
+    setattr( self, RPropertyPrivateKey, None )
+    
+  AttrPrivateKey = property( GetAttrPrivateKey, SetAttrPrivateKey, ResetAttrPrivateKey )
+  # AttrPrivateKey = 'privateBlobFile'
+  def GetAttrPublicKey( self ):
+    return self.RPropertyPublicKey
+
+  def SetAttrPublicKey( self, value ):
+    setattr( self, RPropertyPublicKey, value )
+  
+  def ResetAttrPublicKey( self ):
+    setattr( self, RPropertyPublicKey, None )
+    
+  AttrPublicKey = property( GetAttrPublicKey, SetAttrPublicKey, ResetAttrPublicKey )
+  # AttrPublicKey = 'publicBlobFile'
+
+  def GetRSAPath( self ):
+    return self.RSA_ID_PATH
+  
+  def SetRSAPath( self, value ):
+    if self.RSA_ID_PATH == "" :
+      raise RSAPathExeption, value
+    self.RSA_ID_PATH=value
+    
+  def ResetRSAPath( self ):
+    self.RSA_ID_PATH=None 
+    
+  RSA_Path= property( GetRSAPath, SetRSAPath, ResetRSAPath)
+
   def GetRSA_ID( self, value ):
+    if self.RSA_ID_NAME == "":
+      raise RSAOperationtypeExeption, value 
+    try:
+      if self.RSA_ID_PATH == "None":
+        raise RSAPathWarning
+      value="%/%" % (self.RSA_ID_PATH , self.RSA_ID_NAME )
+    except RSAPathWarning:
+      value="%" % self.RSA_ID_NAME
     return self.RSA_ID_NAME
 
   def SetRSA_ID( self , value ):
-    if self.RSA_ID_NAME == "":
+    if self.RSA_ID_NAME == None:
       raise RSAOperationtypeExeption, value 
     self.RSA_ID_NAME = value
 
   def ResetRSA_ID( self ):
     self.RSA_ID_NAME = None
     
-  RSA_IDName = property( GetRSA_ID, SetRSA_ID, ResetRSA_ID )
+  RSA_Name = property( GetRSA_ID, SetRSA_ID, ResetRSA_ID )
 
   def GetRSA_File( self, value ):
-    return self.RSA_ID_FILE
+    if self.RSA_ID_FILE == "":
+      raise RSAFileOperationExeption, value 
+    try:
+      if self.RSA_ID_PATH == "None":
+        raise RSAPathWarning
+      value="%/%" % (self.RSA_ID_PATH , self.RSA_ID_FILE )
+    except RSAPathWarning:
+      value="%" % self.RSA_ID_FILE 
+    return value
 
   def SetRSA_File( self , value ):
     if self.RSA_ID_FILE == "":
-      raise RSAFileExeption, value 
+      raise RSAFileOperationExeption, value 
     self.RSA_ID_FILE = value
 
   def ResetRSA_File( self ):
     self.RSA_ID_FILE = None
     
   RSA_File = property( GetRSA_File, SetRSA_File, ResetRSA_File)
+
+  def getRSAPrivateKeys( self ):
+    return keys.Key.fromString(data=getattr( self, self.AttrPrivateKey ) )
+  
+  def setRSAPrivateKeys( self, valAttrName ):
+    self.AttrPrivateKey = valAttrName 
+    print "Openning File : %s as private key" % self.RSA_Name
+    setattr( self, valAttrName, open( self.RSA_Name ).read() )
+  
+  DataPrivateKey = property( getRSAPrivateKeys, setRSAPrivateKeys )
+  
+  def getRSAPublicKeys( self ):
+    return keys.Key.fromString(data=getattr( self, self.AttrPublicKey ))
+
+  def setRSAPublicKeys( self, valAttrName ):
+    self.AttrPublicKey = valAttrName 
+    print "Openning File : %s as private key" % self.RSA_File
+    setattr( self, valAttrName, open( self.RSA_File ).read() )
+  
+  DataPublicKey = property( getRSAPublicKeys, setRSAPublicKeys )
+    
+    
+
 
   
 class SSHFunctionController( recvline.HistoricRecvLine ):
@@ -294,9 +388,13 @@ class SSHFunctionControllerRealm(object):
   def __init__( self, **Kargs ):
     self = SSHClassDefinition
     if hasattr( self, 'RSA_IDName' ):
-      print "RSA-Key ID name was defined:[ name=%s ]" % ( self.RSA_IDName ) 
+      print "RSA-Key ID name was defined:[ name=%s ]" % ( self.RSA_Name ) 
     if hasattr( self, 'RSA_File' ):
       print "RSA-Key File name was defined:[ name=%s ]" % ( self.RSA_File ) 
+    if hasattr( self, 'RSA_Path' ):
+      print "RSA-Key Path name was defined:[ name=%s ]" % ( self.RSA_Path ) 
+      
+      
 
   def requestAvatar(self, avatarId, mind, *interfaces):
     if IConchUser in interfaces:
@@ -304,30 +402,27 @@ class SSHFunctionControllerRealm(object):
     else:
       raise NotImplementedError("No supported interfaces found.")
 
-def getRSAKeys():
-  valuRSAName = SSHClassDefinition.RSA_IDName
-  valuRSAFile = SSHClassDefinition.RSA_File
-    
-  with open( valuRSAName ) as privateBlobFile:
-    privateBlob = privateBlobFile.read()
-    privateKey = keys.Key.fromString(data=privateBlob)
 
-  with open( valuRSAFile ) as publicBlobFile:
-    publicBlob = publicBlobFile.read()
-    publicKey = keys.Key.fromString(data=publicBlob)
-
-  return publicKey, privateKey
 
 if __name__ == "__main__":
   AttributeGenerationDecor.AttrName = 'SSHDict'
   sshFactory = factory.SSHFactory()
-  sshFactory.portal = portal.Portal( SSHFunctionControllerRealm( FunctionPrefixHelper= "Fnct_",
-                                                                 RSA_IDName="rsa_id",
-                                                                 RSA_File="rsa_id.pub" ) )
+  sshFactory.portal = portal.Portal( 
+  SSHFunctionControllerRealm( FunctionPrefixHelper= "Fnct_",
+                              DataPrivateKey= 'privateBlobFile',
+                              DataPublicKey= 'publicBlobFile',
+                              RSA_Path="/home/maxiste/github/Fnct.D/python",
+                              RSA_Name="rsa_id",
+                              RSA_File="rsa_id.pub" ) )
   users = {'admin': 'admin', 'fnct.d': ''}
 
   sshFactory.portal.registerChecker( checkers.InMemoryUsernamePasswordDatabaseDontUse(**users) )
-  pubKey, privKey = getRSAKeys()
+  try:
+    pubKey = SSHClassDefinition.DataPublicKey
+    privKey = SSHClassDefinition.DataPrivateKey 
+  except RSAPathExeption:
+    print "Path was not declared inside SSHClassDefinition.RSAPathFile"
+  
   sshFactory.publicKeys = {'ssh-rsa': pubKey}
   sshFactory.privateKeys = {'ssh-rsa': privKey}
 
