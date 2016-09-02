@@ -452,7 +452,6 @@ unset __GetVarReferenceCompWord ;
 ### - Teacher just supplied the answer in a case for an examen of 15% of the
 ### sum and give any other information thru course traversal. 
 
-
 unset BoolVarTestVarCreation ; 
 function BoolVarTestVarCreation()
 {
@@ -810,6 +809,419 @@ function BoolVarTestVarCreation()
   local StrMsg="\nFunction ${__call_locality[1]}, Display Result:\n ${StrTestTemplate}\n" ; 
   VerbState=${IsDisplayIfStatement} VerbDev=/dev/stderr VerbMsg=${StrMsg} Verbosis
   echo -ne "${StrTestTemplate}" ; 
+ fi
+ 
+}
+
+unset _BoolVarTestVarCreation ; 
+function _BoolVarTestVarCreation()
+{
+
+### The main goal : 
+### Will represent a correct view of this example into pattern . 
+### 
+###   local StrMultipleFileSelectionAttr="--multiple"
+###   if [ "${StrZenityFSMultipleFile}" == "False" ] ; then 
+###    StrMultipleFileSelectionAttr="" ; 
+###   fi 
+### 
+### Into CommandLine Echo like pattern and  being evaluated to create following statement:
+### - Having a variable A Holding a content. 
+### - Having a Prefixed-Var named B holding either False Or True like ${Prefixed_Var_named_B:=False}
+### - On Having Reverse position inside ${Prefixed_Var_named_B:=False}, content of variable A, should
+### Be erased of asking to get alternative.
+### 
+### Answer to pattern, 
+### 
+### BVTestVarName=StrMultipleFileSelectionAttr BVTestVarHold="--multiple" BVTestBoolVarName=StrZenityFSMultipleFile BoolVarTestVarCreation 
+### 
+### Nominal purposes: 
+### This is intended to supply a Boolean test and Value Association, done in one line, 
+### it allow to generate a range of variable being Transited from Prefixed-Var and value
+### passed in a query, which is sometimes had no value and give extra code that might trigger error. 
+### 
+### For a Generated example between command-line BoolVarTestVarCreation and Pre-fixed value, see 
+### 
+### BoolVarTestVarCreation for substitution of StrFileTmp from function ZenityShellEval()
+### Note reference : f1161962-0ad8-11e3-b166-001b3875b29c  
+### 
+### 
+###  Warning : 
+###  Note reference : 7236e956-f6cf-11e5-98a2-001e4c8856d6
+###  - Recurrent call in BoolVarTestVarCreation
+###  and avoid uses of  ValueToVariable . 
+###  While BoolVarTestVarCreation is a low-level call indirectly call
+###  by ValueToVariable it's hard to define first will end having 
+###  good sub-body to acheive a strict identity and be able to 
+###  parse all variable before BoolVarTestVarCreation 'will' have to 
+###  end a possible __main_start_services if this one is implemented 
+###  with normal body-topology  .  So it's not recommended to use 
+###  ValueToVariable inside BoolVarTestVarCreation has long there is 
+###  a better mechanisms correcting this problems in bash of recurrent  
+###  function call recurently a lower level function will simply loop
+###  and not finishing the work . 
+### 
+### 
+### 
+
+### Factory Section 
+ unset StrVarBoolTest StrDefaultBoolTest StrNotAsserted StrScopeType StrIfTestType StrIfStringOp IsPreambule StrDefaultEndTest IsTypePreamb StrVTRPrbTpl StrVTRPrbVar StrVTRPrbVTReg StrVTRPrbVTFnct IsTypeAssert StrVTRAsrtTpl StrVTRAsrtVar StrVTRAsrtVTReg StrVTRAsrtVTFnct StrKeyTestType IntDefautlType IsDisplayIfStatement StrIfPattern ArrayIfPattern ArrayAssertion StrTestTemplate IsPreambulePolNtRespt ;
+ local __call_locality=( BVTest _BoolVarTestVarCreation ) ;
+	local ArrayArg=( $* ) ; 
+	local Arg0=${ArrayArg[0]} ;
+ local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\n" ;
+### End of Factory Section.
+ local ArrayTypeTest=( False True ) ;
+ local ArrayPreambule=( ) ; 
+
+ local StrVarNamed=${BVTestVarName:=StrAttrHold} ; 
+ local StrVarNamedHold=${BVTestVarHold:=CONTENT} ; 
+ ### Following variable Stand for Is-Preambule-Polish-Notation-Respect is respected ( 
+ ### like allow cleaning content and validate output for easy-Integer respect instead 
+ ### of having case like IntValue="0" so far is valuable, but fail in case and if test -> 
+ ### if [ "0" -eq 0 ] ; then ; fi , will notice some problems. )
+ local IsPreambulePolNtRespt=${BVTestIsPrmblPlNt:=True} ; 
+ local StrVarBoolTest=${BVTestBoolVarName:=IsVarShould} ; 
+ local StrDefaultBoolTest=${BVTestBoolCase:=False} ;
+ local StrNotAsserted=${BVTestBoolAssertion:=\"\"} ;
+ local StrScopeType=${BVTestScopeTest:=local} ;
+ local StrIfTestType=${BVTestIfType:=String} ; 
+ local StrIfStringOp=${BVTestIfOp:='=='} ;
+ local IsPreambule=${BVTestIsPreambule:=True} ; 
+ local StrDefaultEndTest=${BVTestConclude:=";"} ;
+ ### Section ValueToVariable in Preambule 
+ local IsTypePreamb=${BVTestIsValueToVar:=False} ;
+ local StrVTRPrbTpl=${BVTestVTVTPL:=eval __TES__  __REGISTRY_PRE__ VTVValueEntry=__VAR_ENTRY_PRE__ ValueToVariable __TEE__ __FNCT_PRE__} ;
+ local StrVTRPrbVar=${BVTestVTVVar:=IsVerbose,IsDebug} ;
+ local StrVTRPrbVTReg=${BVTestVTReg:=VTVIsArrayStyleInsert=True VTVIsValueReAssign=True VTVIsValueToConvert=False} ;
+ local StrVTRPrbVTFnct=${BVTestVTFnct:=__FNCT__} ;
+ ### Section ValueToVariable in Assertion .
+ local IsTypeAssert=${BVTestIsValueToVarAssert:=False};
+ local StrVTRAsrtTpl=${BVTestVTVTPLA:=eval __TES__  __REGISTRY_ASRT__ VTVValueEntry=__VAR_ENTRY_ASRT__ ValueToVariable __TEE__ __FNCT_ASRT__} ;
+ local StrVTRAsrtVar=${BVTestVTVVarA:=IsVerbose,IsDebug};
+ local StrVTRAsrtVTReg=${BVTestVTRegA:=VTVIsArrayStyleInsert=True VTVIsValueReAssign=True VTVIsValueToConvert=False}
+ local StrVTRAsrtVTFnct=${BVTestVTFnctA:=__FNCT__}
+ local StrKeyTestType=${BVTestType:='if:fi,if:elif,elif:elif,elif:else,if:else,else:fi'} ;
+ local IntDefautlType=${BVTestIdType:=0} ; 
+ local IsDisplayIfStatement=${BVTestDisplayIf:=False} ; 
+ local StrVarListTransfert="StrTestTemplate,IsDisplayIfStatement,IntDefautlType,StrKeyTestType,StrVTRAsrtVTFnct,StrVTRAsrtVTReg,StrVTRAsrtVar,StrVTRAsrtTpl,IsTypeAssert,StrVTRPrbVTFnct,StrVTRPrbVTReg,StrVTRPrbVar,StrVTRPrbTpl,IsTypePreamb,StrDefaultEndTest,IsPreambule,StrIfStringOp,StrIfTestType,StrScopeType,StrNotAsserted,StrDefaultBoolTest,StrVarBoolTest,IsPreambulePolNtRespt,StrVarNamedHold,StrVarNamed"
+ 
+ local StrTestTemplate=""" __PREAMBULE__ \
+__IF_PATTERN__  \
+__ASSERTION__ \
+__END_TEST__ __END_MARK__ """ ;
+
+ function Verbosis()
+	{
+		local __call_locality=( Verbosis Verb );
+		local StrMsg=${VerbMsg:=__TEXT__} ; 
+		local StrDevOut=${VerbDev:=/dev/stderr} ; 
+  local IsVerboseState=${VerbState:=False} ;
+  local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+  local IsDisplayFormatted=${VerbFormated:=True} ;
+		local ArrayArg=( $* ) ; 
+		if [ "${IsVerboseState:=False}" == "True" ] ; then 
+   if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+     echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+   else
+     echo -ne "${StrMsg}\n" > ${StrDevOut} ;
+   fi 
+		fi
+	}
+ 
+ 
+
+ ArrayIfPattern[0]="""__START_TEST__ [ \"__VAR_BOOL_TEST__\" __OP__ \"__DEFAULT_BOOL_TEST__\" ] """ ;
+ ArrayIfPattern[1]="""__START_TEST__ [ \"__OP__ \"__DEFAULT_BOOL_TEST__\" ] """ ;
+ ArrayIfPattern[2]="""__START_TEST__ \$( test \"__OP__ \"__DEFAULT_BOOL_TEST__\" ) """ ;
+ ArrayIfPattern[3]="""__START_TEST__ [ __VAR_BOOL_TEST__ __OP__ __DEFAULT_BOOL_TEST__ ] """ ;
+ ArrayIfPattern[4]="""eval __VAR__NAMED__ ; res=\$? ; __START_TEST__  [ \${res:=1} __OP__ __DEFAULT_BOOL_TEST__ ] """ ;
+ 
+ function __main_StartServices
+ {
+  local __call_locality=( Main __main_StartServices ) ;
+  local ArrayArg=( $* ) ;
+  local Arg0=${ArrayArg[0]};  
+  ### 
+  ### Getter Section, 
+  ### Retrieving information from Main Function BoolVarTestVarCreation
+  local ArrayTestType=( ${StrKeyTestType//,/ } ) ; 
+  local ArrayTestSection=( ${ArrayTestType[${IntDefautlType}]//:/ } ) ; 
+  
+  ### Note : ArrayTestSection should test if value end with 'fi' and will require an extra semi-colon
+  ### before adding element 'fi' --> 'else ... (;) fi ' 
+  if [ "${ArrayTestSection[1]}" == "fi" ] ; then 
+   ArrayTestSection[1]="; ${ArrayTestSection[1]}" ; 
+  fi 
+  local ArrayTestType=( String File Test Int Shell ) ;
+  local ArrayIfPattern=(  ) ;
+  local ATestType=( $( _BoolVarTestVarCreation --get ArrayTestType[@] ) ) ; 
+
+  ### Other variable required ;
+  local StrCurrentIfPatrn ;  
+  local StrLcTTpl=${StrTestTemplate} ; 
+  local StrIfPattern ; 
+  
+  local ArrayPreambule=( ) ; 
+  ArrayPreambule[0]="__SCOPE__ __VAR_NAME__=__VALUE__" ;
+  
+  local ArrayAssertion=( ) ; 
+  ArrayAssertion[0]="__ASRT_VAR__NAME__=__ASRT_VAR_VALUE__" ;
+  
+  ###
+  ### ArrayIfPattern, Loop and test to select proper 
+  ### StrIfTestType and it's Operator StrIfStringOp.
+  ###
+  for (( intx=0 ; intx <= ${#ATestType[@]}-1 ; intx++ )) ; do 
+   if [ "${StrIfTestType}" == "${ATestType[${intx}]}" ] ; then 
+    StrCurrentIfPatrn=$( _BoolVarTestVarCreation --get ArrayIfPattern[${intx}] )
+    
+    StrIfPattern=${StrCurrentIfPatrn//__OP__/${StrIfStringOp}} ; 
+   fi 
+  done 
+  StrIfPattern=${StrIfPattern//__VAR_BOOL_TEST__/$( _BoolVarTestVarCreation --get StrVarBoolTest )} ;
+  StrIfPattern=${StrIfPattern//__DEFAULT_BOOL_TEST__/$( _BoolVarTestVarCreation --get StrDefaultBoolTest )} ;
+  StrIfPattern=${StrIfPattern//__VAR__NAMED__/$( _BoolVarTestVarCreation --get StrVarNamed )} ;
+
+
+  ### Old Preambule : ${StrScopeType} ${StrVarNamed}=\"${StrVarNamedHold}\"" 
+  ### Old Assertion : \${StrVarNamed}=\${StrNotAsserted} ; 
+  
+  if [ "${IsTypeAssert:=False}" == "True" ] ; then 
+   StrLcTTpl=${StrLcTTpl//__ASSERTION__/${StrVTRAsrtTpl}} ;
+   StrLcTTpl=${StrLcTTpl//__REGISTRY_ASRT__/${StrVTRAsrtVTReg}} ;
+   StrLcTTpl=${StrLcTTpl//__VAR_ENTRY_ASRT__/${StrVTRAsrtVar}} ;
+   StrLcTTpl=${StrLcTTpl//__TES__/\$(} ;
+   StrLcTTpl=${StrLcTTpl//__TEE__/)} ;
+     ### 2016-08-29, require a ';' at the end of a command or an error will occur 
+     ### after the preambule or near the end after assertion
+   StrLcTTpl=${StrLcTTpl//__FNCT_ASRT__/${StrVTRAsrtVTFnct} } ;
+  else
+   StrLcTTpl=${StrLcTTpl//__ASSERTION__/${ArrayAssertion[0]}} ;
+   StrLcTTpl=${StrLcTTpl//__ASRT_VAR__NAME__/${StrVarNamed}} ;
+   StrLcTTpl=${StrLcTTpl//__ASRT_VAR_VALUE__/${StrNotAsserted}} ;
+  fi 
+  
+  if [ "${IsPreambule:=True}" == "True" ] ; then 
+    if [ "${IsTypePreamb:=False}" == "True" ] ; then 
+     StrLcTTpl=${StrLcTTpl//__PREAMBULE__/${StrVTRPrbTpl}} ; 
+     StrLcTTpl=${StrLcTTpl//__VAR_ENTRY_PRE__/${StrVTRPrbVar}} ; 
+     StrLcTTpl=${StrLcTTpl//__REGISTRY_PRE__/${StrVTRPrbVTReg}} ; 
+     StrLcTTpl=${StrLcTTpl//__TES__/\$(} ; 
+     StrLcTTpl=${StrLcTTpl//__TEE__/)} ; 
+     ### 2016-08-29, require a ';' at the end of a command or an error will occur 
+     ### after the preambule or near the end after assertion
+     StrLcTTpl=${StrLcTTpl//__FNCT_PRE__/${StrVTRPrbVTFnct} ; } ; 
+    else
+     ### Missing, Initially we have defined here some Polish notation and we 
+     ### don't have any test related to Integer, String and so forth... 
+     if [ ${IsPreambulePolNtRespt:=True} == "True" ] ; then 
+      ### To Qualify all test we do Made a First variable StrTypeVar ; Will hold 
+      ### the conclusion into
+      ### following answer form ( Bool / Int / String ) ; 
+      ### between String Test or Not 
+      ### Test is made in this order : -> Do we discover something else than number 
+      ### inside the StrVarNamedHold
+      ### First the copy made from StrVarNamedHold remove every number and test the 
+      ### value.
+      ### Secondly ( might not be immediately ), Detecting 0L , or simply called 
+      ### Long not rationnal
+      ### inside script but might be interresting . 
+      ### Succedding to removing all number, counting the remaining char. 
+      local StrVarHoldTest=${StrVarNamedHold} ; 
+      local StrTypeVar="None" ; 
+      
+      ### Because Boolean are Special case, are likely to be String with only 
+      ### 2 type of answer, True/False, It's like old story of Coolege Programmation
+      ### Introduction 101 at Rosemont Cegep in 1997-1999 using Pascal and pseudo-code.
+      ### It does the same for Boolean, having to type it plain text True/False and 
+      ### the lexer/parser inide should understand what is Boolean to what is not... 
+      ### In This context, we have craft a singular one with filtering .
+      
+      ### Special Case, detection of Boolean are made with sed reduction of specific
+      ### Sub-Group. Especially found nothing inside Regular Expression of O'Reilly 
+      ### Pocket reference, but still only a Pocket Reference. 
+      
+      ### Bash Big Line, It's especially important to declare it correctly and allow 
+      ### type definition rather to not filtering the input at start and have many
+      ### messages having problems to handle variable. Especially in Bash is actor
+      ### or builtin/function/shell script to generate error on type not correctly 
+      ### handled. If the variable is designe as Integer and hold String-like 
+      ### information, if you do notthing with that variable or called-it 
+      ### future-design, it won't tell you problems until the day you start to use it.
+      
+      ### Before reducing everything to nil, do a Boolean Detection:
+      ### Since migration to Mint 17.3 and bash : 2016-09-02
+      ### version:( GNU bash, version 4.3.11(1)-release (x86_64-pc-linux-gnu) )
+      ### the sed behavior is not working like mint 12/13 .
+      ### the Sed forma syntax : 
+      ###   echo "${StrVarHoldTest}" | sed 's/[{'True','False'}]//g'
+      ###   for simply taking out False and True reducing the Variable to Nothing and hold 
+      ###   less than 0 charlong it simply not working in this version .
+      StrVarHoldTest=$( echo "${StrVarHoldTest}" | sed 's/True//g;s/False//g'  ) ; 
+      local IntPolishBool=${#StrVarHoldTest};
+      local IntPolisgString ;
+      local IntPolishInteger ;
+      if [ ${IntPolishBool:=0} -eq 0 ] ; then 
+       ### It's a Boolean form notation 
+       StrTypeVar="Bool" ;  
+      fi 
+      
+      ### If previous test did not transform the result into Bool.
+      if [ "${StrTypeVar:=None}" == "None" ] ; then 
+       StrVarHoldTest=$( echo ${StrVarHoldTest} | sed 's/[0-9]//g' ) ;
+       IntPolishInteger=${#StrVarHoldTest} ; 
+       StrTypeVar="Int"
+      fi 
+      
+      ### If previous test did not transform the result into Int.
+      if [ "${StrTypeVar:=None}" == "None" ] ; then 
+       StrVarHoldTest=$( echo ${StrVarHoldTest} | sed 's/[A-Za-z\ ]//g'  | tr '[:graph:]' ' ' | tr '[:cntrl:]' ' ' | tr '[:punct:]' ' ' | tr '[:space:]' ' ' | sed 's/ //g' ) ;
+       IntPolisgString=${#StrVarHoldTest} ;
+       StrTypeVar="String"
+      fi 
+      
+      ### If previous test did not transform the result into String.
+      if [ "${StrTypeVar:=None}" == "None" ] ; then 
+       if [ ${IntPolishInteger:=0} -gt 0 ] ; then 
+         ### it's not number 
+         if [ ${IntPolisgString:=0} -eq 0 ] ; then 
+          ### It own couple of extra char inside and should be see as String . 
+          StrTypeVar="String" ; 
+         fi 
+       fi
+      fi 
+      if [ ${StrTypeVar:=None} == "None" ] ; then 
+       if [ ${IntPolishInteger:=0} -eq 0 ] ; then 
+        ### It's formely all number 
+        StrTypeVar="Int" ; 
+       fi
+      fi
+      
+      if [ ${StrTypeVar:=None} == "Int" ] ; then 
+       StrLcTTpl=${StrLcTTpl//__PREAMBULE__/${StrScopeType} ${StrVarNamed}=${StrVarNamedHold} ;} ; 
+      elif [ ${StrTypeVar:=None} == "String" ] ; then 
+       StrLcTTpl=${StrLcTTpl//__PREAMBULE__/${StrScopeType} ${StrVarNamed}=\"${StrVarNamedHold}\" ;} ; 
+      elif [ ${StrTypeVar:=None} == "Bool" ] ; then 
+       StrLcTTpl=${StrLcTTpl//__PREAMBULE__/${StrScopeType} ${StrVarNamed}=\"${StrVarNamedHold}\" ;} ; 
+      else
+       ### Kept as String .
+       StrLcTTpl=${StrLcTTpl//__PREAMBULE__/${StrScopeType} ${StrVarNamed}=\"${StrVarNamedHold}\" ;} ;  
+      fi  
+     else 
+      StrLcTTpl=${StrLcTTpl//__PREAMBULE__/${StrScopeType} ${StrVarNamed}=\"${StrVarNamedHold}\" ;} ; 
+     fi 
+     
+     
+    fi 
+  else
+    ### This section exist only because BVTestIsPreambule=False allow to completely remove the 
+    ### preambule. Having work around like using IntDefautlType=[1,2,3,4] can remove the 
+    ### preambule and we are out of problem... Not so clean and some efforts are trying to 
+    ### resolve 
+    StrLcTTpl=${StrLcTTpl//__PREAMBULE__/} ; 
+  fi
+  if [ ${IntDefautlType} -eq 0 ] ; then  
+   StrLcTTpl=${StrLcTTpl//__IF_PATTERN__/${StrIfPattern} ; then} ; 
+  elif [ ${IntDefautlType} -eq 1 ] ; then  
+   StrLcTTpl=${StrLcTTpl//__IF_PATTERN__/${StrIfPattern} ; then} ; 
+  elif [ ${IntDefautlType} -eq 2 ] ; then  
+   StrLcTTpl=${StrLcTTpl//__IF_PATTERN__/${StrIfPattern} ; then} ; 
+  elif [ ${IntDefautlType} -eq 3 ] ; then  
+   StrLcTTpl=${StrLcTTpl//__IF_PATTERN__/${StrIfPattern} ; then} ; 
+  elif [ ${IntDefautlType} -eq 4 ] ; then  
+   StrLcTTpl=${StrLcTTpl//__IF_PATTERN__/${StrIfPattern} ; then} ; 
+  elif [ ${IntDefautlType} -eq 5 ] ; then  
+   StrLcTTpl=${StrLcTTpl//__IF_PATTERN__/} ; 
+  fi
+  
+  StrLcTTpl=${StrLcTTpl//__START_TEST__/${ArrayTestSection[0]}} ; 
+  StrLcTTpl=${StrLcTTpl//__END_TEST__/${ArrayTestSection[1]}} ; 
+  ### Uses of Array BVTestType 
+  ### index of operation : 
+  ### 0 -> if:fi,
+  ### 1 -> if:elif,
+  ### 2 -> elif:elif,
+  ### 3 -> elif:else,
+  ### 4 -> if:else,
+  ### 5 -> else:fi
+  ### Exception in case IntDefautlType=4 for Imbrication of if, we need to 
+  ### suppress the StrDefaultEndTest or provide a return caracter to allow 
+  ### to fill second declaration of BoolVarTestVarCreation with state 
+  ### IntDefautlType=4 , Supply a first level if/else 
+  if [ ${IntDefautlType} -eq 1 ] ; then 
+   StrLcTTpl=${StrLcTTpl//__END_MARK__/} ; 
+  elif [ ${IntDefautlType} -eq 2 ] ; then 
+   StrLcTTpl=${StrLcTTpl//__END_MARK__/} ; 
+  elif [ ${IntDefautlType} -eq 3 ] ; then 
+   StrLcTTpl=${StrLcTTpl//__END_MARK__/} ; 
+  elif [ ${IntDefautlType} -eq 4 ] ; then 
+   StrLcTTpl=${StrLcTTpl//__END_MARK__/} ; 
+  else
+   StrLcTTpl=${StrLcTTpl//__END_MARK__/${StrDefaultEndTest}} ;  
+  fi 
+  
+  
+  
+  ### 
+  ### Section We transform StrTestTemplate into 
+  ### IF 
+  ### ...
+  ### FI 
+  ### IF  
+  ### ...
+  ### ELIF 
+  ### ELIF 
+  ### ...
+  ### ELSE, 
+  ### ... --> See BVTestType for all choice made by default. It's a 2 choice 
+  ### method and don't forget, it cover only One test at the time, 
+  ### Either to not execute it after parsing you can call BoolVarTestVarCreation
+  ### many time and glueing result_BVT1 + result_BVT2 + result_BVT3
+  ### to form a complete 
+  ### 
+  ### if   +
+  ### ...  +--> Made by BVTestType=1 BoolVarTestVarCreation Stored in Var1
+  ### elif +
+  ### ...
+  ### elif +
+  ### ...  +--> Made by BVTestType=2 BoolVarTestVarCreation Stored in Var2
+  ### elif +
+  ### ...
+  ### else +
+  ### ...  +--> Made by BVTestType=5 BoolVarTestVarCreation Stored in Var3
+  ### fi   +
+  ### And A new variable NewVarTEst=${Var1}${Var2}${Var3} will hold the entire 
+  ### test ...
+  ### Notice there is odd sequence where the last line of your test SHOULD
+  ### END with FI, like BVTestType=4 BoolVarTestVarCreation
+  ### with if-else marker. This Boolean test does include a TAG named __END_MARK__
+  ### with help you changing it for a 'fi' or either a semi-colon ';' 
+  ### See BVTestConclude where is default is semi-colon ';', but may old
+  ### value like BVTestConclude='fi ;' , BVTestConclude='fi'   
+ 
+  local StrMsg="\nFunction ${__call_locality[1]}, Display Result:\n ${StrLcTTpl}\n" ; 
+  VerbState=${IsDisplayIfStatement} VerbDev=/dev/stderr VerbMsg=${StrMsg} Verbosis
+  echo -ne "${StrLcTTpl}" ; 
+
+  
+ }
+
+  
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+			GetVarReference ${__call_locality[1]} ; 
+			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+		echo -ne """${ArgGet}\n""" ;
+	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+		eval $( __GetVarReferenceList ) ;
+ elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  eval $( VTVValueEntry=${StrVarListTransfert} \
+          VTVIsValueReAssign=True              \ 
+          VTVIsValueToConvert=False            \
+          VTVIsArrayStyleInsert=True           \
+          ValueToVariable ) __main_StartServices 
  fi
  
 }
