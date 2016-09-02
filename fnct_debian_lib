@@ -1002,7 +1002,13 @@ __END_TEST__ __END_MARK__ """ ;
    StrLcTTpl=${StrLcTTpl//__ASRT_VAR_VALUE__/${StrNotAsserted}} ;
   fi 
   
-  if [ "${IsPreambule:=True}" == "True" ] ; then 
+  if [ "${IsPreambule:=True}" == "False" ] ; then 
+   ### This section exist only because BVTestIsPreambule=False allow to completely remove the 
+   ### preambule. Having work around like using IntDefautlType=[1,2,3,4] can remove the 
+   ### preambule and we are out of problem... Not so clean and some efforts are trying to 
+   ### resolve 
+   StrLcTTpl=${StrLcTTpl//__PREAMBULE__/} ; 
+  else
     if [ "${IsTypePreamb:=False}" == "True" ] ; then 
      StrLcTTpl=${StrLcTTpl//__PREAMBULE__/${StrVTRPrbTpl}} ; 
      StrLcTTpl=${StrLcTTpl//__VAR_ENTRY_PRE__/${StrVTRPrbVar}} ; 
@@ -1012,10 +1018,18 @@ __END_TEST__ __END_MARK__ """ ;
      ### 2016-08-29, require a ';' at the end of a command or an error will occur 
      ### after the preambule or near the end after assertion
      StrLcTTpl=${StrLcTTpl//__FNCT_PRE__/${StrVTRPrbVTFnct} ; } ; 
+    ### Second clause of if-"${IsTypePreamb:=False}" == "True"
+    ### here stil in "${IsPreambule:=True}" == "True"
     else
      ### Missing, Initially we have defined here some Polish notation and we 
      ### don't have any test related to Integer, String and so forth... 
-     if [ ${IsPreambulePolNtRespt:=True} == "True" ] ; then 
+     if [ ${IsPreambulePolNtRespt:=True} == "False" ] ; then 
+      StrLcTTpl=${StrLcTTpl//__PREAMBULE__/${StrScopeType} ${StrVarNamed}=\"${StrVarNamedHold}\" ;} ; 
+      ### end of second clause of if [ ${IsPreambulePolNtRespt:=True} == "True"
+      ### here, still in "${IsTypePreamb:=False}" == "True"
+      ### here, on side of ${IsPreambulePolNtRespt:=True} == "False"
+     ### Reverted condition to  put least part of code first. 
+     else 
       ### To Qualify all test we do Made a First variable StrTypeVar ; Will hold 
       ### the conclusion into
       ### following answer form ( Bool / Int / String ) ; 
@@ -1065,6 +1079,9 @@ __END_TEST__ __END_MARK__ """ ;
       if [ ${IntPolishBool:=0} -eq 0 ] ; then 
        ### It's a Boolean form notation 
        StrTypeVar="Bool" ;  
+       ### end of if-${IntPolishBool:=0} -eq 0
+       ### here, still in "${IsTypePreamb:=False}" == "True"
+       ### here, still in ${IsPreambulePolNtRespt:=True} == "True"
       fi 
       
       ### If previous test did not transform the result into Bool.
@@ -1072,6 +1089,9 @@ __END_TEST__ __END_MARK__ """ ;
        StrVarHoldTest=$( echo ${StrVarHoldTest} | sed 's/[0-9]//g' ) ;
        IntPolishInteger=${#StrVarHoldTest} ; 
        StrTypeVar="Int"
+       ### end of if-"${StrTypeVar:=None}" == "None"
+       ### here, still in "${IsTypePreamb:=False}" == "True"
+       ### here, still in ${IsPreambulePolNtRespt:=True} == "True"
       fi 
       
       ### If previous test did not transform the result into Int.
@@ -1079,6 +1099,9 @@ __END_TEST__ __END_MARK__ """ ;
        StrVarHoldTest=$( echo ${StrVarHoldTest} | sed 's/[A-Za-z\ ]//g'  | tr '[:graph:]' ' ' | tr '[:cntrl:]' ' ' | tr '[:punct:]' ' ' | tr '[:space:]' ' ' | sed 's/ //g' ) ;
        IntPolisgString=${#StrVarHoldTest} ;
        StrTypeVar="String"
+       ### end of if-"${StrTypeVar:=None}" == "None" 
+       ### here, still in "${IsTypePreamb:=False}" == "True"
+       ### here, still in ${IsPreambulePolNtRespt:=True} == "True"
       fi 
       
       ### If previous test did not transform the result into String.
@@ -1090,12 +1113,19 @@ __END_TEST__ __END_MARK__ """ ;
           StrTypeVar="String" ; 
          fi 
        fi
+      ### end of if-"${StrTypeVar:=None}" == "None"
+      ### here, still in "${IsTypePreamb:=False}" == "True"
+      ### here, still in ${IsPreambulePolNtRespt:=True} == "True"
       fi 
+      
       if [ ${StrTypeVar:=None} == "None" ] ; then 
        if [ ${IntPolishInteger:=0} -eq 0 ] ; then 
         ### It's formely all number 
         StrTypeVar="Int" ; 
        fi
+      ### end of if-${StrTypeVar:=None} == "None"
+      ### here, still in "${IsTypePreamb:=False}" == "True"
+      ### here, still in ${IsPreambulePolNtRespt:=True} == "True"
       fi
       
       if [ ${StrTypeVar:=None} == "Int" ] ; then 
@@ -1104,22 +1134,24 @@ __END_TEST__ __END_MARK__ """ ;
        StrLcTTpl=${StrLcTTpl//__PREAMBULE__/${StrScopeType} ${StrVarNamed}=\"${StrVarNamedHold}\" ;} ; 
       elif [ ${StrTypeVar:=None} == "Bool" ] ; then 
        StrLcTTpl=${StrLcTTpl//__PREAMBULE__/${StrScopeType} ${StrVarNamed}=\"${StrVarNamedHold}\" ;} ; 
+      ### end of N-clause of if ${StrTypeVar:=None} == "Int"
+      ### here, still in "${IsTypePreamb:=False}" == "True"
+      ### here, still in ${IsPreambulePolNtRespt:=True} == "True"
       else
        ### Kept as String .
        StrLcTTpl=${StrLcTTpl//__PREAMBULE__/${StrScopeType} ${StrVarNamed}=\"${StrVarNamedHold}\" ;} ;  
+      ### end of if-${StrTypeVar:=None} == "Int"
+      ### here, still in "${IsTypePreamb:=False}" == "True"
+      ### here, still in ${IsPreambulePolNtRespt:=True} == "True"
       fi  
-     else 
-      StrLcTTpl=${StrLcTTpl//__PREAMBULE__/${StrScopeType} ${StrVarNamed}=\"${StrVarNamedHold}\" ;} ; 
+     # end of if-${IsPreambulePolNtRespt:=True} == "True"
+     ### After this ${IsPreambulePolNtRespt:=True} == "False"
      fi 
      
-     
-    fi 
-  else
-    ### This section exist only because BVTestIsPreambule=False allow to completely remove the 
-    ### preambule. Having work around like using IntDefautlType=[1,2,3,4] can remove the 
-    ### preambule and we are out of problem... Not so clean and some efforts are trying to 
-    ### resolve 
-    StrLcTTpl=${StrLcTTpl//__PREAMBULE__/} ; 
+    ### end of else, second clause  of if "${IsTypePreamb:=False}" == "True"
+    ### after this "${IsTypePreamb:=False}" == "False" 
+    fi
+  ### end of if-"${IsPreambule:=True}" == "True" 
   fi
   if [ ${IntDefautlType} -eq 0 ] ; then  
    StrLcTTpl=${StrLcTTpl//__IF_PATTERN__/${StrIfPattern} ; then} ; 
