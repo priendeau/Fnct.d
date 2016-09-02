@@ -12,7 +12,7 @@ function ZenityPassPhrase()
 export SSH_ENV="$HOME/.ssh/environment"
 export SSH_ASKPASS="ZenityPassPhrase" 
 
-if [ ${SubSSHAgentLoader:="False"} == "True" ] ; then 
+if [ "${SubSSHAgentLoader:=False}" == "True" ] ; then 
 
 unset StartAgentSSH ; 
 function StartAgentSSH()
@@ -495,7 +495,7 @@ function GetKeyChoice()
 
 
 ### yet Another Password generator.
-if [ ${SubSSHGetPasswd:="False"} == "True" ] ; then 
+if [ "${SubSSHGetPasswd:=False}" == "True" ] ; then 
 
  unset GetPasswd ;
  function GetPasswd()    
@@ -510,6 +510,9 @@ if [ ${SubSSHGetPasswd:="False"} == "True" ] ; then
   local IntRandomSeedFactor=${GPRandomSeed:=10} ; 
   local StrPasswordTypeForm=${GPArgType:=cnsB1,cysB1,cnsyB1} ; 
   local IntPasswordType=${GPGenFormType:=0} ;
+  local BoolEvalCmdExit=${GPShowCmdEvalAndExit:=False} ; 
+  local BoolFormatOuput=${GPShowOutputFormated:=True} ;
+  local BoolDisplayFnctD=${GPShowFnctDCall:=False} ; 
   local IsAutoInstallPwgen=${GPAutoInstallDependency:=False} ; 
   local StrUrlManager=${GPDownloadManager:=/usr/bin/wget};
   local StrDebInstallMethod=${GPDebianMethodInst:=apt,gdebi}
@@ -519,9 +522,8 @@ if [ ${SubSSHGetPasswd:="False"} == "True" ] ; then
   local StrGdebiLineOpt=${GPPwgenGdebiOpt:="""--option=Get::Assume-Yes=\"true\""""} ; 
   local StrGdebiPackageName=${GPPwgenPackaName:=pwgen_2.06-1ubuntu4_amd64.deb} ; 
   local StrGdebiDownloadPack=${GPPwgenPackageURL:=http://launchpadlibrarian.net/124865523/__PACKAGE__} ;
-  local BoolEvalCmdExit=${GPShowCmdEvalAndExit:=False} ; 
   
-  local StrVarListTransfert="StrUrlGetter,BoolEvalCmdExit,StrAppsPwdGenerator,IntDefaultPwdSize,IntDefaultFactor,IntRandomSeedFactor,StrPasswordTypeForm,IntPasswordType,IsAutoInstallPwgen,StrDebInstallMethod,StrDebianInstallerType,StrAptLineCmd,StrGdebiPackageName,StrGdebiDownloadPack" ;
+  local StrVarListTransfert="BoolDisplayFnctD,StrUrlGetter,BoolEvalCmdExit,StrAppsPwdGenerator,IntDefaultPwdSize,IntDefaultFactor,IntRandomSeedFactor,StrPasswordTypeForm,IntPasswordType,IsAutoInstallPwgen,StrDebInstallMethod,StrDebianInstallerType,StrAptLineCmd,StrGdebiPackageName,StrGdebiDownloadPack" ;
   local ArrayInstalChoice=( "apt:StrAptLineCmd" "gdebi:StrGdebiLineCmd" ) ;
   local ArrayMsg=( ) 
   ArrayMsg[0]="executing following line: __CMD__"
@@ -548,9 +550,14 @@ if [ ${SubSSHGetPasswd:="False"} == "True" ] ; then
 		local StrDevOut=${VerbDev:=/dev/stderr} ; 
   local IsVerboseState=${VerbState:=False} ;
   local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+  local IsDisplayFormatted=${VerbFormated:=True} ;
 		local ArrayArg=( $* ) ; 
 		if [ "${IsVerboseState:=False}" == "True" ] ; then 
-			echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+   if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+     echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+   else
+     echo -ne "${StrMsg}\n" > ${StrDevOut} ;
+   fi 
 		fi
 	}
  ### Model : VerbHeader="DEBUG" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbState=True Verbosis
@@ -598,7 +605,7 @@ if [ ${SubSSHGetPasswd:="False"} == "True" ] ; then
      StrMsg=${StrMsg//__MANAGER__/${StrPairLeft}} ;
      StrMsg=${StrMsg//__CMD__/${StrParserCmd}} ;
      VerbHeader="INSTALL" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbState=True Verbosis ;
-     eval ${StrParserCmd} ; 
+     eval "${StrParserCmd}" ; 
     elif [ "${StrPairLeft}" == ${ArrayInstForm[1]} ] ; then 
      StrMsg=$( GetPasswd --get ArrayMsg[2] );
      StrMsg=${StrMsg//__MANAGER__/${StrPairLeft}} ;
@@ -625,17 +632,22 @@ if [ ${SubSSHGetPasswd:="False"} == "True" ] ; then
    local ArrayArg=( $* ) ; 
    local Arg0=${ArrayArg[0]} ;
    local StrMsg ;
-   local x=0;
    StrMsg=$( GetPasswd --get ArrayMsg[3] ) ;
    StrMsg=${StrMsg//__FACTOR__/${factor}} ; 
    VerbHeader="GetPasswd" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbState=True Verbosis ;
    local value ; 
-   while [ ${x} -ne ${factor} ] ; do 
+   local intx=0;
+   while [ ${intx} -ne ${factor} ] ; do 
     value=$( ${StrAppsPwdGenerator} ${StrPwGenFormPassword} ${IntDefaultPwdSize} );
-    let x=$x+1 ; 
+    intx=$(( ${intx} + 1 )) ; 
    done ; 
    StrMsg="${value}" ; 
-   VerbHeader="GetPasswd" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbState=True Verbosis ;
+   if [ "${BoolFormatOuput:=False}" == "True" ] ; then 
+    VerbHeader="" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbState=True Verbosis ;
+   else
+    VerbHeader="GetPasswd" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbState=True VerbFormated=False Verbosis ;
+   fi 
+   
 
   }
   
@@ -663,16 +675,16 @@ if [ ${SubSSHGetPasswd:="False"} == "True" ] ; then
    if [ ! -e ${StrAppsPwdGenerator} ] ; then 
      eval $( BVTestVarHold='' \
        BVTestBoolVarName=\${IsAutoInstallPwgen:=False}  \
-       BVTestBoolCase=True               \
-       BVTestBoolAssertion=''            \
-       BVTestIsPreambule=False           \
-       BVTestScopeTest=local             \
-       BVTestVTVVarA=${StrListVar}       \
-       BVTestVTFnctA=AutoInstallPackage  \
-       BVTestIsValueToVar=True           \
-       BVTestIsValueToVarAssert=True     \
-       BVTestDisplayIf=False             \
-       BoolVarTestVarCreation            )
+       BVTestBoolCase=True                 \
+       BVTestBoolAssertion=''              \
+       BVTestIsPreambule=False             \
+       BVTestScopeTest=local               \
+       BVTestVTVVarA=${StrListVar}         \
+       BVTestVTFnctA=AutoInstallPackage    \
+       BVTestIsValueToVar=True             \
+       BVTestIsValueToVarAssert=True       \
+       BVTestDisplayIf=${BoolDisplayFnctD} \
+       BoolVarTestVarCreation              )
    fi  
    
    if [ ! -e ${StrAppsPwdGenerator} ] ; then 
@@ -681,7 +693,7 @@ if [ ${SubSSHGetPasswd:="False"} == "True" ] ; then
     VerbHeader="PWGEN" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbState=True Verbosis
    else 
     local ArrayFormPassword=( ${StrPasswordTypeForm//,/ } ) ;
-    local StrPwGenFormPassword=-${ArrayFormPassword[${IntPasswordType}]} ;
+    local StrPwGenFormPassword="-${ArrayFormPassword[${IntPasswordType}]}" ;
     local end=${IntDefaultFactor} ; 
     local factor=$(( ${end} * $(( ( ${RANDOM} % ${IntRandomSeedFactor} ) + 1 )) )) ; 
     
@@ -694,22 +706,20 @@ if [ ${SubSSHGetPasswd:="False"} == "True" ] ; then
     local StrDisplayCmd="""${StrCmdPwdEval}""" ; 
     
     ### Decide to display the command-line and exit or do the work. 
-    eval $( BVTestVarHold=''           \
-     BVTestVTVVar=${StrVarListTransfert}       \
-     BVTestVTFnct=__Display            \
+    eval $( BVTestVarHold=''                \
+     BVTestVTVVar=${StrVarListTransfert}    \
+     BVTestVTFnct=__Display                 \
      BVTestBoolVarName=\${BoolEvalCmdExit:=False}  \
-     BVTestBoolCase=False              \
-     BVTestBoolAssertion=''            \
-     BVTestIsPreambule=True            \
-     BVTestScopeTest=local             \
-     BVTestVTVVarA=${StrVarListTransfert}       \
-     BVTestVTFnctA=__Loop              \
-     BVTestIsValueToVar=True           \
-     BVTestIsValueToVarAssert=True     \
-     BVTestDisplayIf=False             \
-     BoolVarTestVarCreation            )
-     
-
+     BVTestBoolCase=False                   \
+     BVTestBoolAssertion=''                 \
+     BVTestIsPreambule=True                 \
+     BVTestScopeTest=local                  \
+     BVTestVTVVarA=${StrVarListTransfert}   \
+     BVTestVTFnctA=__Loop                   \
+     BVTestIsValueToVar=True                \
+     BVTestIsValueToVarAssert=True          \
+     BVTestDisplayIf=${BoolDisplayFnctD}    \
+     BoolVarTestVarCreation                 )
    fi
      
   }
