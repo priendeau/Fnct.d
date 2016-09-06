@@ -17,6 +17,11 @@ from FnctDExpection import ( PrefixFunctionOperationtypeExeption ,
                              RSAPathExeption,
                              RSAPathWarning ) 
 
+### Importing Sqlite/Sqlobject Database object to receive GetUUID registration
+### on voluntary application asking for a registration.
+
+from getUUID import Application
+from getUUID import FKGetUUID
 
 class SSHFunctionController( recvline.HistoricRecvLine ):
 
