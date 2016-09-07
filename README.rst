@@ -3001,6 +3001,7 @@ While elaborating this backup-storyboard in late 2012 during first draft of fnct
 
 .. code:: shell
 
+ ...
 ###  
 ###  Application Box:
 ###  +GetterByLineData+----------------------------------------+
