@@ -2999,6 +2999,8 @@ A backup-storyboard... is Incremental awarness made by many application shelve t
 
 While elaborating this backup-storyboard in late 2012 during first draft of fnct_lib for development of UpdateSquashFS, set of tools was developped to update a btrfs tree with possibility to update the SquashFS 4Gb or 8Gb boosted parameter by re-wrinting the usb-disk-writer to accept higher value ; an update of squahfs pivot was bringing too much cpu time until I do realize fuse-fs stack a common socket-file was not ignored and being put inside the squashfs device with all the command. Some update were made to develop a so similar GetterByLineData application this one failed for problems of Stdout output during _func_eval_cmd and producing error... A this moment the primary version of fnct_lib did not handle the output individully and was not possible to make-it appart... In one word, the Ubuntu 10 was holding on arch 64 bit and working on a 16Gb partition to practice a pivot of 8 Gb after update. A Somewhat StackSpace , DblSpace like microsoft did for version msdos 6.02 and beyond that merely did not work for having same problems called file/buffer memory being a disk section being not ignored and slowing the dblspace... 
 
+.. code:: shell
+
 
 Application Box:
 +GetterByLineData+----------------------------------------+
@@ -3047,6 +3049,9 @@ Overlayed Pragmatic Function.
 -----------------------------
  
 OPF, or Overlayed Pragmatic function are an atomic state of a function. While we are commonly drawing function based on lifetime, its intrinsic action are becoming overlayed if they are requested uring theirs execution.  An Non Overlayed Finite Function is also a Getter in a function and are commonly getting Finite and static result. Even enforcing the getter objectivity to answer to a parsing rules to exchange Tag into variable result it's an action within Non Overlayed Finite Function and result will still being the same if it's calling twice to get the same result. A Overlayed Pragmatic function is dressed like Cumulating layers where this example GetterByLineData had MAster layer being function GetFile it comonly the main function being called every time we do query a part or the whole file. 
+
+.. code:: shell
+
 
 Application Box:
 +GetterByLineData+----------------------------------------------------+
