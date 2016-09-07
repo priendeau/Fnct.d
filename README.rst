@@ -2972,6 +2972,106 @@ This line allow transmission of the Number of record being taked back inside the
 So Overflowing to correct value are not A setter definition but Acute design to transfert the finite informations into this application where finally hold the correct informations du to a correct procedure. We also know it can not change until you change from another file. But we do agree by calling main function GetListRec will definitively change the content of IntNbRec is changed and because GetNbRec will be called many times the function has it type re-defining existing and allowing the rest of the application to work with correct informations. 
 
 
+:Note: 2953b00a-749e-11e6-8b1d-001e4c8856d6
+:Title: Well compromised Recurrent function for low-use of stdout for variable transfert use. 
+:Function: GetterByLineData
+:Structural: Nested function-call & overlayed pragmatic function.
+
+Nested function-call
+--------------------
+
+Notice : 
+Note reference : 2953b00a-749e-11e6-8b1d-001e4c8856d6
+- Well compromised Recurrent function for low-use of stdout for variable transfert use. 
+
+MdCd is an important tool and test-case to establish a datafile merely recognized like 
+low-level certificate. This application create path, put templated structure of important 
+file for your services . The default behavior is described by this box
+
+Using Mdcd becoming mainstream, after port to Mint 17.3 Rosa which is Mate distribution with core of Xenial Ubuntu, I do profit from lack of dependence to add package installer inside some application and upgrading Mdcd, by getting out the Sha1sum agent that produce a validity context after creating the Path, dunping the structure file like .gitignore MANIFEST.in, README.rst it can add many more struture depending of the file-model described own to add it to Mdcd.  Registration of the action is comming and will also have it's «Jeton» inside SSHServicesRequest . Protection of Mdcd is keep inside the main Mdcd file and require only to push the location of the lock for a precise place accessible by any to allow strict survey and avoid multiple path creation in a backup-storyboard reading. 
+
+A backup-storyboard... is Incremental awarness made by many application shelve to allow
+ - reading the structure once and updating it based on time . 
+ - Avoiding touching file recurrently to reduce access time in a network access. 
+   - Known to be important .htaccess inside webservices, a live-incremental backup with 
+     high priority on backuping change of .htaccess / .htpassword can lock the access to
+     it and slowing the services respond. 
+
+While elaborating this backup-storyboard in late 2012 during first draft of fnct_lib for development of UpdateSquashFS, set of tools was developped to update a btrfs tree with possibility to update the SquashFS 4Gb or 8Gb boosted parameter by re-wrinting the usb-disk-writer to accept higher value ; an update of squahfs pivot was bringing too much cpu time until I do realize fuse-fs stack a common socket-file was not ignored and being put inside the squashfs device with all the command. Some update were made to develop a so similar GetterByLineData application this one failed for problems of Stdout output during _func_eval_cmd and producing error... A this moment the primary version of fnct_lib did not handle the output individully and was not possible to make-it appart... In one word, the Ubuntu 10 was holding on arch 64 bit and working on a 16Gb partition to practice a pivot of 8 Gb after update. A Somewhat StackSpace , DblSpace like microsoft did for version msdos 6.02 and beyond that merely did not work for having same problems called file/buffer memory being a disk section being not ignored and slowing the dblspace... 
+
+
+Application Box:
++GetterByLineData+----------------------------------------+
+|                                                         |
+|                                                         |
+|Tree Order :                                             |
+|                                                         |
+|                                                         |
+|           +----------------+GetHeader                   |
+|GetFile+--+FileSplitAction                               |
+|           +----------------+GetContent                  |
+|                            |                            |
+|                            +-----------ShaSum1Content   |
+|                                                         |
++---------------------------------------------------------+
+  
+Major Function coming with the Application :
+Are all accessible thru GBLDAction where :
+ 
+GetFile ---->Throw the whole content of the file
+             GetFile is also First Order in the Execution.
+ 
+GetHeader ----> Most of file are 2 lines height, Being a text-format of 
+                2 lines, the lenght can be illimited for second one...
+                In this case we have put the SHA1SUM of the content to
+                proove the content in second line is safe and can be trusted.
+  
+ 
+ 
+GetContent ---> Get the content of second-text field. 
+
+FileSplitAction ---> The intermediate action preceding GetHeader and GetFile
+
+ShaSum1Content ----> The result of GetContent. 
+ 
+ 
+- A tiny lexic appear by using ShaSum1Content and require to Call GetContent,
+ 
+while this one query-back FileSplitAction that take GetFile. During the call of this structure, no varaible are query thru the stdout and are queryed thru Getter by using the mechanism of GetterByLineData --get ... Even Text Message are Array of Text a the root level of the GetterByLineData. 
+
+ 
+Note: reference file 0f86b448-72f4-11e6-8b1d-001e4c8856d6 a un-approved chunk file will be acknoledged by ZenityFileEditor, but still require some work before frozing the integrity. GetterByLineData Also work with function call and external function call alike ZenityStructure can borought the GetterByLineData structure to replace the footprint of chunk developement. 
+ 
+
+Overlayed Pragmatic Function.
+-----------------------------
+ 
+OPF, or Overlayed Pragmatic function are an atomic state of a function. While we are commonly drawing function based on lifetime, its intrinsic action are becoming overlayed if they are requested uring theirs execution.  An Non Overlayed Finite Function is also a Getter in a function and are commonly getting Finite and static result. Even enforcing the getter objectivity to answer to a parsing rules to exchange Tag into variable result it's an action within Non Overlayed Finite Function and result will still being the same if it's calling twice to get the same result. A Overlayed Pragmatic function is dressed like Cumulating layers where this example GetterByLineData had MAster layer being function GetFile it comonly the main function being called every time we do query a part or the whole file. 
+
+Application Box:
++GetterByLineData+----------------------------------------------------+
+|                                                                     |
+|                                                                     |
+|Layer  ------------> Give Attribute to get Whole file                |
+|GetFile  +-----------------------------------------------------------+-----+
+|         |  Layer                                                    |     |
+|         |  FileSplitAction ----> Give Attribute of decision to split|     |
+|         |                        the file                           |     |
+|         |             +---------------------------------------------+-----+------+
+|         |  +----------|-----+GetHeader   Layer                      |     |      |
+|GetFile+-++FileSplitAction                GetXXXXX                   |     |      |
+|         |  +----------|-----+GetContent   +---> On Part we do trans-|     |      |
+|         |             |     |                   form into result    |     |      |
+|         |             |     |        +---------------------------+  |     |      |
+|         |             |     +--------+--ShaSum1Content           |  |     |      |
+|         |             |              |  Layer With one section   |  |     |      |
+|         |             |              |  we do Apply a Sha1Sum    |  |     |      |
++---------+-------------+--------------+---------------------------+--+     |      |
+          |             |              |                           |        |      |
+          |             |              +---------------------------+        |      |
+          +-------------+---------------------------------------------------+      |
+                        |                                                          |
+                        +----------------------------------------------------------+
 
 ------
 	Setter
