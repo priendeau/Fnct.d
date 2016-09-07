@@ -2739,7 +2739,32 @@ Here also the latest Helper for this function.
  	--startservices	Start the application normally.
  	--get		Return value of Internal Variable.
  	--list		List all Internal Pre-fixed Variable available to query or get.
-		 
+
+Here we do show the sample code of this application making choice between displaying the command and not executing the application and executing it and correctly answer to Pre-fixed var assigned by calling GetPasswd 
+
+.. code:: shell
+
+   if [ ! -e ${StrAppsPwdGenerator} ] ; then 
+    StrMsg=$( GetPasswd --get ArrayMsg[5] );
+    StrMsg=${StrMsg//__APPS__/${StrAppsPwdGenerator}} ; 
+    VerbHeader="PWGEN" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbState=True Verbosis
+   else 
+    local ArrayFormPassword=( ${StrPasswordTypeForm//,/ } ) ;
+    local StrPwGenFormPassword="-${ArrayFormPassword[${IntPasswordType}]}" ;
+    local end=${IntDefaultFactor} ; 
+    local factor=$(( ${end} * $(( ( ${RANDOM} % ${IntRandomSeedFactor} ) + 1 )) )) ; 
+    
+    local value="" ;
+    ### 
+    ### Password Line execution ( needed both in display and Loop command. )
+    ### 
+    local StrCmdPwdEval="""StrAppsPwdGenerator=${StrAppsPwdGenerator} StrPwGenFormPassword=${StrPwGenFormPassword} IntDefaultPwdSize=${IntDefaultPwdSize}""" ; 
+    local StrLoopCmd="""${StrCmdPwdEval} factor=\${factor}""" ; 
+    local StrDisplayCmd="""${StrCmdPwdEval}""" ; 
+    
+    ### Decide to display the command-line and exit or do the work. 
+    eval $( BVTestVarHold='' BVTestVTVVar=${StrVarListTransfert} BVTestVTFnct=__Display BVTestBoolVarName=\${BoolEvalCmdExit:=False} BVTestBoolCase=False BVTestBoolAssertion='' BVTestIsPreambule=True BVTestScopeTest=local BVTestVTVVarA=${StrVarListTransfert} BVTestVTFnctA=__Loop BVTestIsValueToVar=True BVTestIsValueToVarAssert=True BVTestDisplayIf=${BoolDisplayFnctD} ${StrFnctDSvrBVTVC} ) ;
+   fi		 
 		 
 Declaring Switches Helper inside function
 -----------------------------------------
