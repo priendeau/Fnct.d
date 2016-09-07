@@ -2980,10 +2980,6 @@ So Overflowing to correct value are not A setter definition but Acute design to 
 Nested function-call
 --------------------
 
-Notice : 
-Note reference : 2953b00a-749e-11e6-8b1d-001e4c8856d6
-- Well compromised Recurrent function for low-use of stdout for variable transfert use. 
-
 MdCd is an important tool and test-case to establish a datafile merely recognized like 
 low-level certificate. This application create path, put templated structure of important 
 file for your services . The default behavior is described by this box
