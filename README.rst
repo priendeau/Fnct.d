@@ -2678,6 +2678,67 @@ __GetVarReferenceCompWord, __GetVarReferenceList.
             __main_StartServices ; 
            fi
           }
+
+Adding Prefixed-Variable to display Fnct.D lib member displaying result.
+------------------------------------------------------------------------
+
+Complexe function like BoolVarTestVarCreation may sometime be itchy and all alone it may compromise code execution. A Case Specifying a command line of the generated password command was fixed by displaying the BoolVarTestVarCreation by fixing GPShowFnctDCall a Pre-Fixed variable of GetPasswd allowing to push a True value inside all BoolVarTestVarCreation used inside. Also, developping a neat BoolVarTestVarCreation an alternative called _BoolVarTestVarCreation is used and GetPasswd have grow in size after adding the package auto-installer based on apt-get and gdebi. They own enought stuff to make he switch and observe different BoolVarTestVarCreation reaction. Since I do detecting minor problems inside BoolVarTestVarCreation, this function is elected by adding another prefixed-var named 
+
+	
+.. code:: shell
+
+ user@UnderscoreXDevlpt Fnct.D $ GPBVTVCName=_BoolVarTestVarCreation GetPasswd
+
+
+Here also the latest Helper for this function.
+
+.. code:: shell
+
+ Help:
+
+ Function GetPasswd	
+ Default Variable Value:
+ Variable GPAppsGen ,
+ 	Default Value:"/usr/bin/pwgen"
+ Variable GPSize ,
+ 	Default Value:16
+ Variable GPFactor ,
+ 	Default Value:1000
+ Variable GPRandomSeed ,
+ 	Default Value:10
+ Variable GPArgType ,
+ 	Default Value:cnsB1,cysB1,cnsyB1
+ Variable GPGenFormType ,
+ 	Default Value:0
+ Variable GPShowCmdEvalAndExit ,
+ 	Default Value:False
+ Variable GPShowOutputFormated ,
+ 	Default Value:True
+ Variable GPShowFnctDCall ,
+ 	Default Value:False
+ Variable GPAutoInstallDependency ,
+ 	Default Value:False
+ Variable GPDownloadManager ,
+ 	Default Value:/usr/bin/wget
+ Variable GPDebianMethodInst ,
+ 	Default Value:apt,gdebi
+ Variable GPPwGenPackager ,
+ 	Default Value:0
+ Variable GPPwgenAptCmd ,
+ 	Default Value:sudo apt-get install pwgen
+ Variable GPPwgenGdebiCmd ,
+ 	Default Value:sudo gdebi __OPTION__ __PACKAGE__
+ Variable GPPwgenGdebiOpt ,
+ 	Default Value:"""--option=Get::Assume-Yes="true""""
+ Variable GPPwgenPackaName ,
+ 	Default Value:pwgen_2.06-1ubuntu4_amd64.deb
+ Variable GPPwgenPackageURL ,
+ 	Default Value:http://launchpadlibrarian.net/124865523/__PACKAGE__
+ Following switch are available:
+ 
+ 	--startservices	Start the application normally.
+ 	--get		Return value of Internal Variable.
+ 	--list		List all Internal Pre-fixed Variable available to query or get.
 		 
 		 
 Declaring Switches Helper inside function
