@@ -508,7 +508,7 @@ unset __GetVarReferenceCompWord ;
 ### be acknoledged by ZenityFileEditor, but still require some work before frozing the
 ### integrity. GetterByLineData Also work with function call and external function call
 ### alike ZenityStructure can borought the GetterByLineData structure to replace the 
-### footprint fo chunk developement. 
+### footprint of chunk developement. 
 ### 
 unset GetterByLineData ; 
 function GetterByLineData()
