@@ -2993,7 +2993,7 @@ Using Mdcd becoming mainstream, after port to Mint 17.3 Rosa which is Mate distr
 A backup-storyboard... is Incremental awarness made by many application shelve to allow
  - reading the structure once and updating it based on time . 
  - Avoiding touching file recurrently to reduce access time in a network access. 
-  - Known to be important .htaccess inside webservices, a live-incremental backup with high priority on backuping change of .htaccess / .htpassword can lock the access to it and slowing the services respond. 
+   - Known to be important .htaccess inside webservices, a live-incremental backup with high priority on backuping change of .htaccess / .htpassword can lock the access to it and slowing the services respond. 
 
 ::
 
