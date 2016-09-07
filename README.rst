@@ -335,6 +335,8 @@ Since Tuesday 16 august 2016, Twisted module had come out, magically for my firs
   
 .. |twisted| image:: https://raw.githubusercontent.com/priendeau/Fnct.d/master/images/Twisted.png
  :scale: 15%
+ :target: http://bit.ly/XSARm5
+ :align: right
  
 Description
 ===========
