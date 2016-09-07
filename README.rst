@@ -2993,9 +2993,7 @@ Using Mdcd becoming mainstream, after port to Mint 17.3 Rosa which is Mate distr
 A backup-storyboard... is Incremental awarness made by many application shelve to allow
  - reading the structure once and updating it based on time . 
  - Avoiding touching file recurrently to reduce access time in a network access. 
-   - Known to be important .htaccess inside webservices, a live-incremental backup with 
-     high priority on backuping change of .htaccess / .htpassword can lock the access to
-     it and slowing the services respond. 
+   - Known to be important .htaccess inside webservices, a live-incremental backup with high priority on backuping change of .htaccess / .htpassword can lock the access to it and slowing the services respond. 
 
 While elaborating this backup-storyboard in late 2012 during first draft of fnct_lib for development of UpdateSquashFS, set of tools was developped to update a btrfs tree with possibility to update the SquashFS 4Gb or 8Gb boosted parameter by re-wrinting the usb-disk-writer to accept higher value ; an update of squahfs pivot was bringing too much cpu time until I do realize fuse-fs stack a common socket-file was not ignored and being put inside the squashfs device with all the command. Some update were made to develop a so similar GetterByLineData application this one failed for problems of Stdout output during _func_eval_cmd and producing error... A this moment the primary version of fnct_lib did not handle the output individully and was not possible to make-it appart... In one word, the Ubuntu 10 was holding on arch 64 bit and working on a 16Gb partition to practice a pivot of 8 Gb after update. A Somewhat StackSpace , DblSpace like microsoft did for version msdos 6.02 and beyond that merely did not work for having same problems called file/buffer memory being a disk section being not ignored and slowing the dblspace... 
 
