@@ -330,8 +330,8 @@ Since Tuesday 16 august 2016, Twisted module had come out, magically for my firs
 +-------+-------------------------+
 | .. https://raw.githubusercontent.com/priendeau/Fnct.d/master/images/Twisted.png | "[Twisted logo]" footnote  |
 +
-| Used in python/SSHServices-request.py
-+------------------------------+
+ | Used in python/SSHServices-request.py
+ +------------------------------+
  
 
 Description
