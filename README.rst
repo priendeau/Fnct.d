@@ -3002,20 +3002,21 @@ While elaborating this backup-storyboard in late 2012 during first draft of fnct
 .. code:: shell
 
 
-Application Box:
-+GetterByLineData+----------------------------------------+
-|                                                         |
-|                                                         |
-|Tree Order :                                             |
-|                                                         |
-|                                                         |
-|           +----------------+GetHeader                   |
-|GetFile+--+FileSplitAction                               |
-|           +----------------+GetContent                  |
-|                            |                            |
-|                            +-----------ShaSum1Content   |
-|                                                         |
-+---------------------------------------------------------+
+###  
+###  Application Box:
+###  +GetterByLineData+----------------------------------------+
+###  |                                                         |
+###  |                                                         |
+###  |Tree Order :                                             |
+###  |                                                         |
+###  |                                                         |
+###  |           +----------------+GetHeader                   |
+###  |GetFile+--+FileSplitAction                               |
+###  |           +----------------+GetContent                  |
+###  |                            |                            |
+###  |                            +-----------ShaSum1Content   |
+###  |                                                         |
+###  +----------------------------------------------------------
   
 Major Function coming with the Application :
 Are all accessible thru GBLDAction where :
