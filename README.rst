@@ -3011,6 +3011,45 @@ A backup-storyboard... is Incremental awarness made by many application shelve t
   ignored and slowing the dblspace... 
 
 .. code:: shell
+ 
+ ###
+ ### Here the actual helper by typing GetterByLineData --help
+ ###
+ 
+ Function GetterByLineData	
+ Default Variable Value:
+ Variable GBLDTailApps ,
+ 	Default Value:/usr/bin/tail
+ Variable GBLDHeadApps ,
+ 	Default Value:/usr/bin/head
+ Variable GBLDFileStats ,
+ 	Default Value:/usr/bin/wc
+ Variable GBLDFileStatsOpt ,
+ 	Default Value:__APPS__ -c __FILE__
+ Variable GBLDTailCmd ,
+ 	Default Value:__APPS__ -n 1
+ Variable GBLDHeadCmd ,
+ 	Default Value:__APPS__ -n __INTLINE__
+ Variable GBLDFileStoreInfo ,
+ 	Default Value:None
+ Variable GBLDLineID ,
+ 	Default Value:1
+ Variable GBLDVerbose ,
+ 	Default Value:False
+ Variable GBLDAction ,
+ 	Default Value:FileSplitAction
+ Variable GBLDActionReturnError ,
+ 	Default Value:False
+ Following switch are available:
+
+ 	--startservices	Start the application normally.
+ 	--get		Return value of Internal Variable.
+ 	--list		List all Internal Pre-fixed Variable available to query or get.
+ 	--compword	Word Completion Provide a services to Extract on Demand all Pre-fixed Variable
+ 		 String inside this function.
+
+
+.. code:: shell
 
  ...
  ###  
