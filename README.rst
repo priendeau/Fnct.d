@@ -3002,22 +3002,22 @@ While elaborating this backup-storyboard in late 2012 during first draft of fnct
 .. code:: shell
 
  ...
-###  
-###  Application Box:
-###  +GetterByLineData+----------------------------------------+
-###  |                                                         |
-###  |                                                         |
-###  |Tree Order :                                             |
-###  |                                                         |
-###  |                                                         |
-###  |           +----------------+GetHeader                   |
-###  |GetFile+--+FileSplitAction                               |
-###  |           +----------------+GetContent                  |
-###  |                            |                            |
-###  |                            +-----------ShaSum1Content   |
-###  |                                                         |
-###  +----------------------------------------------------------
-  
+ ###  
+ ###  Application Box:
+ ###  +GetterByLineData+----------------------------------------+
+ ###  |                                                         |
+ ###  |                                                         |
+ ###  |Tree Order :                                             |
+ ###  |                                                         |
+ ###  |                                                         |
+ ###  |           +----------------+GetHeader                   |
+ ###  |GetFile+--+FileSplitAction                               |
+ ###  |           +----------------+GetContent                  |
+ ###  |                            |                            |
+ ###  |                            +-----------ShaSum1Content   |
+ ###  |                                                         |
+ ###  +----------------------------------------------------------
+   
 Major Function coming with the Application :
 Are all accessible thru GBLDAction where :
  
@@ -3053,31 +3053,30 @@ OPF, or Overlayed Pragmatic function are an atomic state of a function. While we
 
 .. code:: shell
 
-
-Application Box:
-+GetterByLineData+----------------------------------------------------+
-|                                                                     |
-|                                                                     |
-|Layer  ------------> Give Attribute to get Whole file                |
-|GetFile  +-----------------------------------------------------------+-----+
-|         |  Layer                                                    |     |
-|         |  FileSplitAction ----> Give Attribute of decision to split|     |
-|         |                        the file                           |     |
-|         |             +---------------------------------------------+-----+------+
-|         |  +----------|-----+GetHeader   Layer                      |     |      |
-|GetFile+-++FileSplitAction                GetXXXXX                   |     |      |
-|         |  +----------|-----+GetContent   +---> On Part we do trans-|     |      |
-|         |             |     |                   form into result    |     |      |
-|         |             |     |        +---------------------------+  |     |      |
-|         |             |     +--------+--ShaSum1Content           |  |     |      |
-|         |             |              |  Layer With one section   |  |     |      |
-|         |             |              |  we do Apply a Sha1Sum    |  |     |      |
-+---------+-------------+--------------+---------------------------+--+     |      |
-          |             |              |                           |        |      |
-          |             |              +---------------------------+        |      |
-          +-------------+---------------------------------------------------+      |
-                        |                                                          |
-                        +----------------------------------------------------------+
+ Application Box:
+ +GetterByLineData+----------------------------------------------------+
+ |                                                                     |
+ |                                                                     |
+ |Layer  ------------> Give Attribute to get Whole file                |
+ |GetFile  +-----------------------------------------------------------+-----+
+ |         |  Layer                                                    |     |
+ |         |  FileSplitAction ----> Give Attribute of decision to split|     |
+ |         |                        the file                           |     |
+ |         |             +---------------------------------------------+-----+------+
+ |         |  +----------|-----+GetHeader   Layer                      |     |      |
+ |GetFile+-++FileSplitAction                GetXXXXX                   |     |      |
+ |         |  +----------|-----+GetContent   +---> On Part we do trans-|     |      |
+ |         |             |     |                   form into result    |     |      |
+ |         |             |     |        +---------------------------+  |     |      |
+ |         |             |     +--------+--ShaSum1Content           |  |     |      |
+ |         |             |              |  Layer With one section   |  |     |      |
+ |         |             |              |  we do Apply a Sha1Sum    |  |     |      |
+ +---------+-------------+--------------+---------------------------+--+     |      |
+           |             |              |                           |        |      |
+           |             |              +---------------------------+        |      |
+           +-------------+---------------------------------------------------+      |
+                         |                                                          |
+                         +----------------------------------------------------------+
 
 ------
 	Setter
