@@ -416,6 +416,320 @@ unset __GetVarReferenceCompWord ;
 
 
 ### 
+###  Notice : 
+###  Note reference : 2953b00a-749e-11e6-8b1d-001e4c8856d6
+###  - Well compromised Recurrent function for low-use od stdout for variable transfert use. 
+###  
+###  MdCd is an important tool and test-case to establish a datafile merely recognized like 
+###  low-level certificate. This application create path, put templated structure of important 
+###  file for your services . The default behavior is described by this box
+###  
+###  Using Mdcd becoming mainstream, after port to Mint 17.3 Rosawhich is Mate distribution with
+### core of Xenial Ubuntu, I do profit from lack of dependence to add package installer inside 
+### some application and upgrading Mdcd, by getting out the Sha1sum agent that produce a validity
+### context after creating the Path, dunping the structure file like .gitignore MANIFEST.in, 
+###  README.rst it can add many more struture depending of the file-model described own to 
+###  add it to Mdcd.  Registration of the action is comming and will also have it's «Jeton» inside
+###  SSHServicesRequest . Protection of Mdcd is keep inside the main Mdcd file and require only to
+###  push the location of the lock for a precise place accessible by any to allow strict survey and 
+###  avoid multiple path creation in a backup-storyboard reading. 
+###  
+###  A backup-storyboard... is Incremental awarness made by many application shelve to allow
+###   - reading the structure once and updating it based on time . 
+###   - Avoiding touching file recurrently to reduce access time in a network access. 
+###     - Known to be important .htaccess inside webservices, a live-incremental backup with 
+###       high priority on backuping change of .htaccess / .htpassword can lock the access to
+###       it and slowing the services respond. 
+###  
+###  While elaborating this backup-storyboard in late 2012 during first draft of fnct_lib for 
+###  development of UpdateSquashFS, set of tools was developped to update a btrfs tree with 
+###  possibility to update the SquashFS 4Gb or 8Gb boosted parameter by re-wrinting the 
+###  usb-disk-writer to accept higher value ; an update of squahfs pivot was bringing too much
+###  cpu time until I do realize fuse-fs stack a common socket-file was not ignored and being
+###  put inside the squashfs device with all the command. Some update were made to develop a 
+###  so similar GetterByLineData application this one failed for problems of Stdout output 
+###  during _func_eval_cmd and producing error... A this moment the primary version of fnct_lib
+###  did not handle the output individully and was not possible to make-it appart... 
+###  In one word, the Ubuntu 10 was holding on arch 64 bit and working on a 16Gb partition to 
+###  practice a pivot of 8 Gb after update. A Somewhat StackSpace , DblSpace like microsoft did 
+###  for version msdos 6.02 and beyond that merely did not work for having same problems called 
+###  file/buffer memory being a disk section being not ignored and slowing the dblspace... 
+###  
+###  
+###  
+
+###  
+###  Application Box:
+###  +GetterByLineData+----------------------------------------+
+###  |                                                         |
+###  |                                                         |
+###  |Tree Order :                                             |
+###  |                                                         |
+###  |                                                         |
+###  |           +----------------+GetHeader                   |
+###  |GetFile+--+FileSplitAction                               |
+###  |           +----------------+GetContent                  |
+###  |                            |                            |
+###  |                            +-----------ShaSum1Content   |
+###  |                                                         |
+###  +----------------------------------------------------------
+###  
+###  Major Function coming with the Application :
+###  Are all accessible thru GBLDAction where :
+###  
+###  GetFile ---->Throw the whole content of the file
+###               GetFile is also First Order in the Execution.
+###  
+###  GetHeader ----> Most of file are 2 lines height, Being a text-format of 
+###                  2 lines, the lenght can be illimited for second one...
+###                  In this case we have put the SHA1SUM of the content to
+###                  proove the content in second line is safe and can be trusted.
+###  
+###  
+###  
+###  GetContent ---> Get the content of second-text field. 
+###  
+###  FileSplitAction ---> The intermediate action preceding GetHeader and GetFile
+###  
+###  ShaSum1Content ----> The result of GetContent. 
+###  
+###  
+###  - A tiny lexic appear by using ShaSum1Content and require to Call GetContent,
+###  
+###  while this one query-back FileSplitAction that take GetFile. During the 
+###  call of this structure, no varaible are query thru the stdout and are queryed
+###  thru Getter by using the mechanism of GetterByLineData --get ... Even Text
+###  Message are Array of Text a the root level of the GetterByLineData. 
+###  
+###  
+###  
+###  
+###  Note: reference file 0f86b448-72f4-11e6-8b1d-001e4c8856d6 a un-approved chunk file will
+### be acknoledged by ZenityFileEditor, but still require some work before frozing the
+### integrity. GetterByLineData Also work with function call and external function call
+### alike ZenityStructure can borought the GetterByLineData structure to replace the 
+### footprint fo chunk developement. 
+### 
+unset GetterByLineData ; 
+function GetterByLineData()
+{
+ local __call_locality=( GBLD GetterByLineData ) ;
+ local ArrayArg=( $* ) ; 
+ local Arg0=${ArrayArg[0]} ; 
+ local StrParentApps="${__call_locality[1]}" ;
+ local StrAppsTail=${GBLDTailApps:=/usr/bin/tail} ;
+ local StrAppsHead=${GBLDHeadApps:=/usr/bin/head} ;
+ local StrFStats=${GBLDFileStats:=/usr/bin/wc} ;
+ local StrFStatsOpt=${GBLDFileStatsOpt:=__APPS__ -c __FILE__} ;
+ local StrTailOpt=${GBLDTailCmd:=__APPS__ -n 1} ;
+ local StrHeadOpt=${GBLDHeadCmd:=__APPS__ -n __INTLINE__} ;
+ local StrFileStoreInfo=${GBLDFileStoreInfo:=None} ;
+ local IntLineId=${GBLDLineID:=1} ; 
+ local IsVerbose=${GBLDVerbose:=False} ; 
+ local StrAction=${GBLDAction:=FileSplitAction} ;
+ local IsActionReturnError=${GBLDActionReturnError:=False} ; 
+ local StrVerboseMacro="" ; 
+ local vret=0 ;
+ local StrMsg="" ; 
+ local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+ local StrVarListTransfert="StrParentApps,IntGCID,IntGHID,IsVerbose,IsActionReturnError,StrFileStoreInfo,IntLineId,Stream,StrAppsTail,StrAppsHead,StrAction,StrParentApps,StrVerbosisMacro,StrFStats,StrFStatsOpt" ; 
+ local ArrayMsg=( ) ;
+ 
+ ArrayMsg[0]="Verbose is Turned On" ; 
+ ArrayMsg[1]="File is Present, Size:__FILE_SIZE__, Name=__FILE__" ; 
+ ArrayMsg[2]="File is not Present or experiencing access restriction. File=__FILE__" ; 
+ ArrayMsg[3]="Extraction Starting from line __START_LINE__ From file __FILE__." ; 
+ ArrayMsg[4]="Cmdline Head:__CMDLINE__" ; 
+ ArrayMsg[5]="Cmdline Tail:__CMDLINE__" ; 
+ ArrayMsg[6]="Template: __CMDLINE__" ; 
+ ArrayMsg[7]="Action Does require to return a value" ; 
+ ArrayMsg[8]="Action Does not require to return a value" ; 
+ ArrayMsg[9]="CmdLine: __CMDLINE__" ; 
+ ArrayMsg[10]="Starting function __main_StartServices" ; 
+ 
+
+ function Verbosis()
+	{
+		local __call_locality=( Verbosis Verb  ) ;
+		local StrMsg=${VerbMsg:=__TEXT__} ; 
+		local StrDevOut=${VerbDev:=/dev/stderr} ; 
+  local IsVerboseState=${VerbState:=False} ;
+  local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+  local IsDisplayFormatted=${VerbFormated:=True} ;
+		local ArrayArg=( $* ) ; 
+		if [ "${IsVerboseState:=False}" == "True" ] ; then 
+   if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+     echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+   else
+     echo -ne "${StrMsg}\n" > ${StrDevOut} ;
+   fi 
+		fi
+	} 
+ ### Model : VerbHeader="DEBUG" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbFormated=True VerbState=True Verbosis
+  
+ 
+ function GetFile()
+ {
+  local __call_locality=( GF GetFile ${StrParentApps} ) ;
+  local ArrayArg=( $* ) ; 
+  local Arg0="${ArrayArg[0]}" ; 
+  local StrFile="${StrFileStoreInfo:=None}" ;
+  local StrParserFileStats="${StrFStatsOpt//__APPS__/${StrFStats}}" ; 
+  StrParserFileStats="${StrParserFileStats//__FILE__/${StrFile}}" ; 
+  StrMsg=$( ${StrParentApps} --get ArrayMsg[9] ) ; 
+  StrMsg=${StrMsg//__CMDLINE__/${StrParserFileStats}} ; 
+  VerbHeader="VERBOSE-${__call_locality[1]}" VerbMsg="${StrMsg}" VerbDev=/dev/stderr VerbFormated=True VerbState=${IsVerbose} Verbosis ; 
+  vret=0 ; 
+  if [ -f ${StrFile} ] ; then 
+    IntFileRes=$( ${StrParserFileStats} ) ;
+    IntFileSize=${IntFileRes/% [a-zA-Z0-9\/\_\-\=\"\(\)\]\[\)\(\=]*/} ;
+    StrMsg=$( ${StrParentApps} --get ArrayMsg[1] ) ; 
+    StrMsg=${StrMsg//__FILE_SIZE__/${IntFileSize}} ; 
+    StrMsg=${StrMsg//__FILE__/${StrFile}} ; 
+    VerbHeader="VERBOSE-${__call_locality[1]}" VerbMsg="${StrMsg}"  VerbDev=/dev/stderr VerbFormated=True VerbState=${IsVerbose} Verbosis ; 
+   cat ${StrFile} ; 
+   vret=0 ;   
+  else
+   StrMsg=$( ${StrParentApps} --get ArrayMsg[2] ) ;  
+   StrMsg=${StrMsg/__FILE__/${StrFile}} ; 
+   VerbHeader="VERBOSE-${__call_locality[1]}" VerbMsg="${StrMsg}" VerbDev=/dev/stderr VerbFormated=True VerbState=${IsVerbose} Verbosis ; 
+   vret=1 ; 
+  fi 
+  return ${vret}
+ }	
+	
+ function GetHeader()
+	{
+		local __call_locality=( GH GetHeader ${StrParentApps} ) ;
+		local ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]} ; 
+		local IntLineId=${IntGHId:=1} ; 
+		echo $( GBLDActionReturnError=True GBLDAction=FileSplitAction GBLDFileStoreInfo=${StrFileStoreInfo} GBLDLineID=${IntLineId} GetterByLineData	 ) ; 
+		return $? ;
+	}
+	
+	function GetContent()
+	{	
+		local __call_locality=( GC GetContent ${StrParentApps} ) ;
+		local IntLineId=${IntGCId:=2} ; 
+		echo $( GBLDActionReturnError=True GBLDAction=FileSplitAction GBLDFileStoreInfo=${StrFileStoreInfo} GBLDLineID=${IntLineId} GetterByLineData	 ) ; 
+		return $? ;
+	}
+ 
+ function FileSplitAction( )
+ {
+  local __call_locality=( FSA FileSplitAction ${StrParentApps} ) ;
+  local ArrayArg=( $* ) ;
+  local Arg0=${ArrayArg[0]} ;  
+  
+  local Stream=$( GBLDActionReturnError=True GBLDAction=GetFile GFStoreInfo=${StrFileStoreInfo} GetterByLineData ) ;
+  local vret=$? ; 
+  local StrCmdParseHead=$( ${StrParentApps} --get StrHeadOpt ) ;
+  local StrCmdParseTail=$( ${StrParentApps} --get StrTailOpt ) ;
+  local IntLineStart=$( ${StrParentApps} --get IntLineId ) ; 
+  StrMsg=$( ${StrParentApps} --get ArrayMsg[3] ) ;
+  StrMsg=${StrMsg//__START_LINE__/${IntLineStart}} ; StrMsg=${StrMsg//__FILE__/${StrFileStoreInfo}} ;   
+  VerbHeader="VERBOSE-${StrParentApps}" VerbMsg="${StrMsg}" VerbDev=/dev/stderr VerbFormated=True VerbState=${IsVerbose} Verbosis ; 
+  StrCmdParseHead=${StrCmdParseHead//__INTLINE__/${IntLineStart}} ;
+  StrCmdParseHead=${StrCmdParseHead//__APPS__/${StrAppsHead}}
+  StrCmdParseTail=${StrCmdParseTail//__APPS__/${StrAppsTail}} ; 
+  StrMsg=$( ${StrParentApps} --get ArrayMsg[4] ) ;
+  StrMsg=${StrMsg//__CMDLINE__/${StrCmdParseHead}}
+  VerbHeader="VERBOSE-${StrParentApps}" VerbMsg="${StrMsg}" VerbDev=/dev/stderr VerbFormated=True VerbState=${IsVerbose} Verbosis ; 
+  
+  StrMsg=$( ${StrParentApps} --get ArrayMsg[5] ) ;
+  StrMsg=${StrMsg//__CMDLINE__/${StrCmdParseTail}}
+
+  VerbHeader="VERBOSE-${StrParentApps}" VerbMsg="${StrMsg}" VerbDev=/dev/stderr VerbFormated=True VerbState=${IsVerbose} Verbosis ; 
+  
+  if [ ${vret:=-1} -eq 0 ] ; then 
+    echo "${Stream}" | ${StrCmdParseHead} | ${StrCmdParseTail} ;
+    return 0 ; 
+  else
+    return 1 ; 		
+  fi
+ }
+ 
+ function ShaSum1Content()
+	{
+  local __call_locality=( FSA ShaSum1Content ${StrParentApps} ) ;
+  local ArrayArg=( $* ) ;
+  local Arg0="${ArrayArg[0]}" ;  
+  local Stream=$( GBLDActionReturnError=True GBLDAction=GetContent GFStoreInfo=${StrFileStoreInfo} GetterByLineData ) ;	
+  local vret=$? ; 
+  if [ ${vret:=-1} -eq 0 ] ; then 
+    echo "${Stream}" | /usr/bin/sha1sum | /usr/bin/cut -d ' ' -f 1 ;
+    return 0 ; 
+  else
+    return 1 ; 		
+  fi
+ }
+ 
+ 
+ function __main_StartServices()
+ {
+  local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+  local ArrayArg=( $* ) ;
+  local Arg0=${ArrayArg[0]} ;  
+  
+  StrCmd="eval \$( VTVIsArrayStyleInsert=True VTVValueEntry=__LIST_VAR__ VTVIsValueReAssign=True VTVIsValueToConvert=False VTVIsArrayStyleInsert=True ValueToVariable ) __ACTION__ __RETURN_FORM__" ; 
+  StrMsg=$( ${StrParentApps} --get ArrayMsg[6] ) ;
+  StrMsg=${StrMsg//__CMDLINE__/${StrCmd}}
+  VerbHeader="VERBOSE-${__call_locality[1]}" VerbMsg="${StrMsg}" VerbDev=/dev/stderr VerbFormated=True VerbState=${IsVerbose} Verbosis ; 
+  
+  if [ "${IsActionReturnError:=False}" == "True" ] ; then 
+   StrMsg=$( ${StrParentApps} --get ArrayMsg[7] ) ;
+   VerbHeader="VERBOSE-${__call_locality[1]}" VerbMsg="${StrMsg}" VerbDev=/dev/stderr VerbFormated=True VerbState=${IsVerbose} Verbosis ; 
+
+   StrCmd=${StrCmd//__RETURN_FORM__/ ; vret=\$? ;} ; 
+  else
+   StrMsg=$( ${StrParentApps} --get ArrayMsg[8] ) ;
+   VerbHeader="VERBOSE-${__call_locality[1]}" VerbMsg="${StrMsg}" VerbDev=/dev/stderr VerbFormated=True VerbState=${IsVerbose} Verbosis ; 
+   StrCmd=${StrCmd//__RETURN_FORM__/ ;} ; 
+  fi 
+  
+  StrCmd=${StrCmd//__LIST_VAR__/${StrVarListTransfert}}
+  StrCmd=${StrCmd//__ACTION__/${StrAction}}
+  
+  StrMsg=$( ${StrParentApps} --get ArrayMsg[9] ) ;
+  StrMsg=${StrMsg//__CMDLINE__/${StrCmd}}
+  VerbHeader="VERBOSE-${__call_locality[1]}" VerbMsg="${StrMsg}" VerbDev=/dev/stderr VerbFormated=True VerbState=${IsVerbose} Verbosis ; 
+  eval "${StrCmd}" ; 
+  if [ "${IsActionReturnError:=False}" == "True" ] ; then 
+   StrMsg="Action return value: ${vret}" ; 
+   VerbHeader="VERBOSE-${__call_locality[1]}" VerbMsg="${StrMsg}" VerbDev=/dev/stderr VerbFormated=True VerbState=${IsVerbose} Verbosis ; 
+   return ${vret} ; 
+  fi 
+ }
+  
+
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ;
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( __GetVarReferenceList ) ;
+ elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
+  eval $( __GetVarReferenceCompWord ) ;
+ elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+   VerbHeader="VERBOSE-${__call_locality[1]}" VerbMsg="${ArrayMsg[0]}" VerbDev=/dev/stderr VerbFormated=True VerbState=${IsVerbose} Verbosis ; 
+   StrMsg=$( ${__call_locality[1]} --get ArrayMsg[10] ) ;
+   VerbHeader="VERBOSE-${__call_locality[1]}" VerbMsg="${StrMsg}" VerbDev=/dev/stderr VerbFormated=True VerbState=${IsVerbose} Verbosis ; 
+  eval $( VTVIsArrayStyleInsert=True           \
+          VTVValueEntry=${StrVarListTransfert} \
+          VTVIsValueReAssign=True              \
+          VTVIsValueToConvert=False            \
+          VTVIsArrayStyleInsert=True           \
+          ValueToVariable ) __main_StartServices
+ fi
+
+ unset Verbosis GetFile GetHeader GetContent FileSplitAction __main_StartServices ; 
+}
+
+
+### 
 ### Note, Existence of A-Range Boolean Purposes and B-Applied Boolean
 ### Variable. 
 ### 
