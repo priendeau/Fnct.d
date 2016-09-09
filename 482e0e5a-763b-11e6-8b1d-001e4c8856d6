@@ -1,0 +1,123 @@
+###
+### FootPrint Added, see Prefixed-Var ZSEAddFootPrint from ZenityShellEval
+###
+
+###File:/etc/init.d/Fnct.D//482e0e5a-763b-11e6-8b1d-001e4c8856d6
+###UUID-TIME-MARKER:2441e7ae-763c-11e6-8b1d-001e4c8856d6
+###Date: ${StrDateFormat}
+###Sha1Sum: 594fac25e8714c2c175215f518b4a040de23b766
+### Size:6199
+### NbWord: 514\n
+unset ValueToVariable
+function ValueToVariable( )
+{
+  ### To steve, Network admin from college rosemont... Was probably the Network survey
+  ### from TELUS, already studied as police **Back-Office Administration**, was the guys behing the 
+  ### 35th mondial of Work-fair including 2 student building stage for computer 
+  ### contest... During he drive he was asking couple of question behind this (probably ValueToVariable)
+  ### about something "gellyide" it's mind about double dot... 
+  ### It should not be used to separate item in an array... There probably a transforming action
+  ### allowed by Bash I answer, but it's really far in future and try under Slackware did never
+  ### work... I think... this was in 1999. 
+  
+  local ArrayArg=( $* ) ;
+  local __call_locality=( VTV ValueToVariable ) ;
+  local ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]}  
+ 
+  local StrValueParser=${VTVValueEntry:=StrTest}
+  local IsEntryInComaSep=${VTVIsArrayStyleInsert:=False} ; 
+  local IsValueSimpleConvert=${VTVIsValueToConvert:=True} ;
+  local IsValueToAssignSame=${VTVIsValueReAssign:=False} ;
+  local IsValueIndTransform=${VTVIsTransformed:=False} ;
+  local IsValueTransScript=${VTVIsTransHadScript:=False} ;
+  local IsDisplayDebug=${VTVIsDebugDisplay:=False} ; 
+  local StrDefaultTransScript=${VTVITransformScript:=None} ;
+  local StrDefaultTransform=${VTVDefaultTransform:='s/([SIB][tnos][tro][a-zA-Z0-9]+)/\\$\{\1\}/g'} ;
+  local StrAppsName=${VTVAppsName:=/bin/sed} ; 
+  local StrAppsOpt=${VTVAppsOpt:=-u -r} ;
+  local IsShowDebugValue=${VTVShowDebugVar:=False} ; 
+  local IsShowFnctDParsing=${VTVShowFnctD:=False} ;
+  local StrDefaultSedScript='s/([SIBA][tnosr][tror]*[a-zA-Z0-9]+)/\$\{\1\}/g' ;
+  local StrDefaultAssignScript='s/([SIBA][tnosr][tror]*[a-zA-Z0-9]+)/\1=\$\{\1\}/g' ;
+
+  local StrAppsAction=${VTVAppsAction:='None'} ; 
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
+
+ function Verbosis()
+ {
+  local __call_locality=( Verbosis Verb );
+  local StrMsg=${VerbMsg:=__TEXT__} ; 
+  local StrDevOut=${VerbDev:=/dev/stderr} ; 
+  local IsVerboseState=${VerbState:=False} ;
+  local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+  local IsDisplayFormatted=${VerbFormated:=True} ;
+  local ArrayArg=( $* ) ; 
+  if [ "${IsVerboseState:=False}" == "True" ] ; then 
+    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+        echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+    else
+        echo -ne "${StrMsg}\n" > ${StrDevOut} ;
+    fi 
+  fi
+ }
+ ### Model : VerbHeader="DEBUG" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbState=True Verbosis
+
+ function __Action()
+ {
+  local __call_locality=(  Action __Action ) ;
+  local ArrayArg=( $* ) ;
+  local Arg0="${ArrayArg[0]}" ;
+  
+  eval $( BVTVarName="StrParsedVar" BVTVarHold="\${StrValueParser}" BVTBoolVarName="\${IsEntryInComaSep}"                    BVTBoolAssertion="\${StrValueParser//,/ }" BVTDisplayIf=${IsShowFnctDParsing} BVTBoolCase=True BoolVarTest ) ; 
+  local CmdLine="echo \"${StrParsedVar}\" | ${StrAppsName} ${StrAppsOpt} '${StrAppsAction}'" ;
+  VerbHeader="DEBUG-CMDLINE" VerbMsg=${CmdLine}  VerbDev=/dev/stderr VerbState=${IsShowDebugValue} Verbosis 
+  #if [ ${IsDisplayDebug} == "True" ] ; then
+  # echo -ne "CmdLine:\n[ ${CmdLine} ]\n" > /dev/stderr ; 
+  #fi 
+  eval "${CmdLine}" ; 
+  
+ }
+ 
+ function __main_StartServices()
+ {
+  local ArraySubItem=( ) ; 
+  local StrPairLeft , StrPairRight ; 
+  local ArrayVarTest=( IsValueSimpleConvert:StrDefaultSedScript IsValueToAssignSame:StrDefaultAssignScript IsValueTransScript:StrDefaultTransform ) ; 
+  for StrCoupleVar in ${ArrayVarTest[@]} ; do 
+  #local ArraySubItem=( ${item//:/ } ) ; 
+  ## In replacement, 
+  ## ArraySubItem -> index 0 -> Left Side
+  ## ArraySubItem -> index 1 -> Right Side
+  StrPairLeft=${StrCoupleVar/%:[SIBA][tnosr][tror]*[a-zA-Z0-9]*/};
+  StrPairRight=${StrCoupleVar/#[SIBA][tnosr][a-zA-Z0-9]*:/};
+  StrMsg="DEBUG-CMDLINE: Pair «StrPairLeft=${StrPairRight} ; StrPairRight=${StrPairRight}»" ;
+  VerbHeader="" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbState=${IsShowDebugValue} Verbosis ;
+   
+  StrParseCmd="""BVTScopeTest=local BVTVarName=StrAppsAction BVTVarHold=\"\${StrAppsAction}\" BVTBoolVarName=\"\${${StrPairLeft}}\" BVTBoolAssertion=\"\${${StrPairRight}}\" BVTDisplayIf=${IsShowFnctDParsing} BVTBoolCase=True BoolVarTest""" ; 
+  StrMsg="DEBUG-CMDLINE: __CMDLINE__" ;
+  VerbHeader="" VerbMsg=${StrMsg//__CMDLINE__/${StrParseCmd}}  VerbDev=/dev/stderr VerbState=${IsShowDebugValue} Verbosis ;
+  eval $( "${StrParseCmd}" )  ;
+  done  
+  StrMsg="StrAppsName : ${StrAppsName}\nStrAppsOpt : ${StrAppsOpt}\nStrAppsAction : ${StrAppsAction}" ;
+  VerbHeader="DEBUG" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbState=${IsShowDebugValue} Verbosis 
+
+  #if [ ${IsDisplayDebug} == "True" ] ; then
+   echo -ne  > /dev/stderr ; 
+  #fi 
+  IsShowFnctDParsing=${IsShowFnctDParsing} IsShowDebugValue=${IsShowDebugValue} StrAppsName=${StrAppsName} StrAppsOpt=${StrAppsOpt} StrAppsAction=${StrAppsAction} IsEntryInComaSep=${IsEntryInComaSep} StrValueParser=${StrValueParser} __Action ; 
+ }
+
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+  GetVarReference ${__call_locality[1]} ; 
+  echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ;
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( __GetVarReferenceList ) ;
+ elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  IsShowDebugValue=${IsShowDebugValue} IsShowFnctDParsing=${IsShowFnctDParsing} IsValueSimpleConvert=${IsValueSimpleConvert} IsValueToAssignSame=${IsValueToAssignSame} IsValueIndTransform=${IsValueIndTransform} IsValueTransScript=${IsValueTransScript} StrDefaultTransScript=${StrDefaultTransScript} StrDefaultTransform=${StrDefaultTransform} StrAppsName=${StrAppsName} StrAppsOpt=${StrAppsOpt} StrDefaultSedScript=${StrDefaultSedScript} StrDefaultAssignScript=${StrDefaultAssignScript} StrAppsAction=${StrAppsAction} StrValueParser=${StrValueParser} IsDisplayDebug=${IsDisplayDebug} IsEntryInComaSep=${IsEntryInComaSep} __main_StartServices ; 
+ fi
+
+}
