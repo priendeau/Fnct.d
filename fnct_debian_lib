@@ -1834,8 +1834,8 @@ if [ "${versionVTV:=0.0.2}" == "0.0.2" ] ; then
   local ArrayArg=( $* ) ; 
   local Arg0=${ArrayArg[0]}  
   
+  local StrReAssign=${VTVValueRe:=StrTestA_1,StrTestB_1,StrCTest1_1,StrDTest2_1,IntA_1,IntB_1,IsTestA_1,IsNotTestA_1}
   local StrValueParser=${VTVValueEntry:=StrTestA,StrTestB,StrCTest1,StrDTest2,IntA,IntB,IsTestA,IsNotTestA};
-  local StrValueReAssign=${VTVValueRe:=StrTestA_1,StrTestB_1,StrCTest1_1,StrDTest2_1,IntA_1,IntB_1,IsTestA_1,IsNotTestA_1}
   local IsEntryInComaSep=${VTVIsArrayStyleInsert:=False} ; 
   local StrSepList=${VTVSepList:=",;:"} ;
   local IntValueSep=${VTVISeparatorType:=0};
@@ -1884,12 +1884,12 @@ if [ "${versionVTV:=0.0.2}" == "0.0.2" ] ; then
    local __call_locality=( VF VarFilter ) ;
 		 local Arg0=${ArrayArg[0]} ;
 		 local ArrayArg=( $* ) ;
+   local StrParserReassign=$( ValueToVariable --get StrReAssign ) ; 
    local StrParserList=$( ValueToVariable --get StrValueParser ) ;
-   local StrParserReassign=$( ValueToVariable --get StrValueReAssign ) ; 
    local StrListSep=$( ValueToVariable --get StrSepList ) ;
    local IntCharSel=$( ValueToVariable --get IntValueSep ) ;
    local StrFilter=$( ValueToVariable --get StrVarFilter ) ; 
-   local StrFilter2=$( ValueToVariable --get StrValueReAssign ) ; 
+   local StrFilter2=${StrVarFilter} ; 
    local StrPrefix=$( ValueToVariable --get StrPrefix ) ; 
    local StrSuffix=$( ValueToVariable --get StrSuffix ) ; 
    local IsValueIndTransform=$( ValueToVariable --get IsValueIndTransform ) ; 
@@ -1901,52 +1901,85 @@ if [ "${versionVTV:=0.0.2}" == "0.0.2" ] ; then
    StrFilter=${StrFilter//__SEP__/${StrCharSep}} ; 
    StrFilter2=${StrFilter2__SEP__/${StrCharSep}} ; 
    local ArrayVarList=(  ) ; 
+   local ArrayRejectionList=( ) ; 
    local IntNotEmptyList=1 ;
    local IntSizeBuffe=0 ; 
    local StrNewVarEntry="" ; 
    if [ "${IsValueIndTransform:=False}" == "True" ] ;  then 
+    StrMsg="Application is Transforming Variable during passing-thru action."
+    VerbMsg="${StrMsg}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
+    
     if [ "${StrPrefix:=None}" != "None" ] ; then 
+     StrMsg="Application Add a Prefix during passing-thru action."
+     VerbMsg="${StrMsg}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
      StrNPrefix=${StrPrefix} ; 
     fi
+    
     if [ "${StrSufix:=None}" != "None" ] ; then 
+     StrMsg="Application Add a Sufix during passing-thru action."
+     VerbMsg="${StrMsg}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
      StrNSuffix=${StrSuffix} ; 
     fi 
+   
+   else
+    StrMsg="Application is not Transforming Variable during passing-thru action."
+    VerbMsg="${StrMsg//__VAR__/${StrNewVarEntry}}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
    fi 
-   while [ ${IntNotEmptyList} -eq 0 ] ; do
-     StrNewVarEntry="${StrParserList/#[SIB][tnos][a-zA-Z0-9_]*${StrCharSep}}" ; 
+   
+   if [ "${IsValueToReAssign:=False}" == "True" ] ; then 
+    StrMsg="Application Does depend of a table-of Reassignation see VTVValueRe "
+    VerbMsg="${StrMsg}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
+   else
+    StrMsg="Application Does not depend of a table-of Reassignation see VTVValueRe "
+    VerbMsg="${StrMsg}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
+ 
+   fi
+  
+   StrMsg="Initial Variable List: __VAR__ " ; 
+   VerbMsg="${StrMsg//__VAR__/${StrParserList}}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
+  
+   while [ ${IntNotEmptyList:=1} -ne 0 ] ; do
+     ### StrNewVarEntry="${StrParserList/#[SIB][tnos][a-zA-Z0-9_]*${StrCharSep}}" ; 
+     eval StrNewVarEntry="${StrParserList/#${StrFilter}*${StrCharSep}}" ; 
      StrParserList=${StrParserList//${StrCharSep}${StrNewVarEntry}/} ;
-    if [ "${IsValueToReAssign:=False}" == "True" ] ; then 
-     StrNewVarReassign="${StrParserReassign/#[SIB][tnos][a-zA-Z0-9_]*${StrCharSep}}" ;
-     StrParserReassign=${StrParserReassign//${StrCharSep}${StrNewVarReassign}/} ;
-    fi 
+     StrMsg="New Entry:__VAR__"
+     VerbMsg="${StrMsg//__VAR__/${StrNewVarEntry}}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
+     sleep 1 ; 
+     if [ "${IsValueToReAssign:=False}" == "True" ] ; then 
+      StrNewVarReassign="${StrParserReassign/#[SIB][tnos][a-zA-Z0-9_]*${StrCharSep}}" ;
+      StrParserReassign=${StrParserReassign//${StrCharSep}${StrNewVarReassign}/} ;
+     fi 
+    
     ### It important to remove the "Separator + Variable name" to ensure Buffer become empty.
     ### Noted: The processor '/#' inside a String only output what is lying at the end  and 
     ### we do filtering a last value without the remaining char and not appearing inside the 
     ### StrNewVarEntry so adding the char-separator to remove is important. 
-    if [ "${IsValueSimpleConvert:=False}" == "True" ] ; then 
-      if [ "${IsValueToReAssign:=False}" == "True" ] ; then 
-       ArrayVarList[${#ArrayVarList[@]}]="""${StrNPrefix}${StrNewVarReassign}${StrNSuffix}=\${${StrNewVarEntry}}""" ;
-      else
-       ArrayVarList[${#ArrayVarList[@]}]="""${StrNPrefix}${StrNewVarEntry}${StrNSuffix}=\${${StrNewVarEntry}}""" ; 
-      fi 
-    else
-      if [ "${IsValueToReAssign:=False}" == "True" ] ; then 
-       ArrayVarList[${#ArrayVarList[@]}]="""${StrNewVarReassign}=\${${StrNewVarEntry}}""" ;
-       ### Note there is already protection inside if [ "${IsValueIndTransform:=False}... 
-       ### and we do prevent putting nil-sized variable but should pose a problems . 
-      else
-       ArrayVarList[${#ArrayVarList[@]}]="""${StrNewVarEntry}=\${${StrNewVarEntry}}""" ;
-       ### Note there is already protection inside if [ "${IsValueIndTransform:=False}... 
-       ### and we do prevent putting nil-sized variable but should pose a problems . 
-      fi
-    fi
-    IntSizeBuffer=${#StrParserList} ; 
-    if [ ${IntSizeBuffer:=0} -eq 0 ] ; then 
-     IntNotEmptyList=0; 
-     ### we do set IntNotEmptyList to 0 meaning inspecting for 
-     ### possibility of having an Not Empty List is now at 0 mean
-     ### no we dont own it at all because it's now at 0;
-    fi 
+     if [ "${IsValueSimpleConvert:=False}" == "True" ] ; then 
+       if [ "${IsValueToReAssign:=False}" == "True" ] ; then 
+        ArrayVarList[${#ArrayVarList[@]}]="""${StrNPrefix}${StrNewVarReassign}${StrNSuffix}=\${${StrNewVarEntry}}""" ;
+       else
+        ArrayVarList[${#ArrayVarList[@]}]="""${StrNPrefix}${StrNewVarEntry}${StrNSuffix}=\${${StrNewVarEntry}}""" ; 
+       fi 
+     else
+       if [ "${IsValueToReAssign:=False}" == "True" ] ; then 
+        ArrayVarList[${#ArrayVarList[@]}]="""${StrNewVarReassign}=\${${StrNewVarEntry}}""" ;
+        ### Note there is already protection inside if [ "${IsValueIndTransform:=False}... 
+        ### and we do prevent putting nil-sized variable but should pose a problems . 
+       else
+        ArrayVarList[${#ArrayVarList[@]}]="""${StrNewVarEntry}=\${${StrNewVarEntry}}""" ;
+        ### Note there is already protection inside if [ "${IsValueIndTransform:=False}... 
+        ### and we do prevent putting nil-sized variable but should pose a problems . 
+       fi
+     fi
+     IntSizeBuffer=${#StrParserList} ; 
+     if [ ${IntSizeBuffer:=0} -eq 0 ] ; then 
+      IntNotEmptyList=0; 
+      StrMsg="Reached end of StrParserList."
+      VerbMsg="${StrMsg}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
+      ### we do set IntNotEmptyList to 0 meaning inspecting for 
+      ### possibility of having an Not Empty List is now at 0 mean
+      ### no we dont own it at all because it's now at 0;
+     fi 
    done 
    StrMsg="Variable Parser:__VAR__"
    VerbMsg="${StrMsg//__VAR__/${ArrayVarList[@]}}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
