@@ -52,12 +52,12 @@ function StartAgentSSH()
  
  ### Create StrPathSSH and if IsHomeUser==False, StrPathSSH will own
  ### the StrPathBase value (default set to /root )
- local StrEvalCmdUserHome=$( BVTestVarName="StrPathSSH" \
-       BVTestDisplayIf=${IsVerbosis} \
-       BVTestVarHold=${HOME} \
-       BVTestBoolVarName=\${IsHomeUser} \
-       BVTestBoolAssertion=\${StrPathBase} \
-       BVTestConclude=' ' BoolVarTestVarCreation ) ; 
+ local StrEvalCmdUserHome=$( BVTVarName="StrPathSSH" \
+       BVTDisplayIf=${IsVerbosis} \
+       BVTVarHold=${HOME} \
+       BVTBoolVarName=\${IsHomeUser} \
+       BVTBoolAssertion=\${StrPathBase} \
+       BVTConclude=' ' BoolVarTest ) ; 
  StrDbgMsg="In Funct:${__call_locality[1]}\n\t\tContent of StrEvalCmdUserHome:[${StrEvalCmdUserHome}]" ;
  VerbMsg=${StrDbgMsg} VerbState=${IsVerbosis} Verbosis ; 
  eval ${StrEvalCmdUserHome} ; 
@@ -176,43 +176,43 @@ function SSHAgentMemoryInfo()
 ### like command line: 
 ### 
 ### Explicitly mean : following command will output all 
-### virtual test being handled by BoolVarTestVarCreation if there is not 
+### virtual test being handled by BoolVarTest if there is not 
 ### explicitly assigned value to is original command line, IsDisplayIfStatement
-### is the Verbosis example following the output inside BoolVarTestVarCreation. 
+### is the Verbosis example following the output inside BoolVarTest. 
 ### 
 ### But subject line fully working in date of 2016-03-30 belong to notice 
 ### 208d465e-f6d4-11e5-98a2-001e4c8856d6 and after token notice, example :
 ### 
-### BVTestDisplayIf=True AgentLoader --stopservices
-### BVTestDisplayIf=True AgentLoader --startservices 
-### will display the current BoolVarTestVarCreation listing of if-fi statement.
+### BVTDisplayIf=True AgentLoader --stopservices
+### BVTDisplayIf=True AgentLoader --startservices 
+### will display the current BoolVarTest listing of if-fi statement.
 ### 
 ### reference : 
 ### 
-### BVTestDisplayIf=True AgentLoader --stopservices 
+### BVTDisplayIf=True AgentLoader --stopservices 
 ### VERBOSE:[ 
-### Function BoolVarTestVarCreation, Display Result:
+### Function BoolVarTest, Display Result:
 ### local StrAppsAction="${StrAppsAction}" ;
 ###  if [ "${IsValueSimpleConvert}" == "True" ]  ; then 
 ###   StrAppsAction=${StrDefaultSedScript} 
 ###   ; fi ;
 ###  ]
 ### VERBOSE:[ 
-### Function BoolVarTestVarCreation, Display Result:
+### Function BoolVarTest, Display Result:
 ###  local StrAppsAction="${StrAppsAction}" ;
 ###  if [ "${IsValueToAssignSame}" == "True" ]  ; then 
 ###   StrAppsAction=${StrDefaultAssignScript} 
 ###   ; fi ;
 ###  ]
 ### VERBOSE:[ 
-### Function BoolVarTestVarCreation, Display Result:
+### Function BoolVarTest, Display Result:
 ###  local StrAppsAction="${StrAppsAction}" ;
 ###  if [ "${IsValueTransScript}" == "True" ]  ; then 
 ###   StrAppsAction=${StrDefaultTransform} 
 ###   ; fi ;
 ###  ]
 ### VERBOSE:[ 
-### Function BoolVarTestVarCreation, Display Result:
+### Function BoolVarTest, Display Result:
 ###  local StrParsedVar="${StrValueParser}" ;
 ###  if [ "${IsEntryInComaSep}" == "True" ]  ; then 
 ###   StrParsedVar=${StrValueParser//,/ } 
@@ -510,7 +510,7 @@ if [ "${SubSSHGetPasswd:=False}" == "True" ] ; then
   local IntRandomSeedFactor=${GPRandomSeed:=10} ; 
   local StrPasswordTypeForm=${GPArgType:=cnsB1,cysB1,cnsyB1} ; 
   local IntPasswordType=${GPGenFormType:=0} ;
-  local BoolEvalCmdExit=${GPShowCmdEvalAndExit:=False} ; 
+  local BoolEvalCmdExit=${GPShowCmdEvalAndExit:=False} ;
   local BoolFormatOuput=${GPShowOutputFormated:=True} ;
   local BoolDisplayFnctD=${GPShowFnctDCall:=False} ; 
   local IsAutoInstallPwgen=${GPAutoInstallDependency:=False} ; 
@@ -522,7 +522,7 @@ if [ "${SubSSHGetPasswd:=False}" == "True" ] ; then
   local StrGdebiLineOpt=${GPPwgenGdebiOpt:="""--option=Get::Assume-Yes=\"true\""""} ; 
   local StrGdebiPackageName=${GPPwgenPackaName:=pwgen_2.06-1ubuntu4_amd64.deb} ; 
   local StrGdebiDownloadPack=${GPPwgenPackageURL:=http://launchpadlibrarian.net/124865523/__PACKAGE__} ;
-  local StrFnctDSvrBVTVC=${GPBVTVCName:=_BoolVarTestVarCreation} ;  
+  local StrFnctDSvrBVTVC=${GPBVTVCName:=BoolVarTest} ;  
   local StrVarListTransfert="BoolDisplayFnctD,StrUrlGetter,BoolEvalCmdExit,StrAppsPwdGenerator,IntDefaultPwdSize,IntDefaultFactor,IntRandomSeedFactor,StrPasswordTypeForm,IntPasswordType,IsAutoInstallPwgen,StrDebInstallMethod,StrDebianInstallerType,StrAptLineCmd,StrGdebiPackageName,StrGdebiDownloadPack,StrFnctDSvrBVTVC" ;
   local ArrayInstalChoice=( "apt:StrAptLineCmd" "gdebi:StrGdebiLineCmd" ) ;
   local ArrayMsg=( ) 
@@ -643,9 +643,9 @@ if [ "${SubSSHGetPasswd:=False}" == "True" ] ; then
    done ; 
    StrMsg="${value}" ; 
    if [ "${BoolFormatOuput:=False}" == "True" ] ; then 
-    VerbHeader="" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbState=True Verbosis ;
+    VerbHeader="" VerbMsg="${StrMsg}"  VerbDev=/dev/stderr VerbState=True Verbosis ;
    else
-    VerbHeader="GetPasswd" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbState=True VerbFormated=False Verbosis ;
+    VerbHeader="GetPasswd" VerbMsg="${StrMsg}"  VerbDev=/dev/stderr VerbState=True VerbFormated=False Verbosis ;
    fi 
    
 
@@ -670,10 +670,12 @@ if [ "${SubSSHGetPasswd:=False}" == "True" ] ; then
    local ArrayArg=( $* ) ; 
    local Arg0=${ArrayArg[0]} ;
    local StrMsg="" ; 
-   
+   local StrPrefixFuncD=$( ${StrFnctDSvrBVTVC} --get __call_locality[0] ) ; 
    ### In Case we do require to install the package :
    if [ ! -e ${StrAppsPwdGenerator} ] ; then 
-     eval $( BVTestVarHold='' BVTestBoolVarName=\${IsAutoInstallPwgen:=False} BVTestBoolCase=True BVTestBoolAssertion='' BVTestIsPreambule=False BVTestScopeTest=local BVTestVTVVarA=${StrListVar} BVTestVTFnctA=AutoInstallPackage BVTestIsValueToVar=True BVTestIsValueToVarAssert=True BVTestDisplayIf=${BoolDisplayFnctD} ${StrFnctDSvrBVTVC} ) ;
+     ParserCmd="""${StrPrefixFuncD}VarHold='' ${StrPrefixFuncD}BoolVarName=\"\${IsAutoInstallPwgen:=False}\" ${StrPrefixFuncD}BoolCase=True ${StrPrefixFuncD}BoolAssertion='' ${StrPrefixFuncD}IsPreambule=False ${StrPrefixFuncD}ScopeTest=local ${StrPrefixFuncD}VTVVarA=${StrListVar} ${StrPrefixFuncD}VTFnctA=AutoInstallPackage ${StrPrefixFuncD}IsValueToVar=True ${StrPrefixFuncD}IsValueToVarAssert=True ${StrPrefixFuncD}DisplayIf=${BoolDisplayFnctD} ${StrFnctDSvrBVTVC}""" ;
+     VerbHeader="DEBUG-CMDLINE" VerbMsg=${ParserCmd}  VerbDev=/dev/stderr VerbState=${BoolDisplayFnctD} Verbosis ;
+     eval $( ${ParserCmd} ) ;
    fi  
    
    if [ ! -e ${StrAppsPwdGenerator} ] ; then 
@@ -695,7 +697,9 @@ if [ "${SubSSHGetPasswd:=False}" == "True" ] ; then
     local StrDisplayCmd="""${StrCmdPwdEval}""" ; 
     
     ### Decide to display the command-line and exit or do the work. 
-    eval $( BVTestVarHold='' BVTestVTVVar=${StrVarListTransfert} BVTestVTFnct=__Display BVTestBoolVarName=\${BoolEvalCmdExit:=False} BVTestBoolCase=False BVTestBoolAssertion='' BVTestIsPreambule=True BVTestScopeTest=local BVTestVTVVarA=${StrVarListTransfert} BVTestVTFnctA=__Loop BVTestIsValueToVar=True BVTestIsValueToVarAssert=True BVTestDisplayIf=${BoolDisplayFnctD} ${StrFnctDSvrBVTVC} ) ;
+    ParserCmd="""${StrPrefixFuncD}VarHold='' ${StrPrefixFuncD}VTVVar=${StrVarListTransfert} ${StrPrefixFuncD}VTFnct=__Display ${StrPrefixFuncD}BoolVarName=\"\${BoolEvalCmdExit:=False}\" ${StrPrefixFuncD}BoolCase=False ${StrPrefixFuncD}oolAssertion='' ${StrPrefixFuncD}IsPreambule=True ${StrPrefixFuncD}ScopeTest=local ${StrPrefixFuncD}VTVVarA=${StrVarListTransfert} ${StrPrefixFuncD}VTFnctA=__Loop ${StrPrefixFuncD}IsValueToVar=True ${StrPrefixFuncD}IsValueToVarAssert=True ${StrPrefixFuncD}DisplayIf=${BoolDisplayFnctD} ${StrFnctDSvrBVTVC}""" ;
+    VerbHeader="DEBUG-CMDLINE" VerbMsg=${ParserCmd}  VerbDev=/dev/stderr VerbState=True Verbosis ;
+    $( eval ${ParserCmd} ) ;
    fi
      
   }
@@ -710,11 +714,7 @@ if [ "${SubSSHGetPasswd:=False}" == "True" ] ; then
   elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
    eval $( __GetVarReferenceList ) ;
   elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
-  eval $( VTVValueEntry=${StrVarListTransfert} \
-          VTVIsValueReAssign=True              \ 
-          VTVIsValueToConvert=False            \
-          VTVIsArrayStyleInsert=True           \
-          ValueToVariable ) __main_StartServices
+  eval $( VTVValueEntry=${StrVarListTransfert} VTVIsValueReAssign=True VTVIsValueToConvert=False VTVIsArrayStyleInsert=True ValueToVariable ) __main_StartServices
   fi	 
   
 

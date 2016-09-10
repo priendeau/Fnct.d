@@ -985,6 +985,137 @@ Declared thru the Shell it produce that sequence which it is  ""merely identical
 
 While BoolVarTestVarCreation is a low-level call indirectly call by ValueToVariable it's hard to define first will end having good sub-body to acheive a strict identity and be able to parse all variable before BoolVarTestVarCreation 'will' have to end a possible __main_start_services if this one is implemented with normal body-topology  .  So it's not recommended to use ValueToVariable inside BoolVarTestVarCreation has long there is a better mechanisms correcting this problems in bash of recurrent  function call recurently a lower level function will simply loop and not finishing the work . 
 
+:Note: 23082f68-76f7-11e6-8b1d-001e4c8856d6
+:Title: Possible leak in evaluation-statement or during parsing of command With Sed inside ValueToVariable.
+:Reference: Developement
+:Reference: Warning
+:Function: ValueToVariable
+
+It's Unclear the reason being Sed leak, and latest update from fnct_debian_lib by adding Unbuffering Sed did not make improvement by display a command Not-found by trying to execute the code after the parse. It's not Sed application fault, but suggest, sed being padded inside 2 or 3 level of pipe and do have to transform a syntax PolishLike-Variable-Name feeded by Separator. Usually the Separator used ir the virgule «,» and is strongly suggested to write variable name on shell at long and separated by THIS «,» , avoiding space or shell will take it like another Pre-fixed varaible to add to script execution or inlet of environment of execution os following command called. Back to the 2 or 3 level piped of information, sed does return the sequence almost all alone due to parse-grouping effect. Know in short from Bash  reference from O'Reilly from Arnold Robbins, explain Brace expension and did show example of bash expression grouping with both sets of «[,]» and «{,}» where it comonly re-uses groupping effect to produce a compword inline re-scripting of your line by pressing «TAB», but this grouping is more concerning Regular expression from O'reilly by Tony Stubblebine inside Shell Toolexplaining on Table 65, grouping and how-to retrieve a grouping match. It's simply pop-out the match and add a space. 
+
+This development of vtvVersion 0.0.2 ( ValueToVariable ) is exclusively made from Shell expression from internal command . Avoiding the error not found error, it re-abilitate BoolVarTestVarCreation to work back with application like GetPasswd which is has severely changed since migration of Fnct.D work under platform Mint 12/13 to version 17.3. It's Equivalent to Ubuntu Xenial distribution and lower distribution can work. The big observation on why this problem appear and not before are also with addidtion of ValueToVariable being added inside Preambule and both Assertion of BoolVarTestVarCreation, leaving less evaluation brace to worry and only variable to Feed. Until ZenityFunctionPrompt will appear to help user to complete Unregistered call and stock them inside text-file or chunk, The infrastructure per function is already present to use. 
+
+Using Getter is also what made ValueToVariable out of warning of possible recurrent call which made it clumsy to loop infinitely inside dedicated Tested GetPasswd and same BoolVarTestVarCreation output thru debug statement being called did not show loop executed in parsing mode. Noted, uses of an action inside GetPasswd to evaluate an If builded by BoolVarTestVarCreation to Ensure the client can show the command out of application pwgen being mounted in Apps manager for it and increase the loop to ensure lesser recurrency of same password group is also a strict definition of the application. In short It was fix for something not wished. While Infrastructure still able to query all Key by using the application List key like GetPasswd --list, will output all Pre-fixed variable. Like GetVarReference is already ready to build a topology of varaible and default value, mounting them in a Zenity Check-List to recycle every checked item to ensure you can inspect every variable, should be easy but not by standing low with leaky ValueToVariable where now coming with rejection List and long and pretty listing embellished with Verbosis method that start to be current in many example showed. 
+
+Here the new Helper, it's compatible with previous version of ValueToVariable
+
+.. code:: shell
+
+  Help:
+
+  Function ValueToVariable	
+  Default Variable Value:
+  Variable VTVValueRe ,
+   Default Value:StrTestA_1,StrTestB_1,StrCTest1_1,StrDTest2_1,IntA_1,IntB_1,IsTestA_1,IsNotTestA_1
+  Variable VTVValueEntry ,
+   Default Value:StrTestA,StrTestB,StrCTest1,StrDTest2,IntA,IntB,IsTestA,IsNotTestA
+  Variable VTVIsArrayStyleInsert ,
+   Default Value:False
+  Variable VTVSepList ,
+   Default Value:",:"
+  Variable VTVISeparatorType ,
+   Default Value:0
+  Variable VTVVarFilter ,
+   Default Value:[SIB][tnos][a-zA-Z0-9_]*__SEP__
+  Variable VTVRejectionFilter ,
+   Default Value:[a-zA-Z0-9_]*
+  Variable VTVIsValueToConvert ,
+   Default Value:True
+  Variable VTVIsValueReAssign ,
+   Default Value:True
+  Variable VTVReasignPrefix ,
+   Default Value:None
+  Variable VTVReasignSuffix ,
+   Default Value:None
+  Variable VTVIsTransformed ,
+   Default Value:False
+  Variable VTVIsTransHadScript ,
+   Default Value:False
+  Variable VTVIsDebugDisplay ,
+   Default Value:False
+  Variable VTVIsSlowDebug ,
+   Default Value:False
+  Variable VTVITransformScript ,
+   Default Value:None
+  Variable VTVAppsScripter ,
+   Default Value:/usr/bin/gawk
+  Variable VTVAppsScripterOpt ,
+   Default Value:--field-separator=__SEP__ --file=__FILE__ __VAR_ASSIGN__ 
+  Variable VTVScriptInterVar ,
+   Default Value:--assign=__VAR__=__VALUE__
+  Variable VTVAppsParser ,
+   Default Value:__APPS__ __OPT__
+  Following switch are available:
+
+   --startservices	Start the application normally.
+   --get		Return value of Internal Variable.
+   --list		List all Internal Pre-fixed Variable available to query or get.
+
+Also available a command-line example to verify your informations :
+
+.. code:: shell
+
+  ### By default it's already version 0.0.2 effective by calling 
+  ### . /etc/init.d/Fnct.D/fnct_debian_lib, but I will let you see
+  ### what's wrong by calling it vtvVersion=0.0.1 . /etc/init.d/Fnct.D/fnct_debian_lib
+  ### It calling Chunk /etc/init.d/Fnct.D/482e0e5a-763b-11e6-8b1d-001e4c8856d6 
+  ### with old version of ValueToVariable, to tell me more what's wrong , study it-up and 
+  ### and write me down by mail. 
+  vtvVersion=0.0.2 . /etc/init.d/Fnct.D/fnct_debian_lib ; VTVIsValueToConvert=False VTVIsTransHadScript=False VTVIsValueReAssign=True VTVIsDebugDisplay=True VTVValueEntry=oolDisplayFnctD,CCFLAG,StrUrlGetter,BoolEvalCmdExit,StrAppsPwdGenerator,IntDefaultPwdSize,LDFLAGS,IntDefaultFactor,Ldflags,IntRandomSeedFactor,GCC,CC,CXX,CPP,StrPasswordTypeForm,IntPasswordType,IsAutoInstallPwgen,StrDebInstallMethod,StrDebianInstallerType,StrAptLineCmd,StrGdebiPackageName,StrGdebiDownloadPack,StrFnctDSvrBVTVC ValueToVariable 
+
+.. code:: shell
+
+ DEBUG-VarFilter:[ Application is Transforming Variable during passing-thru action. ]
+ DEBUG-VarFilter:[ Application Does not depend of a table-of Reassignation see VTVValueRe  ]
+ DEBUG-VarFilter:[ Initial Variable List: BoolDisplayFnctD,CCFLAG,StrUrlGetter,BoolEvalCmdExit,StrAppsPwdGenerator,IntDefaultPwdSize,LDFLAGS,IntDefaultFactor,Ldflags,IntRandomSeedFactor,GCC,CC,CXX,CPP,StrPasswordTypeForm,IntPasswordType,IsAutoInstallPwgen,StrDebInstallMethod,StrDebianInstallerType,StrAptLineCmd,StrGdebiPackageName,StrGdebiDownloadPack,StrFnctDSvrBVTVC  ]
+ DEBUG-VarFilter:[ Initial Filter To Split Member between Separator ',' : '[SIB][tnos][a-zA-Z0-9_]*,'  ]
+ DEBUG-VarFilter:[ New Entry:StrFnctDSvrBVTVC ]
+ DEBUG-VarFilter:[ Pass1 PolishNoted variable rejected:None ]
+ DEBUG-VarFilter:[ New Entry:StrGdebiDownloadPack ]
+ DEBUG-VarFilter:[ Pass1 PolishNoted variable rejected:None ]
+ DEBUG-VarFilter:[ New Entry:StrGdebiPackageName ]
+ DEBUG-VarFilter:[ Pass1 PolishNoted variable rejected:None ]
+ DEBUG-VarFilter:[ New Entry:StrAptLineCmd ]
+ DEBUG-VarFilter:[ Pass1 PolishNoted variable rejected:None ]
+ DEBUG-VarFilter:[ New Entry:StrDebianInstallerType ]
+ DEBUG-VarFilter:[ Pass1 PolishNoted variable rejected:None ]
+ DEBUG-VarFilter:[ New Entry:StrDebInstallMethod ]
+ DEBUG-VarFilter:[ Pass1 PolishNoted variable rejected:None ]
+ DEBUG-VarFilter:[ New Entry:IsAutoInstallPwgen ]
+ DEBUG-VarFilter:[ Pass1 PolishNoted variable rejected:None ]
+ DEBUG-VarFilter:[ New Entry:IntPasswordType ]
+ DEBUG-VarFilter:[ Pass1 PolishNoted variable rejected:None ]
+ DEBUG-VarFilter:[ New Entry:StrPasswordTypeForm ]
+ DEBUG-VarFilter:[ Pass1 PolishNoted variable rejected:None ]
+ DEBUG-VarFilter:[ New Entry:CPP ]
+ DEBUG-VarFilter:[ Pass1 PolishNoted variable rejected:CPP ]
+ DEBUG-VarFilter:[ New Entry:CXX ]
+ DEBUG-VarFilter:[ Pass1 PolishNoted variable rejected:CXX ]
+ DEBUG-VarFilter:[ New Entry:CC ]
+ DEBUG-VarFilter:[ Pass1 PolishNoted variable rejected:CC ]
+ DEBUG-VarFilter:[ New Entry:GCC ]
+ DEBUG-VarFilter:[ Pass1 PolishNoted variable rejected:GCC ]
+ DEBUG-VarFilter:[ New Entry:IntRandomSeedFactor ]
+ DEBUG-VarFilter:[ Pass1 PolishNoted variable rejected:None ]
+ DEBUG-VarFilter:[ New Entry:Ldflags ]
+ DEBUG-VarFilter:[ Pass1 PolishNoted variable rejected:Ldflags ]
+ DEBUG-VarFilter:[ New Entry:IntDefaultFactor ]
+ DEBUG-VarFilter:[ Pass1 PolishNoted variable rejected:None ]
+ DEBUG-VarFilter:[ New Entry:LDFLAGS ]
+ DEBUG-VarFilter:[ Pass1 PolishNoted variable rejected:LDFLAGS ]
+ DEBUG-VarFilter:[ New Entry:IntDefaultPwdSize ]
+ DEBUG-VarFilter:[ Pass1 PolishNoted variable rejected:None ]
+ DEBUG-VarFilter:[ New Entry:StrAppsPwdGenerator ]
+ DEBUG-VarFilter:[ Pass1 PolishNoted variable rejected:None ]
+ DEBUG-VarFilter:[ New Entry:BoolEvalCmdExit ]
+ DEBUG-VarFilter:[ Pass1 PolishNoted variable rejected:None ]
+ DEBUG-VarFilter:[ New Entry:StrUrlGetter ]
+ DEBUG-VarFilter:[ Pass1 PolishNoted variable rejected:None ]
+ DEBUG-VarFilter:[ No New Separator ',' found inside Parsing String. ]
+ DEBUG-VarFilter:[ Reached end of StrParserList. ]
+ VERBOSE:[ Rejection List Parser:CPP CXX CC GCC Ldflags LDFLAGS ]
+ DEBUG-VarFilter:[ Variable Parser:StrFnctDSvrBVTVC=${StrFnctDSvrBVTVC} StrGdebiDownloadPack=${StrGdebiDownloadPack} StrGdebiPackageName=${StrGdebiPackageName} StrAptLineCmd=${StrAptLineCmd} StrDebianInstallerType=${StrDebianInstallerType} StrDebInstallMethod=${StrDebInstallMethod} IsAutoInstallPwgen=${IsAutoInstallPwgen} IntPasswordType=${IntPasswordType} StrPasswordTypeForm=${StrPasswordTypeForm} IntRandomSeedFactor=${IntRandomSeedFactor} IntDefaultFactor=${IntDefaultFactor} IntDefaultPwdSize=${IntDefaultPwdSize} StrAppsPwdGenerator=${StrAppsPwdGenerator} BoolEvalCmdExit=${BoolEvalCmdExit} StrUrlGetter=${StrUrlGetter} BoolDisplayFnctDFLAG=${BoolDisplayFnctDFLAG} ]
+
 
 :Note: 822d36e2-6517-11e6-98a2-001e4c8856d6
 :Title: Recurrent call in GetUUID Not dangerous and uses isolated Arrays formation 
