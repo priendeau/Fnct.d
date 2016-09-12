@@ -11,7 +11,7 @@ declare -a ArrayLibName=( fnct_debian_lib ) ;
 declare -a ArrayNotReUseLib=( fnct_debian_lib ) 2> /dev/null 
 
 ### Loaded Services of Fnct.D
-declare -a ArrayLib=( fnct_debian_lib _sub_jack_script _sub_Git _sub_setup_py_extra_cmd _sub_ssh_handler _sub_vlc_services ) ;
+declare -a ArrayLib=( fnct_debian_lib _sub_jack_script _sub_Git _sub_setup_py_extra_cmd _sub_ssh_handler _sub_vlc_services _sub_binary ) ;
 ### Agreed project under many Services declared file:
 SubGitCommitTransaction="True"
 SubSSHAgentLoader="True"

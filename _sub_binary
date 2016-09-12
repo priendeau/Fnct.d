@@ -1,0 +1,212 @@
+
+unset MakeHuffmanPair ; 
+function MakeHuffmanPair()
+{
+ local __call_locality=( MHP MakeHuffmanPair ) ;
+ local ArrayArg=( $* ) ; 
+ local Arg0=${ArrayArg[0]} ; 
+ local IntNbHuffmanPair=${MHPNumberOfPair:=64} ;
+ local BoolDisplayDebug=${MHPIsDisplayDebug:=False} ; 
+ local BoolDisplayStartup=${MHPIsDisplayStartup:=True} ;
+ local StrFileStoreResult=${MHPStoreResult:=file-sort.txt}
+ local StrUUID=$( GetUUID ) ; 
+ local StrValList="IntNbHuffmanPair,BoolDisplayDebug,BoolDisplayStarup,StrFileStoreResult,StrUUID" ; 
+ function Verbosis()
+ {
+  local __call_locality=( Verbosis Verb );
+  local StrMsg=${VerbMsg:=__TEXT__} ; 
+  local StrDevOut=${VerbDev:=/dev/stderr} ; 
+  local IsVerboseState=${VerbState:=False} ;
+  local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+  local IsDisplayFormatted=${VerbFormated:=True} ;
+  local ArrayArg=( $* ) ; 
+  if [ "${IsVerboseState:=False}" == "True" ] ; then 
+   if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+     echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+   else
+     echo -ne "${StrMsg}\n" > ${StrDevOut} ;
+   fi 
+  fi
+ } 
+ ### Model : VerbHeader="DEBUG" VerbMsg=${StrMsg} VerbFormated=True VerbState=True Verbosis
+   
+ function __main_StartServices()
+ {
+		local __call_locality=( Main __main_StartServices ${StrParent} ) ;
+		local Arg0=${ArrayArg[0]} ;
+		local ArrayArg=( $* ) ; 
+  local -A ArrayHuffman ;
+  local ArrayTypeExpansion=( "0__A__" "__A__0" "1__A__" "__A__1" ) ; 
+  
+  
+  local StrPairStart="10" ; 
+  ArrayHuffman[${StrPairStart}]="00001" ;   
+  local ApairList=( ) ;
+  local StrMsg="" ; 
+  StrMsg="We should discover __INT__ number(s) of pair." ; 
+  VerbHeader="DEBUG" VerbMsg=${StrMsg//__INT__/${IntNbHuffmanPair}} VerbFormated=True VerbState=${BoolDisplayStartup} Verbosis
+  intx=1 ;
+  while [ ${intx:=1} -ne ${IntNbHuffmanPair}  ] ; do 
+  
+   SkipLevel=0 ; 
+   ### APair is used to start inspection inside three from lowest to highest.
+   ### By Pair we will use form in ArrayTypeExpansion to inject 0 on right and 
+   ### left side to inspect reduction to nill by usinf operator ${name//[01]+Apair[01]+}
+   ### and evaluating the size to 0 -> found it similar, to Len-N make different 
+   ### and still higher than Analysed pair. 
+   ### 
+   sleep 1 ; 
+   for Apair in ${!ArrayHuffman[@]} ; do 
+    ### Ennoncing all Know pair elligible to test theirs branching ability
+    ### So, inside a pure binary tree where each concatenation of 1 or 0
+    ### can generate 4 branches by question, we are getting  a result 
+    ### so This result will by filtered by reducing the predicated pair to
+    ### not reduce to nil the previous accepted pair inside the huffman-code 
+    ### prefix
+    ### 
+    ###       ex:              10  ( Start )
+    ###                   +------+------+
+    ###                  /      / \      \
+    ###                 /      /   \      \
+    ###                /      |     |      \
+    ###               /       /     \       \
+    ###              / *1    /*2     \*3     \*4
+    ###           1?(101)  1?(110) 0?(010)-+  0?(100)
+    ###         +---+---+   ->Forming 9-12 +   +-------Forming 17-20
+    ###        /   /\    \            [[[[ +---> Forming 13-16
+    ###   *5  /   /  \    \           [[
+    ###  1?(1101) |   \    |     <----[[ Forced to Add One more char inside 
+    ###        *6 |    \   | *8       [[ ArrayTypeExpansion to form 
+    ###         1?(1011)\  0?(1010)   [[ "00__A__" "__A__00" "11__A__" "__A__11"
+    ###                  \*7          [[   to find out about branch 5 forming 21-24 
+    ###                  0?(0101)     [[[[   +==> where it should like this *21,111101 *22,110111 *23,001101 *24,110100
+    ###                                    to find out about branch 6 forming 25-28
+    ###                                    to find out about branch 7 forming 29-32
+    ###                                    to find out about branch 8 forming 33-36 
+    ###   So at the step we are reducing number 5,6,7 or 8, we know 
+    ###   only few way to make it fast, or simply re-filter the discovered pair in DPair and 
+    ###   if they are present, we exclude the add of this example.
+    StrMsg="Starting Analysis to Pair «__PAIR__», CountingPair : __INT__" ; 
+    StrMsg=${StrMsg//__PAIR__/${Apair}} ; 
+    StrMsg=${StrMsg//__INT__/${intx}} ; 
+    VerbHeader="DEBUG" VerbMsg=${StrMsg} VerbFormated=True VerbState=${BoolDisplayDebug} Verbosis
+
+    if [ ${intx:=1} -lt ${IntNbHuffmanPair} ] ; then 
+     StrMsg="We haven't hit Maximum number or Huffmann pair, __CURR__ / __MAX__"
+     StrMsg=${StrMsg//__CURR__/${intx}} ; 
+     StrMsg=${StrMsg//__MAX__/${IntNbHuffmanPair}} ; 
+     
+     VerbHeader="DEBUG" VerbMsg=${StrMsg} VerbFormated=True VerbState=${BoolDisplayDebug} Verbosis
+     IntFamilyPair=0 ;
+     for Bpair in ${ArrayTypeExpansion[@]} ; do 
+      
+     
+      StrMsg="Working with template __TPL__"
+      VerbHeader="DEBUG" VerbMsg=${StrMsg//__TPL__/${Bpair}} VerbFormated=True VerbState=${BoolDisplayDebug} Verbosis
+      
+      TempPair=${Bpair//__A__/${Apair}} ; 
+      StrMsg="Testing Pair: __PAIR__" ; 
+      StrMsg=${StrMsg//__PAIR__/${TempPair}} ;
+      
+      VerbHeader="DEBUG" VerbMsg="${StrMsg}" VerbFormated=True VerbState=${BoolDisplayDebug} Verbosis
+      for CPair in  ${!ArrayHuffman[@]} ; do 
+
+       IntCpairSize=${#CPair} ;
+       IntTmpPairSize=${#TempPair} ;
+       if [ ${IntTmpPairSize} -ge ${IntCpairSize}  ] ; then 
+        StrReduce=${TempPair//${CPair}/} ;
+        ### remaining to add Does the StrReduce or remainder is found inside the list.
+        ### if it's true, we do had problem, by founding one item from the tree inside 
+        ### bunch of coded data and llok for the wrong code we loosing the whole integrity . 
+        IntIntegrity=0 ; 
+        for IPair in ${!ArrayHuffman[@]} ; do 
+         if [ "${IPair}" == "${StrReduce}" ] ; then 
+          IntIntegrity=1 ; 
+         fi
+        done 
+        StrMsg="Reducing temporary Pair «__PARSE__» with Pair Huffman : «__PAIR__»: , giving __RESULT__" ;
+        StrMsg=${StrMsg//__PAIR__/${CPair}} ;
+        StrMsg=${StrMsg//__PARSE__/${TempPair}} ;
+        StrMsg=${StrMsg//__RESULT__/${StrReduce}} ;
+        VerbHeader="DEBUG" VerbMsg=${StrMsg} VerbFormated=True VerbState=${BoolDisplayDebug} Verbosis ;
+        IntSizeP=${#StrReduce} ; 
+        if [ ${intx:=1} -lt ${IntNbHuffmanPair} ] ; then 
+         if [ ${IntSizeP:=0} -gt 0  ] ; then
+          if [ ${IntIntegrity:=0} -ne 1  ] ; then 
+            InspectPair=0 ; 
+            ### can we found this pair inside the list.
+            for DPair in ${!ArrayHuffman[@]} ; do
+             if [ "${TempPair}" == "${DPair}" ] ; then InspectPair=1 ; fi 
+            done 
+            if [ ${InspectPair:=1} -eq 0  ] ; then 
+             intx=$(( ${intx} + 1 )) ;
+             StrStoreX="" ;
+             if [ ${intx:=1} -lt 10000 -a ${intx:=1} -ge 1000 ] ; then
+              StrStoreX="0${intx}" ; 
+             elif [ ${intx:=1} -lt 1000 -a ${intx:=1} -ge 100 ] ; then 
+              StrStoreX="00${intx}" ; 
+             elif [ ${intx:=1} -lt 100 -a ${intx:=1} -ge 10 ] ; then 
+              StrStoreX="000${intx}" ; 
+             elif [ ${intx:=1} -lt 10 ] ; then 
+              StrStoreX="0000${intx}" ; 
+             else
+              StrStoreX="${intx}"
+             fi
+             ArrayHuffman[${TempPair}]=${StrStoreX} ;
+             StrMsg="Added Pair: __PAIR__, Member no.__INT__" ; 
+             StrMsg=${StrMsg//__PAIR__/${TempPair}} ;
+             StrMsg=${StrMsg//__INT__/${intx}} ;
+             VerbHeader="DEBUG" VerbMsg=${StrMsg} VerbFormated=True VerbState=${BoolDisplayDebug} Verbosis
+            fi 
+          fi 
+         fi 
+        fi 
+       fi
+      done 
+      IntFamilyPair=$(( ${IntFamilyPair} + 1 )) ; 
+      OddPair=${TempPair} ; 
+      done 
+    fi
+    done  
+  done 
+  #local ArrayPairOrder=( ) ; 
+  #intx=1;
+  #while [ ${intx:=0} -ne ${IntNbHuffmanPair}  ] ; do 
+  # for SPair in in ${!ArrayHuffman[@]} ; do 
+  #  IntCurRank=${ArrayHuffman[${SPair}]} ;
+  #  if [ "${IntCurRank}" == "${intx}" ] ; then
+  #   ArrayPairOrder[${#ArrayPairOrder[@]}]=${SPair} ; 
+  #   intx=$(( ${intx} + 1 )) ; 
+  #  fi 
+  # done 
+  #done 
+  #StrMsg="All Pair Listed: __PAIR__" ; 
+  #StrMsg=${StrMsg//__PAIR__/${ArrayPairOrder[@]}} ; 
+  LngMsg="" ; 
+  for SPair in in ${!ArrayHuffman[@]} ; do 
+   StrMsg="${ArrayHuffman[${SPair}]} ${SPair}" ;
+   LngMsg="${LngMsg}\n${StrMsg}" ; 
+  done ;
+  VerbHeader="" VerbMsg="${LngMsg}\n" VerbFormated=False VerbDev=${StrUUID} VerbState=True Verbosis ; 
+  cat ${StrUUID} | sort -k1 > ${StrFileStoreResult} ;
+  test -f ${StrUUID} && rm -f ${StrUUID} ;
+  cat ${StrFileStoreResult}   ; 
+ }
+
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+			GetVarReference ${__call_locality[1]} ; 
+			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+		echo -ne """${ArgGet}\n""" ;
+	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+		eval $( __GetVarReferenceList ) ;	
+	elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  eval $( VTVValueEntry=${StrValList}, \ 
+          VTVIsArrayStyleInsert=True   \
+          VTVIsValueReAssign=True      \
+          VTVIsValueToConvert=False    \
+          ValueToVariable              ) __main_StartServices ; 
+	fi 
+ 
+}
