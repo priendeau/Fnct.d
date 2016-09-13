@@ -1,5 +1,6 @@
 
 unset MakeHuffmanPair ; 
+
 function MakeHuffmanPair()
 {
  local __call_locality=( MHP MakeHuffmanPair ) ;
@@ -8,9 +9,22 @@ function MakeHuffmanPair()
  local IntNbHuffmanPair=${MHPNumberOfPair:=64} ;
  local BoolDisplayDebug=${MHPIsDisplayDebug:=False} ; 
  local BoolDisplayStartup=${MHPIsDisplayStartup:=True} ;
- local StrFileStoreResult=${MHPStoreResult:=file-sort.txt}
+ local BoolSHowAddedPair=${MHPIsDisplayAddedPair:=False} ; 
+ local StrFileStoreResult=${MHPStoreResult:=file-sort.txt} ; 
+ local StrBasedTreeBranch=${MHPBaseTreeMemeber:=0__A__,__A__0,1__A__,__A__1}
+ local StrParent="${__call_locality[1]}" ;
  local StrUUID=$( GetUUID ) ; 
- local StrValList="IntNbHuffmanPair,BoolDisplayDebug,BoolDisplayStarup,StrFileStoreResult,StrUUID" ; 
+ local ArrayMsg=( ) ; 
+ ArrayMsg[0]="We should discover __INT__ number(s) of pair." ;
+ ArrayMsg[1]="Starting Analysis to Pair «__PAIR__», CountingPair : __INT__" ;
+ ArrayMsg[2]="We haven't hit Maximum number or Huffmann pair, __CURR__ / __MAX__" ;
+ ArrayMsg[3]="Working with template __TPL__" ;
+ ArrayMsg[4]="Testing Pair: __PAIR__" ;
+ ArrayMsg[5]="Reducing temporary Pair «__PARSE__» with Pair Huffman : «__PAIR__»: , giving __RESULT__" ;
+ ArrayMsg[6]="Added Pair: __PAIR__, Member no.__INT__" ;
+ local IntArrayMsg=${#ArrayMsg[@]} ;
+ local StrValList="IntArrayMsg,BoolSHowAddedPair,StrParent,IntNbHuffmanPair,BoolDisplayDebug,BoolDisplayStarup,StrFileStoreResult,StrUUID" ; 
+ 
  function Verbosis()
  {
   local __call_locality=( Verbosis Verb );
@@ -36,14 +50,20 @@ function MakeHuffmanPair()
 		local Arg0=${ArrayArg[0]} ;
 		local ArrayArg=( $* ) ; 
   local -A ArrayHuffman ;
-  local ArrayTypeExpansion=( "0__A__" "__A__0" "1__A__" "__A__1" ) ; 
+  local StrBranchMember=$( ${StrParent} --get StrBasedTreeBranch ) ; 
+  local ArrayTypeExpansion=( ${StrBranchMember//,/ } ) ; 
   
+  local ArrayMsg=( ) ; 
+  for (( intx=0 ; intx <= $( ${StrParent} --get IntArrayMsg ) ; intx++ )) ; do 
+   ArrayMsg[${intx}]=$( ${StrParent} --get ArrayMsg[${intx}] );
+  done 
   
   local StrPairStart="10" ; 
   ArrayHuffman[${StrPairStart}]="00001" ;   
   local ApairList=( ) ;
   local StrMsg="" ; 
-  StrMsg="We should discover __INT__ number(s) of pair." ; 
+  #StrMsg=$( ${StrParent} --get ArrayMsg[0] ) ; 
+  StrMsg=${ArrayMsg[0]} ; 
   VerbHeader="DEBUG" VerbMsg=${StrMsg//__INT__/${IntNbHuffmanPair}} VerbFormated=True VerbState=${BoolDisplayStartup} Verbosis
   intx=1 ;
   while [ ${intx:=1} -ne ${IntNbHuffmanPair}  ] ; do 
@@ -55,7 +75,7 @@ function MakeHuffmanPair()
    ### and evaluating the size to 0 -> found it similar, to Len-N make different 
    ### and still higher than Analysed pair. 
    ### 
-   sleep 1 ; 
+   #sleep 1 ; 
    for Apair in ${!ArrayHuffman[@]} ; do 
     ### Ennoncing all Know pair elligible to test theirs branching ability
     ### So, inside a pure binary tree where each concatenation of 1 or 0
@@ -86,13 +106,15 @@ function MakeHuffmanPair()
     ###   So at the step we are reducing number 5,6,7 or 8, we know 
     ###   only few way to make it fast, or simply re-filter the discovered pair in DPair and 
     ###   if they are present, we exclude the add of this example.
-    StrMsg="Starting Analysis to Pair «__PAIR__», CountingPair : __INT__" ; 
+    #StrMsg=$( ${StrParent} --get ArrayMsg[1] ) ; 
+    StrMsg=${ArrayMsg[1]} ; 
     StrMsg=${StrMsg//__PAIR__/${Apair}} ; 
     StrMsg=${StrMsg//__INT__/${intx}} ; 
     VerbHeader="DEBUG" VerbMsg=${StrMsg} VerbFormated=True VerbState=${BoolDisplayDebug} Verbosis
 
     if [ ${intx:=1} -lt ${IntNbHuffmanPair} ] ; then 
-     StrMsg="We haven't hit Maximum number or Huffmann pair, __CURR__ / __MAX__"
+     #StrMsg=$( ${StrParent} --get ArrayMsg[2] ) ; 
+     StrMsg=${ArrayMsg[2]} ; 
      StrMsg=${StrMsg//__CURR__/${intx}} ; 
      StrMsg=${StrMsg//__MAX__/${IntNbHuffmanPair}} ; 
      
@@ -100,12 +122,11 @@ function MakeHuffmanPair()
      IntFamilyPair=0 ;
      for Bpair in ${ArrayTypeExpansion[@]} ; do 
       
-     
-      StrMsg="Working with template __TPL__"
+      StrMsg=$( ${StrParent} --get ArrayMsg[3] ) ; 
       VerbHeader="DEBUG" VerbMsg=${StrMsg//__TPL__/${Bpair}} VerbFormated=True VerbState=${BoolDisplayDebug} Verbosis
       
       TempPair=${Bpair//__A__/${Apair}} ; 
-      StrMsg="Testing Pair: __PAIR__" ; 
+      StrMsg=$( ${StrParent} --get ArrayMsg[4] ) ; 
       StrMsg=${StrMsg//__PAIR__/${TempPair}} ;
       
       VerbHeader="DEBUG" VerbMsg="${StrMsg}" VerbFormated=True VerbState=${BoolDisplayDebug} Verbosis
@@ -124,7 +145,9 @@ function MakeHuffmanPair()
           IntIntegrity=1 ; 
          fi
         done 
-        StrMsg="Reducing temporary Pair «__PARSE__» with Pair Huffman : «__PAIR__»: , giving __RESULT__" ;
+        
+        #StrMsg=$( ${StrParent} --get ArrayMsg[5] ) ; 
+        StrMsg=${ArrayMsg[5]} ; 
         StrMsg=${StrMsg//__PAIR__/${CPair}} ;
         StrMsg=${StrMsg//__PARSE__/${TempPair}} ;
         StrMsg=${StrMsg//__RESULT__/${StrReduce}} ;
@@ -153,7 +176,9 @@ function MakeHuffmanPair()
               StrStoreX="${intx}"
              fi
              ArrayHuffman[${TempPair}]=${StrStoreX} ;
-             StrMsg="Added Pair: __PAIR__, Member no.__INT__" ; 
+             #StrMsg=$( ${StrParent} --get ArrayMsg[6] ) ; 
+             StrMsg=${ArrayMsg[6]} ; 
+
              StrMsg=${StrMsg//__PAIR__/${TempPair}} ;
              StrMsg=${StrMsg//__INT__/${intx}} ;
              VerbHeader="DEBUG" VerbMsg=${StrMsg} VerbFormated=True VerbState=${BoolDisplayDebug} Verbosis
