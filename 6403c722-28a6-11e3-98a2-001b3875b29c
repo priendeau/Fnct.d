@@ -2,59 +2,66 @@
 ### FootPrint Added, see Prefixed-Var ZSEAddFootPrint from ZenityShellEval
 ###
 
-###File:/home/maxiste/github/Fnct.D/6403c722-28a6-11e3-98a2-001b3875b29c
-###UUID-TIME-MARKER:52d9681a-636f-11e6-98a2-53b252ad1153
+###File:/etc/init.d/Fnct.D/6403c722-28a6-11e3-98a2-001b3875b29c
+###UUID-TIME-MARKER:d4472822-7aaf-11e6-8b1d-001e4c8856d6
 ###Date: ${StrDateFormat}
-###Sha1Sum: de20e9a78f1d8ebb7af47da19774943f1581253d
-### Size:2559
-### NbWord: 273\n
+###Sha1Sum: e3d1d83aefcc14f81be309c0910a773892793001
+### Size:3232
+### NbWord: 337\n
+
 
 function GetVarReference( )
 {
- local ArrayArg=( $* ) ;
  local __call_locality=( GVR GetVarReference ) ;
- local BoolsSynopsis${GVRIsSynopsis:=True} ;
- local BoolsName${GVRIsName:=True} ;
- local BoolsSummary${GVRIsSummary:=True} ;
- local BoolsDesc${GVRIsDesc:=True} ;
+ local ArrayArg=( $* ) ;
+ local Arg0=${ArrayArg[0]} ;
+ local StrParent="GetVarReference" ;
+ local BoolsSynopsis=${GVRIsSynopsis:=False} ;
+ local BoolsName=${GVRIsName:=False} ;
+ local BoolsSummary=${GVRIsSummary:=False} ;
+ local BoolsDesc=${GVRIsDesc:=False} ;
+ local BoolDisplayDebug=${GVRIsDebug:=False} ; 
  local TextDescFunc="\t_NameHelp__Synopsis__Summary__Description_" ; 
  
- if  [ "${BoolsName}" == "True" ]  ; then 
-  echo "Status of StrNameHelper: ${#StrNameHelper} char(s): [ ${StrNameHelper}] " ; 
-  if [ ${#StrNameHelper} -gt 0 ] ; then 
-    TextDescFunc=${TextDescFunc//_NameHelp_/Name\n\t${StrNameHelper}\n\n} ; 
+ if  [ "${BoolsName:=False}" == "True" ]  ; then 
+  if [ "${BoolDisplayDebug:=False}" == "True" ] ; then
+    echo "Status of StrNameHelper: ${#StrNameHelper} char(s): [ ${StrNameHelper}] " ; 
+  fi 
+  local IntNameHelpLen=${#StrNameHelper} ;
+  if [ ${IntNameHelpLen:=0} -gt 0 ] ; then 
+    TextDescFunc="""${TextDescFunc//_NameHelp_/Name\\n\\t${StrNameHelper}\\n\\n}""" ; 
   else 
-    TextDescFunc=${TextDescFunc//_NameHelp_/""} ; 
+    TextDescFunc="""${TextDescFunc//_NameHelp_/}""" ; 
   fi
  else
-  TextDescFunc=${TextDescFunc//_NameHelp_/""} ;
+  TextDescFunc="""${TextDescFunc//_NameHelp_/}""" ;
  fi
- if  [ "${BoolsSynopsis}" == "True" ]  ; then 
+ if  [ "${BoolsSynopsis:=False}" == "True" ]  ; then 
   if [ ${#StrSynopsis} -gt 0 ] ; then
-    TextDescFunc=${TextDescFunc//_Synopsis_/Synopsis\n\t${StrSynopsis}\n\n} ; 
+    TextDescFunc="""${TextDescFunc//_Synopsis_/\\nSynopsis\\n\\t${StrSynopsis}\\n\\n}""" ; 
   else
-    TextDescFunc=${TextDescFunc//_Synopsis_/""} ; 
+    TextDescFunc="""${TextDescFunc//_Synopsis_/}""" ; 
   fi 
  else
-   TextDescFunc=${TextDescFunc//_Synopsis_/""} ; 
+   TextDescFunc="""${TextDescFunc//_Synopsis_/}""" ; 
  fi 
- if  [ "${BoolsSummary}" == "True" ]  ; then 
+ if  [ "${BoolsSummary:=False}" == "True" ]  ; then 
    if [ ${#StrSummary} -gt 0 ] ; then
-    TextDescFunc=${TextDescFunc//_Summary_/Summary\n\t${StrSummary}\n\n}
+    TextDescFunc="""${TextDescFunc//_Summary_/\\nSummary\\n\\t${StrSummary}\\n\\n}""" ;
    else
-     TextDescFunc=${TextDescFunc//_Summary_/""} ;
+     TextDescFunc="""${TextDescFunc//_Summary_/}""" ;
   fi
  else
-   TextDescFunc=${TextDescFunc//_Summary_/""} ;
+   TextDescFunc="""${TextDescFunc//_Summary_/}""" ;
  fi
- if  [ "${BoolsDesc}" == "True" ]  ; then 
+ if  [ "${BoolsDesc:=False}" == "True" ]  ; then 
    if [ ${#StrDescription} -gt 0 ] ; then
-    TextDescFunc=${TextDescFunc//_Description_/Description\n\t${StrDescription}\n\n}
+    TextDescFunc="""${TextDescFunc//_Description_/\\nDescription\\n\\t${StrDescription}\\n\\n}"""
    else
-     TextDescFunc=${TextDescFunc//_Description_/""} ;
+     TextDescFunc="""${TextDescFunc//_Description_/}""" ;
    fi
  else
-  TextDescFunc=${TextDescFunc//_Description_/""} ;
+  TextDescFunc="""${TextDescFunc//_Description_/}""" ;
  fi
  # date: Sat Sep 28 21:27:21 EDT 2013
  # Adding filter of comment line in possible temporary left PrefixedVariable not
@@ -62,21 +69,22 @@ function GetVarReference( )
  function ParseInternalVar( )
  {
    local ArrayArg=( $* ) ;
-   local __call_locality=( PIV ParseInternalVar ) ;
-   egrep -i ":=" |\
-   grep -v "^[\t\ ]*#+" |\
-   sed -r 's/(^[\ \t]*)//g;s/=\$/ \$/g;s/;//g' |\
-   cut -d ' ' -f 3- |\
-   sed 's/\(:=\)/ /g;s/\${//g;s/}$//g;s/\(^[A-Za-z0-9=_]* \)/Variable \1,\n\tDefault Value:/g' | sed 's/[\}\{]//g' ;
+   local Arg0=${ArrayArg[0]} ;
+   local __call_locality=( PIV ParseInternalVar ${StrParent} ) ;
+   /bin/egrep -i ":=" | /bin/grep -v "^[\t\ ]*#+" | /bin/sed -r 's/(^[\ \t]*)//g;s/=\$/ \$/g;s/;//g' | /usr/bin/cut -d ' ' -f 3- | /bin/sed 's/\(:=\)/ /g;s/\${//g;s/}$//g;s/\(^[A-Za-z0-9=_]* \)/Variable \1,\n\tDefault Value:/g' | /bin/sed 's/[\}\{]//g' ;
+ # date: Wed Sep 14 14:27:21 EDT 2016
+ # Adding path to following application: grep, egrep, sed, cut . 
+ # removing  '\|', adding only '|', still searching the ':' error not found happenning freely. 
  }
 
  function ParseLocalityVar()
  {
    local ArrayArg=( $* ) ;
-   local __call_locality=( PLV ParseLocalityVar ) ;
-   egrep "__call_locality" | sed 's/[\)\(]/ /g;s/;//g' | cut -d ' ' -f 7 ;	
+   local Arg0=${ArrayArg[0]} ;
+   local __call_locality=( PLV ParseLocalityVar ${StrParent} ) ;
+   /bin/egrep "__call_locality" | /bin/sed 's/[\)\(]/ /g;s/;//g' | /usr/bin/cut -d ' ' -f 7 ;	
  }
  echo -ne "Help:\n\nFunction ${ArrayArg[0]}${TextDescFunc}\nDefault Variable Value:\n";
  local CallLocalityInternalName=$( declare -f ${ArrayArg[0]} | ParseLocalityVar ) ;
- declare -f ${ArrayArg[0]} | egrep "${CallLocalityInternalName}" | ParseInternalVar ;
+ declare -f ${ArrayArg[0]} | /bin/egrep "${CallLocalityInternalName}" | ParseInternalVar ;
 }

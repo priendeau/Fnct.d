@@ -218,8 +218,10 @@ function MakeHuffmanPair()
   cat ${StrFileStoreResult}   ; 
  }
 
+ local StrSynopsis="This is a simple N-Based Branch genertor, helpped to created Binary, Trinary or N-based Tree to help generating example in storing ability of log thru indexed refenrence. "
+ local StrDescription="This application using artefact of Associative Array, it store inside Array index the binary result. Made it simply and Getter are yield at the beginning of the loop of main function __main_StartServices to prevent to slow he application in both Debugging or not. It using the parameter MHPBaseTreeMemeber to visit any accepted entry inside the associative Array to visit any Pre-fixed Code. Prefixed code stand for mechanical N-Base operation of concatenating member from this parameter. See parameter expect to create 4 branches for 4 mechanicals position where 1 or 0 will be concatenating before and after. Making 4 branch. Developping Equivalent algorithm, with possibly uses of MHPBaseTreeMemeber=0__A__,__A__0,1__A__,__A__1,2__A__,__A__2 will use 3 states possible and inflate the Tree to 6 branches by level. Branches are nominated inside the Associative array by discovery and depend of an algorithm. Using the replacement of a Parent pair it remove itself the parent pair inside the resultat concatenating and does a test accross already founded pair and anaylyse the result to ensure the remaning substartedfrom string reduction of the Parent pair there is no know result or this pair is not selected. It's more similar to LZW pair creationg except it does not come with assocition of data to be passed inside the Associative Array. Coming out of Shanon expression where it's global appelation, this Tree help building log of registered event if this tree is correct." ;
  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-			GetVarReference ${__call_locality[1]} ; 
+			GVRIsSynopsis=True GVRIsDess=True GetVarReference ${__call_locality[1]} ; 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
