@@ -3,10 +3,10 @@
 ###
 
 ###File:/etc/init.d/Fnct.D/6403c722-28a6-11e3-98a2-001b3875b29c
-###UUID-TIME-MARKER:d4472822-7aaf-11e6-8b1d-001e4c8856d6
+###UUID-TIME-MARKER:06426ff4-7ac8-11e6-8b1d-001e4c8856d6
 ###Date: ${StrDateFormat}
-###Sha1Sum: e3d1d83aefcc14f81be309c0910a773892793001
-### Size:3232
+###Sha1Sum: 735ae05500f40f6c88ae79e59d07d1f87ba3c51e
+### Size:3238
 ### NbWord: 337\n
 
 
@@ -21,7 +21,7 @@ function GetVarReference( )
  local BoolsSummary=${GVRIsSummary:=False} ;
  local BoolsDesc=${GVRIsDesc:=False} ;
  local BoolDisplayDebug=${GVRIsDebug:=False} ; 
- local TextDescFunc="\t_NameHelp__Synopsis__Summary__Description_" ; 
+ local TextDescFunc="_NameHelp__Synopsis__Summary__Description_" ; 
  
  if  [ "${BoolsName:=False}" == "True" ]  ; then 
   if [ "${BoolDisplayDebug:=False}" == "True" ] ; then
@@ -29,7 +29,7 @@ function GetVarReference( )
   fi 
   local IntNameHelpLen=${#StrNameHelper} ;
   if [ ${IntNameHelpLen:=0} -gt 0 ] ; then 
-    TextDescFunc="""${TextDescFunc//_NameHelp_/Name\\n\\t${StrNameHelper}\\n\\n}""" ; 
+    TextDescFunc="""${TextDescFunc//_NameHelp_/Name\\n${StrNameHelper}\\n\\n}""" ; 
   else 
     TextDescFunc="""${TextDescFunc//_NameHelp_/}""" ; 
   fi
@@ -38,7 +38,7 @@ function GetVarReference( )
  fi
  if  [ "${BoolsSynopsis:=False}" == "True" ]  ; then 
   if [ ${#StrSynopsis} -gt 0 ] ; then
-    TextDescFunc="""${TextDescFunc//_Synopsis_/\\nSynopsis\\n\\t${StrSynopsis}\\n\\n}""" ; 
+    TextDescFunc="""${TextDescFunc//_Synopsis_/\\nSynopsis\\n\\t\\t${StrSynopsis}\\n\\n}""" ; 
   else
     TextDescFunc="""${TextDescFunc//_Synopsis_/}""" ; 
   fi 
@@ -47,7 +47,7 @@ function GetVarReference( )
  fi 
  if  [ "${BoolsSummary:=False}" == "True" ]  ; then 
    if [ ${#StrSummary} -gt 0 ] ; then
-    TextDescFunc="""${TextDescFunc//_Summary_/\\nSummary\\n\\t${StrSummary}\\n\\n}""" ;
+    TextDescFunc="""${TextDescFunc//_Summary_/\\nSummary\\n\\t\\t${StrSummary}\\n\\n}""" ;
    else
      TextDescFunc="""${TextDescFunc//_Summary_/}""" ;
   fi
@@ -56,7 +56,7 @@ function GetVarReference( )
  fi
  if  [ "${BoolsDesc:=False}" == "True" ]  ; then 
    if [ ${#StrDescription} -gt 0 ] ; then
-    TextDescFunc="""${TextDescFunc//_Description_/\\nDescription\\n\\t${StrDescription}\\n\\n}"""
+    TextDescFunc="""${TextDescFunc//_Description_/\\nDescription\\n\\t\\t${StrDescription}\\n\\n}"""
    else
      TextDescFunc="""${TextDescFunc//_Description_/}""" ;
    fi
@@ -84,7 +84,7 @@ function GetVarReference( )
    local __call_locality=( PLV ParseLocalityVar ${StrParent} ) ;
    /bin/egrep "__call_locality" | /bin/sed 's/[\)\(]/ /g;s/;//g' | /usr/bin/cut -d ' ' -f 7 ;	
  }
- echo -ne "Help:\n\nFunction ${ArrayArg[0]}${TextDescFunc}\nDefault Variable Value:\n";
+ echo -ne "Help:\n\nFunction ${ArrayArg[0]}\n${TextDescFunc}\nDefault Variable Value:\n";
  local CallLocalityInternalName=$( declare -f ${ArrayArg[0]} | ParseLocalityVar ) ;
  declare -f ${ArrayArg[0]} | /bin/egrep "${CallLocalityInternalName}" | ParseInternalVar ;
 }

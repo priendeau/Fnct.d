@@ -2997,6 +2997,110 @@ function ZenityShellEval()
 
 
 }
+ ### TagParser :
+ ###
+ ### Tag Parser	 Ability To parse tagged Information from known varable name.
+ ###	
+ ### Synopsis 
+ ### This is a simple application to provide to function conversion of String of 
+ ### text with Tag ( noted __TAG__ by default ).
+ ###
+ ### Summary
+ ### Providing a Text transformation from provided varaible name inside  parameter. 
+ ### Content expect to exist inside a function, this is a provided evaluation of a 
+ ### loop transformaing an Entry variable name from tag supplied. Noted the 
+ ### evaluation brace is required, a.k.a $( TP...=... eval TagParser ) to add the 
+ ### code directly inside your function. The mechanism allow uses of definied 
+ ### array of desired scope type it is not desctructive for array and does not 
+ ### give the destruct code for Variable name such Array inside Prefixed-Variable 
+ ### TPArrayName.
+ ###
+
+function TagParser( )
+{
+ local __call_locality=( TP TagParser ) ;
+ local ArrayArg=( $* ) ; 
+ local Arg0=${ArrayArg[0]} ;
+ 
+ local StrTagList=${TPListTag:=StrA:__TAGA__,StrB:__TAGB__,IntA:__INT__} ; 
+ local StrVarEntry=${TPVarEntry:=StrEntry} ; 
+ local StrArrayName=${TPArrayName:=ArrayTagParser} ;
+ local StrIterName=${TPIterNameVar:=TagParser} ;
+ local StrLeftPattern=${TPLeftStrPtrn:=[SIB][tnos][a-zA-Z0-9_]*:} ; 
+ local StrRightPattern=${TPRightStrPtrn:=:__[A-Za-z0-9_,]*} ;
+ local StrScopeVar=${TPScopeVar:=local} ; 
+ local StrVarAssign=${TPVarNameParsed:=StrVarEntry}
+ local BoolDebugDisplay=${TPDisplayDebug:=False} ;
+ local BoolDisplayEvalOnly=${TPDisplayEvalOnly:=False} ; 
+ 
+ function Verbosis()
+	{
+		local __call_locality=( Verbosis Verb );
+		local StrMsg=${VerbMsg:=__TEXT__} ; 
+		local StrDevOut=${VerbDev:=/dev/stderr} ; 
+  local IsVerboseState=${VerbState:=False} ;
+  local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+  local IsDisplayFormatted=${VerbFormated:=True} ;
+		local ArrayArg=( $* ) ; 
+		if [ "${IsVerboseState:=False}" == "True" ] ; then 
+   if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+     echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+   else
+     echo -ne "${StrMsg}\n" > ${StrDevOut} ;
+   fi 
+		fi
+	} ### Model : VerbMsg= VerbDev=/dev/stderr VerbState=True VerbFormated=True VerbHeader=${__call_locality[1]} Verbosis
+ 
+ 
+ local StrValList="BoolDisplayEvalOnly,StrTagList,StrVarEntry,StrArrayName,StrIterName,StrLeftPattern,StrRightPattern,StrCmd,StrScopeVar,StrVarAssign" ; 
+ 
+ function __main_StartServices()
+ {
+  local __call_locality=( Main __main_StartServices ${StrParent} ) ;
+  local Arg0=${ArrayArg[0]} ;
+  local ArrayArg=( $* ) ; 
+  local ArrayTagParser=( ${StrTagList//,/ } ) ; 
+ 
+  StrCmd=""" ${StrScopeVar} StrPairLeft ; 
+ ${StrScopeVar} StrPairRight ; 
+ ${StrScopeVar} ${StrArrayName}=( ${StrTagList//,/ } ) ; 
+ for ${StrIterName} in \${${StrArrayName}[@]} ; do 
+   StrPairLeft=\${${StrIterName}/#${StrLeftPattern}/} ; 
+   StrPairRight=\${${StrIterName}/%${StrRightPattern}/} ; 
+   eval ${StrVarAssign}=\${${StrVarAssign}//${StrPairLeft}/\${\${StrPairRight}}}; 
+ done """ ; 
+
+  
+  StgMsg="CmdLine: __CMD__" ; 
+  VerbMsg=${StgMsg//__CMD__/${StrCmd}} VerbHeader="DEBUG:${__call_locality[1]}" VerbState=${BoolDebugDisplay} VerbFormated=True VerbDev=/dev/stderr Verbosis
+  
+  if [ "${BoolDisplayEvalOnly:=False}" == "False" ] ; then 
+   VerbMsg=${StrCmd} VerbHeader="" VerbState=True VerbFormated=False VerbDev=/dev/stdout Verbosis ; 
+  fi
+ } 
+ 
+ local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
+ local StrNameHelper="Tag Parser\t Ability To parse tagged Information from known varable name.";
+ local StrSynopsis="This is a simple application to provide to function conversion of String of text with Tag ( noted __TAG__ by default ). ";
+ local StrSummary="Providing a Text transformation from provided varaible name inside  parameter. Content expect to exist inside a function, this is a provided evaluation of a loop transformaing an Entry variable name from tag supplied. Noted the evaluation brace is required, a.k.a \$( TP...=... eval TagParser ) to add the code directly inside your function. The mechanism allow uses of definied array of desired scope type it is not desctructive for array and does not give the destruct code for Variable name such Array inside Prefixed-Variable TPArrayName."
+ 
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+			BoolsSynopsis=True BoolsName=True BoolsSummary=True GetVarReference ${__call_locality[1]} ; 
+			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+		echo -ne """${ArgGet}\n""" ;
+	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+		eval $( __GetVarReferenceList ) ;	
+	elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  eval $( VTVValueEntry=${StrValList}, \ 
+          VTVIsArrayStyleInsert=True \
+          VTVIsValueReAssign=True \
+          VTVIsValueToConvert=False \
+          ValueToVariable  ) __main_StartServices ; 
+	fi 
+ 
+}
 
 
 
@@ -3014,6 +3118,7 @@ function ZenityShellEval()
  ###
  ###
  ###
+
 
 
 unset StartCoproc
