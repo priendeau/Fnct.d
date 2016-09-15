@@ -464,12 +464,15 @@ function __old_vlc_rate()
  local StrVLCCmd="${VLCRATECMD:=rate __RATE__}" ; 
  local StrSentCmd="" ;
  local IntHighestRate=${VLCRATEHIGHESTRATE:=100} ;    
+ local IntLowestRate=${VLCRATELOWESTRATE:=70};
  local BoolVerb=${Verbose:=True} ;
  local ArrayMsg=( )
  local StrDisplayHeader="DEBUG" ; 
  ArrayMsg[0]="List or range [ __ARRAY__ ], Nb Item: __ITEM__" ;
  ArrayMsg[1]="Rate Fixed to __RATE__, for __SEC__ seconds" ;
- ArrayMsg[2]="Pushing VLC-Cli comand:[ __CMD__ ]"
+ ArrayMsg[2]="Pushing VLC-Cli command:[ __CMD__ ]"
+ ArrayMsg[3]="Highest Rate :[ __INT__ ]"
+ ArrayMsg[4]="Lowest Rate :[ __INT__ ]"
  
  function Verbosis()
 	{
@@ -485,11 +488,22 @@ function __old_vlc_rate()
 	}
  
  ### Create the random-field olding N-range of Possible Rate.  
- for (( intx=0 ; intx <= ${IntRandRange} ; intx++ )) ; do 
+ intx=0;
+ StrMsg=${ArrayMsg[3]//__INT__/${IntHighestRate}} ;
+ VerbHeader=${StrDisplayHeader} VerbMsg=${StrMsg} VerbState=True VerbDev=/dev/stderr Verbosis
+ 
+ StrMsg=${ArrayMsg[4]//__INT__/${IntLowestRate}} ; 
+ VerbHeader=${StrDisplayHeader} VerbMsg=${StrMsg} VerbState=True VerbDev=/dev/stderr Verbosis
+ while [ ${intx} -ne ${IntRandRange} ] ; do 
+ ### Retreiving for_loop and adding while to control lowest and highest rate. 
+ #for (( intx=0 ; intx <= ${IntRandRange} ; intx++ )) ; do 
   IntRateInsert=$(( ${IntHighestRate} - ( ${RANDOM} %  ${IntRandRange} ) )) ;
   ### A Direct convertion of rate 0-100 to 0.0 to 1.0 is performed. 
-  StrRateFmt=$( echo "scale=2 ;${IntRateInsert} / 100" | bc ) ;
-  ArrayRateLevel[${#ArrayRateLevel[@]}]="${StrRateFmt}" ;  
+  if [ ${IntRateInsert} -ge ${IntLowestRate} -a ${IntRateInsert} -le ${IntHighestRate} ] ; then 
+   StrRateFmt=$( echo "scale=2 ;${IntRateInsert} / 100" | bc ) ;
+   ArrayRateLevel[${#ArrayRateLevel[@]}]="${StrRateFmt}" ;  
+   intx=$(( ${intx} + 1 )) ; 
+  fi
  done  ;
  StrMsg=${ArrayMsg[0]//__ARRAY__/${ArrayRateLevel[@]}}
  StrMsg=${StrMsg//__ITEM__/${#ArrayRateLevel[@]}}
@@ -529,7 +543,7 @@ function __old_vlc_rate()
   VerbHeader=${StrDisplayHeader} VerbMsg=${StrMsg} VerbState=True VerbDev=/dev/stderr Verbosis
   #echo "Pushing VLC-Cli comand:[ ${StrSentCmd} ]" > /dev/stderr ; 
   ### Forced Message
-  echo "${StrSentCmd}" | nc -4 -n ${VLCSERVER:=192.168.0.72} ${VLCSRVPORT:=5080} -Treliability 2>&1 /dev/null  ; 
+  echo "${StrSentCmd}" | nc -4 -n ${VLCSERVER:=192.168.0.72} ${VLCSRVPORT:=5080}  2>&1 /dev/null  ; 
   sleep ${IntSleep} ; 
  done ; 
   
