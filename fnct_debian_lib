@@ -1841,6 +1841,8 @@ if [ "${versionVTV:=0.0.2}" == "0.0.2" ] ; then
   local IntValueSep=${VTVISeparatorType:=0};
   local StrVarFilter=${VTVVarFilter:=[SIB][tnos][a-zA-Z0-9_]*__SEP__} ; 
   local StrRejectionList=${VTVRejectionFilter:=[a-zA-Z0-9_]*} ; 
+  local IsWhiteList=${VTVIsWhiteList:=False} ;
+  local StrWhiteListAgree=${VTVWhiteListTransfert:=CFLAGS,LDFLAGS,CC,GCC,CPP} ;
   local IsValueSimpleConvert=${VTVIsValueToConvert:=True} ;
   local IsValueToReAssign=${VTVIsValueReAssign:=True} ;
   local StrPrefix=${VTVReasignPrefix:=None} ;
@@ -1899,6 +1901,9 @@ if [ "${versionVTV:=0.0.2}" == "0.0.2" ] ; then
    local IsValueToReAssign=$( ValueToVariable --get IsValueToReAssign ) ; 
    local IsValueSimpleConvert=$( ValueToVariable --get IsValueSimpleConvert ) ; 
    local IsSlowDebugOut=$( ValueToVariable --get IsSlowDebugOut ) ; 
+   local IsWhiteList=$( ValueToVariable --get IsWhiteList ) ; 
+   local StrWhiteListAgree=$( ValueToVariable --get StrWhiteListAgree ) ;
+   local ArrayWhiteList=( ${StrWhiteListAgree//,/ } ) ;  
    local StrNPrefix="" ;  
    local StrNSuffix="" ; 
    local StrCharSep=${StrListSep:${IntCharSel}:1} ; 
@@ -2053,12 +2058,27 @@ if [ "${versionVTV:=0.0.2}" == "0.0.2" ] ; then
         ### Now IsValueSimpleConvert==False
         if [ ${IntPolishForm:=0} -eq 1  ] ; then 
          ArrayVarList[${#ArrayVarList[@]}]="""${StrNewVarEntry}=\${${StrNewVarEntry}}""" ; 
+        elif [ "${IsWhiteList:=False}" == "True" ] ; then 
+         ### White-list can be inserted here after ele claude from this statement. 
+         IntScanWhite=0 ; 
+         for StrNameVar in ${ArrayWhiteList[@]} ; do 
+          if [ "${StrNewVarEntry}" == "${StrNameVar}" ] ; then 
+           IntScanWhite=1 ; 
+          fi 
+         done
+         if [ ${IntScanWhite:=0} -eq 1 ] ; then 
+          StrMsg="Element __VAR__ is White-Listed, added to normal flow."
+          VerbMsg="${StrMsg//__VAR__/${StrNewVarEntry}}" VerbHeader="WHITELIST-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
+          ArrayVarList[${#ArrayVarList[@]}]="""${StrNewVarEntry}=\${${StrNewVarEntry}}""" ; 
+         fi    
+        ### end of elif "${IsWhiteList:=False}" from if-${IntPolishForm:=0}
         else
-         ArrayRejectionList[${#ArrayRejectionList[@]}]=${StrNewVarEntry}
-        ### White-list can be inserted here after ele claude from this statement. 
+          ArrayRejectionList[${#ArrayRejectionList[@]}]=${StrNewVarEntry} ;
         fi 
         ### IsValueSimpleConvert-> False, IsValueToReAssign->True
+       ### End of if "${IsValueSimpleConvert:=False}"
        fi 
+     ### End of if-"${IsValueToReAssign:=False}"
      else
        ### Now IsValueToReAssign == False 
        ### Changing side, becoming IsValueSimpleConvert 
@@ -2156,6 +2176,10 @@ if [ "${versionVTV:=0.0.2}" == "0.0.2" ] ; then
   }
 
   local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
+  local StrNameHelper="ValueToVariable\t\tThe Fnct.D Mechanisme acting as Re-Copy Pass-Thru Variable in Variable authorized to be transfered from Higher-level function to Sub-Level Function.";
+  local StrSynopsis="Since implementation of TSR resident like Python command-not-found or any type of Layer in interactive Shell in Both Curse Bash Command-Line and/or xterminal, gtk-terminal, The behavior of function is not clear and are not totally accessible. ValueToVariable eliminate problems of declare and following constraint, local variable can travel thru sub-function. ";
+  local StrSummary="ValueToVariable allow creation of variable Assignation before running the application or function. Creating a code evaluation it return in form of VAR1=\${VAR1}  VAR2=\${VAR2} Application ; Where VAR1,VAR2 will be already available inside nestled function or real-function . If the are made from Top-function, Shell command like declare make variable existing beyond Master Function Body, which overcrowding variable after death or termination with uses if unset still existing and increase amount of memory without cleaning it. The mechanism is Filtering Thru and exercise a filter over Polish Notation Respect to enforce uses of Strict Notation to have an idea of their uses. Since Polish notation is adopted inside the Fnct.D, uses of evaluation brace to expand code inside function like BoolVarTest( newest version of BoolVarTestVarCreation) expanding Preambule-code, The If-N clause and it's Assertion code inside function to make parseable function to analyse it faster and discover bottle-neck by re-coding clause and action. ValueToVariable is madatory associated with  Prompt mechanism to pass the __main_StartServices and receive the authorized variable list. Description is under development to explain in depth uses of ValueToVariable, including uses of Whitelist where some power mechanisme like compiler depend of variable like CFLAGS, LDFLAGS... white list nad it's key to activate it VTVIsWhiteList." ; 
+   
   if [ "${Arg0:=--startservices}" == "--help"	] ; then 
     GetVarReference ${__call_locality[1]} ; 
     echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
