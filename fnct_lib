@@ -87,23 +87,97 @@ function PatchUpdater()
 ### 
 ### bzip2 -dc patch-netservices-Fncd.D.0.0.2.bz2 | patch --directory=/etc
 
+### 
+### function LibLoader
+### Main BootStrap loading file from /etc/init.d/Fnct.D and registered inside ArrayLib.
+### 
+### LibLoader does support silent mode and unregistration of function. This is not a 
+### perfect de-registration mechanisme because it does not support file loaded from 
+### Library from Fnct.D like UUID chunk Development, but it is not a complex mechanism
+### to develop du to it's mechanism to load a Chunk. It's a File can be loaded with 
+### '.' and it's file name are plain UUID. so seeking them, like step of unloading 
+### inside --stopservices side from LoadLib doest de-registerate from memory something
+### « rare » in function development. 
+### 
+### Coming with no helper, Before creating light, everything were in the dark . 
+### So here couple of Prefixed-variable and switches. 
+### 
+### Prefixed-Variable
+### 
+### LLDisplayProg Choice : [ True | False ]
+###  Show or hide Status of loading or deregistering the application.
+### 
+### LLStatusDev Choice : [ 0 | 1 ]
+###  0 -> In alpha development and there is nothing more to get even trigger it to 1 .
+###  1 -> Will be first beta Stage for early 2018 or before.  
+### 
+### Switches 
+###  
+###  
+###  
+###  
+###
+
 function LibLoader()
 {
-	echo -ne "Testing Lib Fnct.D\n" > /dev/stderr ; 
+ local __call_locality=( LL LibLoader ) ;
+ local ArrayArg=( $* ) ; 
+ local Arg0=${ArrayArg[0]} ;
+ local IntStatusLib=${LLStatusDev:=0} ; 
+ local BoolDisplayProg=${LLDisplayProg:=True} ;
+ local StrSwitchMessages="${StrSwitchesShow}${StrGetMsgSwitches}\n${StrStartSwitches}\n${StrStopSwitches}\n" ;
+ 
+ local ArrayLibStatus=( "Testing Lib Fnct.D\n" "Registering Lib Fnct.D\n" )
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+			echo -ne "Function ${__call_locality[1]}\n" ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+		echo -ne """${ArgGet}\n""" ;
+	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+		eval $( __GetVarReferenceList ) ;	
+	elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
+ if [ "${BoolDisplayProg:=True}" == "True" ] ; then
+   echo -ne "${ArrayLibStatus[${IntStatusLib}]}" > /dev/stderr ; 
+ fi ;  
+  ### Actually this algo did not unregister Chunk named by a UUID inside fnct_debian_lib... 
+  ArrayListFunc=( )  ; 
+  for (( intx=0 ; intx <= ${#ArrayLib[@]}-1 ; intx++ )) ; do 
+   _LibName=( ${ArrayLib[${intx}]//\// } ) ; 
+   LibName=${_LibName[$((${#_LibName[@]}-1))]} ; 
+   LibFile=${FNCTDLIBPATH}/${ArrayLib[${intx}]} ;
+   if [ ${BoolDisplayProg:=True} == "True" ] ; then
+    test -e ${LibFile} && echo -ne "Un-Loading...\t\t[ \033[01;33m${LibName}\033[00m ]\n" > /dev/stderr ;
+   fi 
+   if [ -e ${LibFile} ] ; then 
+    ArrayListFunc=( $( cat ${LibFile} | egrep "^[\ \t]*function" | grep -v "pkg-config-all" | sed 's/[\)\(]//g;s/\(function \)\([A-Za-z0-9\-\_]*\)/\2/g;s/^\ *//g' | tr '[:cntrl:]' ' '  ) ) ; 
+    unset ${ArrayListFunc[@]} ;  
+   fi
+  done 
+ elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+ if [ "${BoolDisplayProg:=True}" == "True" ] ; then
+   echo -ne "${ArrayLibStatus[${IntStatusLib}]}" > /dev/stderr ; 
+ fi ;  
 	for (( intx=0 ; intx <= ${#ArrayLib[@]}-1 ; intx++ )) ; do 
 	 _LibName=( ${ArrayLib[${intx}]//\// } ) ; 
 	 LibName=${_LibName[$((${#_LibName[@]}-1))]} ; 
 	 LibFile=${FNCTDLIBPATH}/${ArrayLib[${intx}]} ;
-	 test -e ${LibFile} && echo -ne "Loading...\t\t[ \033[01;33m${LibName}\033[00m ]\n" > /dev/stderr ;
+	 if [ "${BoolDisplayProg:=True}" == "True" ] ; then
+    test -e ${LibFile} && echo -ne "Loading...\t\t[ \033[01;33m${LibName}\033[00m ]\n" > /dev/stderr ;
+  fi 
 	 test -e ${LibFile} && . ${LibFile} ; 
 	 if [ "${LibName:=fnct_lib}" == "fnct_debian_lib" ] ; then 
    Sertvices="Not ready"
   ### Services Ready for fnct_debian_lib, update can be inserted 
   fi 
  done 
+	
+ fi 
+
 }
 
-LibLoader ; 
+### Don't worry it's not so easy to spell it up to your neighborhood. 
+LLDisplayProg=${LLDisplayProg:=True} LLStatusDev=${LLStatusDev:=0} LibLoader --startservices ; 
 
 
 ########### ###################################################################
