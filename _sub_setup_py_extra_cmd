@@ -1,4 +1,152 @@
 
+unset EasySetupPythonInstall ; 
+function EasySetupPythonInstall() 
+{  
+ local __call_locality=( ESPI EasySetupPythonInstall ) ; 
+ local ArrayArg=( $* ) ; 
+ local Arg0=${ArrayArg[0]} ;
+ local StrAppsPyInstaller=${ESPIAppsInstaller:=setup.py}
+ local StrAppsPythonApps=${ESPIPythonCall:=/usr/bin/python2.7} ; 
+ local StrSetupStep=${ESPISetupSteplist:=build,build_py,build_ext,build_clib,build_scripts,install,install_lib,install_headers,install_scripts,install_data,bdist}
+ local StrParentApps="${__call_locality[1]}" ; 
+ #local ArrayInstallStep=( build build_py build_ext build_clib build_scripts install install_lib install_headers install_scripts install_data bdist ) ; 
+ local StrEasySetupDependency="EPREFIX,PREFIX,DATAROOTDIR,BUILD,HOST,CC,CFLAGS,LDFLAGS,LIBS,CPPFLAGS,CPP" ;
+ local ArrayFunctOrder=( FileCompilationRequired ExecuteEasyInstall PostEggLookUp ) ;
+ #local IntFunctOrder=${#ArrayFunctOrder[@]} ; 
+ local StrListVar="StrEasySetupDependency,StrAppsPyInstaller,StrAppsPythonApps,StrSetupStep,StrParentApps"
+
+ function Verbosis()
+	{
+		local __call_locality=( Verbosis Verb );
+		local StrMsg=${VerbMsg:=__TEXT__} ; 
+		local StrDevOut=${VerbDev:=/dev/stderr} ; 
+  local IsVerboseState=${VerbState:=False} ;
+  local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+  local IsDisplayFormatted=${VerbFormated:=True} ;
+		local ArrayArg=( $* ) ; 
+		if [ "${IsVerboseState:=False}" == "True" ] ; then 
+   if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+     echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+   else
+     echo -ne "${StrMsg}\n" > ${StrDevOut} ;
+   fi 
+		fi
+	} ### Model : VerbMsg= VerbDev=/dev/stderr VerbState=True VerbFormated=True VerbHeader=${__call_locality[1]} Verbosis
+
+ 
+ function FileCompilationRequired()
+ {
+  local __call_locality=( FCR FileCompilationRequired ) ;
+  local Arg0=${ArrayArg[0]} ;
+  local ArrayArg=( $* ) ; 
+  local IntRet=1 ; 
+  if [ -f ${StrAppsPyInstaller} ] ; then 
+   IntRet=0 ;
+  fi 
+  return ${IntRet} ; 
+ }
+ 
+ function PostEggLookUp()
+ {
+  local __call_locality=( PELU PostEggLookUp ${StrParentApps} ) ;
+  local Arg0=${ArrayArg[0]} ;
+  local ArrayArg=( $* ) ; 
+  echo -ne "\n\n\tSearching Egg file:\n" ; 
+  local StrFind=$( find ./ -type f -iname "*.egg" ) ; 
+  local IntFindLen=${#StrFind} ; 
+  local IntRet=1 ; 
+  if [ ${IntFindLen:=0} -gt 1 ] ; then 
+   IntRet=0 ; 
+  fi 
+  echo "${StrFind}" ; 
+  return ${IntRet} ; 
+ }
+ 
+ function ExecuteEasyInstall()
+ {
+  local __call_locality=( EEI ExecuteEasyInstall ${StrParentApps} ) ;
+  local Arg0=${ArrayArg[0]} ;
+  local ArrayArg=( $* ) ; 
+  local -A ArrayRetCode=( ) ;
+  local IntRet=0 ; 
+  for iStep in ${ArrayInstallStep[@]} ; do 
+    eval $( VTVValueEntry=${StrEasySetupDependency},${StrListVar} \ 
+            VTVIsWhiteList=True        \
+            VTVWhiteListTransfert=${StrEasySetupDependency} \
+            VTVIsArrayStyleInsert=True \
+            VTVIsValueReAssign=True    \
+            VTVIsValueToConvert=False  \
+            ValueToVariable  ) ${StrAppsPythonApps} ${StrAppsPyInstaller} ${iStep} ;   
+            ArrayRetCode[${iStep}]="$?" ; 
+  done 
+  local -i IntStepError=0 ;
+  local -i IntErrorRet=0 ;   
+  echo -ne "Status of All Step executed : "
+  for StepInstall in ${!ArrayRetCode[@]} ; do 
+   eval "IntErrorRet=${ArrayRetCode[${StepInstall}]}" ; 
+   IntStepError=$(( ${IntStepError} + ${IntErrorRet} )) ; 
+   echo -ne "Step:${StepInstall}: result:${IntRet[${StepInstall}]}\n" ; 
+  done 
+  if [ ${IntStepError:=0} -gt 1 ] ; then 
+   IntRet=1 ;
+  fi
+  return ${IntRet} ; 
+ }
+ 
+ function __main_StartServices()
+ {
+  local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+  local Arg0=${ArrayArg[0]} ;
+  local ArrayArg=( $* ) ; 
+  local ArrayInstallStep=( ${StrSetupStep//,/ } ) ; 
+  
+  local IntRet=0 ; 
+  for FuncName in $( ${StrParentApps} --get ArrayFunctOrder[@] ) ; do 
+    echo -ne "Executing Function ${FuncName}.\n"
+    sleep 5 ; 
+    if [ ${IntRet:=0} -eq 0 ] ; then 
+     eval $( VTVValueEntry=${StrEasySetupDependency},${StrListVar} \ 
+             VTVIsWhiteList=True        \
+             VTVWhiteListTransfert=${StrEasySetupDependency} \
+             VTVIsArrayStyleInsert=True \
+             VTVIsValueReAssign=True    \
+             VTVIsValueToConvert=False  \
+             ValueToVariable  ) ${FuncName}
+     IntRet=$? ; 
+    else
+     echo -ne "Function ${FuncName}, return an error, other step are skipped.\n" ; 
+    fi
+  done 
+
+ 
+ }
+
+ local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
+ local StrNameHelper="EasySetupPythonInstall\t Mostly pass across all build explain in a PyDoc about easy_setup.py";
+ local StrSynopsis="Application that simply start all Step in a build like build build_py build_ext build_clib build_scripts install install_lib... And give a topo of the build at the end. Anormally even by hand Python easy_setup.py did not report the status of a step launched rather than fioltering the output or having hard error like compiler error. A left this design seem to work for generally distributed python module not installable by pip or not directly by querying the modu with pypi. Also this application did not install ez_setup like EasyInstallKit which is not working since major architecture flaw make unusable some old shell-function. Should also replace PythonSetup from _sub_setup_py_extra_cmd.";
+ local StrSummary="Application able to detect if a step building is successfull or not and at last find out builded egg file for exportation or system registration. Notice, This is the first Application using WhiteList from ValueToVariable to accept external variable CC,LDFLAGS,CFLAGS to be see from sub function. Some case where meet where application like gcc, configure where unable to see them ."
+ 
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+			GVRIsName=True GVRIsSynopsis=True GVRIsSummary=True GetVarReference ${__call_locality[1]} ; 
+			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+		echo -ne """${ArgGet}\n""" ;
+	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+		eval $( __GetVarReferenceList ) ;	
+	elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  eval $( VTVValueEntry=${StrEasySetupDependency},${StrListVar} \ 
+          VTVIsWhiteList=True        \
+          VTVWhiteListTransfert=${StrEasySetupDependency} \
+          VTVIsArrayStyleInsert=True \
+          VTVIsValueReAssign=True    \
+          VTVIsValueToConvert=False  \
+          ValueToVariable  ) __main_StartServices ; 
+	fi  
+ 
+}
+
+
 if [ "${SubSEPDownloadMgmt:=False}" == "True" ] ; then 
 ### DwnLinkCommitID Notice :
 ### 

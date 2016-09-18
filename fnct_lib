@@ -38,6 +38,55 @@ declare -a ArrayDateFormat=( "%Y%m%d_%H:%M:%S(UNIX(sec,ns):%s.%N)" "%Y%m%d_%H:%M
 
 ### Loader 
 
+unset PatchUpdater
+function PatchUpdater()
+{
+ local __call_locality=( PU PatchUpdater ) ;
+ local ArrayArg=( $* ) ; 
+ local Arg0=${ArrayArg[0]} ;
+ 
+ local StrValList="" ; 
+ local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
+ 
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+			GetVarReference ${__call_locality[1]} ; 
+			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+		echo -ne """${ArgGet}\n""" ;
+	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+		eval $( __GetVarReferenceList ) ;	
+	elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  eval $( VTVValueEntry=${StrValList}, \ 
+          VTVIsArrayStyleInsert=True \
+          VTVIsValueReAssign=True \
+          VTVIsValueToConvert=False \
+          ValueToVariable  ) __main_StartServices ; 
+	fi  
+}
+### Warning, PatchUpdater work only with LibLoader and presence of fnct_debian_lib loaded.
+### Let LibLoader call PatchUpdater or wait on your command shell to call PatchUpdater. 
+### Notice : e06d907a-7c38-11e6-8b1d-001e4c8856d6
+### Reference : Tricky loader or a Boot-strap loader . 
+### 
+### Story of Boot-loader loading function from other part loaded information require
+### important tool like memory link to pipe to in-memory loaded information to call 
+### different element. Known to initrd having freezing starting script it's only 
+### when initrd is decompacted you can profit from it's functionnality. 
+### 
+### 
+### Same Story start over and using technique from memory feeding function code 
+### from LibLoader, calling function like BoolVarTest, BoolVarTestVarCreation,
+### ValueToVariable can be writed here only if the loader make a pending clause
+### to the Loader and know by loading function inside fnct_debian_lib are ready
+### because the statement 'test -e ${LibFile} && . ${LibFile} ; ' was done  . 
+### 
+### 
+### 
+### 
+### 
+### bzip2 -dc patch-netservices-Fncd.D.0.0.2.bz2 | patch --directory=/etc
+
 function LibLoader()
 {
 	echo -ne "Testing Lib Fnct.D\n" > /dev/stderr ; 
@@ -47,7 +96,10 @@ function LibLoader()
 	 LibFile=${FNCTDLIBPATH}/${ArrayLib[${intx}]} ;
 	 test -e ${LibFile} && echo -ne "Loading...\t\t[ \033[01;33m${LibName}\033[00m ]\n" > /dev/stderr ;
 	 test -e ${LibFile} && . ${LibFile} ; 
-	done 
+	 if [ "${LibName:=fnct_lib}" == "fnct_debian_lib" ] ; then 
+  ### Services Ready for fnct_debian_lib, update can be inserted 
+  fi 
+ done 
 }
 
 LibLoader ; 
