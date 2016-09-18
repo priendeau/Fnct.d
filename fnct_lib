@@ -45,7 +45,7 @@ function PatchUpdater()
  local ArrayArg=( $* ) ; 
  local Arg0=${ArrayArg[0]} ;
  
- local StrValList="" ; 
+ local StrVarList="" ; 
  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
  
  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
@@ -57,7 +57,7 @@ function PatchUpdater()
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
 		eval $( __GetVarReferenceList ) ;	
 	elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
-  eval $( VTVValueEntry=${StrValList}, \ 
+  eval $( VTVValueEntry=${StrVarList}, \ 
           VTVIsArrayStyleInsert=True \
           VTVIsValueReAssign=True \
           VTVIsValueToConvert=False \
@@ -97,6 +97,7 @@ function LibLoader()
 	 test -e ${LibFile} && echo -ne "Loading...\t\t[ \033[01;33m${LibName}\033[00m ]\n" > /dev/stderr ;
 	 test -e ${LibFile} && . ${LibFile} ; 
 	 if [ "${LibName:=fnct_lib}" == "fnct_debian_lib" ] ; then 
+   Sertvices="Not ready"
   ### Services Ready for fnct_debian_lib, update can be inserted 
   fi 
  done 

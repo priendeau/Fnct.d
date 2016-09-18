@@ -3077,7 +3077,7 @@ function TagParser( )
 	} ### Model : VerbMsg= VerbDev=/dev/stderr VerbState=True VerbFormated=True VerbHeader=${__call_locality[1]} Verbosis
  
  
- local StrValList="BoolDisplayEvalOnly,StrTagList,StrVarEntry,StrArrayName,StrIterName,StrLeftPattern,StrRightPattern,StrCmd,StrScopeVar,StrVarAssign" ; 
+ local StrVarList="BoolDisplayEvalOnly,StrTagList,StrVarEntry,StrArrayName,StrIterName,StrLeftPattern,StrRightPattern,StrCmd,StrScopeVar,StrVarAssign" ; 
  
  function __main_StartServices()
  {
@@ -3118,7 +3118,7 @@ function TagParser( )
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
 		eval $( __GetVarReferenceList ) ;	
 	elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
-  eval $( VTVValueEntry=${StrValList}, \ 
+  eval $( VTVValueEntry=${StrVarList}, \ 
           VTVIsArrayStyleInsert=True \
           VTVIsValueReAssign=True \
           VTVIsValueToConvert=False \
