@@ -220,12 +220,20 @@ function VLCServer()
 		local __call_locality=( Verbosis Verb );
 		local StrMsg=${VerbMsg:=__TEXT__} ; 
 		local StrDevOut=${VerbDev:=/dev/stderr} ; 
-  local VerboseState=${VerbState:=False} ;
+  local IsVerboseState=${VerbState:=False} ;
+  local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+  local IsDisplayFormatted=${VerbFormated:=True} ;
 		local ArrayArg=( $* ) ; 
-		if [ "${VerboseState:=False}" == "True" ] ; then 
-			echo -ne "VERBOSE:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+		if [ "${IsVerboseState:=False}" == "True" ] ; then 
+   if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+     echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+   else
+     echo -ne "${StrMsg}\n" > ${StrDevOut} ;
+   fi 
 		fi
-	}
+	} 
+ ### Model : VerbMsg= VerbDev=/dev/stderr VerbState=True VerbFormated=True VerbHeader=${__call_locality[1]} Verbosis
+
  
  function __main_StartServices()
  {
@@ -323,12 +331,20 @@ function __vlc_rate()
 		local __call_locality=( Verbosis Verb );
 		local StrMsg=${VerbMsg:=__TEXT__} ; 
 		local StrDevOut=${VerbDev:=/dev/stderr} ; 
-  local VerboseState=${VerbState:=False} ;
+  local IsVerboseState=${VerbState:=False} ;
+  local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+  local IsDisplayFormatted=${VerbFormated:=True} ;
 		local ArrayArg=( $* ) ; 
-		if [ "${VerboseState:=False}" == "True" ] ; then 
-			echo -ne "VERBOSE:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+		if [ "${IsVerboseState:=False}" == "True" ] ; then 
+   if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+     echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+   else
+     echo -ne "${StrMsg}\n" > ${StrDevOut} ;
+   fi 
 		fi
-	}
+	} 
+ ### Model : VerbMsg= VerbDev=/dev/stderr VerbState=True VerbFormated=True VerbHeader=${__call_locality[1]} Verbosis
+
  local StrMsg="" ; 
 
  local ArrayRateLevel=( ); 
@@ -391,6 +407,26 @@ function OldVLCServer()
  local StrAppsListenOption=${OVLCSAppsLiten:=-l}
  local StrSocketAddr=${OVLCSSockAddr:=127.0.1.1};
  local StrSocketPort=${OVLCSSockPort:=5080};
+ local BoolDisplayCmdLine=${OVLCDisplayCmd:=False};
+ 
+ function Verbosis()
+	{
+		local __call_locality=( Verbosis Verb );
+		local StrMsg=${VerbMsg:=__TEXT__} ; 
+		local StrDevOut=${VerbDev:=/dev/stderr} ; 
+  local IsVerboseState=${VerbState:=False} ;
+  local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+  local IsDisplayFormatted=${VerbFormated:=True} ;
+		local ArrayArg=( $* ) ; 
+		if [ "${IsVerboseState:=False}" == "True" ] ; then 
+   if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+     echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+   else
+     echo -ne "${StrMsg}\n" > ${StrDevOut} ;
+   fi 
+		fi
+	} 
+ ### Model : VerbMsg= VerbDev=/dev/stderr VerbState=True VerbFormated=True VerbHeader=${__call_locality[1]} Verbosis
  
  function __main_StartServices()
  {
@@ -398,15 +434,18 @@ function OldVLCServer()
 		local Arg0=${ArrayArg[0]} ;
 		local ArrayArg=( $* ) ; 
   ### StrVLCApps,StrVLCAppsPlaylist,StrSocketApps,StrSocketOption,StrAppsBufferOption,StrSocketBufferOption,StrAppsListenOption,StrSocketAddr
-  test -e rm -f ${HOME}/.vlc-server ; 
-  mkfifo ${HOME}/.vlc-server ; 
+  test -f ${HOME}/.vlc-server && rm -f ${HOME}/.vlc-server  ; 
+  test ! -f ${HOME}/.vlc-server && mkfifo ${HOME}/.vlc-server ; 
   
-  cat ${HOME}/.vlc-server | \
-    ${StrVLCApps} ${StrVLCAppsPlaylist} | \
-    ${StrSocketApps} ${StrSocketOption} \
-    ${StrAppsBufferOption} ${StrSocketBufferOption} \
-    ${StrAppsListenOption} ${StrSocketAddr} ${StrSocketPort} > ${HOME}/.vlc-server 
-
+  local StrCmd="""cat ${HOME}/.vlc-server | \
+  ${StrVLCApps} ${StrVLCAppsPlaylist} | \
+  ${StrSocketApps} ${StrSocketOption} \
+  ${StrAppsBufferOption} ${StrSocketBufferOption} \
+  ${StrAppsListenOption} ${StrSocketAddr} ${StrSocketPort} > ${HOME}/.vlc-server """ ; 
+  
+  VerbMsg=${StrCmd} VerbDev=/dev/stderr VerbState=${BoolDisplayCmdLine} VerbFormated=True VerbHeader="CMDLINE" Verbosis  
+  $( eval "${StrCmd}" ) ; 
+  
  }
  
  function __main_StopServices()
@@ -427,7 +466,7 @@ function OldVLCServer()
 		eval $( __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
   eval $( VTVIsArrayStyleInsert=True \
-  VTVValueEntry=StrVLCApps,StrVLCAppsPlaylist,StrSocketApps,StrSocketOption,StrAppsBufferOption,StrSocketBufferOption,StrAppsListenOption,StrSocketAddr \
+  VTVValueEntry=BoolDisplayCmdLine,StrVLCApps,StrVLCAppsPlaylist,StrSocketApps,StrSocketOption,StrAppsBufferOption,StrSocketBufferOption,StrAppsListenOption,StrSocketAddr \
   VTVIsValueReAssign=True  \
   VTVIsValueToConvert=False \
   VTVIsArrayStyleInsert=True \
