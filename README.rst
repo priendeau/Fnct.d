@@ -525,7 +525,7 @@ function LibLoader
 :Method: Componnent Development. 
 
 
-  Is the Main BootStrap of this services, having application or simply file-shell-script. to developt, The LibLoader hold portion of code you do expect to require to create your services or simply your shell script. The main setup librairy holding all necessary function are store inside ArrayLib, where this one can be modified before launching the LibLoader. LibLoader also assume you have launched /etc/init.d/Fnct.D/fnct_lib at least once, it manage the Bootstraping and launch one after the other the rest of the function file defined. Because of it's colorfull startup, some may prefer to launch it silently on serious application, here some information helping you to start-it up. 
+Is the Main BootStrap of this services, having application or simply file-shell-script. to developt, The LibLoader hold portion of code you do expect to require to create your services or simply your shell script. The main setup librairy holding all necessary function are store inside ArrayLib, where this one can be modified before launching the LibLoader. LibLoader also assume you have launched /etc/init.d/Fnct.D/fnct_lib at least once, it manage the Bootstraping and launch one after the other the rest of the function file defined. Because of it's colorfull startup, some may prefer to launch it silently on serious application, here some information helping you to start-it up. 
  
 
  
