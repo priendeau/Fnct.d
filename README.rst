@@ -526,33 +526,7 @@ function LibLoader
 
   Is the Main BootStrap of this services, having application or simply file-shell-script. to developt, The LibLoader hold portion of code you do expect to require to create your services or simply your shell script. The main setup librairy holding all necessary function are store inside ArrayLib, where this one can be modified before launching the LibLoader. LibLoader also assume you have launched /etc/init.d/Fnct.D/fnct_lib at least once, it manage the Bootstraping and launch one after the other the rest of the function file defined. Because of it's colorfull startup, some may prefer to launch it silently on serious application, here some information helping you to start-it up. 
   
-  
 
-LibLoader does support silent mode and unregistration of function. This is not a  perfect de-registration mechanisme because it does not support file loaded from  Library from Fnct.D like UUID chunk Development, but it is not a complex mechanism to develop du to it's mechanism to load a Chunk. It's a File can be loaded with  '.' and it's file name are plain UUID. so seeking them, like step of unloading  inside --stopservices side from LoadLib doest de-registerate from memory something « rare » in function development. __main_StartServices() or __main_StopServices() it's because built-it command 'declare -f' does not giving all the property of a function and only respect posix form to display information on need. But it's twice harder to ouput __main_StartServices() from 'declare -f' than looking directly inside the script file.... Bash may remain out-of informations for this purposes or require to install development bash file to develop more accurate function built-in command. 
-LibLoader does support the StartServices and StopServices. StartServices used by calling `LibLoader --starservices` does load all the function from file-script inside /etc/init.d/Fnct.D. As well `LibLoader --stopservices` does unload with an internal bash 'unset' call all current function and old function too. It's also removing sub-function because declare internal function is special, using command 'declare -f FUNCTIONNAME', the function FUNCTIONNAME owning couples of function are display like text of the whole function, but if FUNCTIONNAME having a sub-function called  UNDERFUNCTIONNAME, using 'declare -f UNDERFUNCTIONNAME' will be displayed too. Thoses asking why there is no conflits with application for SSH tunelling git repository is not entering in conflicts with other 
-
-Coming with no helper, Before creating light, everything were in the dark . So here couple of Prefixed-variable and switches. 
-
-.. code:: shell
-
- ### Prefixed-Variable
- ### 
- ### LLDisplayProg Choice : [ True | False ]
- ###  Show or hide Status of loading or deregistering the application.
- ### 
- ### LLStatusDev Choice : [ 0 | 1 ]
- ###  0 -> In alpha development and there is nothing more to get even trigger it to 1 .
- ###  1 -> Will be first beta Stage for early 2018 or before.  
- 
-.. code:: shell
- 
- ### Launching it from shell will look like this :  
- $>  LLDisplayProg=False LLStatusDev=0 ./etc/init.d/Fnct.D/fnct_lib 
- 
- ### Or Even LibLoader 
- $>  LLDisplayProg=False LLStatusDev=0 LibLoader --startservices 
-  
-  
   
  
  
