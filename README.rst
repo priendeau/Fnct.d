@@ -106,7 +106,7 @@ In this documentation some convention are used to explicitly name some element
 as it was definied by author and what the author definied inside this library.
 According to this Library, following term :
 
-- Evalutative brace is      : equivalent to 
+- Evalutative-Executive brace is : equivalent to 
 .. code-block:: shell
 
  ' eval $( ... ) '
@@ -153,6 +153,45 @@ According to this Library, following term :
   if [ "${IsHomeUser}" == "False" ]  ; then
     StrPathAttribute=${StrPathBase} ;
   fi
+
+- Pass-Thru or Variable-ReCopy is 
+
+.. code-block:: she
+
+ ### Mechanism in function calling sub-function and preserve Variable integrity.
+ ### For this re-writing code by simply had conservatory example like:
+ ### - Long If-Line being pushed inside Function; Capturing variable inside this 
+ ### long If Brace will reduce time re-writing the code by simply filling the 
+ ### Prefixed-Variable named VTVValueEntry:
+ 
+ eval $( VTVValueEntry=${StrVarList},StrWiteRegister,StrWriteTempInfo,StrUUID,StrTempUUID,StrDateEvent  \ 
+           VTVIsArrayStyleInsert=True    \
+           VTVIsValueReAssign=True       \
+           VTVIsValueToConvert=False     \
+           ValueToVariable  ) WriteUlimitStorage ;
+
+- Re-Wrinting Short-Template or template is
+
+.. code-block:: shell 
+
+ ### This Hack Re-Write the template located inside an Assertive If-Condiftion on If-Side where
+ ### default parameter inscribe here allow uses of an ValueToVariable form and re-writing
+ ### The template named BVTVTVTPLA 
+ ### from original form : 
+ ###   Value:eval __TES__  __REGISTRY_ASRT__ VTVValueEntry=__VAR_ENTRY_ASRT__ ValueToVariable __TEE__ __FNCT_ASRT__
+ ### To :
+ ###   "\$( eval \"__FNCT_ASRT__\" )"
+ ### Of course there is something missing like Function Name in this function called 
+ ### Executive-Evaluative brace, so prefixed-var BVTVTFnctA should be used :
+ ###  
+ BVTIsPreambule=False                         \
+ BVTBoolCase=True                             \
+ BVTBoolVarName=\${BoolDisplayCmdOnly:=False} \
+ BVTIsValueToVar=False                        \
+ BVTBoolCase=True                             \
+ BVTIsValueToVarAssert=True                   \
+ BVTVTVTPLA="\$( eval \"__FNCT_ASRT__\" )"    \
+ BVTVTFnctA=\${StrCmd}               BoolVarTest
 
 
 Unicity Convention
@@ -2810,6 +2849,55 @@ __GetVarReferenceCompWord, __GetVarReferenceList.
            fi
           }
 
+Creating Documentary Acceptable Helper.
+---------------------------------------
+
+GetVarReference was simply boosted from Key helping user to add Documentary, « Wisdommation », Documentation to help the user to understand the role of your function or simply the internal function list. ValueToVariablebeing mainly used is not commented everytime. There is few mechanism in some function Throwing out the Evaluated code but are not linked with specific part under the eyes to understand certainly the purposes of this section. Having developped GetVarReference ith Prefixed-Variable built-in, we can arbritrary make documentation like manpage by calling the switch '--help' but require some varaible to exist like 
+::
+ +------------------+-------------------------------------------------------------------------
+ |StrNameHelper     | Give a Name to your Descriptive Helper
+ +------------------+-------------------------------------------------------------------------
+ |StrSynopsis       | Give in short-term the uses of your variable
+ +------------------+-------------------------------------------------------------------------
+ |StrSummary        | Give The Summary, or mostly in short how to use it
+ +------------------+-------------------------------------------------------------------------
+ |StrDescription    | Give even more detail if your summary was more theorical than pratical.
+ +------------------+-------------------------------------------------------------------------
+
+ This require at least uses of Prefixed-Variable used by GetVarReference to enbale them.
+ The pre-release functionnal work in date of September 2016 is barely A ratify comment and 
+ builting the experience for definition of strength and complexity of function-reign . 
+ 
+.. code :: shell
+
+  # This example enable the Synopsis, NameHelper, Summary and Description
+   if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   GVRIsName=True GVRIsSynopsis=True GVRIsSummary=True GVRIsDesc=True GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;	
+  elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
+   eval $( VTVValueEntry=${StrVarList} \ 
+           VTVIsArrayStyleInsert=True   \
+           VTVIsValueReAssign=True      \
+           VTVIsValueToConvert=False    \
+           ValueToVariable  ) __main_StopServices ; 
+  ...
+
+
+ In clear to build the helper it's rely on uses of the switches , a.k.a. --list, --get, --help which are called in bottom of the function part allowing to put the Getter without having extra code to be executed after . The Helper function called GetVarReference require these Prefixed-Variable to allow you developping safe description.
+ 
+.. code :: shell
+
+ GVRIsName=True 
+ GVRIsSynopsis=True 
+ GVRIsSummary=True 
+ GVRIsDesc=True 
+ 
+  
 Adding Prefixed-Variable to display Fnct.D lib member displaying result.
 ------------------------------------------------------------------------
 
