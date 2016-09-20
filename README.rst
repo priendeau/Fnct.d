@@ -517,10 +517,6 @@ inquirying  the uses of UUID. Goal of GetUUID is also to aggregate a  function
 UUIDRegistration  which uses of  BodyFunct will depend on.  Other alternative 
 like ShortRegistration of  Pattern, variable-set  will also own it's registration. 
 	
-function LibLoader
-~~~~~~~~~~~~~~~~~~
- 
- 
  
 Remark
 ======
