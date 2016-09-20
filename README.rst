@@ -2867,9 +2867,9 @@ GetVarReference was simply boosted from Key helping user to add Documentary, « 
 ===================  ======================================================================
 
 
-|This require at least uses of Prefixed-Variable used by GetVarReference to enbale them.
-|The pre-release functionnal work in date of September 2016 is barely A ratify comment and 
-|builting the experience for definition of strength and complexity of function-reign . 
+This require at least uses of Prefixed-Variable used by GetVarReference to enbale them.
+The pre-release functionnal work in date of September 2016 is barely A ratify comment and 
+builting the experience for definition of strength and complexity of function-reign . 
  
 .. code :: shell
 
@@ -2893,12 +2893,17 @@ GetVarReference was simply boosted from Key helping user to add Documentary, « 
 
  In clear to build the helper it's rely on uses of the switches , a.k.a. --list, --get, --help which are called in bottom of the function part allowing to put the Getter without having extra code to be executed after . The Helper function called GetVarReference require these Prefixed-Variable to allow you developping safe description.
  
-.. code :: shell
+For GetVarReference there is no Helper for it. At this step to voluntary add a in-hand helper
+for this Function is simply out of schedule but putting help here is twice an way to help. 
 
- GVRIsName=True 
- GVRIsSynopsis=True 
- GVRIsSummary=True 
- GVRIsDesc=True 
+ =================   =====  ==============================================
+ Prefixed-Variable   Value  Require This variable hold the Text to be see.
+ =================   =====  ==============================================
+ GVRIsName           True    StrNameHelper
+ GVRIsSynopsis       True    StrSynopsis
+ GVRIsSummary        True    StrSummary
+ GVRIsDesc           True    StrDescription
+ =================   =====  ==============================================
  
   
 Adding Prefixed-Variable to display Fnct.D lib member displaying result.
