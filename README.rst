@@ -519,12 +519,6 @@ like ShortRegistration of  Pattern, variable-set  will also own it's registratio
 	
 function LibLoader
 ~~~~~~~~~~~~~~~~~~
-
-
-:Note: e40085f2-7ee1-11e6-8b1d-001e4c8856d6
-:Title: LibLoader, the main Boostrap of Fnct.D .
-:Method: Componnent Development. 
-
  
  
  
