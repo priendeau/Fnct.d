@@ -533,6 +533,26 @@ LibLoader does support the StartServices and StopServices. StartServices used by
 
 Coming with no helper, Before creating light, everything were in the dark . So here couple of Prefixed-variable and switches. 
 
+.. code:: shell
+
+ ### Prefixed-Variable
+ ### 
+ ### LLDisplayProg Choice : [ True | False ]
+ ###  Show or hide Status of loading or deregistering the application.
+ ### 
+ ### LLStatusDev Choice : [ 0 | 1 ]
+ ###  0 -> In alpha development and there is nothing more to get even trigger it to 1 .
+ ###  1 -> Will be first beta Stage for early 2018 or before.  
+ 
+.. code:: shell
+ 
+ ### Launching it from shell will look like this :  
+ $>  LLDisplayProg=False LLStatusDev=0 ./etc/init.d/Fnct.D/fnct_lib 
+ 
+ ### Or Even LibLoader 
+ $>  LLDisplayProg=False LLStatusDev=0 LibLoader --startservices 
+  
+  
  
 Remark
 ======
