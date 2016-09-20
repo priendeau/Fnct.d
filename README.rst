@@ -2864,11 +2864,12 @@ GetVarReference was simply boosted from Key helping user to add Documentary, « 
  StrSummary          Give The Summary, or mostly in short how to use it
 
  StrDescription      Give even more detail if your summary was more theorical than pratical.
+-------------------  ----------------------------------------------------------------------
 
 
- This require at least uses of Prefixed-Variable used by GetVarReference to enbale them.
- The pre-release functionnal work in date of September 2016 is barely A ratify comment and 
- builting the experience for definition of strength and complexity of function-reign . 
+|This require at least uses of Prefixed-Variable used by GetVarReference to enbale them.
+|The pre-release functionnal work in date of September 2016 is barely A ratify comment and 
+|builting the experience for definition of strength and complexity of function-reign . 
  
 .. code :: shell
 
