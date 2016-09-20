@@ -2854,9 +2854,9 @@ Creating Documentary Acceptable Helper.
 
 GetVarReference was simply boosted from Key helping user to add Documentary, « Wisdommation », Documentation to help the user to understand the role of your function or simply the internal function list. ValueToVariablebeing mainly used is not commented everytime. There is few mechanism in some function Throwing out the Evaluated code but are not linked with specific part under the eyes to understand certainly the purposes of this section. Having developped GetVarReference ith Prefixed-Variable built-in, we can arbritrary make documentation like manpage by calling the switch '--help' but require some varaible to exist like 
  
-===================  ======================================================================
- Variable            Definitions
 -------------------  ----------------------------------------------------------------------
+ Variable            Definitions
+===================  ======================================================================
  StrNameHelper       Give a Name to your Descriptive Helper
 
  StrSynopsis         Give in short-term the uses of your variable
@@ -2864,7 +2864,7 @@ GetVarReference was simply boosted from Key helping user to add Documentary, « 
  StrSummary          Give The Summary, or mostly in short how to use it
 
  StrDescription      Give even more detail if your summary was more theorical than pratical.
--------------------  ----------------------------------------------------------------------
+===================  ======================================================================
 
 
 |This require at least uses of Prefixed-Variable used by GetVarReference to enbale them.
