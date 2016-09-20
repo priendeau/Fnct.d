@@ -11,16 +11,17 @@ declare -a ArrayLibName=( fnct_debian_lib ) ;
 declare -a ArrayNotReUseLib=( fnct_debian_lib ) 2> /dev/null 
 
 ### Loaded Services of Fnct.D
-declare -a ArrayLib=( fnct_debian_lib _sub_jack_script _sub_Git _sub_setup_py_extra_cmd _sub_ssh_handler _sub_vlc_services _sub_binary ) ;
+declare -a ArrayLib=( fnct_debian_lib _sub_jack_script _sub_Git _sub_setup_py_extra_cmd _sub_ssh_handler _sub_vlc_services _sub_binary _sub_PythonBoost ) ;
 ### Agreed project under many Services declared file:
-SubGitCommitTransaction="True"
-SubSSHAgentLoader="True"
-SubSSHGetPasswd="True"
-VarOldsubGit="False"
-SubOldSetupExtraPy="False"
-SubSEPDownloadMgmt="True"
+SubGitCommitTransaction="${SubGitCommitTransaction:=True}" ; 
+SubSSHAgentLoader="${SubSSHAgentLoader:=True}";
+SubSSHGetPasswd="${SubSSHGetPasswd:=True}";
+VarOldsubGit="${VarOldsubGit:=False}";
+SubOldSetupExtraPy="${SubOldSetupExtraPy:=False}";
+SubOldPythonBoost="${SubOldPythonBoost:=False}";
+SubSEPDownloadMgmt="${SubSEPDownloadMgmt:=True}";
 ### note GitHubCommitAlpha, since somes functions depends of __fnctCreateLocalityFuncParam,FParamDefaultValue and become too heavy and had problems paring information it was stop and requiert to isolated the code until a good hand can draw a clever Management tools.
-GitHubCommitAlpha="False"
+GitHubCommitAlpha="${GitHubCommitAlpha:=False}";
 
 
 declare -r FNCTDLIBPATH=${FNCTDLIBPATH:=/etc/init.d/Fnct.D} 2> /dev/null ; 

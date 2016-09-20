@@ -1831,8 +1831,7 @@ if [ "${versionVTV:=0.0.2}" == "0.0.2" ] ; then
    
   local ArrayArg=( $* ) ;
   local __call_locality=( VTV ValueToVariable ) ;
-  local ArrayArg=( $* ) ; 
-  local Arg0=${ArrayArg[0]}  
+  local Arg0="${ArrayArg[0]}" ;
   
   local StrReAssign=${VTVValueRe:=StrTestA_1,StrTestB_1,StrCTest1_1,StrDTest2_1,IntA_1,IntB_1,IsTestA_1,IsNotTestA_1}
   local StrValueParser=${VTVValueEntry:=StrTestA,StrTestB,StrCTest1,StrDTest2,IntA,IntB,IsTestA,IsNotTestA};
@@ -3048,7 +3047,6 @@ function TagParser( )
  local Arg0=${ArrayArg[0]} ;
  
  local StrTagList=${TPListTag:=StrA:__TAGA__,StrB:__TAGB__,IntA:__INT__} ; 
- local StrVarEntry=${TPVarEntry:=StrEntry} ; 
  local StrArrayName=${TPArrayName:=ArrayTagParser} ;
  local StrIterName=${TPIterNameVar:=TagParser} ;
  local StrLeftPattern=${TPLeftStrPtrn:=[SIB][tnos][a-zA-Z0-9_]*:} ; 
@@ -3057,6 +3055,11 @@ function TagParser( )
  local StrVarAssign=${TPVarNameParsed:=StrVarEntry}
  local BoolDebugDisplay=${TPDisplayDebug:=False} ;
  local BoolDisplayEvalOnly=${TPDisplayEvalOnly:=False} ; 
+ local StrVarList="BoolDisplayEvalOnly,StrTagList,StrArrayName,StrIterName,StrLeftPattern,StrRightPattern,StrCmd,StrScopeVar,StrVarAssign" ; 
+ 
+ ### Removed by confusion in code transformation . 
+ ###local StrVarEntry=${TPVarEntry:=StrEntry} ; 
+ 
  
  function Verbosis()
 	{
@@ -3077,8 +3080,7 @@ function TagParser( )
 	} ### Model : VerbMsg= VerbDev=/dev/stderr VerbState=True VerbFormated=True VerbHeader=${__call_locality[1]} Verbosis
  
  
- local StrVarList="BoolDisplayEvalOnly,StrTagList,StrVarEntry,StrArrayName,StrIterName,StrLeftPattern,StrRightPattern,StrCmd,StrScopeVar,StrVarAssign" ; 
- 
+
  function __main_StartServices()
  {
   local __call_locality=( Main __main_StartServices ${StrParent} ) ;
@@ -3086,16 +3088,21 @@ function TagParser( )
   local ArrayArg=( $* ) ; 
   local ArrayTagParser=( ${StrTagList//,/ } ) ; 
  
+  ### 
+  ### This is the injected code wil be outputed and 
+  ### require evaluation and execution brace :
+  ### in form $( eval __CODE__ ) like Value To Variable
+  ### require form $( eval __CODE__ ) Function-name 
+  ###  
   StrCmd=""" ${StrScopeVar} StrPairLeft ; 
  ${StrScopeVar} StrPairRight ; 
  ${StrScopeVar} ${StrArrayName}=( ${StrTagList//,/ } ) ; 
  for ${StrIterName} in \${${StrArrayName}[@]} ; do 
    StrPairLeft=\${${StrIterName}/#${StrLeftPattern}/} ; 
    StrPairRight=\${${StrIterName}/%${StrRightPattern}/} ; 
-   eval ${StrVarAssign}=\${${StrVarAssign}//${StrPairLeft}/\${\${StrPairRight}}}; 
- done """ ; 
+   eval \"${StrVarAssign}=\${${StrVarAssign}//\${StrPairLeft}/\\\${\${StrPairRight}}}\" ; 
+ done ; unset StrPairRight StrPairLeft ${StrArrayName} ; """ ; 
 
-  
   StgMsg="CmdLine: __CMD__" ; 
   VerbMsg=${StgMsg//__CMD__/${StrCmd}} VerbHeader="DEBUG:${__call_locality[1]}" VerbState=${BoolDebugDisplay} VerbFormated=True VerbDev=/dev/stderr Verbosis
   
