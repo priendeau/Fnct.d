@@ -1,3 +1,15 @@
+###
+### FootPrint Added, see Prefixed-Var ZSEAddFootPrint from ZenityShellEval
+###
+
+###File:/home/maxiste/github/Fnct.D/0f86b448-72f4-11e6-8b1d-001e4c8856d6
+###UUID-TIME-MARKER:2dc0a22c-808f-11e6-8b1d-89e3603c5c89
+###Date: ${StrDateFormat}
+###Sha1Sum: 963004cc8fb429b482fadc85a1e64a2dc5081cf5
+### Size:9861
+### NbWord: 981\n
+
+
 ### File Chuck development : 0f86b448-72f4-11e6-8b1d-001e4c8856d6
 
 ### test unit-command  : clear ; . /etc/init.d/Fnct.D/0f86b448-72f4-11e6-8b1d-001e4c8856d6 ; unset Verbosis GetFile GetHeader GetContent FileSplitAction __main_StartServices ;  GBLDFileStoreInfo=/home/maxiste/.ArrayMdCd GBLDActionReturnError=True  GBLDLineID=0 GBLDVerbose=False GBLDAction=GetContent GetterByLineData
@@ -6,10 +18,10 @@
 unset GetDateReportCreation; 
 function GetDateReportCreation()
 {
-	local ArrayArg=( $* ) ;
-	local __call_locality=( GDRC GetDateReportCreation ) ;
-	local Arg0=${ArrayArg[0]} ; 
-	local StrDateFormat=${GDRCDateFormat:="%Y%m%d_%H%M%S"} ; 
+ local ArrayArg=( $* ) ;
+ local __call_locality=( GDRC GetDateReportCreation ) ;
+ local Arg0=${ArrayArg[0]} ; 
+ local StrDateFormat=${GDRCDateFormat:="%Y%m%d_%H%M%S"} ; 
  local StrDateApps=${GDRCDateApps:=GetOtherDate} ;
  local StrVarListTransfert="StrDateFormat,StrDateApps" ;
  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
@@ -21,15 +33,15 @@ function GetDateReportCreation()
  
  
  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-			GetVarReference ${__call_locality[1]} ; 
-			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-		echo -ne """${ArgGet}\n""" ;
-	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( __GetVarReferenceList ) ;
+  GetVarReference ${__call_locality[1]} ; 
+  echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ;
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
-		eval $( __GetVarReferenceCompWord ) ;
+  eval $( __GetVarReferenceCompWord ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
   eval $( VTVIsArrayStyleInsert=True           \
           VTVValueEntry=${StrVarListTransfert} \
@@ -50,8 +62,8 @@ function GetDateReportCreation()
 unset MdCd ;
 function MdCd()
 { 
-	local ArrayArg=( $* ) ;
-	local __call_locality=( MC MdCd ) ;
+ local ArrayArg=( $* ) ;
+ local __call_locality=( MC MdCd ) ;
  local Arg0=${ArrayArg[0]} ; 
 
  local StrAppsExpandModel=${MCAppsExpandModel:=/bin/tar} ;
@@ -77,68 +89,68 @@ function MdCd()
  
  function Verbosis()
 	{
-		local __call_locality=( Verbosis Verb ) ;
-		local StrMsg=${VerbMsg:=__TEXT__} ; 
-		local StrDevOut=${VerbDev:=/dev/stderr} ; 
+  local __call_locality=( Verbosis Verb ) ;
+  local StrMsg=${VerbMsg:=__TEXT__} ; 
+  local StrDevOut=${VerbDev:=/dev/stderr} ; 
   local IsVerboseState=${VerbState:=False} ;
   local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
   local IsDisplayFormatted=${VerbFormated:=True} ;
-		local ArrayArg=( $* ) ; 
-		if [ "${IsVerboseState:=False}" == "True" ] ; then 
+  local ArrayArg=( $* ) ; 
+  if [ "${IsVerboseState:=False}" == "True" ] ; then 
    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
-     echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+    echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
    else
-     echo -ne "${StrMsg}\n" > ${StrDevOut} ;
+    echo -ne "${StrMsg}\n" > ${StrDevOut} ;
    fi 
-		fi
+  fi
 	}
  ### Model : VerbHeader="DEBUG" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbFormated=True VerbState=True
  
 
 		
-	function GetCol1()
-	{
-		local __call_locality=( GC1 GetCol1 ) ;
-		local ArrayArg=( $* ) ; 
+ function GetCol1()
+ {
+  local __call_locality=( GC1 GetCol1 ) ;
+  local ArrayArg=( $* ) ; 
   local Arg0=${ArrayArg[0]} ;
-		/usr/bin/cut -d ' ' -f 1 
-	}
+  /usr/bin/cut -d ' ' -f 1 
+ }
 	
-	function ShaSum1()
-	{
-		local __call_locality=( SS1 ShaSum1 ) ;
-		local ArrayArg=( $* ) ; 
+ function ShaSum1()
+ {
+  local __call_locality=( SS1 ShaSum1 ) ;
+  local ArrayArg=( $* ) ; 
   local Arg0=${ArrayArg[0]} ;
-		/usr/bin/sha1sum ;
-	}	
+  /usr/bin/sha1sum ;
+ }	
 	
-	function GetMemHeader()
-	{
-		local __call_locality=( GMH GetMemHeader ) ;
-		local ArrayArg=( $* ) ; 
+ function GetMemHeader()
+ {
+  local __call_locality=( GMH GetMemHeader ) ;
+  local ArrayArg=( $* ) ; 
   local Arg0=${ArrayArg[0]} ;
-		echo "${ArrayMdCd[@]}" | ShaSum1 | GetCol1
-	}
+  echo "${ArrayMdCd[@]}" | ShaSum1 | GetCol1
+ }
 	
-	function GetMemContent()
-	{
-		local __call_locality=( GMC GetMemContent )
-		local ArrayArg=( $* ) ; 
+ function GetMemContent()
+ {
+  local __call_locality=( GMC GetMemContent )
+  local ArrayArg=( $* ) ; 
   local Arg0=${ArrayArg[0]} ; 
-		echo "${ArrayMdCd[@]}" ; 
-	}
+  echo "${ArrayMdCd[@]}" ; 
+ }
 	
 
 
 
  function __main_StartServices()
  {
-		local __call_locality=( Main __main_StartServices ) ;
- 	local ArrayArg=( $* ) ;
+  local __call_locality=( Main __main_StartServices ) ;
+  local ArrayArg=( $* ) ;
   local Arg0=${ArrayArg[0]} ;  
-  
+
   local ArrayMdCdTag=( ${StrTagCmdParser//, } ) ; 
-  
+
   echo -ne "StrFileStoreInfo : ${StrFileStoreInfo}\n" > ${MDDevOut} ; 
   echo -ne "StrFileStoreLock : ${StrFileStoreLock}\n" > ${MDDevOut} ; 
 
@@ -165,7 +177,7 @@ function MdCd()
    local StrDate=$( GetDateReportCreation ) ; 
    local StrStoreStream="" ; 
    test ! -d	${path_loc} && mkdir -p ${path_loc} ;
-   
+
    ### Notice : 917a3c2a-e331-11e5-98a2-001e4c8856d6 
    ### Note : Problems in tar command fixed. Tar command works in different way
    ### unless somes libs where updated. 
@@ -193,7 +205,7 @@ function MdCd()
     ### and to reduce the sequence. While it's adding extra code, it skipping line simply 
     ### parsing the path we already have inside a Getter that ultimateli send us the path
     ### when it's the time to ask about it. 
-   
+
    done
    
    StrMsg=$( MdCd --get ArrayMsg[0] ) ; 
@@ -218,15 +230,15 @@ function MdCd()
  } 
  
  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-			GetVarReference ${__call_locality[1]} ; 
-			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-		echo -ne """${ArgGet}\n""" ;
-	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( __GetVarReferenceList ) ;
+  GetVarReference ${__call_locality[1]} ; 
+  echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ;
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
-		eval $( __GetVarReferenceCompWord ) ;
+  eval $( __GetVarReferenceCompWord ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
   eval $( VTVIsArrayStyleInsert=True           \
           VTVValueEntry=${StrVarListTransfert} \
