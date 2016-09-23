@@ -414,6 +414,13 @@ unset __GetVarReferenceCompWord ;
 . ${FNCTDLIBPATH}/023102e0-1833-11e3-98a2-001b3875b29c
 ### This is first pragma. BodyFunc Should manage it. 
 
+### __GetVarReferenceCompWord
+unset MdCd GetDateReportCreation ; 
+. ${FNCTDLIBPATH}/0f86b448-72f4-11e6-8b1d-001e4c8856d6
+### This is required code for MdCd, extruded from file md_cd it's code is 
+### now part of fnct_debian_lib_code.  
+
+
 ### ValueToVariable
 ### Was moved into chunk to control version, another version without uses 
 ### of sed and less as possible of BoolVarTest and/or BoolVarTestVarCreation. 
@@ -1203,27 +1210,98 @@ function BoolVarTest()
  local ArrayTypeTest=( False True ) ;
  local ArrayPreambule=( ) ; 
  local ArrayIfPattern=( ) ;
+ ### We do Agree if the clause using an Execution-ASSERTION-type  inside the 
+ ### If-clause the section after the 'then' shoud not carry any trace of 
+ ### BVTVarName, like default one StrAttrHold="" ... but should hold a trace of 
+ ### $ eval $( VTV...=... VTV...=... ValueToVariable ) Function-Name
  local StrVarNamed=${BVTVarName:=StrAttrHold} ; 
  local StrVarNamedHold=${BVTVarHold:=CONTENT} ; 
  ### Following variable Stand for Is-Preambule-Polish-Notation-Respect is respected ( 
  ### like allow cleaning content and validate output for easy-Integer respect instead 
  ### of having case like IntValue="0" so far is valuable, but fail in case and if test -> 
  ### if [ "0" -eq 0 ] ; then ; fi , will notice some problems. )
+
+ ###############
+ ### Belong to Preambule Section Only:
+ ###############
+ 
+ ### Master Switch in case, If there is an Preambule in your ValueToVariable condition
+ ### set this to True. Setting this to false will:
+ ### Remove the Preambule section and avoid creating an Executive-Assertion at this place. 
+ local IsPreambule=${BVTIsPreambule:=True} ; 
+ ### Stand for Is there is a Preambule with Variable uses, To Start creating a 
+ ### Variable with name LIKE CC, CFLAGS, LDFLAGS is not a good idea as long yo do 
+ ### set BVTIsPrmblPlNt to False, this will avoid filtering the variable and 
+ ### Ensure Wrapping from simple quote '"' any String Like variable name and wraping 
+ ### True/False in boolean case from simple quote '"' 
  local IsPreambulePolNtRespt=${BVTIsPrmblPlNt:=True} ; 
+ 
+ ### Section ValueToVariable in Preambule 
+ ### Also we should understand having declared in a case where BVTIsPreambule=False
+ ### there is no way to draw an Preambule in mode Execution-ASSERTION made from ValueToVariable.
+ local IsTypePreamb=${BVTIsValueToVar:=False} ;
+
+ ### Required variable to manage or configure a ValueToVariable Assertion inside Preambule Only.
+ local StrVTRPrbTpl=${BVTVTVTPL:=eval __TES__  __REGISTRY_PRE__ VTVValueEntry=__VAR_ENTRY_PRE__ ValueToVariable __TEE__ __FNCT_PRE__} ;
+ 
+ ### BVTVTVVar is the most used, allowing to pass-thru the variable in uses with 
+ ### the same name to the function associate to Executive-Assertion inside the Preambule.
+ ###
+ local StrVTRPrbVar=${BVTVTVVar:=IsVerbose,IsDebug} ;
+ 
+ ### BVTVTReg, Called BoolVarTest ValueToVariable Registry 
+ ### is plain Prefixed-Variable associate to pass-thru mechanisme
+ ###
+ ### To eliminate confusion an action of 
+ ###
+ ### Taking what is in left-leg members to a similar name to right-leg member 
+ ### describe by VAR1 = VAR1 is an Re-Assignation, or copy-variable algorithm.
+ ### This is not the mechanisme that copy the variable name but entry-in function
+ ### having a role to isolate the Variable and copy the content. Proof of fact  
+ ### the variable is re-copied, it lost it's value at the end of the sub-function
+ ### going back to value of the variable before the entry inside the sub-function.
+ ###
+ ###
+ local StrVTRPrbVTReg=${BVTVTReg:=VTVIsArrayStyleInsert=True VTVIsValueReAssign=True VTVIsValueToConvert=False} ;
+ 
+ ### BVTVTFnct 
+ ###
+ ### You do have a function to fill here to enable the pass-thru to a function 
+ ### this is the part required to let having a function Executed during pre-ambule.
+ ###
+ local StrVTRPrbVTFnct=${BVTVTFnct:=__FNCT__} ;
+ 
+ ###############
+ ### End of Preambule Section .
+ ###############
+ 
+ ### 
+ ### BVTBoolVarName is :
+ ### the Left member in a if-clause evaluation :
+ ### noted :
+ ### if [ BVTBoolVarName == "True" ] ; then ... ; fi 
+ ### 
+ ### But this as also had effect to not correctly specified variable if it's 
+ ### an active form variable 
+ ### Where BVTBoolVarName=BoolIsAnyAction
+ ### 
+ ### and :
+ ### local BoolIsAnyAction="False"
+ ### if [ BoolIsAnyAction == "True" ] ; then ... ; fi
+ ### ---> Should never analyse the if clause as ${BoolIsAnyAction} == "True", 
+ ### but simply doing errors.
+ ### 
+ ### so it's important inside BVTBoolVarName to specified the Variable brace in evaluation mode like 
+ ### BVTBoolVarName=\${BoolIsAnyAction} BVT...=... BVT...=... BVT...=... BoolVarTest
+ ### 
  local StrVarBoolTest=${BVTBoolVarName:=IsVarShould} ; 
  local StrDefaultBoolTest=${BVTBoolCase:=False} ;
  local StrNotAsserted=${BVTBoolAssertion:=\"\"} ;
  local StrScopeType=${BVTScopeTest:=local} ;
  local StrIfTestType=${BVTIfType:=String} ; 
  local StrIfStringOp=${BVTIfOp:='=='} ;
- local IsPreambule=${BVTIsPreambule:=True} ; 
  local StrDefaultEndTest=${BVTConclude:=";"} ;
- ### Section ValueToVariable in Preambule 
- local IsTypePreamb=${BVTIsValueToVar:=False} ;
- local StrVTRPrbTpl=${BVTVTVTPL:=eval __TES__  __REGISTRY_PRE__ VTVValueEntry=__VAR_ENTRY_PRE__ ValueToVariable __TEE__ __FNCT_PRE__} ;
- local StrVTRPrbVar=${BVTVTVVar:=IsVerbose,IsDebug} ;
- local StrVTRPrbVTReg=${BVTVTReg:=VTVIsArrayStyleInsert=True VTVIsValueReAssign=True VTVIsValueToConvert=False} ;
- local StrVTRPrbVTFnct=${BVTVTFnct:=__FNCT__} ;
+
  ### Section ValueToVariable in Assertion .
  local IsTypeAssert=${BVTIsValueToVarAssert:=False};
  local StrVTRAsrtTpl=${BVTVTVTPLA:=eval __TES__  __REGISTRY_ASRT__ VTVValueEntry=__VAR_ENTRY_ASRT__ ValueToVariable __TEE__ __FNCT_ASRT__} ;
@@ -3052,10 +3130,11 @@ function TagParser( )
  local StrLeftPattern=${TPLeftStrPtrn:=[SIB][tnos][a-zA-Z0-9_]*:} ; 
  local StrRightPattern=${TPRightStrPtrn:=:__[A-Za-z0-9_,]*} ;
  local StrScopeVar=${TPScopeVar:=local} ; 
- local StrVarAssign=${TPVarNameParsed:=StrVarEntry}
+ local StrVarAssign=${TPVarNameParsed:=StrVarEntry} ;
+ local BoolInvertPairMatch=${TPIsMatchRtoL:=True} ;
  local BoolDebugDisplay=${TPDisplayDebug:=False} ;
  local BoolDisplayEvalOnly=${TPDisplayEvalOnly:=False} ; 
- local StrVarList="BoolDisplayEvalOnly,StrTagList,StrArrayName,StrIterName,StrLeftPattern,StrRightPattern,StrCmd,StrScopeVar,StrVarAssign" ; 
+ local StrVarList="BoolInvertPairMatch,BoolDisplayEvalOnly,StrTagList,StrArrayName,StrIterName,StrLeftPattern,StrRightPattern,StrCmd,StrScopeVar,StrVarAssign" ; 
  
  ### Removed by confusion in code transformation . 
  ###local StrVarEntry=${TPVarEntry:=StrEntry} ; 
@@ -3093,16 +3172,17 @@ function TagParser( )
   ### require evaluation and execution brace :
   ### in form $( eval __CODE__ ) like Value To Variable
   ### require form $( eval __CODE__ ) Function-name 
-  ###  
-  StrCmd=""" ${StrScopeVar} StrPairLeft ; 
- ${StrScopeVar} StrPairRight ; 
- ${StrScopeVar} ${StrArrayName}=( ${StrTagList//,/ } ) ; 
- for ${StrIterName} in \${${StrArrayName}[@]} ; do 
-   StrPairLeft=\${${StrIterName}/#${StrLeftPattern}/} ; 
-   StrPairRight=\${${StrIterName}/%${StrRightPattern}/} ; 
-   eval \"${StrVarAssign}=\${${StrVarAssign}//\${StrPairLeft}/\\\${\${StrPairRight}}}\" ; 
- done ; unset StrPairRight StrPairLeft ${StrArrayName} ; """ ; 
-
+  ### 
+  local StrPairEvalOrder="" ;
+  if [ "${BoolInvertPairMatch:=True}" == "False" ] ; then 
+   StrPairEvalOrder="eval \"${StrVarAssign}=\${${StrVarAssign}//\${StrPairLeft}/\\\${\${StrPairRight}}}\"";
+  else
+   StrPairEvalOrder="eval \"${StrVarAssign}=\"\${${StrVarAssign}//\${StrPairRight}/\\\${\${StrPairLeft}}}\"";
+  fi
+   
+  StrCmd="""${StrScopeVar} StrPairLeft ; ${StrScopeVar} StrPairRight ; ${StrScopeVar} ${StrArrayName}=( ${StrTagList//,/ } ) ; for ${StrIterName} in \${${StrArrayName}[@]} ; do StrPairLeft=\"\${${StrIterName}/#${StrLeftPattern}/}\" ; StrPairRight=\"\${${StrIterName}/%${StrRightPattern}/}\" ; __PAIR_EXCHANGE_ORDER__ ; done ; unset StrPairRight StrPairLeft ${StrArrayName} ;""" ; 
+  
+  StrCmd="""${StrCmd//__PAIR_EXCHANGE_ORDER__/${StrPairEvalOrder}}""" ; 
   StgMsg="CmdLine: __CMD__" ; 
   VerbMsg=${StgMsg//__CMD__/${StrCmd}} VerbHeader="DEBUG:${__call_locality[1]}" VerbState=${BoolDebugDisplay} VerbFormated=True VerbDev=/dev/stderr Verbosis
   
