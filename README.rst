@@ -490,7 +490,18 @@ Assuming the Git developpement branch was cloned inside /etc/init.d/Fnct.D
 .. code:: shell
 	
 	$> cd /etc/init.d
-	$> sudo -s git clone https://github.com/priendeau/Fnct.d 
+	$> sudo -s git clone https://github.com/priendeau/Fnct.D
+  ### Alterntively create it somewhere else to develop on
+  ### it and do have the impression to not touch to your 
+  ### services inside /etc/init.d. can be linked to your
+  ### /etc/init.d
+  ### --- From your HOME path ---
+ /home/user$> mkdir github && cd github 
+ /home/user/github$> sudo -s git clone https://github.com/priendeau/Fnct.D
+ /home/user/github$> sudo -s ln -sf /home/user/github/Fnct.D /etc/init.d/Fnct.D
+  
+
+
 
 :Note: f4391e08-e1ba-11e5-98a2-001e4c8856d6
 :Title: Unilateraly developing corpus, not shell equivalent.
