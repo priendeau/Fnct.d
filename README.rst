@@ -424,7 +424,7 @@ This is a result from loading /etc/init.d/Fnct.d/fnct_lib from a .bashrc
 	
 Example of .bashrc configuration file with fnct_lib and some usefull widget  configured thru uses of alias. 
 
-.. code:: python
+.. code:: shell
 	
 	### Found on Top of my .bashrc 
 	. /etc/init.d/Fnct.d/fnct_lib 
@@ -471,6 +471,41 @@ Example of .bashrc configuration file with fnct_lib and some usefull widget  con
 	alias PackageRepositoryRest='PRRBackupPath=/media/COMST500GB/Linux-Debian/archives/Mint-15_x86-64/UnderscoreXDevlpt-001 PkgRepoMgmtReposIndex=/media/COMST500GB/Linux-Debian/archives/Mint-15_x86-64/UnderscoreXDevlpt-001 PackageRepositoryRest' ;
 
 
+Using this library inside a shell script is unfortunately one of the most important goal developped here. The example within this code give example like md_cd a mkdir with ability to create a log entry of date creation and on delivery date and published data inside this document will explain it's function and member used inside this library. The most easiest way is to call the Library before you start using function from this bundle. Also developping your own function inside this shell-script is up-to you but we are inviting developper to respect some easy step to develop, Pre-fixed variable header to allow being recognized by some important member ike GetVarReference, or adding extra Pre-fixed Varaiable/Parameters to GetVarReference to allow describing your function or script to allow user to understand the purposes of your function. Other option like TagParser, BoolVarTest and/or BoolVarTestVarCreation can help building from command line a full-set of IF - ELSE , IF-FI, IF-ELIF... set of clause with keeping the corect syntax. Such action like testing presence of file and doing action uppon it's presence or After execution of a program collecting it's return statement and mastering the result is something recurrent and can be registered as part-of-code being accessible thru tools comming up allowing you to register part of code, being aceessible on need and having engine cumuling occurence of the the registered sets of code to later muting thems into more evolued form or simply optimizing them. this all start by calling the Library. Here a sample coming from md_cd saving Old Array of Library and loading your proper sets:
+
+.. code:: shell
+  
+ #### Inside Script.sh
+ ### Depend from ArrayLib, putting only inside fnct_debian_lib like previously declared
+ ### make only this one be loaded. 
+ ### This will display the loaded Library on you command prompt and saving Old Set of 
+ ### configured by you .bashrc if you are loading it from favorite Bash-Shell . 
+ 
+ OldArrayLib=( ${ArrayLib[@]} ) ; 
+ ArrayLib=( fnct_debian_lib ) ; . /etc/init.d/Fnct.D/fnct_lib 
+
+	### Make it silent ...
+ 
+ OldArrayLib=( ${ArrayLib[@]} ) ; 
+ ArrayLib=( fnct_debian_lib ) ; LLDisplayProg=False . /etc/init.d/Fnct.D/fnct_lib 
+	
+ ### Unloading previous loaded function ...
+ 
+ OldArrayLib=( ${ArrayLib[@]} ) ; 
+ LLDisplayProg=True LibLoader --stopservices  ; 
+ ArrayLib=( fnct_debian_lib ) ; LLDisplayProg=False . /etc/init.d/Fnct.D/fnct_lib 
+ 
+ ### ... Your code here.
+ ###
+ ### ... End's here 
+ 
+ ### Back to Initial Set's
+ 
+ LLDisplayProg=True LibLoader --stopservices  ;
+ ArrayLib=( ${OldArrayLib[@]} ) ; LLDisplayProg=False . /etc/init.d/Fnct.D/fnct_lib 
+
+
+
 Improvement
 ===========
 
@@ -489,13 +524,15 @@ Assuming the Git developpement branch was cloned inside /etc/init.d/Fnct.D
 
 .. code:: shell
 	
-	$> cd /etc/init.d
-	$> sudo -s git clone https://github.com/priendeau/Fnct.D
-  ### Alterntively create it somewhere else to develop on
-  ### it and do have the impression to not touch to your 
-  ### services inside /etc/init.d. can be linked to your
-  ### /etc/init.d
-  ### --- From your HOME path ---
+ $> cd /etc/init.d
+ $> sudo -s git clone https://github.com/priendeau/Fnct.D
+ 
+ ### Alterntively create it somewhere else to develop on
+ ### it and do have the impression to not touch to your 
+ ### services inside /etc/init.d. can be linked to your
+ ### /etc/init.d
+ ### --- From your HOME path ---
+ 
  /home/user$> mkdir github && cd github 
  /home/user/github$> sudo -s git clone https://github.com/priendeau/Fnct.D
  /home/user/github$> sudo -s ln -sf /home/user/github/Fnct.D /etc/init.d/Fnct.D
