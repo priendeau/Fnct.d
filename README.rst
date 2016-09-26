@@ -1484,6 +1484,11 @@ To understand it's action here couple of line and it's result in Full-Debug Mode
   StrMsg="Return Status of IRet: __IRET__,\nStrTagParser:__PARSER__\nStrSelectionCmd: __STR__" ;
 
   ### Does Make All this verbose before poping you the Zenity-List Window :
+
+
+.. code:: shell
+
+
   DEBUG-ZenityFileReader:[ ZenityFilter Should return This command-line: eval $( VTVIsArrayStyleInsert=True VTVValueEntry=StrAppsName,StrTagEntry,StrParentApps,IntWidth,IntHeight,StrTitle,StrCol0,StrCol1,StrDefaultCSV,IntDefaultColExtr,StrFileInfo,StrRegSearch,BoolShowUserSelection,BoolCheckList,BoolCheckListMulti,StrVarList VTVIsValueReAssign=True VTVIsValueToConvert=False VTVIsArrayStyleInsert=True ValueToVariable ) ZenityFilter ;  ]
    : command not found
   DEBUG:__main_StartServices:[ CmdLine: local StrPairLeft ; 
@@ -1513,6 +1518,7 @@ To understand it's action here couple of line and it's result in Full-Debug Mode
   DEBUG-ZenityFileReader:[ After TagParser Action: value of StrSelectionCmd:[ StrUserSelection=$( zenity --width=400 --height=500 --list --title "Select a user for Application" --column="selection" --column="user" --radiolist $( eval $( VTVIsArrayStyleInsert=True VTVValueEntry=StrAppsName,StrTagEntry,StrParentApps,IntWidth,IntHeight,StrTitle,StrCol0,StrCol1,StrDefaultCSV,IntDefaultColExtr,StrFileInfo,StrRegSearch,BoolShowUserSelection,BoolCheckList,BoolCheckListMulti,StrVarList VTVIsValueReAssign=True VTVIsValueToConvert=False VTVIsArrayStyleInsert=True ValueToVariable ) ZenityFilter ;   ) ) ] ]
   __TEXT__
   
+The Next Function will be delivered soon and is an helper feeding informations to complex function.
 
 .. code:: shell
 
