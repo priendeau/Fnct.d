@@ -312,7 +312,8 @@ function ValueParser()
 			echo -ne "${StrValueReturn}" ;
 			
 		}
-		local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
+  ### ${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n
+		local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}${StrGetMsgSwitches}\n${StrListMsgSwitches}\n--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--query\t\tQuery for a Prefixed variable name.\n${StrCompWordMsgSwitches}\n" ;
 		if [ "${Arg0:=--startservices}" == "--help"	] ; then 
 			GetVarReference ${__call_locality[1]} ; 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
@@ -328,6 +329,8 @@ function ValueParser()
    StrDefaultScope=${StrDefaultScope}    \
    StrLocality=${StrLocality}            \
    VarHelper   ${ArrayVar[@]} ;
+  elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
+		 eval $( __GetVarReferenceCompWord ) ;
 		elif [ "${Arg0:=--startservices}" == "--startservices"	] ; then 
 			ArrayScope=${ArrayScope[@]// /,} \
    StrVarSuffix=${StrVarSuffix} \
@@ -372,12 +375,14 @@ function AddPValueStore()
 	local StrFunction=${APVSFunction:=__default_test} ; 
 	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
 	 GetVarReference ${__call_locality[1]} ;
-		local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
+		local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
 		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( __GetVarReferenceList ) ;
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
-	else
+ elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
 		echo -ne "__BODY__\n" > /dev/stderr ; 
 	fi 
 }
@@ -419,6 +424,11 @@ unset MdCd GetDateReportCreation ;
 . ${FNCTDLIBPATH}/0f86b448-72f4-11e6-8b1d-001e4c8856d6
 ### This is required code for MdCd, extruded from file md_cd it's code is 
 ### now part of fnct_debian_lib_code.  
+
+unset PackageRepositoryFilter  PackageRepositoryMgmt    PackageRepositoryRest
+### PackageRepositoryFilter  PackageRepositoryMgmt    PackageRepositoryRest 
+. ${FNCTDLIBPATH}/_sub_PackageRepository
+### 
 
 
 ### ValueToVariable
@@ -549,7 +559,6 @@ function GetterByLineData()
  local StrVerboseMacro="" ; 
  local vret=0 ;
  local StrMsg="" ; 
- local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
  local StrVarListTransfert="StrParentApps,IntGCID,IntGHID,IsVerbose,IsActionReturnError,StrFileStoreInfo,IntLineId,Stream,StrAppsTail,StrAppsHead,StrAction,StrParentApps,StrVerbosisMacro,StrFStats,StrFStatsOpt" ; 
  local ArrayMsg=( ) ;
  
@@ -720,6 +729,7 @@ function GetterByLineData()
   fi 
  }
   
+ local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
 
  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
    GetVarReference ${__call_locality[1]} ; 
@@ -840,7 +850,6 @@ function BoolVarTestVarCreation()
  local __call_locality=( BVTest BoolVarTestVarCreation ) ;
 	local ArrayArg=( $* ) ; 
 	local Arg0=${ArrayArg[0]} ;
- local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\n" ;
 ### End of Factory Section.
  local ArrayTypeTest=( False True ) ;
  local ArrayPreambule=( ) ; 
@@ -1127,6 +1136,8 @@ function BoolVarTestVarCreation()
   ### with help you changing it for a 'fi' or either a semi-colon ';' 
   ### See BVTestConclude where is default is semi-colon ';', but may old
   ### value like BVTestConclude='fi ;' , BVTestConclude='fi' 
+ 
+ local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
   
  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
 			GetVarReference ${__call_locality[1]} ; 
@@ -1136,6 +1147,8 @@ function BoolVarTestVarCreation()
 		echo -ne """${ArgGet}\n""" ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
 		eval $( __GetVarReferenceList ) ;
+ elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
+		eval $( __GetVarReferenceCompWord ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
  
   local StrMsg="\nFunction ${__call_locality[1]}, Display Result:\n ${StrTestTemplate}\n" ; 
@@ -1205,7 +1218,7 @@ function BoolVarTest()
  local __call_locality=( BVT BoolVarTest ) ;
 	local ArrayArg=( $* ) ; 
 	local Arg0=${ArrayArg[0]} ;
- local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\n" ;
+ local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
 ### End of Factory Section.
  local ArrayTypeTest=( False True ) ;
  local ArrayPreambule=( ) ; 
@@ -1673,6 +1686,8 @@ __END_TEST__ __END_MARK__ """ ;
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ;
+ elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
+		eval $( __GetVarReferenceCompWord ) ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
 		eval $( __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
@@ -1700,7 +1715,7 @@ function PropertyLibName()
 	local StrOutArrayRef=${PLNArrayRef:=ArrayLibName} ;
 	local ArrayActionType=( Add Delete Test Show ) ; 
 	
-	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\n" ;
+	local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
 	
  function __main_StartServices()
  {
@@ -1717,6 +1732,8 @@ function PropertyLibName()
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ;
+ elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
+		eval $( __GetVarReferenceCompWord ) ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
 		eval $( __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
@@ -2252,7 +2269,7 @@ if [ "${versionVTV:=0.0.2}" == "0.0.2" ] ; then
     fi
   }
 
-  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
   local StrNameHelper="ValueToVariable\t\tThe Fnct.D Mechanisme acting as Re-Copy Pass-Thru Variable in Variable authorized to be transfered from Higher-level function to Sub-Level Function.";
   local StrSynopsis="Since implementation of TSR resident like Python command-not-found or any type of Layer in interactive Shell in Both Curse Bash Command-Line and/or xterminal, gtk-terminal, The behavior of function is not clear and are not totally accessible. ValueToVariable eliminate problems of declare and following constraint, local variable can travel thru sub-function. ";
   local StrSummary="ValueToVariable allow creation of variable Assignation before running the application or function. Creating a code evaluation it return in form of VAR1=\${VAR1}  VAR2=\${VAR2} Application ; Where VAR1,VAR2 will be already available inside nestled function or real-function . If the are made from Top-function, Shell command like declare make variable existing beyond Master Function Body, which overcrowding variable after death or termination with uses if unset still existing and increase amount of memory without cleaning it. The mechanism is Filtering Thru and exercise a filter over Polish Notation Respect to enforce uses of Strict Notation to have an idea of their uses. Since Polish notation is adopted inside the Fnct.D, uses of evaluation brace to expand code inside function like BoolVarTest( newest version of BoolVarTestVarCreation) expanding Preambule-code, The If-N clause and it's Assertion code inside function to make parseable function to analyse it faster and discover bottle-neck by re-coding clause and action. ValueToVariable is madatory associated with  Prompt mechanism to pass the __main_StartServices and receive the authorized variable list. Description is under development to explain in depth uses of ValueToVariable, including uses of Whitelist where some power mechanisme like compiler depend of variable like CFLAGS, LDFLAGS... white list nad it's key to activate it VTVIsWhiteList." ; 
@@ -2264,6 +2281,8 @@ if [ "${versionVTV:=0.0.2}" == "0.0.2" ] ; then
   elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
    eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
    echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
+		 eval $( __GetVarReferenceCompWord ) ;
   elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
    eval $( __GetVarReferenceList ) ;
   elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
@@ -3127,18 +3146,19 @@ function TagParser( )
  local StrTagList=${TPListTag:=StrA:__TAGA__,StrB:__TAGB__,IntA:__INT__} ; 
  local StrArrayName=${TPArrayName:=ArrayTagParser} ;
  local StrIterName=${TPIterNameVar:=TagParser} ;
- local StrLeftPattern=${TPLeftStrPtrn:=[SIB][tnos][a-zA-Z0-9_]*:} ; 
- local StrRightPattern=${TPRightStrPtrn:=:__[A-Za-z0-9_,]*} ;
+ local StrLeftPattern=${TPLeftStrPtrn:='[SIB][tnos][a-zA-Z0-9_]*:'} ; 
+ local StrRightPattern=${TPRightStrPtrn:=':__[A-Za-z0-9_,]*'} ;
  local StrScopeVar=${TPScopeVar:=local} ; 
  local StrVarAssign=${TPVarNameParsed:=StrVarEntry} ;
  local BoolInvertPairMatch=${TPIsMatchRtoL:=True} ;
  local BoolDebugDisplay=${TPDisplayDebug:=False} ;
- local BoolDisplayEvalOnly=${TPDisplayEvalOnly:=False} ; 
- local StrVarList="BoolInvertPairMatch,BoolDisplayEvalOnly,StrTagList,StrArrayName,StrIterName,StrLeftPattern,StrRightPattern,StrCmd,StrScopeVar,StrVarAssign" ; 
+ local BoolDisplayEvalOnly=${TPDisplayEvalOnly:=False} ;
+ local BoolDisplayParserAction=${TPDisplayParserNotice:=False} ;  
+ local StrVarList="BoolDisplayParserAction,BoolInvertPairMatch,BoolDisplayEvalOnly,StrTagList,StrArrayName,StrIterName,StrLeftPattern,StrRightPattern,StrCmd,StrScopeVar,StrVarAssign" ; 
  
  ### Removed by confusion in code transformation . 
  ###local StrVarEntry=${TPVarEntry:=StrEntry} ; 
- 
+  
  
  function Verbosis()
 	{
@@ -3174,15 +3194,51 @@ function TagParser( )
   ### require form $( eval __CODE__ ) Function-name 
   ### 
   local StrPairEvalOrder="" ;
-  if [ "${BoolInvertPairMatch:=True}" == "False" ] ; then 
-   StrPairEvalOrder="eval \"${StrVarAssign}=\${${StrVarAssign}//\${StrPairLeft}/\\\${\${StrPairRight}}}\"";
+  if [ "${BoolInvertPairMatch:=True}" == "True" ] ; then 
+   ### For member of tag in writed in form  RtoL is True : R-> __TAG__, L->Variable
+   ### Substitution goes in this way, Looking for Tag in PairRight and replacing it by Content in
+   ### PairLeft. 
+   #StrPairEvalOrder="eval ${StrVarAssign}=\${${StrVarAssign}//${StrPairRight}/\${\${StrPairLeft}}}"; 
+   StrPairEvalOrder="""eval ${StrVarAssign}=\\\${\\${StrVarAssign}//\${StrPairRight}/\\\${\${StrPairLeft}}} """;
   else
-   StrPairEvalOrder="eval \"${StrVarAssign}=\"\${${StrVarAssign}//\${StrPairRight}/\\\${\${StrPairLeft}}}\"";
+   ### For member of tag in writed in form LtoR is True : L-> __TAG__, R->Variable 
+   ### StrPairEvalOrder="eval ${StrVarAssign}=\${${StrVarAssign}//${StrPairLeft}/\${\${StrPairRight}}}"; 
+   ### Substitution goes in this way, Looking for Tag in PairLeft and replacing it by Content in
+   ### PairRight. 
+   StrPairEvalOrder="""\$( eval ${StrVarAssign}=\\\${\\${StrVarAssign}//${StrPairLeft}/\\\${\${StrPairRight}}} )""";
   fi
    
-  StrCmd="""${StrScopeVar} StrPairLeft ; ${StrScopeVar} StrPairRight ; ${StrScopeVar} ${StrArrayName}=( ${StrTagList//,/ } ) ; for ${StrIterName} in \${${StrArrayName}[@]} ; do StrPairLeft=\"\${${StrIterName}/#${StrLeftPattern}/}\" ; StrPairRight=\"\${${StrIterName}/%${StrRightPattern}/}\" ; __PAIR_EXCHANGE_ORDER__ ; done ; unset StrPairRight StrPairLeft ${StrArrayName} ;""" ; 
+  ### Notice: to find out Left Section in RtoL ( extracting Variable name) we 
+  ### must erase the __TAG__ Name leaving only the Variable name:
+  ### example in String = StrA:__TAGA__
+  ### Extracting part 'StrA', require to erase the __TAGA__ 
+  ### mean using ${String/%__RIGHT_PATTERN__} ; 
+  ### Uses of String substitution with partial erase of the String for a 
+  ### one step imply to detect the partial-to-erase and result is what is
+  ### remaining in the String .... 
+  InitStrCmd="""${StrScopeVar} StrPairLeft ; 
+  ${StrScopeVar} StrPairRight ; 
+  ${StrScopeVar} __ARRAY_NAME__=( ${StrTagList//,/ } ) ; 
+  ${StrScopeVar} StrMsg=\"PairLeft: __LEFT__, PairRight: __RIGHT__, Query: __QUERY__\" ; 
+  for __ITER__ in \${__ARRAY_NAME__[@]}  ; do 
+    AStrMsg=\"\${StrMsg}\" ;
+    StrPairRight=\"\${__ITER__/#__LEFT_PATTERN__/}\" ; 
+    StrPairLeft=\"\${__ITER__/%__RIGHT_PATTERN__/}\" ; 
+    AStrMsg=\${AStrMsg//__LEFT__/\${StrPairLeft}} ;
+    AStrMsg=\${AStrMsg//__RIGHT__/\${StrPairRight}} ;
+    AStrMsg=\${AStrMsg//__QUERY__/\${${StrVarAssign}}} ;
+    VerbMsg=\${AStrMsg} VerbHeader=TAGPARSER VerbState=${BoolDisplayParserAction} VerbFormated=True VerbDev=/dev/stderr Verbosis ; 
+    __PAIR_EXCHANGE_ORDER__ ; 
+  done ; 
+  unset StrPairRight StrPairLeft __ARRAY_NAME__ ;""" ; 
+  StrCmd=$( echo "${InitStrCmd}" | sed 's/\n/\\n/g' ) ; 
   
-  StrCmd="""${StrCmd//__PAIR_EXCHANGE_ORDER__/${StrPairEvalOrder}}""" ; 
+  StrCmd=${StrCmd//__ITER__/${StrIterName}} ; 
+  StrCmd=${StrCmd//__LEFT_PATTERN__/${StrLeftPattern}} ; 
+  StrCmd=${StrCmd//__RIGHT_PATTERN__/${StrRightPattern}} ; 
+  StrCmd=${StrCmd//__ARRAY_NAME__/${StrArrayName}} ; 
+  StrCmd=${StrCmd//__PAIR_EXCHANGE_ORDER__/${StrPairEvalOrder}}  ; 
+  
   StgMsg="CmdLine: __CMD__" ; 
   VerbMsg=${StgMsg//__CMD__/${StrCmd}} VerbHeader="DEBUG:${__call_locality[1]}" VerbState=${BoolDebugDisplay} VerbFormated=True VerbDev=/dev/stderr Verbosis
   
@@ -3195,9 +3251,10 @@ function TagParser( )
  local StrNameHelper="Tag Parser\t Ability To parse tagged Information from known varable name.";
  local StrSynopsis="This is a simple application to provide to function conversion of String of text with Tag ( noted __TAG__ by default ). ";
  local StrSummary="Providing a Text transformation from provided varaible name inside  parameter. Content expect to exist inside a function, this is a provided evaluation of a loop transformaing an Entry variable name from tag supplied. Noted the evaluation brace is required, a.k.a \$( TP...=... eval TagParser ) to add the code directly inside your function. The mechanism allow uses of definied array of desired scope type it is not desctructive for array and does not give the destruct code for Variable name such Array inside Prefixed-Variable TPArrayName."
+ local StrDescription="\nParser notice\n\n  TPListTag\tSTRING Depending of the Prefixed Variable TPIsMatchRtoL it taking form VARIABLE:__TAG__ and are comma separated value\n  TPArrayName\tSTRING Falcutative depending the number of reccurrence of the Parser not executed and may interfer if the Parser Code is mangled and if extended Choice are affected to erase the unset at the end. Sometimes the array name can already be in uses and may affect your operation.\n\n  TPIterNameVar\tSTRING Falcutative, change the String-Iterated item looped inside the Array.\n  TPVarNameParsed\tSTRING Is the entry varaible holding the CODE/Template with __TAG__ to be parsed. We advise using a copy of this Variable because it re-write the content of it.\n  TPScopeVar\tSTRING and can be single-quoted STRING, Inside function 'local' is important or your function will use external variable. making it public or external use declare instead.\n\n  TPLeftStrPtrn\tSTRING Regular expression from Variable substitution algorithm, it remove the Left Side to kept the right side Be careful with this.\n  TPRightStrPtrn\tSTRING Regular expression from Variable substitution algorithm suppress the __TAG__ form to keep the variable name usually, becarefull uses ${VAR/#PTRN/'SEP'} and ${VAR/%'SEP'PTRN} method see in Bash document.\n\nBoolean variable notice:\n\n  TPIsMatchRtoL\t\tSet To True/False Invert Composition of tag in your design, Set to TRUE Variable in TPListTag required to be composed in form VARIABLE:__TAG__, if FALSE in form __TAG__:Variable\n\n  TPDisplayDebug\t\tSet To True/False Display Extra Debug during action, all outputed to /dev/stderr to not confuse the parser.\n  TPDisplayEvalOnly\tSet To True/False Allow displaying the Injected code in eval function using the Tag Parser.\n  TPDisplayParserNotice\tSet To True/False For function equiped of a Verbosis see fnct_debian_list for Verbosis example and will display by Tag pair the result the exanche and actual qiery it should happen after the Parsing.\n" ; 
  
  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-			GVRIsName=True GVRIsSynopsis=True GVRIsSummary=True GetVarReference ${__call_locality[1]} ; 
+			GVRIsName=True GVRIsSynopsis=True GVRIsSummary=True GVRIsDesc=True GetVarReference ${__call_locality[1]} ; 
    VerbMsg=${StrSwitchMessages} VerbDev=/dev/stderr VerbState=True VerbFormated=False VerbHeader="" Verbosis ; 
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
@@ -4587,16 +4644,49 @@ function ZenityContentListing( )
 	local ArrayArg=( $* ) ; 
  local Arg0=( ${ArrayArg[0]} ) ;
 
+ local StrParentApps=${__call_locality[1]} ;
  local StrTitle=${ZCLTitle:="Select a user for __APPS__"} ;
 	local StrCol0=${ZCLCol0:="selection"} ;
 	local StrCol1=${ZCLCol1:="user"} ; 
+ local IntWidth=${ZCLWidth:=400} ;
+ local IntHeight=${ZCLHeight:=500} ;
  local StrDefaultCSV=${ZCLCSV:=':'} ;
  local IntDefaultColExtr=${ZCLColExtr:=1} ;
  local StrFileInfo=${ZCLFilePasswd:=/etc/passwd} ;
+ local StrAppsName=${ZCLAppsName:=Application};
+ local StrTagEntry=${ZCLTagListParser:=StrZenityFilterCmd:__ZenityFilter__,IntWidth:__WIDTH__,IntHeight:__HEIGHT__,StrTypeListOpt:__LIST_TYPE__,StrAppsName:__APPS__} ;
 	local StrRegSearch=${ZCLRegSearch:="\/bin\/bash"} ;
-	local BoolShowUserSelection=${ZCLSUS:=False} ;
- local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
-  
+	
+ local BoolShowUserSelection=${ZCLSUS:=False} ;
+ local BoolCheckList=${ZCLIsCheckList:=False} ; 
+ local BoolCheckListMulti=${ZCLIsCheckListMulti:=False} ;
+ local StrVarList="StrAppsName,StrTagEntry,StrParentApps,IntWidth,IntHeight,StrTitle,StrCol0,StrCol1,StrDefaultCSV,IntDefaultColExtr,StrFileInfo,StrRegSearch,BoolShowUserSelection,BoolCheckList,BoolCheckListMulti,StrVarList" ;
+ local -A ArrayZenityTypeList ;
+ 
+ ArrayZenityTypeList["multi"]="--checklist --multiple" ; 
+ ArrayZenityTypeList["checklist"]="--checklist" ;
+ ArrayZenityTypeList["standard"]="--radiolist" ;
+ 
+ function Verbosis()
+ {
+  local __call_locality=( Verbosis Verb );
+  local StrMsg=${VerbMsg:=__TEXT__} ; 
+  local StrDevOut=${VerbDev:=/dev/stderr} ; 
+  local IsVerboseState=${VerbState:=False} ;
+  local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+  local IsDisplayFormatted=${VerbFormated:=True} ;
+  local ArrayArg=( $* ) ; 
+  if [ "${IsVerboseState:=False}" == "True" ] ; then 
+   if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+     echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+   else
+     echo -ne "${StrMsg}\n" > ${StrDevOut} ;
+   fi 
+  fi
+ } 
+ ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis
+
+ 
  ### Uses current variable 
  ### StrRegSearch,StrFileInfo,StrDefaultCSV,IntDefaultColExtr
  ### 
@@ -4616,26 +4706,63 @@ function ZenityContentListing( )
  ### Uses current variable 
  ### StrTitle,StrCol0,StrCol1,StrDefaultCSV,StrFileInfo,StrRegSearch,IntDefaultColExtr,StrUser,BoolShowUserSelection,,,
  ### 
- function GetPwdUser()
+ function ZenityFileReader()
 	{
-  local __call_locality=( GPU GetPwdUser ) ; 
+  local __call_locality=( ZFR ZenityFileReader ${StrParentApps} ) ; 
   local ArrayArg=( $* ) ; 
   local Arg0=( ${ArrayArg[0]} ) ;		
-  local StrUserSelection=$( zenity \
+  local StrTypeList="standard" ; 
+  
+  ### "StrZenityFilterCmd:__ZenityFilter__,IntWidth:__WIDTH__,IntHeight:__HEIGHT__,StrTypeListOpt:__LIST_TYPE__" ;
+  local StrUserSelection;
+  local StrMsg ; 
+  local StrTypeListOpt=$( ${StrParentApps}  --get ArrayZenityTypeList[${StrTypeList}] ) ;   
+  
+  if [ ${BoolCheckList:=False} == "True" ] ; then
+   StrTypeList="checklist" ;
+  fi 
+  if [ ${BoolCheckListMulti:=False} == "True" ] ; then
+   StrTypeList="multi" ;
+  fi 
+  
+  
+  StrZenityFilterCmd="""eval \$( VTVIsArrayStyleInsert=True VTVValueEntry=\${StrVarList} VTVIsValueReAssign=True VTVIsValueToConvert=False VTVIsArrayStyleInsert=True ValueToVariable ) ZenityFilter """ ; 
+
+  local StrSelectionCmd="""StrUserSelection=\$( zenity \
+  --width=__WIDTH__ --height=__HEIGHT__ \
   --list \
-  --title "${StrTitle}" \
-  --column="${StrCol0}" \
-  --column="${StrCol1}" \
-  --radiolist $( StrDefaultCSV=${StrDefaultCSV} \
-                 StrFileInfo=${StrFileInfo} \
-                 StrRegSearch=${StrRegSearch} \
-                 IntDefaultColExtr=${IntDefaultColExtr} \
-                 ZenityFilter ) ) ;
+  --title \"${StrTitle}\" \
+  --column=\"${StrCol0}\" \
+  --column=\"${StrCol1}\" \
+  __LIST_TYPE__ \
+  \$( __ZenityFilter__  ) )""" ;
+  
+  StrTagParser=$( TPDisplayParserNotice=True TPIsMatchRtoL=True TPDisplayDebug=True TPArrayName=ArrayGPUTag TPVarNameParsed="StrSelectionCmd" TPListTag="${StrTagEntry}" TagParser ) ; 
+  local IRet=$? ;  
+  StrMsg="Return Status of IRet: __IRET__,\nStrTagParser:__PARSER__\nStrSelectionCmd: __STR__" ;
+		StrMsg=${StrMsg//__PARSER__/${StrTagParser}} ;
+		StrMsg=${StrMsg//__IRET__/${IRet:=-1}} ;
+		StrMsg=${StrMsg//__STR__/${StrSelectionCmd}} ;
+  VerbMsg=${StrMsg} VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=True StrDevOut=/dev/stderr Verbosis
+  $( eval ${StrTagParser} )  ;
+  StrMsg="After TagParser Action: value of StrSelectionCmd:[ __STR__ ]" ;
+  VerbMsg=${StrMsg//__STR__/${StrSelectionCmd}} VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=True StrDevOut=/dev/stderr Verbosis
+  
+  ### section here replaced by ValueToVariable 
+  ###StrZenityFilter="""StrDefaultCSV=${StrDefaultCSV} \
+  ###               StrFileInfo=${StrFileInfo} \
+  ###               StrRegSearch=${StrRegSearch} \
+  ###               IntDefaultColExtr=${IntDefaultColExtr} \
+  ###               ZenityFilter""" ;     
+         
 		StrUserSelection=${StrUserSelection:=${StrUser}} ; 
-		if [ "${BoolShowUserSelection}" == "True" ] ; then 
-			echo -ne "User selected: ${StrUserSelection}\n" > /dev/stderr ; 
-		fi 
-		echo "${StrUserSelection}" ; 
+  StrMsg="User selected: __USER__" ;
+   
+  ### Replace the Output for User-selected, aka Prefixed-Variable BoolShowUserSelection from ZCLSUS
+		VerbMsg=${StrMsg//__USER__/${StrUserSelection}} VerbHeader=DEBUG VerbFormated=True VerbState=${BoolShowUserSelection} StrDevOut=/dev/stderr  Verbosis
+		
+  ### Replace the echo and the selected informations
+  VerbMsg=${StrUserSelection} VerbHeader=DEBUG VerbFormated=False VerbState=True StrDevOut=/dev/stdout  Verbosis
 	}
 
  function __main_StartServices()
@@ -4645,16 +4772,27 @@ function ZenityContentListing( )
 		local ArrayArg=( $* ) ; 
   
   eval $( VTVIsArrayStyleInsert=True \
-  VTVValueEntry=StrRegSearch,StrFileInfo,StrDefaultCSV,IntDefaultColExtr,StrTitle,StrCol0,StrCol1,StrDefaultCSV,StrFileInfo,StrRegSearch,IntDefaultColExtr,StrUser,BoolShowUserSelection \
+  VTVValueEntry=${StrVarList} \
   VTVIsValueReAssign=True  \
   VTVIsValueToConvert=False \
   VTVIsArrayStyleInsert=True \
-  ValueToVariable ) GetPwdUser
+  ValueToVariable ) ZenityFileReader
   
  }
  
+ local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+ local StrNameHelper="ZenityContentListing\tThe Fnct.D Mechanism To list-down information from file and report it inside a Standardized Zenity-List container.";
+ local StrSynopsis="\tHelper involved inside GksuZenityLoader to load application like Firefox, Idlex and many more application configured internaly, ";
+ local StrSummary="First it's an helper reserved to choose a user to load the application under a specific name. Used in PackageRepositoryMgmt to select or visualize the UNIQUE-ID snapshoot of maintained archives linked to a backup place to reduce size of /var this application is quite useful if you know how to specify and pass a regular-expression to internal function to ZenityFilter." ; 
+ local StrDescription="\nVariable helper:\n\nZCLIsCheckList\t\tSet True/False, To use a checkboxlist rather than move the radio-buton to your item inside the list. \nZCLIsCheckListMulti\tSet True/False, To activate Multiple selection and Checkboxlist altogether.\n\n\t\tOnly one of the two is affecting the Zenity List interface at the time. Changing the selection to check-list and choosing none of them is retoring the interface to a radio-button action.\n\n\tInterface Field and File-reader options:\n\nZCLFilePasswd\tFILENAME, File choosed to read out, Belong to GksuZenityLoader reference to use the sudo belong to user to load the application it read user list from /etc/passwd, from PackageRepositoryMgmt it read the latest file (named latest after doing package transfert)\nZCLColExtr\tINT 0 .. NF Tel to ZenityContentListing which column to display or to read from your CSV match\nZCLCSV\t\tCHAR, Variable used as CHAR identifier in Comma Separated Value and usually choosed ':' or ','. We strongly suggest to wrap your CSV choice with single quote/guillemets mandatory for semi-colon : ';' \n\n\tInterface options:\n\nZCLTitle\tTo Define a Title (suggested to use simple or triple quotes ) ; ZCLTitle have property to hold a Tag named __APPS__ and will hold the application name, adding this tag to the property of ZCLTitle will parse-it.\nZCLCol0\t\tFirst Column a.k.a selection column it take the name of the action when the second one is a file-list as example (ZCLCol0=\"file deletion\")\nZCLCol1\t\tSecond Column name always represent the listing desired, in case of filtering file /etc/passwd it take the user result in CSV=1, at CSV=7 it take the shell per-user.\nZCLWidth\tWidth Size or X-axis of the List-Box. \nZCLHeight\tHeight or Y-axis of the List-Box.\n\n\tGkSuZenityLoader options:\n\nZCLSUS\t\tOption to Set True/False to change the output to Desired GkSuZenityLoader requirement to format the output to form a sentences from selection and should be inserted inside a Text-dialog." ;
+ 
+  
  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-			GetVarReference ${__call_locality[1]} ; 
+			GVRIsName=True     \
+   GVRIsSynopsis=True \
+   GVRIsSummary=True  \
+   GVRIsDesc=True     \
+   GetVarReference ${__call_locality[1]} ; 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
@@ -4663,11 +4801,13 @@ function ZenityContentListing( )
 		eval $( __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
   eval $( VTVIsArrayStyleInsert=True \
-  VTVValueEntry=StrTitle,StrCol0,StrDefaultCSV,IntDefaultColExtr,StrFileInfo,StrRegSearch,BoolShowUserSelection \
+  VTVValueEntry=${StrVarList} \
   VTVIsValueReAssign=True  \
   VTVIsValueToConvert=False \
   VTVIsArrayStyleInsert=True \
   ValueToVariable ) __main_StartServices
+ elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
+		eval $( __GetVarReferenceCompWord ) ;
 	fi
  
 }
@@ -4792,6 +4932,8 @@ function GkSuZenityLoader()
 		echo -ne """${ArgGet}\n""" ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
 		eval $( __GetVarReferenceList ) ;
+ elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
+		eval $( __GetVarReferenceCompWord ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
 			StrUser=${StrUser}                       \
    StrApps=${StrApps}                       \
@@ -4832,6 +4974,8 @@ function UUIDHelper()
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ;
+ elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
+		eval $( __GetVarReferenceCompWord ) ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
 		eval $( __GetVarReferenceList ) ;	
 	else
@@ -4983,6 +5127,8 @@ function GetUUID ()
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ;
+ elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
+		eval $( __GetVarReferenceCompWord ) ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
 		eval $( __GetVarReferenceList ) ;	
 	else
@@ -5058,6 +5204,8 @@ function GetMplayerStream()
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ;
+ elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
+		eval $( __GetVarReferenceCompWord ) ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
 		eval $( __GetVarReferenceList ) ;
 	elif [ "${Arg0:=--startservices}" == "debug"	] ; then 
@@ -5162,6 +5310,8 @@ function BuildOnFaultCompiler()
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ;
+ elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
+		eval $( __GetVarReferenceCompWord ) ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
 		eval $( __GetVarReferenceList ) ;
 	else
@@ -5202,6 +5352,8 @@ function RoundRobinSwapRealloc()
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ;
+ elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
+		eval $( __GetVarReferenceCompWord ) ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
 		eval $( __GetVarReferenceList ) ;
 	elif [ "${Arg0:=--startservices}" == "--swaptorealloc"	] ; then 
@@ -5210,10 +5362,6 @@ function RoundRobinSwapRealloc()
 		 Start ; 
 	fi 
 }
-
-
-### Loading External Lib
-. /etc/init.d/Fnct.D/_sub_PackageRepository
 
 
 ########### ###################################################################
