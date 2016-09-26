@@ -1461,9 +1461,9 @@ Common High-Level Struture imply uses of __TAG__, it replace presence of variabl
    --startservices	Start the application normally.
    --get		Return value of Internal Variable.
    --list		List all Internal Pre-fixed Variable available to query or get.
-
-
-
+  	--compword	Word Completion Provide a services to Extract on Demand all Pre-fixed Variable
+		  \String inside this function.
+  
 :Note: e2382694-0ba3-11e3-98a2-001b3875b29c
 :Title: Usual Shell Chunk-Development.
 :Function: ZenityShellEval
