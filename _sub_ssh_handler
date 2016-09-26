@@ -109,7 +109,8 @@ function StartAgentSSH()
    eval ${StrChmodApps} ${IntDefaultSSHEnvChmod} "${SSH_ENV}"
    . "${SSH_ENV}" > /dev/null
    echo -ne "\n\t\033[01;33mLoading ${StrSSHAddApps}...\033[00m\n\n"
-   eval ${StrSSHAddApps} ;
+   local CmdLine="${StrSSHAddApps}" ; 
+   eval ${CmdLine} ; 
   fi
  }
  
@@ -237,7 +238,7 @@ function SSHAgentMemoryInfo()
    local __call_locality=( Stop __main_StopServices ) ;
    local Arg0=${ArrayArg[0]} ;
    local ArrayArg=( $* ) ;  
-   SASSHUnregisterSSHENV=True SASSHIsSetSSHENV=True StartAgentSSH --stopservices 
+   SASSHSSHAgentApp=${SASSHSSHAgentApp} SASSHSSHADDApp=${SASSHSSHADDApp} SASSHUnregisterSSHENV=True SASSHIsSetSSHENV=True StartAgentSSH --stopservices 
    unset SSH_AGENT_PID SSH_ENV ; 
   }
   
@@ -247,7 +248,7 @@ function SSHAgentMemoryInfo()
    local Arg0=${ArrayArg[0]} ;
    local ArrayArg=( $* ) ; 
    ### Create environment for SSH_ENV 
-   SASSHIsSetSSHENV=True StartAgentSSH ; 
+   SASSHSSHAgentApp=${SASSHSSHAgentApp} SASSHSSHADDApp=${SASSHSSHADDApp} SASSHIsSetSSHENV=True StartAgentSSH ; 
    
    # Source SSH settings, if applicable
    if [ -f "${SSH_ENV}" ]; then
@@ -270,14 +271,19 @@ function SSHAgentMemoryInfo()
    fi
   }
   
+  local StrNameHelper="AgentLoader\t\tThe Fnct.D SSH-Key manager, A Stub Function being StartAgentSSH";
+  local StrSynopsis="Application allow to enter your SSH-Key from ASKPASS or from Shell and does wrap the key entry with user permission to Kill Actual-key and renew the PID instead of loosing the key-realm after definition of Key-Duration limit with git.";
+  local StrSummary="By Starting the services AgentLoader does itself the PID registration and does keep it later to terminate the services with --stop-services switches. Make it easy to handle stopping the services it may ask you the password of the username and does terminate the session. Leaving you making changes in you key or yelding another key ans starting the services once. To manage the property of the SSH-Realm connection you must pass Pre-fixed variable to StartAgentSSH. This one is another function making the management of the services loaded by AgentLoader." ; 
 
-  StrSwitchMessages="""${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n""" ; 
+  StrSwitchMessages="""${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n""" ; 
   if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-    GetVarReference ${__call_locality[1]} ; 
+    GVRIsName=True GVRIsSynopsis=True GVRIsSummary=True GetVarReference ${__call_locality[1]} ; 
     echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
   elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
    eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
    echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
+		 eval $( __GetVarReferenceCompWord ) ;
   elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
    eval $( __GetVarReferenceList ) ;
   elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
