@@ -2842,7 +2842,53 @@ even a dpkg --install....
 
 And many-more wisdom $( ... ) are coming once stateful-design for Zenity UI will be 
 completed... 
+
+:Note: 2f4fd5f0-8421-11e6-8b1d-001e4c8856d6
+:Title: TAG used in general require much more attention during creation.
+:Function: ZenityContentListing
+:Function: TagParser
+:Function: All Newer Function
+:Structural: Strict Parsing required
+:Warning: Not found Exception in parsing event come from evaluative Executive Brace.
+
+Many function will depend from TagParser and this parser inject or simply create code to be evaluated and executed. Even if there only __TAG__ to replace by Variable Name, it either have inside the common function and should exist or at-least be handled or pushed by ValueToVariable. The problem is not the parsing technique, comming from Pure String Variable handling and substituing it deal with Bash expansion pattern and are subject to partially uses execution back-trace to expand to a know value inside your variable. Adding inside a Parser a Query munished from __TAG__ and Variable or temporary un-evaluated variable (like Case1:\${VARNAME} or Case2:\${${VARNAME}}) where Case 1 will be evaluated for having multiple name being placed inside the back-slashed variable location. Case 2 will Browse from Existing variable and a failed expansion from Variable Name forming another Variable will create a execution inside an evaluation and randomly execute something in hand or really close... Case of ZenityContentListing with migration of TagParser create a really-long line holding the Zenity-list parameter and the ZenityFilter to read the content and create a Block-list from TRUE/FALSE Item be selectionned, and ZenityFilter require to be executed inside the Command-line of ZenityFileReader and do create a command line with  Double Executive-Brace and does require a evaluation brace for the pass-thru of ValueToVariable. Don't Forget the TagParser does traversing the Command-line for searching tag and does translate __TAG__ into Variable Name from definition passed to. This case take while to dismiss and discover problems of parsing and after visiting the TagParser, some Hard-quoting style is in force, and TagParser also use it's onw TAG to dequote some region of the code-creation and does working after all in Strict-parsing. So before merging solution or branching other idea to parse the information it's mostly the Parser created a.k.a. your command line used that require some Strict back-slashed to some variable and addition of Pending Evaluation-Executive Brace like '\$( eval __THING__ ) ' and Pending Variable
+
 	
+Example 4:
+
+.. code:: shell
+	
+	### 
+	### Latest improvement inside ZenityContentListing to work with TagParser add
+	###  posibility to use the multiple-selection from Zenity List helper with options
+ ### of selecting checkbox and multiple-selection, let you selecting more than
+ ### one package at the time for doing your dayly management, inspection... 
+	
+	ZCLIsCheckListMulti=True ZCLFilePasswd=latest ZCLColExtr=2 ZCLRegSearch=^fcb9ecc6-8389-11e6-8b1d-001e4c8856d6  ZenityContentListing
+
+.. image:: https://raw.github.com/priendeau/Fnct.d/master/images/ZenityContentListing-003.png
+		:target: https://github.com/priendeau/Fnct.d#b9a774fc-8425-11e6-8b1d-001e4c8856d6
+
+
+:Note: ad9f62fc-8423-11e6-8b1d-001e4c8856d6
+:Title: Field Effect, Pending variable Creation and Nth-Pending variable creation
+:Action: Parsing with Evaluation and Evaluative Executive Brace 
+:Function: TagParser
+:Function: All Newer Function
+:Structural: Strict Parsing required
+:Warning: Are required to fix parsing and substitution in complex algorithm to acheive Code-creation.
+
+The closest effect in this code is thru function TagParser having a Strict parsing engine to create code ready execution inside a function call of you TagParser need over a variable shoosed with TPVarNameParsed and internally are parsed like __TAG__ found and will become \\\${\\${YOUR_VARIABLE}, after one evaluation lost the Double Slashed Aperture and become \${${YOUR_VARIABLE} your variable inside the Receiver hand or called the Evaluative Executive-Brace from your TagParser and this one once executed become ${${YOUR_VARIABLE} or the New ${VARIABLE} this case is the TagValue from a pair found inside TPListTag like first example StrA:__TAGA__ where ${StrA} is the variable existing inside your code and be the required value from your __TAGA__. This is why TagParser does not worry about your value but require the presence of this variable . The advantage of Single-Backslashed Pending Variable are steady variable name, Used inside TagPArser for StrPairRight StrPairLeft are subject to end into ${StrPairRight} and ${StrPairLeft} and nothing much, but does not have to be evaluated during the non-formalisation of the code only on the end. And TagParser can not acheive them niterpreted or it attempt to execute the variable like a program name, has we had made i18n to allow execution function with '=' caracter it probably waiting for and \xHEX value or UTF-8 or UTF-16 with =\0xFF while we are looking for strict typing function name.  
+
+.. code:: shell
+	### This state of Variable is pending and will only exist under back-slashed dollar
+ ### signed variable on last-stage, being executed from Parser like TagParser 
+ ### and being executed by your uses of TagPArser 
+ Double-Backslashed Pending variable creation: \\\${\\${StrVarAssign}
+
+ Single-Backslashed Pending Variable creation: \\\${\${StrPairRight}}
+
+ 
 ----------------------------------------------------------------------------------
 Introducing connection-layer to a unicast-per-user group and bash interoperability
 ----------------------------------------------------------------------------------
