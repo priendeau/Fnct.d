@@ -1382,18 +1382,101 @@ The Getter is the whole function. Notice it important to reduce heading from beg
 
 It's Essential to talk about Attribution of Second Edition by Jessia McKellar and Abe Fettig (O'reilly) Copright 2013 Jessica McKellar using ISBN 978-1-4493-2611-1, to provide information on HowTo Start your engine correctly. There is ton of other starter for initiating engine simply and this is why I do beleive retreive information from and Open Standars rather prettenting copying informations . I do implement my decorator and my staticclass and my own topology to code essential of Shell command used by half automated-finite engine have strict goal to acheive and having later tools to inspect information. It's important to find good Network Programming Source-of-interest to evolve in compuware and diags-middle-ware. My README for Fnct.D for God is nothing more than a CRAN diagnostic quoted remark to develop a real important JOKE in real life. We do develop ironic statement out Ingenior work and asking why our stuff is falling down. It's important to prone for clear Dialectic inward to reduce problems for ever... 
 
+:Note: 007250e2-842a-11e6-8b1d-001e4c8856d6
+:Title: The Common __TAG__ replacement inside a String into Variable Name executed as-in your function call.
+:Function: TagPArser
+
+---------------
+TagParser
+---------------
+
+Common High-Level Struture imply uses of __TAG__, it replace presence of variable and are always associated with Templating. Coming with story of Word Perfect artefact to replace __TAG__ in multi-letter header, it have move to a WordProcessor the era to develop steady Text with alteration like Topic, Date, User dedicated or even Page number are today know TAG equivalent. Modern programing had greatly move toward Templating the Text to allow it's conversion to other Language or tongue. Had move to generalistic expression of the information to let the Template be more genral and more uniform to even generate universal template. Other side of publishing is HTML side which an adapted version of XML and is dedicated to Uniform publishig of about any form of information. XML becoming Greater by it's expression it under the hood we do understand it's power. Codeability of the XML will be reache when a __TAG__ does express is formal conception to had limit and beyond that limit it'd more important to specify other alternative to denote efficiently the content... At this stage we do have to present you the canvats-set and it's mutability but starting with this function because we haven't filled all the appropriate function to explain a Double-dictionnary of event and relation being muted into one intrinsict action to be the sets of required informations showed and products asked. TagParser is a tools to allow muting information faster than only create a by-hand with String and command dependant from Variable. TAG-set are not altering the state odf your function if they are not parsed it's the final result that won't be showed you and will not display Error. Having Command line filled of missing informations and variable will pop's you error when a command is issued. Generally moved to Array of information created at the beginning of a function you can store the whole Text and putting TAG where result one compiled will be see. TagParser does this type of operation, Getting To litteratly transfer a compiled informations into living Variable-name in uses and some function dependent of it will be cumuled to show you example, look at first sight the helper now inclusing Name Helper, Synopsis, Summary, and Description with Prefixed-Variable notice you are now able to understand the the variable uses and code by yourself.
+
+.. code:: shell
+
+  Help:
+
+  Function TagParser
+  Name
+  Tag Parser	 Ability To parse tagged Information from known varable name.
+
+
+  Synopsis
+    This is a simple application to provide to function conversion of String of text with Tag ( noted __TAG__ by default ). 
+
+
+  Summary
+    Providing a Text transformation from provided varaible name inside  parameter. Content expect to exist inside a function, this is a provided evaluation of a loop transformaing an Entry variable name from tag supplied. Noted the evaluation brace is required, a.k.a $( TP...=... eval TagParser ) to add the code directly inside your function. The mechanism allow uses of definied array of desired scope type it is not desctructive for array and does not give the destruct code for Variable name such Array inside Prefixed-Variable TPArrayName.
+
+
+  Description
+    
+  Parser notice
+
+    TPListTag	STRING Depending of the Prefixed Variable TPIsMatchRtoL it taking form VARIABLE:__TAG__ and are comma separated value
+    TPArrayName	STRING Falcutative depending the number of reccurrence of the Parser not executed and may interfer if the Parser Code is mangled and if extended Choice are affected to erase the unset at the end. Sometimes the array name can already be in uses and may affect your operation.
+
+    TPIterNameVar	STRING Falcutative, change the String-Iterated item looped inside the Array.
+    TPVarNameParsed	STRING Is the entry varaible holding the CODE/Template with __TAG__ to be parsed. We advise using a copy of this Variable because it re-write the content of it.
+    TPScopeVar	STRING and can be single-quoted STRING, Inside function 'local' is important or your function will use external variable. making it public or external use declare instead.
+
+    TPLeftStrPtrn	STRING Regular expression from Variable substitution algorithm, it remove the Left Side to kept the right side Be careful with this.
+    TPRightStrPtrn	STRING Regular expression from Variable substitution algorithm suppress the __TAG__ form to keep the variable name usually, becarefull uses  and  method see in Bash document.
+
+  Boolean variable notice:
+
+    TPIsMatchRtoL		Set To True/False Invert Composition of tag in your design, Set to TRUE Variable in TPListTag required to be composed in form VARIABLE:__TAG__, if FALSE in form __TAG__:Variable
+
+    TPDisplayDebug		Set To True/False Display Extra Debug during action, all outputed to /dev/stderr to not confuse the parser.
+    TPDisplayEvalOnly	Set To True/False Allow displaying the Injected code in eval function using the Tag Parser.
+    TPDisplayParserNotice	Set To True/False For function equiped of a Verbosis see fnct_debian_list for Verbosis example and will display by Tag pair the result the exanche and actual qiery it should happen after the Parsing.
+
+
+
+  Default Variable Value:
+  Variable TPListTag ,
+   Default Value:StrA:__TAGA__,StrB:__TAGB__,IntA:__INT__
+  Variable TPArrayName ,
+   Default Value:ArrayTagParser
+  Variable TPIterNameVar ,
+   Default Value:TagParser
+  Variable TPLeftStrPtrn ,
+   Default Value:'[SIB][tnos][a-zA-Z0-9_]*:'
+  Variable TPRightStrPtrn ,
+   Default Value:':__[A-Za-z0-9_,]*'
+  Variable TPScopeVar ,
+   Default Value:local
+  Variable TPVarNameParsed ,
+   Default Value:StrVarEntry
+  Variable TPIsMatchRtoL ,
+   Default Value:True
+  Variable TPDisplayDebug ,
+   Default Value:False
+  Variable TPDisplayEvalOnly ,
+   Default Value:False
+  Variable TPDisplayParserNotice ,
+   Default Value:False
+  Following switch are available:
+
+   --startservices	Start the application normally.
+   --get		Return value of Internal Variable.
+   --list		List all Internal Pre-fixed Variable available to query or get.
+
+
+
 :Note: e2382694-0ba3-11e3-98a2-001b3875b29c
 :Title: Usual Shell Chunk-Development.
 :Function: ZenityShellEval
-
 
 ---------------
 ZenityShellEval
 ---------------
 
-Full-length example : 
-Including 1 example :
-$> ZenityShellEval (Enter)
+.. code:: shell
+
+  Full-length example : 
+  Including 1 example :
+  $> ZenityShellEval (Enter)
 
 - It Open Windows from Zenity with parameter for Text-info in editable
 mode.
