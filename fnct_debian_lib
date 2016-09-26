@@ -4654,7 +4654,7 @@ function ZenityContentListing( )
  local IntDefaultColExtr=${ZCLColExtr:=1} ;
  local StrFileInfo=${ZCLFilePasswd:=/etc/passwd} ;
  local StrAppsName=${ZCLAppsName:=Application};
- local StrTagEntry=${ZCLTagListParser:=StrZenityFilterCmd:__ZenityFilter__,IntWidth:__WIDTH__,IntHeight:__HEIGHT__,StrTypeListOpt:__LIST_TYPE__,StrAppsName:__APPS__} ;
+ local StrTagEntry=${ZCLTagListParser:=StrAppsName:__APPS__,StrZenityFilterCmd:__ZenityFilter__,IntWidth:__WIDTH__,IntHeight:__HEIGHT__,StrTypeListOpt:__LIST_TYPE__} ;
 	local StrRegSearch=${ZCLRegSearch:="\/bin\/bash"} ;
 	
  local BoolShowUserSelection=${ZCLSUS:=False} ;
@@ -4695,12 +4695,7 @@ function ZenityContentListing( )
   local __call_locality=( ZF ZenityFilter ) ; 
   local ArrayArg=( $* ) ; 
   local Arg0=( ${ArrayArg[0]} ) ;			
-  egrep -i ${StrRegSearch} \
-  ${StrFileInfo} | \
-    /usr/bin/cut \
-    -d ${StrDefaultCSV} \
-    -f ${IntDefaultColExtr} |\
-       sed  's/\(^[a-zA-Z0-9]*\)/FALSE \1/g' ; 
+  egrep -i ${StrRegSearch} ${StrFileInfo} | /usr/bin/cut -d ${StrDefaultCSV} -f ${IntDefaultColExtr} | sed  's/\(^[a-zA-Z0-9]*\)/FALSE \1/g' ; 
 	}
 	
  ### Uses current variable 
@@ -4712,11 +4707,14 @@ function ZenityContentListing( )
   local ArrayArg=( $* ) ; 
   local Arg0=( ${ArrayArg[0]} ) ;		
   local StrTypeList="standard" ; 
-  
-  ### "StrZenityFilterCmd:__ZenityFilter__,IntWidth:__WIDTH__,IntHeight:__HEIGHT__,StrTypeListOpt:__LIST_TYPE__" ;
+  local StrSelectionCmd ; 
+  local StrTypeListOpt ; 
+  local StrZenityFilterCmd ; 
   local StrUserSelection;
   local StrMsg ; 
-  local StrTypeListOpt=$( ${StrParentApps}  --get ArrayZenityTypeList[${StrTypeList}] ) ;   
+  local StrTypeListOpt ; 
+  local StrTagParser; 
+  ### "StrZenityFilterCmd:__ZenityFilter__,IntWidth:__WIDTH__,IntHeight:__HEIGHT__,StrTypeListOpt:__LIST_TYPE__" ;
   
   if [ ${BoolCheckList:=False} == "True" ] ; then
    StrTypeList="checklist" ;
@@ -4724,27 +4722,24 @@ function ZenityContentListing( )
   if [ ${BoolCheckListMulti:=False} == "True" ] ; then
    StrTypeList="multi" ;
   fi 
+  StrTypeListOpt=$( ${StrParentApps}  --get ArrayZenityTypeList[${StrTypeList}] ) ;   
   
   
-  StrZenityFilterCmd="""eval \$( VTVIsArrayStyleInsert=True VTVValueEntry=\${StrVarList} VTVIsValueReAssign=True VTVIsValueToConvert=False VTVIsArrayStyleInsert=True ValueToVariable ) ZenityFilter """ ; 
+  StrZenityFilterCmd="""eval \$( VTVIsArrayStyleInsert=True VTVValueEntry=${StrVarList} VTVIsValueReAssign=True VTVIsValueToConvert=False VTVIsArrayStyleInsert=True ValueToVariable ) ZenityFilter ; """ ; 
+  
+  StrMsg="ZenityFilter Should return This command-line: __CMD__" ;
+  VerbMsg=${StrMsg//__CMD__/${StrZenityFilterCmd}} VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=True StrDevOut=/dev/stderr Verbosis
 
-  local StrSelectionCmd="""StrUserSelection=\$( zenity \
-  --width=__WIDTH__ --height=__HEIGHT__ \
-  --list \
-  --title \"${StrTitle}\" \
-  --column=\"${StrCol0}\" \
-  --column=\"${StrCol1}\" \
-  __LIST_TYPE__ \
-  \$( __ZenityFilter__  ) )""" ;
+  StrSelectionCmd="""StrUserSelection=\$( zenity --width=__WIDTH__ --height=__HEIGHT__ --list --title \"${StrTitle}\" --column=\"${StrCol0}\" --column=\"${StrCol1}\" __LIST_TYPE__ \$( __ZenityFilter__  ) )""" ;
   
-  StrTagParser=$( TPDisplayParserNotice=True TPIsMatchRtoL=True TPDisplayDebug=True TPArrayName=ArrayGPUTag TPVarNameParsed="StrSelectionCmd" TPListTag="${StrTagEntry}" TagParser ) ; 
+  eval StrTagParser=$( TPVarNameParsed="StrSelectionCmd" TPDisplayParserNotice=True TPIsMatchRtoL=True TPDisplayDebug=True TPArrayName=ArrayGPUTag TPListTag="${StrTagEntry}" TagParser ) ; 
   local IRet=$? ;  
   StrMsg="Return Status of IRet: __IRET__,\nStrTagParser:__PARSER__\nStrSelectionCmd: __STR__" ;
 		StrMsg=${StrMsg//__PARSER__/${StrTagParser}} ;
 		StrMsg=${StrMsg//__IRET__/${IRet:=-1}} ;
 		StrMsg=${StrMsg//__STR__/${StrSelectionCmd}} ;
   VerbMsg=${StrMsg} VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=True StrDevOut=/dev/stderr Verbosis
-  $( eval ${StrTagParser} )  ;
+  $( eval "${StrTagParser}" )  ;
   StrMsg="After TagParser Action: value of StrSelectionCmd:[ __STR__ ]" ;
   VerbMsg=${StrMsg//__STR__/${StrSelectionCmd}} VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=True StrDevOut=/dev/stderr Verbosis
   
@@ -4763,7 +4758,8 @@ function ZenityContentListing( )
 		
   ### Replace the echo and the selected informations
   VerbMsg=${StrUserSelection} VerbHeader=DEBUG VerbFormated=False VerbState=True StrDevOut=/dev/stdout  Verbosis
-	}
+	 $( eval "${StrSelectionCmd}" ) ; 
+ }
 
  function __main_StartServices()
  {
@@ -4788,11 +4784,7 @@ function ZenityContentListing( )
  
   
  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-			GVRIsName=True     \
-   GVRIsSynopsis=True \
-   GVRIsSummary=True  \
-   GVRIsDesc=True     \
-   GetVarReference ${__call_locality[1]} ; 
+			GVRIsName=True GVRIsSynopsis=True GVRIsSummary=True GVRIsDesc=True GetVarReference ${__call_locality[1]} ; 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
@@ -4801,11 +4793,11 @@ function ZenityContentListing( )
 		eval $( __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
   eval $( VTVIsArrayStyleInsert=True \
-  VTVValueEntry=${StrVarList} \
-  VTVIsValueReAssign=True  \
-  VTVIsValueToConvert=False \
-  VTVIsArrayStyleInsert=True \
-  ValueToVariable ) __main_StartServices
+       VTVValueEntry=${StrVarList}   \
+       VTVIsValueReAssign=True       \
+       VTVIsValueToConvert=False     \
+       VTVIsArrayStyleInsert=True    \
+       ValueToVariable ) __main_StartServices
  elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
 		eval $( __GetVarReferenceCompWord ) ;
 	fi
