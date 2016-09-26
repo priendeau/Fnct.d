@@ -1483,12 +1483,12 @@ To understand it's action here couple of line and it's result in Full-Debug Mode
   local IRet=$? ;  
   StrMsg="Return Status of IRet: __IRET__,\nStrTagParser:__PARSER__\nStrSelectionCmd: __STR__" ;
 
-  ### Does Make All this verbose before poping you the Zenity-List Window :
-
-
 .. code:: shell
 
-
+  ###
+  ### Does Make All this verbose before poping you the Zenity-List Window :
+  ###
+  ###
   DEBUG-ZenityFileReader:[ ZenityFilter Should return This command-line: eval $( VTVIsArrayStyleInsert=True VTVValueEntry=StrAppsName,StrTagEntry,StrParentApps,IntWidth,IntHeight,StrTitle,StrCol0,StrCol1,StrDefaultCSV,IntDefaultColExtr,StrFileInfo,StrRegSearch,BoolShowUserSelection,BoolCheckList,BoolCheckListMulti,StrVarList VTVIsValueReAssign=True VTVIsValueToConvert=False VTVIsArrayStyleInsert=True ValueToVariable ) ZenityFilter ;  ]
    : command not found
   DEBUG:__main_StartServices:[ CmdLine: local StrPairLeft ; 
@@ -1508,10 +1508,19 @@ To understand it's action here couple of line and it's result in Full-Debug Mode
     unset StrPairRight StrPairLeft ArrayGPUTag ; ]
   StrPairLeft: command not found
   TAGPARSER:[ PairLeft: StrAppsName, PairRight: __APPS__, Query: StrUserSelection=$( zenity --width=__WIDTH__ --height=__HEIGHT__ --list --title "Select a user for __APPS__" --column="selection" --column="user" __LIST_TYPE__ $( __ZenityFilter__  ) ) ]
-  TAGPARSER:[ PairLeft: StrZenityFilterCmd, PairRight: __ZenityFilter__, Query: StrUserSelection=$( zenity --width=__WIDTH__ --height=__HEIGHT__ --list --title "Select a user for Application" --column="selection" --column="user" __LIST_TYPE__ $( __ZenityFilter__  ) ) ]
-  TAGPARSER:[ PairLeft: IntWidth, PairRight: __WIDTH__, Query: StrUserSelection=$( zenity --width=__WIDTH__ --height=__HEIGHT__ --list --title "Select a user for Application" --column="selection" --column="user" __LIST_TYPE__ $( eval $( VTVIsArrayStyleInsert=True VTVValueEntry=StrAppsName,StrTagEntry,StrParentApps,IntWidth,IntHeight,StrTitle,StrCol0,StrCol1,StrDefaultCSV,IntDefaultColExtr,StrFileInfo,StrRegSearch,BoolShowUserSelection,BoolCheckList,BoolCheckListMulti,StrVarList VTVIsValueReAssign=True VTVIsValueToConvert=False VTVIsArrayStyleInsert=True ValueToVariable ) ZenityFilter ;   ) ) ]
-  TAGPARSER:[ PairLeft: IntHeight, PairRight: __HEIGHT__, Query: StrUserSelection=$( zenity --width=400 --height=__HEIGHT__ --list --title "Select a user for Application" --column="selection" --column="user" __LIST_TYPE__ $( eval $( VTVIsArrayStyleInsert=True VTVValueEntry=StrAppsName,StrTagEntry,StrParentApps,IntWidth,IntHeight,StrTitle,StrCol0,StrCol1,StrDefaultCSV,IntDefaultColExtr,StrFileInfo,StrRegSearch,BoolShowUserSelection,BoolCheckList,BoolCheckListMulti,StrVarList VTVIsValueReAssign=True VTVIsValueToConvert=False VTVIsArrayStyleInsert=True ValueToVariable ) ZenityFilter ;   ) ) ]
-  TAGPARSER:[ PairLeft: StrTypeListOpt, PairRight: __LIST_TYPE__, Query: StrUserSelection=$( zenity --width=400 --height=500 --list --title "Select a user for Application" --column="selection" --column="user" __LIST_TYPE__ $( eval $( VTVIsArrayStyleInsert=True VTVValueEntry=StrAppsName,StrTagEntry,StrParentApps,IntWidth,IntHeight,StrTitle,StrCol0,StrCol1,StrDefaultCSV,IntDefaultColExtr,StrFileInfo,StrRegSearch,BoolShowUserSelection,BoolCheckList,BoolCheckListMulti,StrVarList VTVIsValueReAssign=True VTVIsValueToConvert=False VTVIsArrayStyleInsert=True ValueToVariable ) ZenityFilter ;   ) ) ]
+   |
+ +-+--------------> ***Here the verbose action from Prefixed Variable  TPDisplayParserNotice ***
+ | |
+ |TAGPARSER:[ PairLeft: StrZenityFilterCmd, PairRight: __ZenityFilter__, Query: StrUserSelection=$( zenity --width=__WIDTH__ --height=__HEIGHT__ --list --title "Select a user for Application" --column="selection" --column="user" __LIST_TYPE__ $( __ZenityFilter__  ) ) ]
+ | 
+ | 
+ +TAGPARSER:[ PairLeft: IntWidth, PairRight: __WIDTH__, Query: StrUserSelection=$( zenity --width=__WIDTH__ --height=__HEIGHT__ --list --title "Select a user for Application" --column="selection" --column="user" __LIST_TYPE__ $( eval $( VTVIsArrayStyleInsert=True VTVValueEntry=StrAppsName,StrTagEntry,StrParentApps,IntWidth,IntHeight,StrTitle,StrCol0,StrCol1,StrDefaultCSV,IntDefaultColExtr,StrFileInfo,StrRegSearch,BoolShowUserSelection,BoolCheckList,BoolCheckListMulti,StrVarList VTVIsValueReAssign=True VTVIsValueToConvert=False VTVIsArrayStyleInsert=True ValueToVariable ) ZenityFilter ;   ) ) ]
+ | 
+ | 
+ +TAGPARSER:[ PairLeft: IntHeight, PairRight: __HEIGHT__, Query: StrUserSelection=$( zenity --width=400 --height=__HEIGHT__ --list --title "Select a user for Application" --column="selection" --column="user" __LIST_TYPE__ $( eval $( VTVIsArrayStyleInsert=True VTVValueEntry=StrAppsName,StrTagEntry,StrParentApps,IntWidth,IntHeight,StrTitle,StrCol0,StrCol1,StrDefaultCSV,IntDefaultColExtr,StrFileInfo,StrRegSearch,BoolShowUserSelection,BoolCheckList,BoolCheckListMulti,StrVarList VTVIsValueReAssign=True VTVIsValueToConvert=False VTVIsArrayStyleInsert=True ValueToVariable ) ZenityFilter ;   ) ) ]
+ | 
+ | 
+ +TAGPARSER:[ PairLeft: StrTypeListOpt, PairRight: __LIST_TYPE__, Query: StrUserSelection=$( zenity --width=400 --height=500 --list --title "Select a user for Application" --column="selection" --column="user" __LIST_TYPE__ $( eval $( VTVIsArrayStyleInsert=True VTVValueEntry=StrAppsName,StrTagEntry,StrParentApps,IntWidth,IntHeight,StrTitle,StrCol0,StrCol1,StrDefaultCSV,IntDefaultColExtr,StrFileInfo,StrRegSearch,BoolShowUserSelection,BoolCheckList,BoolCheckListMulti,StrVarList VTVIsValueReAssign=True VTVIsValueToConvert=False VTVIsArrayStyleInsert=True ValueToVariable ) ZenityFilter ;   ) ) ]
   DEBUG-ZenityFileReader:[ Return Status of IRet: 0,
   StrTagParser:
   StrSelectionCmd: StrUserSelection=$( zenity --width=400 --height=500 --list --title "Select a user for Application" --column="selection" --column="user" --radiolist $( eval $( VTVIsArrayStyleInsert=True VTVValueEntry=StrAppsName,StrTagEntry,StrParentApps,IntWidth,IntHeight,StrTitle,StrCol0,StrCol1,StrDefaultCSV,IntDefaultColExtr,StrFileInfo,StrRegSearch,BoolShowUserSelection,BoolCheckList,BoolCheckListMulti,StrVarList VTVIsValueReAssign=True VTVIsValueToConvert=False VTVIsArrayStyleInsert=True ValueToVariable ) ZenityFilter ;   ) ) ]
