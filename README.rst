@@ -1463,7 +1463,83 @@ Common High-Level Struture imply uses of __TAG__, it replace presence of variabl
    --list		List all Internal Pre-fixed Variable available to query or get.
   	--compword	Word Completion Provide a services to Extract on Demand all Pre-fixed Variable
 		  \String inside this function.
+
+
+To understand it's action here couple of line and it's result in Full-Debug Mode, TagParser does include 3 Debug statement that include, To display couple of Verbose line during the PArsing ; Parsing but not execute the statement, Let the Created Code one executed from your function point-of-insertion speak for himself and tell it's suppose to found by Match Sequence. The last one as debug called Prefixed-Variable TPDisplayParserNotice require you setup a descent Verbosis function. There is many Verbosis function not to be annoying amoung function and not to fall on construction of expanding Main Verbosis function. But Future tell Registrer like In-code building on calling it and die on exit of this function will never show the informations about Verbosis inside a code source and avoid Program-Parser deeping inside the Verbosis uselessly. Visible by `declare -f` as well. 
+
+.. code:: shell
+
+  ### 
+  ### From function ZenityContent Listing 
+  ###
+  StrZenityFilterCmd="""eval \$( VTVIsArrayStyleInsert=True VTVValueEntry=${StrVarList} VTVIsValueReAssign=True VTVIsValueToConvert=False VTVIsArrayStyleInsert=True ValueToVariable ) ZenityFilter ; """ ; 
+
+  StrMsg="ZenityFilter Should return This command-line: __CMD__" ;
+  VerbMsg=${StrMsg//__CMD__/${StrZenityFilterCmd}} VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=True StrDevOut=/dev/stderr Verbosis
+
+  StrSelectionCmd="""StrUserSelection=\$( zenity --width=__WIDTH__ --height=__HEIGHT__ --list --title \"${StrTitle}\" --column=\"${StrCol0}\" --column=\"${StrCol1}\" __LIST_TYPE__ \$( __ZenityFilter__  ) )""" ;
+
+  eval StrTagParser=$( TPVarNameParsed="StrSelectionCmd" TPDisplayParserNotice=True TPIsMatchRtoL=True TPDisplayDebug=True TPArrayName=ArrayGPUTag TPListTag="${StrTagEntry}" TagParser ) ; 
+  local IRet=$? ;  
+  StrMsg="Return Status of IRet: __IRET__,\nStrTagParser:__PARSER__\nStrSelectionCmd: __STR__" ;
+
+  ### Does Make All this verbose before poping you the Zenity-List Window :
+  DEBUG-ZenityFileReader:[ ZenityFilter Should return This command-line: eval $( VTVIsArrayStyleInsert=True VTVValueEntry=StrAppsName,StrTagEntry,StrParentApps,IntWidth,IntHeight,StrTitle,StrCol0,StrCol1,StrDefaultCSV,IntDefaultColExtr,StrFileInfo,StrRegSearch,BoolShowUserSelection,BoolCheckList,BoolCheckListMulti,StrVarList VTVIsValueReAssign=True VTVIsValueToConvert=False VTVIsArrayStyleInsert=True ValueToVariable ) ZenityFilter ;  ]
+   : command not found
+  DEBUG:__main_StartServices:[ CmdLine: local StrPairLeft ; 
+    local StrPairRight ; 
+    local ArrayGPUTag=( StrAppsName:__APPS__ StrZenityFilterCmd:__ZenityFilter__ IntWidth:__WIDTH__ IntHeight:__HEIGHT__ StrTypeListOpt:__LIST_TYPE__ ) ; 
+    local StrMsg="PairLeft: __LEFT__, PairRight: __RIGHT__, Query: __QUERY__" ; 
+    for TagParser in ${ArrayGPUTag[@]}  ; do 
+      AStrMsg="${StrMsg}" ;
+      StrPairRight="${TagParser/#[SIB][tnos][a-zA-Z0-9_]*:/}" ; 
+      StrPairLeft="${TagParser/%:__[A-Za-z0-9_,]*/}" ; 
+      AStrMsg=${AStrMsg//__LEFT__/${StrPairLeft}} ;
+      AStrMsg=${AStrMsg//__RIGHT__/${StrPairRight}} ;
+      AStrMsg=${AStrMsg//__QUERY__/${StrSelectionCmd}} ;
+      VerbMsg=${AStrMsg} VerbHeader=TAGPARSER VerbState=True VerbFormated=True VerbDev=/dev/stderr Verbosis ; 
+      eval StrSelectionCmd=\${\StrSelectionCmd//${StrPairRight}/\${${StrPairLeft}}}  ; 
+    done ; 
+    unset StrPairRight StrPairLeft ArrayGPUTag ; ]
+  StrPairLeft: command not found
+  TAGPARSER:[ PairLeft: StrAppsName, PairRight: __APPS__, Query: StrUserSelection=$( zenity --width=__WIDTH__ --height=__HEIGHT__ --list --title "Select a user for __APPS__" --column="selection" --column="user" __LIST_TYPE__ $( __ZenityFilter__  ) ) ]
+  TAGPARSER:[ PairLeft: StrZenityFilterCmd, PairRight: __ZenityFilter__, Query: StrUserSelection=$( zenity --width=__WIDTH__ --height=__HEIGHT__ --list --title "Select a user for Application" --column="selection" --column="user" __LIST_TYPE__ $( __ZenityFilter__  ) ) ]
+  TAGPARSER:[ PairLeft: IntWidth, PairRight: __WIDTH__, Query: StrUserSelection=$( zenity --width=__WIDTH__ --height=__HEIGHT__ --list --title "Select a user for Application" --column="selection" --column="user" __LIST_TYPE__ $( eval $( VTVIsArrayStyleInsert=True VTVValueEntry=StrAppsName,StrTagEntry,StrParentApps,IntWidth,IntHeight,StrTitle,StrCol0,StrCol1,StrDefaultCSV,IntDefaultColExtr,StrFileInfo,StrRegSearch,BoolShowUserSelection,BoolCheckList,BoolCheckListMulti,StrVarList VTVIsValueReAssign=True VTVIsValueToConvert=False VTVIsArrayStyleInsert=True ValueToVariable ) ZenityFilter ;   ) ) ]
+  TAGPARSER:[ PairLeft: IntHeight, PairRight: __HEIGHT__, Query: StrUserSelection=$( zenity --width=400 --height=__HEIGHT__ --list --title "Select a user for Application" --column="selection" --column="user" __LIST_TYPE__ $( eval $( VTVIsArrayStyleInsert=True VTVValueEntry=StrAppsName,StrTagEntry,StrParentApps,IntWidth,IntHeight,StrTitle,StrCol0,StrCol1,StrDefaultCSV,IntDefaultColExtr,StrFileInfo,StrRegSearch,BoolShowUserSelection,BoolCheckList,BoolCheckListMulti,StrVarList VTVIsValueReAssign=True VTVIsValueToConvert=False VTVIsArrayStyleInsert=True ValueToVariable ) ZenityFilter ;   ) ) ]
+  TAGPARSER:[ PairLeft: StrTypeListOpt, PairRight: __LIST_TYPE__, Query: StrUserSelection=$( zenity --width=400 --height=500 --list --title "Select a user for Application" --column="selection" --column="user" __LIST_TYPE__ $( eval $( VTVIsArrayStyleInsert=True VTVValueEntry=StrAppsName,StrTagEntry,StrParentApps,IntWidth,IntHeight,StrTitle,StrCol0,StrCol1,StrDefaultCSV,IntDefaultColExtr,StrFileInfo,StrRegSearch,BoolShowUserSelection,BoolCheckList,BoolCheckListMulti,StrVarList VTVIsValueReAssign=True VTVIsValueToConvert=False VTVIsArrayStyleInsert=True ValueToVariable ) ZenityFilter ;   ) ) ]
+  DEBUG-ZenityFileReader:[ Return Status of IRet: 0,
+  StrTagParser:
+  StrSelectionCmd: StrUserSelection=$( zenity --width=400 --height=500 --list --title "Select a user for Application" --column="selection" --column="user" --radiolist $( eval $( VTVIsArrayStyleInsert=True VTVValueEntry=StrAppsName,StrTagEntry,StrParentApps,IntWidth,IntHeight,StrTitle,StrCol0,StrCol1,StrDefaultCSV,IntDefaultColExtr,StrFileInfo,StrRegSearch,BoolShowUserSelection,BoolCheckList,BoolCheckListMulti,StrVarList VTVIsValueReAssign=True VTVIsValueToConvert=False VTVIsArrayStyleInsert=True ValueToVariable ) ZenityFilter ;   ) ) ]
+  DEBUG-ZenityFileReader:[ After TagParser Action: value of StrSelectionCmd:[ StrUserSelection=$( zenity --width=400 --height=500 --list --title "Select a user for Application" --column="selection" --column="user" --radiolist $( eval $( VTVIsArrayStyleInsert=True VTVValueEntry=StrAppsName,StrTagEntry,StrParentApps,IntWidth,IntHeight,StrTitle,StrCol0,StrCol1,StrDefaultCSV,IntDefaultColExtr,StrFileInfo,StrRegSearch,BoolShowUserSelection,BoolCheckList,BoolCheckListMulti,StrVarList VTVIsValueReAssign=True VTVIsValueToConvert=False VTVIsArrayStyleInsert=True ValueToVariable ) ZenityFilter ;   ) ) ] ]
+  __TEXT__
   
+
+.. code:: shell
+
+  ### 
+  ### From function ZenityPrefixedVarSelection
+  ###
+  local StrZenityListBuild=$( eval $( VTVValueEntry=${StrVarList} VTVIsArrayStyleInsert=True VTVIsValueReAssign=True VTVIsValueToConvert=False ValueToVariable  ) BuildListInformation ) ; 
+  StrMsg="Zenity List Value CmdLine: ${StrZenityListBuild}\n" ; 
+  VerbMsg="${StrMsg}" VerbDev=/dev/stderr VerbState=True VerbFormated=True VerbHeader=${__call_locality[1]} Verbosis
+  
+  local StrCmdLine="${StrZenityListParser}" ;
+   
+  StrMsg="Zenity List CmdLine: ${StrCmdLine}\n" ; 
+  VerbMsg="${StrMsg}" VerbDev=/dev/stderr VerbState=True VerbFormated=True VerbHeader=${__call_locality[1]} Verbosis
+  ### Section using TagParser to Replace __TAG__ by Variable Name. 
+  eval $( TPIsMatchRtoL=True TPDisplayDebug=True TPArrayName=ArrayZPVSTag TPVarNameParsed="StrCmdLine" TPListTag="${StrTagList}" TagParser ) ; 
+  # eval "${StrTagCmdLine}" ;  
+  
+  StrMsg="Parsed Zenity List CmdLine: ${StrCmdLine}\n" ; 
+  VerbMsg="${StrMsg}" VerbDev=/dev/stderr VerbState=True VerbFormated=True VerbHeader="${__call_locality[1]}-CMDLINE" Verbosis
+  
+  eval """${StrCmdLine}""" ; 
+  
+  ### 
+  ### Output Generated Skipped. 
+  ###
+
 :Note: e2382694-0ba3-11e3-98a2-001b3875b29c
 :Title: Usual Shell Chunk-Development.
 :Function: ZenityShellEval
