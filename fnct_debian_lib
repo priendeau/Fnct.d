@@ -4659,10 +4659,11 @@ function ZenityContentListing( )
  local StrTagEntry=${ZCLTagListParser:=StrAppsName:__APPS__,StrZenityFilterCmd:__ZenityFilter__,IntWidth:__WIDTH__,IntHeight:__HEIGHT__,StrTypeListOpt:__LIST_TYPE__} ;
 	local StrRegSearch=${ZCLRegSearch:="\/bin\/bash"} ;
 	
+ local BoolDisplayDebug=${ZCLDebuf:=False} ; 
  local BoolShowUserSelection=${ZCLSUS:=False} ;
  local BoolCheckList=${ZCLIsCheckList:=False} ; 
  local BoolCheckListMulti=${ZCLIsCheckListMulti:=False} ;
- local StrVarList="StrAppsName,StrTagEntry,StrParentApps,IntWidth,IntHeight,StrTitle,StrCol0,StrCol1,StrDefaultCSV,IntDefaultColExtr,StrFileInfo,StrRegSearch,BoolShowUserSelection,BoolCheckList,BoolCheckListMulti,StrVarList" ;
+ local StrVarList="BoolDisplayDebug,StrAppsName,StrTagEntry,StrParentApps,IntWidth,IntHeight,StrTitle,StrCol0,StrCol1,StrDefaultCSV,IntDefaultColExtr,StrFileInfo,StrRegSearch,BoolShowUserSelection,BoolCheckList,BoolCheckListMulti,StrVarList" ;
  local -A ArrayZenityTypeList ;
  
  ArrayZenityTypeList["multi"]="--checklist --multiple" ; 
@@ -4676,13 +4677,18 @@ function ZenityContentListing( )
   local StrDevOut=${VerbDev:=/dev/stderr} ; 
   local IsVerboseState=${VerbState:=False} ;
   local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+  local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
   local IsDisplayFormatted=${VerbFormated:=True} ;
   local ArrayArg=( $* ) ; 
   if [ "${IsVerboseState:=False}" == "True" ] ; then 
    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
-     echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+    echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
    else
-     echo -ne "${StrMsg}\n" > ${StrDevOut} ;
+    if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+     echo "${StrMsg}" ;  
+    else
+     echo "${StrMsg}" > ${StrDevOut} ;
+    fi 
    fi 
   fi
  } 
@@ -4730,20 +4736,20 @@ function ZenityContentListing( )
   StrZenityFilterCmd="""eval \$( VTVIsArrayStyleInsert=True VTVValueEntry=${StrVarList} VTVIsValueReAssign=True VTVIsValueToConvert=False VTVIsArrayStyleInsert=True ValueToVariable ) ZenityFilter ; """ ; 
   
   StrMsg="ZenityFilter Should return This command-line: __CMD__" ;
-  VerbMsg=${StrMsg//__CMD__/${StrZenityFilterCmd}} VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=True StrDevOut=/dev/stderr Verbosis
+  VerbMsg=${StrMsg//__CMD__/${StrZenityFilterCmd}} VerbState=${BoolDisplayDebug} VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True StrDevOut=/dev/stderr Verbosis
 
   StrSelectionCmd="""StrUserSelection=\$( zenity --width=__WIDTH__ --height=__HEIGHT__ --list --title \"${StrTitle}\" --column=\"${StrCol0}\" --column=\"${StrCol1}\" __LIST_TYPE__ \$( __ZenityFilter__  ) )""" ;
   
-  eval StrTagParser=$( TPVarNameParsed="StrSelectionCmd" TPDisplayParserNotice=True TPIsMatchRtoL=True TPDisplayDebug=True TPArrayName=ArrayGPUTag TPListTag="${StrTagEntry}" TagParser ) ; 
+  eval StrTagParser=$( TPVarNameParsed="StrSelectionCmd" TPDisplayParserNotice=${BoolDisplayDebug} TPIsMatchRtoL=True TPDisplayDebug=${BoolDisplayDebug} TPArrayName=ArrayGPUTag TPListTag="${StrTagEntry}" TagParser ) ; 
   local IRet=$? ;  
   StrMsg="Return Status of IRet: __IRET__,\nStrTagParser:__PARSER__\nStrSelectionCmd: __STR__" ;
 		StrMsg=${StrMsg//__PARSER__/${StrTagParser}} ;
 		StrMsg=${StrMsg//__IRET__/${IRet:=-1}} ;
 		StrMsg=${StrMsg//__STR__/${StrSelectionCmd}} ;
-  VerbMsg=${StrMsg} VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=True StrDevOut=/dev/stderr Verbosis
+  VerbMsg=${StrMsg} VerbState=${BoolDisplayDebug} VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True StrDevOut=/dev/stderr Verbosis
   $( eval "${StrTagParser}" )  ;
   StrMsg="After TagParser Action: value of StrSelectionCmd:[ __STR__ ]" ;
-  VerbMsg=${StrMsg//__STR__/${StrSelectionCmd}} VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=True StrDevOut=/dev/stderr Verbosis
+  VerbMsg=${StrMsg//__STR__/${StrSelectionCmd}} VerbState=${BoolDisplayDebug} VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True StrDevOut=/dev/stderr Verbosis
   
   ### section here replaced by ValueToVariable 
   ###StrZenityFilter="""StrDefaultCSV=${StrDefaultCSV} \
@@ -4761,10 +4767,11 @@ function ZenityContentListing( )
   StrMsg="User selected: __USER__" ;
    
   ### Replace the Output for User-selected, aka Prefixed-Variable BoolShowUserSelection from ZCLSUS
-		VerbMsg=${StrMsg//__USER__/${StrUserSelection}} VerbHeader=DEBUG VerbFormated=True VerbState=${BoolShowUserSelection} StrDevOut=/dev/stderr  Verbosis
+		VerbMsg=${StrMsg//__USER__/${StrUserSelection}} VerbHeader=DEBUG VerbFormated=True VerbState=${BoolShowUserSelection} StrDevOut=/dev/stdout  Verbosis
 		
   ### Replace the echo and the selected informations
-  VerbMsg=${StrUserSelection} VerbHeader=DEBUG VerbFormated=False VerbState=True StrDevOut=/dev/stdout  Verbosis
+  #echo "${StrUserSelection}" ; 
+  VerbMsg=${StrUserSelection} VerbHeader=DEBUG VerbEvalForm=True  VerbFormated=False VerbState=True StrDevOut=/dev/stdout  Verbosis
  }
 
  function __main_StartServices()
