@@ -1386,9 +1386,9 @@ It's Essential to talk about Attribution of Second Edition by Jessia McKellar an
 :Title: The Common __TAG__ replacement inside a String into Variable Name executed as-in your function call.
 :Function: TagPArser
 
----------------
+
 TagParser
----------------
+~~~~~~~~~
 
 Common High-Level Struture imply uses of __TAG__, it replace presence of variable and are always associated with Templating. Coming with story of Word Perfect artefact to replace __TAG__ in multi-letter header, it have move to a WordProcessor the era to develop steady Text with alteration like Topic, Date, User dedicated or even Page number are today know TAG equivalent. Modern programing had greatly move toward Templating the Text to allow it's conversion to other Language or tongue. Had move to generalistic expression of the information to let the Template be more genral and more uniform to even generate universal template. Other side of publishing is HTML side which an adapted version of XML and is dedicated to Uniform publishig of about any form of information. XML becoming Greater by it's expression it under the hood we do understand it's power. Codeability of the XML will be reache when a __TAG__ does express is formal conception to had limit and beyond that limit it'd more important to specify other alternative to denote efficiently the content... At this stage we do have to present you the canvats-set and it's mutability but starting with this function because we haven't filled all the appropriate function to explain a Double-dictionnary of event and relation being muted into one intrinsict action to be the sets of required informations showed and products asked. TagParser is a tools to allow muting information faster than only create a by-hand with String and command dependant from Variable. TAG-set are not altering the state odf your function if they are not parsed it's the final result that won't be showed you and will not display Error. Having Command line filled of missing informations and variable will pop's you error when a command is issued. Generally moved to Array of information created at the beginning of a function you can store the whole Text and putting TAG where result one compiled will be see. TagParser does this type of operation, Getting To litteratly transfer a compiled informations into living Variable-name in uses and some function dependent of it will be cumuled to show you example, look at first sight the helper now inclusing Name Helper, Synopsis, Summary, and Description with Prefixed-Variable notice you are now able to understand the the variable uses and code by yourself.
 
@@ -1559,9 +1559,9 @@ The Next Function will be delivered soon and is an helper feeding informations t
 :Title: Usual Shell Chunk-Development.
 :Function: ZenityShellEval
 
----------------
+
 ZenityShellEval
----------------
+~~~~~~~~~~~~~~~
 
 .. code:: shell
 
