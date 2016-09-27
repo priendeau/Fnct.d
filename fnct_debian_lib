@@ -3247,7 +3247,7 @@ function TagParser( )
   fi
  } 
  
- local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
+ local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
  local StrNameHelper="Tag Parser\t Ability To parse tagged Information from known varable name.";
  local StrSynopsis="This is a simple application to provide to function conversion of String of text with Tag ( noted __TAG__ by default ). ";
  local StrSummary="Providing a Text transformation from provided varaible name inside  parameter. Content expect to exist inside a function, this is a provided evaluation of a loop transformaing an Entry variable name from tag supplied. Noted the evaluation brace is required, a.k.a \$( TP...=... eval TagParser ) to add the code directly inside your function. The mechanism allow uses of definied array of desired scope type it is not desctructive for array and does not give the destruct code for Variable name such Array inside Prefixed-Variable TPArrayName."
@@ -3261,7 +3261,9 @@ function TagParser( )
 		echo -ne """${ArgGet}\n""" ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
 		eval $( __GetVarReferenceList ) ;	
-	elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+ elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
+		eval $( __GetVarReferenceCompWord ) ;
+ elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
   eval $( VTVValueEntry=${StrVarList}, \ 
           VTVIsArrayStyleInsert=True \
           VTVIsValueReAssign=True \
@@ -4750,7 +4752,12 @@ function ZenityContentListing( )
   ###               IntDefaultColExtr=${IntDefaultColExtr} \
   ###               ZenityFilter""" ;     
          
-		StrUserSelection=${StrUserSelection:=${StrUser}} ; 
+  
+		### Notice, since the StrUserSelection is embedded inside the StrSelectionCmd
+  ### We need to evaluate without execution back-trace -> $( __COMMAND__ ) ; 
+  ### simply eval __COMMAND__ 
+  eval "${StrSelectionCmd}" ;
+  
   StrMsg="User selected: __USER__" ;
    
   ### Replace the Output for User-selected, aka Prefixed-Variable BoolShowUserSelection from ZCLSUS
@@ -4758,7 +4765,6 @@ function ZenityContentListing( )
 		
   ### Replace the echo and the selected informations
   VerbMsg=${StrUserSelection} VerbHeader=DEBUG VerbFormated=False VerbState=True StrDevOut=/dev/stdout  Verbosis
-	 $( eval "${StrSelectionCmd}" ) ; 
  }
 
  function __main_StartServices()
@@ -4780,7 +4786,7 @@ function ZenityContentListing( )
  local StrNameHelper="ZenityContentListing\tThe Fnct.D Mechanism To list-down information from file and report it inside a Standardized Zenity-List container.";
  local StrSynopsis="\tHelper involved inside GksuZenityLoader to load application like Firefox, Idlex and many more application configured internaly, ";
  local StrSummary="First it's an helper reserved to choose a user to load the application under a specific name. Used in PackageRepositoryMgmt to select or visualize the UNIQUE-ID snapshoot of maintained archives linked to a backup place to reduce size of /var this application is quite useful if you know how to specify and pass a regular-expression to internal function to ZenityFilter." ; 
- local StrDescription="\nVariable helper:\n\nZCLIsCheckList\t\tSet True/False, To use a checkboxlist rather than move the radio-buton to your item inside the list. \nZCLIsCheckListMulti\tSet True/False, To activate Multiple selection and Checkboxlist altogether.\n\n\t\tOnly one of the two is affecting the Zenity List interface at the time. Changing the selection to check-list and choosing none of them is retoring the interface to a radio-button action.\n\n\tInterface Field and File-reader options:\n\nZCLFilePasswd\tFILENAME, File choosed to read out, Belong to GksuZenityLoader reference to use the sudo belong to user to load the application it read user list from /etc/passwd, from PackageRepositoryMgmt it read the latest file (named latest after doing package transfert)\nZCLColExtr\tINT 0 .. NF Tel to ZenityContentListing which column to display or to read from your CSV match\nZCLCSV\t\tCHAR, Variable used as CHAR identifier in Comma Separated Value and usually choosed ':' or ','. We strongly suggest to wrap your CSV choice with single quote/guillemets mandatory for semi-colon : ';' \n\n\tInterface options:\n\nZCLTitle\tTo Define a Title (suggested to use simple or triple quotes ) ; ZCLTitle have property to hold a Tag named __APPS__ and will hold the application name, adding this tag to the property of ZCLTitle will parse-it.\nZCLCol0\t\tFirst Column a.k.a selection column it take the name of the action when the second one is a file-list as example (ZCLCol0=\"file deletion\")\nZCLCol1\t\tSecond Column name always represent the listing desired, in case of filtering file /etc/passwd it take the user result in CSV=1, at CSV=7 it take the shell per-user.\nZCLWidth\tWidth Size or X-axis of the List-Box. \nZCLHeight\tHeight or Y-axis of the List-Box.\n\n\tGkSuZenityLoader options:\n\nZCLSUS\t\tOption to Set True/False to change the output to Desired GkSuZenityLoader requirement to format the output to form a sentences from selection and should be inserted inside a Text-dialog." ;
+ local StrDescription="\nVariable helper:\n\nZCLIsCheckList\t\tSet True/False, To use a checkboxlist rather than move the radio-buton to your item inside the list. \nZCLIsCheckListMulti\tSet True/False, To activate Multiple selection and Checkboxlist altogether.\n\n\t\tOnly one of the two is affecting the Zenity List interface at the time. Changing the selection to check-list and choosing none of them is retoring the interface to a radio-button action.\n\n\tInterface Field and File-reader options:\n\nZCLFilePasswd\tFILENAME, File choosed to read out, Belong to GksuZenityLoader reference to use the sudo belong to user to load the application it read user list from /etc/passwd, from PackageRepositoryMgmt it read the latest file (named latest after doing package transfert)\nZCLRegSearch\tSTRING The Regular Expression to search by column lines. In /etc/passwd it's all user having /bin/bash like shell, but a line start with anything can be [A-Za-z0-9]* Some case require good quoting or error will happen...\nZCLColExtr\tINT 0 .. NF Tel to ZenityContentListing which column to display or to read from your CSV match\nZCLCSV\t\tCHAR, Variable used as CHAR identifier in Comma Separated Value and usually choosed ':' or ','. We strongly suggest to wrap your CSV choice with single quote/guillemets mandatory for semi-colon : ';' \n\n\tInterface options:\n\nZCLTitle\tTo Define a Title (suggested to use simple or triple quotes ) ; ZCLTitle have property to hold a Tag named __APPS__ and will hold the application name, adding this tag to the property of ZCLTitle will parse-it.\nZCLCol0\t\tFirst Column a.k.a selection column it take the name of the action when the second one is a file-list as example (ZCLCol0=\"file deletion\")\nZCLCol1\t\tSecond Column name always represent the listing desired, in case of filtering file /etc/passwd it take the user result in CSV=1, at CSV=7 it take the shell per-user.\nZCLWidth\tWidth Size or X-axis of the List-Box. \nZCLHeight\tHeight or Y-axis of the List-Box.\n\n\tGkSuZenityLoader options:\n\nZCLSUS\t\tOption to Set True/False to change the output to Desired GkSuZenityLoader requirement to format the output to form a sentences from selection and should be inserted inside a Text-dialog." ;
  
   
  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
