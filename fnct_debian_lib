@@ -3595,12 +3595,204 @@ function ObjFindFunction()
 ### better body definition and reduce complexity by reading it... 
 ### 
 
+### ZenityPrefixedVarSelection :
+###
+### Full-length example : ZPVSFunctionName=ValueToVariable  ZenityPrefixedVarSelection
+###	
+### ZenityPrefixedVarSelection and ZenityBuildForm are 2 set of helper declared from 
+### list section, it will be easy to setup Command-line function from --list switch
+### and uses of Prefixed-Variable : 
+###
+### example :
+### ZenityBuildForm=True ValueToVariable --list
+###
+### - will pop you the first interface ZenityPrefixedVarSelection which
+### show you selectable variable to configure or to change. We recommand 
+### you to choose them even if they are true, and make them changeable on
+### need . This mean Associating them to variable or leave it as same 
+### value. I do decide to present a First interface for economic reason, the 
+### interface of some function is so abundant in condition than it take most 
+### of the screen showing you and some without screen equiped with pannig 
+### factor ( virtual screen ) won't be able to push the OK or event the cancel
+### Button. Once the selected variable is done the other interface is text field
+### format and for all variable even True/False once require 
+###
+###
+###
 
+unset ZenityPrefixedVarSelection ; 
+function ZenityPrefixedVarSelection()
+{
+ local __call_locality=( ZPVS ZenityPrefixedVarSelection ) ;
+ local ArrayArg=( $* ) ; 
+ local Arg0=${ArrayArg[0]} ;
+ 
+ local BoolDisplayDebug=${ZPVSDisplayDebug:=True} ; 
+ local StrFuncName=${ZPVSFunctionName:=None} ;
+ local IntHeight=${ZPVSHeight:=600} ; 
+ local IntWidth=${ZPVSWidth:=400} ; 
+ local StrTextWindows=${ZPVSZenityTxtWin:=Choose your Prefixed-Variable to Edit} ;
+ local StrDefaultSep=${ZPVSSeparatorList:=' '} ;
+ local StrTxtCheckCase=${ZPVSTxtChkName:=Prefixed-Var}
+ local StrTxtListValue=${ZPVSTxtListValue:=Value} ;
+ local StrDefaultSelection=${ZPVSDefaultSet:=FALSE} ; 
+ local StrZenityApps=${ZPVSZenityApps:=/usr/bin/zenity} 
+ local StrZenityOptWin=${ZPVSZenityOptWin:="--list --checklist --multiple"}
+ local StrTagList=${ZPVSTagParserOpt:=StrZenityOptWin:__OPT__,StrZenityApps:__APPS__,IntHeight:__HEIGHT__,IntWidth:__WIDTH__,StrTextWindows:__TEXT__,StrTxtCheckCase:__COL1__,StrTxtListValue:__COL2__,StrDefaultSep:__SEP__,StrZenityListBuild:__LIST__} ; 
+ local StrZenityListParser=${ZPVSZenityListOpt:="""__APPS__ __OPT__ --height=__HEIGHT__ --width=__WIDTH__ --text=\"__TEXT__\" --column=Selection --column=\"__COL1__\" --column=\"__COL2__\" --print-column=2 --separator='__SEP__ ' __LIST__ """} ; 
+ local StrTransfertFunc="" ; 
+ local StrFunctionMain=${ZPVSFunctionCall:=__main_StartServices} ; 
+ local StrParentApps="${__call_locality[1]}" ; 
+ 
+ local StrVarList="BoolDisplayDebug,StrDefaultSelection,StrFuncName,IntWidth,IntHeight,StrTextWindows,StrDefaultSep,StrTxtCheckCase,StrTxtListValue,StrZenityListParser,StrZenityApps,StrZenityOptWin,StrTagList,StrParentApps,StrFunctionMain" ; 
+
+ function Verbosis()
+ {
+  local __call_locality=( Verbosis Verb );
+  local StrMsg=${VerbMsg:=__TEXT__} ; 
+  local StrDevOut=${VerbDev:=/dev/stderr} ; 
+  local IsVerboseState=${VerbState:=False} ;
+  local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+  local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+  local IsDisplayFormatted=${VerbFormated:=True} ;
+  local ArrayArg=( $* ) ; 
+  if [ "${IsVerboseState:=False}" == "True" ] ; then 
+   if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+    echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+   else
+    if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+     echo "${StrMsg}" ;  
+    else
+     echo "${StrMsg}" > ${StrDevOut} ;
+    fi 
+   fi 
+  fi
+ } 
+ ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis
+
+ ### Function BuildListInformation:
+ ### Because this part is usefull to build a list for Selection, aka :
+ ###  Transforming the query ( Function --list ) into 
+ ###  TRUE/FALSE + PreFixedVariable + """__PreFixedVariable__"""
+ ###  - And also parse the content of __PreFixedVariable__ into 
+ ### default value it's hard to not having engine read the content
+ ### and be able to parse-it safely. 
+ ### 
+ function BuildListInformation()
+ {
+  local __call_locality=( BLI BuildListInformation ${StrParentApps} ) ;
+  local ArrayArg=( $* ) ;
+  local Arg0=${ArrayArg[0]};  
+  local StrCallName=$( GetStdPrefixName ${StrFuncName} ) ;  
+  
+  StrMsg="Prefixed String for Function: ${StrFuncName} :${StrCallName}" ; 
+  VerbMsg="${StrMsg}" VerbDev=/dev/stderr VerbState=${BoolDisplayDebug} VerbFormated=True VerbHeader=${__call_locality[1]} Verbosis
+  local ArrayPrefixedVar=( $( ${StrFuncName} --list ) ) ; 
+  StrMsg="Building entry List: ${VarName}" ; 
+  VerbMsg="${StrMsg}" VerbDev=/dev/stderr VerbState=${BoolDisplayDebug} VerbFormated=True VerbHeader=${__call_locality[1]} Verbosis
+  local StrZenityListBuild=$( eval "${StrFuncName} --list" | sed 's/\('${StrCallName}'[A-Za-z0-9]*\)/'${StrDefaultSelection}' \1/g ; s/\('${StrCallName}'[A-Za-z0-9]*\)/\1 __\1__/g' ) ; 
+  StrMsg="Initial Zenity TagParser List: ${StrZenityListBuild}\n" ; 
+  VerbMsg="${StrMsg}" VerbDev=/dev/stderr VerbState=${BoolDisplayDebug} VerbFormated=True VerbHeader=${__call_locality[1]} Verbosis
+  local StrDefautVal="" ; 
+  
+  for VarName in ${ArrayPrefixedVar[@]} ; do 
+   StrDefautVal=$( ${StrFuncName} --get ${VarName} ) ; 
+   StrZenityListBuild="""${StrZenityListBuild//__${VarName}__/\"\"\" ${StrDefautVal}\"\"\"}""" ;  
+  done 
+  
+  StrZenityListBuild="""${StrZenityListCmd} ${StrZenityListBuild}""" ; 
+  StrMsg="Zenity List Value for CmdLine: ${StrZenityListBuild}\n" ;  
+  VerbMsg="${StrMsg}" VerbDev=/dev/stderr VerbState=${BoolDisplayDebug} VerbFormated=True VerbHeader=${__call_locality[1]} Verbosis
+  
+  ### This Verbosis required to be set tot VerbState=True + VerbFormated=False to allow 
+  ### The list to be outputed.
+  VerbMsg="${StrZenityListBuild}" VerbDev=/dev/stdout VerbState=True VerbFormated=False VerbHeader="" Verbosis
+ }
+ 
+ function __main_StartServices()
+ {
+  local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+  local ArrayArg=( $* ) ;
+  local Arg0=${ArrayArg[0]};  
+ 
+  local StrZenityListBuild=$( eval $( VTVValueEntry=${StrVarList} VTVIsArrayStyleInsert=True VTVIsValueReAssign=True VTVIsValueToConvert=False ValueToVariable  ) BuildListInformation ) ; 
+  StrMsg="Zenity List Value CmdLine: ${StrZenityListBuild}\n" ; 
+  VerbMsg="${StrMsg}" VerbDev=/dev/stderr VerbState=True VerbFormated=True VerbHeader=${__call_locality[1]} Verbosis
+  
+  local StrCmdLine="${StrZenityListParser}" ;
+   
+  StrMsg="Zenity List CmdLine: ${StrCmdLine}\n" ; 
+  VerbMsg="${StrMsg}" VerbDev=/dev/stderr VerbState=True VerbFormated=True VerbHeader=${__call_locality[1]} Verbosis
+  ### Section using TagParser to Replace __TAG__ by Variable Name. 
+  eval $( TPIsMatchRtoL=True TPDisplayDebug=True TPArrayName=ArrayZPVSTag TPVarNameParsed="StrCmdLine" TPListTag="${StrTagList}" TagParser ) ; 
+  # eval "${StrTagCmdLine}" ;  
+  
+  StrMsg="Parsed Zenity List CmdLine: ${StrCmdLine}\n" ; 
+  VerbMsg="${StrMsg}" VerbDev=/dev/stderr VerbState=True VerbFormated=True VerbHeader="${__call_locality[1]}-CMDLINE" Verbosis
+  
+  eval """${StrCmdLine}""" ; 
+ }
+ 
+ function __main_StopServices()
+ {
+  local __call_locality=( Main __main_StopServices ${StrParentApps} ) ;
+  local ArrayArg=( $* ) ;
+  local Arg0=${ArrayArg[0]};  
+ }
+ 
+ local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
+ local StrNameHelper="ZenityPrefixedVarSelection\t\tThe Fnct.D Zenity Services to Select from Windows Frame required Prefixed-Variable to build a query";
+ local StrSynopsis="Implementation of a Member for Registration process, ZenityPrefixedVarSelection, is the 1st door to knock by choosing item to register, to use correctly in building one or severals line of code for Fnct.D";
+ local StrSummary="This function simply open a Zenity Windows depending which function you have choosed it display registered Prefixed-Variable, you select required field and wait for the second windows which pop-up a form to feed the information on selected Prefixed-Variable. All alone it output only the selected variable and return by String Space separated value the Registered Prefixed variable. Reserved by possibility to change the String-Space separated value by ZPVSSeparatorList it does the same. " ; 
+ local StrDescription="Initially called by ZenityBuildForm, you can re-use the application for complementary query. Some effort to integrate this windows to --list operator switches it ill require uses of Prefixed-Variable. Suggested method imply adding ZenityList=True to a function you require to select value. While services like compword is active in all function with bottom-clause to filter switched --compword to tab accross Prefixed-Expansion variable showing you on prompt ZenityPrefixedVarSelection does the same in Windows form." ;   
+ 
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+  GVRIsName=True GVRIsSynopsis=True GVRIsSummary=True GVRIsDesc=True GetVarReference ${__call_locality[1]} ; 
+		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+		echo -ne """${ArgGet}\n""" ;
+	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+		eval $( __GetVarReferenceList ) ;	
+	elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
+  eval $( VTVValueEntry=${StrVarList} \ 
+          VTVIsArrayStyleInsert=True   \
+          VTVIsValueReAssign=True      \
+          VTVIsValueToConvert=False    \
+          ValueToVariable  ) __main_StopServices ; 
+	elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  eval $( VTVValueEntry=${StrVarList}  \ 
+          VTVIsArrayStyleInsert=True    \
+          VTVIsValueReAssign=True       \
+          VTVIsValueToConvert=False     \
+          ValueToVariable  ) ${StrFunctionMain} ; 
+	fi  
+ 
+} ; 
 
 unset __GetVarReferenceList ;
 function __GetVarReferenceList( )
 {
-		echo -ne """eval ${__call_locality[1]} --help 2> /dev/null | egrep -i \"^Variable\" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '""" ; 
+		local IsZenityBuildForm=${BuildForm:=False} ;
+  ### Prefixed-Variable __GLRLAppsGuiBuilder is reserved for 
+  ### user creating a better Gui-Builder than existing one 
+  ### to form execution statement fo Bash ...
+  local StrAppsGuiForm=${__GLRLAppsGuiBuilder:=ZenityBuildForm} ; 
+  ### Exception to StrVariableList and uses of eval in this case, 
+  ### it should require extra wrapup of an Evaluative Executive Brace, but using 
+  ### an echo does replace it. Notice it's the cheating way to get rid of 
+  ### back-slashing the quote, back-slashing the dollar-sign, back-slashing  the any
+  ### 'compromized chars ', but it cost uses of echo, an application /bin/echo
+  ### where is may cost cpu-cycle if it's in a loop, executed recurrently or
+  ### managed of owner execution like sudo application "chown +S/bin/echo", we can
+  ### be in big trouble...  
+  local StrVariableList=$( echo """eval ${__call_locality[1]} --help 2> /dev/null | egrep -i \"^Variable ${__call_locality[0]}\" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '""" ) ; 
+  if [ ${IsZenityBuildForm:=False} == "True" ] ; then 
+   ZBFFunctionName=${__call_locality[1]} ${StrAppsGuiForm} ; 
+  else
+   echo -ne "${StrVariableList}" ; 
+  fi
+  
 }
 
 
