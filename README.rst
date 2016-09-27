@@ -36,93 +36,78 @@ About
 =====
 
 This is a Library for managing function a permanent subset for a clean 
-/etc/init.d and many distribution shell with doubtfull feature and poor
+/etc/init.d and many distribution shell with doubtful feature and poor
 verbosity and documentation. 
 
 
 Function Management is especially important in this era, having important 
 function or operator being mashed into one Lib ; They defined all appropriate 
-exceptions and allow fews or fewers action if they are not correctly used. 
+exceptions and allow fews or fewer action if they are not correctly used. 
 Starting from Declaration of variable to uses of simple command like let, uses 
 of operator or even the test internal command equivalent to if [ ... ] ; then ... fi
 
 A Common quote :
 
-::
 
-Bash Big Line, It's especially important to declare it correctly and conceive a type definition if your function uses rather to not filtering the input at start and have many messages having problems to handle variable. Especially in Bash is actor or builtin/function/shell script to generate error on type not correctly handled. If the variable is designe as Integer and hold String-like information, if you do notthing with that variable or called-it future-design, it won't tell you problems until the day you start to use it.
-
-
+Bash Big Line
+    It's especially important to declare it correctly and conceive a type definition if your function uses rather to not filtering the input at start and have many messages having problems to handle variable. Especially in Bash is actor or built-in/function/shell script to generate error on type not correctly handled. If the variable is design as Integer and hold String-like information, if you do nothing with that variable or called-it future-design, it won't tell you problems until the day you start to use it.
+    
+    
 Preface
 =======
 
 These are Common Bash-Object for Fnctlib _pre-Alpha-Init.d re-implementation 
-for services management in Ubuntu/Debian/Fedora, which pass secessfully some handy-test 
-in 3 years of developpement.
+for services management in Ubuntu/Debian/Fedora, which pass sucessfully some handy-test 
+in 3 years of development.
 
 
 Why we are defining Using Fnct.D
 ================================
 
-It's Dialectic context. Purelly ; mastering shell code like many of us, this Draft will not teach you trick, but having a dialectic context. Today rather than being Network administrator, coders, developpers, you receive imperative order to complete a task and better to develop an adaptive context to adapt you to this ecosystem without leaving... Once in, we are all beg for if you can acheive a task, leeching forums and even tell password to root access to talk about your problems... On the other side, we are owning all weakness, from the Agora of Athens people develop talk of theirs competence under 'maïeutique' and prone a way until you find the quation to your problems. And walking to mont St-sinaï to receive presence of God had require you do a prone dialectic of faith to understand you are the elected one... Modern Dialectic is quite simple, it's the open-question being finite-automata, computer can formulate question made of finite-automata to answer to a question. At school we have many context for experiencing dialectic of a code in learning but does not own any path or way when it's time to apply a relation. Made from a dialectic from coders and networks administrator accessing beyond date many python-module to test and explore possibilities, we were able to talk about Twisted module around version 1.2 way before it's really exist. It's Canadian context, we can access to future even because we have all the infrastructure to manage occurence and de-obfuscation of time-event. So talking strickly of having problems to install Twisted and beware we  are limited in contacting the creator ; we do beg for finalist. Having developped a semantic in this dialectic, was searching for sparse and protected sparce was merely what something can lead for a trace of continuity... It mus a least have one version that do not require cffi and does ultimately fix the solution. Getting down to SSH-socket to irc was catastrophic. And receiving you point of like by... I do start from beginning, taking fisrt version compiling it into Egg, addind a first componnent at least on the required version and to a test-unit.. For cffi case, using all version of Twisted , adding lowest version allowed and test you unit with Exception and shell-script to detect a rerturn statement that goes in error, having decorator to write in file when it is not working and so forth. Today everything works from Swig making sense and Jython purely virtual, there is fewer lexic to develop to understand something taht not working than really putting hand in the system and inspecting, library, dynamic library, using objdump to find name-section and all header for compiled function, finding anomalies or simply compiled-problems.... Actually Openssl does nightmare like this, I'm not so for to old table in hand and ask to God, can you please the procedure to make a one pass compilation work... Ever getting Segmentation fault by the compiler and require second pass compilation. But Dialectic trace to support other in their un-rullable problems made from something they may haven't correctly understand.
+It's Dialectic context. Purely ; mastering shell code like many of us, this Draft will not teach you trick, but having a dialectic context. Today rather than being Network administrator, coders, developers, you receive imperative order to complete a task and better to develop an adaptive context to adapt you to this ecosystem without leaving... Once in, we are all beg for if you can achieve a task, leeching forums and even tell password to root access to talk about your problems... On the other side, we are owning all weakness, from the Agora of Athens people develop talk of theirs competence under 'maïeutique' and prone a way until you find the equation to your problems. And walking to mont St-sinaï to receive presence of God had require you do a prone dialectic of faith to understand you are the elected one... Modern Dialectic is quite simple, it's the open-question being finite-automata, computer can formulate question made of finite-automata to answer to a question. At school we have many context for experiencing dialectic of a code in learning but does not own any path or way when it's time to apply a relation. Made from a dialectic from coders and networks administrator accessing beyond date many python-module to test and explore possibilities, we were able to talk about Twisted module around version 1.2 way before it's really exist. It's Canadian context, we can access to future even because we have all the infrastructure to manage occurrence and de-obfuscation of time-event. So talking strickly of having problems to install Twisted and beware we  are limited in contacting the creator ; we do beg for finalist. Having developed a semantic in this dialectic, was searching for sparse and protected sparse was merely what something can lead for a trace of continuity... It mus a least have one version that do not require cffi and does ultimately fix the solution. Getting down to SSH-socket to irc was catastrophic. And receiving you point of like by... I do start from beginning, taking first version compiling it into Egg, adding a first component at least on the required version and to a test-unit.. For cffi case, using all version of Twisted , adding lowest version allowed and test you unit with Exception and shell-script to detect a rerturn statement that goes in error, having decorator to write in file when it is not working and so forth. Today everything works from Swig making sense and Jython purely virtual, there is fewer Stem to develop to understand something taht not working than really putting hand in the system and inspecting, library, dynamic library, using objdump to find name-section and all header for compiled function, finding anomalies or simply compiled-problems.... Actually Openssl does nightmare like this, I'm not so for to old table in hand and ask to God, can you please the procedure to make a one pass compilation work... Ever getting Segmentation fault by the compiler and require second pass compilation. But Dialectic trace to support other in their UN-rullable problems made from something they may haven't correctly understand.
 
 Post-Note
 =========
 
-Unlike old development of fnct_lib, such important function and design being 
-redesigned to simply work. Fnct_lib leave the function __call_locality where an 
-important overloading just corrupt the design. Also introduced the Getter and 
-Setter thru the __call_locality function was an echec and function does not 
-support '.' in their name at all, in any version also I beileive it's and event
-assembly export from many *nix design does not support '.' in their name... 
-Old Fnct_lib was also developping a dangerous concept, The Post-Fixed variables.
-Where totally not handled, it should be supported by the function core like 
-__call_locality or any __fnctCreateLocalityFuncParam and ... Also fnct_lib was
-trying to develop passing interface based on Base64 a uniform codec translation
-a bit slower and really slowing the function when assignement 
-__call_localityDisplayFunctionEntry=1 was made inside __call_locality function 
-and using mere __in_for, a Loop-wrapper for Array and function Array => F(x)
+Unlike old development of fnct_lib, such important function and design being redesigned to simply work. Fnct_lib leave the function __call_locality where an important overloading just corrupt the design. Also introduced the Getter and Setter thru the "\_\_call_locality" function was an echec and function does not support '.' in their name at all, in any version also I believe it's and event assembly export from many *nix design does not support '.' in their name... 
+
+Old Fnct_lib was also developing a dangerous concept, The Post-Fixed variables. Where totally not handled, it should be supported by the function core like "\_\_call_locality" or any "\_\_fnctCreateLocalityFuncParam" and ... Also fnct_lib was trying to develop passing interface based on Base64 a uniform codec translation
+a bit slower and really slowing the function when assignment 
+"\_\_call_localityDisplayFunctionEntry=1" was made inside __call_locality function and using mere "\_\_in_for", a Loop-wrapper for Array and function Array => F(x)
 execution. 
 
-Today we leaving __call_locality to implement external function reading the TAG.
-Now, __call_locality come back as Array, it accept the Root Named 
-Prefixed-Variable and the full-name of the function. This setup leave some 
-external function like  GetVarReference extracting almost anything and add a basic 
-helper. Where is was impossible to create convenient Helper inside the original 
-fnct_lib, GetVarReference had several acheivement... Weak and simple, but 
+Today we leaving "\_\_call_locality" to implement external function reading the TAG.Now, __call_locality come back as Array, it accept the Root Named Prefixed-Variable and the full-name of the function. This setup leave some external function like  GetVarReference extracting almost anything and add a basic helper. Where is was impossible to create convenient Helper inside the original fnct_lib, GetVarReference had several acheivement... Weak and simple, but 
 still work corretly. Two derivate from this external function, 
-__GetVarReferenceList __GetVarReferenceCompWord  are also good candidate 
-to produce steady services, Prefixed-Variable extraction and automation of 
-Word Completion, a lacking design after hearing some group asking  to put on the 
-thumb important reference while Network admin from late 1990 should have 
-to administrate World and world of network by hand... There is no evolution 
-between implementation of this services and methodology to implement it on safe
-basic design.
+"\_\_GetVarReferenceList" "\_\_GetVarReferenceCompWord"  are also good candidate to produce steady services, Prefixed-Variable extraction and automation of Word Completion, a lacking design after hearing some group asking  to put on the thumb important reference while Network admin from late 1990 should have to administrate World and world of network by hand... There is no evolution between implementation of this services and methodology to implement it on safe base design.
 
 Convention
 ==========
 
 In this documentation some convention are used to explicitly name some element 
-as it was definied by author and what the author definied inside this library.
+as it was defined by author and what the author defined inside this library.
 According to this Library, following term :
 
-- Evalutative-Executive brace is : equivalent to 
+- Evaluative-Executive brace is : equivalent to
+ 
 .. code-block:: shell
 
  ' eval $( ... ) '
  
 - Executive   brace is      : equivalent to 
+
 .. code-block:: shell
 
  ' $( ... ) '
 
 - Scoped  Variable  is      : equivalent to 
+
 .. code-block:: shell
 
  local Varname 
  global Varname 
                                             
 - Intrinsic   Function call : equivalent to 
+
 .. code-block:: shell
 
  Var1=Value Var2=Value VarN. FunctionName
@@ -130,6 +115,7 @@ According to this Library, following term :
 - Intrinsically abstract most of Var1, Var2, VarN are not existing inside FunctionName but does own presence for manipulation and or query. Is somewhat Object Approach realized with ValueToVariable, it serialize the Variable by using it appropriately.
 
 - Prefixed    Function Call : equivalent to 
+
 .. code-block:: shell
 
  FNa=Value FNb=Value FNz=Value FunctionName
@@ -138,6 +124,7 @@ According to this Library, following term :
   __GetVarReferenceList a manager used with switch --help 
 
 - Boolean Var Test          : equivalent to  
+
 .. code-block:: shell
 
  BVTestVarName="NewVariable" 
@@ -154,9 +141,9 @@ According to this Library, following term :
     StrPathAttribute=${StrPathBase} ;
   fi
 
-- Pass-Thru or Variable-ReCopy is 
+- Pass-Through or Variable-recopy is 
 
-.. code-block:: she
+.. code-block:: shell
 
  ### Mechanism in function calling sub-function and preserve Variable integrity.
  ### For this re-writing code by simply had conservatory example like:
@@ -170,7 +157,7 @@ According to this Library, following term :
            VTVIsValueToConvert=False     \
            ValueToVariable  ) WriteUlimitStorage ;
 
-- Re-Wrinting Short-Template or template is
+- Re-Writing Short-Template or template is
 
 .. code-block:: shell 
 
@@ -197,20 +184,20 @@ According to this Library, following term :
 Unicity Convention
 ==================
 
-A unicity convention allow a action or an in-memory ID to be totally unique by it's implementation and it uses somewhere inside an services instanciation from --startservices switche or short-action services with no need to call a  --stopservices switche a value being
+A unicity convention allow a action or an in-memory ID to be totally unique by it's implementation and it uses somewhere inside an services instantiation from --startservices switche or short-action services with no need to call a  --stopservices switche a value being
 
-1. Printed, stored permanently or keeped in memory SHALL be revealed to be a UUID random number based on time. 
+1. Printed, stored permanently or kept in memory SHALL be revealed to be a UUID random number based on time. 
 	
 2. Transfered from and to the Higher Communication Layer from Internal StorageExternal Storage, Engine Storage and API Communication level and Function from Prefixed-Variable Level being Unique and respecting uses of UUID random number based on time. 
  
-3. All this should be readeable. By mean, we expect not using example in bash to let itself generating script, but python-layer will help improving database access by interposing some generated code made by python script. This will alsobe human redeable or at least part-extractible to let the processor parse the syntax. We do imaginate having to parse some high volume of section like application vault and retain some tangible information while we developping function or applicative oclusion while some already depend of it's presence inside Unix/Linux environment. This should be revertible and offert alternative.Or either having restrictive application oclusionning some artefact. Like  in virtualisation AgentLoader, not owning the right of calling ssh-add, ssh-agent.Or simply function StartAgentSSH should never call something out of encryption package to call as example hacker-stuff independent package.  This is why everything should be readeable. 
+3. All this should be readable. By mean, we expect not using example in bash to let itself generating script, but python-layer will help improving database access by interposing some generated code made by python script. This will also be human readable or at least part-extractable to let the processor parse the syntax. We do imaginate having to parse some high volume of section like application vault and retain some tangible information while we developing function or applicative occlusion while some already depend of it's presence inside Unix/Linux environment. This should be revertible and offert alternative.Or either having restrictive application oclusionning some artifact. Like  in visualization AgentLoader, not owning the right of calling ssh-add, ssh-agent.Or simply function StartAgentSSH should never call something out of encryption package to call as example hacker-stuff independent package.  This is why everything should be readable. 
 
 	
-This mean a function from the Communication Layer communicating with other function will have to own Unique Prefixed-Variable attribute to transfert, redundant uses of same Prefixed-Variable with different value cause one of them being overwritted and cause an abnormal behavior to not corresponding to initial design. 
+This mean a function from the Communication Layer communicating with other function will have to own Unique Prefixed-Variable attribute to transfer, redundant uses of same Prefixed-Variable with different value cause one of them being overwritten and cause an abnormal behavior to not corresponding to initial design. 
 
 This also mean, communicating with Higher level like API and SQlite Engine will own a Unique-ID per transaction and this have to be unique and will communicate the Unique ID facility which is not an PkID made from integer but from UUID random number based on time.  
 
-This is also invite Structural design to own memory by design componnent having inherent cache instruction being storing complete list of Prefixed-Variable being stored under Unique-ID and be accessible from SQLite Storage Engine facility to ouput initial herited value from this Unique-ID. 
+This is also invite Structural design to own memory by design component having inherent cache instruction being storing complete list of Prefixed-Variable being stored under Unique-ID and be accessible from SQLite Storage Engine facility to output initial inherited value from this Unique-ID. 
 
 This will also implement a WILL of HAVING TO talk to API or SQLite Storage Engine facility by emitting a Unique-ID SHALL BE and Imperatively Be used by the facility and be automatically stored. 
 
@@ -218,11 +205,11 @@ Convention use in this development
 ==================================
 By calling '**Idiom**' I will refer to a current sequence obtained by promoted output of an application and/or result of the system itself. Having property to be unique it also refer to it's unique family called sequenced-data. 
  
-By calling '**Functor**' I  will refer to a  transient way  to call  conventionnal function and / or application with really general function statement. To use as simplification of statement and to simplify uses in End-Users test and uses. 
+By calling '**Functor**' I  will refer to a  transient way  to call  conventional function and / or application with really general function statement. To use as simplification of statement and to simplify uses in End-Users test and uses. 
 
 By calling '**Stub**' I will refer to a function ancestor replaced by a modern Fnct.D function name and or any Short-Named Function to replace a long function name. It's also used in one way function uses. Like BoolVarTestVarCreation is becoming versatile and will not only offer a one if / fi template, but some  stub will be generated to render easy to understand and use it . We do predict upcoming BoolVarTestVarCreation showing entering in higher mangling and will cover [ if - elif ], [ elif, elif ], [ elif , fi ] logical pair and will not only generate simple assertion based on scoped variable. 
 
-Term '**general function statement**', stand for nominal function with less than 3 lines of code or only to hide End-User usuability out of conventionnal method describe in Fnct.D to uses Variable direct re-definition in function call to allow reduction of Bash or similar shell to apply a ulimit and other mechanism to reduce lenght of element or limit of memory to acheive a debugging statement decoy similar problem in future bash - Sub command domain know to be function script language. 
+Term '**general function statement**', stand for nominal function with less than 3 lines of code or only to hide End-User usability out of conventional method describe in Fnct.D to uses Variable direct re-definition in function call to allow reduction of Bash or similar shell to apply a ulimit and other mechanism to reduce length of element or limit of memory to achieve a debugging statement decoy similar problem in future bash - Sub command domain know to be function script language. 
 
 
 Naming Convention
@@ -362,16 +349,11 @@ This Document rely on uses of Bash. Uniformely implemented in Unix/Linux world, 
 
 Since Tuesday 16 august 2016, Twisted module had come out, magically for my first SSHFunctionController. Twisted version 16.3.1 being present to implement a DoController functionnality in second stage, to render easier the SQlite3 Access by sending a PostCard registration during connection, the pre-draft version will soon only require the public and private key segment to avoid uses of password and will have ssh access with option to send command line. Praised long by Network Administrator, SSH with sending command are most wanted knowledge to access to a specific problems when this one have to be stopped. Eliminating need to connect, brow and type, ssh with one command embedded in the connection is just perfect. To visit Twisted please visit :
 
-.. figure:: https://raw.githubusercontent.com/priendeau/Fnct.d/master/images/Twisted.png
+.. image:: https://raw.githubusercontent.com/priendeau/Fnct.d/master/images/Twisted.png
  :scale: 25% 
  :align: right
  :target: http://bit.ly/XSARm5
-+-------+-------------------------+
-| .. https://raw.githubusercontent.com/priendeau/Fnct.d/master/images/Twisted.png | "[Twisted logo]" footnote  |
-+
- | Used in python/SSHServices-request.py
- +------------------------------+
- 
+
 
 Description
 ===========
@@ -383,15 +365,17 @@ Synopsis
 ========
 This will serve to generate development script and auto-creation-script for test purposes and automated services for many U*nix and Linux environment. 
 
-By The design, it will offer safe-container and safe method of transfering information in management of services and will be able to perform gain in check-up in stable envirronement by skipping check in Read-only mode of certains loading... Like, If RO-File-system is older than creation date, it will be able to query OS to add trigger to perform less operation and load information faster in subsequent startup... Idem with services with less touched file configuration. It will be able also to increase oeuvrability of uncommon option like Disk-To-Stream accesibility and Memory-To-Stream Uses, aka Network-Booting, Network Memory Pool and Network Application Ground-up.
+By The design, it will offer safe-container and safe method of transferring information in management of services and will be able to perform gain in check-up in stable environment by skipping check in Read-only mode of certain loading... Like, If RO-File-system[*] is older than creation date, it will be able to query OS to add trigger to perform less operation and load information faster in subsequent startup... Idem with services with less touched file configuration. It will be able also to increase maneuverability of uncommon option like Disk-To-Stream accessibility and Memory-To-Stream Uses, aka Network-Booting, Network Memory Pool and Network Application Ground-up.
 
-Also , Methodology of implementation is strict and observe Object-oriented transcription in transformation of many available Byte-coded of IDL re-interpretation in super-tiny scalling...
+[*] RO: Read-Only Filesystem
 
-Certains option will be implemented in second-stage of developpement, and creating wrapper for un-accessible Gpl-services or fast-implementation prototyping, switch for DTD extraction of Shell-Application program and XML Verbosis and XML object induction to help developpement of functionnality implementation in fnct_list .
+Also , Methodology of implementation is strict and observe Object-oriented transcription in transformation of many available Byte-coded of IDL re-interpretation in super-tiny scaling...
+
+Certain option will be implemented in second-stage of development, and creating wrapper for UN-accessible Gpl-services or fast-implementation prototyping, switch for DTD extraction of Shell-Application program and XML Verbosis and XML object induction to help development of functionality implementation in fnct_list .
 
 This Function-Library is sensitive to uses of UUID, current and future development will own critical application with simple name. Called GetUUID this application will issue UUID and will manage it's presence by storing it properly. 
  
-Using a specific type of mechanism to store the informations, second-hand function will invoke and  or query the informations toward this created idoms inside this library. 
+Using a specific type of mechanism to store the informations, second-hand function will invoke and  or query the informations toward this created idioms inside this library. 
  
 As example BodyFunc function will depend of registration of the body and it's root require uses of UUID. Managing the idiom is important to store definition of many IF/ELSE condition used in conjunction of BoolVarTestVarCreation and will create registration sequence where any new sequences will give another new body for execution. 
 
@@ -401,21 +385,21 @@ Arguments
 
 Level-1 Argument, A Deference-In :
 	
-Are Mostly Prefixed-variable to be understand and replacing 90% of switched uses into Services declaration and Services Information. Services Establishement like --compword is a future feature available soon after 2013-09-08 where all function will own word completion activation. 
+Are Mostly Prefixed-variable to be understand and replacing 90% of switched uses into Services declaration and Services Information. Services Establishment like --compword is a future feature available soon after 2013-09-08 where all function will own word completion activation. 
 
-Are Certains GetVarReference play an important part in realisation of __GetVarReferenceList since Outputing Internal Variable for ``poking`` the content of function is an important part of WHAT IS required to creater builder without porting the function structure into hermetic container called Black-Boxes , or making reflection. SHALL GetVarReference being a pivot in User Knowledge database, allowing user to seek for action thru Prefixed-Variable showed out from GetVarReference being present in bottom block  of our function design to help user having the strict minimum of our function interaction. Our set's of function calling --help is diretly linked to this part. SHALL GetVarReference also have it's Documentary structure involving uses of String of appropriate name like Chapter name NameHelper, Synopsis, Summary, Description and Prefixed-Variable named [ GVRIs + Chapter ] Name can increase chance of understanding your memoize or you documentary code being present on calling the helper aka --help switches and having chance to make it lasting y having Documentary structure within your development. Shadowed by simple variable action.  
+Are Certain GetVarReference play an important part in realization of __GetVarReferenceList since Outputting Internal Variable for ``poking`` the content of function is an important part of WHAT IS required to create builder without porting the function structure into hermetic container called Black-Boxes , or making reflection. SHALL GetVarReference being a pivot in User Knowledge database, allowing user to seek for action thru Prefixed-Variable showed out from GetVarReference being present in bottom block  of our function design to help user having the strict minimum of our function interaction. Our set's of function calling --help is directly linked to this part. SHALL GetVarReference also have it's Documentary structure involving uses of String of appropriate name like Chapter name NameHelper, Synopsis, Summary, Description and Prefixed-Variable named [ GVRIs + Chapter ] Name can increase chance of understanding your memoize[1] or you documentary code being present on calling the helper aka --help switches and having chance to make it lasting y having Documentary structure within your development. Shadowed by simple variable action.  
 
-Are conform owning aggregation of couple function having strict action and attended resultat. GetOtherDate is also commonly used and correctly definied to accedpt Posix formated date and having possibility to handle multiple range of creation and can answer to some criteron. 
+Are conform owning aggregation of couple function having strict action and attended resultat. GetOtherDate is also commonly used and correctly defined to accept Posix formated date and having possibility to handle multiple range of creation and can answer to some criterion. 
 
-Are HAVING structure and environment to allow quantomic action to wide-action, LibLoader having strict method to call and rely on Posix shell function aggregation allow our set's being more and more stable and anomalies are detectable. Quantomic action like proof of unicity by using corpus of UUID and mechanism to protect wrinting in some design like md_cd does allow presence of unique action and dismissing uncertainty event corrupting information. md_cd and UlimitSystem and important action on environment to change system performance ( UlimitSystem ) and change status of backuping information ( md_cd ), to own 'preservance' by protecting write of log and preserving integrity of start-services / stop-services ( UlimitSystem ) we are working to proove them able to perform some vision anticipated HAS problems of loss of process beyond scope day and lost of information FROM lack of directory survey, unifying simple tool DOES have an impact on system life-cycle. 
+Are HAVING structure and environment to allow quantum-state action to wide-action, LibLoader having strict method to call and rely on Posix shell function aggregation allow our set's being more and more stable and anomalies are detectable. Quantomic action like proof of unicity by using corpus of UUID and mechanism to protect writing in some design like md_cd does allow presence of unique action and dismissing uncertainty event corrupting information. md_cd and UlimitSystem and important action on environment to change system performance ( UlimitSystem ) and change status of backuping information ( md_cd ), to own 'preservance' by protecting write of log and preserving integrity of start-services / stop-services ( UlimitSystem ) we are working to proove them able to perform some vision anticipated HAS problems of loss of process beyond scope day and lost of information FROM lack of directory survey, unifying simple tool DOES have an impact on system life-cycle. 
 
 This is why Fnct.D is a good Dialect on keeping thing alive and not only working. 
 
 Level-2 Argument, A Reference-In :
 
-Based on Python optparser we do see application had Growed in amount of switched while some other Visual environment like X Window did not and also profit from Posix Shell Variable to let the environment to grow-up. Having multiples screen port are Matter if ${DISPLAY} startying from one display on DISPLAY=:0.0 on local port it can grow over different connection setuped by X Window and will emerge in multiple region to other port like distant connection. All visible with couple Variable. Pre-Fixed Variable are mastered by COMPILER, Link-Edition ( LD ), Execution Layer ( a.out, ELF ... ) and are transfering theirs informations from the system thru POSIX variable. Fnct.D does own mechanism to reflect the action of Function and Sub-Function in a quasi Objective method where it's  need to reduce effect of black-boxes from a function imply extras and costless action to allow safe manipulation of data during this attempt to reflect the action of an object of arbritrary safe containner reserved for an embdded action. This re-entry shoul be easy and have it's structure being easy to reproduce. Some function does have internal-function being present and callable from Top-Function and deliver internal action by simply adding Pre-fixed variable binding the action of requiring only a part of the action and not the whole function. GetterByLineData is one of them, and ZenityBuildForm/ZenityPrefixedVarSelection is another one. one working for the integrity of data, MUST having scheme to call a strict action like taking the root-of-certification in a file and allowing it to create a new one. Other are working with descendant of __GetVarReferenceList allowing to push Factorization of function by providing a way to know Pre-Fixed Variable to use and generating command for understanding what your are creating . 
+Based on Python optparser we do see application were growing in number of switched while some other Visual environment like X Window did not and also profit from Posix Shell Variable to let the environment to grow-up. Having multiples screen port are Matter if ${DISPLAY} starting from one display on DISPLAY=:0.0 on local port it can grow over different connection setup-ed by X Window and will emerge in multiple region to other port like distant connection. All visible with couple Variable. Pre-Fixed Variable are mastered by COMPILER, Link-Edition ( LD ), Execution Layer ( a.out, ELF ... ) and are transferring theirs informations from the system through POSIX variable. Fnct.D does own mechanism to reflect the action of Function and Sub-Function in a quasi Objective method where it's  need to reduce effect of black-boxes from a function imply extras and costless action to allow safe manipulation of data during this attempt to reflect the action of an object of arbitrary safe container reserved for an embedded action. This re-entry should be easy and have it's structure being easy to reproduce. Some function does have internal-function being present and callable from Top-Function and deliver internal action by simply adding Pre-fixed variable binding the action of requiring only a part of the action and not the whole function. GetterByLineData is one of them, and ZenityBuildForm/ZenityPrefixedVarSelection is another one. one working for the integrity of data, MUST having scheme to call a strict action like taking the root-of-certification in a file and allowing it to create a new one. Other are working with descendant of __GetVarReferenceList allowing to push Factorization of function by providing a way to know Pre-Fixed Variable to use and generating command for understanding what your are creating . 
 
-
+[1] Memoize, from memoization : The term "memoization" was coined by Donald Michie in 1968[5] and is derived from the Latin word "memorandum" ("to be remembered"), usually truncated as "memo" in the English language, and thus carries the meaning of "turning [the results of] a function into something to be remembered." While "memoization" might be confused with "memorization" (because they are etymological cognates), "memoization" has a specialized meaning in computing.
 Invocation
 ==========
 
@@ -1153,57 +1137,78 @@ Using Getter is also what made ValueToVariable out of warning of possible recurr
 
 Here the new Helper, it's compatible with previous version of ValueToVariable
 
+- Does include Synopsisa and Summary and Description will be available soon. 
+
 .. code:: shell
 
-  Help:
+ Help:
 
-  Function ValueToVariable	
-  Default Variable Value:
-  Variable VTVValueRe ,
-   Default Value:StrTestA_1,StrTestB_1,StrCTest1_1,StrDTest2_1,IntA_1,IntB_1,IsTestA_1,IsNotTestA_1
-  Variable VTVValueEntry ,
-   Default Value:StrTestA,StrTestB,StrCTest1,StrDTest2,IntA,IntB,IsTestA,IsNotTestA
-  Variable VTVIsArrayStyleInsert ,
-   Default Value:False
-  Variable VTVSepList ,
-   Default Value:",:"
-  Variable VTVISeparatorType ,
-   Default Value:0
-  Variable VTVVarFilter ,
-   Default Value:[SIB][tnos][a-zA-Z0-9_]*__SEP__
-  Variable VTVRejectionFilter ,
-   Default Value:[a-zA-Z0-9_]*
-  Variable VTVIsValueToConvert ,
-   Default Value:True
-  Variable VTVIsValueReAssign ,
-   Default Value:True
-  Variable VTVReasignPrefix ,
-   Default Value:None
-  Variable VTVReasignSuffix ,
-   Default Value:None
-  Variable VTVIsTransformed ,
-   Default Value:False
-  Variable VTVIsTransHadScript ,
-   Default Value:False
-  Variable VTVIsDebugDisplay ,
-   Default Value:False
-  Variable VTVIsSlowDebug ,
-   Default Value:False
-  Variable VTVITransformScript ,
-   Default Value:None
-  Variable VTVAppsScripter ,
-   Default Value:/usr/bin/gawk
-  Variable VTVAppsScripterOpt ,
-   Default Value:--field-separator=__SEP__ --file=__FILE__ __VAR_ASSIGN__ 
-  Variable VTVScriptInterVar ,
-   Default Value:--assign=__VAR__=__VALUE__
-  Variable VTVAppsParser ,
-   Default Value:__APPS__ __OPT__
-  Following switch are available:
+ Function ValueToVariable
+ Name
+ ValueToVariable		The Fnct.D Mechanisme acting as Re-Copy Pass-Thru Variable in Variable authorized to be transfered from Higher-level function to Sub-Level Function.
 
-   --startservices	Start the application normally.
-   --get		Return value of Internal Variable.
-   --list		List all Internal Pre-fixed Variable available to query or get.
+
+ Synopsis
+   Since implementation of TSR resident like Python command-not-found or any type of Layer in interactive Shell in Both Curse Bash Command-Line and/or xterminal, gtk-terminal, The behavior of function is not clear and are not totally accessible. ValueToVariable eliminate problems of declare and following constraint, local variable can travel thru sub-function. 
+
+
+ Summary
+   ValueToVariable allow creation of variable Assignation before running the application or function. Creating a code evaluation it return in form of VAR1=${VAR1}  VAR2=${VAR2} Application ; Where VAR1,VAR2 will be already available inside nestled function or real-function . If the are made from Top-function, Shell command like declare make variable existing beyond Master Function Body, which overcrowding variable after death or termination with uses if unset still existing and increase amount of memory without cleaning it. The mechanism is Filtering Thru and exercise a filter over Polish Notation Respect to enforce uses of Strict Notation to have an idea of their uses. Since Polish notation is adopted inside the Fnct.D, uses of evaluation brace to expand code inside function like BoolVarTest( newest version of BoolVarTestVarCreation) expanding Preambule-code, The If-N clause and it's Assertion code inside function to make parseable function to analyse it faster and discover bottle-neck by re-coding clause and action. ValueToVariable is madatory associated with  Prompt mechanism to pass the __main_StartServices and receive the authorized variable list. Description is under development to explain in depth uses of ValueToVariable, including uses of Whitelist where some power mechanisme like compiler depend of variable like CFLAGS, LDFLAGS... white list nad it's key to activate it VTVIsWhiteList.
+
+
+ Default Variable Value:
+ Variable VTVValueRe ,
+  Default Value:StrTestA_1,StrTestB_1,StrCTest1_1,StrDTest2_1,IntA_1,IntB_1,IsTestA_1,IsNotTestA_1
+ Variable VTVValueEntry ,
+  Default Value:StrTestA,StrTestB,StrCTest1,StrDTest2,IntA,IntB,IsTestA,IsNotTestA
+ Variable VTVIsArrayStyleInsert ,
+  Default Value:False
+ Variable VTVSepList ,
+  Default Value:",:"
+ Variable VTVISeparatorType ,
+  Default Value:0
+ Variable VTVVarFilter ,
+  Default Value:[SIB][tnos][a-zA-Z0-9_]*__SEP__
+ Variable VTVRejectionFilter ,
+  Default Value:[a-zA-Z0-9_]*
+ Variable VTVIsWhiteList ,
+  Default Value:False
+ Variable VTVWhiteListTransfert ,
+  Default Value:CFLAGS,LDFLAGS,CC,GCC,CPP
+ Variable VTVIsValueToConvert ,
+  Default Value:True
+ Variable VTVIsValueReAssign ,
+  Default Value:True
+ Variable VTVReasignPrefix ,
+  Default Value:None
+ Variable VTVReasignSuffix ,
+  Default Value:None
+ Variable VTVIsTransformed ,
+  Default Value:False
+ Variable VTVIsTransHadScript ,
+  Default Value:False
+ Variable VTVIsDebugDisplay ,
+  Default Value:False
+ Variable VTVIsSlowDebug ,
+  Default Value:False
+ Variable VTVITransformScript ,
+  Default Value:None
+ Variable VTVAppsScripter ,
+  Default Value:/usr/bin/gawk
+ Variable VTVAppsScripterOpt ,
+  Default Value:--field-separator=__SEP__ --file=__FILE__ __VAR_ASSIGN__ 
+ Variable VTVScriptInterVar ,
+  Default Value:--assign=__VAR__=__VALUE__
+ Variable VTVAppsParser ,
+  Default Value:__APPS__ __OPT__
+ Following switch are available:
+
+  --startservices	Start the application normally.
+  --get		Return value of Internal Variable.
+  --list		List all Internal Pre-fixed Variable available to query or get.
+  --compword	Word Completion Provide a services to Extract on Demand all Pre-fixed Variable
+   \String inside this function.
+
 
 Also available a command-line example to verify your informations :
 
