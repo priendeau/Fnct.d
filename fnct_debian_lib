@@ -554,12 +554,13 @@ function GetterByLineData()
  local StrFileStoreInfo=${GBLDFileStoreInfo:=None} ;
  local IntLineId=${GBLDLineID:=1} ; 
  local IsVerbose=${GBLDVerbose:=False} ; 
+ local IsShaRemovingComment=${GBLDIsShaRemoveComment:=True} ; 
  local StrAction=${GBLDAction:=FileSplitAction} ;
  local IsActionReturnError=${GBLDActionReturnError:=False} ; 
  local StrVerboseMacro="" ; 
  local vret=0 ;
  local StrMsg="" ; 
- local StrVarListTransfert="StrParentApps,IntGCID,IntGHID,IsVerbose,IsActionReturnError,StrFileStoreInfo,IntLineId,Stream,StrAppsTail,StrAppsHead,StrAction,StrParentApps,StrVerbosisMacro,StrFStats,StrFStatsOpt" ; 
+ local StrVarListTransfert="IsShaRemovingComment,StrParentApps,IntGCID,IntGHID,IsVerbose,IsActionReturnError,StrFileStoreInfo,IntLineId,Stream,StrAppsTail,StrAppsHead,StrAction,StrParentApps,StrVerbosisMacro,StrFStats,StrFStatsOpt" ; 
  local ArrayMsg=( ) ;
  
  ArrayMsg[0]="Verbose is Turned On" ; 
@@ -631,7 +632,13 @@ function GetterByLineData()
 		local ArrayArg=( $* ) ; 
   local Arg0=${ArrayArg[0]} ; 
 		local IntLineId=${IntGHId:=1} ; 
-		echo $( GBLDActionReturnError=True GBLDAction=FileSplitAction GBLDFileStoreInfo=${StrFileStoreInfo} GBLDLineID=${IntLineId} GetterByLineData	 ) ; 
+		StrHeaderStream=$( GBLDActionReturnError=True GBLDAction=FileSplitAction GBLDFileStoreInfo=${StrFileStoreInfo} GBLDLineID=${IntLineId} GetterByLineData	 ) ; 
+  if [ "${IsShaRemovingComment}" == "True" ] ; then 
+   echo "${StrHeaderStream/\#/}" ; 
+  else
+   echo "${StrHeaderStream}" ; 
+  fi
+  
 		return $? ;
 	}
 	
