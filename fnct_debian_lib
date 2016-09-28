@@ -3777,6 +3777,221 @@ function ZenityPrefixedVarSelection()
  
 } ; 
 
+unset ZenityBuildForm ;
+function ZenityBuildForm()    
+{ 
+ local __call_locality=( ZBF ZenityBuildForm ) ;
+ local ArrayArg=( $* ) ; 
+ local Arg0=${ArrayArg[0]} ;
+ local StrFuncName=${ZBFFunctionName:=None} ; 
+ local StrSep=${ZBFSep:=' '} ;
+ local StrTextApps=${ZBFTitle:='Form Builder, Prefixed-Variable Property'} ;
+ local IntHeight=${ZBFHeight:=500}
+ local StrTagZenityForm=${ZBFZenityForm:=StrParentApps:__LOCAL__,StrTextApps:__TEXT__,IntHeight:__HEIGHT__,StrSep:__SEP__} ; 
+ local BoolDisplayParserDebug=${ZBFParserDebug:=False} ;
+ local BoolDisplayDebug=${ZBFDebug:=False} ; 
+ local BoolProvideUUIDQuery=${ZBFUUIDQuery:=False} ;
+ local StrRepositoryQuery=${ZBFQueryRepository:=/var/cache/Fnct.D/BuildForm} ;  
+ local BoolCreateRepository=${ZBFRepositoryCreation:=False} ; 
+ local StrDefaultUser=${ZBFRepoUser:=\${USER}.\${USER}} ;
+ local StrDefaultPerm=${ZBFRepoPerm:=775} ;  
+ local StrMsg="" ; 
+ local StrParentApps="${__call_locality[1]}" ; 
+ local StrUUIDSession=$( GetUAppsRegisterName=${StrParentApps} GetUIDRegister=True GetUTimeBased=True GetUSeq=1 GetUUID ) ;   
+ local StrStorageID="${StrRepositoryQuery}/${StrUUIDSession}" ; 
+ local -A ArrayVarVal ; 
+ local -A ArrayPV ;
+ local StrText ;
+ local StrForm="""zenity --height=__HEIGHT__ --text=\"__LOCAL__ __TEXT__\"  --separator='__SEP__' --forms __ENTRY__""" ; 
+ local StrValueReturn="__VAR__ __APPS__" ;
+ local -A ArrayQueryGenertor ; 
+ local StrVarList="StrDefaultPerm,StrDefaultUser,StrFuncName,StrSep,StrTextApps,IntHeight,StrTagZenityForm,BoolDisplayParserDebug,BoolDisplayDebug,BoolProvideUUIDQuery,StrRepositoryQuery,BoolCreateRepository,StrParentApps,StrUUIDSession,StrStorageID,StrForm,StrValueReturn,StrVarList" ; 
+ 
+ function Verbosis()
+ {
+  local __call_locality=( Verbosis Verb );
+  local StrMsg=${VerbMsg:=__TEXT__} ; 
+  local StrDevOut=${VerbDev:=/dev/stderr} ; 
+  local IsVerboseState=${VerbState:=False} ;
+  local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+  local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+  local IsDisplayFormatted=${VerbFormated:=True} ;
+  local ArrayArg=( $* ) ; 
+  if [ "${IsVerboseState:=False}" == "True" ] ; then 
+   if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+    echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+   else
+    if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+     echo "${StrMsg}" ;  
+    else
+     echo "${StrMsg}" > ${StrDevOut} ;
+    fi 
+   fi 
+  fi
+ } 
+ ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis
+ 
+ function SimpleQueryGenerator()
+ {
+		local __call_locality=( SQG SimpleQueryGenerator ) ; 
+		local Arg0=${ArrayArg[0]} ; 
+		local ArrayArg=( $* ) ; 
+  zenity --entry --title="ZenityBuildForm Function Template Model" --text="Builder Prefixed Variable and Function Return Statement" --entry-text="${StrValueReturn}" ;  
+ } 
+ 
+ function UUIDQueryGenerator()
+ {
+		local __call_locality=( UQG UUIDQueryGenerator ) ; 
+		local Arg0=${ArrayArg[0]} ; 
+		local ArrayArg=( $* ) ; 
+  local StrContentCert="${StrValueReturn}\n#UUID:${StrUUIDSession}\n";
+  local StrShaSum=$( echo -ne "${StrContentCert}" | sha1sum  | cut -d ' ' -f 1 ) ; 
+  echo -ne "#${StrShaSum}\n" > ${StrStorageID} ;
+  echo -ne "${StrContentCert}" >>  ${StrStorageID} ; 
+  zenity --text-info --title="ZenityBuildForm Function Template Model UUID=${StrUUIDSession}" --filename=${StrStorageID} --font=12 ; 
+  
+ }
+ function FunctionGenerator()
+ {
+		local __call_locality=( FG FunctionGenerator ) ; 
+		local Arg0=${ArrayArg[0]} ; 
+		local ArrayArg=( $* ) ;  ### Because StrSep is uniform it's clumsy to exchange 
+  ### space for a space .
+  local -a ArrayValue ;
+  if [ "${StrSep}" != ' ' ] ; then 
+   ArrayValue=( ${StrFieldValue//${StrSep}/ } ) ;
+  else
+   ArrayValue=( ${StrFieldValue} ) ;
+  fi 
+  local IntCountArg=0 ; 
+  
+  for VarPrefix in ${!ArrayVarVal[@]} ; do 
+   ArrayVarVal[${VarPrefix}]="${ArrayValue[${IntCountArg}]}" ; 
+   ### Must increase the COunter after each iteration to 
+   ### extract Space Formated Output of Zenity Form captured
+   ### in a String transformed into Array.
+   StrValueReturn=${StrValueReturn//${VarPrefix}/${VarPrefix}=${ArrayVarVal[${VarPrefix}]}} ; 
+   IntCountArg=$(( ${IntCountArg} + 1 )) ;
+  
+  done 
+
+ }
+ function RepositoryCreation()
+ {
+		local __call_locality=( RC RepositoryCreation ) ; 
+		local Arg0=${ArrayArg[0]} ; 
+		local ArrayArg=( $* ) ;
+  if [ ! -d ${StrRepositoryQuery} ] ; then 
+   sudo -s -H /bin/mkdir ${StrRepositoryQuery} ; 
+   sudo -s -H /bin/chown ${StrDefaultUser} ${StrRepositoryQuery} ; 
+   sudo -s -H /bin/chmod ${StrDefaultPerm} ${StrRepositoryQuery} ;
+  fi 
+
+ } 
+ function __main_StartServices()
+ {
+		local __call_locality=( Main __main_StartServices ) ; 
+		local Arg0=${ArrayArg[0]} ; 
+		local ArrayArg=( $* ) ;
+  local StrQueryGenerator ; 
+  StrMsg="Function To Select Variable:__FUNC__" ; 
+  VerbMsg="${StrMsg//__FUNC__/${StrFuncName}}" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
+   
+  if [ ${BoolCreateRepository:=False} == "True" ] ; then
+   eval $( VTVIsArrayStyleInsert=True \
+       VTVValueEntry=${StrVarList},StrFieldValue,StrValueReturn   \
+       VTVIsValueReAssign=True       \
+       VTVIsValueToConvert=False     \
+       VTVIsArrayStyleInsert=True    \
+       ValueToVariable ) RepositoryCreation ;
+  fi 
+  #for VarName in $( ${StrFuncName} --list ) ; do 
+  local ArrayPreFixV=( $( ZPVSFunctionName=${StrFuncName} ZenityPrefixedVarSelection ) ) ; 
+  ### We also Feed the StrValueReturn to exchange __VAR__ for all Prefixed Variable. 
+  StrValueReturn=${StrValueReturn//__VAR__/${ArrayPreFixV[@]}} ; 
+  ### We also Feed the StrValueReturn to exchange __APPS__ for the function Name. 
+  StrValueReturn=${StrValueReturn//__APPS__/${StrFuncName}} ; 
+  for VarName in ${ArrayPreFixV[@]} ; do  
+   ### For Reading the General Value from Default one . 
+   ArrayVarVal[${VarName}]=$( ${StrFuncName} --get ${VarName} ) ; 
+   ### The new Associative Array to associate the new Value . 
+   ArrayPV[${VarName}]=""
+  done ; 
+  StrText=$( GetVarReference ${StrFuncName} ) ; 
+  StrText="${StrText}"
+  
+  ### Point of Parsing, At this moment We should own all required variable being 
+  ### ready to Parse the command-line StrForm . 
+  eval $( TPIsMatchRtoL=True TPDisplayParserNotice=${BoolDisplayParserDebug} TPDisplayDebug=${BoolDisplayDebug} TPArrayName="Array${__call_locality[0]}Tag" TPVarNameParsed="StrForm" TPListTag="${StrTagZenityForm}" TagParser ) ;
+  
+  StrMsg="Zenity CMD:__FORM__" ; 
+  #eval """${StrForm}""" ;         
+  ### This Section Add an __ENTRY__ after each parsing and require to remove it 
+  ### to avoid of excess of informations on zenity command-line . 
+  for ItemName in ${!ArrayVarVal[@]} ; do 
+    StrValue=${ArrayVarVal[${ItemName}]} ; 
+    StrForm=${StrForm//__ENTRY__/--add-entry=\"${ItemName} value: ${StrValue}\" __ENTRY__} ; 
+  done ; 
+  
+  StrForm=${StrForm/__ENRTY__/} ; 
+  
+  StrMsg="Zenity CMD:__FORM__" ; 
+  VerbMsg=${StrMsg//__FORM__/${StrForm}} VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} StrDevOut=/dev/stderr Verbosis ; 
+  
+  eval """StrFieldValue=\$( ${StrForm} )""" ;  
+  
+  StrMsg="Result Value:__VALUE__" ; 
+  VerbMsg=${StrMsg//__VALUE__/${StrFieldValue}} VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} StrDevOut=/dev/stderr Verbosis ; 
+  
+  eval $( VTVIsArrayStyleInsert=True \
+       VTVValueEntry=${StrVarList},StrFieldValue,StrValueReturn   \
+       VTVIsValueReAssign=True       \
+       VTVIsValueToConvert=False     \
+       VTVIsArrayStyleInsert=True    \
+       ValueToVariable ) FunctionGenerator ; 
+  
+  StrQueryGenerator="SimpleQueryGenerator" ; 
+  if [ "${BoolProvideUUIDQuery:=False}" == "True" ] ; then 
+   StrQueryGenerator="UUIDQueryGenerator" ; 
+  fi
+  
+  eval $( VTVIsArrayStyleInsert=True \
+       VTVValueEntry=${StrVarList}   \
+       VTVIsValueReAssign=True       \
+       VTVIsValueToConvert=False     \
+       VTVIsArrayStyleInsert=True    \
+       ValueToVariable ) ${StrQueryGenerator} ;  
+ }
+ 
+ local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+ local StrNameHelper="ZenityBuildForm\tThe Fnct.D Mechanism This is the Helper Selecting Variable and Throught the Gui Interface.";
+ local StrSummary="This is a simple helper to generate Function for your command-line and/or Function to craft. They can be stored inside a Repository and own specific signature were tool like GetterByLineData might extract informations. Repository is /var/cache/Fnct.D/BuildForm ; and required appropriate permission and owner. ZenityBuildForm will propably own a repository creator in fews versions." ; 
+ local StrSynopsis="Works in 3 Steps, First it pop you the windows for the choosed function name. ; Selecting the variable required to fit in your code . Secondly it pop you after pressing OK button, another form with Variable Name and a field to let you write your information. It can be fixed value ,this can also include variable name like ${VAR} and __TAG__ as well. Don't forget it require TagParser to Interpret the Tag .After the end it pop-you a Third windows with the answer. The asnwer come in 2 mode, simple text-form with the function-line or second mode require ues of Prefixed-Variable ZBFUUIDQuery=True and store the information in UUID mode, and write the Query to a file inside /var/cache/Fnct.D/BuildForm and hold a signature in the top of the file certify your query is integral after creation. The receip is the last line and second line your query.";
+ local StrDescription="Please use the Prefixed-Variable ZBFFunctionName= to subscribe a function to Start the Sequence 1" ;
+ 
+ 
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+			GVRIsName=True GVRIsSynopsis=True GVRIsSummary=True GVRIsDesc=True GetVarReference ${__call_locality[1]} ; 
+			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+		echo -ne """${ArgGet}\n""" ;
+	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+		eval $( __GetVarReferenceList ) ;
+ elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  eval $( VTVIsArrayStyleInsert=True \
+       VTVValueEntry=${StrVarList}   \
+       VTVIsValueReAssign=True       \
+       VTVIsValueToConvert=False     \
+       VTVIsArrayStyleInsert=True    \
+       ValueToVariable ) __main_StartServices
+ elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
+		eval $( __GetVarReferenceCompWord ) ;
+	fi 
+ 
+ }  ; 
+
+
 unset __GetVarReferenceList ;
 function __GetVarReferenceList( )
 {
