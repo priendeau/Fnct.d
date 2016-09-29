@@ -1670,6 +1670,54 @@ the sample to put inside the Zenity Text-Info in editable mode :
 	}
 	test_expr ; 
 
+ZenityBuildForm
+~~~~~~~~~~~~~~~
+
+Sometimes Hacked Things are miss used term. Having ZenityBuildForm fall in the middle of the development is having unattended result over 2 sets of hack inside Fnct.D, the evaluation-executive brace wounding the --list switches which is re-used to brought you a GUI-tool to select and seek for element to change in a query called command-line And this --list switches is an handly helper coming out of switche --help where GetVarReference was glued in mode Certified Chunck, or quasi hard-coded. Like any code is hard-coded in Fnct.D, Evaluative Brace does it part from TagParser to Inject extra code for building Repository for ZenityBuildForm, for handling Zenity-form where there is not Hard-coded Form for any function, simple --list extraction that sleep inside any function and does only output Prefixed-Variable from your code. Talking about chunk of development are also certified with SHA1SUM and if you doubt having unwilling tweak inside your chunk ZenityShellEval is the one can certify if your code is certified at lest by this GitHub repository or yourself having merging things in your own repository or on your local drive. In both way it's to prevent your idea of the code or our Idea of the integrity is respected and prevent the hole Library to flaw. Interesting write fomr section 0x200 from chapter Programming from [Hacking The Art if Exploit from Jon Erickson] is explainning hacking.
+
+So, the clever conerintuitive solution to a problem inside way to present a easy way to attract users to use my Library is to provide key that prove Bash-Shell can be designed by interface. And have inserted power tools, not like fmt_vuln fmt_vuln2 test_val and heap, but more like BoolVarTest/BoolVarTestVarCreation, TagParser, ValueToVariable __GetVarReferenceList GetVarReference, which play with ability to filter information from declare application from Bash and extract function content. And also the Helper itself is reponsible to provide function infortmation like Prefixed-Variable. So be honest having better tant a DTD to implement it's the story of the function yield in Function helper called with switches --help. ZenityBuildForm is 3 Step Query designed from command line and some picture are placed here to invite Draft to know about what is possible to see to adopt in early stage of understanding the function itself in designing your your own code is to Create it.
+
+
+Everything start with calling ZenityBuildForm, let use the same interface held by thi images 
+
+.. code:: shell
+
+ # There is 2 type of ouput for ZenityBuildForm, here the command Line for Both Example:
+ ##
+ ### Example Number 1 
+ $> ZBFUUIDQuery=True ZBFFunctionName=ValueToVariable ZenityBuildForm
+ 
+ ### Example Number 2 
+ $> ZBFFunctionName=ValueToVariable ZenityBuildForm
+ 
+ ### This one give exactly the same form as Number 2
+ 
+ $> ZBFUUIDQuery=True ZBFFunctionName=ValueToVariable ZenityBuildForm
+
+ZenityBuildForm depend from frienf called ZenityPrefixedVarSelection It's the first windows appearing. This application have other sub-function being callable by uses of Prefixed-Variable BuildListInformation from ZenityPrefixedVarSelection is somewhat a DTD extration-tool. Because it extract the list of variable and do expand the extraction into TAG, having expanded TAG into Default Value Extracted we are not far from created a Dictionnary of common key and type-of-value. But first here the selectable windows from ZenityBuildForm.
+
+.. image:: https://github.com/priendeau/Fnct.d/blob/master/images/ZenityPrefixedVariable.png
+        :target: https://github.com/priendeau/Fnct.d#ZenityBuildForm
+
+The second Windows we are exactly in Step 2 inside ZenityBuildForm which had extrated TAG from Prefixed-Variable and have created a Form made from Text-Entry wished to fill from Pre-Selected information. You don't have to go back to look for the Value example inside the previous windows, a set of them are displayed and probably some are taking to much place to enlarge from WIDTH ratio the windows. Zenity Form mode does not support checkable or set of True/False for Entry. Even inside the List mode from Zenity Form we can choose more than one title and not asking to select True-State one. Take in mind, the information you have selected need to be filled or you only have to not select them if they are correct the function will launch ith what the default are. 
+
+.. image:: https://github.com/priendeau/Fnct.d/blob/master/images/ZenityBuildForm.png
+        :target: https://github.com/priendeau/Fnct.d#ZenityBuildForm
+
+Here the 2 Type of Windows. One the Number 1 does store all yourtrial inside a repository and use Zenity Text-info to read an UUID-filename from the Repository location. The advantage against Number 2 it's you don't have to run the ZenityBuildForm once to get the same function and the Number 1 does certify what you have selected is finger-printed or clearly certify with SHA1SUM algorithm. Which made the call authentic and using some other tools inside the Librabry will let you see if it's authentic or not. This authenticity trace is part of this section from Draft Paper indicate some tools are contribuying to secure you code if this code will be integrated inside server with many level of management and many Administrator and/or Webmaster or Higher-priviledge with possibility to authentify runnable script mean having a clear vision f what's online should always be checked or it's possibly a trace of faillure. 
+
+.. image:: https://github.com/priendeau/Fnct.d/blob/master/images/ZenityBuildForm-output.png
+        :target: https://github.com/priendeau/Fnct.d#ZenityBuildForm
+
+
+
+
+[Hacking The Art if Exploit from Jon Erickson]
+Chapter 0x200, Programming 
+Hacking us a term used both by those who write code and those exploit it. Even thought these two groups of hackers have different end goals, both groups use similar problems-solvingtechniques. And because an understanding of programming helps those who exploit, and an understanding of exploitation helps those who program, many hackers do both. There are interesting hacks found in both the techniques uses to write elegant code and the techniques used to exploit programs. Hacking is really just the act of finding a clever conerintuitive solution to a problem.
+---------------------------------------
+Step forward the ZenityBuildForm sample
+---------------------------------------
 
 ---------------------------------------
 Step forward the ZenityShellEval sample
