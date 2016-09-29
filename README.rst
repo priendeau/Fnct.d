@@ -1715,6 +1715,9 @@ Here the 2 Type of Windows. One the Number 1 does store all yourtrial inside a r
 [Hacking The Art if Exploit from Jon Erickson]
 Chapter 0x200, Programming 
 Hacking us a term used both by those who write code and those exploit it. Even thought these two groups of hackers have different end goals, both groups use similar problems-solvingtechniques. And because an understanding of programming helps those who exploit, and an understanding of exploitation helps those who program, many hackers do both. There are interesting hacks found in both the techniques uses to write elegant code and the techniques used to exploit programs. Hacking is really just the act of finding a clever conerintuitive solution to a problem.
+
+
+
 ---------------------------------------
 Step forward the ZenityBuildForm sample
 ---------------------------------------
