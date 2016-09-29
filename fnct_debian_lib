@@ -68,7 +68,7 @@
 	###	 eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 	###	 echo -ne """${ArgGet}\n""" ; 			
 	### elif [ "${Arg0:=--startservices}" == "--list" ] ; then } ---> Sequence to extract Prefixed-var and uses 
-	###	 eval $( __GetVarReferenceList ) ;                     } of function call to accelerate external variable 
+	###	 eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;                     } of function call to accelerate external variable 
  ###	                                                       } transfert, ex : FuncNameThatIsUnderstandable --get $(  FuncNameThatIsUnderstandable --list | cut -d ' ' -f 1  ) *(4)
  ###	                                                       } will get the First Prefixed-variable value
  ###	 
@@ -321,7 +321,7 @@ function ValueParser()
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 			echo -ne """${ArgGet}\n""" ; 			
 		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval $( __GetVarReferenceList ) ;
+			eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
 		elif [ "${Arg0:=--startservices}" == "--varhelper"	] ; then 
 			ArrayScope=${ArrayScope[@]// /,}      \
    StrVarSuffix=${StrVarSuffix}          \
@@ -357,7 +357,7 @@ function __default_test()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( __GetVarReferenceList ) ;
+		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
 	else
 		echo "__BODY__" > /dev/stderr ; 
 	fi 
@@ -378,7 +378,7 @@ function AddPValueStore()
 		local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
 		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-  eval $( __GetVarReferenceList ) ;
+  eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
@@ -745,7 +745,7 @@ function GetterByLineData()
   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
   echo -ne """${ArgGet}\n""" ;
  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-  eval $( __GetVarReferenceList ) ;
+  eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
   eval $( __GetVarReferenceCompWord ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
@@ -1153,7 +1153,7 @@ function BoolVarTestVarCreation()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( __GetVarReferenceList ) ;
+		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
 		eval $( __GetVarReferenceCompWord ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
@@ -1696,7 +1696,7 @@ __END_TEST__ __END_MARK__ """ ;
  elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
 		eval $( __GetVarReferenceCompWord ) ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( __GetVarReferenceList ) ;
+		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
   eval $( VTVValueEntry=${StrVarListTransfert} \
           VTVIsValueReAssign=True              \ 
@@ -1742,7 +1742,7 @@ function PropertyLibName()
  elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
 		eval $( __GetVarReferenceCompWord ) ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( __GetVarReferenceList ) ;
+		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
   StrAction=${StrAction}           \ 
   StrLibName=${StrLibName}         \
@@ -2291,7 +2291,9 @@ if [ "${versionVTV:=0.0.2}" == "0.0.2" ] ; then
   elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
 		 eval $( __GetVarReferenceCompWord ) ;
   elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-   eval $( __GetVarReferenceList ) ;
+   StrMsg="Status BuildForm:__BF__, __call_locality:${__call_locality[1]}" ;
+   VerbMsg="${StrMsg//__BF__/${BuildForm}}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=True StrDevOut=/dev/stderr Verbosis ; 
+   eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
   elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
    __main_StartServices; 
   fi
@@ -2588,7 +2590,7 @@ function WrapPathIntegration()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( __GetVarReferenceList ) ;	
+		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;	
 	else
   eval $( VTVIsArrayStyleInsert=True \
           VTVIsValueReAssign=True \
@@ -2713,7 +2715,7 @@ function MakeLink()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( __GetVarReferenceList ) ;
+		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
   eval $( VTVIsArrayStyleInsert=True \
   VTVValueEntry=StrRootOrigin,IsMake,StrAction,StrFileSearch,StrAliasFind,StrLinkFormat,StrLinkApps,StrLinkOpt,StrDebugLink,IsRenameDest,StrMoveSuffix \
@@ -2787,7 +2789,7 @@ function AutoChown()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( __GetVarReferenceList ) ;
+		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
   StrUser=${StrUser}               \
   IntSleep=${IntSleep}             \
@@ -3111,7 +3113,7 @@ function ZenityShellEval()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( __GetVarReferenceList ) ;
+		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
 		eval $( __GetVarReferenceCompWord ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
@@ -3267,7 +3269,7 @@ function TagParser( )
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( __GetVarReferenceList ) ;	
+		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;	
  elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
 		eval $( __GetVarReferenceCompWord ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
@@ -3340,7 +3342,7 @@ function StartCoproc()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( __GetVarReferenceList ) ;
+		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
 	elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
 		echo ""
 		### Prog To create a coprocess 
@@ -3413,7 +3415,7 @@ function PkgConfigQuery()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( __GetVarReferenceList ) ;
+		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
 	else
 		if [ ${IntArgLen:=0} -eq 0 ] ; then 
 			ArrayFlagTest=( ${StrFlagList//,/ } ) ; 
@@ -3484,7 +3486,7 @@ function pkg-config-all()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( __GetVarReferenceList ) ;
+		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
 	else
 		Arg0=${Arg0} StrAppsName=${StrAppsName} StrCutAlias=${StrCutAlias} StrAppsOpt=${StrAppsOpt} IntScoping=${IntScoping} StrArrayName=${StrArrayName} Main
 	fi
@@ -3551,7 +3553,7 @@ function ObjFindFunction()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( __GetVarReferenceList ) ;
+		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
 	else
 		local ArrayDll=( $( GetFindListStartPath=${StrPathStartFind} GetFindListNamePatter=${StrDllSuffix} GetFindListPrintfFormat=${StrPrintfFormat} ) ) ; 
 		for StrdllFunction in ${dllFunction[@]}; do 
@@ -3760,7 +3762,7 @@ function ZenityPrefixedVarSelection()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( __GetVarReferenceList ) ;	
+		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;	
 	elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
   eval $( VTVValueEntry=${StrVarList} \ 
           VTVIsArrayStyleInsert=True   \
@@ -3787,7 +3789,11 @@ function ZenityBuildForm()
  local StrSep=${ZBFSep:=' '} ;
  local StrTextApps=${ZBFTitle:='Form Builder, Prefixed-Variable Property'} ;
  local IntHeight=${ZBFHeight:=500}
- local StrTagZenityForm=${ZBFZenityForm:=StrParentApps:__LOCAL__,StrTextApps:__TEXT__,IntHeight:__HEIGHT__,StrSep:__SEP__} ; 
+ local StrTagZenityForm=${ZBFParserForm:=StrParentApps:__LOCAL__,StrTextApps:__TEXT__,IntHeight:__HEIGHT__,StrSep:__SEP__} ; 
+ local StrTagZenityMkdir=${ZBFParserMkdir:=StrAppsSudo:__SUDO__,StrAppsSudoOpt:__OPT__,StrAppsMkdir:__APPS__,StrRepositoryQuery:__PATH__}
+ local StrTagZenityChmod=${ZBFParserChmod:=StrAppsSudo:__SUDO__,StrAppsSudoOpt:__OPT__,StrAppsChmod:__APPS__,StrRepositoryQuery:__PATH__,StrDefaultPerm:__PERM__}
+ local StrTagZenityChown=${ZBFParserChown:=StrAppsSudo:__SUDO__,StrAppsSudoOpt:__OPT__,StrAppsChown:__APPS__,StrRepositoryQuery:__PATH__,StrDefaultUser:__OWNER__}
+ local BoolRepoCreaEnabled=${ZBFRepoCreatEnabled:=True} ; 
  local BoolDisplayParserDebug=${ZBFParserDebug:=False} ;
  local BoolDisplayDebug=${ZBFDebug:=False} ; 
  local BoolProvideUUIDQuery=${ZBFUUIDQuery:=False} ;
@@ -3795,17 +3801,31 @@ function ZenityBuildForm()
  local BoolCreateRepository=${ZBFRepositoryCreation:=False} ; 
  local StrDefaultUser=${ZBFRepoUser:=\${USER}.\${USER}} ;
  local StrDefaultPerm=${ZBFRepoPerm:=775} ;  
+ local StrAppsSudo=${ZBFAppsSudo:=/usr/bin/sudo} ;
+ local StrAppsSudoOpt=${ZBFAppsSudoOpt:=-s -H} ;
+ local StrAppsMkdir=${ZBFAppsMkdir:=/bin/mkdir} ;
+ local StrAppsChown=${ZBFChown:=/bin/chown} ;
+ local StrAppsChmod=${ZBFChmod:=/bin/chmod} ;
+ local StrStartMain=${ZBFFuncStart:=__main_StartServices}
+ 
+ local -A ArrayTplAction ; 
+ local -A ArrayVarVal ; 
+ local -A ArrayPV ;
+ #local -A ArrayQueryGenertor ; 
+ 
+ ArrayTplAction['Mkdir']="__SUDO__ __OPT__ __APPS__ __PATH__" ;  
+ ArrayTplAction['Chown']="__SUDO__ __OPT__ __APPS__ __OWNER__ __PATH__"   ;
+ ArrayTplAction['Chmod']="__SUDO__ __OPT__ __APPS__ __PERM__ __PATH__"   ;
+ local ArrayActionOrder=( "Mkdir" "Chmod" "Chown" ) ;
+      
  local StrMsg="" ; 
  local StrParentApps="${__call_locality[1]}" ; 
  local StrUUIDSession=$( GetUAppsRegisterName=${StrParentApps} GetUIDRegister=True GetUTimeBased=True GetUSeq=1 GetUUID ) ;   
  local StrStorageID="${StrRepositoryQuery}/${StrUUIDSession}" ; 
- local -A ArrayVarVal ; 
- local -A ArrayPV ;
  local StrText ;
  local StrForm="""zenity --height=__HEIGHT__ --text=\"__LOCAL__ __TEXT__\"  --separator='__SEP__' --forms __ENTRY__""" ; 
  local StrValueReturn="__VAR__ __APPS__" ;
- local -A ArrayQueryGenertor ; 
- local StrVarList="StrDefaultPerm,StrDefaultUser,StrFuncName,StrSep,StrTextApps,IntHeight,StrTagZenityForm,BoolDisplayParserDebug,BoolDisplayDebug,BoolProvideUUIDQuery,StrRepositoryQuery,BoolCreateRepository,StrParentApps,StrUUIDSession,StrStorageID,StrForm,StrValueReturn,StrVarList" ; 
+ local StrVarList="BoolRepoCreaEnabled,StrStartMain,StrTagZenityMkdir,StrTagZenityChmod,StrTagZenityChown,StrAppsSudo,StrAppsSudoOpt,StrAppsMkdir,StrAppsChown,StrAppsChmod,StrDefaultPerm,StrDefaultUser,StrFuncName,StrSep,StrTextApps,IntHeight,StrTagZenityForm,BoolDisplayParserDebug,BoolDisplayDebug,BoolProvideUUIDQuery,StrRepositoryQuery,BoolCreateRepository,StrParentApps,StrUUIDSession,StrStorageID,StrForm,StrValueReturn,StrVarList" ; 
  
  function Verbosis()
  {
@@ -3833,7 +3853,7 @@ function ZenityBuildForm()
  
  function SimpleQueryGenerator()
  {
-		local __call_locality=( SQG SimpleQueryGenerator ) ; 
+		local __call_locality=( SQG SimpleQueryGenerator ${StrParentApps} ) ; 
 		local Arg0=${ArrayArg[0]} ; 
 		local ArrayArg=( $* ) ; 
   zenity --entry --title="ZenityBuildForm Function Template Model" --text="Builder Prefixed Variable and Function Return Statement" --entry-text="${StrValueReturn}" ;  
@@ -3841,7 +3861,7 @@ function ZenityBuildForm()
  
  function UUIDQueryGenerator()
  {
-		local __call_locality=( UQG UUIDQueryGenerator ) ; 
+		local __call_locality=( UQG UUIDQueryGenerator ${StrParentApps} ) ; 
 		local Arg0=${ArrayArg[0]} ; 
 		local ArrayArg=( $* ) ; 
   local StrContentCert="${StrValueReturn}\n#UUID:${StrUUIDSession}\n";
@@ -3853,7 +3873,7 @@ function ZenityBuildForm()
  }
  function FunctionGenerator()
  {
-		local __call_locality=( FG FunctionGenerator ) ; 
+		local __call_locality=( FG FunctionGenerator ${StrParentApps} ) ; 
 		local Arg0=${ArrayArg[0]} ; 
 		local ArrayArg=( $* ) ;  ### Because StrSep is uniform it's clumsy to exchange 
   ### space for a space .
@@ -3867,7 +3887,7 @@ function ZenityBuildForm()
   
   for VarPrefix in ${!ArrayVarVal[@]} ; do 
    ArrayVarVal[${VarPrefix}]="${ArrayValue[${IntCountArg}]}" ; 
-   ### Must increase the COunter after each iteration to 
+   ### Must increase the Counter after each iteration to 
    ### extract Space Formated Output of Zenity Form captured
    ### in a String transformed into Array.
    StrValueReturn=${StrValueReturn//${VarPrefix}/${VarPrefix}=${ArrayVarVal[${VarPrefix}]}} ; 
@@ -3878,33 +3898,61 @@ function ZenityBuildForm()
  }
  function RepositoryCreation()
  {
-		local __call_locality=( RC RepositoryCreation ) ; 
+		local __call_locality=( RC RepositoryCreation ${StrParentApps} ) ; 
 		local Arg0=${ArrayArg[0]} ; 
 		local ArrayArg=( $* ) ;
+  local StrAction ; 
+  StrMsg="Prefixed Variable: __VAR__=__VALUE__\nThis is an assistan creating the Repository (location: __PATH__)\n.This is reserved to store your Query for future uses. Prepare to enter into\nCredential action to create the Repository. In case your haven't chooses Variable\n\tZBFRepoUser ZBFRepoPerm\nto set your user(s)/Group accessing the repository or Permission to read and write,\nyou can stop the application and start over. If you haven't choose a Function Name\nfor this step it will pop-you a warning and stop the application." ;
+  StrMsg=${StrMsg//__VALUE__/${BoolCreateRepository}} ; 
+  StrMsg=${StrMsg//__VAR__/BoolCreateRepository} ; 
+  StrMsg=${StrMsg//__PATH__/${StrRepositoryQuery}} ; 
+  VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis ; 
+  
+  StrMsg="Creation of PATH __PATH__, Right Attribution : __MODE__, Owner: __USER__" ;
+  StrMsg=${StrMsg//__PATH__/${StrRepositoryQuery}} ;
+  StrMsg=${StrMsg//__MODE__/${StrDefaultPerm}} ;
+  StrMsg=${StrMsg//__USER__/${StrDefaultUser}} ;
+  VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis ; 
   if [ ! -d ${StrRepositoryQuery} ] ; then 
-   sudo -s -H /bin/mkdir ${StrRepositoryQuery} ; 
-   sudo -s -H /bin/chown ${StrDefaultUser} ${StrRepositoryQuery} ; 
-   sudo -s -H /bin/chmod ${StrDefaultPerm} ${StrRepositoryQuery} ;
+   for IterActionName in $( ${StrParentApps} --get ArrayActionOrder[@] ) ; do 
+    StrAction=$( ${StrParentApps} --get ArrayTplAction[${IterActionName}] ) ; 
+    StrArrayName="StrTagZenity" ;
+    ### There is 3 active Template-index inside ArrayActionOrder.
+    ### Each one is inside an Associatiev Array where we do extract the Template
+    ### command line Noted: ArrayTplAction[${IterActionName}]
+    ### But There is no common Array of Tag association with variable. 
+    ### There is no possibility because I have use __APPS__ 3 time in all of template
+    ### having exactely 3 definition in 3 other Array of Tag association.
+    ### Theirs name : StrTagZenityMkdir StrTagZenityChmod StrTagZenityChown
+    ### If we retreive the Common-name of these variable, the prefix is : StrTagZenity
+    ### So Stemming StrTagZenity with concatenation of ${IterActionName} it do 
+    ### forming the Dictionnary name a.k.a. String of Tag association with var.  
+    ### We do require to procure a new version of StrAction at the beginning of
+    ### the loop . All this should replace the execution of 3 commands. 
+    ### And because ZenityBuildForm require a ZBFFuncStart=__main_StartServices 
+    ### Mean we can lunch this command without passing by the Test of Function 
+    ### Name like ZBFFuncStart=RepositoryCreation ZenityBuildForm 
+    ### and come idea to use this function like suplemment of creation of path
+    ### if This Application become a hand in management of a Bigger infrastructure.
+    ### like creating other path, launching other Zenity Frame... 
+    eval "StrTagListVar=\${${StrArrayName}${IterActionName}} ;" ; 
+    eval $( TPVarNameParsed="StrAction" TPListTag=${StrTagListVar} TPIsMatchRtoL=True TPDisplayParserNotice=\${BoolDisplayParserDebug} TPDisplayDebug=${BoolDisplayDebug} TPArrayName="Array${__call_locality[0]}Tag" TagParser 2> /dev/null ) ;
+    StrMsg="__CMD__ " ; 
+    VerbMsg="${StrMsg//__CMD__/${StrAction}}" VerbHeader="${__call_locality[1]}-CMDLINE" VerbEvalForm=False VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis ; 
+    if [ "${BoolRepoCreaEnabled:=False}" == "True" ] ; then 
+      eval """$( ${StrAction} )""" ;
+    fi 
+   done 
+
   fi 
 
  } 
- function __main_StartServices()
+ function FunctionQuery( )
  {
-		local __call_locality=( Main __main_StartServices ) ; 
+		local __call_locality=( FQ FunctionQuery ${StrParentApps} ) ; 
 		local Arg0=${ArrayArg[0]} ; 
 		local ArrayArg=( $* ) ;
   local StrQueryGenerator ; 
-  StrMsg="Function To Select Variable:__FUNC__" ; 
-  VerbMsg="${StrMsg//__FUNC__/${StrFuncName}}" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
-   
-  if [ ${BoolCreateRepository:=False} == "True" ] ; then
-   eval $( VTVIsArrayStyleInsert=True \
-       VTVValueEntry=${StrVarList},StrFieldValue,StrValueReturn   \
-       VTVIsValueReAssign=True       \
-       VTVIsValueToConvert=False     \
-       VTVIsArrayStyleInsert=True    \
-       ValueToVariable ) RepositoryCreation ;
-  fi 
   #for VarName in $( ${StrFuncName} --list ) ; do 
   local ArrayPreFixV=( $( ZPVSFunctionName=${StrFuncName} ZenityPrefixedVarSelection ) ) ; 
   ### We also Feed the StrValueReturn to exchange __VAR__ for all Prefixed Variable. 
@@ -3922,7 +3970,7 @@ function ZenityBuildForm()
   
   ### Point of Parsing, At this moment We should own all required variable being 
   ### ready to Parse the command-line StrForm . 
-  eval $( TPIsMatchRtoL=True TPDisplayParserNotice=${BoolDisplayParserDebug} TPDisplayDebug=${BoolDisplayDebug} TPArrayName="Array${__call_locality[0]}Tag" TPVarNameParsed="StrForm" TPListTag="${StrTagZenityForm}" TagParser ) ;
+  eval $( TPIsMatchRtoL=True TPDisplayParserNotice=${BoolDisplayParserDebug} TPDisplayDebug=${BoolDisplayDebug} TPArrayName="Array${__call_locality[0]}Tag" TPVarNameParsed="StrForm" TPListTag="${StrTagZenityForm}" TagParser 2> /dev/null ) ;
   
   StrMsg="Zenity CMD:__FORM__" ; 
   #eval """${StrForm}""" ;         
@@ -3963,11 +4011,42 @@ function ZenityBuildForm()
        ValueToVariable ) ${StrQueryGenerator} ;  
  }
  
+ function __main_StartServices()
+ {
+		local __call_locality=( Main __main_StartServices ${StrParentApps} ) ; 
+		local Arg0=${ArrayArg[0]} ; 
+		local ArrayArg=( $* ) ;
+  StrMsg="Function To Select Variable:__FUNC__" ; 
+  VerbMsg="${StrMsg//__FUNC__/${StrFuncName}}" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
+  
+  
+  if [ ${BoolCreateRepository:=False} == "True" ] ; then
+   eval $( VTVIsArrayStyleInsert=True \
+       VTVValueEntry=${StrVarList}   \
+       VTVIsValueReAssign=True       \
+       VTVIsValueToConvert=False     \
+       VTVIsArrayStyleInsert=True    \
+       ValueToVariable ) RepositoryCreation ;
+  fi 
+  
+  if [ ${StrFuncName:=None} != "None" ] ; then 
+   eval $( VTVIsArrayStyleInsert=True \
+        VTVValueEntry=${StrVarList},StrFieldValue,StrValueReturn   \
+        VTVIsValueReAssign=True       \
+        VTVIsValueToConvert=False     \
+        VTVIsArrayStyleInsert=True    \
+        ValueToVariable ) FunctionQuery ;
+  else
+   StrMsg="No function selected : __FUNCT__" ; 
+   VerbMsg="${StrMsg//__FUNCT__/${StrFuncName}}" VerbHeader="${__call_locality[1]}-WARNING" VerbEvalForm=False VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis ; 
+  fi
+ }
+ 
  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
  local StrNameHelper="ZenityBuildForm\tThe Fnct.D Mechanism This is the Helper Selecting Variable and Throught the Gui Interface.";
  local StrSummary="This is a simple helper to generate Function for your command-line and/or Function to craft. They can be stored inside a Repository and own specific signature were tool like GetterByLineData might extract informations. Repository is /var/cache/Fnct.D/BuildForm ; and required appropriate permission and owner. ZenityBuildForm will propably own a repository creator in fews versions." ; 
  local StrSynopsis="Works in 3 Steps, First it pop you the windows for the choosed function name. ; Selecting the variable required to fit in your code . Secondly it pop you after pressing OK button, another form with Variable Name and a field to let you write your information. It can be fixed value ,this can also include variable name like ${VAR} and __TAG__ as well. Don't forget it require TagParser to Interpret the Tag .After the end it pop-you a Third windows with the answer. The asnwer come in 2 mode, simple text-form with the function-line or second mode require ues of Prefixed-Variable ZBFUUIDQuery=True and store the information in UUID mode, and write the Query to a file inside /var/cache/Fnct.D/BuildForm and hold a signature in the top of the file certify your query is integral after creation. The receip is the last line and second line your query.";
- local StrDescription="Please use the Prefixed-Variable ZBFFunctionName= to subscribe a function to Start the Sequence 1" ;
+ local StrDescription="Please use the Prefixed-Variable ZBFFunctionName= to subscribe a function to Start the Sequence 1\n\nZenity Notice Prefixed Var:\n\n ZBFTitle\tSTRING Set the title of the main windows\n ZBFHeight\tINT Set the Height of an application, WIDTH depend of the Length of your variable, some effort will be deployed to trunk the varaible content example.\n ZBFSep\tCHAR Zenity Windows ouput the information from pipe '|' sometimes. Require attention it will reflect information on Shell command created.\n\nParser Notice Prefixed Var:\n\n ZBFParserForm\tSTRING Private information but it's handled by TagParser, hint, removing sudoer layer imply removing information about tag __SUDO__ __OPT__\n ZBFParserMkdir\tSTRING Private information but it's handled by TagParser, Having better Mkdir like MdCd, this can be fit here.\n ZBFParserChmod\tSTRING Private information but it's handled by TagParser, Having Security in mind, Having a Secret report to read about change of owner, can be fited here.\n ZBFParserChown\tSTRING Private information but it's handled by TagParser, Having Intelligent observer changing information on demand, can change this here.\n\n\nRepository Notice Prefixed Var:\n\n ZBFQueryRepository\tSTRING The repository for storing your query, initially /var/cache/Fnct.D/BuildForm can be changed but require to be set an alias with your next call.\n ZBFRepoUser\t\tSTRING This is the user and group required to create your repository and be able to gain acces. ex: user.root; 500.devlpt\n ZBFRepoPerm\t\tSTRING This is the permission applied to the Repository, ex 775 where user and group can create, read, execute, and other can only read and execute\n\n\nBoolean Notice Prefixed Var :\n\n ZBFRepositoryCreation\tSet True/False Add a Pass to check the presence of /var/cache/Fnct.D/BuildForm, may forget to use ZBFFunctionName if it's a task to create the Repository\n ZBFRepoCreatEnabled\tSet True/False Emulate the action, will only display the command invoked, similar to a dry-run \n ZBFParserDebug\t\tSet True/False Display Debug-information for every parser invoked during run  \n ZBFDebug\t\tSet True/False Display extra Debug like verbose during run\n ZBFUUIDQuery\t\tSet True/False Allow uses of zenity text-info and store your query inside /var/cache/Fnct.D/BuildForm under UUID file-name and show you the Function invoked in a Zenity Windows and UUID is also inside the file so you can copy/paste the information. Any Query made with this Trigger make a certified quesry and informations are coming with a signature in comment. This can be verified with GetterByLineData a function to extract certified information." ;
  
  
  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
@@ -3977,14 +4056,14 @@ function ZenityBuildForm()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( __GetVarReferenceList ) ;
+		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
   eval $( VTVIsArrayStyleInsert=True \
        VTVValueEntry=${StrVarList}   \
        VTVIsValueReAssign=True       \
        VTVIsValueToConvert=False     \
        VTVIsArrayStyleInsert=True    \
-       ValueToVariable ) __main_StartServices
+       ValueToVariable ) ${StrStartMain}
  elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
 		eval $( __GetVarReferenceCompWord ) ;
 	fi 
@@ -3995,11 +4074,14 @@ function ZenityBuildForm()
 unset __GetVarReferenceList ;
 function __GetVarReferenceList( )
 {
+  #local __call_locality=( __GVRL __GetVarReferenceList ) ;
+  #local ArrayArg=( $* ) ; 
+  #local Arg0=${ArrayArg[0]} ;  
 		local IsZenityBuildForm=${BuildForm:=False} ;
   ### Prefixed-Variable __GLRLAppsGuiBuilder is reserved for 
   ### user creating a better Gui-Builder than existing one 
   ### to form execution statement fo Bash ...
-  local StrAppsGuiForm=${__GLRLAppsGuiBuilder:=ZenityBuildForm} ; 
+  local StrAppsGuiForm=${__GVRLAppsGuiBuilder:=ZenityBuildForm} ; 
   ### Exception to StrVariableList and uses of eval in this case, 
   ### it should require extra wrapup of an Evaluative Executive Brace, but using 
   ### an echo does replace it. Notice it's the cheating way to get rid of 
@@ -4008,11 +4090,15 @@ function __GetVarReferenceList( )
   ### where is may cost cpu-cycle if it's in a loop, executed recurrently or
   ### managed of owner execution like sudo application "chown +S/bin/echo", we can
   ### be in big trouble...  
-  local StrVariableList=$( echo """eval ${__call_locality[1]} --help 2> /dev/null | egrep -i \"^Variable ${__call_locality[0]}\" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '""" ) ; 
+  local StrVariableList=$( echo """eval BuildForm=False  ${__call_locality[1]} --help 2> /dev/null | egrep -i \"^Variable ${__call_locality[0]}\" | cut -d ' ' -f 2 | tr '[:cntrl:]' ' '""" ) ; 
+  local StrBuildFormResult ;
   if [ ${IsZenityBuildForm:=False} == "True" ] ; then 
-   ZBFFunctionName=${__call_locality[1]} ${StrAppsGuiForm} ; 
+   StrBuildFormResult=$( """{ ZBFFunctionName=${__call_locality[1]} ZenityBuildForm ; }""" ) ; 
+   #eval $( eval """\\${__call_locality[1]} \\${StrAppsGuiForm} """ ) ; 
+   #eval echo $( """echo -ne \"Function: ${__call_locality[1]} \" """ ) ;
+   ### ; __GVRLVariableList="${StrVariableList// /,}" ZBFFunctionName=${__call_locality[1]} ${StrAppsGuiForm} ;""" ) ;   
   else
-   echo -ne "${StrVariableList}" ; 
+   echo "${StrVariableList}" ; 
   fi
   
 }
@@ -4065,7 +4151,7 @@ function DefaultConfigure()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( __GetVarReferenceList ) ;
+		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
 	elif [ "${ArrayArg[0]}" == "${StrDefaultAction}" ] ; then 
 		CmdEval=( ${CmdEval[@]} ${StrConfigureContent} ) ; 
 		echo -ne "Configure option extracted: \n\t${CmdEval[@]}\n\n" > /dev/stderr ; 
@@ -4142,7 +4228,7 @@ function IsPathName()
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 			echo -ne """${ArgGet}\n""" ; 			
 		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval $( __GetVarReferenceList ) ;
+			eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
 		else
 			for(( intx=0 ; intx <= ${#ArrayActionList[@]]}-1 ; intx++ )) ; do 
 			 local StrReg="${ArrayRegExp[${intx}]}" ;
@@ -4265,7 +4351,7 @@ function GetOtherDate()
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 			echo -ne """${ArgGet}\n""" ; 			
 		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval $( __GetVarReferenceList ) ;
+			eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
 	 else	 
 	 	if [ "${isLoop:=False}" == "True" ] ; then 
 	 	 local StrDebugMsg="ArrayRange, nb-element:${#ArrayRange[@]}, hold [ ${ArrayRange[@]} ]\n" ;
@@ -4314,7 +4400,7 @@ function kill_cmd()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( __GetVarReferenceList ) ;
+		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
 	else
 		for (( x=0 ; x <= ${#ArrayArg[@]}-1 ; x++ )) ; do 
 			local cmd=${ArrayArg[${x}]} ; 
@@ -4343,7 +4429,7 @@ function StartApps()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( __GetVarReferenceList ) ;
+		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
  else	 
 	 local AppsRefresh=${StartAppsRefresh:=4} ; 
 	 local Apps=${StartAppsCmd:=rezound --audio-method=jack} ; 
@@ -4385,7 +4471,7 @@ function Survey_kill_apps()
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 			echo -ne """${ArgGet}\n""" ; 			
 		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval $( __GetVarReferenceList ) ;
+			eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
 		else	 
 		  local StrApps=${SurveyApps:=rezound} ; 
 		  local IntDelay=${SurveyAppsRefresh:=4} ; 
@@ -4423,7 +4509,7 @@ function DpkgGetInlineBuildFlags()
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 			echo -ne """${ArgGet}\n""" ; 			
 		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval $( __GetVarReferenceList ) ;
+			eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
  	else	 
   	local CmdEval=( "cat" "${DpkgGetInlineBuildFlagsPath:=/etc/dpkg/}"${DpkgGetInlineBuildFlagsFile:=buildflags.conf} "|" """sed -e 's/^\(SET\ \)\([a-zA-Z]*FLAGS\)\([\t\ ]*\)/\2=/g'""" "|" tr """'[:cntrl:]\' ' '""" ) ;
   	eval "${CmdEval[@]}" ;
@@ -4475,7 +4561,7 @@ function DebianAptSrcCompiler()
   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
   echo -ne """${ArgGet}\n""" ; 			
  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-  eval $( __GetVarReferenceList ) ;
+  eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
  else	 	
   if [ ${AddPatch:=True} == "True" ]; then 
    StrPatchOpt="-p" ;
@@ -4655,7 +4741,7 @@ function AptSrcChange()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
 		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval $( __GetVarReferenceList ) ;
+			eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
 		else	
   cp ${StrAptSourceList} ${StrAptSourceSave} ; 
   cat ${StrAptSourceList} | sed 's/^${StrTagSearch} ${StrDefaultURI}/${StrTagAdd} [ arch=${StrDefaultArch} ] ${StrDefaultURI}/g' > ${StrUUID} ; 
@@ -4701,7 +4787,7 @@ function AptRebuild()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( __GetVarReferenceList ) ;
+		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
 	else	 
 		for (( intx=0 ; intx <= ${#ArrayArg[@]}-1 ; intx++ )) ; do 
 			Package=${ArrayArg[${intx}]} ; 
@@ -4748,7 +4834,7 @@ function find_edit_file()
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 			echo -ne """${ArgGet}\n""" ; 			
 		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval $( __GetVarReferenceList ) ;
+			eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
  	else	
 		for file in ${ArrayArg[@]} ; do 
 			local StrFilterInFind=${StrFindFilterOpt//__FILE__/${file}}
@@ -4803,7 +4889,7 @@ function FindFilterPathExclusion()
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 			echo -ne """${ArgGet}\n""" ; 			
 		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval $( __GetVarReferenceList ) ;
+			eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
  	else	 
 
 		### 
@@ -4945,7 +5031,7 @@ function acquire_lan_ifconfig()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( __GetVarReferenceList ) ;
+		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
 	elif [ "${Arg0:=--start-services}" == "--start-services" ] ; then 
   GetIpaddrTagList=${StrTagNameList} \
   GetIpaddrAppsIfconfig=${StrAppsNetConf} \
@@ -4981,7 +5067,7 @@ function GetZenityText()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ; 			
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( __GetVarReferenceList ) ;
+		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
 	else
 		eval ${StrApps} ${StrTypeUI} ${ArrayArg[@]} ;
 	fi 
@@ -5009,7 +5095,7 @@ function GetZenityTextEntry()
 			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 			echo -ne """${ArgGet}\n""" ; 			
 		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval $( __GetVarReferenceList ) ;
+			eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
 		else
 			local CmdEval=( """local StrReturn=\$( GetZenityText --width=${IntWidth}  --height=${IntHeight} --title="${StrTitle}" --text="${StrQuestion}" ) """ ); 
 			echo -ne "\n\nCmdEval : ${CmdEval[@]}\n\n" > /dev/stderr ; 
@@ -5217,7 +5303,7 @@ function ZenityContentListing( )
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( __GetVarReferenceList ) ;
+		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
   eval $( VTVIsArrayStyleInsert=True \
        VTVValueEntry=${StrVarList}   \
@@ -5350,7 +5436,7 @@ function GkSuZenityLoader()
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( __GetVarReferenceList ) ;
+		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
 		eval $( __GetVarReferenceCompWord ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
@@ -5396,7 +5482,7 @@ function UUIDHelper()
  elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
 		eval $( __GetVarReferenceCompWord ) ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( __GetVarReferenceList ) ;	
+		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;	
 	else
   eval $( VTVIsArrayStyleInsert=True VTVIsValueReAssign=True VTVIsValueToConvert=False \
   VTVValueEntry=IsVerbosis,StrDefaultSwitches,StrDefaultApps ValueToVariable ) __main_StartServices 
@@ -5549,7 +5635,7 @@ function GetUUID ()
  elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
 		eval $( __GetVarReferenceCompWord ) ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( __GetVarReferenceList ) ;	
+		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;	
 	else
   eval $( VTVIsArrayStyleInsert=True \
           VTVIsValueReAssign=True \
@@ -5626,7 +5712,7 @@ function GetMplayerStream()
  elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
 		eval $( __GetVarReferenceCompWord ) ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( __GetVarReferenceList ) ;
+		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
 	elif [ "${Arg0:=--startservices}" == "debug"	] ; then 
 		echo -ne "CmdLine[0]:${cmdline[0]} \nCmdLine[1]:${cmdline[1]}\n" > /dev/stderr ;
 	else
@@ -5732,7 +5818,7 @@ function BuildOnFaultCompiler()
  elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
 		eval $( __GetVarReferenceCompWord ) ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( __GetVarReferenceList ) ;
+		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
 	else
 		StrAppsLib=${StrAppsLib} StrAppsLibOpt=${StrAppsLibOpt} StrAppsLibOpt=${StrAppsLibOpt} StrAppsAppsFault=${StrAppsAppsFault} StrAppsAppsFaultOpt=${StrAppsAppsFaultOpt} IntRandomSize=${IntRandomSize} Start ; 
 	fi 
@@ -5774,7 +5860,7 @@ function RoundRobinSwapRealloc()
  elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
 		eval $( __GetVarReferenceCompWord ) ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( __GetVarReferenceList ) ;
+		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
 	elif [ "${Arg0:=--startservices}" == "--swaptorealloc"	] ; then 
 		GetSwapList ;
 	else
