@@ -1139,7 +1139,7 @@ Using Getter is also what made ValueToVariable out of warning of possible recurr
 
 Here the new Helper, it's compatible with previous version of ValueToVariable
 
-- Does include Synopsisa and Summary and Description will be available soon. 
+- Does include Synopsis and Summary and Description will be available soon. 
 
 .. code:: shell
 
@@ -1155,7 +1155,70 @@ Here the new Helper, it's compatible with previous version of ValueToVariable
 
 
  Summary
-   ValueToVariable allow creation of variable Assignation before running the application or function. Creating a code evaluation it return in form of VAR1=${VAR1}  VAR2=${VAR2} Application ; Where VAR1,VAR2 will be already available inside nestled function or real-function . If the are made from Top-function, Shell command like declare make variable existing beyond Master Function Body, which overcrowding variable after death or termination with uses if unset still existing and increase amount of memory without cleaning it. The mechanism is Filtering Thru and exercise a filter over Polish Notation Respect to enforce uses of Strict Notation to have an idea of their uses. Since Polish notation is adopted inside the Fnct.D, uses of evaluation brace to expand code inside function like BoolVarTest( newest version of BoolVarTestVarCreation) expanding Preambule-code, The If-N clause and it's Assertion code inside function to make parseable function to analyse it faster and discover bottle-neck by re-coding clause and action. ValueToVariable is madatory associated with  Prompt mechanism to pass the __main_StartServices and receive the authorized variable list. Description is under development to explain in depth uses of ValueToVariable, including uses of Whitelist where some power mechanisme like compiler depend of variable like CFLAGS, LDFLAGS... white list nad it's key to activate it VTVIsWhiteList.
+   ValueToVariable allow creation of variable Assignation before running the application or function. Creating a code evaluation it return in form of VAR1=${VAR1}  VAR2=${VAR2} Application ; Where VAR1,VAR2 will be already available inside nestled function or real-function . If the are made from Top-function, Shell command like declare make variable existing beyond Master Function Body, which overcrowding variable after death or termination of function uses if unset still existing and increase amount of memory without cleaning it. The mechanism is Filtering throught and acting like Filter over Polish Notation Respect to enforce uses of Strict Notation to have an idea of their uses. Since Polish notation is adopted inside the Fnct.D, uses of evaluation brace to expand code inside function like BoolVarTest( newest version of BoolVarTestVarCreation) expanding Preambule-code, The If-N clause and it's Assertion code inside function to make parseable function to analyse it faster and discover bottle-neck by developping more assertion clause and action. ValueToVariable is madatory associated with  Prompt mechanism to pass the __main_StartServices and receive the authorized variable list. Must read inside Description most-standard case Prefixed Variable, describe most frequent uses of Prefixed-Variable for common task between Function. While Whitelist is an accute case to transfert External variable being recognized by the Shell, some function had becoming totally blind behind variable visibility, WhiteList is popular with compiler, link-edition and pre-processor application. 
+
+
+ Description
+   
+ Comment over Obsolete Prefixed-Var
+ They are not in effect and might be re-attributed. Initially work altogether VTVValueRe VTVIsTransformed were removed from prototype aka ancester of BoolVarTestVarCreation coming from old_var_fnct_lib. Where fews functions filters the contents of this function with 'declare -f' to inspect variable presence and create an assignation table, this was removed even from prototype having problems in handling the table correctly.
+
+ Comment over VTVAppsScripter
+ Default is Awk while some may like something else, it's also play with performance being AWK as long you define the VTVAppsParser, VTVScriptInterVar, VTVAppsScripterOpt, VTVITransformScript you can define application like Python,Ruby,Perl...
+
+ Comment over VTVIsWhiteList
+ For Unusual Variable name, and or information too-short for variable name, being consider like not so used but Lacking of Regularity in your code using not conformant Polish-notation variable Like Rachid1,Rachid2,Rachid3,RachidN, you must use WhiteList Option. Also same for uses of externals variable like CC,CFLAGS,LDFLAGS,GCC... These by-passing the Polish-notation filter and transfert-them after-filter Effect.
+
+
+ Comment over VTVRejectionFilter
+ Initially inside the ValueToVariable engine it filter VTVRejectionFilter, and after filter with VTVVarFilter and what failling remain inside WhiteList and wait if Option IsWhiteList is trigger.
+
+ Comment over VTVIsArrayStyleInsert
+ While Shell-Array are not totally recognized information inside array, Integer and STRING are taken together, if you do have problem in regard of integer being reported not like your design is thinked try to enforce a IF test with integer with forced value. Because ValueToVariable take individually elements and assign it before calling your function you do have more change to keep variable structure than creation an allocation-holder and calculating like registry access. Another case where Array are altering the information in regard of loosing the Interger value is the uses of Associative array. Index are STRING and content too. We do recommend also to profit from Getter in place inside function from Fnct.D Structure and adopt a recuperation methode throught Getter. Default is False, but we recommend it to Set True form more than one Variable. Professionnal uses had enforced the uses of Variable Transfert holding name inside the Variable and call only this one ex, calling StrVarList=StrVar1,StrVar2 calling StrVarList inside VTVValueEntry does not need an Array Style Insert.
+
+ Comment over VTVIsWhiteList
+ Uses of Whitelist where some power mechanisme like compiler depend of variable like CFLAGS, LDFLAGS... do require it if your out of generating code from shell or out of main Function do require a function white list 
+
+ Comment over VTVValueEntry Know Effect
+ In many sub-function does prove there is no creation of variable but Assignation by-Recopy.
+
+ Comment over VTVIsDebugDisplay
+ While the mechanism can not be directly see from calling it directly from Command-Shell it get on with eval and it's optimized to work with simple Executive-Evaluative Brace only the DebugDisplay option will let you see the result. Information are ouputed on /dev/stderr.
+
+ Comment over VTVIsTransHadScrip
+  like Awk Script and it's a mechanism totally non-interactive ans pass-throught do directly to this action, with dependancy of VTVITransformScript, VTVAppsScripter, VTVAppsScripterOpt, theses options are not certified yet.
+ ValueToVariable Prefixed-Variable informations
+
+ Boolean Notice Prefixed Variable:
+
+ VTVIsArrayStyleInsert	Set True/False ArrayStyle is a declaration passed throught a variable and fastest way to pass theses elements are with separator or common method is « Comma Separated Value ». Further Information seek second part.
+ VTVIsTransformed	Set True/False Reserved and Obsoleted until all the function exception will be tested.
+ VTVIsTransHadScrip	Set True/False This Prefixed-Variable is Unique and only accept VTVIsArrayStyleInsert and activate the uses of independent script.
+ VTVIsDebugDisplay	Set True/False Allow outputing Debug Statement. 
+ VTVIsSlowDebug		Set True/False This option is not improving Speed of your function and does slow-down the option DebugDisplay if you do have problem to filter All the Displayed Debug information.
+ VTVIsValueToConvert	Set True/False Is mostly False, this Prefixed-variable allow variable having other name, and respectly have en entry and importance inside way variable are mangled, activating uses of VTVReasignPrefix, VTVReasignSuffix
+
+ Important Notice, most-standard case Prefixed Variable:
+
+
+
+ Important Notice, NonTrivial Prefixed Variable:
+
+ VTVVarFilter		STRING Regular Expression, from Bash Expansion algorithm, mostly like regular expression, but not full-length regular expression.
+ VTVRejectionFilter	STRING Regular Expression, from Bash Expansion algorithm Rejection filter is also know for what will remain inside WhiteList Option
+ VTVIsWhiteList		STRING Separated with Comma is the exeption List to pass throught .
+ VTVITransformScript	STRINGScript Filename use inside VTVAppsScripterOpt under TAG __FILE__. Neglecting VTVAppsScripterOpt to own TAG __FILE__ will not work .
+ VTVAppsScripter	STRING Default is /usr/bin/gawk
+ VTVAppsScripterOpt	STRING Reserved for VTVAppsScripter or application wrap-up, handle most of variable call for an application wrapper.
+ VTVScriptInterVar	STRING Repsonsible to answer to TAG __VAR_ASSIGN__ inside VTVAppsScripterOpt is a method transfering other variable with --assign from awk/gawk option look for awk manual for further information.
+ VTVAppsParser	STRING It's TAG definition where __APPS__ is awk/gawk, any application and __OPT__. The __OPT__ is namespace for all Prefixed Variable VTVScriptInterVar, VTVAppsScripterOpt and VTVITransformScript.
+
+
+ Important Notice, Obsoletes Prefixed Variable:
+
+ VTVValueRe		Set True/False [INEFFECTIVE] Was working with VTVIsTransformed
+ VTVIsTransformed	Set True/False [INEFFECTIVE] Was used in conjunction with VTVValueRe and require VTVValueEntry and does associate 1 on 1, so having to inspect the variable list to fit with element make a decision to remove the prototype from this function.
+
 
 
  Default Variable Value:
