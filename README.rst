@@ -1287,6 +1287,9 @@ Also available a command-line example to verify your informations :
   ### and write me down by mail. 
   vtvVersion=0.0.2 . /etc/init.d/Fnct.D/fnct_debian_lib ; VTVIsValueToConvert=False VTVIsTransHadScript=False VTVIsValueReAssign=True VTVIsDebugDisplay=True VTVValueEntry=oolDisplayFnctD,CCFLAG,StrUrlGetter,BoolEvalCmdExit,StrAppsPwdGenerator,IntDefaultPwdSize,LDFLAGS,IntDefaultFactor,Ldflags,IntRandomSeedFactor,GCC,CC,CXX,CPP,StrPasswordTypeForm,IntPasswordType,IsAutoInstallPwgen,StrDebInstallMethod,StrDebianInstallerType,StrAptLineCmd,StrGdebiPackageName,StrGdebiDownloadPack,StrFnctDSvrBVTVC ValueToVariable 
 
+And following comment are DebugDisplay showing you Step-by-Step the treatment of your 
+request. 
+
 .. code:: shell
 
  DEBUG-VarFilter:[ Application is Transforming Variable during passing-thru action. ]
