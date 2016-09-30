@@ -88,8 +88,8 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   ArrayMsg[5]="Entry-Start : __FUNCT__"
   
   ArrayTplAction['Mkdir']="__SUDO__ __OPT__ __APPS__ __PATH__" ;  
-  ArrayTplAction['Chown']="__SUDO__ __OPT__ __APPS__ __OWNER__ __PATH__"   ;
   ArrayTplAction['Chmod']="__SUDO__ __OPT__ __APPS__ __PERM__ __PATH__"   ;
+  ArrayTplAction['Chown']="__SUDO__ __OPT__ __APPS__ __OWNER__ __PATH__"   ;
   local ArrayActionOrder=( "Mkdir" "Chmod" "Chown" ) ;
    
   local StrVarList="StrVarList,BoolOutToZenity,BoolOutToFile,StrTagFeeder,StrParentApps,BoolEmitUUID,StrParserResult,StrAwkScript,StrAppsTemplate,StrApps,StrAppsOpt,StrFilterApps,StrFilterOpt,StrParserTag,StrFileName,StrDefaultPipe,StrDefaultVerbose,StrTagRepoMkdir,StrTagRepoChmod,StrTagRepoChown,BoolRepoCreaEnabled,BoolDisplayParserDebug,StrRepositoryQuery,BoolCreateRepository,StrDefaultUser,StrDefaultPerm,StrAppsSudo,StrAppsSudoOpt,StrAppsMkdir,StrAppsChown,StrAppsChmod,StrStartMain,BoolExecuteEval,BoolGenerateCode,StrUUIDInstance,StrPrefixTagGroup" ; 
@@ -204,8 +204,15 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
     for IterActionName in $( ${StrParentApps} --get ArrayActionOrder[@] ) ; do 
      StrAction=$( ${StrParentApps} --get ArrayTplAction[${IterActionName}] ) ; 
      StrArrayName="${StrPrefixTagGroup}" ;
-
-     eval "StrTagListVar=\${${StrArrayName}${IterActionName}} ;" ; 
+     
+     StrTagListVarName="${StrArrayName}${IterActionName}" ;
+     eval "StrTagListVar=\${${StrTagListVarName}} ;" ; 
+     StrMsg="Parser TAG-List Variable name : __TAGLIST__: Template:[ __ACTION__] : content: [ __CONTENT__ ]" ; 
+     StrMsg=${StrMsg//__TAGLIST__/${StrTagListVarName}} ; 
+     StrMsg=${StrMsg//__CONTENT__/${StrTagListVar}} ; 
+     StrMsg=${StrMsg//__ACTION__/${StrAction}} ; 
+     
+     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-CMDLINE" VerbEvalForm=False VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis ; 
      eval $( TPVarNameParsed="StrAction" TPListTag=${StrTagListVar} TPIsMatchRtoL=True TPDisplayParserNotice=\${BoolDisplayParserDebug} TPDisplayDebug=${BoolDisplayDebug} TPArrayName="Array${__call_locality[0]}Tag" TagParser 2> /dev/null ) ;
      StrMsg=$( ${StrParentApps} --get ArrayMsg[2] ) ;
      

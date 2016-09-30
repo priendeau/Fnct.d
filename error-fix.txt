@@ -1,0 +1,48 @@
+Following command produce this error inside the function.
+
+Date:20160930-17:33:00
+Reference:472de1ad3899ab7a0aa52869a073c19c52178940
+file: _sub_Function_Appliance 
+function: GnrlPrsrInfctr
+With command line : 
+unset ArrayLib ; versionGPI=0.0.1 . /etc/init.d/Fnct.D/fnct_lib  ; GPIDisplayDebug=True GPIIsUUIDInstance=True GPIRepoCreatEnabled=False GPIRepositoryCreation=True  GPIFuncStart=RepositoryCreation GPIRepoUser=maxiste.root GPIRepoPerm=775 GnrlPrsrInfctr 
+description : Parser-line extracted from ZenityBuildForm does re-use tag __PERM__ inside line for mkdir and chown but not chmod, while __PERM__ is only present inside Association TAG nd not Template. In term, StrAction is not changing even if there
+is a loop and Associative Array query via Getter from $( GnrlPrsrInfctr --get ArrayTplAction[${IterActionName}] ) 
+
+
+OUTPUT:
+--------------------------------------------------------------------------------------------------------------
+GnrlPrsrInfctr-DEBUG:[ Instance will use UUID reference: a590e8c2-8754-11e6-8b1d-001e4c8856d6 ]
+Entry-Start : RepositoryCreation
+RepositoryCreation-DEBUG:[ Prefixed Variable: BoolCreateRepository=True
+This is an assistant creating the Repository (location: /var/log/Fnct.D/GnrlPrsrInfctr)
+.This is reserved to store your Query for future uses. Prepare to enter into
+Credential action to create the Repository. In case your haven't chooses Variable
+	GPIRepoUser GPIRepoPerm
+to set your user(s)/Group accessing the repository or Permission to read and write,
+you can stop the application and start over. If you haven't choose a Function Name
+for this step it will pop-you a warning and stop the application. ]
+RepositoryCreation-DEBUG:[ Creation of PATH /var/log/Fnct.D/GnrlPrsrInfctr, Right Attribution : 775, Owner: maxiste.root ]
+RepositoryCreation-CMDLINE:[ Parser TAG-List Variable name : StrTagRepoMkdir: Template:[ __SUDO__ __OPT__ __APPS__ __OWNER__ __PATH__] : content: [ StrAppsSudo:__SUDO__,StrAppsSudoOpt:__OPT__,StrAppsMkdir:__APPS__,StrRepositoryQuery:__PATH__ ] ]
+TAGPARSER:[ PairLeft: StrAppsSudo, PairRight: __SUDO__, Query: __SUDO__ __OPT__ __APPS__ __OWNER__ __PATH__ ]
+TAGPARSER:[ PairLeft: StrAppsSudoOpt, PairRight: __OPT__, Query: /usr/bin/sudo __OPT__ __APPS__ __OWNER__ __PATH__ ]
+TAGPARSER:[ PairLeft: StrAppsMkdir, PairRight: __APPS__, Query: /usr/bin/sudo -s -H __APPS__ __OWNER__ __PATH__ ]
+TAGPARSER:[ PairLeft: StrRepositoryQuery, PairRight: __PATH__, Query: /usr/bin/sudo -s -H /bin/mkdir __OWNER__ __PATH__ ]
+RepositoryCreation-CMDLINE:[ /usr/bin/sudo -s -H /bin/mkdir __OWNER__ /var/log/Fnct.D/GnrlPrsrInfctr  ]
+RepositoryCreation-CMDLINE:[ Parser TAG-List Variable name : StrTagRepoChmod: Template:[ __SUDO__ __OPT__ __APPS__ __OWNER__ __PATH__] : content: [ StrAppsSudo:__SUDO__,StrAppsSudoOpt:__OPT__,StrAppsChmod:__APPS__,StrRepositoryQuery:__PATH__,StrDefaultPerm:__PERM__ ] ]
+TAGPARSER:[ PairLeft: StrAppsSudo, PairRight: __SUDO__, Query: __SUDO__ __OPT__ __APPS__ __OWNER__ __PATH__ ]
+TAGPARSER:[ PairLeft: StrAppsSudoOpt, PairRight: __OPT__, Query: /usr/bin/sudo __OPT__ __APPS__ __OWNER__ __PATH__ ]
+TAGPARSER:[ PairLeft: StrAppsChmod, PairRight: __APPS__, Query: /usr/bin/sudo -s -H __APPS__ __OWNER__ __PATH__ ]
+TAGPARSER:[ PairLeft: StrRepositoryQuery, PairRight: __PATH__, Query: /usr/bin/sudo -s -H /bin/chmod __OWNER__ __PATH__ ]
+TAGPARSER:[ PairLeft: StrDefaultPerm, PairRight: __PERM__, Query: /usr/bin/sudo -s -H /bin/chmod __OWNER__ /var/log/Fnct.D/GnrlPrsrInfctr ]
+RepositoryCreation-CMDLINE:[ /usr/bin/sudo -s -H /bin/chmod __OWNER__ /var/log/Fnct.D/GnrlPrsrInfctr  ]
+RepositoryCreation-CMDLINE:[ Parser TAG-List Variable name : StrTagRepoChown: Template:[ __SUDO__ __OPT__ __APPS__ __OWNER__ __PATH__] : content: [ StrAppsSudo:__SUDO__,StrAppsSudoOpt:__OPT__,StrAppsChown:__APPS__,StrRepositoryQuery:__PATH__,StrDefaultUser:__OWNER__ ] ]
+TAGPARSER:[ PairLeft: StrAppsSudo, PairRight: __SUDO__, Query: __SUDO__ __OPT__ __APPS__ __OWNER__ __PATH__ ]
+TAGPARSER:[ PairLeft: StrAppsSudoOpt, PairRight: __OPT__, Query: /usr/bin/sudo __OPT__ __APPS__ __OWNER__ __PATH__ ]
+TAGPARSER:[ PairLeft: StrAppsChown, PairRight: __APPS__, Query: /usr/bin/sudo -s -H __APPS__ __OWNER__ __PATH__ ]
+TAGPARSER:[ PairLeft: StrRepositoryQuery, PairRight: __PATH__, Query: /usr/bin/sudo -s -H /bin/chown __OWNER__ __PATH__ ]
+TAGPARSER:[ PairLeft: StrDefaultUser, PairRight: __OWNER__, Query: /usr/bin/sudo -s -H /bin/chown __OWNER__ /var/log/Fnct.D/GnrlPrsrInfctr ]
+RepositoryCreation-CMDLINE:[ /usr/bin/sudo -s -H /bin/chown maxiste.root /var/log/Fnct.D/GnrlPrsrInfctr  ]
+
+
+--------------------------------------------------------------------------------------------------------------
