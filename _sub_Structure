@@ -239,6 +239,7 @@ if [ "${versionGUUID:=0.0.2}" == "0.0.2" ] ; then
   local IntSeqLoop=${GetUSeq:=1} ; 
   local StrGetHelperName=${GetUHelperName:=UUIDHelper} ;
   local StrUUIDHelperStream=${GetUHelper:=UUIDHApps= UUIDHSwitches= __HELPERNAME__} ; 
+  ### No Need to transfert TypeAppsName, its recuperated by StrAppsNameCall .
   local TypeAppsName=${GetUAppsDef:=__HELPERNAME__ --get UUIDHApps}
   local StrUUIDActionName=${GetUActionFunc:=UUIDNoLoop,UUIDLoop} ;
   local IsVerbosis=${GetUVerbosis:=False} ;
@@ -251,60 +252,112 @@ if [ "${versionGUUID:=0.0.2}" == "0.0.2" ] ; then
   local StrUUIDIndexName=${GetUIDName=.GetUUID};
   local StrAppsNameCall=${TypeAppsName//__HELPERNAME__/${StrGetHelperName}} ; 
   local StrAppsName=$( ${StrAppsNameCall} ) ; 
+  local StrParentApps=${__call_locality[1]} ; 
+  local StrVarList="StrAppsName,StrAppsNameCall,StrUUIDIndexName,StrAppsRegister,BoolCallRegistered,StrDbSchema,StrDbURI,IsUUIDDbImport,IsUUIDDbCreation,IsVerbosis,StrUUIDActionName,StrUUIDHelperStream,StrGetHelperName,IntSeqLoop,BoolLoop,BoolTimeBased,StrParentApps,StrVarList"; 
+  
+  ArrayMsg[1]="UUID StrAppsName: ${StrAppsName}" ; 
+  VerbState=${IsVerbosis} VerbMsg=${ArrayMsg[1]} Verbosis;
 
+  StrUUIDHelperStream=${StrUUIDHelperStream//__HELPERNAME__/${StrGetHelperName}} ;
+  StrUUIDHelperStream=${StrUUIDHelperStream//UUIDHApps=/UUIDHApps=${StrAppsName}} ; 
+
+
+  ### This is a specialized Verbosis mode :
+  ###  
+  ###  All condition required to set VerbState=True 
+  ###  All condition required to set a message with VerbMsg=STRING
+  ###  
+  ###  
+  ### It can be used to :
+  ###  - Echo result to be passed throught Value Result .
+  ###  Required :
+  ###  VerbEvalForm=True VerbFormated=False 
+  ###  
+  ###  VerbHeader Is ineffective
+  ###  
+  ### -Echo result can be append to file and not overwriting the content: 
+  ###  Required ;
+  ###  VerbFormated=False/True VerbAppendDev=True VerbDev=[ FILENAME | UUID ]
+  ###  - Appending to file also required to be unique-file were no instance of 
+  ###  Verbosis may point on same-file or loss of log will be CERTAIN.
+  ###  -Pointing to Same-Destination require a lock Mechanism which is 
+  ###  not implemented here
+  ###  
+  function Verbosis()
+  {
+   local __call_locality=( Verbosis Verb );
+   local StrMsg=${VerbMsg:=__TEXT__} ; 
+   local StrDevOut=${VerbDev:=/dev/stderr} ; 
+   local IsVerboseState=${VerbState:=False} ;
+   local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+   local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+   local IsDisplayFormatted=${VerbFormated:=True} ;
+   local IsAppendMode=${VerbAppendDev:=False} ; 
+   local ArrayArg=( $* ) ; 
+   if [ "${IsVerboseState:=False}" == "True" ] ; then 
+    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+     if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
+     else  
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+     fi
+    else
+     if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+        echo "${StrMsg}" ;  
+     else
+      if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo "${StrMsg}" >> ${StrDevOut} ;
+      else
+       echo "${StrMsg}" > ${StrDevOut} ;
+      fi
+     fi 
+    fi 
+   fi
+  } 
+  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis
+
+  
   function ApplicationRegistrationIndex()
   {
-   local __call_locality=( ARI ApplicationRegistrationIndex ) ;
+   local __call_locality=( ARI ApplicationRegistrationIndex ${StrParentApps} ) ;
    local ArrayArg=( $* ) ; 
    local Arg0=${ArrayArg[0]} ;
   
    
   }
 
-  function Verbosis()
-  {
-   local __call_locality=( Verbosis Verb );
-   local StrMsg=${VerbMsg:=__TEXT__} ; 
-   local StrDevOut=${VerbDev:=/dev/stderr} ; 
-   local VerboseState=${VerbState:=False} ;
-   local ArrayArg=( $* ) ; 
-   if [ "${VerbState:=False}" == "True" ] ; then 
-    echo -ne "VERBOSE:[ ${StrMsg} ]\n" > ${StrDevOut} ;
-   fi
-  }
-  ArrayMsg[1]="UUID StrAppsName: ${StrAppsName}" ; 
-  VerbState=${IsVerbosis} VerbMsg=${ArrayMsg[1]} Verbosis;
 
-  StrUUIDHelperStream=${StrUUIDHelperStream//__HELPERNAME__/${StrGetHelperName}} ;
-  StrUUIDHelperStream=${StrUUIDHelperStream//UUIDHApps=/UUIDHApps=${StrAppsName}} ; 
-  
-  #local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n" ;
-  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
   
   function UUIDNoLoop()
   {
-    #eval $( ${StrUUIDHelper} ) ;
-    local StrMsg="UUID HELPER: ${StrUUIDHelper}" ;
-    VerbState=${IsVerbosis} VerbMsg=${StrMsg} Verbosis;
-    eval ${StrUUIDHelper} ;
+   local __call_locality=( UUIDNL UUIDNoLoop ${StrParentApps} ) ;
+   local ArrayArg=( $* ) ; 
+   local Arg0=${ArrayArg[0]} ;
+   #eval $( ${StrUUIDHelper} ) ;
+   local StrMsg="UUID HELPER: ${StrUUIDHelper}" ;
+   VerbState=${IsVerbosis} VerbMsg=${StrMsg} VerbHeader="VERBOSE" Verbosis;
+   eval ${StrUUIDHelper} ;
   }
   
   function UUIDLoop()
   {
+   local __call_locality=( UUIDL UUIDLoop ${StrParentApps} ) ;
+   local ArrayArg=( $* ) ; 
+   local Arg0=${ArrayArg[0]} ;
    local ArrayMsg=( ) ;
    ArrayMsg[0]="UUID LOOPSEQ: ${IntSeqLoop}";
    ArrayMsg[1]="UUID HELPER: ${StrUUIDHelper}\n" ;
    
    VerbState=${IsVerbosis} VerbMsg=${ArrayMsg[0]} Verbosis;
    for (( intX=0 ; intX <= $(( ${IntSeqLoop}-1 )) ; intX++ )) ; do
-    VerbState=${IsVerbosis} VerbMsg=${ArrayMsg[1]} Verbosis;
+    VerbState=${IsVerbosis} VerbMsg=${ArrayMsg[1]} VerbHeader="VERBOSE" Verbosis;
     eval ${StrUUIDHelper} ;
    done 
   }
   
   function __main_StartServices()
   {
-   local __call_locality=( Main __main_StartServices ) ;
+   local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
    local Arg0=${ArrayArg[0]} ;
    local ArrayArg=( $* ) ; 
    local IntUUIDHelperIndex=0 ;
@@ -325,7 +378,7 @@ if [ "${versionGUUID:=0.0.2}" == "0.0.2" ] ; then
    StrUUIDHelper=${StrUUIDHelper//UUIDHSwitches=/UUIDHSwitches=${StrUUIDOption}}  ;
    #StrUUIDHelper=$( eval ${StrUUIDHelperStream} ) ; 
    ArrayMsg[1]="UUID __main_StartServices: content of StrUUIDHelper:[${StrUUIDHelper}]" ; 
-   VerbState=${IsVerbosis} VerbMsg=${ArrayMsg[1]} Verbosis;
+   VerbState=${IsVerbosis} VerbMsg=${ArrayMsg[1]} VerbHeader="VERBOSE" Verbosis ;
    #echo -ne "[UUID __main_StartServices: content of StrUUIDHelper:[${StrUUIDHelper}]]\n" > /dev/stderr 
 
    if [ "${BoolLoop:=False}" == "True" ] ; then 
@@ -337,13 +390,16 @@ if [ "${versionGUUID:=0.0.2}" == "0.0.2" ] ; then
    fi 
    StrAction=${ArrayUUIDAction[${IntUUIDActionIndex}]} ; 
    ArrayMsg[2]="UUID ACTION: ${StrAction}" ; 
-   VerbState=${IsVerbosis} VerbMsg=${ArrayMsg[2]} Verbosis;
+   VerbState=${IsVerbosis} VerbMsg=${ArrayMsg[2]} VerbHeader="VERBOSE" Verbosis ;
    #echo -ne "[UUID ACTION: ${StrAction}]\n" > /dev/stderr  ;
    eval $( VTVIsArrayStyleInsert=True \
            VTVIsValueReAssign=True \
            VTVIsValueToConvert=False \
            VTVValueEntry=IsVerbosis,StrAction,StrUUIDHelper,IntSeqLoop ValueToVariable ) ${StrAction} ; 
   } 
+  
+  #local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n" ;
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
   
   if [ "${Arg0:=--startservices}" == "--help"	] ; then 
     GetVarReference ${__call_locality[1]} ; 
@@ -355,11 +411,12 @@ if [ "${versionGUUID:=0.0.2}" == "0.0.2" ] ; then
    eval $( __GetVarReferenceCompWord ) ;
   elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
    eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;	
-  else
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
    eval $( VTVIsArrayStyleInsert=True \
            VTVIsValueReAssign=True \
            VTVIsValueToConvert=False \
-           VTVValueEntry=IsVerbosis,BoolTimeBased,BoolLoop,IntSeqLoop,StrGetHelperName,StrUUIDHelperStream,StrUUIDActionName ValueToVariable ) __main_StartServices 
+           VTVValueEntry=StrVarList ValueToVariable ) __main_StartServices 
+  ### replacement IsVerbosis,BoolTimeBased,BoolLoop,IntSeqLoop,StrGetHelperName,StrUUIDHelperStream,StrUUIDActionName by StrVarList
   fi 
 
  }
