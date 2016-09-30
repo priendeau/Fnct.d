@@ -42,7 +42,67 @@
 ######################################################################
 ### Main Function of PackageRepositoryMgmt function
 ###
+### Extruding the function GetDpkgInstalled out of GetIdDpkgListing
+### While I was designing the GnrlPrsrInfctr or GeneralParserInfrastructure out of
+### this sample from GetDpkgInstalled. I do apply uses of ValueToVAriable to this 
+### _sub_PackageRepository and crafting the rest in prototyping to deliver 
+###  GnrlPrsrInfctr.... 
 
+function GetDpkgInstalled()
+{
+ local __call_locality=( GDI GetDpkgInstalled ) ;
+ local ArrayArg=( $* ) ;
+ local Arg0=( ${ArrayArg[0]} ) ; 
+ local StrAwkScript=$( PackageRepositoryMgmt --get PkgRepoMgmtReposAwkLst ) ; 
+ local StrAppsTemplate=${GDIDpkgTpl:=__APPS__ __OPT__ \| __FILTER__ __FILTER_OPT__ } ;
+ local StrApps=${GDIDpkgApps:=/usr/bin/dpkg} ;
+ local StrAppsOpt=${GDIDpkgAppsOpt:=--get-selections} ; 
+ local StrFilterApps=${GDIFilterApps:=/usr/bin/gawk} ;
+ local StrFilterOpt=${GDIFilterOpt:=-f __FILE__} ; 
+ local StrParserTag=${GDITagParser:=}
+ local StrParserResult=${GDITagParserResult:=StrCmd} ; 
+ local StrVarList="StrParserResult,StrAwkScript,StrAppsTemplate,StrApps,StrAppsOpt,StrFilterApps,StrFilterOpt,StrParserTag" ; 
+ ### Because there is strong dependency in uses of thsis application with PkgRepoMgmtReposAwkLst
+ ### We will extract common information like The not working parser-script suppose to be replaced
+ ### by /etc/init.d/Fnct.D/awk-script/dpkg-col-display.awk . 
+ ### local StrAwkScript=${GetPkgInstAwkScript:=/etc/init.d/Fnct.d/awk-script/dpkg-package-id-listing.awk}
+ ### While script /etc/init.d/Fnct.D/awk-script/dpkg-col-display.awk should be corect to work with 
+ ###  StrAwkScript, I do not found notice of it on my last modification of this package.... So I recraft
+ ### it and if I do not see correct information in-debugging out of this function being the point-start
+ ### of this problems of snap-shooting I do have to make something else, like other script...
+ function __main_StartServices()
+ {
+  local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+  local ArrayArg=( $* ) ;
+  local Arg0=${ArrayArg[0]};  
+  local StrCmd=${StrAppsTemplate}
+  dpkg --get-selections | awk -f ${StrAwkScript}
+  eval $( TPIsMatchRtoL=True TPDisplayDebug=True TPArrayName=Array${__call_locality[0]}Tag TPVarNameParsed="${StrParserResult}" TPListTag="${StrParserTag}" TagParser ) ; 
+  # eval "${StrTagCmdLine}" ;  
+  
+  StrMsg="Parsed Zenity List CmdLine: ${StrCmdLine}\n" ; 
+  VerbMsg="${StrMsg}" VerbDev=/dev/stderr VerbState=True VerbFormated=True VerbHeader="${__call_locality[1]}-CMDLINE" Verbosis
+  
+  eval """\${${StrParserResult}}""" ; 
+ 
+ } 
+ 
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+  GVRIsName=True GVRIsSynopsis=True GVRIsSummary=True GVRIsDesc=True GetVarReference ${__call_locality[1]} ; 
+  echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ;
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( __GetVarReferenceList ) ;	
+ elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
+  eval $( VTVValueEntry=${StrVarList} \ 
+          VTVIsArrayStyleInsert=True   \
+          VTVIsValueReAssign=True      \
+          VTVIsValueToConvert=False    \
+          ValueToVariable  ) __main_StartServices ; 
+ fi
+}
 
  #########################################################################
  ###### Part of Snapshoot section 
@@ -60,16 +120,7 @@
   echo -ne "ADD SNAPSHOT\nDATE:${StrTransactionStart}:ID:${StrPackageID}\n" >> ${StrIndexFile} ; 
   echo -ne "ID of listing:${StrPackageID}\n"  > /dev/stderr ; 
  }
-  
- function GetDpkgInstalled()
- {
-  local __call_locality=( GetPkgInst GetDpkgInstalled ) ;
-  local ArrayArg=( $* ) ;
-  local Arg0=( ${ArrayArg[0]} ) ; 
-  local StrAwkScript=${GetPkgInstAwkScript:=/etc/init.d/Fnct.d/awk-script/dpkg-package-id-listing.awk}
-  dpkg --get-selections | awk -f ${StrAwkScript}
- }
-  
+    
  function StreamCprEnvlTxt()
  {
   
@@ -88,11 +139,12 @@
   local __call_locality=( GetDpkgLst GetPackageListing ) ;
   local ArrayArg=( $* ) ; 
   local Arg0=( ${ArrayArg[0]} ) ;
+  local GetDpkgInstalledAwkScript=${StrScriptAwkFilter} ; 
   local StrId=$( GIDLPackageUUID=${StrSnapShotUUID}         \
                  StrIndexFile=${StrIndexFile}               \
                  StrTransactionStart=${StrTransactionStart} \
                  GetIdDpkgListing                           ) 
-  GetDpkgInstalledAwkScript=${ScriptAwkFilter} GetDpkgInstalled                                        | \
+  GetDpkgInstalledAwkScript=${StrScriptAwkFilter} GetDpkgInstalled                                        | \
                             StrPkgLstExt=${StrPkgLstExt}                                                 \
                             StreamCprEnvlTxtFile=${StrPathReposIndex}/${StrSnapShotUUID}.${StrPkgLstExt} \
                             StreamCprEnvlTxt  ; 
@@ -300,9 +352,8 @@ function PackageRepositoryMgmt()
 	local StrDefaultActionIndex=${PkgRepoMgmtReposIndexAction:="mkdir -p __PATH__"} ;
 	local StrTestDriveDebug=${PkgRepoMgmtReposDriveDebug:=False} ;
 	local StrIndexTest=${PkgRepoMgmtReposIndexTest:=! -d} ;
-	local ScriptAwkFilter=${PkgRepoMgmtReposAwkLst:=/etc/init.d/Fnct.d/awk-script/dpkg-package-id-listing.awk} ;
+	local StrScriptAwkFilter=${PkgRepoMgmtReposAwkLst:=/etc/init.d/Fnct.D/awk-script/dpkg-package-id-listing.awk} ;
  echo -ne "Reserved ID for COMMIT:${StrUUID}\nReserved ID for Listing:${StrSnapShotUUID}\n\n" > /dev/stderr ;
-
 
 	### Explained in GetOtherDate, GODReference can be negative and report yesterday date too. and not null will
   ### give n-day after today... 	
@@ -313,10 +364,121 @@ function PackageRepositoryMgmt()
 	local StrIndexFile=${StrPathReposIndex}/${StrTodatDateTransfert} ;
 	
 	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--add-snapshoot\tAdd DPKG Listing inside Current Index File.\n\t\t\tOnly Store an ID in the index-file and the content into UUID-name from index path.\n\n" ;
+ local StrVarList="StrUUID,StrSnapShotUUID,StrPathArchives,StrFindStringFormat,StrPackageType,StrPathRepository,StrPathReposIndex,StrIndexLatest,StrAddPackageListing,StrPkgLstExt,StrAppsLinkerName,StrAppsLinkerOptionRecv,StrAppsLinkerOption,StrDumpingFormat,StrDefaultActionIndex,StrTestDriveDebug,StrIndexTest,StrScriptAwkFilter,IntDefaultDayIndexName,StrBackupAction,StrTransactionStart,StrTodatDateTransfert,StrIndexFile"
+
+ function Verbosis()
+ {
+  local __call_locality=( Verbosis Verb );
+  local StrMsg=${VerbMsg:=__TEXT__} ; 
+  local StrDevOut=${VerbDev:=/dev/stderr} ; 
+  local IsVerboseState=${VerbState:=False} ;
+  local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+  local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+  local IsDisplayFormatted=${VerbFormated:=True} ;
+  local ArrayArg=( $* ) ; 
+  if [ "${IsVerboseState:=False}" == "True" ] ; then 
+   if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+    echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+   else
+    if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+     echo "${StrMsg}" ;  
+    else
+     echo "${StrMsg}" > ${StrDevOut} ;
+    fi 
+   fi 
+  fi
+ } 
+ ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis
+
+ function CheckDrive()
+ {
+  local __call_locality=( CD CheckDrive ) ;
+  local Arg0=${ArrayArg[0]} ;
+  local ArrayArg=( $* ) ;   
+		test $( TestDriveMountDebug=${StrTestDriveDebug} TestDriveMountList=${StrPathRepository},${StrPathArchives} TestDriveMount ) && \
+		echo -ne "Status of IsMountDrive: ${IsMountDrive}\n" > /dev/stderr ; 
+ }
 	
-
-
-	### #############################################
+ function AddSnapShoot()
+ {
+  local __call_locality=( ASS AddSnapShoot ) ;
+  local Arg0=${ArrayArg[0]} ;
+  local ArrayArg=( $* ) ;   
+  echo -ne "File to store next SnapShoot: ${StrIndexFile}\n" > /dev/stderr ; 
+		test $( TestDriveMountDebug=${StrTestDriveDebug} TestDriveMountList=${StrPathRepository},${StrPathArchives} TestDriveMount ) && \
+  eval $( VTVValueEntry=${StrVarList} \ 
+          VTVIsArrayStyleInsert=True  \
+          VTVIsValueReAssign=True     \
+          VTVIsValueToConvert=False   \
+          ValueToVariable             )  GetDpkgListing ;
+ }
+ 
+ function __main_StartServices()
+ {
+  local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+  local ArrayArg=( $* ) ;
+  local Arg0=${ArrayArg[0]};  
+    
+  
+  $( TestDriveMountDebug=${StrTestDriveDebug} TestDriveMountList=${StrPathRepository},${StrPathArchives} TestDriveMount ) ; 
+  if [ "${IsMountDrive:=True}" == "True" ] ; then 
+   TestPathIndexName=${StrPathReposIndex}   \
+   TestPathIndexTest=${StrIndexTest}        \
+   TestPathIndexResultAction=${StrDefaultActionIndex} TestPathIndex ;
+   
+   local ArrayFileList=( $( GetPackageListPathArchives=${StrPathArchives} GetPackageListFormat=${StrPackageType} GetPackageListStringFormat="${StrFindStringFormat}" GetPackageList ) )
+   local ShaSum=$( echo ${ArrayFileList[@]} | sha1sum | cut -d ' ' -f 1 )
+   if [ ${StrAddPackageListing:=False} == "True" ] ; then 
+     StrPathReposIndex=${StrPathReposIndex}       \
+     StrIndexFile=${StrIndexFile}                 \
+     StrTransactionStart=${StrTransactionStart}   \
+     StrPkgLstExt=${StrPkgLstExt}                 \
+     GetDpkgInstalledAwkScript=${StrScriptAwkFilter} \
+     StrSnapShotUUID=${StrSnapShotUUID} GetDpkgListing ; 
+   fi
+   local IntIsFile=0 ;
+   test -e ${StrIndexFile} && IntIsFile=1 ; 
+   if [ ${IntIsFile:=0} -eq 1 ] ; then 
+    echo -ne "NEW TRANSACTION:${StrTransactionStart}\n" >> ${StrIndexFile} ;  
+   else
+    echo -ne "NEW FILE\n" > ${StrIndexFile} ; 
+    echo -ne "NEW TRANSACTION:${StrTransactionStart}\n" > ${StrIndexFile} ;  
+   fi 
+   echo -ne "COMMIT TRANSACTION:ID:${StrUUID}:NB_FILE:${#ArrayFileList[@]}:SHA1SUM:${ShaSum}:${StrTransactionStart}\n" >> ${StrIndexFile} ; 
+   
+   local Result=$? ; 
+   if [ ${Result:=1} -eq 0 ] ; then 
+    for (( intx=0 ; intx <= ${#ArrayFileList[@]}-1 ; intx++ )) ; do 
+     local strfile="${ArrayFileList[${intx}]}" ;
+     echo -ne "File: ${strfile}\n" > /dev/stderr ; 
+     local StrLinkAction=${StrBackupAction};
+     StrLinkAction=${StrLinkAction//__FILE__/${strfile}} ; 
+     StrLinkAction=${StrLinkAction//__SRC__/${StrPathArchives}} ; 
+     StrLinkAction=${StrLinkAction//__DEST__/${StrPathRepository}} ;
+     StrLinkAction=${StrLinkAction//__VIRG__/;} ; 
+     local StrDump=${StrDumpingFormat}; 
+     StrDump=${StrDump//__ID__/${StrUUID}};
+     StrDump=${StrDump//__FILE__/${strfile}};
+     echo -ne "${StrDump}\n" >> ${StrIndexFile} ; 
+     echo -ne "Action:[ ${StrLinkAction} ]\n" > /dev/stderr ; 
+     eval "${StrLinkAction}" ; 
+    
+    done 
+    ### Adding Latest index being stored.
+    eval """${StrAppsLinkerName} ${StrAppsLinkerOption[@]} ${StrIndexFile} ${StrPathReposIndex}/${StrIndexLatest} """; 
+   else
+    echo -ne "ArrayFileList return Empty List\n" > /dev/stderr . 
+    fi
+  else
+   echo -ne "Exit on Path acces Problems\nStatus of IsMountDrive: ${IsMountDrive}\n" > /dev/stderr ;
+   return 1 ;
+  fi
+ 
+ }
+	
+ 
+ 
+ ### #############################################
 	### Main Body 
 	### #############################################
 
@@ -329,72 +491,24 @@ function PackageRepositoryMgmt()
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
 		eval $( __GetVarReferenceList ) ;
 	elif [ "${Arg0:=--startservices}" == "--checkdrive"	] ; then 
-		test $( TestDriveMountDebug=${StrTestDriveDebug} TestDriveMountList=${StrPathRepository},${StrPathArchives} TestDriveMount ) && \
-		echo -ne "Status of IsMountDrive: ${IsMountDrive}\n" > /dev/stderr ; 
+  eval $( VTVValueEntry=${StrVarList} \ 
+          VTVIsArrayStyleInsert=True  \
+          VTVIsValueReAssign=True     \
+          VTVIsValueToConvert=False   \
+          ValueToVariable             ) CheckDrive ;
 	elif [ "${Arg0:=--startservices}" == "--add-snapshoot" ] ; then 
-		echo -ne "File to store next SnapShoot: ${StrIndexFile}\n" > /dev/stderr ; 
-		test $( TestDriveMountDebug=${StrTestDriveDebug} TestDriveMountList=${StrPathRepository},${StrPathArchives} TestDriveMount ) && \
-		StrPathReposIndex=${StrPathReposIndex}       \
-		StrIndexFile=${StrIndexFile}                 \
-		StrTransactionStart=${StrTransactionStart}   \
-		StrPkgLstExt=${StrPkgLstExt}                 \
-		GetDpkgInstalledAwkScript=${ScriptAwkFilter} \
-  StrSnapShotUUID=${StrSnapShotUUID} GetDpkgListing ; 
-	else 
-			$( TestDriveMountDebug=${StrTestDriveDebug} TestDriveMountList=${StrPathRepository},${StrPathArchives} TestDriveMount ) ; 
-			if [ "${IsMountDrive:=True}" == "True" ] ; then 
-				TestPathIndexName=${StrPathReposIndex}   \
-				TestPathIndexTest=${StrIndexTest}        \
-				TestPathIndexResultAction=${StrDefaultActionIndex} TestPathIndex ;
-				
-				local ArrayFileList=( $( GetPackageListPathArchives=${StrPathArchives} GetPackageListFormat=${StrPackageType} GetPackageListStringFormat="${StrFindStringFormat}" GetPackageList ) )
-				local ShaSum=$( echo ${ArrayFileList[@]} | sha1sum | cut -d ' ' -f 1 )
-				if [ ${StrAddPackageListing:=False} == "True" ] ; then 
-					 StrPathReposIndex=${StrPathReposIndex}       \
-					 StrIndexFile=${StrIndexFile}                 \
-					 StrTransactionStart=${StrTransactionStart}   \
-					 StrPkgLstExt=${StrPkgLstExt}                 \
-					 GetDpkgInstalledAwkScript=${ScriptAwkFilter} \
-      StrSnapShotUUID=${StrSnapShotUUID} GetDpkgListing ; 
-				fi
-				local IntIsFile=0 ;
-				test -e ${StrIndexFile} && IntIsFile=1 ; 
-				if [ ${IntIsFile:=0} -eq 1 ] ; then 
-					echo -ne "NEW TRANSACTION:${StrTransactionStart}\n" >> ${StrIndexFile} ;  
-				else
-				 echo -ne "NEW FILE\n" > ${StrIndexFile} ; 
-				 echo -ne "NEW TRANSACTION:${StrTransactionStart}\n" > ${StrIndexFile} ;  
-				fi 
-				echo -ne "COMMIT TRANSACTION:ID:${StrUUID}:NB_FILE:${#ArrayFileList[@]}:SHA1SUM:${ShaSum}:${StrTransactionStart}\n" >> ${StrIndexFile} ; 
-				
-				local Result=$? ; 
-				if [ ${Result:=1} -eq 0 ] ; then 
-					for (( intx=0 ; intx <= ${#ArrayFileList[@]}-1 ; intx++ )) ; do 
-						local strfile="${ArrayFileList[${intx}]}" ;
-						echo -ne "File: ${strfile}\n" > /dev/stderr ; 
-						local StrLinkAction=${StrBackupAction};
-						StrLinkAction=${StrLinkAction//__FILE__/${strfile}} ; 
-						StrLinkAction=${StrLinkAction//__SRC__/${StrPathArchives}} ; 
-						StrLinkAction=${StrLinkAction//__DEST__/${StrPathRepository}} ;
-						StrLinkAction=${StrLinkAction//__VIRG__/;} ; 
-						local StrDump=${StrDumpingFormat}; 
-						StrDump=${StrDump//__ID__/${StrUUID}};
-						StrDump=${StrDump//__FILE__/${strfile}};
-						echo -ne "${StrDump}\n" >> ${StrIndexFile} ; 
-						echo -ne "Action:[ ${StrLinkAction} ]\n" > /dev/stderr ; 
-						eval "${StrLinkAction}" ; 
-					
-					done 
-					### Adding Latest index being stored.
-					eval """${StrAppsLinkerName} ${StrAppsLinkerOption[@]} ${StrIndexFile} ${StrPathReposIndex}/${StrIndexLatest} """; 
-				else
-					echo -ne "ArrayFileList return Empty List\n" > /dev/stderr . 
-  			fi
-			else
-				echo -ne "Exit on Path acces Problems\nStatus of IsMountDrive: ${IsMountDrive}\n" > /dev/stderr ;
-				return 1 ;
-			fi
-	fi 
+		eval $( VTVValueEntry=${StrVarList} \ 
+          VTVIsArrayStyleInsert=True  \
+          VTVIsValueReAssign=True     \
+          VTVIsValueToConvert=False   \
+          ValueToVariable             )  AddSnapShoot ; 
+	elif [ "${Arg0:=--startservices}" == "--start-services" ] ; then
+	 eval $( VTVValueEntry=${StrVarList} \ 
+          VTVIsArrayStyleInsert=True  \
+          VTVIsValueReAssign=True     \
+          VTVIsValueToConvert=False   \
+          ValueToVariable             ) __main_StartServices ; 
+ fi 
 }
 
 ######################################################################
