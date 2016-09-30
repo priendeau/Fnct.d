@@ -32,7 +32,7 @@
 ###  - Many more precautions and tests. 
 ### 
 
-if [ ${versionGPI:=0.0.1} == "0.0.2" ] ; then 
+if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then 
 
  function GnrlPrsrInfctr()
  {
@@ -52,19 +52,53 @@ if [ ${versionGPI:=0.0.1} == "0.0.2" ] ; then
   local StrParserResult=${GPITagParserResult:=StrCmd} ; 
   local StrDefaultPipe=${GPIPipeSig:=\|} ;
   local StrDefaultVerbose=${GPIVerboseDev:=/dev/stderr} ; 
-  local BoolEmitUUID=${GPIIsUUIDInstance:=True} ; 
   local StrUUIDInstance ;
   local StrFileOutput=${GPIOutFile:=.GnrlPrsrInfctr} ; 
+  local BoolDisplayDebug=${GPIDisplayDebug:=False} ; 
+  local BoolEmitUUID=${GPIIsUUIDInstance:=False} ; 
   local BoolGenerateCode=${GPIIsGenerateCode:=False} ; 
   local BoolOutToZenity=${GPIIsZenityHandlerOut:=False} ;
   local BoolOutToFile=${GPIIsFileHandlerOut:=False} ; 
   local BoolExecuteEval=${GPIIsExecuteEval:=True} ; 
+
+  ### General To RepositoryCreation
+  local BoolRepoCreaEnabled=${GPIRepoCreatEnabled:=True} ; 
+  local BoolDisplayParserDebug=${GPIParserDebug:=False} ;
+  local BoolCreateRepository=${GPIRepositoryCreation:=False} ; 
+  local StrTagRepoMkdir=${GPIParserMkdir:=StrAppsSudo:__SUDO__,StrAppsSudoOpt:__OPT__,StrAppsMkdir:__APPS__,StrRepositoryQuery:__PATH__}
+  local StrTagRepoChmod=${GPIParserChmod:=StrAppsSudo:__SUDO__,StrAppsSudoOpt:__OPT__,StrAppsChmod:__APPS__,StrRepositoryQuery:__PATH__,StrDefaultPerm:__PERM__}
+  local StrTagRepoChown=${GPIParserChown:=StrAppsSudo:__SUDO__,StrAppsSudoOpt:__OPT__,StrAppsChown:__APPS__,StrRepositoryQuery:__PATH__,StrDefaultUser:__OWNER__}
+  local StrPrefixTagGroup=${GPIGroupParserPrefix:=StrTagRepo} ; 
+  local StrRepositoryQuery=${GPIQueryRepository:=/var/log/Fnct.D/GnrlPrsrInfctr} ;  
+  local StrDefaultUser=${GPIRepoUser:=user.root} ;
+  local StrDefaultPerm=${GPIRepoPerm:=775} ;  
+  local StrAppsSudo=${GPIAppsSudo:=/usr/bin/sudo} ;
+  local StrAppsSudoOpt=${GPIAppsSudoOpt:=-s -H} ;
+  local StrAppsMkdir=${GPIAppsMkdir:=/bin/mkdir} ;
+  local StrAppsChown=${GPIChown:=/bin/chown} ;
+  local StrAppsChmod=${GPIChmod:=/bin/chmod} ;
+  local StrParentApps=${__call_locality[1]} ;
+  local StrStartMain=${GPIFuncStart:=__main_StartServices} ;
+  
+  ArrayMsg[0]="Prefixed Variable: __VAR__=__VALUE__\nThis is an assistant creating the Repository (location: __PATH__)\n.This is reserved to store your Query for future uses. Prepare to enter into\nCredential action to create the Repository. In case your haven't chooses Variable\n\tGPIRepoUser GPIRepoPerm\nto set your user(s)/Group accessing the repository or Permission to read and write,\nyou can stop the application and start over. If you haven't choose a Function Name\nfor this step it will pop-you a warning and stop the application." ;
+  ArrayMsg[1]="Creation of PATH __PATH__, Right Attribution : __MODE__, Owner: __USER__" ;
+  ArrayMsg[2]="__CMD__ " ;
+  ArrayMsg[3]="Parsed CmdLine: __CMDLINE__" ;
+  ArrayMsg[4]="Instance will use UUID reference: __UUID__"
+  ArrayMsg[5]="Entry-Start : __FUNCT__"
+  
+  ArrayTplAction['Mkdir']="__SUDO__ __OPT__ __APPS__ __PATH__" ;  
+  ArrayTplAction['Chown']="__SUDO__ __OPT__ __APPS__ __OWNER__ __PATH__"   ;
+  ArrayTplAction['Chmod']="__SUDO__ __OPT__ __APPS__ __PERM__ __PATH__"   ;
+  local ArrayActionOrder=( "Mkdir" "Chmod" "Chown" ) ;
+   
+  local StrVarList="StrVarList,BoolOutToZenity,BoolOutToFile,StrTagFeeder,StrParentApps,BoolEmitUUID,StrParserResult,StrAwkScript,StrAppsTemplate,StrApps,StrAppsOpt,StrFilterApps,StrFilterOpt,StrParserTag,StrFileName,StrDefaultPipe,StrDefaultVerbose,StrTagRepoMkdir,StrTagRepoChmod,StrTagRepoChown,BoolRepoCreaEnabled,BoolDisplayParserDebug,StrRepositoryQuery,BoolCreateRepository,StrDefaultUser,StrDefaultPerm,StrAppsSudo,StrAppsSudoOpt,StrAppsMkdir,StrAppsChown,StrAppsChmod,StrStartMain,BoolExecuteEval,BoolGenerateCode,StrUUIDInstance,StrPrefixTagGroup" ; 
   
   ### Informations About uses of StrUUIDInstance vs. StrFileOutput  .
   ### 
   ### +---------------------------------------------------------------------------------------------------+ 
   ### |Specialized case, if it's UUID choice have been obtain from BoolEmitUUID                           |
-  ### | we do storing inside {Repository}/{UUID} , if its not the case it's {GDIOutFile:=.GnrlPrsrInfctr} |
+  ### | we do storing inside {Repository}/{UUID} , if its not the case it's {GPIOutFile:=.GnrlPrsrInfctr} |
   ### | it can be everywhere                                                                              |
   ### +-+-------------------------------------------------------------------------------------------------+
   ###   |
@@ -73,7 +107,7 @@ if [ ${versionGPI:=0.0.1} == "0.0.2" ] ; then
   ### |    < BoolEmitUUID >          |  is Reponsible to inform the application to :
   ### +-+-----|---|------------------+        
   ###   |     |   +TRUE -> Use the UUID Infrastructure and output on location {Repository}/{UUID} on need  
-  ###   |     +FALSE    -> Use the local {GDIOutFile:=.GnrlPrsrInfctr} on need . 
+  ###   |     +FALSE    -> Use the local {GPIOutFile:=.GnrlPrsrInfctr} on need . 
   ###   | 
   ### +-+---------------------------------------------+ In case BoolExecuteEval==True ( same model is 
   ### |  Box-Output-The-Information                   | applied to BoolExecuteEval=False )
@@ -84,8 +118,8 @@ if [ ${versionGPI:=0.0.1} == "0.0.2" ] ; then
   ###      |   |                                 |          Information will be dumped inside
   ###      |   +For BoolEmitUUID==False          |          {Repository}/{UUID}
   ###      |    Zenity will look inside file     +---For BoolEmitUUID==False
-  ###      |    {GDIOutFile:=.GnrlPrsrInfctr}        Information will be dumped inside
-  ###      |                                         {GDIOutFile:=.GnrlPrsrInfctr}
+  ###      |    {GPIOutFile:=.GnrlPrsrInfctr}        Information will be dumped inside
+  ###      |                                         {GPIOutFile:=.GnrlPrsrInfctr}
   ###      +-----For BoolEmitUUID==True
   ###            Zenity will look inside file
   ###            {Repository}/{UUID} 
@@ -93,38 +127,8 @@ if [ ${versionGPI:=0.0.1} == "0.0.2" ] ; then
   ### 
   ### 
   
-  ### General To RepositoryCreation
-  local StrTagRepoMkdir=${GPIParserMkdir:=StrAppsSudo:__SUDO__,StrAppsSudoOpt:__OPT__,StrAppsMkdir:__APPS__,StrRepositoryQuery:__PATH__}
-  local StrTagRepoChmod=${GPIParserChmod:=StrAppsSudo:__SUDO__,StrAppsSudoOpt:__OPT__,StrAppsChmod:__APPS__,StrRepositoryQuery:__PATH__,StrDefaultPerm:__PERM__}
-  local StrTagRepoChown=${GPIParserChown:=StrAppsSudo:__SUDO__,StrAppsSudoOpt:__OPT__,StrAppsChown:__APPS__,StrRepositoryQuery:__PATH__,StrDefaultUser:__OWNER__}
-  local BoolRepoCreaEnabled=${GPIRepoCreatEnabled:=True} ; 
-  local BoolDisplayParserDebug=${GPIParserDebug:=False} ;
-  local StrRepositoryQuery=${GPIQueryRepository:=/var/log/Fnct.D/GnrlPrsrInfctr} ;  
-  local BoolCreateRepository=${GPIRepositoryCreation:=False} ; 
-  local StrDefaultUser=${GPIRepoUser:=\${USER}.\${USER}} ;
-  local StrDefaultPerm=${GPIRepoPerm:=775} ;  
-  local StrAppsSudo=${GPIAppsSudo:=/usr/bin/sudo} ;
-  local StrAppsSudoOpt=${GPIAppsSudoOpt:=-s -H} ;
-  local StrAppsMkdir=${GPIAppsMkdir:=/bin/mkdir} ;
-  local StrAppsChown=${GPIChown:=/bin/chown} ;
-  local StrAppsChmod=${GPIChmod:=/bin/chmod} ;
-  local StrParentApps=${__call_locality[1]} ;
-  local StrStartMain=${GPIFuncStart:=__main_StartServices} ;
   
-  ArrayMsg[0]="Prefixed Variable: __VAR__=__VALUE__\nThis is an assistant creating the Repository (location: __PATH__)\n.This is reserved to store your Query for future uses. Prepare to enter into\nCredential action to create the Repository. In case your haven't chooses Variable\n\tGDIRepoUser GDIRepoPerm\nto set your user(s)/Group accessing the repository or Permission to read and write,\nyou can stop the application and start over. If you haven't choose a Function Name\nfor this step it will pop-you a warning and stop the application." ;
-  ArrayMsg[1]="Creation of PATH __PATH__, Right Attribution : __MODE__, Owner: __USER__" ;
-  ArrayMsg[2]="__CMD__ " ;
-  ArrayMsg[3]="Parsed CmdLine: __CMDLINE__" ;
-  
-  ArrayTplAction['Mkdir']="__SUDO__ __OPT__ __APPS__ __PATH__" ;  
-  ArrayTplAction['Chown']="__SUDO__ __OPT__ __APPS__ __OWNER__ __PATH__"   ;
-  ArrayTplAction['Chmod']="__SUDO__ __OPT__ __APPS__ __PERM__ __PATH__"   ;
-  local ArrayActionOrder=( "Mkdir" "Chmod" "Chown" ) ;
-   
-  local StrVarList="StrVarList,BoolOutToZenity,BoolOutToFile,StrTagFeeder,StrParentApps,BoolEmitUUID,StrParserResult,StrAwkScript,StrAppsTemplate,StrApps,StrAppsOpt,StrFilterApps,StrFilterOpt,StrParserTag,StrFileName,StrDefaultPipe,StrDefaultVerbose,StrTagRepoMkdir,StrTagRepoChmod,StrTagRepoChown,BoolRepoCreaEnabled,BoolDisplayParserDebug,StrRepositoryQuery,BoolCreateRepository,StrDefaultUser,StrDefaultPerm,StrAppsSudo,StrAppsSudoOpt,StrAppsMkdir,StrAppsChown,StrAppsChmod,StrStartMain,BoolExecuteEval,BoolGenerateCode,StrUUIDInstance" ; 
-  if [ "${BoolEmitUUID:=True}" == "True" ] ; then 
-   StrUUIDInstance=$( GetUTimeBased=True GetUSeq=1 GetUIDRegister=True GetUAppsRegisterName=GnrlPrsrInfctr GetUUID ) ; 
-  fi 
+
   ### This is a specialized Verbosis mode :
   ###  
   ###  All condition required to set VerbState=True 
@@ -199,7 +203,7 @@ if [ ${versionGPI:=0.0.1} == "0.0.2" ] ; then
    if [ ! -d ${StrRepositoryQuery} ] ; then 
     for IterActionName in $( ${StrParentApps} --get ArrayActionOrder[@] ) ; do 
      StrAction=$( ${StrParentApps} --get ArrayTplAction[${IterActionName}] ) ; 
-     StrArrayName="StrTagZenity" ;
+     StrArrayName="${StrPrefixTagGroup}" ;
 
      eval "StrTagListVar=\${${StrArrayName}${IterActionName}} ;" ; 
      eval $( TPVarNameParsed="StrAction" TPListTag=${StrTagListVar} TPIsMatchRtoL=True TPDisplayParserNotice=\${BoolDisplayParserDebug} TPDisplayDebug=${BoolDisplayDebug} TPArrayName="Array${__call_locality[0]}Tag" TagParser 2> /dev/null ) ;
@@ -236,14 +240,16 @@ if [ ${versionGPI:=0.0.1} == "0.0.2" ] ; then
     StrDestinationResult="${StrFileResult}"
    fi 
    
-    
+   local StrTplZenityTextInfo="zenity --text-info --filename=__FILE__ --font=10" ; 
    if [ ${BoolExecuteEval:=True} == "True" ] ; then
     ### Execution Side 
     eval """\${${StrParserResult}}""" ; 
     if [ "${BoolOutToZenity:=False}" == "True" ] ; then 
      ### Send-it to a file, Zenity will recuperate-it 
      VerbMsg="""\${${StrParserResult}}""" VerbDev=${StrDestinationResult} VerbEvalForm=False VerbHeader="" VerbState=True VerbFormated=False Verbosis ; 
-     
+     StrTplZenityTextInfo=${StrTplZenityTextInfo//__FILE__/${StrDestinationResult}} ; 
+     ### Should Lunch Zenity --text-info... 
+     ${StrTplZenityTextInfo}
     elif [ "${BoolOutToFile:=False}" == "True" ] ; then 
      ### Send-it to a file. 
      ### No recuperation from tiers methods. 
@@ -279,7 +285,7 @@ if [ ${versionGPI:=0.0.1} == "0.0.2" ] ; then
         VTVIsArrayStyleInsert=True    \
         ValueToVariable ) RepositoryCreation ;
    fi   
-
+    
     eval $( VTVIsArrayStyleInsert=True \
         VTVValueEntry=${StrVarList}   \
         VTVIsValueReAssign=True       \
@@ -306,7 +312,14 @@ if [ ${versionGPI:=0.0.1} == "0.0.2" ] ; then
    echo -ne """${ArgGet}\n""" ;
   elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
    eval $( __GetVarReferenceList ) ;	
-  elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+   if [ "${BoolEmitUUID:=True}" == "True" ] ; then 
+    StrUUIDInstance=$( GetUTimeBased=True GetUSeq=1 GetUIDRegister=True GetUAppsRegisterName=GnrlPrsrInfctr GetUUID ) ; 
+    VerbMsg="${ArrayMsg[4]//__UUID__/${StrUUIDInstance}}" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
+   
+   fi 
+   StrMsg=${ArrayMsg[5]}; 
+   VerbMsg="${StrMsg//__FUNCT__/${StrStartMain}}" VerbEvalForm=True VerbHeader="" VerbState=True VerbFormated=False Verbosis ; 
    eval $( VTVIsArrayStyleInsert=True \
         VTVValueEntry=${StrVarList}   \
         VTVIsValueReAssign=True       \
