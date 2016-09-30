@@ -1,0 +1,244 @@
+
+### Package : _sub_Function_Appliance
+
+### Comming from reference of pythonmodule jellyfish:
+### with matching rating-codex of Infrastructure
+### jellyfish.match_rating_codex(u'Infrastructure')
+### give Infctr
+### While same module to short Name like 
+### General        ->  Gnrl
+### Parser         ->  Prsr
+### Infrastructure ->  Infctr
+### To make this function called GnrlPrsrInfctr for a really 
+### short Name which telling more... 
+ 
+### function GeneralParserInfctr 
+### Is not actually ready in design plan it only miss couple of verification
+### before pushing it to version 0.0.2 . It's sure if you start LibLoader ( 
+### with _sub_Function_Appliance inside the ArrayLib and adding to the command 
+### line versionGPI=0.0.2 it will parse this but this function is not ready 
+### to proove how pushing variable from command-prompt and Feeding the Parser with 
+### GDITagFeeder help the Parser to parser variable from prompt and declaration 
+### of relation of variable+__TAG__ to acheive a Generalistic Case of function
+### wrapper to have a applied firter to a function to get a speciffic result. 
+### 
+### Missing, 
+###  - Loging inside UUID, 
+###  - Executing the Evaluation and inject the variable result inside current code
+###  so we can be ready to use the Value . We do have GDIDpkgTpl for template-future
+###  command line and StrCmd from GDITagParserResult, it evaluate the GDIDpkgTpl result
+### but haven't specified where to execute it... Initially inside the function but all
+### the returned event are simply displayed and not keeped. 
+###  - Many more precautions and tests. 
+### 
+
+if [ ${versionGPI:=0.0.1} == "0.0.2" ] ; then 
+
+ function GnrlPrsrInfctr()
+ {
+  local __call_locality=( GPI GnrlPrsrInfctr ) ;
+  local ArrayArg=( $* ) ;
+  local Arg0=( ${ArrayArg[0]} ) ; 
+  
+  ### General to GnrlPrsrInfctr Command Parser and depot. 
+  local StrAppsTemplate=${GDIDpkgTpl:=__APPS__ __APPS_OPT__ __PIPE__ __FILTER__ __FILTER_OPT__ } ;
+  local StrApps=${GDIDpkgApps:=/usr/bin/dpkg} ;
+  local StrAppsOpt=${GDIDpkgAppsOpt:=--get-selections} ; 
+  local StrFilterApps=${GDIFilterApps:=/usr/bin/gawk} ;
+  local StrFileName=${GDIFileName:=None} ;
+  local StrFilterOpt=${GDIFilterOpt:=-f __FILE__} ; 
+  local StrParserTag=${GDITagParser:=StrDefaultPipe:__PIPE__,StrApps:__APPS__,StrAppsOpt:__APPS_OPT__,StrFilterApps:__FILTER__,StrFilterOpt:__FILTER_OPT__,StrFileName:__FILE__}
+  local StrTagFeeder=${GDITagFeeder:=''} ;
+  local StrParserResult=${GDITagParserResult:=StrCmd} ; 
+  local StrDefaultPipe=${GDIPipeSig:=\|} ;
+  local StrDefaultVerbose=${GDIVerboseDev:=/dev/stderr} ; 
+  local BoolEmitUUID=${GDIIsUUIDInstance:=True} ; 
+  local BoolOutToZenity=${GDIIsZenityHandlerOut:=False} ;
+  local BoolOutToFile=${GDIIsFileHandlerOut:=False} ; 
+  local BoolExecuteEval=${GDIIsExecuteEval:=True} ; 
+  
+  ### General To RepositoryCreation
+  local StrTagRepoMkdir=${GDIParserMkdir:=StrAppsSudo:__SUDO__,StrAppsSudoOpt:__OPT__,StrAppsMkdir:__APPS__,StrRepositoryQuery:__PATH__}
+  local StrTagRepoChmod=${GDIParserChmod:=StrAppsSudo:__SUDO__,StrAppsSudoOpt:__OPT__,StrAppsChmod:__APPS__,StrRepositoryQuery:__PATH__,StrDefaultPerm:__PERM__}
+  local StrTagRepoChown=${GDIParserChown:=StrAppsSudo:__SUDO__,StrAppsSudoOpt:__OPT__,StrAppsChown:__APPS__,StrRepositoryQuery:__PATH__,StrDefaultUser:__OWNER__}
+  local BoolRepoCreaEnabled=${GDIRepoCreatEnabled:=True} ; 
+  local BoolDisplayParserDebug=${GDIParserDebug:=False} ;
+  local StrRepositoryQuery=${GDIQueryRepository:=/var/log/Fnct.D/GnrlPrsrInfctr} ;  
+  local BoolCreateRepository=${GDIRepositoryCreation:=False} ; 
+  local StrDefaultUser=${GDIRepoUser:=\${USER}.\${USER}} ;
+  local StrDefaultPerm=${GDIRepoPerm:=775} ;  
+  local StrAppsSudo=${GDIAppsSudo:=/usr/bin/sudo} ;
+  local StrAppsSudoOpt=${GDIAppsSudoOpt:=-s -H} ;
+  local StrAppsMkdir=${GDIAppsMkdir:=/bin/mkdir} ;
+  local StrAppsChown=${GDIChown:=/bin/chown} ;
+  local StrAppsChmod=${GDIChmod:=/bin/chmod} ;
+  local StrParentApps=${__call_locality[1]} ;
+  local StrStartMain=${GDIFuncStart:=__main_StartServices} ;
+  
+  ArrayTplAction['Mkdir']="__SUDO__ __OPT__ __APPS__ __PATH__" ;  
+  ArrayTplAction['Chown']="__SUDO__ __OPT__ __APPS__ __OWNER__ __PATH__"   ;
+  ArrayTplAction['Chmod']="__SUDO__ __OPT__ __APPS__ __PERM__ __PATH__"   ;
+  local ArrayActionOrder=( "Mkdir" "Chmod" "Chown" ) ;
+   
+  local StrVarList="StrVarList,BoolOutToZenity,BoolOutToFile,StrTagFeeder,StrParentApps,BoolEmitUUID,StrParserResult,StrAwkScript,StrAppsTemplate,StrApps,StrAppsOpt,StrFilterApps,StrFilterOpt,StrParserTag,StrFileName,StrDefaultPipe,StrDefaultVerbose,StrTagRepoMkdir,StrTagRepoChmod,StrTagRepoChown,BoolRepoCreaEnabled,BoolDisplayParserDebug,StrRepositoryQuery,BoolCreateRepository,StrDefaultUser,StrDefaultPerm,StrAppsSudo,StrAppsSudoOpt,StrAppsMkdir,StrAppsChown,StrAppsChmod,StrStartMain,BoolExecuteEval" ; 
+  
+  ### This is a specialized Verbosis mode :
+  ###  
+  ###  All condition required to set VerbState=True 
+  ###  All condition required to set a message with VerbMsg=STRING
+  ###  
+  ###  
+  ### It can be used to :
+  ###  - Echo result to be passed throught Value Result .
+  ###  Required :
+  ###  VerbEvalForm=True VerbFormated=False 
+  ###  
+  ###  VerbHeader Is ineffective
+  ###  
+  ### -Echo result can be append to file and not overwriting the content: 
+  ###  Required ;
+  ###  VerbFormated=False/True VerbAppendDev=True VerbDev=[ FILENAME | UUID ]
+  ###  - Appending to file also required to be unique-file were no instance of 
+  ###  Verbosis may point on same-file or loss of log will be CERTAIN.
+  ###  -Pointing to Same-Destination require a lock Mechanism which is 
+  ###  not implemented here
+  ###  
+  function Verbosis()
+  {
+   local __call_locality=( Verbosis Verb );
+   local StrMsg=${VerbMsg:=__TEXT__} ; 
+   local StrDevOut=${VerbDev:=/dev/stderr} ; 
+   local IsVerboseState=${VerbState:=False} ;
+   local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+   local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+   local IsDisplayFormatted=${VerbFormated:=True} ;
+   local IsAppendMode=${VerbAppendDev:=False} ; 
+   local ArrayArg=( $* ) ; 
+   if [ "${IsVerboseState:=False}" == "True" ] ; then 
+    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+     if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
+     else  
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+     fi
+    else
+     if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+        echo "${StrMsg}" ;  
+     else
+      if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo "${StrMsg}" >> ${StrDevOut} ;
+      else
+       echo "${StrMsg}" > ${StrDevOut} ;
+      fi
+     fi 
+    fi 
+   fi
+  } 
+  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis
+  function RepositoryCreation()
+  {
+   local __call_locality=( RC RepositoryCreation ${StrParentApps} ) ; 
+   local Arg0=${ArrayArg[0]} ; 
+   local ArrayArg=( $* ) ;
+   local StrAction ; 
+   StrMsg="Prefixed Variable: __VAR__=__VALUE__\nThis is an assistant creating the Repository (location: __PATH__)\n.This is reserved to store your Query for future uses. Prepare to enter into\nCredential action to create the Repository. In case your haven't chooses Variable\n\tZBFRepoUser ZBFRepoPerm\nto set your user(s)/Group accessing the repository or Permission to read and write,\nyou can stop the application and start over. If you haven't choose a Function Name\nfor this step it will pop-you a warning and stop the application." ;
+   StrMsg=${StrMsg//__VALUE__/${BoolCreateRepository}} ; 
+   StrMsg=${StrMsg//__VAR__/BoolCreateRepository} ; 
+   StrMsg=${StrMsg//__PATH__/${StrRepositoryQuery}} ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis ; 
+   
+   StrMsg="Creation of PATH __PATH__, Right Attribution : __MODE__, Owner: __USER__" ;
+   StrMsg=${StrMsg//__PATH__/${StrRepositoryQuery}} ;
+   StrMsg=${StrMsg//__MODE__/${StrDefaultPerm}} ;
+   StrMsg=${StrMsg//__USER__/${StrDefaultUser}} ;
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis ; 
+   if [ ! -d ${StrRepositoryQuery} ] ; then 
+    for IterActionName in $( ${StrParentApps} --get ArrayActionOrder[@] ) ; do 
+     StrAction=$( ${StrParentApps} --get ArrayTplAction[${IterActionName}] ) ; 
+     StrArrayName="StrTagZenity" ;
+
+     eval "StrTagListVar=\${${StrArrayName}${IterActionName}} ;" ; 
+     eval $( TPVarNameParsed="StrAction" TPListTag=${StrTagListVar} TPIsMatchRtoL=True TPDisplayParserNotice=\${BoolDisplayParserDebug} TPDisplayDebug=${BoolDisplayDebug} TPArrayName="Array${__call_locality[0]}Tag" TagParser 2> /dev/null ) ;
+     StrMsg="__CMD__ " ; 
+     VerbMsg="${StrMsg//__CMD__/${StrAction}}" VerbHeader="${__call_locality[1]}-CMDLINE" VerbEvalForm=False VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis ; 
+     if [ "${BoolRepoCreaEnabled:=False}" == "True" ] ; then 
+       eval """$( ${StrAction} )""" ;
+     fi 
+    done 
+
+   fi 
+
+  } 
+  
+  function ParserFunctionEval()
+  {
+   local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+   local ArrayArg=( $* ) ;
+   local Arg0=${ArrayArg[0]};  
+   eval $( TPIsMatchRtoL=True TPDisplayDebug=True TPArrayName=Array${__call_locality[0]}Tag TPVarNameParsed="${StrParserResult}" TPListTag="${StrParserTag}" TagParser ) ; 
+   
+   StrMsg="Parsed CmdLine: ${StrCmdLine}\n" ; 
+   VerbMsg="${StrMsg}" VerbDev=/dev/stderr VerbState=True VerbFormated=True VerbHeader="${__call_locality[1]}-CMDLINE" Verbosis
+   if [ ${BoolExecuteEval:=True} == "True" ] ; then
+    eval """\${${StrParserResult}}""" ; 
+   fi   
+   
+  }
+
+  function __main_StartServices()
+  {
+   local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+   local ArrayArg=( $* ) ;
+   local Arg0=${ArrayArg[0]};  
+   local StrCmd=${StrAppsTemplate}
+   ### dpkg --get-selections | awk -f ${StrAwkScript}
+   
+   ### Generic Infrastructure coming from ZenityBuildForm, have proof of it's success
+   ### we do assume it's simlpe to port-it inside GnrlPrsrInfctr . 
+   if [ ${BoolCreateRepository:=False} == "True" ] ; then
+    eval $( VTVIsArrayStyleInsert=True \
+        VTVValueEntry=${StrVarList}   \
+        VTVIsValueReAssign=True       \
+        VTVIsValueToConvert=False     \
+        VTVIsArrayStyleInsert=True    \
+        ValueToVariable ) RepositoryCreation ;
+   fi   
+
+    eval $( VTVIsArrayStyleInsert=True \
+        VTVValueEntry=${StrVarList}   \
+        VTVIsValueReAssign=True       \
+        VTVIsValueToConvert=False     \
+        VTVIsArrayStyleInsert=True    \
+        ValueToVariable ) ParserFunctionEval ;
+   
+   ### 
+  
+  } 
+  
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+  local StrNameHelper="GnrlPrsrInfctr\tStand for General-Parser-Infrastructure ; The Fnct.D Mechanism Parsing single function call or piped function and even multi-piped function with conjunction of TagParser. ";
+  local StrSummary="This TagParser for single function, piped-function and Nth-piped function is coming with Repository to log result from GnrlPrsrInfctr and Parser engine is equiped of a ParserFeeder to append Variable And Tag to know GDITagParser. The main goal of this Function is to profit from Entry of variable from command-line entry and to use extra TAG binded to Variable-name added to let it parse the rest of the information and thus will be explained." ; 
+  local StrSynopsis="Soon to fill it with lot of informations";
+  local StrDescription="Having surdose of informations, skip this part..." ;
+  
+  
+  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   GVRIsName=True GVRIsSynopsis=True GVRIsSummary=True GVRIsDesc=True GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;	
+  elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
+   eval $( VTVIsArrayStyleInsert=True \
+        VTVValueEntry=${StrVarList}   \
+        VTVIsValueReAssign=True       \
+        VTVIsValueToConvert=False     \
+        VTVIsArrayStyleInsert=True    \
+        ValueToVariable ) ${StrStartMain}
+  fi
+ }
+
+
+fi
