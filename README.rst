@@ -181,6 +181,10 @@ According to this Library, following term :
  BVTVTFnctA=\${StrCmd}               BoolVarTest
 
 
+
+
+
+
 Unicity Convention
 ==================
 
