@@ -33,7 +33,7 @@
 ### 
 
 if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then 
-
+ unset GnrlPrsrInfctr; 
  function GnrlPrsrInfctr()
  {
   local __call_locality=( GPI GnrlPrsrInfctr ) ;
@@ -65,9 +65,9 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   local BoolRepoCreaEnabled=${GPIRepoCreatEnabled:=True} ; 
   local BoolDisplayParserDebug=${GPIParserDebug:=False} ;
   local BoolCreateRepository=${GPIRepositoryCreation:=False} ; 
-  local StrTagRepoMkdir=${GPIParserMkdir:=StrAppsSudo:__SUDO__,StrAppsSudoOpt:__OPT__,StrAppsMkdir:__APPS__,StrRepositoryQuery:__PATH__}
-  local StrTagRepoChmod=${GPIParserChmod:=StrAppsSudo:__SUDO__,StrAppsSudoOpt:__OPT__,StrAppsChmod:__APPS__,StrRepositoryQuery:__PATH__,StrDefaultPerm:__PERM__}
-  local StrTagRepoChown=${GPIParserChown:=StrAppsSudo:__SUDO__,StrAppsSudoOpt:__OPT__,StrAppsChown:__APPS__,StrRepositoryQuery:__PATH__,StrDefaultUser:__OWNER__}
+  local StrTagRepoMkdir=${GPIParserMkdir:=StrAppsSudo:__SUDO__,StrAppsSudoOpt:__OPT__,StrAppsMkdir:__APPS__,StrRepositoryQuery:__PATH__,StrAppsMkdirOpt:__APPS_OPTS__} ;
+  local StrTagRepoChmod=${GPIParserChmod:=StrAppsSudo:__SUDO__,StrAppsSudoOpt:__OPT__,StrAppsChmod:__APPS__,StrRepositoryQuery:__PATH__,StrDefaultPerm:__PERM__} ;
+  local StrTagRepoChown=${GPIParserChown:=StrAppsSudo:__SUDO__,StrAppsSudoOpt:__OPT__,StrAppsChown:__APPS__,StrRepositoryQuery:__PATH__,StrDefaultUser:__OWNER__} ;
   local StrPrefixTagGroup=${GPIGroupParserPrefix:=StrTagRepo} ; 
   local -A ArrayTplAction ; 
   ### Fixed after reference : 472de1ad3899ab7a0aa52869a073c19c52178940
@@ -78,6 +78,7 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   local StrAppsSudo=${GPIAppsSudo:=/usr/bin/sudo} ;
   local StrAppsSudoOpt=${GPIAppsSudoOpt:=-s -H} ;
   local StrAppsMkdir=${GPIAppsMkdir:=/bin/mkdir} ;
+  local StrAppsMkdirOpt=${GPIAppsMkdirOpt:=-p} ;
   local StrAppsChown=${GPIChown:=/bin/chown} ;
   local StrAppsChmod=${GPIChmod:=/bin/chmod} ;
   local StrParentApps=${__call_locality[1]} ;
@@ -90,7 +91,7 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   ArrayMsg[4]="Instance will use UUID reference: __UUID__"
   ArrayMsg[5]="Entry-Start : __FUNCT__"
   
-  ArrayTplAction["Mkdir"]="__SUDO__ __OPT__ __APPS__ __PATH__" ;  
+  ArrayTplAction["Mkdir"]="__SUDO__ __OPT__ __APPS__ __APPS_OPTS__ __PATH__" ;  
   ArrayTplAction["Chmod"]="__SUDO__ __OPT__ __APPS__ __PERM__ __PATH__"   ;
   ArrayTplAction["Chown"]="__SUDO__ __OPT__ __APPS__ __OWNER__ __PATH__"   ;
   local ArrayActionOrder=( "Mkdir" "Chmod" "Chown" ) ;
@@ -244,7 +245,7 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
      StrMsg=${StrMsg//__CONTENT__/${StrTagListVar}} ; 
      StrMsg=${StrMsg//__ACTION__/${StrAction}} ; 
      
-     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-CMDLINE" VerbEvalForm=False VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis ; 
+     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-CMDLINE" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
      eval $( TPVarNameParsed="StrAction" TPListTag=${StrTagListVar} TPIsMatchRtoL=True TPDisplayParserNotice=\${BoolDisplayParserDebug} TPDisplayDebug=${BoolDisplayDebug} TPArrayName="Array${__call_locality[0]}Tag" TagParser 2> /dev/null ) ;
      StrMsg=$( ${StrParentApps} --get ArrayMsg[2] ) ;
      

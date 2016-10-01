@@ -49,3 +49,40 @@ Verifying the Array declaration:
 'local -a ArrayTplAction' ;
 changed for 'local -A ArrayTplAction ;'
 --------------------------------------------------------------------------------------------------------------
+
+Date:20160930-20:38:00
+Reference:9dc33d066343344b204856f7f6d6779799af486f
+file: _sub_Function_Appliance 
+function: GnrlPrsrInfctr
+With command line : 
+unset ArrayLib ; versionGPI=0.0.1 . /etc/init.d/Fnct.D/fnct_lib  ; GPIDisplayDebug=False GPIIsUUIDInstance=True GPIRepoCreatEnabled=True GPIRepositoryCreation=True GPIParserDebug=False  GPIFuncStart=RepositoryCreation GPIRepoUser=maxiste.root GPIRepoPerm=775 GnrlPrsrInfctr
+description: Creation is not possible with actual command mkdir.
+
+OUTPUT:
+--------------------------------------------------------------------------------------------------------------
+Entry-Start : RepositoryCreation
+RepositoryCreation-DEBUG:[ Prefixed Variable: BoolCreateRepository=True
+This is an assistant creating the Repository (location: /var/log/Fnct.D/GnrlPrsrInfctr)
+.This is reserved to store your Query for future uses. Prepare to enter into
+Credential action to create the Repository. In case your haven't chooses Variable
+	GPIRepoUser GPIRepoPerm
+to set your user(s)/Group accessing the repository or Permission to read and write,
+you can stop the application and start over. If you haven't choose a Function Name
+for this step it will pop-you a warning and stop the application. ]
+RepositoryCreation-DEBUG:[ Creation of PATH /var/log/Fnct.D/GnrlPrsrInfctr, Right Attribution : 775, Owner: maxiste.root ]
+RepositoryCreation-CMDLINE:[ /usr/bin/sudo -s -H /bin/mkdir /var/log/Fnct.D/GnrlPrsrInfctr  ]
+[sudo] password for maxiste: 
+/bin/mkdir: cannot create directory ‘/var/log/Fnct.D/GnrlPrsrInfctr’: No such file or directory
+RepositoryCreation-CMDLINE:[ /usr/bin/sudo -s -H /bin/chmod 775 /var/log/Fnct.D/GnrlPrsrInfctr  ]
+/bin/chmod: cannot access ‘/var/log/Fnct.D/GnrlPrsrInfctr’: No such file or directory
+RepositoryCreation-CMDLINE:[ /usr/bin/sudo -s -H /bin/chown maxiste.root /var/log/Fnct.D/GnrlPrsrInfctr  ]
+/bin/chown: cannot access ‘/var/log/Fnct.D/GnrlPrsrInfctr’: No such file or directory
+
+--------------------------------------------------------------------------------------------------------------
+SOLUTION:
+mkdir -p for parent creation as need. Since this application is exempt of uses of aliases, using only
+mkdir which is sometimes aliasing to 'mkdir -p' is counter solution not working in system administrator.
+- Adding __APPS_OPTS__ inside Mkdir Tag Association and entry-point ( GPIFuncStart=RepositoryCreation )
+does working and can be used in more generalistic way to manage path creation. 
+command : 
+unset ArrayLib ; versionGPI=0.0.1 . /etc/init.d/Fnct.D/fnct_lib  ; GPIDisplayDebug=False GPIIsUUIDInstance=True GPIRepoCreatEnabled=True GPIRepositoryCreation=True GPIParserDebug=False  GPIFuncStart=RepositoryCreation GPIRepoUser=maxiste.root GPIRepoPerm=775 GnrlPrsrInfctr 
