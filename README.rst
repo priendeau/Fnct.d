@@ -180,29 +180,10 @@ According to this Library, following term :
  BVTVTVTPLA="\$( eval \"__FNCT_ASRT__\" )"    \
  BVTVTFnctA=\${StrCmd}               BoolVarTest
 
+
 ----------------------
 Example of Development
 ----------------------
-
-While Software development was observed in Compagny reaching CMM Level 2 ( Capability Maturing Model ), a free tools offering certified gadget to use to ensure your development may achaive Capable state of admitting the error can by simple misstyping and observation of result stored during development may reduce compromising and delaying idea to promote. While [Capability Maturing Model] does show best practice, I do not really own compagny or real entity proning such state if the art action to developt. And merely acheived a function called GnrlPrsrInfctr which is the GeneralParserInfrastructure a costly-few risk application to wrap about any call in future of shell-command by controlled environement, Signed Instance being dumped inside /var/log... and ability to own different method to handle a to-Executable Query. Requiert attention and some effort like developping ZenityBuildForm, GetterByLineData where designed to craft a signed Command query to add inside error-fix.txt in case an anomaly during development is observed, Commentary left inside code may appear and disappear, but error-fix give state of GitHub refenrence like footprint for a reason a this stage it happen hand output is also stored to visit what it should like when a ParserTag failed, what a Executive-Brace lying around and doest execute command but leaving command-not-found exception... Here some hint about Profiting from GetterByLine data calling a Footprint command Line from /var/cache/Fnct.D/BuildForm.
-
-.. code-block:: shell 
-
-  ### Require to Build the Form and it's certified query.
-  $> ZBFFunctionName=GnrlPrsrInfctr ZBFUUIDQuery=True ZenityBuildForm
-
-  ### Once the parameter choosed to inspect are selected you fill the second windows, and 
-  ### the third line or the comment block after the command line is the UUID file-name 
-  ### to catch inside /var/cache/Fnct.D/BuildForm, our example left is 
-  ### f646c9a8-8786-11e6-8b1d-001e4c8856d6
-  
-  ### The Signed block is left inside example/BuildForm but it's a query made on my system and 
-  ### once there. If there's error during development of GnrlPrsrInfctr I do confirm the query
-  ### to launch it was correct, despite having 11 Prefixed-var to manage.
-  ### This example is made from your Fnct.D path. 
-  $> eval $( GBLDFileStoreInfo=examples/BuildForm/f646c9a8-8786-11e6-8b1d-001e4c8856d6 GBLDAction=GetContent GetterByLineData  ) ; 
-
-  ### This will execute the query and SHALL HAVE to print the output inside error-fix.txt to notify wrong comportement of the application or any error discovered by data output, verbosis. 
 
 
 
