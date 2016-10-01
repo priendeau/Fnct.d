@@ -181,7 +181,7 @@ According to this Library, following term :
  BVTVTFnctA=\${StrCmd}               BoolVarTest
 
 
-----------------------
+
 Example of Development
 ----------------------
 
