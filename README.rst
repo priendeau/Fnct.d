@@ -191,18 +191,6 @@ While Software development was observed in Compagny reaching CMM Level 2 ( Capab
  ### Require to Build the Form and it's certified query.
  $> ZBFFunctionName=GnrlPrsrInfctr ZBFUUIDQuery=True ZenityBuildForm
 
-
-.. image:: https://github.com/priendeau/Fnct.d/blob/master/images/ZenityContentListing-UC.png
-		:target: https://github.com/priendeau/Fnct.d#Example of Development
-
-
-.. image:: https://github.com/priendeau/Fnct.d/blob/master/images/ZenityBuildForm-UC.png
-		:target: https://github.com/priendeau/Fnct.d#Example of Development
-
-
-.. image:: https://github.com/priendeau/Fnct.d/blob/master/images/ZenityBuildForm-out-UC.png
-		:target: https://github.com/priendeau/Fnct.d#Example of Development
- 
  ### Once the parameter choosed to inspect are selected you fill the second windows, and 
  ### the third line or the comment block after the command line is the UUID file-name 
  ### to catch inside /var/cache/Fnct.D/BuildForm, our example left is 
@@ -215,6 +203,18 @@ While Software development was observed in Compagny reaching CMM Level 2 ( Capab
  $> eval $( GBLDFileStoreInfo=examples/BuildForm/f646c9a8-8786-11e6-8b1d-001e4c8856d6 GBLDAction=GetContent GetterByLineData  ) ; 
 
  ### This will execute the query and SHALL HAVE to print the output inside error-fix.txt to notify wrong comportement of the application or any error discovered by data output, verbosis. 
+
+.. image:: https://github.com/priendeau/Fnct.d/blob/master/images/ZenityContentListing-UC.png
+		:target: https://github.com/priendeau/Fnct.d#Example of Development
+
+
+.. image:: https://github.com/priendeau/Fnct.d/blob/master/images/ZenityBuildForm-UC.png
+		:target: https://github.com/priendeau/Fnct.d#Example of Development
+
+
+.. image:: https://github.com/priendeau/Fnct.d/blob/master/images/ZenityBuildForm-out-UC.png
+		:target: https://github.com/priendeau/Fnct.d#Example of Development
+
 
 [Capability Maturing Model]
 
