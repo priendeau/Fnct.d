@@ -193,18 +193,19 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
    local Arg0=${ArrayArg[0]} ; 
    local ArrayArg=( $* ) ;
    local StrAction ; 
-   StrMsg=$( ${StrParentApps} --get ArrayMsg[0] ) ;
-   StrMsg=${StrMsg//__VALUE__/${BoolCreateRepository}} ; 
-   StrMsg=${StrMsg//__VAR__/BoolCreateRepository} ; 
-   StrMsg=${StrMsg//__PATH__/${StrRepositoryQuery}} ; 
-   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis ; 
-   
-   StrMsg=$( ${StrParentApps} --get ArrayMsg[1] ) ;
-   StrMsg=${StrMsg//__PATH__/${StrRepositoryQuery}} ;
-   StrMsg=${StrMsg//__MODE__/${StrDefaultPerm}} ;
-   StrMsg=${StrMsg//__USER__/${StrDefaultUser}} ;
-   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis ; 
    if [ ! -d ${StrRepositoryQuery} ] ; then 
+    StrMsg=$( ${StrParentApps} --get ArrayMsg[0] ) ;
+    StrMsg=${StrMsg//__VALUE__/${BoolCreateRepository}} ; 
+    StrMsg=${StrMsg//__VAR__/BoolCreateRepository} ; 
+    StrMsg=${StrMsg//__PATH__/${StrRepositoryQuery}} ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis ; 
+    
+    StrMsg=$( ${StrParentApps} --get ArrayMsg[1] ) ;
+    StrMsg=${StrMsg//__PATH__/${StrRepositoryQuery}} ;
+    StrMsg=${StrMsg//__MODE__/${StrDefaultPerm}} ;
+    StrMsg=${StrMsg//__USER__/${StrDefaultUser}} ;
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis ; 
+
     ### The Array ArrayActionOrder is present to define an order . This order 
     ### result in getting numerical index from 1 .. N
     ### Getting information from ArrayActionOrder[@], provide 
@@ -246,7 +247,13 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
      StrMsg=${StrMsg//__ACTION__/${StrAction}} ; 
      
      VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-CMDLINE" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
-     eval $( TPVarNameParsed="StrAction" TPListTag=${StrTagListVar} TPIsMatchRtoL=True TPDisplayParserNotice=\${BoolDisplayParserDebug} TPDisplayDebug=${BoolDisplayDebug} TPArrayName="Array${__call_locality[0]}Tag" TagParser 2> /dev/null ) ;
+     eval $( TPVarNameParsed="StrAction"                       \
+             TPListTag=${StrTagListVar}                        \
+             TPIsMatchRtoL=True                                \
+             TPDisplayParserNotice=\${BoolDisplayParserDebug}  \
+             TPDisplayDebug=${BoolDisplayDebug}                \
+             TPArrayName="Array${__call_locality[0]}Tag"       \
+             TagParser 2> /dev/null ) ;
      StrMsg=$( ${StrParentApps} --get ArrayMsg[2] ) ;
      
      VerbMsg="${StrMsg//__CMD__/${StrAction}}" VerbHeader="${__call_locality[1]}-CMDLINE" VerbEvalForm=False VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis ; 
@@ -261,14 +268,28 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   
   function ParserFunctionEval()
   {
-   local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+   local __call_locality=( PFE ParserFunctionEval ${StrParentApps} ) ;
    local ArrayArg=( $* ) ;
    local Arg0=${ArrayArg[0]};  
-   eval $( TPIsMatchRtoL=True TPDisplayDebug=True TPArrayName=Array${__call_locality[0]}Tag TPVarNameParsed="${StrParserResult}" TPListTag="${StrParserTag}" TagParser ) ; 
+   
+   eval ${StrParserResult}=${StrAppsTemplate} ;
+   
+   StrMsg="Copy of StrAppsTemplate, named __VAR__ will hold __CONTENT__" ; 
+   StrMsg=${StrMsg//__VAR__/${StrParserResult}} ;
+   eval """StrMsg=\${StrMsg//__CONTENT__/\${${StrParserResult}}}"""  ;
+   VerbMsg="${StrMsg}" VerbDev=/dev/stderr VerbState=${BoolDisplayDebug} VerbFormated=True VerbHeader="${__call_locality[1]}-CMDLINE" Verbosis
+   
+   eval $( TPIsMatchRtoL=True                        \
+           TPVarNameParsed="${StrParserResult}"      \
+           TPDisplayDebug=${BoolDisplayDebug}        \
+           TPDisplayParserNotice=${BoolDisplayParserDebug}  \
+           TPArrayName=Array${__call_locality[0]}Tag \
+           TPListTag="${StrParserTag}"               \
+           TagParser ) ; 
    
    StrMsg=$( ${StrParentApps} --get ArrayMsg[3] ) ;
-   StrMsg=${StrMsg//__CMDLINE__/${StrCmdLine}} ;
-   VerbMsg="${StrMsg}" VerbDev=/dev/stderr VerbState=True VerbFormated=True VerbHeader="${__call_locality[1]}-CMDLINE" Verbosis
+   eval """StrMsg=\${StrMsg//__CMDLINE__/\${${StrParserResult}}}"""  ;
+   VerbMsg="${StrMsg}" VerbDev=/dev/stderr VerbState=${BoolDisplayDebug} VerbFormated=True VerbHeader="${__call_locality[1]}-CMDLINE" Verbosis
    
    local StrFileResult="" ;
    local StrDestinationResult="" ; 
@@ -318,12 +339,14 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
    ### Generic Infrastructure coming from ZenityBuildForm, have proof of it's success
    ### we do assume it's simlpe to port-it inside GnrlPrsrInfctr . 
    if [ ${BoolCreateRepository:=False} == "True" ] ; then
-    eval $( VTVIsArrayStyleInsert=True \
-        VTVValueEntry=${StrVarList}   \
-        VTVIsValueReAssign=True       \
-        VTVIsValueToConvert=False     \
-        VTVIsArrayStyleInsert=True    \
-        ValueToVariable ) RepositoryCreation ;
+    if [ ! -d ${StrRepositoryQuery} ] ; then 
+     eval $( VTVIsArrayStyleInsert=True \
+         VTVValueEntry=${StrVarList}   \
+         VTVIsValueReAssign=True       \
+         VTVIsValueToConvert=False     \
+         VTVIsArrayStyleInsert=True    \
+         ValueToVariable ) RepositoryCreation ;
+    fi
    fi   
     
     eval $( VTVIsArrayStyleInsert=True \

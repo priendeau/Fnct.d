@@ -86,3 +86,54 @@ mkdir which is sometimes aliasing to 'mkdir -p' is counter solution not working 
 does working and can be used in more generalistic way to manage path creation. 
 command : 
 unset ArrayLib ; versionGPI=0.0.1 . /etc/init.d/Fnct.D/fnct_lib  ; GPIDisplayDebug=False GPIIsUUIDInstance=True GPIRepoCreatEnabled=True GPIRepositoryCreation=True GPIParserDebug=False  GPIFuncStart=RepositoryCreation GPIRepoUser=maxiste.root GPIRepoPerm=775 GnrlPrsrInfctr 
+
+Date:20160930-22:36:00
+Reference:fb51fdaecc2ec8feb1fa4881bf1d7fc839b5a60c
+File: _sub_Function_Appliance 
+Function: GnrlPrsrInfctr
+With command line :
+-->unset ArrayLib ; versionGPI=0.0.1 . /etc/init.d/Fnct.D/fnct_lib  ; GPIDisplayDebug=True GPIIsUUIDInstance=True GPIRepoCreatEnabled=True GPIRepositoryCreation=True GPIParserDebug=True GPIFuncStart=__main_StartServices GPIIsZenityHandlerOut=False GPIIsFileHandlerOut=False GPIIsGenerateCode=False  GPIIsExecuteEval=True GPIFileName=/home/maxiste/github/Fnct.D/awk-script/dpkg-col-display.awk GnrlPrsrInfctr
+Description: Still having command not found on 'ParserFunctionEval-CMDLINE:[ Copy of StrAppsTemplate...' 
+See 'ParserFunctionEval-CMDLINE:[ Parsed...' The command-line is correct, despite declaration from command-line,
+Prefixed-variable :
+GPIIsZenityHandlerOut=False 
+GPIIsFileHandlerOut=False 
+GPIIsGenerateCode=False  
+GPIIsExecuteEval=True
+- It can not call the command-line properly. 
+OUTPUT: 
+--------------------------------------------------------------------------------------------------------------
+GnrlPrsrInfctr-DEBUG:[ Instance will use UUID reference: da52ab2e-877f-11e6-8b1d-001e4c8856d6 ]
+Entry-Start : __main_StartServices
+__APPS_OPT__: command not found
+ParserFunctionEval-CMDLINE:[ Copy of StrAppsTemplate, named StrCmd will hold __APPS__ __APPS_OPT__ __PIPE__ __FILTER__ __FILTER_OPT__  ]
+ : command not found
+DEBUG:__main_StartServices:[ CmdLine: local StrPairLeft ; 
+   local StrPairRight ; 
+   local ArrayPFETag=( StrDefaultPipe:__PIPE__ StrApps:__APPS__ StrAppsOpt:__APPS_OPT__ StrFilterApps:__FILTER__ StrFilterOpt:__FILTER_OPT__ StrFileName:__FILE__ ) ; 
+   local StrMsg="PairLeft: __LEFT__, PairRight: __RIGHT__, Query: __QUERY__" ; 
+   for TagParser in ${ArrayPFETag[@]}  ; do 
+     AStrMsg="${StrMsg}" ;
+     StrPairRight="${TagParser/#[SIB][tnos][a-zA-Z0-9_]*:/}" ; 
+     StrPairLeft="${TagParser/%:__[A-Za-z0-9_,]*/}" ; 
+     AStrMsg=${AStrMsg//__LEFT__/${StrPairLeft}} ;
+     AStrMsg=${AStrMsg//__RIGHT__/${StrPairRight}} ;
+     AStrMsg=${AStrMsg//__QUERY__/${StrCmd}} ;
+     VerbMsg=${AStrMsg} VerbHeader=TAGPARSER VerbState=True VerbFormated=True VerbDev=/dev/stderr Verbosis ; 
+     eval StrCmd=\${\StrCmd//${StrPairRight}/\${${StrPairLeft}}}  ; 
+   done ; 
+   unset StrPairRight StrPairLeft ArrayPFETag ; ]
+TAGPARSER:[ PairLeft: StrDefaultPipe, PairRight: __PIPE__, Query: __APPS__ __APPS_OPT__ __PIPE__ __FILTER__ __FILTER_OPT__  ]
+TAGPARSER:[ PairLeft: StrApps, PairRight: __APPS__, Query: __APPS__ __APPS_OPT__ | __FILTER__ __FILTER_OPT__  ]
+TAGPARSER:[ PairLeft: StrAppsOpt, PairRight: __APPS_OPT__, Query: /usr/bin/dpkg __APPS_OPT__ | __FILTER__ __FILTER_OPT__  ]
+TAGPARSER:[ PairLeft: StrFilterApps, PairRight: __FILTER__, Query: /usr/bin/dpkg --get-selections | __FILTER__ __FILTER_OPT__  ]
+TAGPARSER:[ PairLeft: StrFilterOpt, PairRight: __FILTER_OPT__, Query: /usr/bin/dpkg --get-selections | /usr/bin/gawk __FILTER_OPT__  ]
+TAGPARSER:[ PairLeft: StrFileName, PairRight: __FILE__, Query: /usr/bin/dpkg --get-selections | /usr/bin/gawk -f __FILE__  ]
+ParserFunctionEval-CMDLINE:[ Parsed CmdLine: /usr/bin/dpkg --get-selections | /usr/bin/gawk -f /home/maxiste/github/Fnct.D/awk-script/dpkg-col-display.awk  ]
+dpkg: no packages found matching |
+dpkg: no packages found matching /usr/bin/gawk
+dpkg: no packages found matching -f
+dpkg: no packages found matching /home/maxiste/github/Fnct.D/awk-script/dpkg-col-display.awk
+${StrCmd}
+
+--------------------------------------------------------------------------------------------------------------
