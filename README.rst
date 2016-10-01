@@ -206,13 +206,6 @@ While Software development was observed in Compagny reaching CMM Level 2 ( Capab
 
 
 
-[Capability Maturing Model]
-
-« Prior need for software processes »
-
-"In the 1960s, the use of computers grew more widespread, more flexible and less costly. Organizations began to adopt computerized information systems, and the demand for software development grew significantly. Many processes for software development were in their infancy, with few standard or "best practice" approaches defined."
-
-
 Unicity Convention
 ==================
 
