@@ -208,14 +208,20 @@ While Software development was observed in Compagny reaching CMM Level 2 ( Capab
 
 .. image:: https://github.com/priendeau/Fnct.d/blob/master/images/ZenityContentListing-UC.png
 		:target: https://github.com/priendeau/Fnct.d#Example of Development
+  :align: center
+
 
 
 .. image:: https://github.com/priendeau/Fnct.d/blob/master/images/ZenityBuildForm-UC.png
 		:target: https://github.com/priendeau/Fnct.d#Example of Development
+  :align: center
+
 
 
 .. image:: https://github.com/priendeau/Fnct.d/blob/master/images/ZenityBuildForm-out-UC.png
 		:target: https://github.com/priendeau/Fnct.d#Example of Development
+  :align: center
+
 
 
 
