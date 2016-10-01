@@ -192,11 +192,25 @@ While Software development was observed in Compagny reaching CMM Level 2 ( Capab
   ### Require to Build the Form and it's certified query.
   $> ZBFFunctionName=GnrlPrsrInfctr ZBFUUIDQuery=True ZenityBuildForm
 
+
+.. image:: https://github.com/priendeau/Fnct.d/blob/master/images/ZenityContentListing-UC.png
+ :target: https://github.com/priendeau/Fnct.d#Example of Development
+ :align: center
+
+.. code-block:: shell 
+
   ### Once the parameter choosed to inspect are selected you fill the second windows, and 
   ### the third line or the comment block after the command line is the UUID file-name 
   ### to catch inside /var/cache/Fnct.D/BuildForm, our example left is 
   ### f646c9a8-8786-11e6-8b1d-001e4c8856d6
-  
+
+
+.. image:: https://github.com/priendeau/Fnct.d/blob/master/images/ZenityBuildForm-UC.png
+ :target: https://github.com/priendeau/Fnct.d#Example of Development
+ :align: center
+
+.. code-block:: shell 
+
   ### The Signed block is left inside example/BuildForm but it's a query made on my system and 
   ### once there. If there's error during development of GnrlPrsrInfctr I do confirm the query
   ### to launch it was correct, despite having 11 Prefixed-var to manage.
@@ -206,21 +220,9 @@ While Software development was observed in Compagny reaching CMM Level 2 ( Capab
   ### This will execute the query and SHALL HAVE to print the output inside error-fix.txt to notify wrong comportement of the application or any error discovered by data output, verbosis. 
 
 
-.. image:: https://github.com/priendeau/Fnct.d/blob/master/images/ZenityContentListing-UC.png
-		:target: https://github.com/priendeau/Fnct.d#Example of Development
-  :align: center
-
-
-
-.. image:: https://github.com/priendeau/Fnct.d/blob/master/images/ZenityBuildForm-UC.png
-		:target: https://github.com/priendeau/Fnct.d#Example of Development
-  :align: center
-
-
-
 .. image:: https://github.com/priendeau/Fnct.d/blob/master/images/ZenityBuildForm-out-UC.png
-		:target: https://github.com/priendeau/Fnct.d#Example of Development
-  :align: center
+ :target: https://github.com/priendeau/Fnct.d#Example of Development
+ :align: center
 
 
 
