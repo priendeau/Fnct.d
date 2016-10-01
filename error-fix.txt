@@ -44,5 +44,8 @@ TAGPARSER:[ PairLeft: StrRepositoryQuery, PairRight: __PATH__, Query: /usr/bin/s
 TAGPARSER:[ PairLeft: StrDefaultUser, PairRight: __OWNER__, Query: /usr/bin/sudo -s -H /bin/chown __OWNER__ /var/log/Fnct.D/GnrlPrsrInfctr ]
 RepositoryCreation-CMDLINE:[ /usr/bin/sudo -s -H /bin/chown maxiste.root /var/log/Fnct.D/GnrlPrsrInfctr  ]
 
-
+SOLUTION:
+Verifying the Array declaration:
+'local -a ArrayTplAction' ;
+changed for 'local -A ArrayTplAction ;'
 --------------------------------------------------------------------------------------------------------------

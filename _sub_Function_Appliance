@@ -69,6 +69,9 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   local StrTagRepoChmod=${GPIParserChmod:=StrAppsSudo:__SUDO__,StrAppsSudoOpt:__OPT__,StrAppsChmod:__APPS__,StrRepositoryQuery:__PATH__,StrDefaultPerm:__PERM__}
   local StrTagRepoChown=${GPIParserChown:=StrAppsSudo:__SUDO__,StrAppsSudoOpt:__OPT__,StrAppsChown:__APPS__,StrRepositoryQuery:__PATH__,StrDefaultUser:__OWNER__}
   local StrPrefixTagGroup=${GPIGroupParserPrefix:=StrTagRepo} ; 
+  local -A ArrayTplAction ; 
+  ### Fixed after reference : 472de1ad3899ab7a0aa52869a073c19c52178940
+  ### Associative Array was declared with '-a' instead of '-A'
   local StrRepositoryQuery=${GPIQueryRepository:=/var/log/Fnct.D/GnrlPrsrInfctr} ;  
   local StrDefaultUser=${GPIRepoUser:=user.root} ;
   local StrDefaultPerm=${GPIRepoPerm:=775} ;  
@@ -87,9 +90,9 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   ArrayMsg[4]="Instance will use UUID reference: __UUID__"
   ArrayMsg[5]="Entry-Start : __FUNCT__"
   
-  ArrayTplAction['Mkdir']="__SUDO__ __OPT__ __APPS__ __PATH__" ;  
-  ArrayTplAction['Chmod']="__SUDO__ __OPT__ __APPS__ __PERM__ __PATH__"   ;
-  ArrayTplAction['Chown']="__SUDO__ __OPT__ __APPS__ __OWNER__ __PATH__"   ;
+  ArrayTplAction["Mkdir"]="__SUDO__ __OPT__ __APPS__ __PATH__" ;  
+  ArrayTplAction["Chmod"]="__SUDO__ __OPT__ __APPS__ __PERM__ __PATH__"   ;
+  ArrayTplAction["Chown"]="__SUDO__ __OPT__ __APPS__ __OWNER__ __PATH__"   ;
   local ArrayActionOrder=( "Mkdir" "Chmod" "Chown" ) ;
    
   local StrVarList="StrVarList,BoolOutToZenity,BoolOutToFile,StrTagFeeder,StrParentApps,BoolEmitUUID,StrParserResult,StrAwkScript,StrAppsTemplate,StrApps,StrAppsOpt,StrFilterApps,StrFilterOpt,StrParserTag,StrFileName,StrDefaultPipe,StrDefaultVerbose,StrTagRepoMkdir,StrTagRepoChmod,StrTagRepoChown,BoolRepoCreaEnabled,BoolDisplayParserDebug,StrRepositoryQuery,BoolCreateRepository,StrDefaultUser,StrDefaultPerm,StrAppsSudo,StrAppsSudoOpt,StrAppsMkdir,StrAppsChown,StrAppsChmod,StrStartMain,BoolExecuteEval,BoolGenerateCode,StrUUIDInstance,StrPrefixTagGroup" ; 
@@ -201,8 +204,37 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
    StrMsg=${StrMsg//__USER__/${StrDefaultUser}} ;
    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis ; 
    if [ ! -d ${StrRepositoryQuery} ] ; then 
+    ### The Array ArrayActionOrder is present to define an order . This order 
+    ### result in getting numerical index from 1 .. N
+    ### Getting information from ArrayActionOrder[@], provide 
+    ### 3 differents index name, 
+    ### 0 -> "Mkdir" 
+    ### 1 -> "Chmod" 
+    ### 2 -> "Chown"
+    ### in Error observed inside error-fix.txt for reference : 472de1ad3899ab7a0aa52869a073c19c52178940
+    ### is the StrAction is not changing at all after each loop and get only
+    ### ArrayTplAction["Chown"] 
+    ### 
+    ### This mean : 
+    ### calling application 
+    ### GnrlPrsrInfctr --get ArrayTplAction['Mkdir']
+    ###  --> __SUDO__ __OPT__ __APPS__ __OWNER__ __PATH__
+    ### GnrlPrsrInfctr --get ArrayTplAction['Chmod']
+    ###  --> __SUDO__ __OPT__ __APPS__ __OWNER__ __PATH__
+    ### GnrlPrsrInfctr --get ArrayTplAction['Chown']
+    ###  --> __SUDO__ __OPT__ __APPS__ __OWNER__ __PATH__
+    ### 
+    ### Getting from First Application able to do this : ZenityBuildForm
+    ### 
+    ### ZenityBuildForm --get ArrayTplAction['Mkdir'] 
+    ###  --> __SUDO__ __OPT__ __APPS__ __PATH__
+    ### ZenityBuildForm --get ArrayTplAction['Chmod'] 
+    ###  --> __SUDO__ __OPT__ __APPS__ __PERM__ __PATH__
+    ### ZenityBuildForm --get ArrayTplAction['Chown']
+    ###  --> __SUDO__ __OPT__ __APPS__ __OWNER__ __PATH__
+    ### 
     for IterActionName in $( ${StrParentApps} --get ArrayActionOrder[@] ) ; do 
-     StrAction=$( ${StrParentApps} --get ArrayTplAction[${IterActionName}] ) ; 
+     StrAction=$( ${StrParentApps} --get ArrayTplAction["${IterActionName}"] ) ; 
      StrArrayName="${StrPrefixTagGroup}" ;
      
      StrTagListVarName="${StrArrayName}${IterActionName}" ;
