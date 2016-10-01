@@ -191,11 +191,14 @@ While Software development was observed in Compagny reaching CMM Level 2 ( Capab
  ### Require to Build the Form and it's certified query.
  $> ZBFFunctionName=GnrlPrsrInfctr ZBFUUIDQuery=True ZenityBuildForm
 
+
 .. image:: https://github.com/priendeau/Fnct.d/blob/master/images/ZenityContentListing-UC.png
 		:target: https://github.com/priendeau/Fnct.d#Example of Development
 
+
 .. image:: https://github.com/priendeau/Fnct.d/blob/master/images/ZenityBuildForm-UC.png
 		:target: https://github.com/priendeau/Fnct.d#Example of Development
+
 
 .. image:: https://github.com/priendeau/Fnct.d/blob/master/images/ZenityBuildForm-out-UC.png
 		:target: https://github.com/priendeau/Fnct.d#Example of Development
@@ -214,8 +217,10 @@ While Software development was observed in Compagny reaching CMM Level 2 ( Capab
  ### This will execute the query and SHALL HAVE to print the output inside error-fix.txt to notify wrong comportement of the application or any error discovered by data output, verbosis. 
 
 [Capability Maturing Model]
+
 « Prior need for software processes »
 "In the 1960s, the use of computers grew more widespread, more flexible and less costly. Organizations began to adopt computerized information systems, and the demand for software development grew significantly. Many processes for software development were in their infancy, with few standard or "best practice" approaches defined."
+
 
 Unicity Convention
 ==================
