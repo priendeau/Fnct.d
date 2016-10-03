@@ -1,12 +1,161 @@
 
-function GetPythonBoostLibName()
+### Add all seemlessly python module requiring uses of boot to developt
+### A steady body for easy creation, configuration, compilation. 
+
+function StartConfigurePyBoost()
 {
-  eval $( __call_localityLocalName=GetPythonBoostLibName __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
-  dpkg-listfiles $( dpkg --get-selections | egrep -i "boost" | awk 'BEGIN{}{printf("%s\n",$1);}END{}' | egrep -iv "\-dev" | tr '[:cntrl:]' ' ')| egrep -i "\.so" | awk 'BEGIN{}{split($1,ArrayLib,/\./);gsub(/\/usr\/lib\//,"",ArrayLib[1]);printf("'\''%s'\'',",ArrayLib[1])}END{}'
+  local __call_locality=( SCPB StartConfigurePyBoost ) ;
+  local ArrayArg=( $* ) ;
+  local Arg0="${ArrayArg[0]}" ;
+  local StrDefaultPyVer=${SCPBPyVer:=2.7} ;
+  local StrPythonBin=${SCPBPythonBin:=/usr/bin/python__VER__} ; 
+  local StrBoostPythonVer=${SCPBPyBoostName:=boost_python-py27} ;
+  local StrPathCreation=${SCPBPathDistSrc:=/usr/local/lib/python-devel/python__VER__/dist-packages/src} ;
+  local StrMeshPyGit=${SCPBMeshPyGitURL:=http://git.tiker.net/trees/meshpy.git} ;
+  local StrGitCloneAct=${SCPBGitCloneCmd:=git clone} ;
+  local BoolCleanCache=${SCPBRemoveSiteConf:=False} ; 
+  local StrConfigureApps=${SCPBConfigureApp:=configure.py} ;
+  local StrCacheFile=${SCPBCacheFile:=siteconf.py} ;
+  local StrSudoApps=${SCPBSudoApps:=/usr/bin/sudo -s -H} ;
+  local StrGitCloneParser=${SCPBGitParser:=__APPS__ __URL__} ;
+  local StrPostRepoAction=${SCPBGitPostRepoAction:=git submodule update --init} ; 
+  local BoolDisplayCmdOnly=${SCPBDisplayCmdOnly:=False} ;
+  local StrParentApps="${__call_locality[1]}" ;  
+  local -A ArrayCmd ; 
+  local -A ArrayTagOptions ;
+  
+  local StrVarList="BoolDisplayCmdOnly,StrParentApps,StrConfigureApps,StrSudoApps,BoolCleanCache,StrPythonBin,StrPostRepoAction,StrGitCloneParser,StrGitCloneAct,StrPathSrc,StrDefaultPyVer,StrBoostPythonVer,StrPathCreation,StrMeshPyGit"
+  
+  ArrayCmd["mkdir"]="__SUDO__ mkdir __PATH__"
+  ArrayCmd["rm-siteconf"]="__SUDO__ rm -f __FILE__" ;
+  ### Don't forget Associative Array taking String only and uses of Array declaration like :
+  ### ArrayTagOptions["mkdir"]=( StrPathDest:__PATH__ StrSudoApps:__SUDO__ ) ;
+  ### is forbidden ; is giving an error. 
+  ArrayTagOptions["mkdir"]="StrPathDest:__PATH__,StrSudoApps:__SUDO__"
+  ArrayTagOptions["rm-siteconf"]="StrSudoApps:__SUDO__,StrCacheFile:__FILE__"
+  
+  function Verbosis()
+	 {
+   local __call_locality=( Verbosis Verb );
+   local StrMsg=${VerbMsg:=__TEXT__} ; 
+   local StrDevOut=${VerbDev:=/dev/stderr} ; 
+   local IsVerboseState=${VerbState:=False} ;
+   local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+   local IsDisplayFormatted=${VerbFormated:=True} ;
+   local ArrayArg=( $* ) ; 
+   if [ "${IsVerboseState:=False}" == "True" ] ; then 
+    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+      echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+    else
+      echo -ne "${StrMsg}\n" > ${StrDevOut} ;
+    fi 
+   fi
+	 } 
+ ### Model : VerbMsg= VerbDev=/dev/stderr VerbState=True VerbFormated=True VerbHeader=${__call_locality[1]} Verbosis
+
+
+  
+  
+
+  function GitRepository()
+  {
+   local __call_locality=( GR GitRepository ${StrParentApps} ) ;
+		 local Arg0=${ArrayArg[0]} ;
+		 local ArrayArg=( $* ) ;   
+   
+   ### Cloning the Repository
+   $( eval "${StrGitAction}"  )
+   
+   ### Updating sub-modules, sometime it depend of bpl...
+   $( eval "${StrPostRepoAction}" ) ; 
+  
+   ### Require to clean the cache by erasing siteconf.py 
+   StrCmd=$( ${StrParentApps} --get ArrayCmd["rm-siteconf"] ) ; 
+   if [ "${BoolCleanCache}" == "True" ] ; then 
+    if [ -f "siteconf.py" ] ; then 
+     $( eval TPVarNameParsed=StrCmd TPListTag=$( ${StrParentApps} --get ArrayTagOptions["rm-siteconf"] )  TagParser ) ; 
+     StrCmd=${StrCmd//__SUDO__/${StrSudoApps}} ; 
+     
+    fi  
+   fi 
+   
+  
+  }
+ 
+  ### Not Finished 
+  ### git submodule update --init
+  ### 
+  ### sudo -s -H python2.7 ./configure.py \
+  ### --python-exe=/usr/bin/python2.7 \
+  ### --boost-inc-dir=/usr/include/boost \
+  ### --boost-lib-dir=/usr/lib/x86_64-linux-gnu \
+  ### --boost-compiler=/usr/bin/x86_64-linux-gnu-gcc-4.8  \
+  ### --boost-python-libname=boost_python-py27  
+  
+
+  function __main_StartServices()
+  {
+   local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+		 local Arg0=${ArrayArg[0]} ;
+		 local ArrayArg=( $* ) ;   
+   local StrPathDest=${StrPathCreation//__VER__/${StrDefaultPyVer}} ;  
+   local StrPythonApps=${StrPythonBin//__VER__/${StrDefaultPyVer}} ;
+   local StrGitAction=${StrGitCloneParser//__APPS__/${StrGitCloneAct}} ; 
+   StrGitAction=${StrGitAction//__URL__/${StrMeshPyGit}} ; 
+   ### Working inside the path:
+   
+   StrCmdTagParsList="" ; 
+   StrCmd=$( ${StrParentApps} --get ArrayCmd["mkdir"] ) ; 
+   ### Testing path and do a Mkdir on. 
+   if [ ! -d ${StrPathDest} ] ; then 
+    #StrCmd=${StrCmd//__SUDO__/${StrSudoApps}} ; 
+    #StrCmd=${StrCmd//__PATH__/${StrPathDest}}
+    $( eval TPVarNameParsed=StrCmd TPListTag=$( ${StrParentApps} --get ArrayTagOptions["mkdir"] )  TagParser ) ; 
+    VerbMsg= VerbDev=/dev/stderr VerbState=True VerbFormated=True VerbHeader=${__call_locality[1]} Verbosis
+    
+    #$( eval "${StrCmd}" ) ; 
+    
+   fi 
+   cd ${StrPathDest} ; 
+  }
+
+  
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
+  local StrNameHelper="StartConfigurePyBoost\t\tThe Fnct.D Mechanisme testing Module who support PythonBoost declaration for theirs build-ups, This example include MeshPy configuration but configure from this build is widely use and doest had compiler call for mixed C source file and CPP file ";
+  local StrSynopsis="";
+  local StrSummary="" ; 
+   
+  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+    ### Not listed inside live-documentation: GVRIsDesc=True 
+    GVRIsName=True GVRIsSynopsis=True GVRIsSummary=True GetVarReference ${__call_locality[1]} ; 
+    echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+    eval $( VTVValueEntry=${StrVarList}  \ 
+         VTVIsArrayStyleInsert=True    \
+         VTVIsValueReAssign=True       \
+         VTVIsValueToConvert=False     \
+         ValueToVariable  ) __main_StartServices ; 
+  fi
+
 }
 
-function GetPythonBoostLDFLAGS()
-{
-  eval $( __call_localityLocalName=GetPythonBoostLDFLAGS __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
-  dpkg-listfiles $( dpkg --get-selections | egrep -i "boost" | awk 'BEGIN{}{printf("%s\n",$1);}END{}' | egrep -iv "\-dev" | tr '[:cntrl:]' ' ')| egrep -i "\.so" | awk 'BEGIN{}{printf("'\''-L %s'\'', ",$1)}END{}'
-}
+if [ "${SubOldPythonBoost:=False}" == "True" ] ; then 
+ 
+ function GetPythonBoostLibName()
+ {
+   eval $( __call_localityLocalName=GetPythonBoostLibName __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+   dpkg-listfiles $( dpkg --get-selections | egrep -i "boost" | awk 'BEGIN{}{printf("%s\n",$1);}END{}' | egrep -iv "\-dev" | tr '[:cntrl:]' ' ')| egrep -i "\.so" | awk 'BEGIN{}{split($1,ArrayLib,/\./);gsub(/\/usr\/lib\//,"",ArrayLib[1]);printf("'\''%s'\'',",ArrayLib[1])}END{}'
+ }
+
+ function GetPythonBoostLDFLAGS()
+ {
+   eval $( __call_localityLocalName=GetPythonBoostLDFLAGS __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
+   dpkg-listfiles $( dpkg --get-selections | egrep -i "boost" | awk 'BEGIN{}{printf("%s\n",$1);}END{}' | egrep -iv "\-dev" | tr '[:cntrl:]' ' ')| egrep -i "\.so" | awk 'BEGIN{}{printf("'\''-L %s'\'', ",$1)}END{}'
+ }
+
+fi

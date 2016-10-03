@@ -54,7 +54,7 @@ if [ ${SubGitCommitTransaction:=False} == "True" ] ; then
      int IOStatus=0 ; 
      local StrTestWarnInfo="""\nFollowing command will be executed\n"""
      local StrCmdUpdate="""git push origin master"""
-     local StrCmd=$( zenity --entry --width="300" --text=${StrTestWarnInfo} --entry-text=${StrCmdUpdate} )
+     local StrCmd=$( zenity --entry --width="300" --text=${StrTestWarnInfo} --entry-text="${StrCmdUpdate}" ) ; 
      IOStatus=$?
      if [ ${IOStatus:=0} -eq 0  ] ; then 
       eval ${StrCmd} ; 
@@ -128,8 +128,7 @@ if [ ${SubGitCommitTransaction:=False} == "True" ] ; then
    fi 
    touch .commit-msg ;
    touch .file-selection ;
-   #echo "" > .commit-msg ;
-   #echo "" > .file-selection ;
+
 
    while [ ${IntQuit:=1} -ne 0 ] ; do 
     ### Get FileInPath Signal:
