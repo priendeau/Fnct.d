@@ -53,6 +53,7 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   local StrUUIDTransmit=${GPITUUIDName:=UUID} ; 
   local StrDefaultPipe=${GPIPipeSig:=\|} ;
   local StrDefaultVerbose=${GPIVerboseDev:=/dev/stderr} ; 
+  local IntFontSize=${GPIFontSize:=10} ; 
   local StrUUIDInstance ;
   local StrFileOutput=${GPIOutFile:=.GnrlPrsrInfctr} ; 
   local BoolDisplayDebug=${GPIDisplayDebug:=False} ; 
@@ -97,7 +98,7 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   ArrayTplAction["Chown"]="__SUDO__ __OPT__ __APPS__ __OWNER__ __PATH__"   ;
   local ArrayActionOrder=( "Mkdir" "Chmod" "Chown" ) ;
    
-  local StrVarList="StrVarList,BoolOutToZenity,BoolOutToFile,StrTagFeeder,StrParentApps,BoolEmitUUID,StrParserResult,StrAwkScript,StrAppsTemplate,StrApps,StrAppsOpt,StrFilterApps,StrFilterOpt,StrParserTag,StrFileName,StrDefaultPipe,StrDefaultVerbose,StrTagRepoMkdir,StrTagRepoChmod,StrTagRepoChown,BoolRepoCreaEnabled,BoolDisplayParserDebug,StrRepositoryQuery,BoolCreateRepository,StrDefaultUser,StrDefaultPerm,StrAppsSudo,StrAppsSudoOpt,StrAppsMkdir,StrAppsChown,StrAppsChmod,StrStartMain,BoolExecuteEval,BoolGenerateCode,StrUUIDInstance,StrPrefixTagGroup,StrUUIDTransmit" ; 
+  local StrVarList="StrVarList,StrFileOutput,BoolOutToZenity,BoolOutToFile,StrTagFeeder,StrParentApps,BoolEmitUUID,StrParserResult,StrAwkScript,StrAppsTemplate,StrApps,StrAppsOpt,StrFilterApps,StrFilterOpt,StrParserTag,StrFileName,StrDefaultPipe,StrDefaultVerbose,StrTagRepoMkdir,StrTagRepoChmod,StrTagRepoChown,BoolRepoCreaEnabled,BoolDisplayParserDebug,StrRepositoryQuery,BoolCreateRepository,StrDefaultUser,StrDefaultPerm,StrAppsSudo,StrAppsSudoOpt,StrAppsMkdir,StrAppsChown,StrAppsChmod,StrStartMain,BoolExecuteEval,BoolGenerateCode,StrUUIDInstance,StrPrefixTagGroup,StrUUIDTransmit,IntFontSize" ; 
   
   ### Informations About uses of StrUUIDInstance vs. StrFileOutput  .
   ### 
@@ -267,6 +268,75 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
 
   } 
   
+  function ReportReference()
+  {
+   local __call_locality=( SE StatementExecution ${StrParentApps} ) ;
+   local ArrayArg=( $* ) ;
+   local Arg0=${ArrayArg[0]};  
+   local StrMsg ; 
+   ### After moving the body of the if statement if if [ "${BoolExecuteEval}" == True...
+   ### into a function. The query was tried again and confirm 
+   ### BuildForm UUID:6e5b6d0c-890f-11e6-8b1d-001e4c8856d6 , was able to 
+   ### publish the same information. 
+   
+   ### Execution Side
+   ### Example : BuildForm UUID:6e5b6d0c-890f-11e6-8b1d-001e4c8856d6
+   ### Should End here since this BuildForm imply  : refusing to generate code.
+   ### don't dump it on file , on ZenityViewer like and also once executed it 
+   ### transfert the content into na UUID into /var/log/GnrlPrsrInfctr/UUID because GPIIsUUIDInstance=TRue
+   ### See path example/BuildForm/6e5b6d0c-890f-11e6-8b1d-001e4c8856d6 for parameter.
+   ### Evaluation side to execte it inside called-funtion. 
+   
+   ### Default StrParserResult should Use variable name StrCmd to apply rules of parser to obtain
+   ### 1. StrCmd=dpkg --get-selections | /usr/bin/gawk -f awk-script/dpkg-col-display.awk 
+   ### 2 By calling ${StrCmd} it should execute itself and at least output the display on 
+   ### screen . 
+   
+   ### We do have a limit to Pass StrUUIDTransmit, as long there is instance 
+   ### in form UUID, or general file .GnrlPrsrInfctr i used. This is why the message
+   ### is changing, and there is no evaluation in case BoolEmitUUID==False In the other
+   ### case I  have neglected uses of UUID, it's not generated and ${StrFileOutput} 
+   ### was probably assigned to .GnrlPrsrInfctr . 
+   
+   if [ "${BoolEmitUUID:=True}" == "True" ] ; then
+    StrMsg="Query Executed, UUID-Variable Reference:[ __VAR_NAME__ ]" ;
+    StrMsg=${StrMsg//__VAR_NAME__/${StrUUIDTransmit}} ; 
+    eval ${StrUUIDTransmit}=${StrUUIDInstance} ;
+   else
+    StrMsg="Query Executed, No UUID used, Reference file:[ __FILE__ ]" ;
+    StrMsg=${StrMsg//__FILE__/${StrFileOutput}} ;
+   fi 
+   VerbMsg=${StrMsg} VerbDev=/dev/stderr VerbEvalForm=False VerbHeader="EXECUTE-${__call_locality[1]}" VerbState=True VerbFormated=True Verbosis ; 
+   ### Allow the Command-prompt or after this function ending it's live to allow having 
+   ### One way to recuperate the UUID-log. 
+  
+  }
+    
+  function ZenityHandlerOut()
+  {
+   local __call_locality=( ZHO ZenityHandlerOut ${StrParentApps} ) ;
+   local ArrayArg=( $* ) ;
+   local Arg0=${ArrayArg[0]};  
+   ### After moving the body of the if statement if [ "${BoolOutToZenity:=False}" == "True"...
+   ### into a function. The query was tried again and confirm 
+   ### BuildForm UUID:bb7e1d60-899f-11e6-8b1d-001e4c8856d6 , was able to 
+   ### publish the same information. 
+   ### 
+   ### Send-it to a file, Zenity will recuperate-it 
+   ### Example : BuildForm UUID:bb7e1d60-899f-11e6-8b1d-001e4c8856d6
+   ### Should End here since this BuildForm imply  : refusing to generate code.
+   ### To view the result with Zenity Windows.
+   ### Since Zenity can not really accept Stream from piped application action it
+   ### requiert to dump it on file first. 
+   ### Some extra Prefixed-Variable will be available to free-out the file after . 
+   VerbMsg=$( eval eval "\${${StrParserResult}}" ) VerbDev=${StrDestinationResult} VerbEvalForm=False VerbHeader="" VerbState=True VerbFormated=False Verbosis ; 
+   #VerbMsg="""\${${StrParserResult}}""" VerbDev=${StrDestinationResult} VerbEvalForm=False VerbHeader="" VerbState=True VerbFormated=False Verbosis ; 
+   StrTplZenityTextInfo=${StrTplZenityTextInfo//__FILE__/${StrDestinationResult}} ; 
+   StrTplZenityTextInfo=${StrTplZenityTextInfo//__FONT__/${IntFontSize}} ; 
+   ### Should Lunch Zenity --text-info... 
+   ${StrTplZenityTextInfo}  
+  }  
+  
   function ParserFunctionEval()
   {
    local __call_locality=( PFE ParserFunctionEval ${StrParentApps} ) ;
@@ -302,7 +372,7 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
     StrDestinationResult="${StrFileResult}"
    fi 
    
-   local StrTplZenityTextInfo="zenity --text-info --filename=__FILE__ --font=10" ; 
+   local StrTplZenityTextInfo="zenity --text-info --filename=__FILE__ --font=__FONT__" ; 
    
    ### Notice : Because we only allow One State at the time, Evualing the code or
    ### Executing the code the Prefixed-variable are ste by default to 
@@ -323,31 +393,20 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
    ### value can flow across schema of Select. 
    
    if [ "${BoolExecuteEval:=True}" == "True" ] ; then
-    ### Execution Side
-    ### Example : BuildForm UUID:6e5b6d0c-890f-11e6-8b1d-001e4c8856d6
-    ### Should End here since this BuildForm imply  : refusing to generate code.
-    ### don't dump it on file , on ZenityViewer like and also once executed it 
-    ### transfert the content into na UUID into /var/log/GnrlPrsrInfctr/UUID because GPIIsUUIDInstance=TRue
-    ### See path example/BuildForm/6e5b6d0c-890f-11e6-8b1d-001e4c8856d6 for parameter.
-    ### Evaluation side to execte it inside called-funtion. 
-    
-    ### Default StrParserResult should Use variable name StrCmd to apply rules of parser to obtain
-    ### 1. StrCmd=dpkg --get-selections | /usr/bin/gawk -f awk-script/dpkg-col-display.awk 
-    ### 2 By calling ${StrCmd} it should execute itself and at least output the display on 
-    ### screen . 
-    StrMsg="Query Executed, UUID-Variable Reference:[ __VAR_NAME__ ]" ;
-    StrMsg=${StrMsg//__VAR_NAME__/${StrUUIDTransmit}} ; 
-    VerbMsg=${StrMsg} VerbDev=/dev/stderr VerbEvalForm=False VerbHeader="EXECUTE-${__call_locality[1]}" VerbState=True VerbFormated=True Verbosis ; 
-    ### Allow the Command-prompt or after this function ending it's live to allow having 
-    ### One way to recuperate the UUID-log. 
-    eval ${StrUUIDTransmit}=${StrUUIDInstance} ;
+    eval $( VTVIsArrayStyleInsert=True \
+             VTVValueEntry=${StrVarList},${StrParserResult},StrDestinationResult   \
+             VTVIsValueReAssign=True       \
+             VTVIsValueToConvert=False     \
+             VTVIsArrayStyleInsert=True    \
+             ValueToVariable ) ReportReference ;    
 
     if [ "${BoolOutToZenity:=False}" == "True" ] ; then 
-     ### Send-it to a file, Zenity will recuperate-it 
-     VerbMsg="""\${${StrParserResult}}""" VerbDev=${StrDestinationResult} VerbEvalForm=False VerbHeader="" VerbState=True VerbFormated=False Verbosis ; 
-     StrTplZenityTextInfo=${StrTplZenityTextInfo//__FILE__/${StrDestinationResult}} ; 
-     ### Should Lunch Zenity --text-info... 
-     ${StrTplZenityTextInfo}
+     eval $( VTVIsArrayStyleInsert=True \
+              VTVValueEntry=${StrVarList},${StrParserResult},StrTplZenityTextInfo   \
+              VTVIsValueReAssign=True       \
+              VTVIsValueToConvert=False     \
+              VTVIsArrayStyleInsert=True    \
+              ValueToVariable ) ZenityHandlerOut ;    
     elif [ "${BoolOutToFile:=False}" == "True" ] ; then 
      ### Send-it to a file. 
      ### No recuperation from tiers methods. 
