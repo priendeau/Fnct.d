@@ -136,4 +136,11 @@ dpkg: no packages found matching -f
 dpkg: no packages found matching /home/maxiste/github/Fnct.D/awk-script/dpkg-col-display.awk
 ${StrCmd}
 
+SOLUTION:
+Based on Query BuilForm : unset ArrayLib ; versionGPI=0.0.1 . /etc/init.d/Fnct.D/fnct_lib ; eval $( GBLDFileStoreInfo=/var/cache/Fnct.D/BuildForm/6e5b6d0c-890f-11e6-8b1d-001e4c8856d6 GBLDAction=GetContent GetterByLineData )   ;
+- Changing for a double eval will execute the query :
+eval eval "\${${StrParserResult}}" inside if [ ${BoolExecuteEval:=True} ] ... 
+${${StrParserResult}} is by default a Variable Named $StrCmd which Verbosiscan display the content.
+evaluating once it turn into ${StrCmd} but have no chance to turn into a executable compound elements.
+The double eval eval allow to re-evaluate the statement into real command line.  
 --------------------------------------------------------------------------------------------------------------

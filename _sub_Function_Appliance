@@ -41,7 +41,7 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   local Arg0=( ${ArrayArg[0]} ) ; 
   
   ### General to GnrlPrsrInfctr Command Parser and depot. 
-  local StrAppsTemplate=${GPIDpkgTpl:=__APPS__ __APPS_OPT__ __PIPE__ __FILTER__ __FILTER_OPT__ } ;
+  local StrAppsTemplate=${GPIDpkgTpl:=__APPS__ __APPS_OPT__ __PIPE__ __FILTER__ __FILTER_OPT__} ;
   local StrApps=${GPIDpkgApps:=/usr/bin/dpkg} ;
   local StrAppsOpt=${GPIDpkgAppsOpt:=--get-selections} ; 
   local StrFilterApps=${GPIFilterApps:=/usr/bin/gawk} ;
@@ -303,8 +303,20 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
    
    local StrTplZenityTextInfo="zenity --text-info --filename=__FILE__ --font=10" ; 
    if [ ${BoolExecuteEval:=True} == "True" ] ; then
-    ### Execution Side 
-    eval """\${${StrParserResult}}""" ; 
+    ### Execution Side
+    ### Example : BuildForm UUID:6e5b6d0c-890f-11e6-8b1d-001e4c8856d6
+    ### Should End here since this BuildForm imply  : refusing to generate code.
+    ### don't dump it on file , on ZenityViewer like and also once executed it 
+    ### transfert the content into na UUID into /var/log/GnrlPrsrInfctr/UUID because GPIIsUUIDInstance=TRue
+    ### See path example/BuildForm/6e5b6d0c-890f-11e6-8b1d-001e4c8856d6 for parameter.
+    ### Evaluation side to execte it inside called-funtion. 
+    
+    ### Default StrParserResult should Use variable name StrCmd to apply rules of parser to obtain
+    ### 1. StrCmd=dpkg --get-selections | /usr/bin/gawk -f awk-script/dpkg-col-display.awk 
+    ### 2 By calling ${StrCmd} it should execute itself and at least output the display on 
+    ### screen . 
+    VerbMsg="Executing Query StrCmd=${StrCmd}" VerbDev=/dev/stderr VerbEvalForm=False VerbHeader="EXECUTE-${__call_locality[1]}" VerbState=True VerbFormated=True Verbosis ; 
+    eval eval "\${${StrParserResult}}"  > ${StrDestinationResult} ; 
     if [ "${BoolOutToZenity:=False}" == "True" ] ; then 
      ### Send-it to a file, Zenity will recuperate-it 
      VerbMsg="""\${${StrParserResult}}""" VerbDev=${StrDestinationResult} VerbEvalForm=False VerbHeader="" VerbState=True VerbFormated=False Verbosis ; 
@@ -322,7 +334,6 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
     fi
      
    elif [ "${BoolGenerateCode:=False}" == "True" ] ; then 
-    ### Evaluation side to execte it inside called-funtion. 
     VerbMsg="""\${${StrParserResult}}""" VerbEvalForm=True VerbHeader="" VerbState=True VerbFormated=False Verbosis ; 
         
    fi   
