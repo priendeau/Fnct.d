@@ -135,4 +135,55 @@ eval eval "\${${StrParserResult}}" inside if [ ${BoolExecuteEval:=True} ] ...
 ${${StrParserResult}} is by default a Variable Named $StrCmd which Verbosiscan display the content.
 evaluating once it turn into ${StrCmd} but have no chance to turn into a executable compound elements.
 The double eval eval allow to re-evaluate the statement into real command line.  
+
+Date:20161003-15:07:00
+Reference:3a823d9f23772dc301c947a641e0a4f5bd7e56b2
+File: _sub_Function_Appliance 
+Function: GnrlPrsrInfctr
+With command line :
+--> unset ArrayLib ; versionGPI=0.0.1 . /etc/init.d/Fnct.D/fnct_lib ; eval $( GBLDFileStoreInfo=/var/cache/Fnct.D/BuildForm/def9e256-8990-11e6-8b1d-001e4c8856d6 GBLDAction=GetContent GetterByLineData )   ;  IntSize=$( wc -c /var/log/Fnct.D/GnrlPrsrInfctr/${UUID} | cut -d ' ' -f 1 ) ; echo -ne "Size of File: /var/log/Fnct.D/GnrlPrsrInfctr/${UUID}: ${IntSize}\n" ;
+Description: 
+OUTPUT: 
 --------------------------------------------------------------------------------------------------------------
+GnrlPrsrInfctr-DEBUG:[ Instance will use UUID reference: 8be2f07e-899c-11e6-8b1d-001e4c8856d6 ]
+Entry-Start : __main_StartServices
+__APPS_OPT__: command not found
+ParserFunctionEval-CMDLINE:[ Copy of StrAppsTemplate, named StrCmd will hold __APPS__ __APPS_OPT__ __PIPE__ __FILTER__ __FILTER_OPT__ ]
+ : command not found
+DEBUG:__main_StartServices:[ CmdLine: local StrPairLeft ; 
+   local StrPairRight ; 
+   local ArrayPFETag=( StrDefaultPipe:__PIPE__ StrApps:__APPS__ StrAppsOpt:__APPS_OPT__ StrFilterApps:__FILTER__ StrFilterOpt:__FILTER_OPT__ StrFileName:__FILE__ ) ; 
+   local StrMsg="PairLeft: __LEFT__, PairRight: __RIGHT__, Query: __QUERY__" ; 
+   for TagParser in ${ArrayPFETag[@]}  ; do 
+     AStrMsg="${StrMsg}" ;
+     StrPairRight="${TagParser/#[SIB][tnos][a-zA-Z0-9_]*:/}" ; 
+     StrPairLeft="${TagParser/%:__[A-Za-z0-9_,]*/}" ; 
+     AStrMsg=${AStrMsg//__LEFT__/${StrPairLeft}} ;
+     AStrMsg=${AStrMsg//__RIGHT__/${StrPairRight}} ;
+     AStrMsg=${AStrMsg//__QUERY__/${StrCmd}} ;
+     VerbMsg=${AStrMsg} VerbHeader=TAGPARSER VerbState=True VerbFormated=True VerbDev=/dev/stderr Verbosis ; 
+     eval StrCmd=\${\StrCmd//${StrPairRight}/\${${StrPairLeft}}}  ; 
+   done ; 
+   unset StrPairRight StrPairLeft ArrayPFETag ; ]
+TAGPARSER:[ PairLeft: StrDefaultPipe, PairRight: __PIPE__, Query: __APPS__ __APPS_OPT__ __PIPE__ __FILTER__ __FILTER_OPT__ ]
+TAGPARSER:[ PairLeft: StrApps, PairRight: __APPS__, Query: __APPS__ __APPS_OPT__ | __FILTER__ __FILTER_OPT__ ]
+TAGPARSER:[ PairLeft: StrAppsOpt, PairRight: __APPS_OPT__, Query: /usr/bin/dpkg __APPS_OPT__ | __FILTER__ __FILTER_OPT__ ]
+TAGPARSER:[ PairLeft: StrFilterApps, PairRight: __FILTER__, Query: /usr/bin/dpkg --get-selections | __FILTER__ __FILTER_OPT__ ]
+TAGPARSER:[ PairLeft: StrFilterOpt, PairRight: __FILTER_OPT__, Query: /usr/bin/dpkg --get-selections | /usr/bin/gawk __FILTER_OPT__ ]
+TAGPARSER:[ PairLeft: StrFileName, PairRight: __FILE__, Query: /usr/bin/dpkg --get-selections | /usr/bin/gawk -f __FILE__ ]
+ParserFunctionEval-CMDLINE:[ Parsed CmdLine: /usr/bin/dpkg --get-selections | /usr/bin/gawk -f awk-script/dpkg-col-display.awk ]
+EXECUTE-ParserFunctionEval:[ Query Executed, UUID-Variable Reference:[ UUID ] ]
+Size of File: /var/log/Fnct.D/GnrlPrsrInfctr/8be2f07e-899c-11e6-8b1d-001e4c8856d6: 106161
+--------------------------------------------------------------------------------------------------------------
+SOLUTION:
+Using Verbosis function with this form:
+VerbMsg=$( eval eval "\${${StrParserResult}}" ) \
+VerbDev=${StrDestinationResult} \
+VerbEvalForm=False \
+VerbHeader="" \
+VerbState=True \
+VerbFormated=False Verbosis ; 
+- Where VerbMsg=MSG is usually the form or accepting a variable, using double-eval with executive brace does
+working and we are using the VerbDev=Device usually to specified the /dev/stdout, /dev/stderr do support file
+as well. Notice,  StrDestinationResult is uniformely supporting the UUID and .GnrlPrsrInfctr for prior 
+assignation. 

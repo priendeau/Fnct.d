@@ -303,7 +303,26 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
    fi 
    
    local StrTplZenityTextInfo="zenity --text-info --filename=__FILE__ --font=10" ; 
-   if [ ${BoolExecuteEval:=True} == "True" ] ; then
+   
+   ### Notice : Because we only allow One State at the time, Evualing the code or
+   ### Executing the code the Prefixed-variable are ste by default to 
+   ### GPIIsGenerateCode:=False + GPIIsExecuteEval:=True
+   ### ---> This mean it prefer to execute the value and since all handler are all
+   ### False There is more chance than It produce a stream of information on screen.
+   ### Since GPIIsUUIDInstance is False by default it give twice the chance to have
+   ### user decision having to read .GnrlPrsrInfctr for the content in case of 
+   ### File-Handler is True. Idem for case of Window-Handler. The actual setup of
+   ### if-elif give choice to Execute Eval to be the first test but case where 2 
+   ### are false, there is nothing at the end and function should end without doing 
+   ### something. it's probably important to set a Warning in case 2 Master decision 
+   ### is false
+   ### GPIIsGenerateCode ==False And GPIIsExecuteEval==False
+   ### 
+   ### In case where thoses 2 master variable are True, it's the BoolExecuteEval
+   ### will be executed first because it's not a Select case where more than True
+   ### value can flow across schema of Select. 
+   
+   if [ "${BoolExecuteEval:=True}" == "True" ] ; then
     ### Execution Side
     ### Example : BuildForm UUID:6e5b6d0c-890f-11e6-8b1d-001e4c8856d6
     ### Should End here since this BuildForm imply  : refusing to generate code.
@@ -319,7 +338,9 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
     StrMsg="Query Executed, UUID-Variable Reference:[ __VAR_NAME__ ]" ;
     StrMsg=${StrMsg//__VAR_NAME__/${StrUUIDTransmit}} ; 
     VerbMsg=${StrMsg} VerbDev=/dev/stderr VerbEvalForm=False VerbHeader="EXECUTE-${__call_locality[1]}" VerbState=True VerbFormated=True Verbosis ; 
-    
+    ### Allow the Command-prompt or after this function ending it's live to allow having 
+    ### One way to recuperate the UUID-log. 
+    eval ${StrUUIDTransmit}=${StrUUIDInstance} ;
 
     if [ "${BoolOutToZenity:=False}" == "True" ] ; then 
      ### Send-it to a file, Zenity will recuperate-it 
@@ -335,10 +356,9 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
      ###                GPIIsFileHandlerOut=True
      ### To avoid falling inside next elif-case where 2 Handler-Out( ToFile and ToZenity )
      ### to refuse collecting the result. 
-     VerbMsg="""\${${StrParserResult}}""" VerbDev=${StrDestinationResult} VerbEvalForm=False VerbHeader="" VerbState=True VerbFormated=False Verbosis ; 
-    
+     VerbMsg=$( eval eval "\${${StrParserResult}}" ) VerbDev=${StrDestinationResult} VerbEvalForm=False VerbHeader="" VerbState=True VerbFormated=False Verbosis ; 
+     
     elif [ "${BoolOutToFile:=False}" == "False" -a "${BoolOutToZenity:=False}" == "False" ]  ; then 
-     eval ${StrUUIDTransmit}=${StrUUIDInstance} ;
      eval eval "\${${StrParserResult}}"  
      ### This scenario from Executing only the query and not provide handler to see the content, 
      ### to have not Handler like file handler (.GnrlPrsrInfctr or UUID depot) is part of the query 
@@ -353,7 +373,33 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
      
    elif [ "${BoolGenerateCode:=False}" == "True" ] ; then 
     VerbMsg="""\${${StrParserResult}}""" VerbEvalForm=True VerbHeader="" VerbState=True VerbFormated=False Verbosis ; 
-        
+    ### I admit it's not a gain to profit from log-repository to store volume of informations, 
+    ### and it' probably once we do generated code we can asking what was generated and can we 
+    ### see back the information. So Test of the of the handler-out are also important here. 
+    ###    
+    ###    Genration/Exec Tree Possibility . 
+    ###    
+    ###    
+    ###                      Content of code generated 
+    ###                   /+ will go in file
+    ###    Output        /   
+    ###    Generation-------+Both are False, it's not reported 
+    ###                  \
+    ###                   \+ Content of code generated  
+    ###                      will go inside windows 
+    ###                      called Zenity
+    ###    
+    ###                      Content of Execution
+    ###                   /+ will go in file  
+    ###    Output        /   
+    ###    Execution -------+Both are False, it's not reported
+    ###                  \               
+    ###                   \+ Content of Execution 
+    ###                      will go inside windows 
+    ###                      called Zenity
+    ###    
+    ###    
+    ###    
    fi   
   }
 
