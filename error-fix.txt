@@ -91,16 +91,8 @@ Date:20160930-22:36:00
 Reference:fb51fdaecc2ec8feb1fa4881bf1d7fc839b5a60c
 File: _sub_Function_Appliance 
 Function: GnrlPrsrInfctr
-With command line :
--->unset ArrayLib ; versionGPI=0.0.1 . /etc/init.d/Fnct.D/fnct_lib  ; GPIDisplayDebug=True GPIIsUUIDInstance=True GPIRepoCreatEnabled=True GPIRepositoryCreation=True GPIParserDebug=True GPIFuncStart=__main_StartServices GPIIsZenityHandlerOut=False GPIIsFileHandlerOut=False GPIIsGenerateCode=False  GPIIsExecuteEval=True GPIFileName=/home/maxiste/github/Fnct.D/awk-script/dpkg-col-display.awk GnrlPrsrInfctr
-Description: Still having command not found on 'ParserFunctionEval-CMDLINE:[ Copy of StrAppsTemplate...' 
-See 'ParserFunctionEval-CMDLINE:[ Parsed...' The command-line is correct, despite declaration from command-line,
-Prefixed-variable :
-GPIIsZenityHandlerOut=False 
-GPIIsFileHandlerOut=False 
-GPIIsGenerateCode=False  
-GPIIsExecuteEval=True
-- It can not call the command-line properly. 
+With command line :unset ArrayLib ; versionGPI=0.0.1 . /etc/init.d/Fnct.D/fnct_lib ; eval $( GBLDFileStoreInfo=/var/cache/Fnct.D/BuildForm/6e5b6d0c-890f-11e6-8b1d-001e4c8856d6 GBLDAction=GetContent GetterByLineData )   ;
+-->
 OUTPUT: 
 --------------------------------------------------------------------------------------------------------------
 GnrlPrsrInfctr-DEBUG:[ Instance will use UUID reference: da52ab2e-877f-11e6-8b1d-001e4c8856d6 ]
