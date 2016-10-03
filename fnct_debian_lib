@@ -2615,6 +2615,18 @@ function ZenityBuildForm()
  
  }  ; 
 
+function UUIDBuildForm()
+{ 
+ 
+ ### This is a wrapped around ZenityBuildForm to accept by default 
+ ### To create query directly inside the repository and uses 
+ ### Arg0 to handle the function name. 
+ local __call_locality=( UUIDBF UUIDBuildForm ) ;
+ local ArrayArg=( $* ) ; 
+ local Arg0=${ArrayArg[0]} ;
+ ZBFUUIDQuery=True ZBFFunctionName=${Arg0} ZenityBuildForm ; 
+
+}
 
 
 unset DefaultConfigure ;
