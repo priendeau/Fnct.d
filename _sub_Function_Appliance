@@ -50,6 +50,7 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   local StrParserTag=${GPITagParser:=StrDefaultPipe:__PIPE__,StrApps:__APPS__,StrAppsOpt:__APPS_OPT__,StrFilterApps:__FILTER__,StrFilterOpt:__FILTER_OPT__,StrFileName:__FILE__}
   local StrTagFeeder=${GPITagFeeder:=''} ;
   local StrParserResult=${GPITagParserResult:=StrCmd} ; 
+  local StrUUIDTransmit=${GPITUUIDName:=UUID} ; 
   local StrDefaultPipe=${GPIPipeSig:=\|} ;
   local StrDefaultVerbose=${GPIVerboseDev:=/dev/stderr} ; 
   local StrUUIDInstance ;
@@ -96,7 +97,7 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   ArrayTplAction["Chown"]="__SUDO__ __OPT__ __APPS__ __OWNER__ __PATH__"   ;
   local ArrayActionOrder=( "Mkdir" "Chmod" "Chown" ) ;
    
-  local StrVarList="StrVarList,BoolOutToZenity,BoolOutToFile,StrTagFeeder,StrParentApps,BoolEmitUUID,StrParserResult,StrAwkScript,StrAppsTemplate,StrApps,StrAppsOpt,StrFilterApps,StrFilterOpt,StrParserTag,StrFileName,StrDefaultPipe,StrDefaultVerbose,StrTagRepoMkdir,StrTagRepoChmod,StrTagRepoChown,BoolRepoCreaEnabled,BoolDisplayParserDebug,StrRepositoryQuery,BoolCreateRepository,StrDefaultUser,StrDefaultPerm,StrAppsSudo,StrAppsSudoOpt,StrAppsMkdir,StrAppsChown,StrAppsChmod,StrStartMain,BoolExecuteEval,BoolGenerateCode,StrUUIDInstance,StrPrefixTagGroup" ; 
+  local StrVarList="StrVarList,BoolOutToZenity,BoolOutToFile,StrTagFeeder,StrParentApps,BoolEmitUUID,StrParserResult,StrAwkScript,StrAppsTemplate,StrApps,StrAppsOpt,StrFilterApps,StrFilterOpt,StrParserTag,StrFileName,StrDefaultPipe,StrDefaultVerbose,StrTagRepoMkdir,StrTagRepoChmod,StrTagRepoChown,BoolRepoCreaEnabled,BoolDisplayParserDebug,StrRepositoryQuery,BoolCreateRepository,StrDefaultUser,StrDefaultPerm,StrAppsSudo,StrAppsSudoOpt,StrAppsMkdir,StrAppsChown,StrAppsChmod,StrStartMain,BoolExecuteEval,BoolGenerateCode,StrUUIDInstance,StrPrefixTagGroup,StrUUIDTransmit" ; 
   
   ### Informations About uses of StrUUIDInstance vs. StrFileOutput  .
   ### 
@@ -315,8 +316,11 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
     ### 1. StrCmd=dpkg --get-selections | /usr/bin/gawk -f awk-script/dpkg-col-display.awk 
     ### 2 By calling ${StrCmd} it should execute itself and at least output the display on 
     ### screen . 
-    VerbMsg="Executing Query StrCmd=${StrCmd}" VerbDev=/dev/stderr VerbEvalForm=False VerbHeader="EXECUTE-${__call_locality[1]}" VerbState=True VerbFormated=True Verbosis ; 
-    eval eval "\${${StrParserResult}}"  > ${StrDestinationResult} ; 
+    StrMsg="Query Executed, UUID-Variable Reference:[ __VAR_NAME__ ]" ;
+    StrMsg=${StrMsg//__VAR_NAME__/${StrUUIDTransmit}} ; 
+    VerbMsg=${StrMsg} VerbDev=/dev/stderr VerbEvalForm=False VerbHeader="EXECUTE-${__call_locality[1]}" VerbState=True VerbFormated=True Verbosis ; 
+    
+
     if [ "${BoolOutToZenity:=False}" == "True" ] ; then 
      ### Send-it to a file, Zenity will recuperate-it 
      VerbMsg="""\${${StrParserResult}}""" VerbDev=${StrDestinationResult} VerbEvalForm=False VerbHeader="" VerbState=True VerbFormated=False Verbosis ; 
@@ -326,11 +330,25 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
     elif [ "${BoolOutToFile:=False}" == "True" ] ; then 
      ### Send-it to a file. 
      ### No recuperation from tiers methods. 
+     ### Scenario from BuildForm UUID:def9e256-8990-11e6-8b1d-001e4c8856d6
+     ### At this stage, GPIIsExecuteEval=True 
+     ###                GPIIsFileHandlerOut=True
+     ### To avoid falling inside next elif-case where 2 Handler-Out( ToFile and ToZenity )
+     ### to refuse collecting the result. 
      VerbMsg="""\${${StrParserResult}}""" VerbDev=${StrDestinationResult} VerbEvalForm=False VerbHeader="" VerbState=True VerbFormated=False Verbosis ; 
+    
     elif [ "${BoolOutToFile:=False}" == "False" -a "${BoolOutToZenity:=False}" == "False" ]  ; then 
+     eval ${StrUUIDTransmit}=${StrUUIDInstance} ;
+     eval eval "\${${StrParserResult}}"  
+     ### This scenario from Executing only the query and not provide handler to see the content, 
+     ### to have not Handler like file handler (.GnrlPrsrInfctr or UUID depot) is part of the query 
+     ### BuildForm UUID:6e5b6d0c-890f-11e6-8b1d-001e4c8856d6
+
      ### Display the Evaluation on /dev/stderr 
-     VerbMsg="""\${${StrParserResult}}""" VerbDev=/dev/stderr VerbEvalForm=False VerbHeader="" VerbState=True VerbFormated=False Verbosis ; 
-           
+     #VerbMsg="""\${${StrParserResult}}""" VerbDev=/dev/stderr VerbEvalForm=False VerbHeader="" VerbState=True VerbFormated=False Verbosis ; 
+     #eval ${StrUUIDTransmit}=${StrUUIDInstance} ;
+     #eval eval "\${${StrParserResult}}" > ${StrDestinationResult} ; 
+       
     fi
      
    elif [ "${BoolGenerateCode:=False}" == "True" ] ; then 
