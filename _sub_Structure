@@ -1215,13 +1215,36 @@ if [ "${versionTP:=0.0.2}" == "0.0.2" ] ; then
   local BoolInvertPairMatch=${TPIsMatchRtoL:=True} ;
   local BoolDebugDisplay=${TPDisplayDebug:=False} ;
   local BoolDisplayEvalOnly=${TPDisplayEvalOnly:=False} ;
-  local BoolDisplayParserAction=${TPDisplayParserNotice:=False} ;  
-  local StrVarList="BoolDisplayParserAction,BoolInvertPairMatch,BoolDisplayEvalOnly,StrTagList,StrArrayName,StrIterName,StrLeftPattern,StrRightPattern,StrCmd,StrScopeVar,StrVarAssign" ; 
+  local BoolDisplayParserAction=${TPDisplayParserNotice:=False} ; 
+  local BoolUsingSed=${TPUsingSedTrim:=True} ;  
+  ### 20161004 - Added BoolUsingSed, set it to False will filter StrInitCmd with tr instead 
+  local StrVarList="BoolUsingSed,BoolDisplayParserAction,BoolInvertPairMatch,BoolDisplayEvalOnly,StrTagList,StrArrayName,StrIterName,StrLeftPattern,StrRightPattern,StrCmd,StrScopeVar,StrVarAssign" ; 
   
   ### Removed by confusion in code transformation . 
   ###local StrVarEntry=${TPVarEntry:=StrEntry} ; 
    
   
+  ### This is a specialized Verbosis mode :
+  ###  
+  ###  All condition required to set VerbState=True 
+  ###  All condition required to set a message with VerbMsg=STRING
+  ###  
+  ###  
+  ### It can be used to :
+  ###  - Echo result to be passed throught Value Result .
+  ###  Required :
+  ###  VerbEvalForm=True VerbFormated=False 
+  ###  
+  ###  VerbHeader Is ineffective
+  ###  
+  ### -Echo result can be append to file and not overwriting the content: 
+  ###  Required ;
+  ###  VerbFormated=False/True VerbAppendDev=True VerbDev=[ FILENAME | UUID ]
+  ###  - Appending to file also required to be unique-file were no instance of 
+  ###  Verbosis may point on same-file or loss of log will be CERTAIN.
+  ###  -Pointing to Same-Destination require a lock Mechanism which is 
+  ###  not implemented here
+  ###  
   function Verbosis()
   {
    local __call_locality=( Verbosis Verb );
@@ -1229,17 +1252,32 @@ if [ "${versionTP:=0.0.2}" == "0.0.2" ] ; then
    local StrDevOut=${VerbDev:=/dev/stderr} ; 
    local IsVerboseState=${VerbState:=False} ;
    local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+   local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
    local IsDisplayFormatted=${VerbFormated:=True} ;
+   local IsAppendMode=${VerbAppendDev:=False} ; 
    local ArrayArg=( $* ) ; 
    if [ "${IsVerboseState:=False}" == "True" ] ; then 
     if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
-      echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+     if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
+     else  
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+     fi
     else
-      echo -ne "${StrMsg}\n" > ${StrDevOut} ;
+     if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+        echo "${StrMsg}" ;  
+     else
+      if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo "${StrMsg}" >> ${StrDevOut} ;
+      else
+       echo "${StrMsg}" > ${StrDevOut} ;
+      fi
+     fi 
     fi 
    fi
-  } ### Model : VerbMsg= VerbDev=/dev/stderr VerbState=True VerbFormated=True VerbHeader=${__call_locality[1]} Verbosis
-  
+  } 
+  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis
+   
   
 
   function __main_StartServices()
@@ -1278,11 +1316,13 @@ if [ "${versionTP:=0.0.2}" == "0.0.2" ] ; then
    ### Uses of String substitution with partial erase of the String for a 
    ### one step imply to detect the partial-to-erase and result is what is
    ### remaining in the String .... 
-   InitStrCmd="""${StrScopeVar} StrPairLeft ; 
+   # for __ITER__ in \${__ARRAY_NAME__[@]}  ; do 
+   local StrInitCmd="""${StrScopeVar} intx=0 ; ${StrScopeVar} StrPairLeft ; 
    ${StrScopeVar} StrPairRight ; 
    ${StrScopeVar} __ARRAY_NAME__=( ${StrTagList//,/ } ) ; 
-   ${StrScopeVar} StrMsg=\"PairLeft: __LEFT__, PairRight: __RIGHT__, Query: __QUERY__\" ; 
-   for __ITER__ in \${__ARRAY_NAME__[@]}  ; do 
+   ${StrScopeVar} StrMsg=\"PairLeft( __LEFT__ ), PairRight( __RIGHT__ ), Query( __QUERY__)\" ; 
+   for (( intx=0 ; intx <= \${#__ARRAY_NAME__[@]}-1 ; intx++ )) ; do 
+     __ITER__=\${__ARRAY_NAME__[\${intx}]} ; 
      AStrMsg=\"\${StrMsg}\" ;
      StrPairRight=\"\${__ITER__/#__LEFT_PATTERN__/}\" ; 
      StrPairLeft=\"\${__ITER__/%__RIGHT_PATTERN__/}\" ; 
@@ -1292,8 +1332,16 @@ if [ "${versionTP:=0.0.2}" == "0.0.2" ] ; then
      VerbMsg=\${AStrMsg} VerbHeader=TAGPARSER VerbState=${BoolDisplayParserAction} VerbFormated=True VerbDev=/dev/stderr Verbosis ; 
      __PAIR_EXCHANGE_ORDER__ ; 
    done ; 
-   unset StrPairRight StrPairLeft __ARRAY_NAME__ ;""" ; 
-   StrCmd=$( echo "${InitStrCmd}" | sed 's/\n/\\n/g' ) ; 
+   unset intx StrPairRight StrPairLeft __ARRAY_NAME__ ;""" ; 
+   ### Added 20161004 - Filtering excess of control caracter . 
+   ### Sed does filtering the excessive \n \r into \\n and \\r 
+   ### and /usr/bin/tr does remote it, it change the form of the query but does not 
+   ### alter the code. 
+   if [ "${BoolUsingSed:=True}" == "False" ] ; then 
+    StrCmd=$( echo "${StrInitCmd}" | /usr/bin/tr '[:cntrl:]' ' ' ) ; 
+   else
+    StrCmd=$( echo "${StrInitCmd}" | /bin/sed 's/\n/\\n/g;s/\r/\\r/g' ) ; 
+   fi 
    
    StrCmd=${StrCmd//__ITER__/${StrIterName}} ; 
    StrCmd=${StrCmd//__LEFT_PATTERN__/${StrLeftPattern}} ; 
@@ -1305,7 +1353,9 @@ if [ "${versionTP:=0.0.2}" == "0.0.2" ] ; then
    VerbMsg=${StgMsg//__CMD__/${StrCmd}} VerbHeader="DEBUG:${__call_locality[1]}" VerbState=${BoolDebugDisplay} VerbFormated=True VerbDev=/dev/stderr Verbosis
    
    if [ "${BoolDisplayEvalOnly:=False}" == "False" ] ; then 
-    VerbMsg=${StrCmd} VerbHeader="" VerbState=True VerbFormated=False VerbDev=/dev/stdout Verbosis ; 
+    ### 20161004, changing Verbosis model, support Evaluation. and is not thowing the code 
+    ### on /dev/stdout but general device. 
+    VerbMsg=${StrCmd} VerbEvalForm=True VerbFormated=False VerbState=True Verbosis ; 
    fi
   } 
   
