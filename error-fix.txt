@@ -282,3 +282,69 @@ uses of ValueToVariable does reduce transformation of code and allow moving part
 as long the small moved part should not transform a variable and next-code unmoved SHALL not inherit from
 this infortmation or mechanism to transfert the value should be added. 
 
+Date:20161003-17:53:00
+Reference:cdded9951311cf433f2c08fda464131714b091cf
+File: _sub_Function_Appliance 
+Function: GnrlPrsrInfctr
+With command line :
+--> unset ArrayLib ; versionGPI=0.0.1 . /etc/init.d/Fnct.D/fnct_lib ; IsUUID=True IsZenity=True IsFile=False eval $( GBLDFileStoreInfo=/var/cache/Fnct.D/BuildForm/bf35dfa8-89b1-11e6-8b1d-001e4c8856d6 GBLDAction=GetContent GetterByLineData ) ;  IntSize=$( wc -c /var/log/Fnct.D/GnrlPrsrInfctr/${UUID} | cut -d ' ' -f 1 ) ; echo -ne "Size of File: /var/log/Fnct.D/GnrlPrsrInfctr/${UUID}: ${IntSize}\n" ;
+Description: Display ${StrCmd} and after the command line. This test run with BuildFormn bf35dfa8-89b1-11e6-8b1d-001e4c8856d6, from /var/cache/Fnct.D/BuildForm/ but can be reproduced with Form deposed inside path examples/BuildForm/bf35dfa8-89b1-11e6-8b1d-001e4c8856d6, variable IsUUID=True IsZenity=True IsFile=False are used to exchange value of GPIIsUUIDInstance, GPIIsZenityHandlerOut GPIIsFileHandlerOut which are shorted to write down ; can explicitly load the Zenity Windows and drop the command inside. 
+OUTPUT: 
+--------------------------------------------------------------------------------------------------------------
+GnrlPrsrInfctr-DEBUG:[ Instance will use UUID reference: 9cd79cb6-8a66-11e6-8b1d-001e4c8856d6 ]
+Entry-Start : __main_StartServices
+__APPS_OPT__: command not found
+ParserFunctionEval-CMDLINE:[ Copy of StrAppsTemplate, named StrCmd will hold __APPS__ __APPS_OPT__ __PIPE__ __FILTER__ __FILTER_OPT__ ]
+ : command not found
+DEBUG:__main_StartServices:[ CmdLine: local StrPairLeft ; 
+   local StrPairRight ; 
+   local ArrayPFETag=( StrDefaultPipe:__PIPE__ StrApps:__APPS__ StrAppsOpt:__APPS_OPT__ StrFilterApps:__FILTER__ StrFilterOpt:__FILTER_OPT__ StrFileName:__FILE__ ) ; 
+   local StrMsg="PairLeft: __LEFT__, PairRight: __RIGHT__, Query: __QUERY__" ; 
+   for TagParser in ${ArrayPFETag[@]}  ; do 
+     AStrMsg="${StrMsg}" ;
+     StrPairRight="${TagParser/#[SIB][tnos][a-zA-Z0-9_]*:/}" ; 
+     StrPairLeft="${TagParser/%:__[A-Za-z0-9_,]*/}" ; 
+     AStrMsg=${AStrMsg//__LEFT__/${StrPairLeft}} ;
+     AStrMsg=${AStrMsg//__RIGHT__/${StrPairRight}} ;
+     AStrMsg=${AStrMsg//__QUERY__/${StrCmd}} ;
+     VerbMsg=${AStrMsg} VerbHeader=TAGPARSER VerbState=True VerbFormated=True VerbDev=/dev/stderr Verbosis ; 
+     eval StrCmd=\${\StrCmd//${StrPairRight}/\${${StrPairLeft}}}  ; 
+   done ; 
+   unset StrPairRight StrPairLeft ArrayPFETag ; ]
+TAGPARSER:[ PairLeft: StrDefaultPipe, PairRight: __PIPE__, Query: __APPS__ __APPS_OPT__ __PIPE__ __FILTER__ __FILTER_OPT__ ]
+TAGPARSER:[ PairLeft: StrApps, PairRight: __APPS__, Query: __APPS__ __APPS_OPT__ | __FILTER__ __FILTER_OPT__ ]
+TAGPARSER:[ PairLeft: StrAppsOpt, PairRight: __APPS_OPT__, Query: /usr/bin/dpkg __APPS_OPT__ | __FILTER__ __FILTER_OPT__ ]
+TAGPARSER:[ PairLeft: StrFilterApps, PairRight: __FILTER__, Query: /usr/bin/dpkg --get-selections | __FILTER__ __FILTER_OPT__ ]
+TAGPARSER:[ PairLeft: StrFilterOpt, PairRight: __FILTER_OPT__, Query: /usr/bin/dpkg --get-selections | /usr/bin/gawk __FILTER_OPT__ ]
+TAGPARSER:[ PairLeft: StrFileName, PairRight: __FILE__, Query: /usr/bin/dpkg --get-selections | /usr/bin/gawk -f __FILE__ ]
+ParserFunctionEval-CMDLINE:[ Parsed CmdLine: /usr/bin/dpkg --get-selections | /usr/bin/gawk -f awk-script/dpkg-col-display.awk ]
+EXECUTE-ReportReference:[ Query Executed, UUID-Variable Reference:[ UUID ] ]
+${StrCmd}
+/usr/bin/dpkg --get-selections | /usr/bin/gawk -f awk-script/dpkg-col-display.awk
+--------------------------------------------------------------------------------------------------------------
+SOLUTION:
+to remove the extra code after 
+elif BoolGenerateCode== True , it contain the Variable name holding the command and it's not usefull at this step,
+This step to main use ReportRefence to generate the UUID variable if the file report is a UUID or a .GnrlPrsrInfctr 
+report. 
+
+Date:20161004-15:51:00
+Reference:cdded9951311cf433f2c08fda464131714b091cf
+File: _sub_Function_Appliance 
+Function: GnrlPrsrInfctr
+With command line :
+--> unset ArrayLib ; versionGPI=0.0.1 . /etc/init.d/Fnct.D/fnct_lib ; IsUUID=True IsZenity=True IsFile=False ; eval $( GBLDFileStoreInfo=/var/cache/Fnct.D/BuildForm/bf35dfa8-89b1-11e6-8b1d-001e4c8856d6 GBLDAction=GetContent GetterByLineData | sed 's/GPIParserDebug=True/GPIParserDebug=False/g;s/GPIDisplayDebug=True/GPIDisplayDebug=False/g' ) ;  IntSize=$( wc -c /var/log/Fnct.D/GnrlPrsrInfctr/${UUID} | cut -d ' ' -f 1 ) ; echo -ne "Size of File: /var/log/Fnct.D/GnrlPrsrInfctr/${UUID}: ${IntSize}\n" ;
+Description: The Query to display no debug and Keeping actual choice for Evaluation based of BuildForm UUID:bf35dfa8-89b1-11e6-8b1d-001e4c8856d6 display anormal '__APPS_OPT__: command not found',  and  ' : command not found' . Note it display the command line parsed and mean it can be evaluated or placed inside Executive Brace.  
+OUTPUT: 
+--------------------------------------------------------------------------------------------------------------
+__APPS_OPT__: command not found
+ : command not found
+/usr/bin/dpkg --get-selections | /usr/bin/gawk -f awk-script/dpkg-col-display.awk
+--------------------------------------------------------------------------------------------------------------
+SOLUTION:
+inside ParserFunctionEval, evaluation require quoted string for 
+${StrParserResult}
+full line : eval "local ${StrParserResult}=\"${StrAppsTemplate} ${StrTagFeeder}\"" ;
+this remove only the __APPS_OPT__ and a redundant StrCmd was erased from __main_StartServices.
+
+

@@ -249,13 +249,16 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
      StrMsg=${StrMsg//__ACTION__/${StrAction}} ; 
      
      VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-CMDLINE" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
-     eval $( TPVarNameParsed="StrAction"                       \
+     
+     ### Double Evaluation of the command seem to work for TagParser. 
+     eval eval TPVarNameParsed="StrAction"                     \
              TPListTag=${StrTagListVar}                        \
              TPIsMatchRtoL=True                                \
              TPDisplayParserNotice=\${BoolDisplayParserDebug}  \
              TPDisplayDebug=${BoolDisplayDebug}                \
              TPArrayName="Array${__call_locality[0]}Tag"       \
-             TagParser 2> /dev/null ) ;
+             TagParser ;
+             # 2> /dev/null )  
      StrMsg=$( ${StrParentApps} --get ArrayMsg[2] ) ;
      
      VerbMsg="${StrMsg//__CMD__/${StrAction}}" VerbHeader="${__call_locality[1]}-CMDLINE" VerbEvalForm=False VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis ; 
@@ -270,7 +273,7 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   
   function ReportReference()
   {
-   local __call_locality=( SE StatementExecution ${StrParentApps} ) ;
+   local __call_locality=( RR ReportReference ${StrParentApps} ) ;
    local ArrayArg=( $* ) ;
    local Arg0=${ArrayArg[0]};  
    local StrMsg ; 
@@ -306,7 +309,12 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
     StrMsg="Query Executed, No UUID used, Reference file:[ __FILE__ ]" ;
     StrMsg=${StrMsg//__FILE__/${StrFileOutput}} ;
    fi 
-   VerbMsg=${StrMsg} VerbDev=/dev/stderr VerbEvalForm=False VerbHeader="EXECUTE-${__call_locality[1]}" VerbState=True VerbFormated=True Verbosis ; 
+   VerbMsg=${StrMsg}          \
+   VerbDev=/dev/stderr        \
+   VerbEvalForm=False         \
+   VerbHeader="EXECUTE-${__call_locality[1]}" \
+   VerbState=${BoolDisplayDebug}              \
+   VerbFormated=True Verbosis ; 
    ### Allow the Command-prompt or after this function ending it's live to allow having 
    ### One way to recuperate the UUID-log. 
   
@@ -317,6 +325,8 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
    local __call_locality=( ZHO ZenityHandlerOut ${StrParentApps} ) ;
    local ArrayArg=( $* ) ;
    local Arg0=${ArrayArg[0]};  
+   local StrTplZenityTextInfo=${ZHOZenityTpl:="zenity --text-info --filename=__FILE__ --font=__FONT__"} ; 
+   
    ### After moving the body of the if statement if [ "${BoolOutToZenity:=False}" == "True"...
    ### into a function. The query was tried again and confirm 
    ### BuildForm UUID:bb7e1d60-899f-11e6-8b1d-001e4c8856d6 , was able to 
@@ -329,7 +339,12 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
    ### Since Zenity can not really accept Stream from piped application action it
    ### requiert to dump it on file first. 
    ### Some extra Prefixed-Variable will be available to free-out the file after . 
-   VerbMsg=$( eval eval "\${${StrParserResult}}" ) VerbDev=${StrDestinationResult} VerbEvalForm=False VerbHeader="" VerbState=True VerbFormated=False Verbosis ; 
+   VerbMsg=$( eval eval "\${${StrParserResult}}" ) \
+   VerbDev=${StrDestinationResult} \
+   VerbEvalForm=False              \
+   VerbHeader=""                   \
+   VerbState=True                  \
+   VerbFormated=False Verbosis ; 
    #VerbMsg="""\${${StrParserResult}}""" VerbDev=${StrDestinationResult} VerbEvalForm=False VerbHeader="" VerbState=True VerbFormated=False Verbosis ; 
    StrTplZenityTextInfo=${StrTplZenityTextInfo//__FILE__/${StrDestinationResult}} ; 
    StrTplZenityTextInfo=${StrTplZenityTextInfo//__FONT__/${IntFontSize}} ; 
@@ -343,7 +358,10 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
    local ArrayArg=( $* ) ;
    local Arg0=${ArrayArg[0]};  
    
-   eval ${StrParserResult}=${StrAppsTemplate} ;
+   ### This line does, Getting from Prefixed-Variable desired Variable to 
+   ### to be generated like Variable=command
+   ### and put the content of template and FeedParser .  
+   eval "local ${StrParserResult}=\"${StrAppsTemplate} ${StrTagFeeder}\"" ;
    
    StrMsg="Copy of StrAppsTemplate, named __VAR__ will hold __CONTENT__" ; 
    StrMsg=${StrMsg//__VAR__/${StrParserResult}} ;
@@ -372,7 +390,7 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
     StrDestinationResult="${StrFileResult}"
    fi 
    
-   local StrTplZenityTextInfo="zenity --text-info --filename=__FILE__ --font=__FONT__" ; 
+   
    
    ### Notice : Because we only allow One State at the time, Evualing the code or
    ### Executing the code the Prefixed-variable are ste by default to 
@@ -415,7 +433,12 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
      ###                GPIIsFileHandlerOut=True
      ### To avoid falling inside next elif-case where 2 Handler-Out( ToFile and ToZenity )
      ### to refuse collecting the result. 
+     
      VerbMsg=$( eval eval "\${${StrParserResult}}" ) VerbDev=${StrDestinationResult} VerbEvalForm=False VerbHeader="" VerbState=True VerbFormated=False Verbosis ; 
+     ### This case execute and send it to file which is different from it's brotherhood 
+     ### of evaluating the code where the code should at least get out of the fuction and 
+     ### logging is used on demand, where 2 method here exist to execute the code and 
+     ### suggest to keep the code from elif BoolOutToFile == False AND BoolOutToZenity == False  
      
     elif [ "${BoolOutToFile:=False}" == "False" -a "${BoolOutToZenity:=False}" == "False" ]  ; then 
      eval eval "\${${StrParserResult}}"  
@@ -431,11 +454,24 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
     fi
      
    elif [ "${BoolGenerateCode:=False}" == "True" ] ; then 
-    VerbMsg="""\${${StrParserResult}}""" VerbEvalForm=True VerbHeader="" VerbState=True VerbFormated=False Verbosis ; 
-    ### I admit it's not a gain to profit from log-repository to store volume of informations, 
-    ### and it' probably once we do generated code we can asking what was generated and can we 
-    ### see back the information. So Test of the of the handler-out are also important here. 
-    ###    
+    ### ReportReference Must display proper mesage where is the Specified file
+    ### to hold the result. 
+    ### Also Generate the Variable required to hold the query ready to execute. 
+    eval $( VTVIsArrayStyleInsert=True \
+          VTVValueEntry=${StrVarList},${StrParserResult},StrDestinationResult   \
+          VTVIsValueReAssign=True       \
+          VTVIsValueToConvert=False     \
+          VTVIsArrayStyleInsert=True    \
+          ValueToVariable ) ReportReference ; 
+    
+    ### Does create ${StrCmd} uselessly .... 
+    ### VerbMsg="""\${${StrParserResult}}""" VerbEvalForm=True VerbHeader="" VerbState=True VerbFormated=False Verbosis ; 
+    
+    ### I admit it's not a profit gain for log-repository to store volume of 
+    ### informations,and it' probably once we do generated code we can asking 
+    ### was generated and can we see back the information. So Test of the 
+    ### handler-out are also important here. 
+    ###   
     ###    Genration/Exec Tree Possibility . 
     ###    
     ###    
@@ -451,14 +487,46 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
     ###                      Content of Execution
     ###                   /+ will go in file  
     ###    Output        /   
-    ###    Execution -------+Both are False, it's not reported
-    ###                  \               
-    ###                   \+ Content of Execution 
+    ###    Execution ---------------------------------+Both are False, it's not reported ( and case neglected because 
+    ###                  \                             if-elif-elif structure suggest if there is no variable handled 
+    ###                   \+ Content of Execution      BoolOutToZenity & BoolOutToFile it won't fall in inapropritate choice. 
     ###                      will go inside windows 
     ###                      called Zenity
     ###    
     ###    
     ###    
+    
+    ### Responsible to Throw the command line on to launch it or display it 
+    ### like an echo . The procedure include fall inside BoolGenerateCode ==True
+    ### 1 - MUST generate code for evaluation ... 
+    ### 2 - depending of a condition BoolOutToZenity==True or BoolOutToFile==True
+    ### it dump the log confirmation of executed text in a zenity Windows or 
+    ### File. 
+    eval VerbMsg="\${${StrParserResult}}" \
+    VerbDev=/dev/stderr  \
+    VerbEvalForm=True    \
+    VerbHeader=""        \
+    VerbState=True       \
+    VerbFormated=False  Verbosis ; 
+    
+    if [ "${BoolOutToZenity:=False}" == "True" ] ; then
+     local StrTplZenityTextInfo=${ZHOZenityTpl:="zenity --text-info --filename=__FILE__ --font=__FONT__"} ; 
+     eval VerbMsg="\${${StrParserResult}}" VerbDev=${StrDestinationResult} VerbEvalForm=False VerbHeader="" VerbState=True VerbFormated=False Verbosis ; 
+     StrTplZenityTextInfo=${StrTplZenityTextInfo//__FILE__/${StrDestinationResult}} ; 
+     StrTplZenityTextInfo=${StrTplZenityTextInfo//__FONT__/${IntFontSize}} ; 
+     ### Should Lunch Zenity --text-info... 
+     ${StrTplZenityTextInfo}  
+     
+     #VerbMsg=$( eval "\${${StrParserResult}}" ) VerbEvalForm=True VerbHeader="" VerbState=True VerbFormated=False Verbosis ;  
+     #VerbDev=${StrDestinationResult} 
+    elif [ "${BoolOutToFile:=False}" == "True" ] ; then 
+     eval VerbMsg="\${${StrParserResult}}" VerbDev=/dev/stderr VerbEvalForm=True VerbHeader="" VerbState=${BoolDisplayDebug} VerbFormated=False  Verbosis ; 
+    
+    ### Suggested to eliminate this case .  
+    #elif [ "${BoolOutToFile:=False}" == "False" -a "${BoolOutToZenity:=False}" == "False" ]  ; then 
+    # eval VerbMsg="\${${StrParserResult}}" VerbDev=/dev/stderr VerbEvalForm=True VerbHeader="" VerbState=${BoolDisplayDebug} VerbFormated=False  Verbosis ; 
+     
+    fi
    fi   
   }
 
@@ -467,8 +535,8 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
    local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
    local ArrayArg=( $* ) ;
    local Arg0=${ArrayArg[0]};  
-   local StrCmd=${StrAppsTemplate}
-   ### dpkg --get-selections | awk -f ${StrAwkScript}
+   #local StrCmd=${StrAppsTemplate}
+   
    
    ### Generic Infrastructure coming from ZenityBuildForm, have proof of it's success
    ### we do assume it's simlpe to port-it inside GnrlPrsrInfctr . 
@@ -484,7 +552,7 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
    fi   
     
     eval $( VTVIsArrayStyleInsert=True \
-        VTVValueEntry=${StrVarList}   \
+        VTVValueEntry=${StrVarList},StrCmd   \
         VTVIsValueReAssign=True       \
         VTVIsValueToConvert=False     \
         VTVIsArrayStyleInsert=True    \
@@ -512,11 +580,21 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
    if [ "${BoolEmitUUID:=True}" == "True" ] ; then 
     StrUUIDInstance=$( GetUTimeBased=True GetUSeq=1 GetUIDRegister=True GetUAppsRegisterName=GnrlPrsrInfctr GetUUID ) ; 
-    VerbMsg="${ArrayMsg[4]//__UUID__/${StrUUIDInstance}}" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
+    VerbMsg="${ArrayMsg[4]//__UUID__/${StrUUIDInstance}}" \
+    VerbHeader="${__call_locality[1]}-DEBUG" \
+    VerbEvalForm=False                       \
+    VerbFormated=True                        \
+    VerbState=${BoolDisplayDebug}            \
+    StrDevOut=/dev/stderr  Verbosis ; 
    
    fi 
    StrMsg=${ArrayMsg[5]}; 
-   VerbMsg="${StrMsg//__FUNCT__/${StrStartMain}}" VerbEvalForm=True VerbHeader="" VerbState=True VerbFormated=False Verbosis ; 
+   VerbMsg="${StrMsg//__FUNCT__/${StrStartMain}}" \
+   VerbEvalForm=False VerbHeader="${__call_locality[1]}-DEBUG" \
+   VerbState=${BoolDisplayDebug} \
+   VerbFormated=False \
+   VerbDevOut=/dev/stderr Verbosis ; 
+   
    eval $( VTVIsArrayStyleInsert=True \
         VTVValueEntry=${StrVarList}   \
         VTVIsValueReAssign=True       \
