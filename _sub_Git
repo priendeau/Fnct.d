@@ -162,7 +162,38 @@ if [ ${versionGCT:=0.0.1} == "0.0.1" ] ; then
 ### End of if-versionGCT==0.0.1
 fi
 
-if [ ${versionGCT:=0.0.1} == "0.0.2" ] ; then 
+if [ "${versionGCT:=0.0.1}" == "0.0.2" ] ; then 
+
+
+### A prototype to avoid declaring in wrong orfer the
+### Arg0 and ArrayArg ... 
+### It will create the appropriate code in correct order 
+### to ensure Argument will be callable .
+
+function __Call_Argument()
+{
+  local __call_locality=( CA __Call_Argument ) ;
+  local StrFuncName=${CAFunctName:=None} ; 
+  local StrShortName=$( GetStdPrefixName ${StrFuncName} ) ; 
+  local StrScope=${CACodeScope:=local} ;
+  local BoolUsingSed=${CAUsingSedTrim:=True} ; 
+  local StrArgumentCode="""__SCOPE__ __call_locality=( __SHORTNAME__ __LONGNAME__ ) ;
+local ArrayArg=( \$* ) ;
+__SCOPE__ Arg0=\${ArrayArg[0]} ;
+__SCOPE__ StrStartMain=\${__SHORTNAME__FuncStart:=__main_StartServices} ;
+__SCOPE__ StrParentApps=\${__call_locality[1]} ;""" ; 
+  StrArgumentCode=${StrArgumentCode//__SCOPE__/${StrScope}} ;
+  StrArgumentCode=${StrArgumentCode//__PREFIX__/${StrPrefixVar}} ;
+  StrArgumentCode=${StrArgumentCode//__SHORTNAME__/${StrShortName}} ;
+  StrArgumentCode=${StrArgumentCode//__LONGNAME__/${StrFuncName}} ;
+  
+  if [ "${BoolUsingSed:=True}" == "False" ] ; then 
+    StrArgumentCode=$( echo "${StrArgumentCode}" | /usr/bin/tr '[:cntrl:]' ' ' ) ; 
+  else
+    StrArgumentCode=$( echo "${StrArgumentCode}" | /bin/sed 's/\n/\\n/g;s/\r/\\r/g' ) ; 
+  fi
+  echo "${StrArgumentCode}" ; 
+}
 
 ### This is also a prototyped GitCommitTransaction it is not 
 ### conformant to Fnct.D Lib and having poor manageability 
@@ -171,26 +202,33 @@ if [ ${versionGCT:=0.0.1} == "0.0.2" ] ; then
  unset GitRessourceInformation;
  function GitRessourceInformation()
  {
-  local __call_locality=( GRI GitRessourceInformation ) ;
-  local Arg0=${ArrayArg[0]} ;
-  local ArrayArg=( $* ) ; 
+  eval $( CAFunctName=GitRessourceInformation __Call_Argument ) ; 
+  #local __call_locality=( GRI GitRessourceInformation ) ;
+  #local ArrayArg=( $* ) ; 
+  #local Arg0=${ArrayArg[0]} ;
   local StrFileBuffer=${GRIFileBuffer:=.file-selection} ;
   local StrCommitBuffer=${GRICommitBuffer:=.commit-msg} ; 
   local BoolTouchCommit=${GRIIsTouchCommit:=True} ;
   local BoolTouchFile=${GRIIsTouchFile:=True} ; 
   local IOStatus=0 ; 
-  local StrParentApps=${__call_locality[1]} ;
-  local StrFileList=$( cat ${StrFileBuffer} | sed -r 's/\ +/ \n/g' ) ;
-  local IntSizeFile=$( wc -c ${StrFileBuffer} | cut -d ' ' -f 1  ) ;   
+  local StrFileList="" ;
+  local IntSizeFile=0 ;
+  #local StrStartMain=${GRIFuncStart:=__main_StartServices} ;
+  #local StrParentApps=${__call_locality[1]} ;
   
-  eval local StrStartMain=\${${__call_locality[0]}FuncStart:=__main_StartServices} ;
+  if [ -f ${StrFileBuffer} ] ; then 
+    StrFileList=$( cat ${StrFileBuffer} | sed -r 's/\ +/ \n/g' ) ;
+    IntSizeFile=$( wc -c ${StrFileBuffer} | cut -d ' ' -f 1  ) ;   
+  fi   
+
+  
   local StrVarList="StrVarList,StrQuestion,IOStatus,StrFileList,StrParentApps,StrStartMain,BoolTouchCommit,BoolTouchFile" ; 
   
   function InitializeCommitBuffer()
   {
    local __call_locality=( ICB InitializeCommitBuffer ${StrParentApps} ) ;
-   local Arg0=${ArrayArg[0]} ;
    local ArrayArg=( $* ) ; 
+   local Arg0=${ArrayArg[0]} ;
    
    if [ -f ${StrCommitBuffer} ] ; then 
     rm -f ${StrCommitBuffer} ; 
@@ -205,8 +243,8 @@ if [ ${versionGCT:=0.0.1} == "0.0.2" ] ; then
   function InitializeFileBuffer()
   {
    local __call_locality=( IFB InitializeFileBuffer ${StrParentApps} ) ;
-   local Arg0=${ArrayArg[0]} ;
    local ArrayArg=( $* ) ; 
+   local Arg0=${ArrayArg[0]} ;
    
    if [ -f ${StrFileBuffer} ] ; then 
     rm -f ${StrFileBuffer} ; 
@@ -221,10 +259,9 @@ if [ ${versionGCT:=0.0.1} == "0.0.2" ] ; then
   function __main_StartServices()
   {
    local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
-   local Arg0=${ArrayArg[0]} ;
    local ArrayArg=( $* ) ; 
-   
-   return ${IOStatus} ;
+   local Arg0=${ArrayArg[0]} ;
+ 
   }
     
   local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
@@ -242,12 +279,12 @@ if [ ${versionGCT:=0.0.1} == "0.0.2" ] ; then
   elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
    eval $( __GetVarReferenceList ) ;	
   elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
-   return eval $( VTVIsArrayStyleInsert=True \
+   eval $( VTVIsArrayStyleInsert=True \
         VTVValueEntry=${StrVarList}   \
         VTVIsValueReAssign=True       \
         VTVIsValueToConvert=False     \
         VTVIsArrayStyleInsert=True    \
-        ValueToVariable ) ${StrStartMain}
+        ValueToVariable ) ${StrStartMain} ; 
   fi
   
  }
@@ -256,8 +293,8 @@ if [ ${versionGCT:=0.0.1} == "0.0.2" ] ; then
  function GetFileBuffered()     
  {
   local __call_locality=( GFB GetFileBuffered ) ;
-  local Arg0=${ArrayArg[0]} ;
   local ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]} ;
   local StrQuestion=${GFBQuestion:="Keep File selection\n\n__FILELIST__"} ;
   local StrWorkPath=${GitPath:=${GFBPath:=/home/maxiste/github/Fnct.D/}} ;
   local IOStatus=0;
@@ -272,8 +309,8 @@ if [ ${versionGCT:=0.0.1} == "0.0.2" ] ; then
   function __main_StartServices()
   {
    local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
-   local Arg0=${ArrayArg[0]} ;
    local ArrayArg=( $* ) ; 
+   local Arg0=${ArrayArg[0]} ;
    
    zenity --question --text "${StrQuestion//__FILELIST__/${StrFileList}}" ;  
    IOStatus=$?
@@ -308,8 +345,8 @@ if [ ${versionGCT:=0.0.1} == "0.0.2" ] ; then
  function GetCommandQuit()    
  {
   local __call_locality=( GCQ GetCommandQuit ) ;
-  local Arg0=${ArrayArg[0]} ;
   local ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]} ;
   local StrQuestion=${GCQQuestion:="Quit Git Commit transaction ?"} ;
   local StrWorkPath=${GitPath:=${GCQPath:=/home/maxiste/github/Fnct.D/}} ;
   local IOStatus=0;
@@ -320,8 +357,8 @@ if [ ${versionGCT:=0.0.1} == "0.0.2" ] ; then
   function __main_StartServices()
   {
    local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
-   local Arg0=${ArrayArg[0]} ;
    local ArrayArg=( $* ) ; 
+   local Arg0=${ArrayArg[0]} ;
    zenity --question --text "${StrQuestion}" ;  
    IOStatus=$?
    return ${IOStatus} ;
@@ -355,8 +392,8 @@ if [ ${versionGCT:=0.0.1} == "0.0.2" ] ; then
  function GetCommitMsg()    
  {
   local __call_locality=( GCM GetCommitMsg ) ;
-  local Arg0=${ArrayArg[0]} ;
   local ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]} ;
   local StrCheckBoxMsg=${GCMCheckCase:="Ready to commit, protected against Error."} ;
   local IntFontSize=${GCMFontSize:=11} ; 
   local StrWorkPath=${GitPath:=${GCMPath:=/home/maxiste/github/Fnct.D/}} ;
@@ -416,8 +453,8 @@ if [ ${versionGCT:=0.0.1} == "0.0.2" ] ; then
  function GitUpdate ()    
  { 
   local __call_locality=( GU GitUpdate ) ;
-  local Arg0=${ArrayArg[0]} ;
   local ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]} ;
   local IOStatus=0 ; 
   local StrTestWarnInfo=${GUWarnInfo:="\nFollowing command will be executed\n"} ; 
   local StrWorkPath=${GitPath:=${GUPath:=/home/maxiste/github/Fnct.D/}} ;
@@ -429,8 +466,8 @@ if [ ${versionGCT:=0.0.1} == "0.0.2" ] ; then
   function __main_StartServices()
   {
    local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
-   local Arg0=${ArrayArg[0]} ;
    local ArrayArg=( $* ) ; 
+   local Arg0=${ArrayArg[0]} ;
    local StrCmd=$( zenity --entry --width="300" --text=${StrTestWarnInfo} --entry-text="${StrCmdUpdate}" ) ; 
    
    #sudo /etc/init.d/iptables-persistent restart ;
@@ -469,8 +506,8 @@ if [ ${versionGCT:=0.0.1} == "0.0.2" ] ; then
  function ZenityFileSelection()
  {
   local __call_locality=( ZFS ZenityFileSelection ) ;
-  local Arg0=${ArrayArg[0]} ;
   local ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]} ;
   local IOStatus=0;
   local StrParentApps=${__call_locality[1]} ;
   local StrWorkPath=${GitPath:=${ZFSPath:=/home/maxiste/github/Fnct.D/}} ; 
@@ -489,8 +526,8 @@ if [ ${versionGCT:=0.0.1} == "0.0.2" ] ; then
   function __main_StartServices()
   {
    local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
-   local Arg0=${ArrayArg[0]} ;
    local ArrayArg=( $* ) ; 
+   local Arg0=${ArrayArg[0]} ;
 
    #if [ -f ${StrFileBuffer} ] ; then 
    # rm -f ${StrFileBuffer} ; 
@@ -539,8 +576,8 @@ if [ ${versionGCT:=0.0.1} == "0.0.2" ] ; then
  function GetFileInPath()    
  {
   local __call_locality=( GFI GetFileInPath ) ;
-  local Arg0=${ArrayArg[0]} ;
   local ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]} ;
   local IOStatus=0 ; 
   local StrFileBuffer=$( GitRessourceInformation --get GRIFileBuffer ) ;
   #local StrCommitBuffer=$( GitRessourceInformation --get GRICommitBuffer  ) ;  
@@ -612,8 +649,8 @@ if [ ${versionGCT:=0.0.1} == "0.0.2" ] ; then
  function CommitLevel()
  {
   local __call_locality=( CL CommitLevel ) ;
-  local Arg0=${ArrayArg[0]} ;
   local ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]} ;
   local StrParentApps=${__call_locality[1]} ;
   local StrWorkPath=${GitPath:=${CLPath:=/home/maxiste/github/Fnct.D/}} ;
   #local StrFileBuffer=$( GitRessourceInformation --get GRIFileBuffer ) ;
@@ -625,8 +662,8 @@ if [ ${versionGCT:=0.0.1} == "0.0.2" ] ; then
   function __main_StartServices()
   {
    local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
-   local Arg0=${ArrayArg[0]} ;
    local ArrayArg=( $* ) ; 
+   local Arg0=${ArrayArg[0]} ;
    
    #${StrCommitBuffer} ${StrFileBuffer}
    StrMsg=$( cat ${StrCommitBuffer} ) ;
@@ -668,8 +705,8 @@ if [ ${versionGCT:=0.0.1} == "0.0.2" ] ; then
  function GitCommitTransaction()    
  {
   local __call_locality=( GCT GitCommitTransaction ) ;
-  local Arg0=${ArrayArg[0]} ;
   local ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]} ;
   local IntQuit=1 ; 
   local IntComitSig=0 ; 
   local IntFileInPathSig=0 ; 
