@@ -4,7 +4,7 @@
 ### Agreed Services, GitCommitTransaction
 if [ ${SubGitCommitTransaction:=False} == "True" ] ; then   
 
-
+if [ ${versionGCT:=0.0.1} == "0.0.1" ] ; then 
 ### This is also a prototyped GitCommitTransaction it is not 
 ### conformant to Fnct.D Lib and having poor manageability 
 ### sometimes font can change size erraticaly from instance 
@@ -51,7 +51,7 @@ if [ ${SubGitCommitTransaction:=False} == "True" ] ; then
  { 
      #sudo /etc/init.d/iptables-persistent restart ;
      #sleep 5 ;
-     int IOStatus=0 ; 
+     local IOStatus=0 ; 
      local StrTestWarnInfo="""\nFollowing command will be executed\n"""
      local StrCmdUpdate="""git push origin master"""
      local StrCmd=$( zenity --entry --width="300" --text=${StrTestWarnInfo} --entry-text="${StrCmdUpdate}" ) ; 
@@ -158,6 +158,611 @@ if [ ${SubGitCommitTransaction:=False} == "True" ] ; then
    done ; 
    rm -f .commit-msg .file-selection ; 
 }
+
+### End of if-versionGCT==0.0.1
+fi
+
+if [ ${versionGCT:=0.0.1} == "0.0.2" ] ; then 
+
+### This is also a prototyped GitCommitTransaction it is not 
+### conformant to Fnct.D Lib and having poor manageability 
+### sometimes font can change size erraticaly from instance 
+### to another one . 
+ unset GitRessourceInformation;
+ function GitRessourceInformation()
+ {
+  local __call_locality=( GRI GitRessourceInformation ) ;
+  local Arg0=${ArrayArg[0]} ;
+  local ArrayArg=( $* ) ; 
+  local StrFileBuffer=${GRIFileBuffer:=.file-selection} ;
+  local StrCommitBuffer=${GRICommitBuffer:=.commit-msg} ; 
+  local BoolTouchCommit=${GRIIsTouchCommit:=True} ;
+  local BoolTouchFile=${GRIIsTouchFile:=True} ; 
+  local IOStatus=0 ; 
+  local StrParentApps=${__call_locality[1]} ;
+  local StrFileList=$( cat ${StrFileBuffer} | sed -r 's/\ +/ \n/g' ) ;
+  local IntSizeFile=$( wc -c ${StrFileBuffer} | cut -d ' ' -f 1  ) ;   
+  
+  eval local StrStartMain=\${${__call_locality[0]}FuncStart:=__main_StartServices} ;
+  local StrVarList="StrVarList,StrQuestion,IOStatus,StrFileList,StrParentApps,StrStartMain,BoolTouchCommit,BoolTouchFile" ; 
+  
+  function InitializeCommitBuffer()
+  {
+   local __call_locality=( ICB InitializeCommitBuffer ${StrParentApps} ) ;
+   local Arg0=${ArrayArg[0]} ;
+   local ArrayArg=( $* ) ; 
+   
+   if [ -f ${StrCommitBuffer} ] ; then 
+    rm -f ${StrCommitBuffer} ; 
+   fi
+   if [ "${BoolTouchCommit:=True}" == "True" ] ; then 
+     touch ${StrCommitBuffer} ; 
+   fi
+  } 
+  ### made to call a Initialisation of Commit Buffer, 
+  ### GRIFuncStart=InitializeCommitBuffer GitRessourceInformation
+  
+  function InitializeFileBuffer()
+  {
+   local __call_locality=( IFB InitializeFileBuffer ${StrParentApps} ) ;
+   local Arg0=${ArrayArg[0]} ;
+   local ArrayArg=( $* ) ; 
+   
+   if [ -f ${StrFileBuffer} ] ; then 
+    rm -f ${StrFileBuffer} ; 
+   fi
+   if [ "${BoolTouchFile:=True}" == "True" ] ; then 
+     touch ${StrFileBuffer} ; 
+   fi
+  } 
+  ### made to call a Initialisation of Commit Buffer, 
+  ### GRIFuncStart=InitializeFileBuffer GitRessourceInformation
+  
+  function __main_StartServices()
+  {
+   local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+   local Arg0=${ArrayArg[0]} ;
+   local ArrayArg=( $* ) ; 
+   
+   return ${IOStatus} ;
+  }
+    
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+  local StrNameHelper="__FUNCT__\tStand for ";
+  local StrSummary="This __FUNCT__" ; 
+  local StrSynopsis="Soon to Document this __FUNCT__";
+  local StrDescription="This section contain Detailed information for __FUNCT__" ;
+  
+  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   GVRIsName=False GVRIsSynopsis=False GVRIsSummary=False GVRIsDesc=False GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;	
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+   return eval $( VTVIsArrayStyleInsert=True \
+        VTVValueEntry=${StrVarList}   \
+        VTVIsValueReAssign=True       \
+        VTVIsValueToConvert=False     \
+        VTVIsArrayStyleInsert=True    \
+        ValueToVariable ) ${StrStartMain}
+  fi
+  
+ }
+
+ unset GetFileBuffered ; 
+ function GetFileBuffered()     
+ {
+  local __call_locality=( GFB GetFileBuffered ) ;
+  local Arg0=${ArrayArg[0]} ;
+  local ArrayArg=( $* ) ; 
+  local StrQuestion=${GFBQuestion:="Keep File selection\n\n__FILELIST__"} ;
+  local StrWorkPath=${GitPath:=${GFBPath:=/home/maxiste/github/Fnct.D/}} ;
+  local IOStatus=0;
+  local StrFileBuffer=$( GitRessourceInformation --get GRIFileBuffer ) ;
+  #local StrCommitBuffer=$( GitRessourceInformation --get GRICommitBuffer  ) ; 
+  local StrFileList=$( GitRessourceInformation --get StrFileList ) ; 
+
+  local StrParentApps=${__call_locality[1]} ;
+  eval local StrStartMain=\${${__call_locality[0]}FuncStart:=__main_StartServices} ;
+  local StrVarList="StrVarList,StrQuestion,IOStatus,StrFileList,StrParentApps,StrStartMain,StrFileBuffer,StrWorkPath" ; 
+  
+  function __main_StartServices()
+  {
+   local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+   local Arg0=${ArrayArg[0]} ;
+   local ArrayArg=( $* ) ; 
+   
+   zenity --question --text "${StrQuestion//__FILELIST__/${StrFileList}}" ;  
+   IOStatus=$?
+   return ${IOStatus} ;
+  }
+  
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+  local StrNameHelper="__FUNCT__\tStand for ";
+  local StrSummary="This __FUNCT__" ; 
+  local StrSynopsis="Soon to Document this __FUNCT__";
+  local StrDescription="This section contain Detailed information for __FUNCT__" ;
+  
+  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   GVRIsName=False GVRIsSynopsis=False GVRIsSummary=False GVRIsDesc=False GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;	
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+   return eval $( VTVIsArrayStyleInsert=True \
+        VTVValueEntry=${StrVarList}   \
+        VTVIsValueReAssign=True       \
+        VTVIsValueToConvert=False     \
+        VTVIsArrayStyleInsert=True    \
+        ValueToVariable ) ${StrStartMain}
+  fi
+ } ;
+
+ unset GetCommandQuit ; 
+ function GetCommandQuit()    
+ {
+  local __call_locality=( GCQ GetCommandQuit ) ;
+  local Arg0=${ArrayArg[0]} ;
+  local ArrayArg=( $* ) ; 
+  local StrQuestion=${GCQQuestion:="Quit Git Commit transaction ?"} ;
+  local StrWorkPath=${GitPath:=${GCQPath:=/home/maxiste/github/Fnct.D/}} ;
+  local IOStatus=0;
+  local StrParentApps=${__call_locality[1]} ;
+  eval local StrStartMain=\${${__call_locality[0]}FuncStart:=__main_StartServices} ;
+  local StrVarList="StrVarList,StrQuestion,IOStatus,StrParentApps,StrStartMain" ; 
+  
+  function __main_StartServices()
+  {
+   local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+   local Arg0=${ArrayArg[0]} ;
+   local ArrayArg=( $* ) ; 
+   zenity --question --text "${StrQuestion}" ;  
+   IOStatus=$?
+   return ${IOStatus} ;
+  }
+  
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+  local StrNameHelper="__FUNCT__\tStand for ";
+  local StrSummary="This __FUNCT__" ; 
+  local StrSynopsis="Soon to Document this __FUNCT__";
+  local StrDescription="This section contain Detailed information for __FUNCT__" ;
+  
+  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   GVRIsName=False GVRIsSynopsis=False GVRIsSummary=False GVRIsDesc=False GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;	
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+   return eval $( VTVIsArrayStyleInsert=True \
+        VTVValueEntry=${StrVarList}   \
+        VTVIsValueReAssign=True       \
+        VTVIsValueToConvert=False     \
+        VTVIsArrayStyleInsert=True    \
+        ValueToVariable ) ${StrStartMain}
+  fi
+ } ;
+
+ unset GetCommitMsg ; 
+ function GetCommitMsg()    
+ {
+  local __call_locality=( GCM GetCommitMsg ) ;
+  local Arg0=${ArrayArg[0]} ;
+  local ArrayArg=( $* ) ; 
+  local StrCheckBoxMsg=${GCMCheckCase:="Ready to commit, protected against Error."} ;
+  local IntFontSize=${GCMFontSize:=11} ; 
+  local StrWorkPath=${GitPath:=${GCMPath:=/home/maxiste/github/Fnct.D/}} ;
+  local IOStatus ; 
+  local StrParentApps=${__call_locality[1]} ;
+  eval local StrStartMain=\${${__call_locality[0]}FuncStart:=__main_StartServices} ;
+  #local StrFileBuffer=$( GitRessourceInformation --get GRIFileBuffer ) ;
+  local StrCommitBuffer=$( GitRessourceInformation --get GRICommitBuffer  ) ; 
+  local IntSizeFile=$( GitRessourceInformation --get IntSizeFile  ) ;  
+  
+  local StrVarList="StrVarList,StrCheckBoxMsg,IOStatus,StrParentApps,IntFontSize" ; 
+  function __main_StartServices()
+  {
+   local __call_locality=( Main __main_StartServices ${StrParentApps}) ;
+   local Arg0=${ArrayArg[0]} ;
+   local ArrayArg=( $* ) ; 
+   #echo > .commit-msg ;
+   
+   ### if [ -f ${StrCommitBuffer} ] ; then 
+   ###  rm -f ${StrCommitBuffer} ; 
+   ### fi
+   #### touch ${StrCommitBuffer} ; 
+   ### This is part is replaced by GRIFuncStart=InitializeCommitBuffer GitRessourceInformation
+   GRIFuncStart=InitializeCommitBuffer GitRessourceInformation ;
+   
+   zenity --text-info --editable --checkbox="${StrCheckBoxMsg}" --width=400 --height=400 --font=${IntFontSize} > ${StrCommitBuffer} ; 
+   IOStatus=$?
+   return ${IOStatus} ;
+  }
+   
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+  local StrNameHelper="__FUNCT__\tStand for ";
+  local StrSummary="This __FUNCT__" ; 
+  local StrSynopsis="Soon to Document this __FUNCT__";
+  local StrDescription="This section contain Detailed information for __FUNCT__" ;
+  
+  
+  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   GVRIsName=False GVRIsSynopsis=False GVRIsSummary=False GVRIsDesc=False GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;	
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+   return eval $( VTVIsArrayStyleInsert=True \
+        VTVValueEntry=${StrVarList}   \
+        VTVIsValueReAssign=True       \
+        VTVIsValueToConvert=False     \
+        VTVIsArrayStyleInsert=True    \
+        ValueToVariable ) ${StrStartMain}
+  fi
+ } ;
+
+ unset GitUpdate ;
+ function GitUpdate ()    
+ { 
+  local __call_locality=( GU GitUpdate ) ;
+  local Arg0=${ArrayArg[0]} ;
+  local ArrayArg=( $* ) ; 
+  local IOStatus=0 ; 
+  local StrTestWarnInfo=${GUWarnInfo:="\nFollowing command will be executed\n"} ; 
+  local StrWorkPath=${GitPath:=${GUPath:=/home/maxiste/github/Fnct.D/}} ;
+  local StrCmdUpdate="""git push origin master"""
+  local StrParentApps=${__call_locality[1]} ;
+  eval local StrStartMain=\${${__call_locality[0]}FuncStart:=__main_StartServices} ;
+  local StrVarList="StrVarList,IOStatus,StrTestWarnInfo,StrCmdUpdate,StrParentApps,StrStartMain,StrWorkPath" ; 
+  
+  function __main_StartServices()
+  {
+   local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+   local Arg0=${ArrayArg[0]} ;
+   local ArrayArg=( $* ) ; 
+   local StrCmd=$( zenity --entry --width="300" --text=${StrTestWarnInfo} --entry-text="${StrCmdUpdate}" ) ; 
+   
+   #sudo /etc/init.d/iptables-persistent restart ;
+   #sleep 5 ;
+   IOStatus=$?
+   if [ ${IOStatus:=0} -eq 0  ] ; then 
+    eval ${StrCmd} ; 
+   fi 
+  }
+  
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+  local StrNameHelper="__FUNCT__\tStand for ";
+  local StrSummary="This __FUNCT__" ; 
+  local StrSynopsis="Soon to Document this __FUNCT__";
+  local StrDescription="This section contain Detailed information for __FUNCT__" ;
+  
+  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   GVRIsName=False GVRIsSynopsis=False GVRIsSummary=False GVRIsDesc=False GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;	
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+   return eval $( VTVIsArrayStyleInsert=True \
+        VTVValueEntry=${StrVarList}   \
+        VTVIsValueReAssign=True       \
+        VTVIsValueToConvert=False     \
+        VTVIsArrayStyleInsert=True    \
+        ValueToVariable ) ${StrStartMain}
+  fi
+ } ; 
+
+ unset ZenityFileSelection ; 
+ function ZenityFileSelection()
+ {
+  local __call_locality=( ZFS ZenityFileSelection ) ;
+  local Arg0=${ArrayArg[0]} ;
+  local ArrayArg=( $* ) ; 
+  local IOStatus=0;
+  local StrParentApps=${__call_locality[1]} ;
+  local StrWorkPath=${GitPath:=${ZFSPath:=/home/maxiste/github/Fnct.D/}} ; 
+  local BoolUseAlternateFile=${ZFSIsAlternateSelection:=False} ; 
+  eval local StrStartMain=\${${__call_locality[0]}FuncStart:=__main_StartServices} ;
+  local StrFileBuffer=$( GitRessourceInformation --get GRIFileBuffer ) ;
+  #local StrCommitBuffer=$( GitRessourceInformation --get GRICommitBuffer  ) ; 
+  local StrVarList="StrVarList,IOStatus,StrParentApps,StrStartMain,BoolUseAlternateFile,StrWorkPath,StrFileBuffer" ; 
+  
+  ### Tips: If you want to try the Alternate File selection, poping-you a zenity-list windows
+  ### with all file from current path (agreed you have start GitCommitTransaction in your root Fnct.D repository) .
+  ### just make an alias from your command line of ZenityFileSelection:
+  ### alias ZenityFileSelection='ZFSIsAlternateSelection=True ZenityFileSelection'; and services 
+  ### will popup a zenity-list. 
+  
+  function __main_StartServices()
+  {
+   local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+   local Arg0=${ArrayArg[0]} ;
+   local ArrayArg=( $* ) ; 
+
+   #if [ -f ${StrFileBuffer} ] ; then 
+   # rm -f ${StrFileBuffer} ; 
+   #fi 
+   GRIIsTouchFile=False GRIFuncStart=InitializeFileBuffer GitRessourceInformation ;
+
+   if [ ${BoolUseAlternateFile:=False} == "True" ] ; then 
+    zenity --list --text="File Selection from Repository" --column="Selection" --column="File" --checklist --multiple  --separator='  ' $( find ${StrWorkPath} -maxdepth 3 -type f -printf "FALSE %p " | sed 's/.\///g' | sort -k 2 ) > ${StrFileBuffer} ;  ### If it's not the time to eat a banana because it's already done ! 
+    IOStatus=$? ;
+   else
+    cd  ${StrWorkPath:=${HOME}} ;
+    zenity --file-selection --multiple --separator='  '  > ${StrFileBuffer} ; 
+    IOStatus=$? ; 
+   fi 
+  
+   return ${IOStatus} ;
+  }
+
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+  local StrNameHelper="__FUNCT__\tStand for ";
+  local StrSummary="This __FUNCT__" ; 
+  local StrSynopsis="Soon to Document this __FUNCT__";
+  local StrDescription="This section contain Detailed information for __FUNCT__" ;
+  
+  
+  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   GVRIsName=False GVRIsSynopsis=False GVRIsSummary=False GVRIsDesc=False GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;	
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+   return eval $( VTVIsArrayStyleInsert=True \
+        VTVValueEntry=${StrVarList}   \
+        VTVIsValueReAssign=True       \
+        VTVIsValueToConvert=False     \
+        VTVIsArrayStyleInsert=True    \
+        ValueToVariable ) ${StrStartMain}
+  fi
+ }
+
+
+ unset GetFileInPath ; 
+ function GetFileInPath()    
+ {
+  local __call_locality=( GFI GetFileInPath ) ;
+  local Arg0=${ArrayArg[0]} ;
+  local ArrayArg=( $* ) ; 
+  local IOStatus=0 ; 
+  local StrFileBuffer=$( GitRessourceInformation --get GRIFileBuffer ) ;
+  #local StrCommitBuffer=$( GitRessourceInformation --get GRICommitBuffer  ) ;  
+  local IntSizeFile=$( GitRessourceInformation --get IntSizeFile ) ; 
+
+  
+  local StrWorkPath=${GitPath:=${GFIPath:=/home/maxiste/github/Fnct.D/}} ; 
+  local StrParentApps=${__call_locality[1]} ;
+  eval local StrStartMain=\${${__call_locality[0]}FuncStart:=__main_StartServices} ;
+  local StrVarList="StrVarList,StrParentApps,StrWorkPath,IOStatus,IntSizeFile,StrStartMain,StrFileBuffer,BoolUseAlternateFile" ; 
+  
+  function __main_StartServices()
+  {
+   local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+   local Arg0=${ArrayArg[0]} ;
+   local ArrayArg=( $* ) ; 
+   
+   if [ ${IntSizeFile:=0} -gt 0 ] ; then 
+    ### Case existing file and asking to keep them 
+    GetFileBuffered ; 
+    IOStatus=$? ; 
+    if [ ${IOStatus:=0} -eq 1  ] ; then
+     ZFSPath=${StrWorkPath} BoolUseAlternateFile=${BoolUseAlternateFile} ZenityFileSelection
+     IOStatus=$? ;
+    else
+     IOStatus=0 ; 
+    fi 
+   else
+     ###rm -f ${StrFileBuffer} ; 
+     ###touch ${StrFileBuffer} ; 
+     ### Replaced by GRIIsTouchFile=True GRIFuncStart=InitializeFileBuffer GitRessourceInformation
+     ### and do a file-test in more.  
+     GRIIsTouchFile=True GRIFuncStart=InitializeFileBuffer GitRessourceInformation ;
+     ZFSPath=${StrWorkPath} BoolUseAlternateFile=${BoolUseAlternateFile} ZenityFileSelection
+     IOStatus=$? ;
+   fi 
+   IOStatus=$? ;
+  return ${IOStatus} ;   
+  
+  }
+  
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+  local StrNameHelper="__FUNCT__\tStand for ";
+  local StrSummary="This __FUNCT__" ; 
+  local StrSynopsis="Soon to Document this __FUNCT__";
+  local StrDescription="This section contain Detailed information for __FUNCT__" ;
+  
+  
+  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   GVRIsName=False GVRIsSynopsis=False GVRIsSummary=False GVRIsDesc=False GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;	
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+   return eval $( VTVIsArrayStyleInsert=True \
+        VTVValueEntry=${StrVarList}   \
+        VTVIsValueReAssign=True       \
+        VTVIsValueToConvert=False     \
+        VTVIsArrayStyleInsert=True    \
+        ValueToVariable ) ${StrStartMain}
+  fi
+
+ } ;
+
+ unset CommitLevel ; 
+ function CommitLevel()
+ {
+  local __call_locality=( CL CommitLevel ) ;
+  local Arg0=${ArrayArg[0]} ;
+  local ArrayArg=( $* ) ; 
+  local StrParentApps=${__call_locality[1]} ;
+  local StrWorkPath=${GitPath:=${CLPath:=/home/maxiste/github/Fnct.D/}} ;
+  #local StrFileBuffer=$( GitRessourceInformation --get GRIFileBuffer ) ;
+  local StrCommitBuffer=$( GitRessourceInformation --get GRICommitBuffer  ) ; 
+
+  eval local StrStartMain=\${${__call_locality[0]}FuncStart:=__main_StartServices} ;
+  local StrVarList="StrVarList,StrParentApps,StrStartMain,StrCommitBuffer,StrFileBuffer,StrWorkPath" ; 
+  
+  function __main_StartServices()
+  {
+   local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+   local Arg0=${ArrayArg[0]} ;
+   local ArrayArg=( $* ) ; 
+   
+   #${StrCommitBuffer} ${StrFileBuffer}
+   StrMsg=$( cat ${StrCommitBuffer} ) ;
+   ArrayFileList=( $( cat ${StrFileBuffer} ) ) ;  
+   echo """git commit -m \"${StrMsg}\" ${ArrayFileList[@]}"""  > /dev/stderr ; 
+   git commit -m """${StrMsg}""" ${ArrayFileList[@]} ; 
+   sleep 5 ; 
+   echo GitUpdate > /dev/stderr;
+   GitUpdate ;
+  }
+  
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+  local StrNameHelper="__FUNCT__\tStand for ";
+  local StrSummary="This __FUNCT__" ; 
+  local StrSynopsis="Soon to Document this __FUNCT__";
+  local StrDescription="This section contain Detailed information for __FUNCT__" ;
+  
+  
+  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   GVRIsName=False GVRIsSynopsis=False GVRIsSummary=False GVRIsDesc=False GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;	
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+   return eval $( VTVIsArrayStyleInsert=True \
+        VTVValueEntry=${StrVarList}   \
+        VTVIsValueReAssign=True       \
+        VTVIsValueToConvert=False     \
+        VTVIsArrayStyleInsert=True    \
+        ValueToVariable ) ${StrStartMain}
+  fi
+
+ }
+
+ unset GitCommitTransaction ; 
+ function GitCommitTransaction()    
+ {
+  local __call_locality=( GCT GitCommitTransaction ) ;
+  local Arg0=${ArrayArg[0]} ;
+  local ArrayArg=( $* ) ; 
+  local IntQuit=1 ; 
+  local IntComitSig=0 ; 
+  local IntFileInPathSig=0 ; 
+  local StrMsg="" ; 
+  local StrParentApps=${__call_locality[1]} ;
+  local StrFileBuffer=$( GitRessourceInformation --get GRIFileBuffer ) ;
+  local StrCommitBuffer=$( GitRessourceInformation --get GRICommitBuffer  ) ; 
+  
+  eval local StrStartMain=\${${__call_locality[0]}FuncStart:=__main_StartServices} ;
+  
+  local StrWorkPath=${GitPath:=${GCTPath:=/home/maxiste/github/Fnct.D/}} ;
+  local StrVarList="StrFileBuffer,StrCommitBuffer,StrVarList,IntQuit,IntComitSig,IntFileInPathSig,StrMsg,StrParentApps,StrStartMain" ; 
+  
+  function __main_StartServices()
+  {
+   local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+   local Arg0=${ArrayArg[0]} ;
+   local ArrayArg=( $* ) ; 
+   local ArrayFileList=( ) ;
+   
+   
+   ### if [ -f ${StrCommitBuffer} ] ; then 
+   ### rm -f ${StrCommitBuffer} ${StrFileBuffer} ; 
+   ### fi 
+   ### touch ${StrCommitBuffer} ;
+   ### touch ${StrFileBuffer} ;
+   ### replaced by next two lines .  
+   GRIIsTouchCommit=True GRIFuncStart=InitializeCommitBuffer GitRessourceInformation
+   GRIIsTouchFile=True GRIFuncStart=InitializeFileBuffer GitRessourceInformation
+
+
+   while [ ${IntQuit:=1} -ne 0 ] ; do 
+    ### Get FileInPath Signal:
+    BoolUseAlternateFile=${BoolUseAlternateFile} GFIPath=${StrWorkPath} GetFileInPath
+    IntFileInPathSig=$? ; 
+    ### Get Commit Signal:
+    if [ ${IntFileInPathSig:=0} -eq 0 ] ; then 
+      ### Get the commit Message.
+      GCMPath=${StrWorkPath} GetCommitMsg ;
+      IntComitSig=$? ;
+     if [ ${IntComitSig:=1} -eq 0 ] ; then 
+      CommitLevel
+     fi
+    else 
+      GCQPath=${StrWorkPath}  GetCommandQuit 
+      IntComitSig=$? ; 
+      if  [ ${IntComitSig:=0} -eq 0 ] ; then 
+        IntQuit=0 ; 
+      fi
+    fi 
+    GCQPath=${StrWorkPath}   GetCommandQuit ; 
+    IntComitSig=$? ; 
+    if  [ ${IntComitSig:=0} -eq 0 ] ; then 
+      IntQuit=0 ; 
+    fi 
+    sleep 5 ;
+   done ; 
+   ### replaced by next two lines and does not make a touch, really erasing the files.
+   ### rm -f ${StrCommitBuffer} ${StrFileBuffer} ; 
+   GRIIsTouchCommit=False GRIFuncStart=InitializeCommitBuffer GitRessourceInformation
+   GRIIsTouchFile=False GRIFuncStart=InitializeFileBuffer GitRessourceInformation
+
+  }
+  
+  
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+  local StrNameHelper="__FUNCT__\tStand for ";
+  local StrSummary="This __FUNCT__" ; 
+  local StrSynopsis="Soon to Document this __FUNCT__";
+  local StrDescription="This section contain Detailed information for __FUNCT__" ;
+  
+  
+  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   GVRIsName=False GVRIsSynopsis=False GVRIsSummary=False GVRIsDesc=False GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;	
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+   return eval $( VTVIsArrayStyleInsert=True \
+        VTVValueEntry=${StrVarList}   \
+        VTVIsValueReAssign=True       \
+        VTVIsValueToConvert=False     \
+        VTVIsArrayStyleInsert=True    \
+        ValueToVariable ) ${StrStartMain}
+  fi
+
+}
+
+### End of if-versionGCT == 0.0.2
+fi
 
 ### End if of SubGitCommitTransaction
 fi 
