@@ -325,7 +325,7 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
    local __call_locality=( ZHO ZenityHandlerOut ${StrParentApps} ) ;
    local ArrayArg=( $* ) ;
    local Arg0=${ArrayArg[0]};  
-   local StrTplZenityTextInfo=${ZHOZenityTpl:="zenity --text-info --filename=__FILE__ --font=__FONT__"} ; 
+   local StrTplZenityTextInfo=${ZHOZenityTpl:="zenity --text-info --filename=__FILE__ --font=__FONT__ 2> /dev/null"} ; 
    
    ### After moving the body of the if statement if [ "${BoolOutToZenity:=False}" == "True"...
    ### into a function. The query was tried again and confirm 
@@ -510,7 +510,7 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
     VerbFormated=False  Verbosis ; 
     
     if [ "${BoolOutToZenity:=False}" == "True" ] ; then
-     local StrTplZenityTextInfo=${ZHOZenityTpl:="zenity --text-info --filename=__FILE__ --font=__FONT__"} ; 
+     local StrTplZenityTextInfo=${ZHOZenityTpl:="zenity --text-info --filename=__FILE__ --font=__FONT__ 2> /dev/null"} ; 
      eval VerbMsg="\${${StrParserResult}}" VerbDev=${StrDestinationResult} VerbEvalForm=False VerbHeader="" VerbState=True VerbFormated=False Verbosis ; 
      StrTplZenityTextInfo=${StrTplZenityTextInfo//__FILE__/${StrDestinationResult}} ; 
      StrTplZenityTextInfo=${StrTplZenityTextInfo//__FONT__/${IntFontSize}} ; 
@@ -520,7 +520,7 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
      #VerbMsg=$( eval "\${${StrParserResult}}" ) VerbEvalForm=True VerbHeader="" VerbState=True VerbFormated=False Verbosis ;  
      #VerbDev=${StrDestinationResult} 
     elif [ "${BoolOutToFile:=False}" == "True" ] ; then 
-     eval VerbMsg="\${${StrParserResult}}" VerbDev=/dev/stderr VerbEvalForm=True VerbHeader="" VerbState=${BoolDisplayDebug} VerbFormated=False  Verbosis ; 
+     eval VerbMsg="\${${StrParserResult}}" VerbDev=${StrDestinationResult} VerbEvalForm=False VerbHeader="" VerbState=True VerbFormated=False  Verbosis ; 
     
     ### Suggested to eliminate this case .  
     #elif [ "${BoolOutToFile:=False}" == "False" -a "${BoolOutToZenity:=False}" == "False" ]  ; then 

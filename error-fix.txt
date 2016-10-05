@@ -347,4 +347,35 @@ ${StrParserResult}
 full line : eval "local ${StrParserResult}=\"${StrAppsTemplate} ${StrTagFeeder}\"" ;
 this remove only the __APPS_OPT__ and a redundant StrCmd was erased from __main_StartServices.
 
+Date:20161004-20:00:00
+Reference:70edde5ecd935399f26bdf77a863e9af1fdccf03
+File: _sub_Function_Appliance 
+Function: GnrlPrsrInfctr
+With command line :
+--> clear ; unset ArrayLib ; versionGPI=0.0.1 . /etc/init.d/Fnct.D/fnct_lib ; IsUUID=True IsZenity=True IsFile=False ; eval $( eval $( GBLDFileStoreInfo=/var/cache/Fnct.D/BuildForm/bf35dfa8-89b1-11e6-8b1d-001e4c8856d6 GBLDAction=GetContent GetterByLineData | sed 's/GPIParserDebug=True/GPIParserDebug=False/g;s/GPIDisplayDebug=True/GPIDisplayDebug=False/g' ) ) ;  IntSize=$( wc -c /var/log/Fnct.D/GnrlPrsrInfctr/${UUID} | cut -d ' ' -f 1 ) ; echo -ne "Size of File: /var/log/Fnct.D/GnrlPrsrInfctr/${UUID}: ${IntSize}\n" ;
+Description: Only one ': command not found' not comming from TagParser or unexpected result from GnrlPrsrInfctr, and somes error coming from zenity from Dbus services which not causing under-sides effetcts. bus address: org.freedesktop.DBus.Error.ServiceUnknown
+OUTPUT: 
+--------------------------------------------------------------------------------------------------------------
+ : command not found
+
+** (zenity:9576): WARNING **: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files
+ accountsservice install
+ acl install
+ acpi-support install
+ acpid install
+ add-apt-key install
+ adduser install
+ adobe-flashplugin install
+ aglfn install
+ alsa-base install
+ alsa-utils install
+ anacron install
+ antlr3 install
+ anyremote install
+...
+--------------------------------------------------------------------------------------------------------------
+SOLUTION: System may require installation of package to fix dependency, but this introspection of the Dbus with dbus-send on destination org.a11y.Bus /org/a11y/bus org.a11y.Bus.GetAddress does produce the same error. 
+sudo dbus-send --session --print-reply --dest=org.a11y.Bus /org/a11y/bus org.a11y.Bus.GetAddress
+wrapping zenity in need of '2> /dev/null' at end may only eliminate the error.
+
 
