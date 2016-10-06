@@ -71,6 +71,96 @@ if [ "${versionGSPN:=0.0.2}" == "0.0.2" ] ; then
  . ${FNCTDLIBPATH}/69968204-0cf6-11e3-99bc-001b3875b29c
 fi
 
+if [ "${versionCA:=0.0.2}" == "0.0.2" ] ; then 
+ ### A prototype to avoid declaring in wrong order the
+ ### Arg0 and ArrayArg ... 
+ ### It will create the appropriate code in correct order 
+ ### to ensure Argument will be callable .
+
+ function __Call_Argument()
+ {
+   local __call_locality=( CA __Call_Argument ) ;
+   local ArrayArg=( $* ) ;
+   local Arg0=${ArrayArg[0]};
+   
+   local StrFuncName=${CAFunctName:=None} ; 
+   local StrScope=${CACodeScope:=local} ;
+   local BoolUsingSed=${CAUsingSedTrim:=True} ; 
+   local BoolAddParent=${CAIsAddParent:=False} ; 
+   local BoolChildBoot=${CAIsChildBoot:=False} ; 
+   local StrStartMain=${CAFuncStart:=__main_StartServices} ; 
+   local StrShortName ; 
+   local StrVarList="StrVarList,StrFuncName,StrScope,StrStartMain,StrShortName,BoolChildBoot,BoolAddParent,BoolUsingSed" ; 
+   
+   function __main_StartServices()
+   {
+    local __call_locality=( Main __main_StartServices ) ;
+    local ArrayArg=( $* ) ;
+    local Arg0=${ArrayArg[0]};
+    if [ "${StrFuncName:=__main_StartServices}" == "__main_StartServices" ] ; then 
+     StrShortName="Main"
+    elif [ "${StrFuncName:=__main_StartServices}" == "__main_StopServices" ] ; then 
+     StrShortName="Main"
+    else
+     StrShortName=$( GetStdPrefixName ${StrFuncName} ) ;
+    fi 
+    local StrBootStrap="__SCOPE__ StrStartMain=\${__SHORTNAME__FuncStart:=__main_StartServices} ;" ; 
+    local StrArgumentCode="""__SCOPE__ __call_locality=( __SHORTNAME__ __LONGNAME__ __PARENT_NAME__ ) ;
+  local ArrayArg=( \$* ) ;
+  __SCOPE__ Arg0=\${ArrayArg[0]} ;
+  __BOOT_STRAP__
+  __SCOPE__ StrParentApps=\${__call_locality[1]} ;""" ; 
+    if [ "${BoolAddParent:=False}" == "True" ] ; then 
+     StrArgumentCode=${StrArgumentCode//__PARENT_NAME__/\$\{StrParentApps\}} ; 
+     if [ "${BoolChildBoot:=False}" == "False" ] ; then 
+      StrArgumentCode=${StrArgumentCode/__BOOT_STRAP__/} ; 
+     fi 
+    else
+     StrArgumentCode=${StrArgumentCode//__PARENT_NAME__/} ;
+    fi
+    StrArgumentCode=${StrArgumentCode/__BOOT_STRAP__/${StrBootStrap}} ; 
+    StrArgumentCode=${StrArgumentCode//__SCOPE__/${StrScope}} ;
+    StrArgumentCode=${StrArgumentCode//__PREFIX__/${StrPrefixVar}} ;
+    StrArgumentCode=${StrArgumentCode//__SHORTNAME__/${StrShortName}} ;
+    StrArgumentCode=${StrArgumentCode//__LONGNAME__/${StrFuncName}} ;
+    
+    if [ "${BoolUsingSed:=True}" == "False" ] ; then 
+      StrArgumentCode=$( echo "${StrArgumentCode}" | /usr/bin/tr '[:cntrl:]' ' ' ) ; 
+    else
+      StrArgumentCode=$( echo "${StrArgumentCode}" | /bin/sed 's/\n/\\n/g;s/\r/\\r/g' ) ; 
+    fi
+    echo "${StrArgumentCode}" ; 
+    
+   }
+
+   local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+   local StrNameHelper="__Call_Argument\tStand for Meta-Function of Fnct.D";
+   local StrSummary="This Meta-Function __Call_Argument is a mechanism describe in README.rst to inform function from it's name, it's Short-name and presence of parent or in which function the sub-function is part of. This Meta-Function generate important code and replace state-of-the-art declaration of __call_locality, StrParentApps, and also define the BootStrap name in top-function. Bootstrap is a procedure handled by --start-services allow to start the Main function or other subfunction if they are equiped of Second-Role-Function. Second-Role-Function are some functionality embedded inside a function called by the bootstrap process to give a second action call from your top-function. " ; 
+   local StrSynopsis="__Call_Argument in replacement of some step to code appropriate Fnct.D compliant function to talk and communicate with other entity is a Procedure-ready to apply to a top-function and Prefixed-Variable can only add Layer of information to help the function to grow in diversity of Fnct.D method helping to develop with less code.";
+   local StrDescription="This section contain Detailed information for __FUNCT__" ;
+   
+   if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+    GVRIsName=True GVRIsSynopsis=True GVRIsSummary=True GVRIsDesc=False GetVarReference ${__call_locality[1]} ; 
+    echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+   elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+    eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+    echo -ne """${ArgGet}\n""" ;
+   elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+    eval $( __GetVarReferenceList ) ;	
+   elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+    eval $( VTVIsArrayStyleInsert=True \
+         VTVValueEntry=${StrVarList}   \
+         VTVIsValueReAssign=True       \
+         VTVIsValueToConvert=False     \
+         VTVIsArrayStyleInsert=True    \
+         ValueToVariable ) ${StrStartMain} ; 
+   fi
+
+ }
+
+### End-of if-versionCA == 0.0.2 . 
+fi
+
 if [ "${versionGOD:=0.0.2}" == "0.0.2" ] ; then 
 
   ### GetOtherDate :

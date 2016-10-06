@@ -165,35 +165,6 @@ fi
 if [ "${versionGCT:=0.0.1}" == "0.0.2" ] ; then 
 
 
-### A prototype to avoid declaring in wrong orfer the
-### Arg0 and ArrayArg ... 
-### It will create the appropriate code in correct order 
-### to ensure Argument will be callable .
-
-function __Call_Argument()
-{
-  local __call_locality=( CA __Call_Argument ) ;
-  local StrFuncName=${CAFunctName:=None} ; 
-  local StrShortName=$( GetStdPrefixName ${StrFuncName} ) ; 
-  local StrScope=${CACodeScope:=local} ;
-  local BoolUsingSed=${CAUsingSedTrim:=True} ; 
-  local StrArgumentCode="""__SCOPE__ __call_locality=( __SHORTNAME__ __LONGNAME__ ) ;
-local ArrayArg=( \$* ) ;
-__SCOPE__ Arg0=\${ArrayArg[0]} ;
-__SCOPE__ StrStartMain=\${__SHORTNAME__FuncStart:=__main_StartServices} ;
-__SCOPE__ StrParentApps=\${__call_locality[1]} ;""" ; 
-  StrArgumentCode=${StrArgumentCode//__SCOPE__/${StrScope}} ;
-  StrArgumentCode=${StrArgumentCode//__PREFIX__/${StrPrefixVar}} ;
-  StrArgumentCode=${StrArgumentCode//__SHORTNAME__/${StrShortName}} ;
-  StrArgumentCode=${StrArgumentCode//__LONGNAME__/${StrFuncName}} ;
-  
-  if [ "${BoolUsingSed:=True}" == "False" ] ; then 
-    StrArgumentCode=$( echo "${StrArgumentCode}" | /usr/bin/tr '[:cntrl:]' ' ' ) ; 
-  else
-    StrArgumentCode=$( echo "${StrArgumentCode}" | /bin/sed 's/\n/\\n/g;s/\r/\\r/g' ) ; 
-  fi
-  echo "${StrArgumentCode}" ; 
-}
 
 ### This is also a prototyped GitCommitTransaction it is not 
 ### conformant to Fnct.D Lib and having poor manageability 
@@ -202,7 +173,7 @@ __SCOPE__ StrParentApps=\${__call_locality[1]} ;""" ;
  unset GitRessourceInformation;
  function GitRessourceInformation()
  {
-  eval $( CAFunctName=GitRessourceInformation __Call_Argument ) ; 
+  eval $( CAFunctName=GitRessourceInformation CAIsAddParent=False __Call_Argument ) ; 
   #local __call_locality=( GRI GitRessourceInformation ) ;
   #local ArrayArg=( $* ) ; 
   #local Arg0=${ArrayArg[0]} ;
@@ -213,8 +184,6 @@ __SCOPE__ StrParentApps=\${__call_locality[1]} ;""" ;
   local IOStatus=0 ; 
   local StrFileList="" ;
   local IntSizeFile=0 ;
-  #local StrStartMain=${GRIFuncStart:=__main_StartServices} ;
-  #local StrParentApps=${__call_locality[1]} ;
   
   if [ -f ${StrFileBuffer} ] ; then 
     StrFileList=$( cat ${StrFileBuffer} | sed -r 's/\ +/ \n/g' ) ;
@@ -226,9 +195,7 @@ __SCOPE__ StrParentApps=\${__call_locality[1]} ;""" ;
   
   function InitializeCommitBuffer()
   {
-   local __call_locality=( ICB InitializeCommitBuffer ${StrParentApps} ) ;
-   local ArrayArg=( $* ) ; 
-   local Arg0=${ArrayArg[0]} ;
+   eval $( CAFunctName=InitializeCommitBuffer CAIsAddParent=True __Call_Argument ) ; 
    
    if [ -f ${StrCommitBuffer} ] ; then 
     rm -f ${StrCommitBuffer} ; 
@@ -242,9 +209,7 @@ __SCOPE__ StrParentApps=\${__call_locality[1]} ;""" ;
   
   function InitializeFileBuffer()
   {
-   local __call_locality=( IFB InitializeFileBuffer ${StrParentApps} ) ;
-   local ArrayArg=( $* ) ; 
-   local Arg0=${ArrayArg[0]} ;
+   eval $( CAFunctName=InitializeFileBuffer CAIsAddParent=True __Call_Argument ) ; 
    
    if [ -f ${StrFileBuffer} ] ; then 
     rm -f ${StrFileBuffer} ; 
@@ -258,9 +223,7 @@ __SCOPE__ StrParentApps=\${__call_locality[1]} ;""" ;
   
   function __main_StartServices()
   {
-   local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
-   local ArrayArg=( $* ) ; 
-   local Arg0=${ArrayArg[0]} ;
+   eval $( CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
  
   }
     
@@ -292,25 +255,18 @@ __SCOPE__ StrParentApps=\${__call_locality[1]} ;""" ;
  unset GetFileBuffered ; 
  function GetFileBuffered()     
  {
-  local __call_locality=( GFB GetFileBuffered ) ;
-  local ArrayArg=( $* ) ; 
-  local Arg0=${ArrayArg[0]} ;
+  eval $( CAFunctName=GetFileBuffered CAIsAddParent=False __Call_Argument ) ; 
   local StrQuestion=${GFBQuestion:="Keep File selection\n\n__FILELIST__"} ;
   local StrWorkPath=${GitPath:=${GFBPath:=/home/maxiste/github/Fnct.D/}} ;
   local IOStatus=0;
   local StrFileBuffer=$( GitRessourceInformation --get GRIFileBuffer ) ;
-  #local StrCommitBuffer=$( GitRessourceInformation --get GRICommitBuffer  ) ; 
   local StrFileList=$( GitRessourceInformation --get StrFileList ) ; 
 
-  local StrParentApps=${__call_locality[1]} ;
-  eval local StrStartMain=\${${__call_locality[0]}FuncStart:=__main_StartServices} ;
   local StrVarList="StrVarList,StrQuestion,IOStatus,StrFileList,StrParentApps,StrStartMain,StrFileBuffer,StrWorkPath" ; 
   
   function __main_StartServices()
   {
-   local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
-   local ArrayArg=( $* ) ; 
-   local Arg0=${ArrayArg[0]} ;
+   eval $( CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
    
    zenity --question --text "${StrQuestion//__FILELIST__/${StrFileList}}" ;  
    IOStatus=$?
@@ -344,21 +300,17 @@ __SCOPE__ StrParentApps=\${__call_locality[1]} ;""" ;
  unset GetCommandQuit ; 
  function GetCommandQuit()    
  {
-  local __call_locality=( GCQ GetCommandQuit ) ;
-  local ArrayArg=( $* ) ; 
-  local Arg0=${ArrayArg[0]} ;
+  eval $( CAFunctName=GetCommandQuit CAIsAddParent=False __Call_Argument ) ; 
+
   local StrQuestion=${GCQQuestion:="Quit Git Commit transaction ?"} ;
   local StrWorkPath=${GitPath:=${GCQPath:=/home/maxiste/github/Fnct.D/}} ;
   local IOStatus=0;
-  local StrParentApps=${__call_locality[1]} ;
-  eval local StrStartMain=\${${__call_locality[0]}FuncStart:=__main_StartServices} ;
   local StrVarList="StrVarList,StrQuestion,IOStatus,StrParentApps,StrStartMain" ; 
   
   function __main_StartServices()
   {
-   local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
-   local ArrayArg=( $* ) ; 
-   local Arg0=${ArrayArg[0]} ;
+   eval $( CAFunctName= CAIsAddParent=True __Call_Argument ) ; 
+
    zenity --question --text "${StrQuestion}" ;  
    IOStatus=$?
    return ${IOStatus} ;
@@ -391,26 +343,20 @@ __SCOPE__ StrParentApps=\${__call_locality[1]} ;""" ;
  unset GetCommitMsg ; 
  function GetCommitMsg()    
  {
-  local __call_locality=( GCM GetCommitMsg ) ;
-  local ArrayArg=( $* ) ; 
-  local Arg0=${ArrayArg[0]} ;
+  eval $( CAFunctName=GetCommitMsg CAIsAddParent=False __Call_Argument ) ; 
+
   local StrCheckBoxMsg=${GCMCheckCase:="Ready to commit, protected against Error."} ;
   local IntFontSize=${GCMFontSize:=11} ; 
   local StrWorkPath=${GitPath:=${GCMPath:=/home/maxiste/github/Fnct.D/}} ;
   local IOStatus ; 
   local StrParentApps=${__call_locality[1]} ;
-  eval local StrStartMain=\${${__call_locality[0]}FuncStart:=__main_StartServices} ;
-  #local StrFileBuffer=$( GitRessourceInformation --get GRIFileBuffer ) ;
   local StrCommitBuffer=$( GitRessourceInformation --get GRICommitBuffer  ) ; 
   local IntSizeFile=$( GitRessourceInformation --get IntSizeFile  ) ;  
   
   local StrVarList="StrVarList,StrCheckBoxMsg,IOStatus,StrParentApps,IntFontSize" ; 
   function __main_StartServices()
   {
-   local __call_locality=( Main __main_StartServices ${StrParentApps}) ;
-   local Arg0=${ArrayArg[0]} ;
-   local ArrayArg=( $* ) ; 
-   #echo > .commit-msg ;
+   eval $( CAFunctName= CAIsAddParent=True __Call_Argument ) ; 
    
    ### if [ -f ${StrCommitBuffer} ] ; then 
    ###  rm -f ${StrCommitBuffer} ; 
@@ -452,22 +398,19 @@ __SCOPE__ StrParentApps=\${__call_locality[1]} ;""" ;
  unset GitUpdate ;
  function GitUpdate ()    
  { 
-  local __call_locality=( GU GitUpdate ) ;
-  local ArrayArg=( $* ) ; 
-  local Arg0=${ArrayArg[0]} ;
+  eval $( CAFunctName=GitUpdate CAIsAddParent=False __Call_Argument ) ; 
+
   local IOStatus=0 ; 
   local StrTestWarnInfo=${GUWarnInfo:="\nFollowing command will be executed\n"} ; 
   local StrWorkPath=${GitPath:=${GUPath:=/home/maxiste/github/Fnct.D/}} ;
   local StrCmdUpdate="""git push origin master"""
   local StrParentApps=${__call_locality[1]} ;
-  eval local StrStartMain=\${${__call_locality[0]}FuncStart:=__main_StartServices} ;
   local StrVarList="StrVarList,IOStatus,StrTestWarnInfo,StrCmdUpdate,StrParentApps,StrStartMain,StrWorkPath" ; 
   
   function __main_StartServices()
   {
-   local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
-   local ArrayArg=( $* ) ; 
-   local Arg0=${ArrayArg[0]} ;
+   eval $( CAFunctName= CAIsAddParent=True __Call_Argument ) ; 
+
    local StrCmd=$( zenity --entry --width="300" --text=${StrTestWarnInfo} --entry-text="${StrCmdUpdate}" ) ; 
    
    #sudo /etc/init.d/iptables-persistent restart ;
@@ -505,14 +448,13 @@ __SCOPE__ StrParentApps=\${__call_locality[1]} ;""" ;
  unset ZenityFileSelection ; 
  function ZenityFileSelection()
  {
-  local __call_locality=( ZFS ZenityFileSelection ) ;
-  local ArrayArg=( $* ) ; 
-  local Arg0=${ArrayArg[0]} ;
+  eval $( CAFunctName=ZenityFileSelection CAIsAddParent=False __Call_Argument ) ; 
+
   local IOStatus=0;
-  local StrParentApps=${__call_locality[1]} ;
+  #local StrParentApps=${__call_locality[1]} ;
   local StrWorkPath=${GitPath:=${ZFSPath:=/home/maxiste/github/Fnct.D/}} ; 
   local BoolUseAlternateFile=${ZFSIsAlternateSelection:=False} ; 
-  eval local StrStartMain=\${${__call_locality[0]}FuncStart:=__main_StartServices} ;
+  #eval local StrStartMain=\${${__call_locality[0]}FuncStart:=__main_StartServices} ;
   local StrFileBuffer=$( GitRessourceInformation --get GRIFileBuffer ) ;
   #local StrCommitBuffer=$( GitRessourceInformation --get GRICommitBuffer  ) ; 
   local StrVarList="StrVarList,IOStatus,StrParentApps,StrStartMain,BoolUseAlternateFile,StrWorkPath,StrFileBuffer" ; 
@@ -525,13 +467,8 @@ __SCOPE__ StrParentApps=\${__call_locality[1]} ;""" ;
   
   function __main_StartServices()
   {
-   local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
-   local ArrayArg=( $* ) ; 
-   local Arg0=${ArrayArg[0]} ;
+   eval $( CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
 
-   #if [ -f ${StrFileBuffer} ] ; then 
-   # rm -f ${StrFileBuffer} ; 
-   #fi 
    GRIIsTouchFile=False GRIFuncStart=InitializeFileBuffer GitRessourceInformation ;
 
    if [ ${BoolUseAlternateFile:=False} == "True" ] ; then 
@@ -575,9 +512,8 @@ __SCOPE__ StrParentApps=\${__call_locality[1]} ;""" ;
  unset GetFileInPath ; 
  function GetFileInPath()    
  {
-  local __call_locality=( GFI GetFileInPath ) ;
-  local ArrayArg=( $* ) ; 
-  local Arg0=${ArrayArg[0]} ;
+  eval $( CAFunctName=GetFileInPath CAIsAddParent=False __Call_Argument ) ; 
+
   local IOStatus=0 ; 
   local StrFileBuffer=$( GitRessourceInformation --get GRIFileBuffer ) ;
   #local StrCommitBuffer=$( GitRessourceInformation --get GRICommitBuffer  ) ;  
@@ -586,14 +522,12 @@ __SCOPE__ StrParentApps=\${__call_locality[1]} ;""" ;
   
   local StrWorkPath=${GitPath:=${GFIPath:=/home/maxiste/github/Fnct.D/}} ; 
   local StrParentApps=${__call_locality[1]} ;
-  eval local StrStartMain=\${${__call_locality[0]}FuncStart:=__main_StartServices} ;
+  #eval local StrStartMain=\${${__call_locality[0]}FuncStart:=__main_StartServices} ;
   local StrVarList="StrVarList,StrParentApps,StrWorkPath,IOStatus,IntSizeFile,StrStartMain,StrFileBuffer,BoolUseAlternateFile" ; 
   
   function __main_StartServices()
   {
-   local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
-   local Arg0=${ArrayArg[0]} ;
-   local ArrayArg=( $* ) ; 
+   eval $( CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
    
    if [ ${IntSizeFile:=0} -gt 0 ] ; then 
     ### Case existing file and asking to keep them 
@@ -648,24 +582,16 @@ __SCOPE__ StrParentApps=\${__call_locality[1]} ;""" ;
  unset CommitLevel ; 
  function CommitLevel()
  {
-  local __call_locality=( CL CommitLevel ) ;
-  local ArrayArg=( $* ) ; 
-  local Arg0=${ArrayArg[0]} ;
-  local StrParentApps=${__call_locality[1]} ;
+  eval $( CAFunctName=CommitLevel CAIsAddParent=False __Call_Argument ) ; 
+  
   local StrWorkPath=${GitPath:=${CLPath:=/home/maxiste/github/Fnct.D/}} ;
-  #local StrFileBuffer=$( GitRessourceInformation --get GRIFileBuffer ) ;
   local StrCommitBuffer=$( GitRessourceInformation --get GRICommitBuffer  ) ; 
-
-  eval local StrStartMain=\${${__call_locality[0]}FuncStart:=__main_StartServices} ;
   local StrVarList="StrVarList,StrParentApps,StrStartMain,StrCommitBuffer,StrFileBuffer,StrWorkPath" ; 
   
   function __main_StartServices()
   {
-   local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
-   local ArrayArg=( $* ) ; 
-   local Arg0=${ArrayArg[0]} ;
-   
-   #${StrCommitBuffer} ${StrFileBuffer}
+   eval $( CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
+  
    StrMsg=$( cat ${StrCommitBuffer} ) ;
    ArrayFileList=( $( cat ${StrFileBuffer} ) ) ;  
    echo """git commit -m \"${StrMsg}\" ${ArrayFileList[@]}"""  > /dev/stderr ; 
@@ -704,30 +630,24 @@ __SCOPE__ StrParentApps=\${__call_locality[1]} ;""" ;
  unset GitCommitTransaction ; 
  function GitCommitTransaction()    
  {
-  local __call_locality=( GCT GitCommitTransaction ) ;
-  local ArrayArg=( $* ) ; 
-  local Arg0=${ArrayArg[0]} ;
+  eval $( CAFunctName=GitCommitTransaction CAIsAddParent=False __Call_Argument ) ; 
+
   local IntQuit=1 ; 
   local IntComitSig=0 ; 
   local IntFileInPathSig=0 ; 
   local StrMsg="" ; 
-  local StrParentApps=${__call_locality[1]} ;
+  #local StrParentApps=${__call_locality[1]} ;
   local StrFileBuffer=$( GitRessourceInformation --get GRIFileBuffer ) ;
   local StrCommitBuffer=$( GitRessourceInformation --get GRICommitBuffer  ) ; 
-  
-  eval local StrStartMain=\${${__call_locality[0]}FuncStart:=__main_StartServices} ;
   
   local StrWorkPath=${GitPath:=${GCTPath:=/home/maxiste/github/Fnct.D/}} ;
   local StrVarList="StrFileBuffer,StrCommitBuffer,StrVarList,IntQuit,IntComitSig,IntFileInPathSig,StrMsg,StrParentApps,StrStartMain" ; 
   
   function __main_StartServices()
   {
-   local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
-   local Arg0=${ArrayArg[0]} ;
-   local ArrayArg=( $* ) ; 
+   eval $( CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
    local ArrayFileList=( ) ;
-   
-   
+
    ### if [ -f ${StrCommitBuffer} ] ; then 
    ### rm -f ${StrCommitBuffer} ${StrFileBuffer} ; 
    ### fi 
