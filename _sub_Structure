@@ -105,11 +105,7 @@ if [ "${versionCA:=0.0.2}" == "0.0.2" ] ; then
      StrShortName=$( GetStdPrefixName ${StrFuncName} ) ;
     fi 
     local StrBootStrap="__SCOPE__ StrStartMain=\${__SHORTNAME__FuncStart:=__main_StartServices} ;" ; 
-    local StrArgumentCode="""__SCOPE__ __call_locality=( __SHORTNAME__ __LONGNAME__ __PARENT_NAME__ ) ;
-  local ArrayArg=( \$* ) ;
-  __SCOPE__ Arg0=\${ArrayArg[0]} ;
-  __BOOT_STRAP__
-  __SCOPE__ StrParentApps=\${__call_locality[1]} ;""" ; 
+    local StrArgumentCode="""__SCOPE__ __call_locality=( __SHORTNAME__ __LONGNAME__ __PARENT_NAME__ ) ; __SCOPE__ ArrayArg=( \$* ) ; __SCOPE__ Arg0=\${ArrayArg[0]} ; __SCOPE__ StrParentApps=\${__call_locality[1]} ; __BOOT_STRAP__""" ; 
     if [ "${BoolAddParent:=False}" == "True" ] ; then 
      StrArgumentCode=${StrArgumentCode//__PARENT_NAME__/\$\{StrParentApps\}} ; 
      if [ "${BoolChildBoot:=False}" == "False" ] ; then 
