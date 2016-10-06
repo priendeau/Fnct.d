@@ -36,14 +36,15 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
  unset GnrlPrsrInfctr; 
  function GnrlPrsrInfctr()
  {
-  local __call_locality=( GPI GnrlPrsrInfctr ) ;
-  local ArrayArg=( $* ) ;
-  local Arg0=( ${ArrayArg[0]} ) ; 
+  eval $( CAFunctName=GnrlPrsrInfctr CAIsAddParent=False __Call_Argument ) ; 
+  #local __call_locality=( GPI GnrlPrsrInfctr ) ;
+  #local ArrayArg=( $* ) ;
+  #local Arg0=( ${ArrayArg[0]} ) ; 
   
   ### General to GnrlPrsrInfctr Command Parser and depot. 
-  local StrAppsTemplate=${GPIDpkgTpl:=__APPS__ __APPS_OPT__ __PIPE__ __FILTER__ __FILTER_OPT__} ;
-  local StrApps=${GPIDpkgApps:=/usr/bin/dpkg} ;
-  local StrAppsOpt=${GPIDpkgAppsOpt:=--get-selections} ; 
+  local StrAppsTemplate=${GPITpl:=__APPS__ __APPS_OPT__ __PIPE__ __FILTER__ __FILTER_OPT__} ;
+  local StrApps=${GPIApps:=/usr/bin/dpkg} ;
+  local StrAppsOpt=${GPIAppsOpt:=--get-selections} ; 
   local StrFilterApps=${GPIFilterApps:=/usr/bin/gawk} ;
   local StrFileName=${GPIFileName:=None} ;
   local StrFilterOpt=${GPIFilterOpt:=-f __FILE__} ; 
@@ -83,8 +84,8 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   local StrAppsMkdirOpt=${GPIAppsMkdirOpt:=-p} ;
   local StrAppsChown=${GPIChown:=/bin/chown} ;
   local StrAppsChmod=${GPIChmod:=/bin/chmod} ;
-  local StrParentApps=${__call_locality[1]} ;
-  local StrStartMain=${GPIFuncStart:=__main_StartServices} ;
+  #local StrParentApps=${__call_locality[1]} ;
+  #local StrStartMain=${GPIFuncStart:=__main_StartServices} ;
   
   ArrayMsg[0]="Prefixed Variable: __VAR__=__VALUE__\nThis is an assistant creating the Repository (location: __PATH__)\n.This is reserved to store your Query for future uses. Prepare to enter into\nCredential action to create the Repository. In case your haven't chooses Variable\n\tGPIRepoUser GPIRepoPerm\nto set your user(s)/Group accessing the repository or Permission to read and write,\nyou can stop the application and start over. If you haven't choose a Function Name\nfor this step it will pop-you a warning and stop the application." ;
   ArrayMsg[1]="Creation of PATH __PATH__, Right Attribution : __MODE__, Owner: __USER__" ;
@@ -158,7 +159,7 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   ###  
   function Verbosis()
   {
-   local __call_locality=( Verbosis Verb );
+   eval $( CAFunctName=Verbosis CAIsAddParent=False __Call_Argument ) ; 
    local StrMsg=${VerbMsg:=__TEXT__} ; 
    local StrDevOut=${VerbDev:=/dev/stderr} ; 
    local IsVerboseState=${VerbState:=False} ;
@@ -191,9 +192,10 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   
   function RepositoryCreation()
   {
-   local __call_locality=( RC RepositoryCreation ${StrParentApps} ) ; 
-   local Arg0=${ArrayArg[0]} ; 
-   local ArrayArg=( $* ) ;
+   eval $( CAFunctName=RepositoryCreation CAIsAddParent=True __Call_Argument ) ; 
+   #local __call_locality=( RC RepositoryCreation ${StrParentApps} ) ; 
+   #local Arg0=${ArrayArg[0]} ; 
+   #local ArrayArg=( $* ) ;
    local StrAction ; 
    if [ ! -d ${StrRepositoryQuery} ] ; then 
     StrMsg=$( ${StrParentApps} --get ArrayMsg[0] ) ;
@@ -273,9 +275,10 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   
   function ReportReference()
   {
-   local __call_locality=( RR ReportReference ${StrParentApps} ) ;
-   local ArrayArg=( $* ) ;
-   local Arg0=${ArrayArg[0]};  
+   eval $( CAFunctName=ReportReference CAIsAddParent=True __Call_Argument ) ; 
+   #local __call_locality=( RR ReportReference ${StrParentApps} ) ;
+   #local ArrayArg=( $* ) ;
+   #local Arg0=${ArrayArg[0]};  
    local StrMsg ; 
    ### After moving the body of the if statement if if [ "${BoolExecuteEval}" == True...
    ### into a function. The query was tried again and confirm 
@@ -322,9 +325,10 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
     
   function ZenityHandlerOut()
   {
-   local __call_locality=( ZHO ZenityHandlerOut ${StrParentApps} ) ;
-   local ArrayArg=( $* ) ;
-   local Arg0=${ArrayArg[0]};  
+   eval $( CAFunctName=ZenityHandlerOut CAIsAddParent=True __Call_Argument ) ; 
+   #local __call_locality=( ZHO ZenityHandlerOut ${StrParentApps} ) ;
+   #local ArrayArg=( $* ) ;
+   #local Arg0=${ArrayArg[0]};  
    local StrTplZenityTextInfo=${ZHOZenityTpl:="zenity --text-info --filename=__FILE__ --font=__FONT__ 2> /dev/null"} ; 
    
    ### After moving the body of the if statement if [ "${BoolOutToZenity:=False}" == "True"...
@@ -354,9 +358,10 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   
   function ParserFunctionEval()
   {
-   local __call_locality=( PFE ParserFunctionEval ${StrParentApps} ) ;
-   local ArrayArg=( $* ) ;
-   local Arg0=${ArrayArg[0]};  
+   eval $( CAFunctName=ParserFunctionEval CAIsAddParent=True __Call_Argument ) ; 
+   #local __call_locality=( PFE ParserFunctionEval ${StrParentApps} ) ;
+   #local ArrayArg=( $* ) ;
+   #local Arg0=${ArrayArg[0]};  
    
    ### This line does, Getting from Prefixed-Variable desired Variable to 
    ### to be generated like Variable=command
@@ -530,11 +535,14 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
    fi   
   }
 
+  
   function __main_StartServices()
   {
-   local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
-   local ArrayArg=( $* ) ;
-   local Arg0=${ArrayArg[0]};  
+   eval $( CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
+
+   #local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+   #local ArrayArg=( $* ) ;
+   #local Arg0=${ArrayArg[0]};  
    #local StrCmd=${StrAppsTemplate}
    
    
