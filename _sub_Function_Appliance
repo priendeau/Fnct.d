@@ -192,7 +192,7 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   
   function RepositoryCreation()
   {
-   eval $( CAFunctName=RepositoryCreation CAIsAddParent=True __Call_Argument ) ; 
+   eval $( "CAFunctName=RepositoryCreation CAIsAddParent=True __Call_Argument" ) ; 
    #local __call_locality=( RC RepositoryCreation ${StrParentApps} ) ; 
    #local Arg0=${ArrayArg[0]} ; 
    #local ArrayArg=( $* ) ;
@@ -358,10 +358,15 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   
   function ParserFunctionEval()
   {
-   eval $( CAFunctName=ParserFunctionEval CAIsAddParent=True __Call_Argument ) ; 
+   ### Require Unusual Evaluation or evaluation not interpret this line like a 
+   ### command line parsing . 
+   eval $( "CAFunctName=ParserFunctionEval CAIsAddParent=True __Call_Argument" ) ; 
    #local __call_locality=( PFE ParserFunctionEval ${StrParentApps} ) ;
    #local ArrayArg=( $* ) ;
    #local Arg0=${ArrayArg[0]};  
+   
+   #eval $( CAFunctName=ParserFunctionEval CAIsAddParent=True __Call_Argument ) ; 
+   
    
    ### This line does, Getting from Prefixed-Variable desired Variable to 
    ### to be generated like Variable=command
@@ -538,11 +543,11 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   
   function __main_StartServices()
   {
-   eval $( CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
-
+   eval $( "CAUsingSedTrim=False CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument" ) ; 
    #local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
    #local ArrayArg=( $* ) ;
    #local Arg0=${ArrayArg[0]};  
+   
    #local StrCmd=${StrAppsTemplate}
    
    
