@@ -37,11 +37,11 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
  unset GnrlPrsrInfctr; 
  function GnrlPrsrInfctr()
  {
-  echo -ne "GnrlPrsrInfctr in version versionCA=${versionCA}\n" > /dev/stderr ; 
+  echo -ne "GnrlPrsrInfctr version versionCA=${versionCA}, versionGPI=${versionGPI}\n" > /dev/stderr ; 
   if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
-   local __call_locality=( GPI GnrlPrsrInfctr ) ;
-   local ArrayArg=( $* ) ;
-   local Arg0=( ${ArrayArg[0]} ) ;  
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( GPI GnrlPrsrInfctr ) ;
+   local Arg0=${ArrayArg[0]};  
   elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
    eval $( CAFunctName=GnrlPrsrInfctr CAIsAddParent=False __Call_Argument ) ; 
   elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
@@ -106,6 +106,12 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   #local StrParentApps=${__call_locality[1]} ;
   #local StrStartMain=${GPIFuncStart:=__main_StartServices} ;
   
+  ### While GnrlPrsrInfctr is the only first Helper available, it provide a list of function
+  ### where this provider have some internal action being usefull to re-use, example RepositoryCreation
+  ### It's useless to export this variable it's mostly re-used by application Getter . 
+  local UUIDHApps=${GPIAppsProvide:=RepositoryCreation} ; 
+  
+  
   ArrayMsg[0]="Prefixed Variable: __VAR__=__VALUE__\nThis is an assistant creating the Repository (location: __PATH__)\n.This is reserved to store your Query for future uses. Prepare to enter into\nCredential action to create the Repository. In case your haven't chooses Variable\n\tGPIRepoUser GPIRepoPerm\nto set your user(s)/Group accessing the repository or Permission to read and write,\nyou can stop the application and start over. If you haven't choose a Function Name\nfor this step it will pop-you a warning and stop the application." ;
   ArrayMsg[1]="Creation of PATH __PATH__, Right Attribution : __MODE__, Owner: __USER__" ;
   ArrayMsg[2]="__CMD__ " ;
@@ -116,7 +122,7 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   ArrayTplAction["Mkdir"]="__SUDO__ __OPT__ __APPS__ __APPS_OPTS__ __PATH__" ;  
   ArrayTplAction["Chmod"]="__SUDO__ __OPT__ __APPS__ __PERM__ __PATH__"   ;
   ArrayTplAction["Chown"]="__SUDO__ __OPT__ __APPS__ __OWNER__ __PATH__"   ;
-  local ArrayActionOrder=( "Mkdir" "Chmod" "Chown" ) ;
+  local -a ArrayActionOrder=( "Mkdir" "Chmod" "Chown" ) ;
    
   local StrVarList="StrVarList,StrFileOutput,BoolOutToZenity,BoolOutToFile,StrTagFeeder,StrParentApps,BoolEmitUUID,StrParserResult,StrAwkScript,StrAppsTemplate,StrApps,StrAppsOpt,StrFilterApps,StrFilterOpt,StrParserTag,StrFileName,StrDefaultPipe,StrDefaultVerbose,StrTagRepoMkdir,StrTagRepoChmod,StrTagRepoChown,BoolRepoCreaEnabled,BoolDisplayParserDebug,StrRepositoryQuery,BoolCreateRepository,StrDefaultUser,StrDefaultPerm,StrAppsSudo,StrAppsSudoOpt,StrAppsMkdir,StrAppsChown,StrAppsChmod,StrStartMain,BoolExecuteEval,BoolGenerateCode,StrUUIDInstance,StrPrefixTagGroup,StrUUIDTransmit,IntFontSize" ; 
   
@@ -179,6 +185,7 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   function Verbosis()
   {
    #eval $( CAFunctName=Verbosis CAIsAddParent=False __Call_Argument ) ; 
+   local -a ArrayArg=( $* ) ; 
    local StrMsg=${VerbMsg:=__TEXT__} ; 
    local StrDevOut=${VerbDev:=/dev/stderr} ; 
    local IsVerboseState=${VerbState:=False} ;
@@ -186,7 +193,6 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
    local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
    local IsDisplayFormatted=${VerbFormated:=True} ;
    local IsAppendMode=${VerbAppendDev:=False} ; 
-   local ArrayArg=( $* ) ; 
    if [ "${IsVerboseState:=False}" == "True" ] ; then 
     if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
      if [ "${IsAppendMode:=False}" == "True" ] ; then 
@@ -212,8 +218,8 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   function RepositoryCreation()
   {
    if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
-    local __call_locality=( RC RepositoryCreation ) ;
-    local ArrayArg=( $* ) ;
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( RC RepositoryCreation ) ;
     local Arg0=( ${ArrayArg[0]} ) ;  
    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
     eval $( CAFunctName=RepositoryCreation CAIsAddParent=True __Call_Argument ) ; 
@@ -300,13 +306,14 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
    fi 
 
   } 
+
   
   function ReportReference()
   {
    if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
-    local __call_locality=( RR ReportReference ) ;
-    local ArrayArg=( $* ) ;
-    local Arg0=( ${ArrayArg[0]} ) ;  
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( RR ReportReference ) ;
+    local Arg0=${ArrayArg[0]} ;  
    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
     eval $( CAFunctName=ReportReference CAIsAddParent=True __Call_Argument ) ; 
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
@@ -349,7 +356,7 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
     StrMsg="Query Executed, No UUID used, Reference file:[ __FILE__ ]" ;
     StrMsg=${StrMsg//__FILE__/${StrFileOutput}} ;
    fi 
-   VerbMsg=${StrMsg}          \
+   VerbMsg="${StrMsg}"        \
    VerbDev=/dev/stderr        \
    VerbEvalForm=False         \
    VerbHeader="EXECUTE-${__call_locality[1]}" \
@@ -363,9 +370,9 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   function ZenityHandlerOut()
   {
    if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
-    local __call_locality=( ZHO ZenityHandlerOut ) ;
-    local ArrayArg=( $* ) ;
-    local Arg0=( ${ArrayArg[0]} ) ;  
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( ZHO ZenityHandlerOut ) ;
+    local Arg0="${ArrayArg[0]}" ;  
    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
     eval $( CAFunctName=ZenityHandlerOut CAIsAddParent=True __Call_Argument ) ; 
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
@@ -405,9 +412,9 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   function ParserFunctionEval()
   {
    if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
-    local __call_locality=( PFE ParserFunctionEval ) ;
-    local ArrayArg=( $* ) ;
-    local Arg0=( ${ArrayArg[0]} ) ;  
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( PFE ParserFunctionEval ) ;
+    local Arg0="${ArrayArg[0]}" ;  
    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
     eval $( CAFunctName=ParserFunctionEval CAIsAddParent=True __Call_Argument ) ; 
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
@@ -599,9 +606,9 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   function __main_StartServices()
   {
    if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
-    local __call_locality=( Main __main_StartServices ) ;
-    local ArrayArg=( $* ) ;
-    local Arg0=( ${ArrayArg[0]} ) ;  
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Main __main_StartServices ) ;
+    local Arg0="${ArrayArg[0]}";  
    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
     eval $( CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 

@@ -25,9 +25,9 @@ if [ "${versionGVRL:=0.0.2}" == "0.0.2" ] ; then
  unset __GetVarReferenceList ;
  function __GetVarReferenceList( )
  {
-   #local __call_locality=( __GVRL __GetVarReferenceList ) ;
-   #local ArrayArg=( $* ) ; 
-   #local Arg0=${ArrayArg[0]} ;  
+   #local -a __call_locality=( __GVRL __GetVarReferenceList ) ;
+   #local -a ArrayArg=( $* ) ; 
+   #local Arg0="${ArrayArg[0]}" ;  
    local IsZenityBuildForm=${BuildForm:=False} ;
    ### Prefixed-Variable __GLRLAppsGuiBuilder is reserved for 
    ### user creating a better Gui-Builder than existing one 
@@ -64,8 +64,11 @@ if [ "${versionGVRCW:=0.0.2}" == "0.0.2" ] ; then
 ### End-of if-${versionGVRCW} 
 fi
 
-
 if [ "${versionGSPN:=0.0.2}" == "0.0.2" ] ; then 
+ ### GetStdPrefixName 
+ unset GetStdPrefixName ; 
+. ${FNCTDLIBPATH}/131cb830-8cd7-11e6-8b1d-001e4c8856d6
+elif [ "${versionGSPN:=0.0.2}" == "0.0.1" ] ; then 
  ### GetStdPrefixName 
  unset GetStdPrefixName ; 
  . ${FNCTDLIBPATH}/69968204-0cf6-11e3-99bc-001b3875b29c
@@ -79,9 +82,9 @@ if [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then
  unset CallArgument ; 
  function CallArgument()
  {
-   local __call_locality=( CA CallArgument ) ;
-   local ArrayArg=( $* ) ;
-   local Arg0=${ArrayArg[0]};
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( CA CallArgument ) ;
+   local Arg0="${ArrayArg[0]}";
    
    local StrFuncName=${CAFunctName:=None} ; 
    local StrScope=${CACodeScope:=local} ;
@@ -89,14 +92,14 @@ if [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then
    local BoolAddParent=${CAIsAddParent:=False} ; 
    local BoolChildBoot=${CAIsChildBoot:=False} ; 
    local StrStartMain=${CAFuncStart:=__main_StartServices} ; 
-   local StrShortName ; 
-   local StrVarList="StrVarList,StrFuncName,StrScope,StrStartMain,StrShortName,BoolChildBoot,BoolAddParent,BoolUsingSed" ; 
+   local StrVarList="StrVarList,StrFuncName,StrScope,StrStartMain,BoolChildBoot,BoolAddParent,BoolUsingSed" ; 
    
    function __main_StartServices()
    {
-    local __call_locality=( Main __main_StartServices ) ;
-    local ArrayArg=( $* ) ;
-    local Arg0=${ArrayArg[0]};
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Main __main_StartServices ) ;
+    local Arg0="${ArrayArg[0]}";
+    local StrShortName ; 
     if [ "${StrFuncName:=__main_StartServices}" == "__main_StartServices" ] ; then 
      StrShortName="Main"
     elif [ "${StrFuncName:=__main_StartServices}" == "__main_StopServices" ] ; then 
@@ -105,7 +108,7 @@ if [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then
      StrShortName=$( GetStdPrefixName ${StrFuncName} ) ;
     fi 
     local StrBootStrap="__SCOPE__ StrStartMain=\${__SHORTNAME__FuncStart:=__main_StartServices} ;" ; 
-    local StrArgumentCode="""__SCOPE__ __call_locality=( __SHORTNAME__ __LONGNAME__ __PARENT_NAME__ ) ; __SCOPE__ ArrayArg=( \$* ) ; __SCOPE__ Arg0=\${ArrayArg[0]} ; __SCOPE__ StrParentApps=\${__call_locality[1]} ; __BOOT_STRAP__""" ; 
+    local StrArgumentCode="""__SCOPE__ ArrayArg=( \$* ); __SCOPE__ __call_locality=( __SHORTNAME__ __LONGNAME__ __PARENT_NAME__ ); __SCOPE__ Arg0=\${ArrayArg[0]}; __SCOPE__ StrParentApps=\${__call_locality[1]}; __BOOT_STRAP__""" ; 
     if [ "${BoolAddParent:=False}" == "True" ] ; then 
      StrArgumentCode=${StrArgumentCode//__PARENT_NAME__/\$\{StrParentApps\}} ; 
      if [ "${BoolChildBoot:=False}" == "False" ] ; then 
@@ -165,9 +168,9 @@ if [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then
  unset __Call_Argument ; 
  function __Call_Argument()
  {
-   local __call_locality=( CA __Call_Argument ) ;
-   local ArrayArg=( $* ) ;
-   local Arg0=${ArrayArg[0]};
+   local -a __call_locality=( CA __Call_Argument ) ;
+   local -a ArrayArg=( $* ) ;
+   local Arg0="${ArrayArg[0]}";
    
    local StrFuncName=${CAFunctName:=None} ; 
    local StrScope=${CACodeScope:=local} ;
@@ -180,9 +183,9 @@ if [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then
    
    function __main_StartServices()
    {
-    local __call_locality=( Main __main_StartServices ) ;
-    local ArrayArg=( $* ) ;
-    local Arg0=${ArrayArg[0]};
+    local -a __call_locality=( Main __main_StartServices ) ;
+    local -a ArrayArg=( $* ) ;
+    local Arg0="${ArrayArg[0]}";
     if [ "${StrFuncName:=__main_StartServices}" == "__main_StartServices" ] ; then 
      StrShortName="Main"
     elif [ "${StrFuncName:=__main_StartServices}" == "__main_StopServices" ] ; then 
@@ -279,9 +282,9 @@ if [ "${versionGOD:=0.0.2}" == "0.0.2" ] ; then
  unset GetOtherDate ;
  function GetOtherDate()
  {
-   local __call_locality=( GOD GetOtherDate );
-   local ArrayArg=( $* ) ; 
-   local Arg0=${ArrayArg[0]}; 
+   local -a ArrayArg=( $* ) ; 
+   local -a __call_locality=( GOD GetOtherDate );
+   local Arg0="${ArrayArg[0]}"; 
    local StrDateUnitPattern=${GODDateUnitPatrn:=__DATEUNIT__};
    local StrDateUnitReference=${GODDateUnit:="day"};
    local StrDateFormat=${GODFormat:=%Y%m%d} ;
@@ -296,10 +299,10 @@ if [ "${versionGOD:=0.0.2}" == "0.0.2" ] ; then
      
    function Verbosis()
    {
-    local __call_locality=( Verbosis Verbosis );
+    local -a ArrayArg=( $* ) ; 
+    local -a __call_locality=( Verbosis Verbosis );
     local StrMsg=${VerbosisMsg:=__TEXT__} ; 
     local StrDevOut=${VerbosisDev:=/dev/stderr} ; 
-    local ArrayArg=( $* ) ; 
     if [ "${VerboseState:=False}" == "True" ] ; then 
      echo -ne "VERBOSE:[ ${StrMsg} ]\n" > ${StrDevOut} ;
     fi
@@ -308,8 +311,8 @@ if [ "${versionGOD:=0.0.2}" == "0.0.2" ] ; then
    
    function DateFunc()
    {
-    local __call_locality=( DateFunc DateFunc ) ;
-    local ArrayArg=( $* ) ; 
+    local -a ArrayArg=( $* ) ; 
+    local -a __call_locality=( DateFunc DateFunc ) ;
     local StrEval="""${DateFuncApp} +"${DateFuncFormat:=%Y%m%d}" -d '${DateFuncIndicator}'""" ; 
     if [ "${DateFuncVerbose:=False}" == "True" ] ; then 
      VerbosisMsg=${StrEval} VerboseState=${IsVerbose} Verbosis ;
@@ -330,7 +333,7 @@ if [ "${versionGOD:=0.0.2}" == "0.0.2" ] ; then
    #local StrDateIndicator=${StrDateIndicatorFormat/__INT__/${IntDayDiff:=0}}  ;
    #StrDateIndicator=${StrDateIndicator/${StrDateUnitPattern}/${StrDateUnitReference}} ;
    
-   local ArrayRange=( ${LoopRange/,/ } ) ;
+   local -a ArrayRange=( ${LoopRange/,/ } ) ;
    local OperRange="<=" ;  
    local OperRangeIn="Intx++" ;
    local OperBaseStart=${ArrayRange[0]} ;
@@ -403,14 +406,15 @@ if [ "${versionGUUID:=0.0.2}" == "0.0.2" ] ; then
  unset GetUUID 
  function GetUUID ()
  {
-  local __call_locality=( GetU GetUUID ) ;
-  local ArrayArg=( $* ) ; 
-  local Arg0=${ArrayArg[0]} ;
+  local -a ArrayArg=( $* ) ; 
+  local -a __call_locality=( GetU GetUUID ) ;
+  local Arg0="${ArrayArg[0]}" ;
   local BoolTimeBased=${GetUTimeBased:=True}
   local BoolLoop=${GetULoop:=False} ;
   local IntSeqLoop=${GetUSeq:=1} ; 
   local StrGetHelperName=${GetUHelperName:=UUIDHelper} ;
   local StrUUIDHelperStream=${GetUHelper:=UUIDHApps= UUIDHSwitches= __HELPERNAME__} ; 
+  local BoolIsHelper=${GetUIsHelper:=False} ; 
   ### No Need to transfert TypeAppsName, its recuperated by StrAppsNameCall .
   local TypeAppsName=${GetUAppsDef:=__HELPERNAME__ --get UUIDHApps}
   local StrUUIDActionName=${GetUActionFunc:=UUIDNoLoop,UUIDLoop} ;
@@ -423,7 +427,20 @@ if [ "${versionGUUID:=0.0.2}" == "0.0.2" ] ; then
   local StrAppsRegister=${GetUAppsRegisterName:=None};
   local StrUUIDIndexName=${GetUIDName=.GetUUID};
   local StrAppsNameCall=${TypeAppsName//__HELPERNAME__/${StrGetHelperName}} ; 
-  local StrAppsName=$( ${StrAppsNameCall} ) ; 
+  if [ "${BoolIsHelper:=False}" == "True" ] ; then 
+   ### Section not ready, use a Declaration to call it, but no Helper are 
+   ### available at this time. 
+   ### While it's not ready-yet it scheduled and 
+   ### only providers are ZenityPrefixedVarSelection->BuildListInformation which 
+   ### is usefull method to make __TAG__ from List variable from a function .
+   ### The first workable is GnrlPrsrInfctr->RepositoryCreation which is 
+   ### suppose to answer. So supposing we have to split-down GnrlPrsrInfctr to 
+   ### version 0.0.1 for restriction policy like "Not Allowing creation of path or
+   ### repository" we should receive "nothing or None" and GetUUID can not pass 
+   ### informations for creating Database location. Initially only the getter for  
+   ### UUIDHApps can be implemented. 
+   local StrAppsName=$( ${StrAppsNameCall} ) ; 
+  fi 
   local StrParentApps=${__call_locality[1]} ; 
   local StrVarList="StrAppsName,StrAppsNameCall,StrUUIDIndexName,StrAppsRegister,BoolCallRegistered,StrDbSchema,StrDbURI,IsUUIDDbImport,IsUUIDDbCreation,IsVerbosis,StrUUIDActionName,StrUUIDHelperStream,StrGetHelperName,IntSeqLoop,BoolLoop,BoolTimeBased,StrParentApps,StrVarList"; 
   
@@ -457,7 +474,8 @@ if [ "${versionGUUID:=0.0.2}" == "0.0.2" ] ; then
   ###  
   function Verbosis()
   {
-   local __call_locality=( Verbosis Verb );
+   local -a ArrayArg=( $* ) ; 
+   local -a __call_locality=( Verbosis Verb );
    local StrMsg=${VerbMsg:=__TEXT__} ; 
    local StrDevOut=${VerbDev:=/dev/stderr} ; 
    local IsVerboseState=${VerbState:=False} ;
@@ -465,7 +483,6 @@ if [ "${versionGUUID:=0.0.2}" == "0.0.2" ] ; then
    local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
    local IsDisplayFormatted=${VerbFormated:=True} ;
    local IsAppendMode=${VerbAppendDev:=False} ; 
-   local ArrayArg=( $* ) ; 
    if [ "${IsVerboseState:=False}" == "True" ] ; then 
     if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
      if [ "${IsAppendMode:=False}" == "True" ] ; then 
@@ -491,9 +508,9 @@ if [ "${versionGUUID:=0.0.2}" == "0.0.2" ] ; then
   
   function ApplicationRegistrationIndex()
   {
-   local __call_locality=( ARI ApplicationRegistrationIndex ${StrParentApps} ) ;
-   local ArrayArg=( $* ) ; 
-   local Arg0=${ArrayArg[0]} ;
+   local -a ArrayArg=( $* ) ; 
+   local -a __call_locality=( ARI ApplicationRegistrationIndex ${StrParentApps} ) ;
+   local Arg0="${ArrayArg[0]}" ;
   
    
   }
@@ -502,9 +519,9 @@ if [ "${versionGUUID:=0.0.2}" == "0.0.2" ] ; then
   
   function UUIDNoLoop()
   {
-   local __call_locality=( UUIDNL UUIDNoLoop ${StrParentApps} ) ;
-   local ArrayArg=( $* ) ; 
-   local Arg0=${ArrayArg[0]} ;
+   local -a ArrayArg=( $* ) ; 
+   local -a __call_locality=( UUIDNL UUIDNoLoop ${StrParentApps} ) ;
+   local Arg0="${ArrayArg[0]}" ;
    #eval $( ${StrUUIDHelper} ) ;
    local StrMsg="UUID HELPER: ${StrUUIDHelper}" ;
    VerbState=${IsVerbosis} VerbMsg=${StrMsg} VerbHeader="VERBOSE" Verbosis;
@@ -513,10 +530,10 @@ if [ "${versionGUUID:=0.0.2}" == "0.0.2" ] ; then
   
   function UUIDLoop()
   {
-   local __call_locality=( UUIDL UUIDLoop ${StrParentApps} ) ;
-   local ArrayArg=( $* ) ; 
-   local Arg0=${ArrayArg[0]} ;
-   local ArrayMsg=( ) ;
+   local -a ArrayArg=( $* ) ; 
+   local -a __call_locality=( UUIDL UUIDLoop ${StrParentApps} ) ;
+   local Arg0="${ArrayArg[0]}" ;
+   local -a ArrayMsg=( ) ;
    ArrayMsg[0]="UUID LOOPSEQ: ${IntSeqLoop}";
    ArrayMsg[1]="UUID HELPER: ${StrUUIDHelper}\n" ;
    
@@ -529,9 +546,9 @@ if [ "${versionGUUID:=0.0.2}" == "0.0.2" ] ; then
   
   function __main_StartServices()
   {
-   local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
-   local Arg0=${ArrayArg[0]} ;
-   local ArrayArg=( $* ) ; 
+   local -a ArrayArg=( $* ) ; 
+   local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+   local Arg0="${ArrayArg[0]}" ;
    local IntUUIDHelperIndex=0 ;
    local StrUUIDOption="" ;
    local StrUUIDHelper=""
@@ -697,9 +714,9 @@ if [ "${versionGBLD:=0.0.2}" == "0.0.2" ] ; then
  unset GetterByLineData ; 
  function GetterByLineData()
  {
-  local __call_locality=( GBLD GetterByLineData ) ;
-  local ArrayArg=( $* ) ; 
-  local Arg0=${ArrayArg[0]} ; 
+  local -a ArrayArg=( $* ) ; 
+  local -a __call_locality=( GBLD GetterByLineData ) ;
+  local Arg0="${ArrayArg[0]}" ; 
   local StrParentApps="${__call_locality[1]}" ;
   local StrAppsTail=${GBLDTailApps:=/usr/bin/tail} ;
   local StrAppsHead=${GBLDHeadApps:=/usr/bin/head} ;
@@ -717,7 +734,7 @@ if [ "${versionGBLD:=0.0.2}" == "0.0.2" ] ; then
   local vret=0 ;
   local StrMsg="" ; 
   local StrVarListTransfert="IsShaRemovingComment,StrParentApps,IntGCID,IntGHID,IsVerbose,IsActionReturnError,StrFileStoreInfo,IntLineId,Stream,StrAppsTail,StrAppsHead,StrAction,StrParentApps,StrVerbosisMacro,StrFStats,StrFStatsOpt" ; 
-  local ArrayMsg=( ) ;
+  local -a ArrayMsg=( ) ;
   
   ArrayMsg[0]="Verbose is Turned On" ; 
   ArrayMsg[1]="File is Present, Size:__FILE_SIZE__, Name=__FILE__" ; 
@@ -734,13 +751,13 @@ if [ "${versionGBLD:=0.0.2}" == "0.0.2" ] ; then
 
   function Verbosis()
   {
-   local __call_locality=( Verbosis Verb  ) ;
+   local -a ArrayArg=( $* ) ; 
+   local -a __call_locality=( Verbosis Verb  ) ;
    local StrMsg=${VerbMsg:=__TEXT__} ; 
    local StrDevOut=${VerbDev:=/dev/stderr} ; 
    local IsVerboseState=${VerbState:=False} ;
    local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
    local IsDisplayFormatted=${VerbFormated:=True} ;
-   local ArrayArg=( $* ) ; 
    if [ "${IsVerboseState:=False}" == "True" ] ; then 
     if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
@@ -754,8 +771,8 @@ if [ "${versionGBLD:=0.0.2}" == "0.0.2" ] ; then
   
   function GetFile()
   {
-   local __call_locality=( GF GetFile ${StrParentApps} ) ;
-   local ArrayArg=( $* ) ; 
+   local -a ArrayArg=( $* ) ; 
+   local -a __call_locality=( GF GetFile ${StrParentApps} ) ;
    local Arg0="${ArrayArg[0]}" ; 
    local StrFile="${StrFileStoreInfo:=None}" ;
    local StrParserFileStats="${StrFStatsOpt//__APPS__/${StrFStats}}" ; 
@@ -784,9 +801,9 @@ if [ "${versionGBLD:=0.0.2}" == "0.0.2" ] ; then
   
   function GetHeader()
   {
-   local __call_locality=( GH GetHeader ${StrParentApps} ) ;
-   local ArrayArg=( $* ) ; 
-   local Arg0=${ArrayArg[0]} ; 
+   local -a ArrayArg=( $* ) ; 
+   local -a __call_locality=( GH GetHeader ${StrParentApps} ) ;
+   local Arg0="${ArrayArg[0]}" ; 
    local IntLineId=${IntGHId:=1} ; 
    StrHeaderStream=$( GBLDActionReturnError=True GBLDAction=FileSplitAction GBLDFileStoreInfo=${StrFileStoreInfo} GBLDLineID=${IntLineId} GetterByLineData	 ) ; 
    if [ "${IsShaRemovingComment}" == "True" ] ; then 
@@ -800,7 +817,8 @@ if [ "${versionGBLD:=0.0.2}" == "0.0.2" ] ; then
   
   function GetContent()
   {	
-   local __call_locality=( GC GetContent ${StrParentApps} ) ;
+   local -a __call_locality=( GC GetContent ${StrParentApps} ) ;
+   local -a ArrayArg=( $* ) ; 
    local IntLineId=${IntGCId:=2} ; 
    echo $( GBLDActionReturnError=True GBLDAction=FileSplitAction GBLDFileStoreInfo=${StrFileStoreInfo} GBLDLineID=${IntLineId} GetterByLineData	 ) ; 
    return $? ;
@@ -808,9 +826,9 @@ if [ "${versionGBLD:=0.0.2}" == "0.0.2" ] ; then
   
   function FileSplitAction( )
   {
-   local __call_locality=( FSA FileSplitAction ${StrParentApps} ) ;
-   local ArrayArg=( $* ) ;
-   local Arg0=${ArrayArg[0]} ;  
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( FSA FileSplitAction ${StrParentApps} ) ;
+   local Arg0="${ArrayArg[0]}" ;  
    
    local Stream=$( GBLDActionReturnError=True GBLDAction=GetFile GFStoreInfo=${StrFileStoreInfo} GetterByLineData ) ;
    local vret=$? ; 
@@ -842,8 +860,8 @@ if [ "${versionGBLD:=0.0.2}" == "0.0.2" ] ; then
   
   function ShaSum1Content()
   {
-   local __call_locality=( FSA ShaSum1Content ${StrParentApps} ) ;
-   local ArrayArg=( $* ) ;
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( FSA ShaSum1Content ${StrParentApps} ) ;
    local Arg0="${ArrayArg[0]}" ;  
    local Stream=$( GBLDActionReturnError=True GBLDAction=GetContent GFStoreInfo=${StrFileStoreInfo} GetterByLineData ) ;	
    local vret=$? ; 
@@ -858,9 +876,9 @@ if [ "${versionGBLD:=0.0.2}" == "0.0.2" ] ; then
   
   function __main_StartServices()
   {
-   local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
-   local ArrayArg=( $* ) ;
-   local Arg0=${ArrayArg[0]} ;  
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+   local Arg0="${ArrayArg[0]}" ;  
    
    StrCmd="eval \$( VTVIsArrayStyleInsert=True VTVValueEntry=__LIST_VAR__ VTVIsValueReAssign=True VTVIsValueToConvert=False VTVIsArrayStyleInsert=True ValueToVariable ) __ACTION__ __RETURN_FORM__" ; 
    StrMsg=$( ${StrParentApps} --get ArrayMsg[6] ) ;
@@ -973,8 +991,8 @@ if [ "${versionVTV:=0.0.2}" == "0.0.2" ] ; then
    ###
    
    
-  local ArrayArg=( $* ) ;
-  local __call_locality=( VTV ValueToVariable ) ;
+  local -a ArrayArg=( $* ) ;
+  local -a __call_locality=( VTV ValueToVariable ) ;
   local Arg0="${ArrayArg[0]}" ;
   
   local StrReAssign=${VTVValueRe:=StrTestA_1,StrTestB_1,StrCTest1_1,StrDTest2_1,IntA_1,IntB_1,IsTestA_1,IsNotTestA_1}
@@ -1002,13 +1020,13 @@ if [ "${versionVTV:=0.0.2}" == "0.0.2" ] ; then
    
   function Verbosis()
   {
-   local __call_locality=( Verbosis Verb );
+   local -a ArrayArg=( $* ) ; 
+   local -a __call_locality=( Verbosis Verb );
    local StrMsg=${VerbMsg:=__TEXT__} ; 
    local StrDevOut=${VerbDev:=/dev/stderr} ; 
    local IsVerboseState=${VerbState:=False} ;
    local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
    local IsDisplayFormatted=${VerbFormated:=True} ;
-   local ArrayArg=( $* ) ; 
    if [ "${IsVerboseState:=False}" == "True" ] ; then 
     if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
@@ -1028,9 +1046,9 @@ if [ "${versionVTV:=0.0.2}" == "0.0.2" ] ; then
 
   function VarFilter()
   {
-   local __call_locality=( VF VarFilter ) ;
-		 local Arg0=${ArrayArg[0]} ;
-		 local ArrayArg=( $* ) ;
+		 local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( VF VarFilter ) ;
+		 local Arg0="${ArrayArg[0]}" ;
    local StrParserReassign=$( ValueToVariable --get StrReAssign ) ; 
    local StrParserList=$( ValueToVariable --get StrValueParser ) ;
    local StrListSep=$( ValueToVariable --get StrSepList ) ;
@@ -1046,14 +1064,14 @@ if [ "${versionVTV:=0.0.2}" == "0.0.2" ] ; then
    local IsSlowDebugOut=$( ValueToVariable --get IsSlowDebugOut ) ; 
    local IsWhiteList=$( ValueToVariable --get IsWhiteList ) ; 
    local StrWhiteListAgree=$( ValueToVariable --get StrWhiteListAgree ) ;
-   local ArrayWhiteList=( ${StrWhiteListAgree//,/ } ) ;  
+   local -a ArrayWhiteList=( ${StrWhiteListAgree//,/ } ) ;  
    local StrNPrefix="" ;  
    local StrNSuffix="" ; 
    local StrCharSep=${StrListSep:${IntCharSel}:1} ; 
    StrFilter=${StrFilter//__SEP__/${StrCharSep}} ; 
    StrFilter2=${StrFilter2__SEP__/${StrCharSep}} ; 
-   local ArrayVarList=(  ) ; 
-   local ArrayRejectionList=( ) ; 
+   local -a ArrayVarList=(  ) ; 
+   local -a ArrayRejectionList=( ) ; 
    local IntNotEmptyList=1 ;
    local IntSizeBuffe=0 ; 
    local StrNewVarEntry="" ; 
@@ -1128,7 +1146,7 @@ if [ "${versionVTV:=0.0.2}" == "0.0.2" ] ; then
        StrTestFilter=${StrTestFilter//${StrRejectionFilter}/}
        if [ "${StrTestFilter:=None}" == "None" ] ; then 
         IntPolishForm=0
-        ### We do have variable le Cflags, CFLAGS, LDFLAGS, Ldflags...
+        ### I do have variables like Cflags, CFLAGS, LDFLAGS, Ldflags...
        fi 
       fi 
      
@@ -1264,11 +1282,11 @@ if [ "${versionVTV:=0.0.2}" == "0.0.2" ] ; then
   
   function AppsParser()
   {
-   local __call_locality=( AP AppsParser ) ;
-		 local Arg0=${ArrayArg[0]} ;
-		 local ArrayArg=( $* ) ;   
-   local ArrayGetter=( StrSepList IsDisplayDebug IsValueTransScript StrDefaultTransScript StrScriptApps StrScriptAppsOpt StrScriptParser StrValueParser  ) ; 
-   local ArrayTagParser=( __APPS__:StrScriptApps __OPT__:StrScriptAppsOpt __SEP__:StrCharSep __FILE__:StrDefaultTransScript __VAR_ASSIGN__:StrExtraVarScript ) ; 
+		 local -a ArrayArg=( $* ) ;   
+   local -a __call_locality=( AP AppsParser ) ;
+		 local Arg0="${ArrayArg[0]}" ;
+   local -a ArrayGetter=( StrSepList IsDisplayDebug IsValueTransScript StrDefaultTransScript StrScriptApps StrScriptAppsOpt StrScriptParser StrValueParser  ) ; 
+   local -a ArrayTagParser=( __APPS__:StrScriptApps __OPT__:StrScriptAppsOpt __SEP__:StrCharSep __FILE__:StrDefaultTransScript __VAR_ASSIGN__:StrExtraVarScript ) ; 
    ### local StrSepList=$( ValueToVariable --get StrSepList ) ;
    ### local IntValueSep=$( ValueToVariable --get IntValueSep ) ;
    local StrCharSep=${StrSepList:${IntValueSep}:1} ;
@@ -1296,9 +1314,9 @@ if [ "${versionVTV:=0.0.2}" == "0.0.2" ] ; then
   
   function __main_StartServices()
   {
-   local __call_locality=( Main __main_StartServices ) ;
-		 local Arg0=${ArrayArg[0]} ;
-		 local ArrayArg=( $* ) ;   
+		  local -a ArrayArg=( $* ) ;   
+    local -a __call_locality=( Main __main_StartServices ) ;
+		  local Arg0="${ArrayArg[0]}" ;
     local IsValueSimpleConvert=$( ValueToVariable --get IsValueSimpleConvert ) ;  
     local IsValueTransScript=$( ValueToVariable --get IsValueTransScript ) ; 
     if [ "${IsValueSimpleConvert:=True}" == "True" ] ; then 
@@ -1325,12 +1343,7 @@ if [ "${versionVTV:=0.0.2}" == "0.0.2" ] ; then
   local StrDescription="\nComment over Obsolete Prefixed-Var\nThey are not in effect and might be re-attributed. Initially work altogether VTVValueRe VTVIsTransformed were removed from prototype aka ancester of BoolVarTestVarCreation coming from old_var_fnct_lib. Where fews functions filters the contents of this function with 'declare -f' to inspect variable presence and create an assignation table, this was removed even from prototype having problems in handling the table correctly.\n\nComment over VTVAppsScripter\nDefault is Awk while some may like something else, it's also play with performance being AWK as long you define the VTVAppsParser, VTVScriptInterVar, VTVAppsScripterOpt, VTVITransformScript you can define application like Python,Ruby,Perl...\n\nComment over VTVIsWhiteList\nFor Unusual Variable name, and or information too-short for variable name, being consider like not so used but Lacking of Regularity in your code using not conformant Polish-notation variable Like Rachid1,Rachid2,Rachid3,RachidN, you must use WhiteList Option. Also same for uses of externals variable like CC,CFLAGS,LDFLAGS,GCC... These by-passing the Polish-notation filter and transfert-them after-filter Effect.\n\n\nComment over VTVRejectionFilter\nInitially inside the ValueToVariable engine it filter VTVRejectionFilter, and after filter with VTVVarFilter and what failling remain inside WhiteList and wait if Option IsWhiteList is trigger.\n\nComment over VTVIsArrayStyleInsert\nWhile Shell-Array are not totally recognized information inside array, Integer and STRING are taken together, if you do have problem in regard of integer being reported not like your design is thinked try to enforce a IF test with integer with forced value. Because ValueToVariable take individually elements and assign it before calling your function you do have more change to keep variable structure than creation an allocation-holder and calculating like registry access. Another case where Array are altering the information in regard of loosing the Interger value is the uses of Associative array. Index are STRING and content too. We do recommend also to profit from Getter in place inside function from Fnct.D Structure and adopt a recuperation methode throught Getter. Default is False, but we recommend it to Set True form more than one Variable. Professionnal uses had enforced the uses of Variable Transfert holding name inside the Variable and call only this one ex, calling StrVarList=StrVar1,StrVar2 calling StrVarList inside VTVValueEntry does not need an Array Style Insert.\n\nComment over VTVIsWhiteList\nUses of Whitelist where some power mechanisme like compiler depend of variable like CFLAGS, LDFLAGS... do require it if your out of generating code from shell or out of main Function do require a function white list \n\nComment over VTVValueEntry Know Effect\nIn many sub-function does prove there is no creation of variable but Assignation by-Recopy.\n\nComment over VTVIsDebugDisplay\nWhile the mechanism can not be directly see from calling it directly from Command-Shell it get on with eval and it's optimized to work with simple Executive-Evaluative Brace only the DebugDisplay option will let you see the result. Information are ouputed on /dev/stderr.\n\nComment over VTVIsTransHadScrip\n like Awk Script and it's a mechanism totally non-interactive ans pass-throught do directly to this action, with dependancy of VTVITransformScript, VTVAppsScripter, VTVAppsScripterOpt, theses options are not certified yet.\nValueToVariable Prefixed-Variable informations\n\nBoolean Notice Prefixed Variable:\n\nVTVIsArrayStyleInsert\tSet True/False ArrayStyle is a declaration passed throught a variable and fastest way to pass theses elements are with separator or common method is « Comma Separated Value ». Further Information seek second part.\nVTVIsTransformed\tSet True/False Reserved and Obsoleted until all the function exception will be tested.\nVTVIsTransHadScrip\tSet True/False This Prefixed-Variable is Unique and only accept VTVIsArrayStyleInsert and activate the uses of independent script.\nVTVIsDebugDisplay\tSet True/False Allow outputing Debug Statement. \nVTVIsSlowDebug\t\tSet True/False This option is not improving Speed of your function and does slow-down the option DebugDisplay if you do have problem to filter All the Displayed Debug information.\nVTVIsValueToConvert\tSet True/False Is mostly False, this Prefixed-variable allow variable having other name, and respectly have en entry and importance inside way variable are mangled, activating uses of VTVReasignPrefix, VTVReasignSuffix\n\nImportant Notice, most-standard case Prefixed Variable:\n\n\n\nImportant Notice, NonTrivial Prefixed Variable:\n\nVTVVarFilter\t\tSTRING Regular Expression, from Bash Expansion algorithm, mostly like regular expression, but not full-length regular expression.\nVTVRejectionFilter\tSTRING Regular Expression, from Bash Expansion algorithm Rejection filter is also know for what will remain inside WhiteList Option\nVTVIsWhiteList\t\tSTRING Separated with Comma is the exeption List to pass throught .\nVTVITransformScript\tSTRINGScript Filename use inside VTVAppsScripterOpt under TAG __FILE__. Neglecting VTVAppsScripterOpt to own TAG __FILE__ will not work .\nVTVAppsScripter\tSTRING Default is /usr/bin/gawk\nVTVAppsScripterOpt\tSTRING Reserved for VTVAppsScripter or application wrap-up, handle most of variable call for an application wrapper.\nVTVScriptInterVar\tSTRING Repsonsible to answer to TAG __VAR_ASSIGN__ inside VTVAppsScripterOpt is a method transfering other variable with --assign from awk/gawk option look for awk manual for further information.\nVTVAppsParser\tSTRING It's TAG definition where __APPS__ is awk/gawk, any application and __OPT__. The __OPT__ is namespace for all Prefixed Variable VTVScriptInterVar, VTVAppsScripterOpt and VTVITransformScript.\n\n\nImportant Notice, Obsoletes Prefixed Variable:\n\nVTVValueRe\t\tSet True/False [INEFFECTIVE] Was working with VTVIsTransformed\nVTVIsTransformed\tSet True/False [INEFFECTIVE] Was used in conjunction with VTVValueRe and require VTVValueEntry and does associate 1 on 1, so having to inspect the variable list to fit with element make a decision to remove the prototype from this function.\n" ; 
    
    
-  ### 
-  ### 
-  ###  \n
-   
   if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-    ### Not listed inside live-documentation: GVRIsDesc=True 
     GVRIsName=True GVRIsSynopsis=True GVRIsSummary=True GVRIsDesc=True GetVarReference ${__call_locality[1]} ; 
     echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
   elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
@@ -1373,9 +1386,9 @@ if [ "${versionTP:=0.0.2}" == "0.0.2" ] ; then
 
  function TagParser( )
  {
-  local __call_locality=( TP TagParser ) ;
-  local ArrayArg=( $* ) ; 
-  local Arg0=${ArrayArg[0]} ;
+  local -a ArrayArg=( $* ) ; 
+  local -a __call_locality=( TP TagParser ) ;
+  local Arg0="${ArrayArg[0]}" ;
   
   local StrTagList=${TPListTag:=StrA:__TAGA__,StrB:__TAGB__,IntA:__INT__} ; 
   local StrArrayName=${TPArrayName:=ArrayTagParser} ;
@@ -1419,7 +1432,9 @@ if [ "${versionTP:=0.0.2}" == "0.0.2" ] ; then
   ###  
   function Verbosis()
   {
-   local __call_locality=( Verbosis Verb );
+   local -a ArrayArg=( $* ) ; 
+   local -a __call_locality=( Verbosis Verb ) ;
+   local Arg0="${ArrayArg[0]}" ;
    local StrMsg=${VerbMsg:=__TEXT__} ; 
    local StrDevOut=${VerbDev:=/dev/stderr} ; 
    local IsVerboseState=${VerbState:=False} ;
@@ -1427,7 +1442,6 @@ if [ "${versionTP:=0.0.2}" == "0.0.2" ] ; then
    local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
    local IsDisplayFormatted=${VerbFormated:=True} ;
    local IsAppendMode=${VerbAppendDev:=False} ; 
-   local ArrayArg=( $* ) ; 
    if [ "${IsVerboseState:=False}" == "True" ] ; then 
     if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
      if [ "${IsAppendMode:=False}" == "True" ] ; then 
@@ -1454,10 +1468,10 @@ if [ "${versionTP:=0.0.2}" == "0.0.2" ] ; then
 
   function __main_StartServices()
   {
-   local __call_locality=( Main __main_StartServices ${StrParent} ) ;
-   local Arg0=${ArrayArg[0]} ;
-   local ArrayArg=( $* ) ; 
-   local ArrayTagParser=( ${StrTagList//,/ } ) ; 
+   local -a ArrayArg=( $* ) ; 
+   local -a __call_locality=( Main __main_StartServices ${StrParent} ) ;
+   local Arg0="${ArrayArg[0]}" ;
+   local -a ArrayTagParser=( ${StrTagList//,/ } ) ; 
   
    ### 
    ### This is the injected code wil be outputed and 
@@ -1491,7 +1505,7 @@ if [ "${versionTP:=0.0.2}" == "0.0.2" ] ; then
    # for __ITER__ in \${__ARRAY_NAME__[@]}  ; do 
    local StrInitCmd="""${StrScopeVar} intx=0 ; ${StrScopeVar} StrPairLeft ; 
    ${StrScopeVar} StrPairRight ; 
-   ${StrScopeVar} __ARRAY_NAME__=( ${StrTagList//,/ } ) ; 
+   ${StrScopeVar} -a __ARRAY_NAME__=( ${StrTagList//,/ } ) ; 
    ${StrScopeVar} StrMsg=\"PairLeft( __LEFT__ ), PairRight( __RIGHT__ ), Query( __QUERY__)\" ; 
    for (( intx=0 ; intx <= \${#__ARRAY_NAME__[@]}-1 ; intx++ )) ; do 
      __ITER__=\${__ARRAY_NAME__[\${intx}]} ; 
@@ -1613,16 +1627,16 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
  ### 
 
  ### Factory Section 
+  local -a ArrayArg=( $* ) ; 
+  local -a __call_locality=( BVT BoolVarTest ) ;
   unset StrVarBoolTest StrDefaultBoolTest StrNotAsserted StrScopeType StrIfTestType StrIfStringOp IsPreambule StrDefaultEndTest IsTypePreamb StrVTRPrbTpl StrVTRPrbVar StrVTRPrbVTReg StrVTRPrbVTFnct IsTypeAssert StrVTRAsrtTpl StrVTRAsrtVar StrVTRAsrtVTReg StrVTRAsrtVTFnct StrKeyTestType IntDefautlType IsDisplayIfStatement StrIfPattern ArrayIfPattern ArrayAssertion StrTestTemplate IsPreambulePolNtRespt ;
   unset Verbosis __main_StartServices ;
-  local __call_locality=( BVT BoolVarTest ) ;
-  local ArrayArg=( $* ) ; 
-  local Arg0=${ArrayArg[0]} ;
+  local Arg0="${ArrayArg[0]}" ;
   local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
  ### End of Factory Section.
-  local ArrayTypeTest=( False True ) ;
-  local ArrayPreambule=( ) ; 
-  local ArrayIfPattern=( ) ;
+  local -a ArrayTypeTest=( False True ) ;
+  local -a ArrayPreambule=( ) ; 
+  local -a ArrayIfPattern=( ) ;
   ### We do Agree if the clause using an Execution-ASSERTION-type  inside the 
   ### If-clause the section after the 'then' shoud not carry any trace of 
   ### BVTVarName, like default one StrAttrHold="" ... but should hold a trace of 
@@ -1725,7 +1739,7 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
   local IntDefautlType=${BVTIdType:=0} ; 
   local IsShowDebug=${BVTDisplayShowDebug:=False} ;
   local IsDisplayIfStatement=${BVTDisplayIf:=False} ; 
-  local ArrayVarTestType=( String File Test Int Shell ) ;
+  local -a ArrayVarTestType=( String File Test Int Shell ) ;
   local StrParentApps="BoolVarTest" ;
   local StrVarListTransfert="StrTestTemplate,IsDisplayIfStatement,IntDefautlType,StrKeyTestType,StrVTRAsrtVTFnct,StrVTRAsrtVTReg,StrVTRAsrtVar,StrVTRAsrtTpl,IsTypeAssert,StrVTRPrbVTFnct,StrVTRPrbVTReg,StrVTRPrbVar,StrVTRPrbTpl,IsTypePreamb,StrDefaultEndTest,IsPreambule,StrIfStringOp,StrIfTestType,StrScopeType,StrNotAsserted,StrDefaultBoolTest,StrVarBoolTest,IsPreambulePolNtRespt,StrVarNamedHold,StrVarNamed,StrParentApps" ; 
   
@@ -1742,13 +1756,13 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
   
   function Verbosis()
   {
-   local __call_locality=( Verbosis Verb );
+   local -a ArrayArg=( $* ) ; 
+   local -a __call_locality=( Verbosis Verb );
    local StrMsg=${VerbMsg:=__TEXT__} ; 
    local StrDevOut=${VerbDev:=/dev/stderr} ; 
    local IsVerboseState=${VerbState:=False} ;
    local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
    local IsDisplayFormatted=${VerbFormated:=True} ;
-   local ArrayArg=( $* ) ; 
    if [ "${IsVerboseState:=False}" == "True" ] ; then 
     if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
@@ -1763,14 +1777,14 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
 
   function __main_StartServices
   {
-   local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
-   local ArrayArg=( $* ) ;
-   local Arg0=${ArrayArg[0]};  
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+   local Arg0="${ArrayArg[0]}";  
    ### 
    ### Getter Section, 
    ### Retrieving information from Main Function BoolVarTest
-   local ArrayTestType=( ${StrKeyTestType//,/ } ) ; 
-   local ArrayTestSection=( ${ArrayTestType[${IntDefautlType}]//:/ } ) ; 
+   local -a ArrayTestType=( ${StrKeyTestType//,/ } ) ; 
+   local -a ArrayTestSection=( ${ArrayTestType[${IntDefautlType}]//:/ } ) ; 
    
    ### Note : ArrayTestSection should test if value end with 'fi' and will require an extra semi-colon
    ### before adding element 'fi' --> 'else ... (;) fi ' 
@@ -1778,17 +1792,17 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
     ArrayTestSection[1]="; ${ArrayTestSection[1]}" ; 
    fi 
    # local ArrayIfPattern=(  ) ;
-   local ATestType=( $( ${StrParentApps} --get ArrayVarTestType[@] ) ) ; 
+   local -a ATestType=( $( ${StrParentApps} --get ArrayVarTestType[@] ) ) ; 
 
    ### Other variable required ;
    local StrCurrentIfPatrn ;  
    local StrLcTTpl=${StrTestTemplate} ; 
    local StrIfPattern ; 
    
-   local ArrayPreambule=( ) ; 
+   local -a ArrayPreambule=( ) ; 
    ArrayPreambule[0]="__SCOPE__ __VAR_NAME__=__VALUE__" ;
    
-   local ArrayAssertion=( ) ; 
+   local -a ArrayAssertion=( ) ; 
    ArrayAssertion[0]="__ASRT_VAR__NAME__=__ASRT_VAR_VALUE__" ;
    
    ###
@@ -1805,7 +1819,7 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
    StrMsg="Type of VarTest: ${StrIfPattern}, StringOP: ${StrIfStringOp}" ;
    VerbHeader="DEBUG" VerbState="${IsShowDebug}" VerbDev=/dev/stderr VerbMsg=${StrMsg} Verbosis ;
    
-   local ArrarTagParseOpt=( __VAR_BOOL_TEST__,StrVarBoolTest __DEFAULT_BOOL_TEST__,StrDefaultBoolTest __VAR__NAMED__,StrVarNamed )
+   local -a ArrarTagParseOpt=( __VAR_BOOL_TEST__,StrVarBoolTest __DEFAULT_BOOL_TEST__,StrDefaultBoolTest __VAR__NAMED__,StrVarNamed )
    #for StrSyntaxItem in ${ArrarTagParseOpt[@]} ; do
    # StrPairRight="${StrSyntaxItem/#\_\_[A-Z_]*,/}" ; 
    # StrPairLeft="${StrSyntaxItem/%,[A-Z][A-Za-z0-9]*/}" ;
@@ -1882,7 +1896,7 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
        ### Long not rationnal
        ### inside script but might be interresting . 
        ### Succedding to removing all number, counting the remaining char. 
-       local StrVarHoldTest=${StrVarNamedHold} ; 
+       local StrVarHoldTest="${StrVarNamedHold}" ; 
        local StrTypeVar="None" ; 
        
        ### Because Boolean are Special case, are likely to be String with only 
@@ -1993,17 +2007,21 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
      fi
    ### end of if-"${IsPreambule:=True}" == "True" 
    fi
-   if [ ${IntDefautlType} -eq 0 ] ; then  
+   ###
+   ### Section __IF_PATTERN__, filtering from StrIfPattern required part
+   ### of __IF_PATTERN__ to fill . 
+   ###
+   if [ ${IntDefautlType:=0} -eq 0 ] ; then  
     StrLcTTpl=${StrLcTTpl//__IF_PATTERN__/${StrIfPattern} ; then} ; 
-   elif [ ${IntDefautlType} -eq 1 ] ; then  
+   elif [ ${IntDefautlType:=0} -eq 1 ] ; then  
     StrLcTTpl=${StrLcTTpl//__IF_PATTERN__/${StrIfPattern} ; then} ; 
-   elif [ ${IntDefautlType} -eq 2 ] ; then  
+   elif [ ${IntDefautlType:=0} -eq 2 ] ; then  
     StrLcTTpl=${StrLcTTpl//__IF_PATTERN__/${StrIfPattern} ; then} ; 
-   elif [ ${IntDefautlType} -eq 3 ] ; then  
+   elif [ ${IntDefautlType:=0} -eq 3 ] ; then  
     StrLcTTpl=${StrLcTTpl//__IF_PATTERN__/${StrIfPattern} ; then} ; 
-   elif [ ${IntDefautlType} -eq 4 ] ; then  
+   elif [ ${IntDefautlType:=0} -eq 4 ] ; then  
     StrLcTTpl=${StrLcTTpl//__IF_PATTERN__/${StrIfPattern} ; then} ; 
-   elif [ ${IntDefautlType} -eq 5 ] ; then  
+   elif [ ${IntDefautlType:=0} -eq 5 ] ; then  
     StrLcTTpl=${StrLcTTpl//__IF_PATTERN__/} ; 
    fi
    
@@ -2021,18 +2039,21 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
    ### suppress the StrDefaultEndTest or provide a return caracter to allow 
    ### to fill second declaration of BoolVarTest with state 
    ### IntDefautlType=4 , Supply a first level if/else 
-   if [ ${IntDefautlType} -eq 1 ] ; then 
+   if [ ${IntDefautlType:=0} -eq 1 ] ; then 
     StrLcTTpl=${StrLcTTpl//__END_MARK__/} ; 
-   elif [ ${IntDefautlType} -eq 2 ] ; then 
+   elif [ ${IntDefautlType:=0} -eq 2 ] ; then 
     StrLcTTpl=${StrLcTTpl//__END_MARK__/} ; 
-   elif [ ${IntDefautlType} -eq 3 ] ; then 
+   elif [ ${IntDefautlType:=0} -eq 3 ] ; then 
     StrLcTTpl=${StrLcTTpl//__END_MARK__/} ; 
-   elif [ ${IntDefautlType} -eq 4 ] ; then 
+   elif [ ${IntDefautlType:=0} -eq 4 ] ; then 
     StrLcTTpl=${StrLcTTpl//__END_MARK__/} ; 
    else
     StrLcTTpl=${StrLcTTpl//__END_MARK__/${StrDefaultEndTest}} ;  
    fi 
-   
+   ###
+   ### End-Section __IF_PATTERN__
+   ###  
+   ###   
    
    
    ### 
