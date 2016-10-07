@@ -482,6 +482,186 @@ function OldVLCServer()
 
 }
 
+unset VLCSetVolume ; 
+function VLCSetVolume()
+{
+  VerbMsg="Function Entry" VerbHeader="DEBUG" VerbEvalForm=False VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis ; 
+  #eval $( CAFunctName=VLCSetVolume CAIsAddParent=False __Call_Argument ) ;
+ if [ ${versionGPI:=0.0.0} == "0.0.1" ] ; then 
+  eval $( CAFunctName=VLCSetVolume CAIsAddParent=False __Call_Argument ) ; 
+ elif [ ${versionGPI:=0.0.0} == "0.0.2" ] ; then 
+  eval $( CAFunctName=VLCSetVolume CAIsAddParent=False CallArgument ) ; 
+ fi 
+ local StrTplZenityVol=${VLCSVTplZenity:="zenity --scale --text=\"__TEXT__\" --value=__VOLUME__ --min-value=__MIN_VOLUME__ --max-value=__MAX_VOLUME__ --step=__VOL_STEP__"} ;
+ local StrTplParser=${VLCSVTagParser:=StrTextCLient:__TEXT__,IntVol:__VOLUME__,IntMinVol:__MIN_VOLUME__,IntMaxVol:__MAX_VOLUME__,IntStepVol:__VOL_STEP__,StrAddr:__IP__,IntPort:__PORT__,StrVolCLiCmd:__CLI_CMD__,IntNewVol:__NEWVOL__,StrAppsEcCli:__APPS_EC_OPT__,StrAppsEc:__APPS_EC__} ;
+ local StrTextCLient=${VLCSVTextCli:='VLC CLient Volume Indicator'} ;
+ local StrVolCLiGetCmd=${VLCSVCliGet:="__APPS_EC__ __PIPE__ __APPS__ __APPS_OPT__ __PIPE__ __FILTER__ __FILTER_OPT__"} ; 
+ local StrVolCLiSetCmd=${VLCSVCliSet:="echo volume __PIPE__ __APPS__ __APPS_OPT__ __PIPE__ __FILTER__ __FILTER_OPTS__"} ; 
+ local StrAppsEc=${VLCSVCLiePushCmd:=echo \"__APPS_EC_OPT__\"} ;
+ local StrAppsEcCli=${VLCSVCLiCmd:=volume} ; 
+ local IntMinVol=${VLCSVMinVol:=0} ;
+ local IntMaxVol=${VLCSVMaxVol:=500} ;
+ local IntStepVol=${VLCSVStepVol:=1} ; 
+ local StrAddr=${VLCSVAddr:=127.0.0.1} ; 
+ local IntPort=${VLCSVPort:=5083} ; 
+ local StrVarList="StrVarList,StrTplZenityVol,StrTplParser,StrTextCLient,StrVolCLiGetCmd,StrVolCLiSetCmd,IntMinVol,IntMaxVol,IntStepVol,StrAddr,IntPort,StrAppsEc,StrAppsEcCli" ; 
+
+ function Verbosis()
+ {
+  ###eval $( CAFunctName=Verbosis CAIsAddParent=False __Call_Argument ) ; 
+  local StrMsg=${VerbMsg:=__TEXT__} ; 
+  local StrDevOut=${VerbDev:=/dev/stderr} ; 
+  local IsVerboseState=${VerbState:=False} ;
+  local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+  local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+  local IsDisplayFormatted=${VerbFormated:=True} ;
+  local IsAppendMode=${VerbAppendDev:=False} ; 
+  local ArrayArg=( $* ) ; 
+  if [ "${IsVerboseState:=False}" == "True" ] ; then 
+   if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+    if [ "${IsAppendMode:=False}" == "True" ] ; then 
+      echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
+    else  
+      echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+    fi
+   else
+    if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+       echo "${StrMsg}" ;  
+    else
+     if [ "${IsAppendMode:=False}" == "True" ] ; then 
+      echo "${StrMsg}" >> ${StrDevOut} ;
+     else
+      echo "${StrMsg}" > ${StrDevOut} ;
+     fi
+    fi 
+   fi 
+  fi
+ } 
+ ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis
+  
+
+ function __main_StartServices()
+ {
+  if [ ${versionGPI:=0.0.0} == "0.0.1" ] ; then 
+   eval $( CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
+  elif [ ${versionGPI:=0.0.0} == "0.0.2" ] ; then 
+   eval $( CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ; 
+  fi  
+  
+  
+  #eval $( "CAFunctName=VLCSetVolume CAIsAddParent=True __Call_Argument" ) ; 
+  #IntVol=$( echo "volume" | nc 127.0.0.1 5083 | sed 's/[^0-9]*//g' )
+  #IntNewVol=$(  zenity --scale --text="VLC CLient Volume Indicator" --value=${IntVol} --min-value=0 --max-value=500 --step=1 ) ;
+  #echo "volume ${IntNewVol}" | nc 127.0.0.1 5083
+  
+  ### New Variable declared for use of GnrlPrsrInfctr #1, and #2
+  #local StrCmdGet ;  
+  local StrCmdSend ; 
+  ### I need to re-copy the StrTplZenityVol and parse the new copy.
+  local StrCmdZenity=${StrTplZenityVol} ; 
+  
+  ### GnrlPrsrInfctr #1, responsible of Getting information from vlc --> StrVolCLiGetCmd
+  eval $( VTVIsArrayStyleInsert=True \
+  VTVValueEntry=StrVarList   \
+  VTVIsValueReAssign=True    \
+  VTVIsValueToConvert=False  \
+  VTVIsArrayStyleInsert=True \
+  ValueToVariable ) GPIIsUUIDInstance=True      \
+                    GPIIsFileHandlerOut=False   \
+                    GPIIsZenityHandlerOut=True  \
+                    GPIIsExecuteEval=True       \
+                    GPIIsGenerateCode=False     \
+                    GPIDisplayDebug=True        \
+                    GPIParserDebug=True         \
+                    GPITpl="${StrVolCLiGetCmd}" \
+                    GPIApps=/bin/nc             \
+                    GPIAppsOpt='${StrAddr} ${IntPort}' \
+                    GPITagFeeder="${StrTplParser}"     \
+                    GPIFilterApps='/bin/sed'           \
+                    GPIFilterOpt='s/[^0-9]*//g'        \
+                    GPITagParserResult='StrCmdGet'     \
+                    GnrlPrsrInfctr ;
+  
+  VerbMsg="StrCmdGet:${StrCmdGet}, reference:UUID:${UUID}" VerbHeader="${__call_locality[0]}-CMDLINE" VerbEvalForm=False VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis ; 
+  
+  ### GnrlPrsrInfctr #1, responsible of Setting information for vlc --> StrVolCLiGetCmd
+  ### Because IntNewVol is a new member it require to be injected on the QueryList or 
+  ### using ValueToVariable can do this task. 
+  
+  ### Since I do need to set the volume value, it require the GUI action from Zenity
+  ### to set the desired variable. I do require to parse with TagPArser the Zenity 
+  ### Command, using the StrTplParser the same from GnrlPrsrInfctr #1, and #2. 
+  #eval eval TPVarNameParsed="StrCmdZenity"               \
+  #     TPListTag="${StrTplParser}"                       \
+  #     TPIsMatchRtoL=True                                \
+  #     TPDisplayParserNotice=True                        \
+  #     TPDisplayDebug=True                               \
+  #     TPArrayName="Array${__call_locality[0]}Tag"       \
+  #     TagParser ;
+  
+  #VerbMsg="StrCmdZenity:${StrCmdZenity}" VerbHeader="${__call_locality[0]}-CMDLINE" VerbEvalForm=False VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis ; 
+             
+  #eval $( VTVIsArrayStyleInsert=True \
+  #VTVValueEntry=IntNewVol \
+  #VTVIsValueReAssign=True  \
+  #VTVIsValueToConvert=False \
+  #VTVIsArrayStyleInsert=True \
+  #ValueToVariable ) GPIIsUUIDInstance=True \
+  #                  GPIIsFileHandlerOut=True \
+  #                  GPIIsExecuteEval=True \
+  #                  GPIIsGenerateCode=False \
+  #                  GPIParserDebug=True \
+  #                  GPITpl="${StrVolCLiSetCmd}" \
+  #                  GPIApps=/bin/nc \
+  #                  GPIAppsOpt='${StrAddr} ${IntPort}' \
+  #                  GPITagFeeder="${StrTplParser}" \
+  #                  GPITagParserResult='StrCmdSend' \
+  #                  GnrlPrsrInfctr  ; 
+
+  #VerbMsg="StrCmdSend:${StrCmdSend}, reference:UUID:${UUID}" VerbHeader="${__call_locality[0]}-CMDLINE" VerbEvalForm=False VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis ; 
+  
+ 
+ }
+ 
+ function __main_StopServices()
+ {
+  if [ ${versionGPI:=0.0.0} == "0.0.1" ] ; then 
+   eval $( CAFunctName=__main_StopServices CAIsAddParent=True __Call_Argument ) ; 
+  elif [ ${versionGPI:=0.0.0} == "0.0.2" ] ; then 
+   eval $( CAFunctName=__main_StopServices CAIsAddParent=True CallArgument ) ; 
+  fi  
+  #eval $( "CAFunctName=VLCSetVolume CAIsAddParent=True __Call_Argument" ) ; 
+  
+ }
+ 
+ 
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+			GetVarReference ${__call_locality[1]} ; 
+			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+		echo -ne """${ArgGet}\n""" ;
+	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+		eval $( __GetVarReferenceList ) ;
+ elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  eval $( VTVIsArrayStyleInsert=True \
+  VTVValueEntry=StrVArList \
+  VTVIsValueReAssign=True  \
+  VTVIsValueToConvert=False \
+  VTVIsArrayStyleInsert=True \
+  ValueToVariable ) ${StrStartMain}
+ elif [ "${Arg0:=--stopservices}" == "--stopservices" ] ; then 
+  eval $( VTVIsArrayStyleInsert=True \
+  VTVValueEntry=StrVArList \
+  VTVIsValueReAssign=True  \
+  VTVIsValueToConvert=False \
+  VTVIsArrayStyleInsert=True \
+  ValueToVariable ) __main_StopServices 
+ fi
+ 
+ 
+}
+
 ### This is also a not Friendly version of VLC-RATE example use to compare
 ### simple but not easy to handle version. 
 ### 

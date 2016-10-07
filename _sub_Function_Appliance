@@ -36,7 +36,20 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
  unset GnrlPrsrInfctr; 
  function GnrlPrsrInfctr()
  {
-  eval $( CAFunctName=GnrlPrsrInfctr CAIsAddParent=False __Call_Argument ) ; 
+  if [ ${versionGPI:=0.0.0} == "0.0.1" ] ; then 
+   eval $( CAFunctName=GnrlPrsrInfctr CAIsAddParent=False __Call_Argument ) ; 
+  elif [ ${versionGPI:=0.0.0} == "0.0.2" ] ; then 
+   eval $( CAFunctName=GnrlPrsrInfctr CAIsAddParent=False CallArgument ) ; 
+  fi
+  ### This is an evaluation test GnrlPrsrInfctr, for having installing extras
+  ### package toward Zenity-Dbus problem and after a reboot, the evaluation 
+  ### start to flaw and solution like echo inside an eval is not quite acceptable:
+  ### solution offert : write like an echo evaluation where it is already going
+  ### out from an echo: eval $( echo "CAFunctName=GnrlPrsrInfctr CAIsAddParent=False __Call_Argument" ) ;
+  ### So I withdraw package from last download and imply testing both version __Call_Argument versionGPI==0.0.1
+  ### and CallArgument versionGPI==0.0.2, and may come to a conclusion function starting with _Prefix or __Prefix
+  ### may be blind to evaluation and report being absent, which is probably a policy-kit altering the code.
+
   #local __call_locality=( GPI GnrlPrsrInfctr ) ;
   #local ArrayArg=( $* ) ;
   #local Arg0=( ${ArrayArg[0]} ) ; 
@@ -159,7 +172,7 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   ###  
   function Verbosis()
   {
-   eval $( CAFunctName=Verbosis CAIsAddParent=False __Call_Argument ) ; 
+   #eval $( CAFunctName=Verbosis CAIsAddParent=False __Call_Argument ) ; 
    local StrMsg=${VerbMsg:=__TEXT__} ; 
    local StrDevOut=${VerbDev:=/dev/stderr} ; 
    local IsVerboseState=${VerbState:=False} ;
@@ -192,7 +205,12 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   
   function RepositoryCreation()
   {
-   eval $( "CAFunctName=RepositoryCreation CAIsAddParent=True __Call_Argument" ) ; 
+   if [ ${versionGPI:=0.0.0} == "0.0.1" ] ; then 
+    eval $( CAFunctName=RepositoryCreation CAIsAddParent=True __Call_Argument ) ; 
+   elif [ ${versionGPI:=0.0.0} == "0.0.2" ] ; then 
+    eval $( CAFunctName=RepositoryCreation CAIsAddParent=True CallArgument ) ; 
+   fi  
+   #eval $( CAFunctName=RepositoryCreation CAIsAddParent=True __Call_Argument ) ; 
    #local __call_locality=( RC RepositoryCreation ${StrParentApps} ) ; 
    #local Arg0=${ArrayArg[0]} ; 
    #local ArrayArg=( $* ) ;
@@ -275,7 +293,12 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   
   function ReportReference()
   {
-   eval $( CAFunctName=ReportReference CAIsAddParent=True __Call_Argument ) ; 
+   if [ ${versionGPI:=0.0.0} == "0.0.1" ] ; then 
+    eval $( CAFunctName=ReportReference CAIsAddParent=True __Call_Argument ) ; 
+   elif [ ${versionGPI:=0.0.0} == "0.0.2" ] ; then 
+    eval $( CAFunctName=ReportReference CAIsAddParent=True CallArgument ) ; 
+   fi   
+   #eval $( CAFunctName=ReportReference CAIsAddParent=True __Call_Argument ) ; 
    #local __call_locality=( RR ReportReference ${StrParentApps} ) ;
    #local ArrayArg=( $* ) ;
    #local Arg0=${ArrayArg[0]};  
@@ -325,7 +348,12 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
     
   function ZenityHandlerOut()
   {
-   eval $( CAFunctName=ZenityHandlerOut CAIsAddParent=True __Call_Argument ) ; 
+   if [ ${versionGPI:=0.0.0} == "0.0.1" ] ; then 
+    eval $( CAFunctName=ZenityHandlerOut CAIsAddParent=True __Call_Argument ) ; 
+   elif [ ${versionGPI:=0.0.0} == "0.0.2" ] ; then 
+    eval $( CAFunctName=ZenityHandlerOut CAIsAddParent=True CallArgument ) ; 
+   fi   
+   #eval $( CAFunctName=ZenityHandlerOut CAIsAddParent=True __Call_Argument ) ; 
    #local __call_locality=( ZHO ZenityHandlerOut ${StrParentApps} ) ;
    #local ArrayArg=( $* ) ;
    #local Arg0=${ArrayArg[0]};  
@@ -358,9 +386,14 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   
   function ParserFunctionEval()
   {
+   if [ ${versionGPI:=0.0.0} == "0.0.1" ] ; then 
+    eval $( CAFunctName=ParserFunctionEval CAIsAddParent=True __Call_Argument ) ; 
+   elif [ ${versionGPI:=0.0.0} == "0.0.2" ] ; then 
+    eval $( CAFunctName=ParserFunctionEval CAIsAddParent=True CallArgument ) ; 
+   fi   
    ### Require Unusual Evaluation or evaluation not interpret this line like a 
    ### command line parsing . 
-   eval $( "CAFunctName=ParserFunctionEval CAIsAddParent=True __Call_Argument" ) ; 
+   #eval $( CAFunctName=ParserFunctionEval CAIsAddParent=True Call_Argument ) ; 
    #local __call_locality=( PFE ParserFunctionEval ${StrParentApps} ) ;
    #local ArrayArg=( $* ) ;
    #local Arg0=${ArrayArg[0]};  
@@ -543,7 +576,12 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   
   function __main_StartServices()
   {
-   eval $( "CAUsingSedTrim=False CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument" ) ; 
+   if [ ${versionGPI:=0.0.0} == "0.0.1" ] ; then 
+    eval $( CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
+   elif [ ${versionGPI:=0.0.0} == "0.0.2" ] ; then 
+    eval $( CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ; 
+   fi   
+   #eval $( CAUsingSedTrim=False CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
    #local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
    #local ArrayArg=( $* ) ;
    #local Arg0=${ArrayArg[0]};  
