@@ -71,7 +71,11 @@ if [ "${versionGSPN:=0.0.2}" == "0.0.2" ] ; then
  . ${FNCTDLIBPATH}/69968204-0cf6-11e3-99bc-001b3875b29c
 fi
 
-if [ "${versionCA:=0.0.2}" == "0.0.2" ] ; then 
+if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+echo -ne "\n\033[01;33m**************************************************\n\033[01;43mNo CallArgument / __Call_Argument in version 0.0.0\n\033[00m\033[01;33m**************************************************\033[00m\n" ; 
+fi
+
+if [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
  unset CallArgument ; 
  function CallArgument()
  {
@@ -153,7 +157,7 @@ if [ "${versionCA:=0.0.2}" == "0.0.2" ] ; then
 ### End-of if-versionCA == 0.0.2 . 
 fi 
 
-if [ "${versionCA:=0.0.2}" == "0.0.1" ] ; then 
+if [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
  ### A prototype to avoid declaring in wrong order the
  ### Arg0 and ArrayArg ... 
  ### It will create the appropriate code in correct order 

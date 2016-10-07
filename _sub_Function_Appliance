@@ -37,13 +37,14 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
  unset GnrlPrsrInfctr; 
  function GnrlPrsrInfctr()
  {
-  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+  echo -ne "GnrlPrsrInfctr in version versionCA=${versionCA}\n" > /dev/stderr ; 
+  if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
    local __call_locality=( GPI GnrlPrsrInfctr ) ;
    local ArrayArg=( $* ) ;
    local Arg0=( ${ArrayArg[0]} ) ;  
-  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+  elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
    eval $( CAFunctName=GnrlPrsrInfctr CAIsAddParent=False __Call_Argument ) ; 
-  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+  elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
    eval $( CAFunctName=GnrlPrsrInfctr CAIsAddParent=False CallArgument ) ; 
   fi
   ### This is an evaluation test GnrlPrsrInfctr, for having installing extras
