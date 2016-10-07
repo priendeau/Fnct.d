@@ -33,12 +33,17 @@
 ### 
 
 if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then 
+ 
  unset GnrlPrsrInfctr; 
  function GnrlPrsrInfctr()
  {
-  if [ ${versionGPI:=0.0.0} == "0.0.1" ] ; then 
+  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+   local __call_locality=( GPI GnrlPrsrInfctr ) ;
+   local ArrayArg=( $* ) ;
+   local Arg0=( ${ArrayArg[0]} ) ;  
+  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
    eval $( CAFunctName=GnrlPrsrInfctr CAIsAddParent=False __Call_Argument ) ; 
-  elif [ ${versionGPI:=0.0.0} == "0.0.2" ] ; then 
+  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
    eval $( CAFunctName=GnrlPrsrInfctr CAIsAddParent=False CallArgument ) ; 
   fi
   ### This is an evaluation test GnrlPrsrInfctr, for having installing extras
@@ -205,9 +210,13 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   
   function RepositoryCreation()
   {
-   if [ ${versionGPI:=0.0.0} == "0.0.1" ] ; then 
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local __call_locality=( RC RepositoryCreation ) ;
+    local ArrayArg=( $* ) ;
+    local Arg0=( ${ArrayArg[0]} ) ;  
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
     eval $( CAFunctName=RepositoryCreation CAIsAddParent=True __Call_Argument ) ; 
-   elif [ ${versionGPI:=0.0.0} == "0.0.2" ] ; then 
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
     eval $( CAFunctName=RepositoryCreation CAIsAddParent=True CallArgument ) ; 
    fi  
    #eval $( CAFunctName=RepositoryCreation CAIsAddParent=True __Call_Argument ) ; 
@@ -293,9 +302,13 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   
   function ReportReference()
   {
-   if [ ${versionGPI:=0.0.0} == "0.0.1" ] ; then 
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local __call_locality=( RR ReportReference ) ;
+    local ArrayArg=( $* ) ;
+    local Arg0=( ${ArrayArg[0]} ) ;  
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
     eval $( CAFunctName=ReportReference CAIsAddParent=True __Call_Argument ) ; 
-   elif [ ${versionGPI:=0.0.0} == "0.0.2" ] ; then 
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
     eval $( CAFunctName=ReportReference CAIsAddParent=True CallArgument ) ; 
    fi   
    #eval $( CAFunctName=ReportReference CAIsAddParent=True __Call_Argument ) ; 
@@ -348,9 +361,13 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
     
   function ZenityHandlerOut()
   {
-   if [ ${versionGPI:=0.0.0} == "0.0.1" ] ; then 
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local __call_locality=( ZHO ZenityHandlerOut ) ;
+    local ArrayArg=( $* ) ;
+    local Arg0=( ${ArrayArg[0]} ) ;  
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
     eval $( CAFunctName=ZenityHandlerOut CAIsAddParent=True __Call_Argument ) ; 
-   elif [ ${versionGPI:=0.0.0} == "0.0.2" ] ; then 
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
     eval $( CAFunctName=ZenityHandlerOut CAIsAddParent=True CallArgument ) ; 
    fi   
    #eval $( CAFunctName=ZenityHandlerOut CAIsAddParent=True __Call_Argument ) ; 
@@ -386,9 +403,13 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   
   function ParserFunctionEval()
   {
-   if [ ${versionGPI:=0.0.0} == "0.0.1" ] ; then 
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local __call_locality=( PFE ParserFunctionEval ) ;
+    local ArrayArg=( $* ) ;
+    local Arg0=( ${ArrayArg[0]} ) ;  
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
     eval $( CAFunctName=ParserFunctionEval CAIsAddParent=True __Call_Argument ) ; 
-   elif [ ${versionGPI:=0.0.0} == "0.0.2" ] ; then 
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
     eval $( CAFunctName=ParserFunctionEval CAIsAddParent=True CallArgument ) ; 
    fi   
    ### Require Unusual Evaluation or evaluation not interpret this line like a 
@@ -576,9 +597,13 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
   
   function __main_StartServices()
   {
-   if [ ${versionGPI:=0.0.0} == "0.0.1" ] ; then 
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local __call_locality=( Main __main_StartServices ) ;
+    local ArrayArg=( $* ) ;
+    local Arg0=( ${ArrayArg[0]} ) ;  
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
     eval $( CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
-   elif [ ${versionGPI:=0.0.0} == "0.0.2" ] ; then 
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
     eval $( CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ; 
    fi   
    #eval $( CAUsingSedTrim=False CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
