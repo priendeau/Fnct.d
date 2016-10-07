@@ -2,12 +2,18 @@
 ### FootPrint Added, see Prefixed-Var ZSEAddFootPrint from ZenityShellEval
 ###
 
-###File:6e063cbc-0ce2-11e3-8879-001b3875b29c
-###UUID-TIME-MARKER:6d7b22be-0cf4-11e3-a611-001b3875b29c
+###File:/home/maxiste/github/Fnct.D//6e063cbc-0ce2-11e3-8879-001b3875b29c
+###UUID-TIME-MARKER:5e66c0e2-8c64-11e6-8b1d-001e4c8856d6
 ###Date: ${StrDateFormat}
-###Sha1Sum: 637c4ea9c7c822f0b456e684e39d2d0bf412ea49
-### Size:1856
-### NbWord: 171\n
+###Sha1Sum: 0beacd1adaaac83736211aa58e1113df0e2e5122
+### Size:4388
+### NbWord: 308\n
+
+
+
+
+
+
 function AnsiCodeTest()
 {
   local ArrayArg=( $* ) ; 
@@ -18,23 +24,72 @@ function AnsiCodeTest()
   local StrAnsiResetCode=${ACTResetCode:=033[00m} ; 
   local StrStringSample=${ACTStringSample:=[TEST]} ;
   local StrErrDev=${ACTErrDev:=/dev/stderr} ; 
-
+  local BoolUniqueVal=${ACTEIsUniqueValue:=False} ; 
+  local BoolDisplayInfo=${ACTEIsDisplayInfo:=True} ; 
+  local IntValue=${ACTEValue:=36} ; 
+  local StrVarList="BoolUniqueVal,BoolDisplayInfo,IntValue,IntStartRange,IntEndRange,StrAnsiResetCode,StrStringSample,StrErrDev" ; 
  
+ function LoopDisplay()
+ {
+   local __call_locality=( LD LoopDisplay ) ;
+   local ArrayArg=( $* ) ; 
+   local Arg0=${ArrayArg[0]} ;
+   for (( intx=${IntStartRange} ; intx <= ${IntEndRange} ; intx++ )) ; do 
+    if [ "${BoolDisplayInfo:=True}" == "True" ] ; then
+     StrLineDisplay=${StrDisplayTpl} ;
+    else
+     StrLineDisplay=${StrDisplayText};
+    fi 
+    
+    StrLineDisplay=${StrLineDisplay//__CODE_DISPLAY__/${StrAnsiCodeDisplay}} ; 
+    StrLineDisplay=${StrLineDisplay//__TEXT__/${StrStringSample}} ; 
+    StrLineDisplay=${StrLineDisplay//__RESET__/${StrAnsiResetCode}} ; 
+    StrLineDisplay=${StrLineDisplay//__ANSI_CODE__/${StrAnsiCode}} ;
+    StrLineDisplay=${StrLineDisplay//__COUNT__/${intx}} ;
+    echo -ne "${StrLineDisplay}\n" > ${StrErrDev} ; 
+   done   
+  
+  
+ }
  function __main_StartServices()
  {
    local __call_locality=( Main __main_StartServices ) ;
    local ArrayArg=( $* ) ; 
    local Arg0=${ArrayArg[0]} ;
-   for (( x=${IntStartRange} ; x<= ${IntEndRange} ; x++ )) ; do 
-    local StrAnsiCode="\033[01;${x}m" ;
-    local StrAnsoCodeDisplay="""\\\033\[01;${x}m""" ;
-    local StrLineDisplay="\\${StrAnsiResetCode}Color no.${x}, Ansi Code '${StrAnsoCodeDisplay}' : ${StrAnsiCode}${StrStringSample}\\${StrAnsiResetCode}" ; 
-    echo -ne "${StrLineDisplay}\n" > ${StrErrDev} ; 
-   done   
+   local StrDisplayText="\\__RESET____ANSI_CODE____TEXT__\\__RESET__"
+   local StrDisplayTpl="\\__RESET__Color no.__COUNT__, Ansi Code '__CODE_DISPLAY__' : __ANSI_CODE____TEXT__\\__RESET__" ; 
+   local StrAnsiCode="\033[01;__COUNT__m" ;
+   local StrAnsiCodeDisplay="""\\\033[01;__COUNT__m""" ;
+   if [ "${BoolUniqueVal:=False}" == "True" ] ; then 
+     if [ "${BoolDisplayInfo:=True}" == "True" ] ; then 
+      StrLineDisplay=${StrDisplayTpl} ; 
+      StrLineDisplay=${StrLineDisplay//__CODE_DISPLAY__/${StrAnsiCodeDisplay}} ; 
+      StrLineDisplay=${StrLineDisplay//__TEXT__/${StrStringSample}} ; 
+      StrLineDisplay=${StrLineDisplay//__RESET__/${StrAnsiResetCode}} ; 
+      StrLineDisplay=${StrLineDisplay//__ANSI_CODE__/${StrAnsiCode}} ;
+      StrLineDisplay=${StrLineDisplay//__COUNT__/${IntValue}} ;
+     else 
+      StrLineDisplay=${StrDisplayText};
+      StrLineDisplay=${StrLineDisplay//__TEXT__/${StrStringSample}} ; 
+      StrLineDisplay=${StrLineDisplay//__RESET__/${StrAnsiResetCode}} ; 
+      StrLineDisplay=${StrLineDisplay//__ANSI_CODE__/${StrAnsiCode}} ;
+      StrLineDisplay=${StrLineDisplay//__COUNT__/${IntValue}} ;
+     fi
+
+     echo -ne "${StrLineDisplay}\n" > ${StrErrDev} ; 
+   else
+    eval $( VTVIsArrayStyleInsert=True \
+        VTVValueEntry=${StrVarList}   \
+        VTVIsValueReAssign=True       \
+        VTVIsValueToConvert=False     \
+        VTVIsArrayStyleInsert=True    \
+        ValueToVariable ) LoopDisplay ; 
+   fi 
  }
 	
- local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\n" ;
-
+ ###local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\n" ;
+ local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+ 
  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
   GetVarReference ${__call_locality[1]} ; 
   echo -ne "${StrSwitchMessages}" > ${StrErrDev} ; 
@@ -44,6 +99,12 @@ function AnsiCodeTest()
  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
   eval $( __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  eval $( VTVIsArrayStyleInsert=True \
+        VTVValueEntry=${StrVarList}   \
+        VTVIsValueReAssign=True       \
+        VTVIsValueToConvert=False     \
+        VTVIsArrayStyleInsert=True    \
+        ValueToVariable ) __main_StartServices
   IntStartRange=${IntStartRange}                 \
   IntEndRange=${IntEndRange}                     \
   StrAnsiResetCode=${StrAnsiResetCode}   \
