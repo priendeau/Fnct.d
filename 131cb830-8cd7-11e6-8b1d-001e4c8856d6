@@ -1,0 +1,86 @@
+###
+### FootPrint Added, see Prefixed-Var ZSEAddFootPrint from ZenityShellEval
+###
+
+###File:/home/maxiste/github/Fnct.D/131cb830-8cd7-11e6-8b1d-001e4c8856d6
+###UUID-TIME-MARKER:1e2ab934-8cd7-11e6-8b1d-001e4c8856d6
+###Date: ${StrDateFormat}
+###Sha1Sum: 0c2cfbfdac24a1187631f1eddbf86b5aa23e207e
+### Size:3534
+### NbWord: 348\n
+
+
+function GetStdPrefixName()
+{
+  local -a ArrayArg=( $* ) ; 
+  local -a __call_locality=( GSPN GetStdPrefixName  ) ; 
+  local StrPrefixEntry=${GSPNArg0:=None} ;
+  local StrException=${GSPNPrefixExcepLst:=GetUUID:GetU} ;  
+  local Arg0=${ArrayArg[0]} ; 
+  
+  local StrSedDefFilter=${GSPNSedFilter:=s/[a-z\)\(\_\-]//g} ; 
+  local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\n" ;
+  StrVarList="StrPrefixEntry,StrException,StrSedDefFilter" ;
+  
+ function __main_StartServices()
+ {
+   local -a ArrayArg=( $* ) ; 
+   local -a __call_locality=( Main __main_StartServices ) ;
+   local Arg0=${ArrayArg[0]};
+   local -a ArrayException=( ${StrException//,/ } ) ; 
+   local IntException=0 ;
+   if [ "${StrPrefixEntry:=None}" == "None" ] ; then 
+    StrPrefixEntry=${Arg0}  ;
+   fi
+   if [ "${StrPrefixEntry:=None}" == "None" ] ; then 
+     echo -ne "Function Name Can not be None\n" > /dev/stderr ; 
+     echo "${StrPrefixEntry:=None}" ; 
+     #| eval "sed '${StrSedDefFilter}'" ;
+   else
+     local -a ArrayPair ; 
+     local StrPrefixExcept="" ; 
+     for StrPairExcept in ${ArrayException[@]} ; do 
+      ArrayPair=( ${StrPairExcept//:/ } ) ; 
+      if [ "${StrPrefixEntry:=None}" == "${ArrayPair[0]}"  ] ; then 
+       IntException=1 ;
+       StrPrefixExcept=${ArrayPair[1]} ;   
+      fi
+     done 
+     if [ ${IntException:=0} -eq 1 ] ; then 
+      echo -ne "${StrPrefixExcept}\n"
+     else
+      echo -ne "${StrPrefixEntry:=None}\n" | eval "sed '${StrSedDefFilter}'" ;
+     fi 
+   fi 
+ }
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+  local StrNameHelper="GetStdPrefixName\tStand for Get Standard Prefix-Name in function Name.";
+  local StrSummary="Function GetStdPrefixName Is a method to generate ShortName in Prefixed-Variable, have and entry inside GetVarReference make it part of main function from Fnct.D" ; 
+  local StrSynopsis="Simply calling it with first paramete being your function or Prefixed-Variable GSPNArg0 to collect name. Some application have exception and are coded inside this Application, GetUUID is an exception which using Prefixed-Variable GetU instead of GUUID.";
+  local StrDescription="Having surdose of informations, skip this part..." ;
+   
+  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   GVRIsName=True GVRIsSynopsis=True GVRIsSummary=True GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+   eval $( VTVIsArrayStyleInsert=True \
+              VTVValueEntry=${StrVarList}   \
+              VTVIsValueReAssign=True       \
+              VTVIsValueToConvert=False     \
+              VTVIsArrayStyleInsert=True    \
+              ValueToVariable ) __main_StartServices
+  else
+   eval $( VTVIsArrayStyleInsert=True \
+              VTVValueEntry=${StrVarList}   \
+              VTVIsValueReAssign=True       \
+              VTVIsValueToConvert=False     \
+              VTVIsArrayStyleInsert=True    \
+              ValueToVariable ) __main_StartServices ${Arg0};
+ fi
+
+}
