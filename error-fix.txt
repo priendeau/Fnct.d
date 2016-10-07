@@ -378,4 +378,79 @@ SOLUTION: System may require installation of package to fix dependency, but this
 sudo dbus-send --session --print-reply --dest=org.a11y.Bus /org/a11y/bus org.a11y.Bus.GetAddress
 wrapping zenity in need of '2> /dev/null' at end may only eliminate the error.
 
+Date:20161007-00:13:00
+Reference:2d1e06e81f613e21552c81d70e3a424e6913ebd0
+File: _sub_Function_Appliance 
+Function: GnrlPrsrInfctr
+With command line :
+--> sudo -s -H ldconfig -f /etc/ld.so.conf ; clear ; source /home/maxiste/.bashrc ; unset ArrayLib ;  eval $( FnctDVersion )  . /etc/init.d/Fnct.D/fnct_lib ; IsUUID=True IsZenity=True IsFile=False ; eval $( eval $( GBLDFileStoreInfo=/var/cache/Fnct.D/BuildForm/bf35dfa8-89b1-11e6-8b1d-001e4c8856d6 GBLDAction=GetContent GetterByLineData | sed 's/GPIParserDebug=True/GPIParserDebug=False/g;s/GPIDisplayDebug=True/GPIDisplayDebug=False/g' ) ) | more ;  IntSize=$( wc -c /var/log/Fnct.D/GnrlPrsrInfctr/${UUID} | cut -d ' ' -f 1 ) ; echo -ne "Size of File: /var/log/Fnct.D/GnrlPrsrInfctr/${UUID}: ${IntSize}\n" 
+Description: 
+here some complement from constant loop after added couple of added package , restart the system and 
+seeing GnrlPrsrInfctr is not working anymore . 
+first here the script FnctDVersion from this command line:
+from .bashrc 
+------------------------------------------------
+export THISVERSION=0.0.2 ; 
+export DEVELVERSION=0.0.1
+
+declare -A ArrayFnctDVersion ;
+ArrayFnctDVersion["versionGCT"]=${THISVERSION}
+ArrayFnctDVersion["versionGPI"]=${DEVELVERSION}
+ArrayFnctDVersion["versionCA"]=${THISVERSION} 
+
+function FnctDVersion()
+{
+ local StrExportVar="__VAR__" ; 
+ for VerName in ${!ArrayFnctDVersion[@]} ; do 
+  StrVersion=${ArrayFnctDVersion[${VerName}]} ;
+  echo -ne "Set FunctionTrigger:${VerName} Version:${StrVersion}\n" > /dev/stderr ; 
+  StrExportVar=${StrExportVar//__VAR__/${VerName}=${StrVersion} __VAR__}
+ done 
+ StrExportVar=${StrExportVar//__VAR__/} ;
+ echo ${StrExportVar} ;  
+}
+------------------------------------------------
+on the other windows after each package removed I should start THIS command-line described inside command-line:
+
+for item in ${ArrayPackage[@]} ; do echo "Removing package ${item}" ; apt-get remove ${item} ; ldconfig -f /etc/ld.so.conf ; done 
+where all package are inserted inside an Array declaration:
+declare -a ArrayPackage=(  sssd-common gnome-packagekit-data libsecret-1-dev gnome-packagekit packagekit-backend-aptcc gnome-packagekit-session ibpackagekit-qt2 libpackagekit-glib2-dev libatk3.0-cil python-sss packagekit-tools gnome-packagekit-tools sssd-dbus mdbus2 libini-config3 libjson-glib-dev libdee-qt5 libpackagekit-qt2-dev libsss-idmap0 libdbusmenu-tools libdbusmenu-jsonloader4 libbasicobjects0  dee-tools libdbusmenu-jsonloader-dev libdbustest1-dev gir1.2-hud-client gir1.2-hud pam-dbus-notify libref-array1 cairo-dock-plug-ins-dbus-interface-mono libpath-utils1 libdhash1 libbasicobjects0 libc-ares2 libcollection2 libdhash1 libini-config3 libpath-utils1 libref-array1 libsss-idmap0  python-sss ) ;
+OUTPUT: 
+--------------------------------------------------------------------------------------------------------------
+[sudo] password for maxiste: 
+
+Testing Lib Fnct.D
+Loading...		[ _sub_Structure ]
+Loading...		[ fnct_debian_lib ]
+Loading...		[ _sub_Function_Appliance ]
+Loading...		[ _sub_jack_script ]
+Loading...		[ _sub_Git ]
+Loading...		[ _sub_setup_py_extra_cmd ]
+Loading...		[ _sub_ssh_handler ]
+Loading...		[ _sub_vlc_services ]
+Loading...		[ _sub_binary ]
+Loading...		[ _sub_PythonBoost ]
+Set FunctionTrigger:versionGCT Version:0.0.2
+Set FunctionTrigger:versionGPI Version:0.0.1
+Set FunctionTrigger:versionCA Version:0.0.2
+Testing Lib Fnct.D
+Loading...		[ _sub_Structure ]
+Loading...		[ fnct_debian_lib ]
+Loading...		[ _sub_Function_Appliance ]
+Loading...		[ _sub_jack_script ]
+Loading...		[ _sub_Git ]
+Loading...		[ _sub_setup_py_extra_cmd ]
+Loading...		[ _sub_ssh_handler ]
+Loading...		[ _sub_vlc_services ]
+Loading...		[ _sub_binary ]
+Loading...		[ _sub_PythonBoost ]
+ : command not found
+ : command not found
+ : command not found
+ : command not found
+ : command not found
+ : command not found
+
+--------------------------------------------------------------------------------------------------------------
+SOLUTION:
 
