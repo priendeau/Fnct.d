@@ -288,13 +288,15 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
      VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-CMDLINE" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
      
      ### Double Evaluation of the command seem to work for TagParser. 
-     eval eval TPVarNameParsed="StrAction"                     \
+     ### I mean it worked for 2 days since I do to respawn it to 
+     ### eval $( ... ) .
+     eval  $( TPVarNameParsed="StrAction"                     \
              TPListTag=${StrTagListVar}                        \
              TPIsMatchRtoL=True                                \
-             TPDisplayParserNotice=\${BoolDisplayParserDebug}  \
+             TPDisplayParserNotice=${BoolDisplayParserDebug}   \
              TPDisplayDebug=${BoolDisplayDebug}                \
              TPArrayName="Array${__call_locality[0]}Tag"       \
-             TagParser ;
+             TagParser ) ;
              # 2> /dev/null )  
      StrMsg=$( ${StrParentApps} --get ArrayMsg[2] ) ;
      
