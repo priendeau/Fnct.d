@@ -37,11 +37,12 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
  unset GnrlPrsrInfctr; 
  function GnrlPrsrInfctr()
  {
-  echo -ne "GnrlPrsrInfctr version versionCA=${versionCA}, versionGPI=${versionGPI}\n" > /dev/stderr ; 
   if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
    local -a ArrayArg=( $* ) ;
    local -a __call_locality=( GPI GnrlPrsrInfctr ) ;
    local Arg0=${ArrayArg[0]};  
+   local StrStartMain=${GPIFuncStart:=__main_StartServices} ; 
+   local StrParentApps=${__call_locality[1]} ; 
   elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
    eval $( CAFunctName=GnrlPrsrInfctr CAIsAddParent=False __Call_Argument ) ; 
   elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
@@ -214,7 +215,7 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
    fi
   } 
   ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis
-  
+
   function RepositoryCreation()
   {
    if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
@@ -663,6 +664,11 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
    eval $( __GetVarReferenceList ) ;	
   elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
    if [ "${BoolEmitUUID:=True}" == "True" ] ; then 
+    StrMsg="GnrlPrsrInfctr version versionCA=__VERSION_CA__, versionGPI=__VERSION_GPI__" ; 
+    VerbMsg=${StrMsg//__VERSION_CA__/${versionCA}} ; 
+    VerbMsg=${StrMsg//__VERSION_GPI__/${versionGPI}} ; 
+    VerbMsg="${StrMsg}" VerbHeader="VERSION" VerbEvalForm=False VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis ; 
+   
     StrUUIDInstance=$( GetUTimeBased=True GetUSeq=1 GetUIDRegister=True GetUAppsRegisterName=GnrlPrsrInfctr GetUUID ) ; 
     VerbMsg="${ArrayMsg[4]//__UUID__/${StrUUIDInstance}}" \
     VerbHeader="${__call_locality[1]}-DEBUG" \
@@ -673,11 +679,7 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
    
    fi 
    StrMsg=${ArrayMsg[5]}; 
-   VerbMsg="${StrMsg//__FUNCT__/${StrStartMain}}" \
-   VerbEvalForm=False VerbHeader="${__call_locality[1]}-DEBUG" \
-   VerbState=${BoolDisplayDebug} \
-   VerbFormated=False \
-   VerbDevOut=/dev/stderr Verbosis ; 
+   VerbMsg="${StrMsg//__FUNCT__/${StrStartMain}}" VerbEvalForm=False VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbFormated=True VerbDevOut=/dev/stderr Verbosis ; 
    
    eval $( VTVIsArrayStyleInsert=True \
         VTVValueEntry=${StrVarList}   \
