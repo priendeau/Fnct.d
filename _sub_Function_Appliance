@@ -214,7 +214,7 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
     fi 
    fi
   } 
-  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis
+  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
 
   function RepositoryCreation()
   {
@@ -237,13 +237,13 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
     StrMsg=${StrMsg//__VALUE__/${BoolCreateRepository}} ; 
     StrMsg=${StrMsg//__VAR__/BoolCreateRepository} ; 
     StrMsg=${StrMsg//__PATH__/${StrRepositoryQuery}} ; 
-    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ; 
     
     StrMsg=$( ${StrParentApps} --get ArrayMsg[1] ) ;
     StrMsg=${StrMsg//__PATH__/${StrRepositoryQuery}} ;
     StrMsg=${StrMsg//__MODE__/${StrDefaultPerm}} ;
     StrMsg=${StrMsg//__USER__/${StrDefaultUser}} ;
-    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ; 
 
     ### The Array ArrayActionOrder is present to define an order . This order 
     ### result in getting numerical index from 1 .. N
@@ -285,7 +285,7 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
      StrMsg=${StrMsg//__CONTENT__/${StrTagListVar}} ; 
      StrMsg=${StrMsg//__ACTION__/${StrAction}} ; 
      
-     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-CMDLINE" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
+     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-CMDLINE" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
      
      ### Double Evaluation of the command seem to work for TagParser. 
      eval eval TPVarNameParsed="StrAction"                     \
@@ -298,7 +298,7 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
              # 2> /dev/null )  
      StrMsg=$( ${StrParentApps} --get ArrayMsg[2] ) ;
      
-     VerbMsg="${StrMsg//__CMD__/${StrAction}}" VerbHeader="${__call_locality[1]}-CMDLINE" VerbEvalForm=False VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis ; 
+     VerbMsg="${StrMsg//__CMD__/${StrAction}}" VerbHeader="${__call_locality[1]}-CMDLINE" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ; 
      if [ "${BoolRepoCreaEnabled:=False}" == "True" ] ; then 
        eval """$( ${StrAction} )""" ;
      fi 
@@ -667,7 +667,7 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
     StrMsg="GnrlPrsrInfctr version versionCA=__VERSION_CA__, versionGPI=__VERSION_GPI__" ; 
     VerbMsg=${StrMsg//__VERSION_CA__/${versionCA}} ; 
     VerbMsg=${StrMsg//__VERSION_GPI__/${versionGPI}} ; 
-    VerbMsg="${StrMsg}" VerbHeader="VERSION" VerbEvalForm=False VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis ; 
+    VerbMsg="${StrMsg}" VerbHeader="VERSION" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ; 
    
     StrUUIDInstance=$( GetUTimeBased=True GetUSeq=1 GetUIDRegister=True GetUAppsRegisterName=GnrlPrsrInfctr GetUUID ) ; 
     VerbMsg="${ArrayMsg[4]//__UUID__/${StrUUIDInstance}}" \
@@ -675,7 +675,7 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
     VerbEvalForm=False                       \
     VerbFormated=True                        \
     VerbState=${BoolDisplayDebug}            \
-    StrDevOut=/dev/stderr  Verbosis ; 
+    VerbDev=/dev/stderr  Verbosis ; 
    
    fi 
    StrMsg=${ArrayMsg[5]}; 
