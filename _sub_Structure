@@ -1708,7 +1708,7 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
   local IsTypePreamb=${BVTIsValueToVar:=False} ;
 
   ### Required variable to manage or configure a ValueToVariable Assertion inside Preambule Only.
-  local StrVTRPrbTpl=${BVTVTVTPL:='eval __TES__  __REGISTRY_PRE__ VTVValueEntry=__VAR_ENTRY_PRE__ ValueToVariable __TEE__ __FNCT_PRE__'} ;
+  local StrVTRPrbTpl=${BVTVTVTPL:='eval __TES__ eval __REGISTRY_PRE__ VTVValueEntry=__VAR_ENTRY_PRE__ ValueToVariable __TEE__ __FNCT_PRE__'} ;
   
   ### BVTVTVVar is the most used, allowing to pass-thru the variable in uses with 
   ### the same name to the function associate to Executive-Assertion inside the Preambule.
@@ -1770,7 +1770,7 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
 
   ### Section ValueToVariable in Assertion .
   local IsTypeAssert=${BVTIsValueToVarAssert:=False};
-  local StrVTRAsrtTpl=${BVTVTVTPLA:='eval __TES__  __REGISTRY_ASRT__ VTVValueEntry=__VAR_ENTRY_ASRT__ ValueToVariable __TEE__ __FNCT_ASRT__'} ;
+  local StrVTRAsrtTpl=${BVTVTVTPLA:='eval __TES__ eval __REGISTRY_ASRT__ VTVValueEntry=__VAR_ENTRY_ASRT__ ValueToVariable __TEE__ __FNCT_ASRT__'} ;
   local StrVTRAsrtVar=${BVTVTVVarA:='IsVerbose,IsDebug'};
   local StrVTRAsrtVTReg=${BVTVTRegA:='VTVIsArrayStyleInsert=True VTVIsValueReAssign=True VTVIsValueToConvert=False'} ; 
   local StrVTRAsrtVTFnct=${BVTVTFnctA:='__FNCT__'}
