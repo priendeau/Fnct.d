@@ -1616,94 +1616,116 @@ function AutoChown()
 
 unset ZenityShellEval ;
 function ZenityShellEval()    
-{ 
-	local __call_locality=( ZSE ZenityShellEval ) ;
-	local ArrayArg=( $* ) ; 
-	local Arg0=${ArrayArg[0]}              ;
+{
+ if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then  
+  local -a ArrayArg=( $* ) ; 
+  local -a __call_locality=( ZSE ZenityShellEval ) ;
+  local Arg0=${ArrayArg[0]};
+  local StrStartMain=${ZSEFuncStart:=__main_StartServices} ;
+ elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then  
+  eval $( eval CAFunctName=ZenityShellEval CAIsAddParent=False __Call_Argument ) ; 
+ elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then  
+  eval $( eval CAFunctName=ZenityShellEval CAIsAddParent=False CallArgument )  ; 
+ fi
+ 
+ function Verbosis()
+ {
+  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( Verb Verbosis ) ; 
+   local Arg0=${ArrayArg[0]} ; 
+  elif [ ${versionGPI:=0.0.0} == "0.0.1" ] ; then 
+   eval $( CAFunctName=Verbosis CAIsAddParent=False __Call_Argument ) ; 
+  elif [ ${versionGPI:=0.0.0} == "0.0.2" ] ; then 
+   eval $( CAFunctName=Verbosis CAIsAddParent=False CallArgument ) ; 
+  fi 
+  local StrMsg=${VerbMsg:=__TEXT__} ; 
+  local StrDevOut=${VerbDev:=/dev/stderr} ; 
+  local IsVerboseState=${VerbState:=False} ;
+  local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+  local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+  local IsDisplayFormatted=${VerbFormated:=True} ;
+  local IsAppendMode=${VerbAppendDev:=False} ; 
+  local ArrayArg=( $* ) ; 
+  if [ "${IsVerboseState:=False}" == "True" ] ; then 
+   if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+    if [ "${IsAppendMode:=False}" == "True" ] ; then 
+      echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
+    else  
+      echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+    fi
+   else
+    if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+       echo "${StrMsg}" ;  
+    else
+     if [ "${IsAppendMode:=False}" == "True" ] ; then 
+      echo "${StrMsg}" >> ${StrDevOut} ;
+     else
+      echo "${StrMsg}" > ${StrDevOut} ;
+     fi
+    fi 
+   fi 
+  fi
+ } 
+ ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
+
  local IntSleep=${ZSESleepInterval:=5}  ;
  local IntFontSize=${ZSEFontSize:=12}   ; 
  local IsEditField=${ZSEEditable:=True} ; 
  local IsAddFootPrint=${ZSEAddFootPrint:=True} ; 
  local StrTitle=${ZSEZenityTitle:='Shell Evaluation command'} ;
- local StrFileName=${ZSEFileName:=None} ;
  local StrDateFormat=${ZSEDateFormat:=%Y%m%d-%H:%M:%S,%s}
  local IntDefaultModeExec=${ZSEChmodFileExec:=775} ;
  local StrFilePath=${ZSEPathStorage:=./} ; 
+ local StrFileName=${ZSEFileName:=None} ;
  local IntWidth=${ZSEWindowWidth:=640} ;
  local IntHeight=${ZSEWindowHeight:=400} ;
  local IsLoopOnSucc=${ZSELoopOnSucc:=True} ; 
  local IsCheckSumOnly=${ZSECheckSumTest:=False} ; 
- local TmpUUIDEdit=$( GetUIDRegister=True GetUAppsRegisterName=${__call_locality[1]} GetUUID )
- ### Note: f1161962-0ad8-11e3-b166-001b3875b29c 
- ### 
- ### Title : Variable Forwarding Example in BoolVarTest & mutation 
- ### of BoolVarTest from True/False test into None
- ### 
- ### BoolVarTest for substitution of StrFileTmp has unidirectionnaly
- ### a uuid-like file name into Pre-fixed Var ZSEFileName:=None for 
- ### affectation inside StrFileName=None, where if this one != None, will 
- ### get the parameter Name Being passed inside StrFileTmp. 
- ### 
- ### - Had consequence:
- ###  - if the file does not exist, an echo > StrFileTmp will be done . 
- ###  - if the file exist, content will be open by Zenity in text-info --editable
- ###  - Selected filename supplied, content will be overwritted and there is 
- ###  no protection mechanism and no verification against file-permission
- ###    - To this, a workaround will store all code generated from this application
- ###    - into sub-directory being made by the command and store-it inside user
- ###      respective home location which is safe and Pre-fixable into 
- ###      your specification, and not-warrented to be correct but designable. 
- ###  
- ### 
- ### - If the variable ZSEFileName is untouched, the content of StrFileTmp will
- ### hold value 'None' and belong to parsed BoolVarTest it should 
- ### get it's uuid-like filename, see generated command from parameter below
- ### 
- ### Command : BVTVarName=StrFileTmp BVTVarHold='${StrFileName}' BVTBoolVarName=\${StrFileName} BVTBoolCase=None BVTBoolAssertion='$( uuidgen -t )' BVTScopeTest=local BoolVarTest
- ### 
- ### generated code:
- ### local StrFileTmp="${StrFileName}" ; 
- ### if [ "${StrFileName}" == "None" ] ; then 
- ###  StrFileTmp=$( uuidgen -t ) ; 
- ### fi
- ### 
- ### Which is making sense. 
- ### 
- ### Also Note f1161962-0ad8-11e3-b166-001b3875b29c introduce explanation on mutation of BoolVarTest from True/False test into None and moving uuid-file-id variable inside BVTBoolAssertion
- ### 
- ### 
- eval $( BVTVarName=StrFileTmp \
-         BVTVarHold='${StrFilePath}/${StrFileName}' \
-         BVTBoolVarName=\${StrFileName} \
-         BVTBoolCase=None \
-         BVTBoolAssertion='${StrFilePath}/$( uuidgen -t )' \
-         BVTScopeTest=local \
-         BoolVarTest ) ; 
- 
- local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
- 
+ local StrVarList="StrStartMain,TmpUUIDEdit,IntSleep,IntFontSize,IsEditField,IsAddFootPrint,StrTitle,StrFileName,StrDateFormat,IntDefaultModeExec,StrFilePath,IntWidth,IntHeight,IsLoopOnSucc,IsCheckSumOnly"
 
+ 
 	function __main_Editor()
  {
 		local __call_locality=( Editor __main_Editor ) ;
-		local Arg0=${ArrayArg[0]} ;
 		local ArrayArg=( $* ) ;
-  test ! -e ${StrFileTmp} && echo "" > ${StrFileTmp} ; 
+		local Arg0=${ArrayArg[0]} ;
+  
+  if [ ! -f ${StrFileTmp} ] ; then 
+   touch ${StrFileTmp} ; 
+  fi
+  #test ! -e ${StrFileTmp} && echo "" > ${StrFileTmp} ; 
   
   local res=1 ; 
   local shell_res=0 ; 
   local shell_quit=0 ; 
   eval $( BVTVarName=StrEditableAttr \
-          BVTVarHold='--editable' \
-          BVTBoolVarName=\${IsEditField} \
+          BVTVarHold=\'--editable\' \
+          BVTBoolVarName=\${IsEditField:=True} \
           BVTBoolCase=False \
           BVTBoolAssertion='' \
           BVTScopeTest=local \
           BoolVarTest ) ; 
+  local -a ArrayMsg=( ) ; 
+  ArrayMsg[0]="Note: New FileName : __FILE__ " ; 
+  ArrayMsg[1]="### FileName: __FILE__" ; 
+  ArrayMsg[2]="Re-opening File : __FILE__ " ; 
   
-  test ! -e ${StrFileTmp} && echo -ne "\n\nNote: New FileName : ${StrFileTmp} \n\n" > /dev/stderr ; 
-  test ! -e ${StrFileTmp} && echo -ne "\n\n### FileName: ${StrFileTmp}\n\n" > ${StrFileTmp} ; 
-  test -e ${StrFileTmp} && echo -ne "\n\nRe-opening File : ${StrFileTmp} \n\n" > /dev/stderr ; 
+  if [ ! -f ${StrFileTmp} ] ; then 
+   StrMsg=${ArrayMsg[0]} ; 
+   StrMsg=${StrMsg//__FILE__/${StrFileTmp}} ; 
+   VerbMsg=${StrMsg} VerbHeader="MESSAGE" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ; 
+   StrMsg=${ArrayMsg[1]} ; 
+   StrMsg=${StrMsg//__FILE__/${StrFileTmp}} ; 
+   VerbMsg=${StrMsg} VerbHeader="MESSAGE" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ; 
+  elif [ -f ${StrFileTmp} ] ; then 
+   StrMsg=${ArrayMsg[2]} ; 
+   StrMsg=${StrMsg//__FILE__/${StrFileTmp}} ; 
+   VerbMsg=${StrMsg} VerbHeader="MESSAGE" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ; 
+  fi   
+  #test ! -e ${StrFileTmp} && echo -ne "\n\nNote: New FileName : ${StrFileTmp} \n\n" > /dev/stderr ; 
+  #test ! -e ${StrFileTmp} && echo -ne "\n\n### FileName: ${StrFileTmp}\n\n" > ${StrFileTmp} ; 
+  #test -e ${StrFileTmp} && echo -ne "\n\nRe-opening File : ${StrFileTmp} \n\n" > /dev/stderr ; 
   
   ### Copy File into Local HOME/path and removing the header and avoid to overwrite the initial 
   ### Protected file 
@@ -1791,19 +1813,90 @@ function ZenityShellEval()
 		local __call_locality=( Main __main_StartServices ) ;
 		local Arg0=${ArrayArg[0]} ;
 		local ArrayArg=( $* ) ; 
-  if [ "${IsCheckSumOnly}" == "True" ] ; then 
-   StrFilePath=${StrFilePath} StrFileName=${StrFileName} __main_CheckSum ; 
-  else
-  eval $( VTVValueEntry=StrFileTmp,StrTitle,StrDateFormat,IntSleep,IntFontSize,IsEditField,IntWidth,IntHeight,IntDefaultModeExec,IsEditField,IsAddFootPrint,IsLoopOnSucc,IsCheckSumOnly\
-          VTVIsValueReAssign=True \
-          VTVIsValueToConvert=False \
-          VTVIsArrayStyleInsert=True \
-          ValueToVariable ) __main_Editor 
-  fi
+  ### Note: f1161962-0ad8-11e3-b166-001b3875b29c 
+  ### 
+  ### Title : Variable Forwarding Example in BoolVarTest & mutation 
+  ### of BoolVarTest from True/False test into None
+  ### 
+  ### BoolVarTest for substitution of StrFileTmp has unidirectionnaly
+  ### a uuid-like file name into Pre-fixed Var ZSEFileName:=None for 
+  ### affectation inside StrFileName=None, where if this one != None, will 
+  ### get the parameter Name Being passed inside StrFileTmp. 
+  ### 
+  ### - Had consequence:
+  ###  - if the file does not exist, an echo > StrFileTmp will be done . 
+  ###  - if the file exist, content will be open by Zenity in text-info --editable
+  ###  - Selected filename supplied, content will be overwritted and there is 
+  ###  no protection mechanism and no verification against file-permission
+  ###    - To this, a workaround will store all code generated from this application
+  ###    - into sub-directory being made by the command and store-it inside user
+  ###      respective home location which is safe and Pre-fixable into 
+  ###      your specification, and not-warrented to be correct but designable. 
+  ###  
+  ### 
+  ### - If the variable ZSEFileName is untouched, the content of StrFileTmp will
+  ### hold value 'None' and belong to parsed BoolVarTest it should 
+  ### get it's uuid-like filename, see generated command from parameter below
+  ### 
+  ### Command : BVTVarName=StrFileTmp BVTVarHold='${StrFileName}' BVTBoolVarName=\${StrFileName} BVTBoolCase=None BVTBoolAssertion='$( uuidgen -t )' BVTScopeTest=local BoolVarTest
+  ### 
+  ### generated code:
+  ### local StrFileTmp="${StrFileName}" ; 
+  ### if [ "${StrFileName}" == "None" ] ; then 
+  ###  StrFileTmp=$( uuidgen -t ) ; 
+  ### fi
+  ### 
+  ### Which is making sense. 
+  ### 
+  ### Also Note f1161962-0ad8-11e3-b166-001b3875b29c introduce explanation on mutation of BoolVarTest from True/False test into None and moving uuid-file-id variable inside BVTBoolAssertion
+  ### 
+  ### 
+  eval $( eval BVTVarName=StrFileTmp \
+          BVTVarHold='${StrFilePath}/${StrFileName}' \
+          BVTBoolVarName=\${StrFileName:=None} \
+          BVTBoolCase=None \
+          BVTBoolAssertion='${StrFilePath}/${TmpUUIDEdit}' \
+          BVTScopeTest=local \
+          BoolVarTest ) ;  
+  
+  ### Definition of StrActionClause
+  ### 2 action are performed inside the variable StrActionClause, both using 
+  ### at 2 moments BoolVarTest it construct a TypeIf 4 and 5 . 
+  ### Require BVTIdType=4 to build the first member it:
+  ### - It's not coming with a preambule or SHALL add Prefixed-Variable build here with BVTVarName=IsCheckSumOnly BVTVarHold=\${ZSECheckSumTest:=False}, to respect introduction of function and Possibly have paremeter to start the SHA1SUM action between content of a chunk and proposed file . In this case it's separated for reason ( not filtered by GetVarReference and being absent of helper-documentation. )
+  ###  -Don't need BVTVarName BVTVarHold for first part . 
+  ###  
+  ###  - BVTIdType=4 is in reference with BVTType, type 
+  ###  4 : will produce a [ if __STATEMENT__ else ] Statement or between 'if' and 'else', it will:
+  ###   - Contain an Assertion, since we haven't filled criterion of Preambule. 
+  ###   - THIS mean only have to fill either BVTBoolAssertion for variable assignation, BVTVarName if we do obtain a value from clause out of a Preambule like variable already managed and require something else. Imagine a seach where item is not found and declare before the loop to 0 and in this case element In assertion is IsCheckSumOnly become true after loop control information , so filling BVTVarName is usefulll and BVTBoolAssertion to say We-found it. THIS CASE suggestion another uses of Assertion , using BVTIsValueToVarAssert suggest a transfert of variable in case we are calling a function. Required BVTIsValueToVarAssert=True BVTVTVVarA for the list of variable, BVTVTFnctA for function name it's the minimalitic Prefixed variable to fill . 
+  ###    - Producing if __STATEMENT__ ; then __ASSERTION__ else ; where Assertion is the ValueToVariable information. 
+  ###  5 : will produce a [  __STATEMENT__ fi ] Statement or after else which is already declared inside  previous BoolVarTest BVTIdType=4. Preambule is useless since we are inside the Assertion. So only section of  BVTVTVVarA BVTVTFnctA require to be filled for another ValueToVariable where __main_Editor is the function onto not choosing to validate a file. 
+  ###  
+  ### so Building a if - else  - fi ; require 2 call of BoolVarTest .   
 
+  local StrActionClause=$( BVTIsPreambule=False BVTBoolVarName=\${IsCheckSumOnly} BVTIdType=4 BVTBoolCase=True BVTIsValueToVarAssert=True BVTVTVVarA=StrFilePath,StrFileName BVTVTFnctA=__main_CheckSum  BoolVarTest ; BVTIsPreambule=False BVTIsValueToVar=False BVTIsValueToVarAssert=True BVTIdType=5 BVTVTVVarA=\${StrVarList} BVTVTFnctA=__main_Editor BoolVarTest ) ; 
+  
+  ### Should replace next statement :
+  #if [ "${IsCheckSumOnly}" == "True" ] ; then 
+  # eval $( VTVValueEntry=StrFilePath,StrFileName \
+  #         VTVIsValueReAssign=True \
+  #         VTVIsValueToConvert=False \
+  #         VTVIsArrayStyleInsert=True \
+  #         ValueToVariable ) __main_CheckSum 
+  #else
+  # eval $( VTVValueEntry=${StrVarList} \
+  #         VTVIsValueReAssign=True \
+  #         VTVIsValueToConvert=False \
+  #         VTVIsArrayStyleInsert=True \
+  #         ValueToVariable ) __main_Editor 
+  #fi
+  eval ${StrActionClause} ; 
 
  }
  
+ local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+
  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
 			GetVarReference ${__call_locality[1]} ; 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
@@ -1815,12 +1908,16 @@ function ZenityShellEval()
  elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
 		eval $( __GetVarReferenceCompWord ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
-  eval $( VTVIsArrayStyleInsert=True \
-  VTVValueEntry=StrFileTmp,StrTitle,StrDateFormat,IntSleep,IntFontSize,IsEditField,IntWidth,IntHeight,IntDefaultModeExec,IsAddFootPrint,IsLoopOnSucc,IsCheckSumOnly \
-  VTVIsValueReAssign=True \
-  VTVIsValueToConvert=False \
-  VTVIsArrayStyleInsert=True \
-  ValueToVariable ) __main_StartServices
+  local TmpUUIDEdit=$( GetUIDRegister=True GetUAppsRegisterName=${__call_locality[1]} GetUUID )
+  StrMsg="Application:${__call_locality[1]} , version:( versionCA:__VER_CA__, versionBVT:__VER_BVT__)" ; 
+  StrMsg=${StrMsg//__VER_CA__/${versionCA}} ;
+  StrMsg=${StrMsg//__VER_BVT__/${versionBVT}} ;
+  VerbMsg=${StrMsg} VerbHeader="VERSION" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ; 
+  eval $( eval VTVIsArrayStyleInsert=True  \
+          VTVValueEntry=${StrVarList} \
+          VTVIsValueReAssign=True     \
+          VTVIsValueToConvert=False   \
+          ValueToVariable ) ${StrStartMain} ; 
  fi
 
 
