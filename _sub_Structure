@@ -194,7 +194,12 @@ if [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then
      StrShortName=$( GetStdPrefixName ${StrFuncName} ) ;
     fi 
     local StrBootStrap="__SCOPE__ StrStartMain=\${__SHORTNAME__FuncStart:=__main_StartServices} ;" ; 
-    local StrArgumentCode="""__SCOPE__ __call_locality=( __SHORTNAME__ __LONGNAME__ __PARENT_NAME__ ) ; __SCOPE__ ArrayArg=( \$* ) ; __SCOPE__ Arg0=\${ArrayArg[0]} ; __SCOPE__ StrParentApps=\${__call_locality[1]} ; __BOOT_STRAP__""" ; 
+    local StrArgumentCode="""
+    __SCOPE__ ArrayArg=( \$* ) ;
+    __SCOPE__ __call_locality=( __SHORTNAME__ __LONGNAME__ __PARENT_NAME__ ) ;
+    __SCOPE__ Arg0=\${ArrayArg[0]} ;
+    __SCOPE__ StrParentApps=\${__call_locality[1]} ;
+    __BOOT_STRAP__""" ; 
     if [ "${BoolAddParent:=False}" == "True" ] ; then 
      StrArgumentCode=${StrArgumentCode//__PARENT_NAME__/\$\{StrParentApps\}} ; 
      if [ "${BoolChildBoot:=False}" == "False" ] ; then 
@@ -214,7 +219,7 @@ if [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then
     else
       StrArgumentCode=$( echo "${StrArgumentCode}" | /bin/sed 's/\n/\\n/g;s/\r/\\r/g' ) ; 
     fi
-    echo "${StrArgumentCode}" ; 
+    echo ${StrArgumentCode} ; 
     
    }
 
@@ -1462,7 +1467,7 @@ if [ "${versionTP:=0.0.2}" == "0.0.2" ] ; then
     fi 
    fi
   } 
-  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis
+  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
    
   
 
@@ -1627,22 +1632,56 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
  ### 
 
  ### Factory Section 
-  local -a ArrayArg=( $* ) ; 
-  local -a __call_locality=( BVT BoolVarTest ) ;
   unset StrVarBoolTest StrDefaultBoolTest StrNotAsserted StrScopeType StrIfTestType StrIfStringOp IsPreambule StrDefaultEndTest IsTypePreamb StrVTRPrbTpl StrVTRPrbVar StrVTRPrbVTReg StrVTRPrbVTFnct IsTypeAssert StrVTRAsrtTpl StrVTRAsrtVar StrVTRAsrtVTReg StrVTRAsrtVTFnct StrKeyTestType IntDefautlType IsDisplayIfStatement StrIfPattern ArrayIfPattern ArrayAssertion StrTestTemplate IsPreambulePolNtRespt ;
   unset Verbosis __main_StartServices ;
+  function Verbosis()
+  {
+   #eval $( CAFunctName=Verbosis CAIsAddParent=False __Call_Argument ) ; 
+   local -a ArrayArg=( $* ) ; 
+   local StrMsg=${VerbMsg:=__TEXT__} ; 
+   local StrDevOut=${VerbDev:=/dev/stderr} ; 
+   local IsVerboseState=${VerbState:=False} ;
+   local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+   local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+   local IsDisplayFormatted=${VerbFormated:=True} ;
+   local IsAppendMode=${VerbAppendDev:=False} ; 
+   if [ "${IsVerboseState:=False}" == "True" ] ; then 
+    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+     if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
+     else  
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+     fi
+    else
+     if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+        echo "${StrMsg}" ;  
+     else
+      if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo "${StrMsg}" >> ${StrDevOut} ;
+      else
+       echo "${StrMsg}" > ${StrDevOut} ;
+      fi
+     fi 
+    fi 
+   fi
+  } 
+  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
+  
+  local -a ArrayArg=( $* ) ; 
+  local -a __call_locality=( BVT BoolVarTest ) ;
   local Arg0="${ArrayArg[0]}" ;
-  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+  local StrParentApps="${__call_locality[1]}" ;
+  local StrStartMain=${BVTFuncStart:=__main_StartServices} ;
  ### End of Factory Section.
-  local -a ArrayTypeTest=( False True ) ;
+  local -a ArrayTypeTest=( "False" "True" ) ;
   local -a ArrayPreambule=( ) ; 
   local -a ArrayIfPattern=( ) ;
   ### We do Agree if the clause using an Execution-ASSERTION-type  inside the 
   ### If-clause the section after the 'then' shoud not carry any trace of 
   ### BVTVarName, like default one StrAttrHold="" ... but should hold a trace of 
   ### $ eval $( VTV...=... VTV...=... ValueToVariable ) Function-Name
-  local StrVarNamed=${BVTVarName:=StrAttrHold} ; 
-  local StrVarNamedHold=${BVTVarHold:=CONTENT} ; 
+  local StrVarNamed=${BVTVarName:='StrAttrHold'} ; 
+  local StrVarNamedHold=${BVTVarHold:='CONTENT'} ; 
   ### Following variable Stand for Is-Preambule-Polish-Notation-Respect is respected ( 
   ### like allow cleaning content and validate output for easy-Integer respect instead 
   ### of having case like IntValue="0" so far is valuable, but fail in case and if test -> 
@@ -1669,12 +1708,12 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
   local IsTypePreamb=${BVTIsValueToVar:=False} ;
 
   ### Required variable to manage or configure a ValueToVariable Assertion inside Preambule Only.
-  local StrVTRPrbTpl=${BVTVTVTPL:=eval __TES__  __REGISTRY_PRE__ VTVValueEntry=__VAR_ENTRY_PRE__ ValueToVariable __TEE__ __FNCT_PRE__} ;
+  local StrVTRPrbTpl=${BVTVTVTPL:='eval __TES__  __REGISTRY_PRE__ VTVValueEntry=__VAR_ENTRY_PRE__ ValueToVariable __TEE__ __FNCT_PRE__'} ;
   
   ### BVTVTVVar is the most used, allowing to pass-thru the variable in uses with 
   ### the same name to the function associate to Executive-Assertion inside the Preambule.
   ###
-  local StrVTRPrbVar=${BVTVTVVar:=IsVerbose,IsDebug} ;
+  local StrVTRPrbVar=${BVTVTVVar:='IsVerbose,IsDebug'} ;
   
   ### BVTVTReg, Called BoolVarTest ValueToVariable Registry 
   ### is plain Prefixed-Variable associate to pass-thru mechanisme
@@ -1689,14 +1728,14 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
   ### going back to value of the variable before the entry inside the sub-function.
   ###
   ###
-  local StrVTRPrbVTReg=${BVTVTReg:=VTVIsArrayStyleInsert=True VTVIsValueReAssign=True VTVIsValueToConvert=False} ;
+  local StrVTRPrbVTReg=${BVTVTReg:='VTVIsArrayStyleInsert=True VTVIsValueReAssign=True VTVIsValueToConvert=False'} ;
   
   ### BVTVTFnct 
   ###
   ### You do have a function to fill here to enable the pass-thru to a function 
   ### this is the part required to let having a function Executed during pre-ambule.
   ###
-  local StrVTRPrbVTFnct=${BVTVTFnct:=__FNCT__} ;
+  local StrVTRPrbVTFnct=${BVTVTFnct:='__FNCT__'} ;
   
   ###############
   ### End of Preambule Section .
@@ -1724,23 +1763,22 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
   local StrVarBoolTest=${BVTBoolVarName:=IsVarShould} ; 
   local StrDefaultBoolTest=${BVTBoolCase:=False} ;
   local StrNotAsserted=${BVTBoolAssertion:=\"\"} ;
-  local StrScopeType=${BVTScopeTest:=local} ;
-  local StrIfTestType=${BVTIfType:=String} ; 
+  local StrScopeType=${BVTScopeTest:='local'} ;
+  local StrIfTestType=${BVTIfType:='String'} ; 
   local StrIfStringOp=${BVTIfOp:='=='} ;
-  local StrDefaultEndTest=${BVTConclude:=";"} ;
+  local StrDefaultEndTest=${BVTConclude:=';'} ;
 
   ### Section ValueToVariable in Assertion .
   local IsTypeAssert=${BVTIsValueToVarAssert:=False};
-  local StrVTRAsrtTpl=${BVTVTVTPLA:=eval __TES__  __REGISTRY_ASRT__ VTVValueEntry=__VAR_ENTRY_ASRT__ ValueToVariable __TEE__ __FNCT_ASRT__} ;
-  local StrVTRAsrtVar=${BVTVTVVarA:=IsVerbose,IsDebug};
-  local StrVTRAsrtVTReg=${BVTVTRegA:=VTVIsArrayStyleInsert=True VTVIsValueReAssign=True VTVIsValueToConvert=False}
-  local StrVTRAsrtVTFnct=${BVTVTFnctA:=__FNCT__}
+  local StrVTRAsrtTpl=${BVTVTVTPLA:='eval __TES__  __REGISTRY_ASRT__ VTVValueEntry=__VAR_ENTRY_ASRT__ ValueToVariable __TEE__ __FNCT_ASRT__'} ;
+  local StrVTRAsrtVar=${BVTVTVVarA:='IsVerbose,IsDebug'};
+  local StrVTRAsrtVTReg=${BVTVTRegA:='VTVIsArrayStyleInsert=True VTVIsValueReAssign=True VTVIsValueToConvert=False'} ; 
+  local StrVTRAsrtVTFnct=${BVTVTFnctA:='__FNCT__'}
   local StrKeyTestType=${BVTType:='if:fi,if:elif,elif:elif,elif:else,if:else,else:fi'} ;
   local IntDefautlType=${BVTIdType:=0} ; 
   local IsShowDebug=${BVTDisplayShowDebug:=False} ;
   local IsDisplayIfStatement=${BVTDisplayIf:=False} ; 
-  local -a ArrayVarTestType=( String File Test Int Shell ) ;
-  local StrParentApps="BoolVarTest" ;
+  local -a ArrayVarTestType=( "String" "File" "Test" "Int" "Shell" ) ;
   local StrVarListTransfert="StrTestTemplate,IsDisplayIfStatement,IntDefautlType,StrKeyTestType,StrVTRAsrtVTFnct,StrVTRAsrtVTReg,StrVTRAsrtVar,StrVTRAsrtTpl,IsTypeAssert,StrVTRPrbVTFnct,StrVTRPrbVTReg,StrVTRPrbVar,StrVTRPrbTpl,IsTypePreamb,StrDefaultEndTest,IsPreambule,StrIfStringOp,StrIfTestType,StrScopeType,StrNotAsserted,StrDefaultBoolTest,StrVarBoolTest,IsPreambulePolNtRespt,StrVarNamedHold,StrVarNamed,StrParentApps" ; 
   
   local StrTestTemplate=""" __PREAMBULE__ \
@@ -1748,33 +1786,13 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
  __ASSERTION__ \
  __END_TEST__ __END_MARK__ """ ;
 
+   
   ArrayIfPattern[0]="""__START_TEST__ [ \"__VAR_BOOL_TEST__\" __OP__ \"__DEFAULT_BOOL_TEST__\" ] """ ;
   ArrayIfPattern[1]="""__START_TEST__ [ \"__OP__ \"__DEFAULT_BOOL_TEST__\" ] """ ;
   ArrayIfPattern[2]="""__START_TEST__ \$( test \"__OP__ \"__DEFAULT_BOOL_TEST__\" ) """ ;
   ArrayIfPattern[3]="""__START_TEST__ [ __VAR_BOOL_TEST__ __OP__ __DEFAULT_BOOL_TEST__ ] """ ;
   ArrayIfPattern[4]="""eval __VAR__NAMED__ ; res=\$? ; __START_TEST__  [ \${res:=1} __OP__ __DEFAULT_BOOL_TEST__ ] """ ;
   
-  function Verbosis()
-  {
-   local -a ArrayArg=( $* ) ; 
-   local -a __call_locality=( Verbosis Verb );
-   local StrMsg=${VerbMsg:=__TEXT__} ; 
-   local StrDevOut=${VerbDev:=/dev/stderr} ; 
-   local IsVerboseState=${VerbState:=False} ;
-   local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
-   local IsDisplayFormatted=${VerbFormated:=True} ;
-   if [ "${IsVerboseState:=False}" == "True" ] ; then 
-    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
-      echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
-    else
-      echo -ne "${StrMsg}\n" > ${StrDevOut} ;
-    fi 
-   fi
-  }
-  
-  
-
-
   function __main_StartServices
   {
    local -a ArrayArg=( $* ) ;
@@ -1793,10 +1811,13 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
    fi 
    # local ArrayIfPattern=(  ) ;
    local -a ATestType=( $( ${StrParentApps} --get ArrayVarTestType[@] ) ) ; 
-
+   
+   ### Cleaning the Template against non-evaluable or non-visible char.
+   StrTestTemplate=$( echo "${StrTestTemplate}" | /bin/sed 's/\n/\\n/g;s/\r/\\r/g' ) ; 
+   
    ### Other variable required ;
    local StrCurrentIfPatrn ;  
-   local StrLcTTpl=${StrTestTemplate} ; 
+   local StrLcTTpl="${StrTestTemplate}" ; 
    local StrIfPattern ; 
    
    local -a ArrayPreambule=( ) ; 
@@ -1817,9 +1838,9 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
     
    done ; 
    StrMsg="Type of VarTest: ${StrIfPattern}, StringOP: ${StrIfStringOp}" ;
-   VerbHeader="DEBUG" VerbState="${IsShowDebug}" VerbDev=/dev/stderr VerbMsg=${StrMsg} Verbosis ;
+   VerbMsg=${StrMsg} VerbHeader="DEBUG" VerbState="${IsShowDebug}" VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
    
-   local -a ArrarTagParseOpt=( __VAR_BOOL_TEST__,StrVarBoolTest __DEFAULT_BOOL_TEST__,StrDefaultBoolTest __VAR__NAMED__,StrVarNamed )
+   local -a ArrarTagParseOpt=( "__VAR_BOOL_TEST__,StrVarBoolTest" "__DEFAULT_BOOL_TEST__,StrDefaultBoolTest" "__VAR__NAMED__,StrVarNamed" ) ; 
    #for StrSyntaxItem in ${ArrarTagParseOpt[@]} ; do
    # StrPairRight="${StrSyntaxItem/#\_\_[A-Z_]*,/}" ; 
    # StrPairLeft="${StrSyntaxItem/%,[A-Z][A-Za-z0-9]*/}" ;
@@ -1878,7 +1899,7 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
       ### discover the wa not inside tring-brace, but conformely not be the reason why
       ### scopetest == ',' and produce ',' instead of result from query .
       if [ "${IsPreambulePolNtRespt:=True}" == "False" ] ; then 
-       StrLcTTpl="""${StrLcTTpl//__PREAMBULE__/${StrScopeType} ${StrVarNamed}=\"${StrVarNamedHold}\" ;}""" ; 
+       StrLcTTpl="""${StrLcTTpl//__PREAMBULE__/${StrScopeType} ${StrVarNamed}=\"${StrVarNamedHold}\";}""" ; 
        ### end of second clause of if [ ${IsPreambulePolNtRespt:=True} == "True"
        ### here, still in "${IsTypePreamb:=False}" == "True"
        ### here, on side of ${IsPreambulePolNtRespt:=True} == "False"
@@ -1983,17 +2004,17 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
        fi
        
        if [ ${StrTypeVar:=None} == "Int" ] ; then 
-        StrLcTTpl=${StrLcTTpl//__PREAMBULE__/${StrScopeType} ${StrVarNamed}=${StrVarNamedHold} ;} ; 
+        StrLcTTpl=${StrLcTTpl//__PREAMBULE__/${StrScopeType} ${StrVarNamed}=${StrVarNamedHold};} ; 
        elif [ ${StrTypeVar:=None} == "String" ] ; then 
-        StrLcTTpl=${StrLcTTpl//__PREAMBULE__/${StrScopeType} ${StrVarNamed}=\"${StrVarNamedHold}\" ;} ; 
+        StrLcTTpl=${StrLcTTpl//__PREAMBULE__/${StrScopeType} ${StrVarNamed}=\"${StrVarNamedHold}\";} ; 
        elif [ ${StrTypeVar:=None} == "Bool" ] ; then 
-        StrLcTTpl=${StrLcTTpl//__PREAMBULE__/${StrScopeType} ${StrVarNamed}=\"${StrVarNamedHold}\" ;} ; 
+        StrLcTTpl=${StrLcTTpl//__PREAMBULE__/${StrScopeType} ${StrVarNamed}=\"${StrVarNamedHold}\";} ; 
        ### end of N-clause of if ${StrTypeVar:=None} == "Int"
        ### here, still in "${IsTypePreamb:=False}" == "True"
        ### here, still in ${IsPreambulePolNtRespt:=True} == "True"
        else
-        ### Kept as String .
-        StrLcTTpl=${StrLcTTpl//__PREAMBULE__/${StrScopeType} ${StrVarNamed}=\"${StrVarNamedHold}\" ;} ;  
+        ### Keep as String .
+        StrLcTTpl=${StrLcTTpl//__PREAMBULE__/${StrScopeType} ${StrVarNamed}=\"${StrVarNamedHold}\";} ;  
        ### end of if-${StrTypeVar:=None} == "Int"
        ### here, still in "${IsTypePreamb:=False}" == "True"
        ### here, still in ${IsPreambulePolNtRespt:=True} == "True"
@@ -2093,12 +2114,14 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
    ### See BVTConclude where is default is semi-colon ';', but may old
    ### value like BVTConclude='fi ;' , BVTConclude='fi'   
   
-   local StrMsg="\nFunction ${__call_locality[1]}, Display Result:\n ${StrLcTTpl}\n" ; 
-   VerbState=${IsDisplayIfStatement} VerbDev=/dev/stderr VerbMsg=${StrMsg} Verbosis
-   echo -ne "${StrLcTTpl}" ; 
-
-   
+   local StrMsg="Function ${__call_locality[1]}, Display Result:\n ${StrLcTTpl}\n" ; 
+   VerbMsg="${StrMsg}" VerbState="${IsDisplayIfStatement}" VerbDev=/dev/stderr Verbosis ; 
+   ### Output in evaluation compatible form . 
+   VerbMsg="${StrLcTTpl}" VerbEvalForm=True VerbFormated=False VerbState=True VerbHeader="" Verbosis ; 
+  
   }
+  
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
 
    
   if [ "${Arg0:=--startservices}" == "--help"	] ; then 
@@ -2112,11 +2135,11 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
   elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
    eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
   elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
-   eval $( VTVValueEntry=${StrVarListTransfert} \
+   eval $( eval VTVValueEntry=${StrVarListTransfert} \
            VTVIsValueReAssign=True              \ 
            VTVIsValueToConvert=False            \
            VTVIsArrayStyleInsert=True           \
-           ValueToVariable ) __main_StartServices 
+           ValueToVariable ) ${StrStartMain} 
   fi
   
  }
