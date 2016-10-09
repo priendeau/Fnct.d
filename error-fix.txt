@@ -453,4 +453,5 @@ Loading...		[ _sub_PythonBoost ]
 
 --------------------------------------------------------------------------------------------------------------
 SOLUTION:
-
+for Getter from GnrlPrsrInfctr that cause a loop, replacing ${StrParentApps} --get ... by GnrlPrsrInfctr --get ...
+Notice : if this line is called with ${StrParentApps} which suppose to be the application GnrlPrsrInfctr --get ArrayMsg[3] <> ${StrParentApps} --get ArrayMsg[3], it enter inside a loop and never end... the test consist to add before the StrMsg=... the echo line "Before getting ArrayMsg[3]" and right under to put an echo line "After getting ArrayMsg[3]". On console you do never see the After getting ArrayMsg[3] !!! But this fixed with putting back the function name GnrlPrsrInfctr, work for versionCA=0.0.0 to 0.0.2 but exceptionnally does it for versionCA=0.0.1 and versionCA=0.0.2 ???
