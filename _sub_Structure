@@ -2123,7 +2123,7 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
   
   local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
 
-   
+  ### End-If-Block for Switches management.
   if [ "${Arg0:=--startservices}" == "--help"	] ; then 
     GetVarReference ${__call_locality[1]} ; 
     echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
