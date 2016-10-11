@@ -54,55 +54,60 @@ function GetDpkgInstalled()
  local ArrayArg=( $* ) ;
  local Arg0=( ${ArrayArg[0]} ) ; 
  local StrAwkScript=$( PackageRepositoryMgmt --get PkgRepoMgmtReposAwkLst ) ; 
- local StrAppsTemplate=${GDIDpkgTpl:=__APPS__ __OPT__ \| __FILTER__ __FILTER_OPT__ } ;
  local StrApps=${GDIDpkgApps:=/usr/bin/dpkg} ;
  local StrAppsOpt=${GDIDpkgAppsOpt:=--get-selections} ; 
  local StrFilterApps=${GDIFilterApps:=/usr/bin/gawk} ;
  local StrFilterOpt=${GDIFilterOpt:=-f __FILE__} ; 
- local StrParserTag=${GDITagParser:=}
  local StrParserResult=${GDITagParserResult:=StrCmd} ; 
- local StrVarList="StrParserResult,StrAwkScript,StrAppsTemplate,StrApps,StrAppsOpt,StrFilterApps,StrFilterOpt,StrParserTag" ; 
- ### Because there is strong dependency in uses of thsis application with PkgRepoMgmtReposAwkLst
- ### We will extract common information like The not working parser-script suppose to be replaced
- ### by /etc/init.d/Fnct.D/awk-script/dpkg-col-display.awk . 
- ### local StrAwkScript=${GetPkgInstAwkScript:=/etc/init.d/Fnct.d/awk-script/dpkg-package-id-listing.awk}
- ### While script /etc/init.d/Fnct.D/awk-script/dpkg-col-display.awk should be corect to work with 
- ###  StrAwkScript, I do not found notice of it on my last modification of this package.... So I recraft
- ### it and if I do not see correct information in-debugging out of this function being the point-start
- ### of this problems of snap-shooting I do have to make something else, like other script...
- function __main_StartServices()
- {
-  local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
-  local ArrayArg=( $* ) ;
-  local Arg0=${ArrayArg[0]};  
-  local StrCmd=${StrAppsTemplate}
-  dpkg --get-selections | awk -f ${StrAwkScript}
-  eval $( TPIsMatchRtoL=True TPDisplayDebug=True TPArrayName=Array${__call_locality[0]}Tag TPVarNameParsed="${StrParserResult}" TPListTag="${StrParserTag}" TagParser ) ; 
-  # eval "${StrTagCmdLine}" ;  
-  
-  StrMsg="Parsed Zenity List CmdLine: ${StrCmdLine}\n" ; 
-  VerbMsg="${StrMsg}" VerbDev=/dev/stderr VerbState=True VerbFormated=True VerbHeader="${__call_locality[1]}-CMDLINE" Verbosis
-  
-  eval """\${${StrParserResult}}""" ; 
+ local StrParentApps=${__call_locality[1]} ; 
+ local StrStartMain=${GDIFuncStart:=__main_StartServices} ;
+ local StrVarList="StrVarList,StrStartMain,StrParentApps,StrParserResult,StrAwkScript,StrAppsTemplate,StrApps,StrAppsOpt,StrFilterApps,StrFilterOpt,StrParserTag" ; 
  
- } 
- 
- if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-  GVRIsName=True GVRIsSynopsis=True GVRIsSummary=True GVRIsDesc=True GetVarReference ${__call_locality[1]} ; 
-  echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
- elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-  echo -ne """${ArgGet}\n""" ;
- elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-  eval $( __GetVarReferenceList ) ;	
- elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
-  eval $( VTVValueEntry=${StrVarList} \ 
-          VTVIsArrayStyleInsert=True   \
-          VTVIsValueReAssign=True      \
-          VTVIsValueToConvert=False    \
-          ValueToVariable  ) __main_StartServices ; 
- fi
+  function __main_StartServices()
+  {
+   local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+   local ArrayArg=( $* ) ;
+   local Arg0=${ArrayArg[0]};  
+   ### removed GPIRepoCreatEnabled=True 
+   GPIIsUUIDInstance=True \
+   GPIFileName=${StrAwkScript}   \
+   GPITagParserResult=${StrParserResult} \
+   GPIDpkgApps=${StrApps}            \
+   GPIDpkgAppsOpt='${StrAppsOpt}'    \
+   GPIFilterApps='${StrFilterApps}'  \
+   GPIFilterOpt='${StrFilterOpt}'    \
+   GPIIsGenerateCode=True            \
+   GPIIsZenityHandlerOut=False       \
+   GPIIsFileHandlerOut=True          \
+   GPIIsExecuteEval=False            \
+   GPIRepositoryCreation=True        \
+   GPIFuncStart=__main_StartServices \
+   GPIDisplayDebug=True              \
+   GPIParserDebug=True               \
+   GnrlPrsrInfctr ; 
+  } 
+  
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+  
+  
+  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   GVRIsName=False GVRIsSynopsis=False GVRIsSummary=False GVRIsDesc=False GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;	
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+   eval $( VTVIsArrayStyleInsert=True \
+        VTVValueEntry=${StrVarList}   \
+        VTVIsValueReAssign=True       \
+        VTVIsValueToConvert=False     \
+        VTVIsArrayStyleInsert=True    \
+        ValueToVariable ) ${StrStartMain}
+  fi
 }
+ 
 
  #########################################################################
  ###### Part of Snapshoot section 
@@ -113,10 +118,15 @@ function GetDpkgInstalled()
   local ArrayArg=( $* ) ;		
   local Arg0=( ${ArrayArg[0]} ) ;
   local StrPackageID=${GIDLPackageUUID:=DefaultID} ;
+  local StrTplSnap=${GIDLTplSnapshoot:=ADD SNAPSHOT\nDATE:__TRANSACTION_START__:ID:__PACKAGE_ID__\n} ; 
+  local StrTplList=${GIDLTplList:=ID of listing:__PACKAGE_ID__\n} ; 
+  local StrID=${StrSnapShotUUID} ; 
   ### Note, moving UUID Creation at the top.
   ### Assuming we need at least an UUID for the Package-naming deposition and 
   ### another one to name a package-listing... ( Having --add-snapshoot and PkgRepoMgmtAddPkgLst Prefixed-Var managing listing )
-  local StrID=${StrSnapShotUUID} ; 
+  StrTplSnap=${StrTplSnap//__TRANSACTION_START__/${StrTransactionStart}} ; 
+  StrTplSnap=${StrTplSnap//__PACKAGE_ID__/${StrPackageID}} ; 
+  StrTplList=${StrTplList//__PACKAGE_ID__/${StrPackageID}} ; 
   echo -ne "ADD SNAPSHOT\nDATE:${StrTransactionStart}:ID:${StrPackageID}\n" >> ${StrIndexFile} ; 
   echo -ne "ID of listing:${StrPackageID}\n"  > /dev/stderr ; 
  }
@@ -352,7 +362,7 @@ function PackageRepositoryMgmt()
 	local StrDefaultActionIndex=${PkgRepoMgmtReposIndexAction:="mkdir -p __PATH__"} ;
 	local StrTestDriveDebug=${PkgRepoMgmtReposDriveDebug:=False} ;
 	local StrIndexTest=${PkgRepoMgmtReposIndexTest:=! -d} ;
-	local StrScriptAwkFilter=${PkgRepoMgmtReposAwkLst:=/etc/init.d/Fnct.D/awk-script/dpkg-package-id-listing.awk} ;
+	local StrScriptAwkFilter=${PkgRepoMgmtReposAwkLst:=/etc/init.d/Fnct.D/awk-script/dpkg-col-display.awk} ;
  echo -ne "Reserved ID for COMMIT:${StrUUID}\nReserved ID for Listing:${StrSnapShotUUID}\n\n" > /dev/stderr ;
 
 	### Explained in GetOtherDate, GODReference can be negative and report yesterday date too. and not null will

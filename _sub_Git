@@ -174,9 +174,7 @@ if [ "${versionGCT:=0.0.1}" == "0.0.2" ] ; then
  function GitRessourceInformation()
  {
   eval $( CAFunctName=GitRessourceInformation CAIsAddParent=False __Call_Argument ) ; 
-  #local __call_locality=( GRI GitRessourceInformation ) ;
-  #local ArrayArg=( $* ) ; 
-  #local Arg0=${ArrayArg[0]} ;
+
   local StrFileBuffer=${GRIFileBuffer:=.file-selection} ;
   local StrCommitBuffer=${GRICommitBuffer:=.commit-msg} ; 
   local BoolTouchCommit=${GRIIsTouchCommit:=True} ;
@@ -190,9 +188,40 @@ if [ "${versionGCT:=0.0.1}" == "0.0.2" ] ; then
     IntSizeFile=$( wc -c ${StrFileBuffer} | cut -d ' ' -f 1  ) ;   
   fi   
 
-  
   local StrVarList="StrVarList,StrQuestion,IOStatus,StrFileList,StrParentApps,StrStartMain,BoolTouchCommit,BoolTouchFile" ; 
-  
+  function Verbosis()
+  {
+   local __call_locality=( Verbosis Verb );
+   local StrMsg=${VerbMsg:=__TEXT__} ; 
+   local StrDevOut=${VerbDev:=/dev/stderr} ; 
+   local IsVerboseState=${VerbState:=False} ;
+   local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+   local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+   local IsDisplayFormatted=${VerbFormated:=True} ;
+   local IsAppendMode=${VerbAppendDev:=False} ; 
+   local ArrayArg=( $* ) ; 
+   if [ "${IsVerboseState:=False}" == "True" ] ; then 
+    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+     if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
+     else  
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+     fi
+    else
+     if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+        echo "${StrMsg}" ;  
+     else
+      if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo "${StrMsg}" >> ${StrDevOut} ;
+      else
+       echo "${StrMsg}" > ${StrDevOut} ;
+      fi
+     fi 
+    fi 
+   fi
+  } 
+  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis
+    
   function InitializeCommitBuffer()
   {
    eval $( CAFunctName=InitializeCommitBuffer CAIsAddParent=True __Call_Argument ) ; 
@@ -451,12 +480,10 @@ if [ "${versionGCT:=0.0.1}" == "0.0.2" ] ; then
   eval $( CAFunctName=ZenityFileSelection CAIsAddParent=False __Call_Argument ) ; 
 
   local IOStatus=0;
-  #local StrParentApps=${__call_locality[1]} ;
+
   local StrWorkPath=${GitPath:=${ZFSPath:=/home/maxiste/github/Fnct.D/}} ; 
   local BoolUseAlternateFile=${ZFSIsAlternateSelection:=False} ; 
-  #eval local StrStartMain=\${${__call_locality[0]}FuncStart:=__main_StartServices} ;
   local StrFileBuffer=$( GitRessourceInformation --get GRIFileBuffer ) ;
-  #local StrCommitBuffer=$( GitRessourceInformation --get GRICommitBuffer  ) ; 
   local StrVarList="StrVarList,IOStatus,StrParentApps,StrStartMain,BoolUseAlternateFile,StrWorkPath,StrFileBuffer" ; 
   
   ### Tips: If you want to try the Alternate File selection, poping-you a zenity-list windows
@@ -516,13 +543,11 @@ if [ "${versionGCT:=0.0.1}" == "0.0.2" ] ; then
 
   local IOStatus=0 ; 
   local StrFileBuffer=$( GitRessourceInformation --get GRIFileBuffer ) ;
-  #local StrCommitBuffer=$( GitRessourceInformation --get GRICommitBuffer  ) ;  
   local IntSizeFile=$( GitRessourceInformation --get IntSizeFile ) ; 
 
   
   local StrWorkPath=${GitPath:=${GFIPath:=/home/maxiste/github/Fnct.D/}} ; 
   local StrParentApps=${__call_locality[1]} ;
-  #eval local StrStartMain=\${${__call_locality[0]}FuncStart:=__main_StartServices} ;
   local StrVarList="StrVarList,StrParentApps,StrWorkPath,IOStatus,IntSizeFile,StrStartMain,StrFileBuffer,BoolUseAlternateFile" ; 
   
   function __main_StartServices()
@@ -636,7 +661,6 @@ if [ "${versionGCT:=0.0.1}" == "0.0.2" ] ; then
   local IntComitSig=0 ; 
   local IntFileInPathSig=0 ; 
   local StrMsg="" ; 
-  #local StrParentApps=${__call_locality[1]} ;
   local StrFileBuffer=$( GitRessourceInformation --get GRIFileBuffer ) ;
   local StrCommitBuffer=$( GitRessourceInformation --get GRICommitBuffer  ) ; 
   
