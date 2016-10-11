@@ -9,6 +9,7 @@ function EasySetupPythonInstall()
  local StrAppsPythonApps=${ESPIPythonCall:=/usr/bin/python2.7} ; 
  local StrSetupStep=${ESPISetupSteplist:=build,build_py,build_ext,build_clib,build_scripts,install,install_lib,install_headers,install_scripts,install_data,bdist}
  local StrParentApps="${__call_locality[1]}" ; 
+ local StrStartMain=${ESPIFunctStart:=__main_StartServices} ;
  #local ArrayInstallStep=( build build_py build_ext build_clib build_scripts install install_lib install_headers install_scripts install_data bdist ) ; 
  local StrEasySetupDependency="EPREFIX,PREFIX,DATAROOTDIR,BUILD,HOST,CC,CFLAGS,LDFLAGS,LIBS,CPPFLAGS,CPP" ;
  local ArrayFunctOrder=( FileCompilationRequired ExecuteEasyInstall PostEggLookUp ) ;
@@ -70,7 +71,7 @@ function EasySetupPythonInstall()
   local -A ArrayRetCode=( ) ;
   local IntRet=0 ; 
   for iStep in ${ArrayInstallStep[@]} ; do 
-    eval $( VTVValueEntry=${StrEasySetupDependency},${StrListVar} \ 
+    eval $( eval VTVValueEntry=${StrEasySetupDependency},${StrListVar} \ 
             VTVIsWhiteList=True        \
             VTVWhiteListTransfert=${StrEasySetupDependency} \
             VTVIsArrayStyleInsert=True \
@@ -105,7 +106,7 @@ function EasySetupPythonInstall()
     echo -ne "Executing Function ${FuncName}.\n"
     sleep 5 ; 
     if [ ${IntRet:=0} -eq 0 ] ; then 
-     eval $( VTVValueEntry=${StrEasySetupDependency},${StrListVar} \ 
+     eval $( eval VTVValueEntry=${StrEasySetupDependency},${StrListVar} \ 
              VTVIsWhiteList=True        \
              VTVWhiteListTransfert=${StrEasySetupDependency} \
              VTVIsArrayStyleInsert=True \
@@ -135,7 +136,7 @@ function EasySetupPythonInstall()
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
 		eval $( __GetVarReferenceList ) ;	
 	elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
-  eval $( VTVValueEntry=${StrEasySetupDependency},${StrListVar} \ 
+  eval $( eval VTVValueEntry=${StrEasySetupDependency},${StrListVar} \ 
           VTVIsWhiteList=True        \
           VTVWhiteListTransfert=${StrEasySetupDependency} \
           VTVIsArrayStyleInsert=True \

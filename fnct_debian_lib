@@ -3631,11 +3631,12 @@ function zenity_pip_installer()
 unset ZenityContentListing ; 
 function ZenityContentListing( )
 {
-	local __call_locality=( ZCL ZenityContentListing ) ; 
-	local ArrayArg=( $* ) ; 
- local Arg0=( ${ArrayArg[0]} ) ;
+	local -a ArrayArg=( $* ) ; 
+	local -a __call_locality=( ZCL ZenityContentListing ) ; 
+ local Arg0="${ArrayArg[0]}" ;
 
  local StrParentApps=${__call_locality[1]} ;
+ local StrStartMain=${ZCLFuncStart:=__main_StartServices} ; 
  local StrTitle=${ZCLTitle:="Select a user for __APPS__"} ;
 	local StrCol0=${ZCLCol0:="selection"} ;
 	local StrCol1=${ZCLCol1:="user"} ; 
@@ -3648,11 +3649,11 @@ function ZenityContentListing( )
  local StrTagEntry=${ZCLTagListParser:=StrAppsName:__APPS__,StrZenityFilterCmd:__ZenityFilter__,IntWidth:__WIDTH__,IntHeight:__HEIGHT__,StrTypeListOpt:__LIST_TYPE__} ;
 	local StrRegSearch=${ZCLRegSearch:="\/bin\/bash"} ;
 	
- local BoolDisplayDebug=${ZCLDebuf:=False} ; 
+ local BoolDisplayDebug=${ZCLDebug:=False} ; 
  local BoolShowUserSelection=${ZCLSUS:=False} ;
  local BoolCheckList=${ZCLIsCheckList:=False} ; 
  local BoolCheckListMulti=${ZCLIsCheckListMulti:=False} ;
- local StrVarList="BoolDisplayDebug,StrAppsName,StrTagEntry,StrParentApps,IntWidth,IntHeight,StrTitle,StrCol0,StrCol1,StrDefaultCSV,IntDefaultColExtr,StrFileInfo,StrRegSearch,BoolShowUserSelection,BoolCheckList,BoolCheckListMulti,StrVarList" ;
+ local StrVarList="StrStartMain,BoolDisplayDebug,StrAppsName,StrTagEntry,StrParentApps,IntWidth,IntHeight,StrTitle,StrCol0,StrCol1,StrDefaultCSV,IntDefaultColExtr,StrFileInfo,StrRegSearch,BoolShowUserSelection,BoolCheckList,BoolCheckListMulti,StrVarList" ;
  local -A ArrayZenityTypeList ;
  
  ArrayZenityTypeList["multi"]="--checklist --multiple" ; 
@@ -3661,14 +3662,15 @@ function ZenityContentListing( )
  
  function Verbosis()
  {
-  local __call_locality=( Verbosis Verb );
+  local -a ArrayArg=( $* ) ; 
+  local -a __call_locality=( Verbosis Verb );
+  local Arg0="${ArrayArg[0]}"
   local StrMsg=${VerbMsg:=__TEXT__} ; 
   local StrDevOut=${VerbDev:=/dev/stderr} ; 
   local IsVerboseState=${VerbState:=False} ;
   local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
   local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
   local IsDisplayFormatted=${VerbFormated:=True} ;
-  local ArrayArg=( $* ) ; 
   if [ "${IsVerboseState:=False}" == "True" ] ; then 
    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
     echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
@@ -3689,9 +3691,9 @@ function ZenityContentListing( )
  ### 
  function ZenityFilter()
 	{
-  local __call_locality=( ZF ZenityFilter ) ; 
-  local ArrayArg=( $* ) ; 
-  local Arg0=( ${ArrayArg[0]} ) ;			
+  local -a __call_locality=( ZF ZenityFilter )
+  local -a ArrayArg=( $* ) ; 
+  local Arg0="${ArrayArg[0]}" ;			
   egrep -i ${StrRegSearch} ${StrFileInfo} | /usr/bin/cut -d ${StrDefaultCSV} -f ${IntDefaultColExtr} | sed  's/\(^[a-zA-Z0-9]*\)/FALSE \1/g' ; 
 	}
 	
@@ -3700,9 +3702,9 @@ function ZenityContentListing( )
  ### 
  function ZenityFileReader()
 	{
-  local __call_locality=( ZFR ZenityFileReader ${StrParentApps} ) ; 
-  local ArrayArg=( $* ) ; 
-  local Arg0=( ${ArrayArg[0]} ) ;		
+  local -a ArrayArg=( $* ) ; 
+  local -a __call_locality=( ZFR ZenityFileReader ${StrParentApps} ) ; 
+  local Arg0="${ArrayArg[0]}";		
   local StrTypeList="standard" ; 
   local StrSelectionCmd ; 
   local StrTypeListOpt ; 
@@ -3716,29 +3718,39 @@ function ZenityContentListing( )
   if [ ${BoolCheckList:=False} == "True" ] ; then
    StrTypeList="checklist" ;
   fi 
+  
   if [ ${BoolCheckListMulti:=False} == "True" ] ; then
    StrTypeList="multi" ;
   fi 
-  StrTypeListOpt=$( ${StrParentApps}  --get ArrayZenityTypeList[${StrTypeList}] ) ;   
+  StrTypeListOpt=$( ${StrParentApps} --get ArrayZenityTypeList[${StrTypeList}] ) ;   
   
   
-  StrZenityFilterCmd="""eval \$( VTVIsArrayStyleInsert=True VTVValueEntry=${StrVarList} VTVIsValueReAssign=True VTVIsValueToConvert=False VTVIsArrayStyleInsert=True ValueToVariable ) ZenityFilter ; """ ; 
+  StrZenityFilterCmd="""eval \$( eval VTVIsArrayStyleInsert=True VTVValueEntry=${StrVarList} VTVIsValueReAssign=True VTVIsValueToConvert=False VTVIsArrayStyleInsert=True ValueToVariable ) ZenityFilter ; """ ; 
   
   StrMsg="ZenityFilter Should return This command-line: __CMD__" ;
   VerbMsg=${StrMsg//__CMD__/${StrZenityFilterCmd}} VerbState=${BoolDisplayDebug} VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True StrDevOut=/dev/stderr Verbosis
 
-  StrSelectionCmd="""StrUserSelection=\$( zenity --width=__WIDTH__ --height=__HEIGHT__ --list --title \"${StrTitle}\" --column=\"${StrCol0}\" --column=\"${StrCol1}\" __LIST_TYPE__ \$( __ZenityFilter__  ) )""" ;
+  StrSelectionCmd="""StrUserSelection=\$( zenity --width=__WIDTH__ --height=__HEIGHT__ --list --title \"${StrTitle}\" --column=\"${StrCol0}\" --column=\"${StrCol1}\" __LIST_TYPE__ \$( __ZenityFilter__  ) 2> /dev/null )""" ;
   
-  eval StrTagParser=$( TPVarNameParsed="StrSelectionCmd" TPDisplayParserNotice=${BoolDisplayDebug} TPIsMatchRtoL=True TPDisplayDebug=${BoolDisplayDebug} TPArrayName=ArrayGPUTag TPListTag="${StrTagEntry}" TagParser ) ; 
+  eval StrTagParser=$( eval                   \
+    TPVarNameParsed="StrSelectionCmd"         \
+    TPDisplayParserNotice=${BoolDisplayDebug} \
+    TPDisplayDebug=${BoolDisplayDebug}        \
+    TPIsMatchRtoL=True                        \
+    TPArrayName=ArrayGPUTag                   \
+    TPListTag="${StrTagEntry}"                \
+    TagParser ) ; 
+
   local IRet=$? ;  
   StrMsg="Return Status of IRet: __IRET__,\nStrTagParser:__PARSER__\nStrSelectionCmd: __STR__" ;
 		StrMsg=${StrMsg//__PARSER__/${StrTagParser}} ;
 		StrMsg=${StrMsg//__IRET__/${IRet:=-1}} ;
 		StrMsg=${StrMsg//__STR__/${StrSelectionCmd}} ;
-  VerbMsg=${StrMsg} VerbState=${BoolDisplayDebug} VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True StrDevOut=/dev/stderr Verbosis
-  $( eval "${StrTagParser}" )  ;
+  VerbMsg=${StrMsg} VerbState=${BoolDisplayDebug} VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbDev=/dev/stderr Verbosis
+  ### Adding one more eval to this line and the error 'Arg0=: command not found' disapearing !
+  eval $( eval "${StrTagParser}" )  ;
   StrMsg="After TagParser Action: value of StrSelectionCmd:[ __STR__ ]" ;
-  VerbMsg=${StrMsg//__STR__/${StrSelectionCmd}} VerbState=${BoolDisplayDebug} VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True StrDevOut=/dev/stderr Verbosis
+  VerbMsg=${StrMsg//__STR__/${StrSelectionCmd}} VerbState=${BoolDisplayDebug} VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbDev=/dev/stderr Verbosis
   
   ### section here replaced by ValueToVariable 
   ###StrZenityFilter="""StrDefaultCSV=${StrDefaultCSV} \
@@ -3756,24 +3768,25 @@ function ZenityContentListing( )
   StrMsg="User selected: __USER__" ;
    
   ### Replace the Output for User-selected, aka Prefixed-Variable BoolShowUserSelection from ZCLSUS
-		VerbMsg=${StrMsg//__USER__/${StrUserSelection}} VerbHeader=DEBUG VerbFormated=True VerbState=${BoolShowUserSelection} StrDevOut=/dev/stdout  Verbosis
+		VerbMsg=${StrMsg//__USER__/${StrUserSelection}} VerbHeader=DEBUG VerbFormated=True VerbState=${BoolShowUserSelection} VerbDev=/dev/stdout  Verbosis ;
 		
   ### Replace the echo and the selected informations
   #echo "${StrUserSelection}" ; 
-  VerbMsg=${StrUserSelection} VerbHeader=DEBUG VerbEvalForm=True  VerbFormated=False VerbState=True StrDevOut=/dev/stdout  Verbosis
+  VerbMsg=${StrUserSelection} VerbEvalForm=True  VerbFormated=False VerbState=True Verbosis ; 
  }
 
  function __main_StartServices()
  {
+		local ArrayArg=( $* ) ; 
 		local __call_locality=( Main __main_StartServices ) ; 
 		local Arg0=${ArrayArg[0]} ; 
-		local ArrayArg=( $* ) ; 
   
-  eval $( VTVIsArrayStyleInsert=True \
+  eval $( eval \
+  VTVIsArrayStyleInsert=True  \
   VTVValueEntry=${StrVarList} \
-  VTVIsValueReAssign=True  \
-  VTVIsValueToConvert=False \
-  VTVIsArrayStyleInsert=True \
+  VTVIsValueReAssign=True     \
+  VTVIsValueToConvert=False   \
+  VTVIsArrayStyleInsert=True  \
   ValueToVariable ) ZenityFileReader
   
  }
@@ -3784,6 +3797,7 @@ function ZenityContentListing( )
  local StrSummary="First it's an helper reserved to choose a user to load the application under a specific name. Used in PackageRepositoryMgmt to select or visualize the UNIQUE-ID snapshoot of maintained archives linked to a backup place to reduce size of /var this application is quite useful if you know how to specify and pass a regular-expression to internal function to ZenityFilter." ; 
  local StrDescription="\nVariable helper:\n\nZCLIsCheckList\t\tSet True/False, To use a checkboxlist rather than move the radio-buton to your item inside the list. \nZCLIsCheckListMulti\tSet True/False, To activate Multiple selection and Checkboxlist altogether.\n\n\t\tOnly one of the two is affecting the Zenity List interface at the time. Changing the selection to check-list and choosing none of them is retoring the interface to a radio-button action.\n\n\tInterface Field and File-reader options:\n\nZCLFilePasswd\tFILENAME, File choosed to read out, Belong to GksuZenityLoader reference to use the sudo belong to user to load the application it read user list from /etc/passwd, from PackageRepositoryMgmt it read the latest file (named latest after doing package transfert)\nZCLRegSearch\tSTRING The Regular Expression to search by column lines. In /etc/passwd it's all user having /bin/bash like shell, but a line start with anything can be [A-Za-z0-9]* Some case require good quoting or error will happen...\nZCLColExtr\tINT 0 .. NF Tel to ZenityContentListing which column to display or to read from your CSV match\nZCLCSV\t\tCHAR, Variable used as CHAR identifier in Comma Separated Value and usually choosed ':' or ','. We strongly suggest to wrap your CSV choice with single quote/guillemets mandatory for semi-colon : ';' \n\n\tInterface options:\n\nZCLTitle\tTo Define a Title (suggested to use simple or triple quotes ) ; ZCLTitle have property to hold a Tag named __APPS__ and will hold the application name, adding this tag to the property of ZCLTitle will parse-it.\nZCLCol0\t\tFirst Column a.k.a selection column it take the name of the action when the second one is a file-list as example (ZCLCol0=\"file deletion\")\nZCLCol1\t\tSecond Column name always represent the listing desired, in case of filtering file /etc/passwd it take the user result in CSV=1, at CSV=7 it take the shell per-user.\nZCLWidth\tWidth Size or X-axis of the List-Box. \nZCLHeight\tHeight or Y-axis of the List-Box.\n\n\tGkSuZenityLoader options:\n\nZCLSUS\t\tOption to Set True/False to change the output to Desired GkSuZenityLoader requirement to format the output to form a sentences from selection and should be inserted inside a Text-dialog." ;
  
+ ### This is the end-block-if for switches
   
  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
 			GVRIsName=True GVRIsSynopsis=True GVRIsSummary=True GVRIsDesc=True GetVarReference ${__call_locality[1]} ; 
@@ -3793,15 +3807,15 @@ function ZenityContentListing( )
 		echo -ne """${ArgGet}\n""" ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
 		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
+ elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
+		eval $( __GetVarReferenceCompWord ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
-  eval $( VTVIsArrayStyleInsert=True \
+  eval $( eval VTVIsArrayStyleInsert=True \
        VTVValueEntry=${StrVarList}   \
        VTVIsValueReAssign=True       \
        VTVIsValueToConvert=False     \
        VTVIsArrayStyleInsert=True    \
-       ValueToVariable ) __main_StartServices
- elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
-		eval $( __GetVarReferenceCompWord ) ;
+       ValueToVariable ) ${StrStartMain}
 	fi
  
 }
@@ -3810,15 +3824,50 @@ function ZenityContentListing( )
 unset GkSuZenityLoader ; 
 function GkSuZenityLoader()
 {
-	local __call_locality=( GSZL GkSuZenityLoader ) ; 
+  function Verbosis()
+  {
+   #eval $( CAFunctName=Verbosis CAIsAddParent=False __Call_Argument ) ; 
+   local -a ArrayArg=( $* ) ; 
+   local -a __call_locality=( Verb Verbosis )
+   local StrMsg=${VerbMsg:=__TEXT__} ; 
+   local StrDevOut=${VerbDev:=/dev/stderr} ; 
+   local IsVerboseState=${VerbState:=False} ;
+   local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+   local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+   local IsDisplayFormatted=${VerbFormated:=True} ;
+   local IsAppendMode=${VerbAppendDev:=False} ; 
+   if [ "${IsVerboseState:=False}" == "True" ] ; then 
+    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+     if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
+     else  
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+     fi
+    else
+     if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+        echo "${StrMsg}" ;  
+     else
+      if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo "${StrMsg}" >> ${StrDevOut} ;
+      else
+       echo "${StrMsg}" > ${StrDevOut} ;
+      fi
+     fi 
+    fi 
+   fi
+  } 
+  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
+ 
 	local ArrayArg=( $* ) ; 
- local Arg0=( ${ArrayArg[0]} ) ;
-
-	local StrUser=${GSZLUser:=none}
-	local StrApps=${GSZLApps:=/usr/local/bin/idlex}
+	local __call_locality=( GSZL GkSuZenityLoader ) ; 
+ local Arg0=${ArrayArg[0]};
+ local StrStartMain=${GSZLFunctStart:=__main_StartServices} ; 
+	local StrUser=${GSZLUser:=none} ;
+	local StrApps=${GSZLApps:=/usr/local/bin/idlex} ;
 	local StrAppsOpt=${GSZLAppsOpt:=''} ;
 	local StrTitle=${GSZLTitle:="Select a user for Idlex"} ;
 	local StrFileInfo=${GSZLFile:=/etc/passwd} ;
+ local StrUserListApps=${GSZLUserListApps:=ZenityContentListing}  ; 
 	local StrCol0=${GSZLCol0:="selection"} ;
 	local StrCol1=${GSZLCol1:="user"} ;
 	local StrRegSearch=${GSZLRegSearch:="\/bin\/bash"}
@@ -3827,18 +3876,20 @@ function GkSuZenityLoader()
 	local BoolShowUserSelection=${GSZLSUS:=False} ;
  local BoolUpdateLdconfig=${GSZLUpdadeLdconfig:=True} ;
  local StrLdConfigUser=${GSZLLdconfigUser:=root} ;
- local StrLdconfigGreeting=${GSZLLdconfigGreeting:='\n\nHint\nLoading ldconfig on need if some module require to be loaded from ldconfig ( ex: from pip installation or easy_setup.py ) It can be accessible thru Prefixed-var GSZLUpdadeLdconfig=True from GkSuZenityLoader.\n\n'}
+ local StrLdconfigGreeting=${GSZLLdconfigGreeting:="Hint: Loading ldconfig on need if some module require to be loaded from ldconfig ( ex: from pip installation or easy_setup.py ) It can be accessible through Prefixed-var GSZLUpdadeLdconfig=True from GkSuZenityLoader."} ;
 	local BoolShowFGSZ=${GSZShowFuncGSZ:=True} ; 
+ local BoolDisplayDebug=${GSZDisplayDebug:=False} ; 
+ local StrVarList="BoolDisplayDebug,StrLdConfigUser,StrUser,StrApps,StrAppsOpt,StrTitle,StrFileInfo,StrCol0,StrCol1,StrRegSearch,StrDefaultCSV,IntDefaultColExtr,BoolShowUserSelection,BoolUpdateLdconfig,StrLdconfigGreeting,BoolShowFGSZ,StrVarList";
    
  function NotificationLdConfig()
  {
-		local __call_locality=( NLC NotificationLdConfig ) ; 
 		local ArrayArg=( $* ) ; 
+		local __call_locality=( NLC NotificationLdConfig ) ; 
   local Arg0=${ArrayArg[0]} ;
   
-  local StrTextNotification=${NLCNotifyText:=You will be prompted for password to load __APPS__ with __APPS__ user allowed: __USER__} 
+  local StrTextNotification=${NLCNotifyText:="You will be prompted for password to load __APPS__ with __APPS__ user allowed: __USER__"} 
   local StrUser=${NLCAppsUser:=root} ; 
-  local StrApps=${NLCAppsName:=ldconfig} ; 
+  local StrApps=${NLCAppsName:=/sbin/ldconfig} ; 
   local StrTagUser=${NLCTagUser:=__USER__} ;
   local StrTagApps=${NLCTagApps:=__APPS__} ;
   StrTextNotification=${StrTextNotification//${StrTagUser}/${StrUser}} ;
@@ -3858,25 +3909,29 @@ function GkSuZenityLoader()
  
  function LdconfigNotification()
  {
-		local __call_locality=( LN LdconfigNotification ) ; 
 		local ArrayArg=( $* ) ; 
+		local __call_locality=( LN LdconfigNotification ) ; 
   local Arg0=${ArrayArg[0]} ;
   NotificationLdConfig ; gksu --user ${StrLdConfigUser} ldconfig
  }
  
 	function Loader()
 	{
-		local __call_locality=( Loader Loader ) ; 
 		local ArrayArg=( $* ) ; 
+		local __call_locality=( L Loader ) ; 
   local Arg0=${ArrayArg[0]} ; 
-  eval $( BVTVarName=StrAppsLd \ 
+  eval $( eval BVTVarName=StrAppsLd \ 
+          BVTDisplayIf=${BoolDisplayDebug} \
+          BVTDisplayShowDebug=${BoolDisplayDebug} \
           BVTVarHold='StrLdconfigGreeting='${StrLdconfigGreeting}' ScreenDisplayLdconfigHint' \
           BVTBoolVarName=\${BoolUpdateLdconfig} \
           BVTBoolCase=True \
           BVTBoolAssertion='LdconfigNotification' \
           BVTScopeTest=local \
           BoolVarTest ) ; 
-  eval $( BVTVarName=StrLdConfigLoad \
+  eval $( eval BVTDisplayIf=${BoolDisplayDebug} \
+          BVTDisplayShowDebug=${BoolDisplayDebug} \
+          BVTVarName=StrLdConfigLoad \
           BVTVarHold='$( eval ${StrAppsLd} )' \
           BVTBoolVarName=\${BoolUpdateLdconfig} \
           BVTBoolCase=True BVTBoolAssertion='$( eval ${StrAppsLd} )' \
@@ -3891,35 +3946,69 @@ function GkSuZenityLoader()
 		local __call_locality=( Main __main_StartServices ) ;
 		local Arg0=${ArrayArg[0]} ;
 		local ArrayArg=( $* ) ; 
+  
  
-  #local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\n" ;   
-  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
-  if [ "${StrUser:=none}" ==  "none" ] ; then 
-   StrUser=$( ZCLCSV=${StrDefaultCSV} \
-      ZCLColExtr=${IntDefaultColExtr} \
-      ZCLFilePasswd=${StrFileInfo} \
-      ZCLTitle=${StrTitle} \
-      ZCLCol0=${StrCol0} \
-      ZCLCol1=${StrCol1} \
-      ZCLRegSearch=${StrRegSearch} \
-      ZCLSUS=${BoolShowUserSelection} ZenityContentListing ) ; 
-  fi 
+   ### Our Rosetta-Pebble Story...  Rosetta Stone : https://en.wikipedia.org/wiki/Rosetta_Stone 
+   ### This version of if user==None -> do call ZenityContenteListing to query 
+   ### for a user name to load the application. It require a simple change inside 
+   ### the Prefixed-variable BVTVTVTPLA for Assertion-ValueToVariable method to include
+   ### a variable to receive the value... 
+   ### A few way to no getting this automatically replaced by 
+   ### >>> StrNewTemplateAssertion=$( BoolVarTest --get BVTVTVTPLA ) | sed 's/\(__FNCT_ASRT__\)/StrUser=__TES__ \1 __TEE__/g'
+   ### Where I leave it for Super-USer, and higher-skills. 
+   
+   local StrNewTemplateAssertion="eval __TES__ eval __REGISTRY_ASRT__ VTVValueEntry=__VAR_ENTRY_ASRT__ ValueToVariable __TEE__ StrUser=__TES__ __FNCT_ASRT__ __TEE__ " ; 
+   eval $( BVTDisplayIf="${BoolDisplayDebug}"       \
+           BVTDisplayShowDebug="${BoolDisplayDebug}"\
+           BVTIsPreambule=False BVTBoolCase='none'  \
+           BVTIsValueToVarAssert=True               \
+           BVTBoolVarName="\${StrUser:=none}"       \
+           BVTVTFnctA="\${StrUserListApps}"         \
+           BVTVTVVarA="${StrVarList}"               \
+           BVTVTVTPLA="${StrNewTemplateAssertion}"  \
+           BoolVarTest ) ; 
+   local StrMsg="User inside varible StrUser:__VAR__" ;
+   
+   StrMsg=${StrMsg//__VAR__/${StrUser}} ; 
+   VerbMsg=${StrMsg} VerbHeader="DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis
+   
+   ### While this code was also being synthetized up-there 
+   #if [ "${StrUser:=none}" ==  "none" ] ; then 
+   # eval StrUser=$( eval VTVIsArrayStyleInsert=True   \
+   #              VTVValueEntry=${StrVarList} \
+   #              VTVIsValueReAssign=True     \
+   #              VTVIsValueToConvert=False   \
+   #              ValueToVariable ) ZenityContentListing ;
+   ### This code was replaced by the content up-there
+   #StrUser=$( ZCLCSV=${StrDefaultCSV} \
+   #   ZCLColExtr=${IntDefaultColExtr} \
+   #   ZCLFilePasswd=${StrFileInfo} \
+   #   ZCLTitle=${StrTitle} \
+   #   ZCLCol0=${StrCol0} \
+   #   ZCLCol1=${StrCol1} \
+   #   ZCLRegSearch=${StrRegSearch} \
+   #   ZCLSUS=${BoolShowUserSelection} ZenityContentListing ) ; 
+   #fi 
   if [ "${StrUser:=none}" == "none" ] ; then 
    echo -ne "Warning Invalid user: ${StrUser}\n" > /dev/stderr ; 
   else
-   StrUser=${StrUser}                         \
-   StrApps=${StrApps}                         \
-   StrAppsOpt=${StrAppsOpt}                   \
-   StrLdConfigUser=${StrLdConfigUser}         \
-   BoolUpdateLdconfig=${BoolUpdateLdconfig}   \
-   StrLdconfigGreeting='${StrLdconfigGreeting}' \ 
-   Loader ;
+  eval $( eval VTVIsArrayStyleInsert=True   \
+                VTVValueEntry=${StrVarList} \
+                VTVIsValueReAssign=True     \
+                VTVIsValueToConvert=False   \
+                ValueToVariable ) Loader ;
   fi 
   
  }
  
+ local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+ local StrNameHelper="GkSuZenityLoader\tA General-Purpose Zenity Userlist calling gksudo and the application ; The Fnct.D Mechanism to load the application by user right. This is done with gksudo application made it easy to handle. ";
+ local StrSummary="While script aren't easy adding exrta-command line for security question, handling GkSuZenityLoader only one Prefixed-Variable GSZLApps allow you to simply choose the user with Zenity List and to confirm password and the application is ready to open with appropriate user restriction . " ; 
+ local StrSynopsis="Since it's becoming more and more easy to make script and development library with Bash, Execution Right and Userr Access are sometime neglected. Using such script may help managing user need and dedicated acount.";
+ local StrDescription="Most simplest way to call-it\n\n\tUsing Firefox as example:\n\n\tGSZLApps=/usr/bin/firefox GkSuZenityLoader\n\n\tHaving Some library update to do before, adding GSZLUpdadeLdconfig=True to command will enhance this task.\n\n\tGSZLUpdadeLdconfig=True GSZLApps=/usr/bin/firefox GkSuZenityLoader" ;
+ 
  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-			GetVarReference ${__call_locality[1]} ; 
+			GVRIsName=True GVRIsSynopsis=True GVRIsSummary=True GVRIsDesc=True  GetVarReference ${__call_locality[1]} ; 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
@@ -3929,13 +4018,13 @@ function GkSuZenityLoader()
  elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
 		eval $( __GetVarReferenceCompWord ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
-			StrUser=${StrUser}                       \
-   StrApps=${StrApps}                       \
-   StrAppsOpt=${StrAppsOpt}                 \
-   StrLdConfigUser=${StrLdConfigUser}       \
-   BoolUpdateLdconfig=${BoolUpdateLdconfig} \
-   __main_StartServices
-	fi
+  eval $( eval VTVIsArrayStyleInsert=True   \
+                VTVValueEntry=${StrVarList} \
+                VTVIsValueReAssign=True     \
+                VTVIsValueToConvert=False   \
+                ValueToVariable ) ${StrStartMain} ;
+ 
+ fi
 }
 
 unset UUIDHelper 

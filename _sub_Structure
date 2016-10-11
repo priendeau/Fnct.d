@@ -1388,18 +1388,17 @@ fi
  ###
 
 if [ "${versionTP:=0.0.2}" == "0.0.2" ] ; then 
-
+ unset TagParser ; 
  function TagParser( )
  {
   local -a ArrayArg=( $* ) ; 
   local -a __call_locality=( TP TagParser ) ;
   local Arg0="${ArrayArg[0]}" ;
-  
   local StrTagList=${TPListTag:=StrA:__TAGA__,StrB:__TAGB__,IntA:__INT__} ; 
   local StrArrayName=${TPArrayName:=ArrayTagParser} ;
   local StrIterName=${TPIterNameVar:=TagParser} ;
   local StrLeftPattern=${TPLeftStrPtrn:='[SIB][tnos][a-zA-Z0-9_]*:'} ; 
-  local StrRightPattern=${TPRightStrPtrn:=':__[A-Za-z0-9_,]*'} ;
+  local StrRightPattern=${TPRightStrPtrn:=':__[A-Za-z0-9\_]*'} ;
   local StrScopeVar=${TPScopeVar:=local} ; 
   local StrVarAssign=${TPVarNameParsed:=StrVarEntry} ;
   local BoolInvertPairMatch=${TPIsMatchRtoL:=True} ;
@@ -1407,8 +1406,10 @@ if [ "${versionTP:=0.0.2}" == "0.0.2" ] ; then
   local BoolDisplayEvalOnly=${TPDisplayEvalOnly:=False} ;
   local BoolDisplayParserAction=${TPDisplayParserNotice:=False} ; 
   local BoolUsingSed=${TPUsingSedTrim:=True} ;  
+  local StrStartMain=${TPFuncStart:=__main_StartServices} ; 
+  local StrParentApps=${__call_locality[1]} ;
   ### 20161004 - Added BoolUsingSed, set it to False will filter StrInitCmd with tr instead 
-  local StrVarList="BoolUsingSed,BoolDisplayParserAction,BoolInvertPairMatch,BoolDisplayEvalOnly,StrTagList,StrArrayName,StrIterName,StrLeftPattern,StrRightPattern,StrCmd,StrScopeVar,StrVarAssign" ; 
+  local StrVarList="StrMainStart,StrParentApps,BoolUsingSed,BoolDisplayParserAction,BoolInvertPairMatch,BoolDisplayEvalOnly,StrTagList,StrArrayName,StrIterName,StrLeftPattern,StrRightPattern,StrCmd,StrScopeVar,StrVarAssign" ; 
   
   ### Removed by confusion in code transformation . 
   ###local StrVarEntry=${TPVarEntry:=StrEntry} ; 
@@ -1474,7 +1475,7 @@ if [ "${versionTP:=0.0.2}" == "0.0.2" ] ; then
   function __main_StartServices()
   {
    local -a ArrayArg=( $* ) ; 
-   local -a __call_locality=( Main __main_StartServices ${StrParent} ) ;
+   local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
    local Arg0="${ArrayArg[0]}" ;
    local -a ArrayTagParser=( ${StrTagList//,/ } ) ; 
   
@@ -1556,6 +1557,8 @@ if [ "${versionTP:=0.0.2}" == "0.0.2" ] ; then
   local StrSummary="Providing a Text transformation from provided varaible name inside  parameter. Content expect to exist inside a function, this is a provided evaluation of a loop transformaing an Entry variable name from tag supplied. Noted the evaluation brace is required, a.k.a \$( TP...=... eval TagParser ) to add the code directly inside your function. The mechanism allow uses of definied array of desired scope type it is not desctructive for array and does not give the destruct code for Variable name such Array inside Prefixed-Variable TPArrayName."
   local StrDescription="\nParser notice\n\n  TPListTag\tSTRING Depending of the Prefixed Variable TPIsMatchRtoL it taking form VARIABLE:__TAG__ and are comma separated value\n  TPArrayName\tSTRING Falcutative depending the number of reccurrence of the Parser not executed and may interfer if the Parser Code is mangled and if extended Choice are affected to erase the unset at the end. Sometimes the array name can already be in uses and may affect your operation.\n\n  TPIterNameVar\tSTRING Falcutative, change the String-Iterated item looped inside the Array.\n  TPVarNameParsed\tSTRING Is the entry varaible holding the CODE/Template with __TAG__ to be parsed. We advise using a copy of this Variable because it re-write the content of it.\n  TPScopeVar\tSTRING and can be single-quoted STRING, Inside function 'local' is important or your function will use external variable. making it public or external use declare instead.\n\n  TPLeftStrPtrn\tSTRING Regular expression from Variable substitution algorithm, it remove the Left Side to kept the right side Be careful with this.\n  TPRightStrPtrn\tSTRING Regular expression from Variable substitution algorithm suppress the __TAG__ form to keep the variable name usually, becarefull uses ${VAR/#PTRN/'SEP'} and ${VAR/%'SEP'PTRN} method see in Bash document.\n\nBoolean variable notice:\n\n  TPIsMatchRtoL\t\tSet To True/False Invert Composition of tag in your design, Set to TRUE Variable in TPListTag required to be composed in form VARIABLE:__TAG__, if FALSE in form __TAG__:Variable\n\n  TPDisplayDebug\t\tSet To True/False Display Extra Debug during action, all outputed to /dev/stderr to not confuse the parser.\n  TPDisplayEvalOnly\tSet To True/False Allow displaying the Injected code in eval function using the Tag Parser.\n  TPDisplayParserNotice\tSet To True/False For function equiped of a Verbosis see fnct_debian_list for Verbosis example and will display by Tag pair the result the exanche and actual qiery it should happen after the Parsing.\n" ; 
   
+  ### End-function block for switches handling. 
+  
   if [ "${Arg0:=--startservices}" == "--help"	] ; then 
     GVRIsName=True GVRIsSynopsis=True GVRIsSummary=True GVRIsDesc=True GetVarReference ${__call_locality[1]} ; 
     VerbMsg=${StrSwitchMessages} VerbDev=/dev/stderr VerbState=True VerbFormated=False VerbHeader="" Verbosis ; 
@@ -1567,11 +1570,11 @@ if [ "${versionTP:=0.0.2}" == "0.0.2" ] ; then
   elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
    eval $( __GetVarReferenceCompWord ) ;
   elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
-   eval $( VTVValueEntry=${StrVarList}, \ 
-           VTVIsArrayStyleInsert=True \
-           VTVIsValueReAssign=True \
-           VTVIsValueToConvert=False \
-           ValueToVariable  ) __main_StartServices ; 
+   eval $( eval VTVValueEntry=${StrVarList} \ 
+           VTVIsArrayStyleInsert=True        \
+           VTVIsValueReAssign=True           \
+           VTVIsValueToConvert=False         \
+           ValueToVariable   ) ${StrStartMain} ; 
   fi 
   
  }
