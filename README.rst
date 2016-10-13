@@ -3394,8 +3394,8 @@ Example: 2
    if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
      ###   +---------> Calling signature. If you try GetStdPrefixName on 
      ###   |           function name GnrlPrsrInfctr, you will get GPI
-     ###	  |
-     ###	  |
+     ###   |
+     ###   |
      ### See Notice [second]_
      local -a ArrayArg=( $* ) ;
      local -a __call_locality=( GPI GnrlPrsrInfctr ) ;
@@ -3409,6 +3409,7 @@ Example: 2
      ### See Notice [fourth]_
      eval $( eval CAFunctName=GnrlPrsrInfctr CAIsAddParent=False CallArgument ) ; 
   fi
+  
   ### This is an evaluation test GnrlPrsrInfctr, for having installing extras
   ### package toward Zenity-Dbus problem and after a reboot, the evaluation 
   ### start to flaw and solution like echo inside an eval is not quite acceptable:
@@ -3426,9 +3427,9 @@ Example: 2
   
   function __main_StartServices()
   {
-		  ###   +---------> Calling signature. If you try GetStdPrefixName on 
-		  ###   |           function name __main_StartServices, you will get SS, but 
-		  ###	  |           CallArgument family does handle an exception here and call it 
+    ###   +---------> Calling signature. If you try GetStdPrefixName on 
+    ###   |           function name __main_StartServices, you will get SS, but 
+    ###	  |           CallArgument family does handle an exception here and call it 
     ###   |           Main [sixth]_
     ###   |
    if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
