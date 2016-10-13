@@ -3362,34 +3362,32 @@ __GetVarReferenceCompWord, __GetVarReferenceList.
            fi
           }
 
-	
-	Example: 2
+
+Introduction to GnrlPrsrInfctr. 
+
+GnrlPrsrInfctr is also called General-Parser-Infrastructure which is a future key in function handling and coumpound-command uses inside function should I suggest you a better way to code your action of calling a command-line to later introduce this application like middle-ware required to register a so 'often-called ' action inside a Registered event to re-useit like instance of that command or synthetized from this knowledge and using a co-instance of something familiar to the code to let you monitor the flow and having hand in by analyzing your function to a lower cost of development. Made out TagParser it act like know Function name ( BoolVarTest / BoolVarTestVarCreation ) which manage if-statement, this application seriously use the TagParser ability to parse and integrate code inside your actual development, then I do decide to produce a similar effect of gathering the Parsing complexity in many command piped and filtered to get a result into an effect eliminated from sub-function problem. Know problem is isolation, a know application being wrapped-in a function do require lot of variable to touch the application[sixth]_
+
+Extended Example . 
+
+While the code is evolving in time, we can work with version of function.
+This imply having more than one corresponding goal and being writed in many
+version. As example before upcoming of CallArgument, it exist a functionnal
+__Call_Argument and even before the initial __call_locality declared by hand 
+inside a top-function entry.  Working with version of function imply making
+if statement to control which is turned-on'n[first]_ correct time .
+
+ Supposing having function __Call_Argument / CallArgumemt to manage inside the code for evaluate your need's we shall consider Version of Fnct.D start at 0.0.0 and does only support __call_locality Array.
+ 
+Version of Fnct.D start at 0.0.1 does support __CallArgument where it's invisible to completion word and activating Compword and looking for this function will never work
+ 
+Version of Fnct.D start at 0.0.2 does Support CallArgument, visible from any sub functionnality
+of bash, it does having ability to make the whole declaration of __call_locality, BootStrap name  	
+
+Example: 2
+
 
 .. code:: shell
 	
- ### 
-	### Extended Example . 
-	###
-	### While the code is evolving in time, we can work with version of function.
-	### This imply having more than one corresponding goal and being writed in many
-	### version. As example before upcoming of CallArgument, it exist a functionnal
- ### __Call_Argument and even before the initial __call_locality declared by hand 
- ### inside a top-function entry.  Working with version of function imply making
- ### if statement to control which is turned-on'n[first]_ correct time .
-	###
-	### Supposing having function __Call_Argument / CallArgumemt to manage inside the 
-	### code for evaluate your need's we shall consider  
-	### Version of Fnct.D start at 0.0.0 and does only support __call_locality Array.
-	### 
-	### Version of Fnct.D start at 0.0.1 does support __CallArgument where it's invisible
-	### to completion word and activating Compword and looking for this function will never work
-	### 
-	### Version of Fnct.D start at 0.0.2 does Support CallArgument, visible from any sub functionnality
- ### of bash, it does having ability to make the whole declaration of __call_locality, BootStrap name
- ### and 
-	### 
-
-
   function GnrlPrsrInfctr()
   {  
    if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
@@ -3462,6 +3460,51 @@ __GetVarReferenceCompWord, __GetVarReferenceList.
    
  }  	
 
+So Here a method developped to touch and uses variable from Library declared inside _sub_Structure and _sub_Function_Appliance which handle strict versionning of function and do require to call either the version of Function required ( like versionCA=0.0.2 GnrlPrsrInfctr ), or to export from your .bashrc all intended version, at this moment I do recommend to add variable like versionTP, versionGCT, versionGPI, versionCA, versionGSPN to appropriate version. Idem for those who love to play with alpha-stuff and non official version of application, using the common version controlled which is a function held inside your .bashrc (I do recommend to create it and change your version from there .) calling function like :
+
+.. code:: shell
+
+ eval $( FnctDVersion ) __FUNCTION__ 
+
+.. code:: shell
+
+ ### Definition of FnctDVersion 
+ ### This code do :
+ ### 1- creating the version required to add like pre-fixed variable to your application 
+ ### 2- to export directly to your Environment so next call will not require to call FnctDVersion
+ ### unless you decide to change version inside your .bashrc .  
+ 
+ ### So inside the .bashrc file : 
+ export ORIGINVERSION=0.0.0 ;
+ export DEVELVERSION=0.0.1 ;
+ export THISVERSION=0.0.2 ; 
+
+ declare -A ArrayFnctDVersion ;
+ ArrayFnctDVersion["versionTP"]=${THISVERSION}
+ ArrayFnctDVersion["versionGCT"]=${DEVELVERSION} ;
+ ArrayFnctDVersion["versionGPI"]=${DEVELVERSION} ;
+ ArrayFnctDVersion["versionCA"]=${THISVERSION} ;
+ ArrayFnctDVersion["versionGSPN"]=${THISVERSION} ;
+
+
+
+ function FnctDVersion()
+ {
+  local StrExportVar="__VAR__" ; 
+  for VerName in ${!ArrayFnctDVersion[@]} ; do 
+   StrVersion=${ArrayFnctDVersion[${VerName}]} ;
+   echo -ne "Set FunctionTrigger:${VerName} Version:${StrVersion}\n" > /dev/stderr ; 
+   StrExportVar=${StrExportVar//__VAR__/${VerName}=${StrVersion} __VAR__}
+   export ${VerName}=${StrVersion} ; 
+  done 
+  StrExportVar=${StrExportVar//__VAR__/} ;
+  echo ${StrExportVar} ;  
+ }
+
+
+
+
+Quoted Information from this chapter : 
 
 
  .. [first] : Lexical uses of Crying n, while sentence is which is turned-on on correct time. we can reduce the turned-on expression into turned-on'n and neglect the rest of the sentence 
