@@ -3362,10 +3362,12 @@ __GetVarReferenceCompWord, __GetVarReferenceList.
            fi
           }
 
-.. code:: shell
 	
 	Example: 2
-	### 
+
+.. code:: shell
+	
+ ### 
 	### Extended Example . 
 	###
 	### While the code is evolving in time, we can work with version of function.
@@ -3391,17 +3393,17 @@ __GetVarReferenceCompWord, __GetVarReferenceList.
   function GnrlPrsrInfctr()
   {  
    if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
-   ### See Notice [second]_
+     ### See Notice [second]_
      local -a ArrayArg=( $* ) ;
      local -a __call_locality=( GPI GnrlPrsrInfctr ) ;
      local Arg0="${ArrayArg[0]}";  
      local StrStartMain=${GPIFuncStart:=__main_StartServices} ; 
      local StrParentApps=${__call_locality[1]} ; 
    elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
-   ### See Notice [third]_
+     ### See Notice [third]_
      eval $( eval CAFunctName=GnrlPrsrInfctr CAIsAddParent=False __Call_Argument ) ; 
    elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
-   ### See Notice [fourth]_
+     ### See Notice [fourth]_
      eval $( eval CAFunctName=GnrlPrsrInfctr CAIsAddParent=False CallArgument ) ; 
   fi
   ### This is an evaluation test GnrlPrsrInfctr, for having installing extras
@@ -3459,7 +3461,9 @@ __GetVarReferenceCompWord, __GetVarReferenceList.
   fi
    
  }  	
- 
+
+
+
  .. [first] : Lexical uses of Crying n, while sentence is which is turned-on on correct time. we can reduce the turned-on expression into turned-on'n and neglect the rest of the sentence 
  .. [second] : This is the know signature required for GetVarReference to start looking inside the function and extract know variable based on it's Prefixed-signature. Your design will work without this implmentation but you will not get access and convenient of using switch helper, switch getter, switch listing and compword which are all good key to allow you code to be understand and documented and even being integrated inside the BuildForm Method.
  .. [third] : Invisible to compword the design of Fnct.D version 0.0.1 is reserved for function having not intention to uses compword so Hard-stated function do not required to be such convenient have comp-word isolation for some testing purposes, like Bash-command line with Fully-decorated with Ansi coloured caracter coed inside PS1, PS2 variable may broke compoword view. 
