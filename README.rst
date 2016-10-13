@@ -1700,15 +1700,12 @@ commonly a result WHERE:
  
  - IT uniformely depend of an application offering information and REQUIRE to obtain a sub-set of 
  this result. 
-
 - A result from the parser is not it's result itself. 
-
  - Once parsed it CAN either be stored for later uses or reference. 
   - Stored for uses imply evaluating a result or simple get the answer inside an automated engine 
     producing result to be observed . 
  - The pared result it at first a command line know to be visible and having acheived it's variable 
    and/or tag association from a variable result. 
-   
  - The General Parser Infrastructure is able to define it's action with prefixed-varaible to :
   - Execute the command-line parsed. 
    - result from Executed command line can either be displayed or be stored. 
@@ -1716,30 +1713,25 @@ commonly a result WHERE:
    called Zenity windows management tool rich in windows-widget format to provide to user 
    of Gtk, Mate, and compatible form of Windows manager to support Zenity offering a text-field
    with ability to display the result. 
-   
    - by STORING the content it's stored belong to parameter passed to the application where initial
    form invite to create a repository and keep this information here. Management of this repository 
    is not the intended task of 'GnrlPrsrInfctr' but do have something with repository Creation. 
    - by STORING the information , the mechanism allow to get the result from THIS location and SHALL
    have a mechanism explained to get this informations.  
-   
   - Generate code know to be the command-line parsed . 
    - Since this application is designed in a wider plan it was designed to generate-only and offer 
    to code genration, ability to put this element inside a variable and this finite information is
    executable afer many uses, as long the life-cycle of the application as not reached the end. 
     This variable is defined by the Parameter to the application to pass to ensure an existance over
     execution of GnrlPrsrInfctr.  
-    
  - The General Parser Infrastructure DOES NOT control right of uses of this command line and generated 
    code from IT's action and require your own knowledge of your environment to prepend SUDOER command 
    allowing the execution being correctly done. 
-   
  - The General Parser Infrastructure DOES own minimalistic language and having Strict uses of variable
    representation inside it's Definisor called Template entry and Template Feeder and uses of a Master 
    dictionnary which is open to the application and yield by the command-line, Strictness of oblitering 
    one WORD from this dictionnary is responsible to broke the engine and not offering the capability 
    developped. 
-   
    - The Dictionnary start with the word and required Pipe word and this is equivalent to COMMAND | COMMAND
    and this word start with definition of existing from variable 'StrDefaultPipe' which is the definition.
    The definition extension for some Entrant like file for Filter operation or existing inside the 
@@ -1747,13 +1739,13 @@ commonly a result WHERE:
    with GPIFilterOpt which is name inside a Pre-fixed variable and does not broke the engine IF and ONLY 
    IF specification of name __FILE__ is not used or usefull.
   - The General Parser Infrastructure minimalistic can brought from Prefixed-List if variable and do accept
-  to  add definition to  it's  dictionnary  template and  do have to handle  this to  extend it's parsing 
-  knowledge.
-  
+   to  add definition to  it's  dictionnary  template and  do have to handle  this to  extend it's parsing 
+   knowledge.
   - The General Parser Infrastructure minimalistic language come from ancestor application name TagParse,
   and it's Template engine is similar to know writing Dictionnary/Template DOES own a Specification also
   available inside this document to inform how this Library work. 
-
+  
+  
   In  Second  The General Parser Infrastructure , call Type Function  'GnrlPrsrInfctr'  having  another 
   structure  where  I call it  'Infrastructure' for  owning ability  to create a Repository to  hold the 
   information  if a Project or Structure bigger than one function does  require a Physical  location  to 
