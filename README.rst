@@ -1181,7 +1181,7 @@ While BoolVarTestVarCreation is a low-level call indirectly call by ValueToVaria
 
 :Note: 23082f68-76f7-11e6-8b1d-001e4c8856d6
 :Title: Possible leak in evaluation-statement or during parsing of command With Sed inside ValueToVariable.
-:Reference: Developement
+:Reference: Development
 :Reference: Warning
 :Function: ValueToVariable
 
@@ -1682,6 +1682,194 @@ The Next Function will be delivered soon and is an helper feeding informations t
   ### Output Generated Skipped. 
   ###
 
+
+
+:Note: a887bb9e-9188-11e6-8b1d-001e4c8856d6
+:Title: First Type Function for Helper and Storage of multiple-state and form of result. 
+:Method: General Parser Infrastructure with repository creation. 
+:Function: GnrlPrsrInfctr
+:Reference: Implementation. 
+:Reference: Development
+
+GnrlPrsrInfctr
+~~~~~~~~~~~~~~
+
+This function will appear in late version 0.0.1 effort of Fnct.D  and version 0.0.2 of Fnct.D after 
+validating all test inside error-fix.txt in many state this function may offert. State of result are 
+commonly a result WHERE: 
+ 
+ - IT uniformely depend of an application offering information and REQUIRE to obtain a sub-set of 
+ this result. 
+
+- A result from the parser is not it's result itself. 
+
+ - Once parsed it CAN either be stored for later uses or reference. 
+  - Stored for uses imply evaluating a result or simple get the answer inside an automated engine 
+    producing result to be observed . 
+ - The pared result it at first a command line know to be visible and having acheived it's variable 
+   and/or tag association from a variable result. 
+   
+ - The General Parser Infrastructure is able to define it's action with prefixed-varaible to :
+  - Execute the command-line parsed. 
+   - result from Executed command line can either be displayed or be stored. 
+   - By DISPLAY it come in form of text from Standard output line and offert a windows form
+   called Zenity windows management tool rich in windows-widget format to provide to user 
+   of Gtk, Mate, and compatible form of Windows manager to support Zenity offering a text-field
+   with ability to display the result. 
+   
+   - by STORING the content it's stored belong to parameter passed to the application where initial
+   form invite to create a repository and keep this information here. Management of this repository 
+   is not the intended task of 'GnrlPrsrInfctr' but do have something with repository Creation. 
+   - by STORING the information , the mechanism allow to get the result from THIS location and SHALL
+   have a mechanism explained to get this informations.  
+   
+  - Generate code know to be the command-line parsed . 
+   - Since this application is designed in a wider plan it was designed to generate-only and offer 
+   to code genration, ability to put this element inside a variable and this finite information is
+   executable afer many uses, as long the life-cycle of the application as not reached the end. 
+    This variable is defined by the Parameter to the application to pass to ensure an existance over
+    execution of GnrlPrsrInfctr.  
+    
+ - The General Parser Infrastructure DOES NOT control right of uses of this command line and generated 
+   code from IT's action and require your own knowledge of your environment to prepend SUDOER command 
+   allowing the execution being correctly done. 
+   
+ - The General Parser Infrastructure DOES own minimalistic language and having Strict uses of variable
+   representation inside it's Definisor called Template entry and Template Feeder and uses of a Master 
+   dictionnary which is open to the application and yield by the command-line, Strictness of oblitering 
+   one WORD from this dictionnary is responsible to broke the engine and not offering the capability 
+   developped. 
+   
+   - The Dictionnary start with the word and required Pipe word and this is equivalent to COMMAND | COMMAND
+   and this word start with definition of existing from variable 'StrDefaultPipe' which is the definition.
+   The definition extension for some Entrant like file for Filter operation or existing inside the 
+   dictionnary under name __FILE__ where it's definition exist inside StrFileName and are managed twice 
+   with GPIFilterOpt which is name inside a Pre-fixed variable and does not broke the engine IF and ONLY 
+   IF specification of name __FILE__ is not used or usefull.
+  - The General Parser Infrastructure minimalistic can brought from Prefixed-List if variable and do accept
+  to  add definition to  it's  dictionnary  template and  do have to handle  this to  extend it's parsing 
+  knowledge.
+  
+  - The General Parser Infrastructure minimalistic language come from ancestor application name TagParse,
+  and it's Template engine is similar to know writing Dictionnary/Template DOES own a Specification also
+  available inside this document to inform how this Library work. 
+
+  In  Second  The General Parser Infrastructure , call Type Function  'GnrlPrsrInfctr'  having  another 
+  structure  where  I call it  'Infrastructure' for  owning ability  to create a Repository to  hold the 
+  information  if a Project or Structure bigger than one function does  require a Physical  location  to 
+  store  information  for logging  the action  and/or  storing FAST-FILE-STORAGE  method for  recurrent 
+  information uses. And This infrastructure come with appropriate SUDOER command and do require extra 
+  paramter to add to the Pre-fixed list of variable to create secure and well formed environement. 
+ 
+Information from command-shell Helper : 
+
+.. code:: shell
+
+  Help:
+
+  Function GnrlPrsrInfctr
+  Name
+  GnrlPrsrInfctr	Stand for General-Parser-Infrastructure ; The Fnct.D Mechanism Parsing single function call or piped function and even multi-piped function with conjunction of TagParser. 
+
+
+  Synopsis
+    Soon to fill it with lot of informations
+
+
+  Summary
+    This TagParser for single function, piped-function and Nth-piped function is coming with Repository to log result from GnrlPrsrInfctr and Parser engine is equiped of a ParserFeeder to append Variable And Tag to know GDITagParser. The main goal of this Function is to profit from Entry of variable from command-line entry and to use extra TAG binded to Variable-name added to let it parse the rest of the information and thus will be explained.
+
+
+  Description
+    Having surdose of informations, skip this part...
+
+
+  Default Variable Value:
+  Variable GPIFuncStart ,
+   Default Value:__main_StartServices
+  Variable GPITpl ,
+   Default Value:__APPS__ __APPS_OPT__ __PIPE__ __FILTER__ __FILTER_OPT__
+  Variable GPIApps ,
+   Default Value:/usr/bin/dpkg
+  Variable GPIAppsOpt ,
+   Default Value:--get-selections
+  Variable GPIFilterApps ,
+   Default Value:/usr/bin/gawk
+  Variable GPIFileName ,
+   Default Value:None
+  Variable GPIFilterOpt ,
+   Default Value:-f __FILE__
+  Variable GPITagParser ,
+   Default Value:StrDefaultPipe:__PIPE__,StrApps:__APPS__,StrAppsOpt:__APPS_OPT__,StrFilterApps:__FILTER__,StrFilterOpt:__FILTER_OPT__,StrFileName:__FILE__
+  Variable GPITagFeeder ,
+   Default Value:''
+  Variable GPITagParserResult ,
+   Default Value:StrCmd
+  Variable GPITUUIDName ,
+   Default Value:UUID
+  Variable GPIPipeSig ,
+   Default Value:|
+  Variable GPIVerboseDev ,
+   Default Value:/dev/stderr
+  Variable GPIFontSize ,
+   Default Value:10
+  Variable GPIOutFile ,
+   Default Value:.GnrlPrsrInfctr
+  Variable GPIDisplayDebug ,
+   Default Value:False
+  Variable GPIIsUUIDInstance ,
+   Default Value:False
+  Variable GPIIsGenerateCode ,
+   Default Value:False
+  Variable GPIIsZenityHandlerOut ,
+   Default Value:False
+  Variable GPIIsFileHandlerOut ,
+   Default Value:False
+  Variable GPIIsExecuteEval ,
+   Default Value:True
+  Variable GPIRepoCreatEnabled ,
+   Default Value:True
+  Variable GPIParserDebug ,
+   Default Value:False
+  Variable GPIRepositoryCreation ,
+   Default Value:False
+  Variable GPIParserMkdir ,
+   Default Value:StrAppsSudo:__SUDO__,StrAppsSudoOpt:__OPT__,StrAppsMkdir:__APPS__,StrRepositoryQuery:__PATH__,StrAppsMkdirOpt:__APPS_OPTS__
+  Variable GPIParserChmod ,
+   Default Value:StrAppsSudo:__SUDO__,StrAppsSudoOpt:__OPT__,StrAppsChmod:__APPS__,StrRepositoryQuery:__PATH__,StrDefaultPerm:__PERM__
+  Variable GPIParserChown ,
+   Default Value:StrAppsSudo:__SUDO__,StrAppsSudoOpt:__OPT__,StrAppsChown:__APPS__,StrRepositoryQuery:__PATH__,StrDefaultUser:__OWNER__
+  Variable GPIGroupParserPrefix ,
+   Default Value:StrTagRepo
+  Variable GPIQueryRepository ,
+   Default Value:/var/log/Fnct.D/GnrlPrsrInfctr
+  Variable GPIRepoUser ,
+   Default Value:user.root
+  Variable GPIRepoPerm ,
+   Default Value:775
+  Variable GPIAppsSudo ,
+   Default Value:/usr/bin/sudo
+  Variable GPIAppsSudoOpt ,
+   Default Value:-s -H
+  Variable GPIAppsMkdir ,
+   Default Value:/bin/mkdir
+  Variable GPIAppsMkdirOpt ,
+   Default Value:-p
+  Variable GPIChown ,
+   Default Value:/bin/chown
+  Variable GPIChmod ,
+   Default Value:/bin/chmod
+  Variable GPIAppsProvide ,
+   Default Value:RepositoryCreation
+  Following switch are available:
+
+   --startservices	Start the application normally.
+   --get		Return value of Internal Variable.
+   --list		List all Internal Pre-fixed Variable available to query or get.
+   --compword	Word Completion Provide a services to Extract on Demand all Pre-fixed Variable
+    \String inside this function.
+ 
+  
 :Note: e2382694-0ba3-11e3-98a2-001b3875b29c
 :Title: Usual Shell Chunk-Development.
 :Function: ZenityShellEval
