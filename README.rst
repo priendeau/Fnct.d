@@ -3284,7 +3284,7 @@ __GetVarReferenceCompWord, __GetVarReferenceList.
 
 .. code:: shell
 	
-	Example:
+	Example: 1
 	### 
 	### Fully functional example. 
 	###
@@ -3301,7 +3301,7 @@ __GetVarReferenceCompWord, __GetVarReferenceList.
 		
 		  ###   +---------> Calling signature. If you try GetStdPrefixName on 
 		  ###   +           function name EasyTestInRun, you will get ETIR
-		  ###	+
+		  ###	  +
 		  local __call_locality=( ETIR EasyTestInRun ) ; 
 		  local StrInput=${ETIRArrayIn:=1,2,3,4}
 		
@@ -3361,6 +3361,111 @@ __GetVarReferenceCompWord, __GetVarReferenceList.
             __main_StartServices ; 
            fi
           }
+
+.. code:: shell
+	
+	Example: 2
+	### 
+	### Extended Example . 
+	###
+	### While the code is evolving in time, we can work with version of function.
+	### This imply having more than one corresponding goal and being writed in many
+	### version. As example before upcoming of CallArgument, it exist a functionnal
+ ### __Call_Argument and even before the initial __call_locality declared by hand 
+ ### inside a top-function entry.  Working with version of function imply making
+ ### if statement to control which is turned-on'n[first]_ correct time .
+	###
+	### Supposing having function __Call_Argument / CallArgumemt to manage inside the 
+	### code for evaluate your need's we shall consider  
+	### Version of Fnct.D start at 0.0.0 and does only support __call_locality Array.
+	### 
+	### Version of Fnct.D start at 0.0.1 does support __CallArgument where it's invisible
+	### to completion word and activating Compword and looking for this function will never work
+	### 
+	### Version of Fnct.D start at 0.0.2 does Support CallArgument, visible from any sub functionnality
+ ### of bash, it does having ability to make the whole declaration of __call_locality, BootStrap name
+ ### and 
+	### 
+
+
+  function GnrlPrsrInfctr()
+  {  
+   if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+   ### See Notice [second]_
+     local -a ArrayArg=( $* ) ;
+     local -a __call_locality=( GPI GnrlPrsrInfctr ) ;
+     local Arg0="${ArrayArg[0]}";  
+     local StrStartMain=${GPIFuncStart:=__main_StartServices} ; 
+     local StrParentApps=${__call_locality[1]} ; 
+   elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
+   ### See Notice [third]_
+     eval $( eval CAFunctName=GnrlPrsrInfctr CAIsAddParent=False __Call_Argument ) ; 
+   elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
+   ### See Notice [fourth]_
+     eval $( eval CAFunctName=GnrlPrsrInfctr CAIsAddParent=False CallArgument ) ; 
+  fi
+  ### This is an evaluation test GnrlPrsrInfctr, for having installing extras
+  ### package toward Zenity-Dbus problem and after a reboot, the evaluation 
+  ### start to flaw and solution like echo inside an eval is not quite acceptable:
+  ### solution offert : write like an echo evaluation where it is already going
+  ### out from an echo: eval $( echo "CAFunctName=GnrlPrsrInfctr 
+  ### CAIsAddParent=False __Call_Argument" ) ; So I withdraw package from last 
+  ### download and imply testing both version __Call_Argument versionGPI==0.0.1
+  ### and CallArgument versionGPI==0.0.2, and may come to a conclusion function 
+  ### starting with _Prefix or __Prefix may be blind to evaluation and report 
+  ### being absent, which is probably a policy-kit altering the code.[fifth]_
+
+  ### ... function Body ... 
+  
+  ### tiny __main_StartServices example : 
+  
+  function __main_StartServices()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}";  
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ; 
+   fi   
+   
+  ### ... extra code
+  }
+     
+  ### The Last-if-block, receiver for switch statement and Extended Helper. 
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+  local StrNameHelper="GnrlPrsrInfctr\tStand for General-Parser-Infrastructure...";
+  local StrSummary="This TagParser for single function, piped-function and Nth-piped function is ..." ; 
+  local StrSynopsis="Soon to fill it with lot of informations";
+  local StrDescription="Having surdose of informations, skip this part..." ;
+    
+  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   GVRIsName=True GVRIsSummary=True GVRIsSynopsis=False GVRIsDesc=False GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;	
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+   eval $( eval \
+     VTVIsArrayStyleInsert=True  \
+     VTVValueEntry=${StrVarList} \
+     VTVIsValueReAssign=True     \
+     VTVIsValueToConvert=False   \
+     ValueToVariable ) ${StrStartMain}
+  fi
+   
+ }  	
+ 
+ .. [first] : Lexical uses of Crying n, while sentence is which is turned-on on correct time. we can reduce the turned-on expression into turned-on'n and neglect the rest of the sentence 
+ .. [second] : This is the know signature required for GetVarReference to start looking inside the function and extract know variable based on it's Prefixed-signature. Your design will work without this implmentation but you will not get access and convenient of using switch helper, switch getter, switch listing and compword which are all good key to allow you code to be understand and documented and even being integrated inside the BuildForm Method.
+ .. [third] : Invisible to compword the design of Fnct.D version 0.0.1 is reserved for function having not intention to uses compword so Hard-stated function do not required to be such convenient have comp-word isolation for some testing purposes, like Bash-command line with Fully-decorated with Ansi coloured caracter coed inside PS1, PS2 variable may broke compoword view. 
+ .. [fourth] : Version 0.0.2 are using fully extendable CallArgument where also re-integrate visibility lost of evaluated function through the helper. Assuming GetVarReference at version 0.0.1 can inspected inside a function with classic search, version 0.0.2 will expect to expand evaluation of CallArgument.
+ .. [fifth] : This comment is also a bare-fact and discouraging action often discourage developper to go beyond by make strengter sub-set of controlled application throught Bash-shell. Bourne Against Shell is also a first shell to support addition of plug-in which making exiting at this moment to integration of library like Gnome, GTK, Xwindows, bash was able by simply add some extra library and library-elidation can work and communicate with posix-layer and push this application to respond and having great uses . It come with sides effect like curses take a lot of time deliverying the Ansi compatibility to a text-environment it create gracious flaws and require to be re-written; Note Dbus is have grow enought but still considering slowing down a system once fully installed and interacting freely with this system by using at-spi and collection of tools to query and interact with reduce the performance enough to consider buying more memory if your system can accept-it.   
+
 
 Creating Documentary Acceptable Helper.
 ---------------------------------------
