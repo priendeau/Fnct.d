@@ -1700,7 +1700,7 @@ commonly a result WHERE:
  
  - IT uniformely depend of an application offering information and REQUIRE to obtain a sub-set of 
  this result. 
-- A result from the parser is not it's result itself. 
+ - A result from the parser is not it's result itself. 
  - Once parsed it CAN either be stored for later uses or reference. 
   - Stored for uses imply evaluating a result or simple get the answer inside an automated engine 
     producing result to be observed . 
