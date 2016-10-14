@@ -1,4 +1,5 @@
 # . /etc/init.d/Fnct.d/fnct_debian_lib
+# Package _sub_PackageRepository
 
 ### Yet Another Debian package Mangler and backup-management. 
 ### 
@@ -195,36 +196,230 @@ function GetDpkgInstalled()
  #########################################################################
  ###### Part of Snapshoot section 
  ######
+ 
+ unset GetIdDpkgListing ; 
  function GetIdDpkgListing()
  {
-  local __call_locality=( GIDL GetIdDpkgListing ) ;
-  local ArrayArg=( $* ) ;		
-  local Arg0=( ${ArrayArg[0]} ) ;
+  ### This is a specialized Verbosis mode :
+  ###  
+  ###  All condition required to set VerbState=True 
+  ###  All condition required to set a message with VerbMsg=STRING
+  ###  
+  ###  
+  ### It can be used to :
+  ###  - Echo result to be passed throught Value Result .
+  ###  Required :
+  ###  VerbEvalForm=True VerbFormated=False 
+  ###  
+  ###  VerbHeader Is ineffective
+  ###  
+  ### -Echo result can be append to file and not overwriting the content: 
+  ###  Required ;
+  ###  VerbFormated=False/True VerbAppendDev=True VerbDev=[ FILENAME | UUID ]
+  ###  - Appending to file also required to be unique-file were no instance of 
+  ###  Verbosis may point on same-file or loss of log will be CERTAIN.
+  ###  -Pointing to Same-Destination require a lock Mechanism which is 
+  ###  not implemented here
+  ###  
+  function Verbosis()
+  {
+   #eval $( CAFunctName=Verbosis CAIsAddParent=False __Call_Argument ) ; 
+   local -a ArrayArg=( $* ) ; 
+   local -a __call_locality=( Verb Verbosis )
+   local StrMsg=${VerbMsg:=__TEXT__} ; 
+   local StrDevOut=${VerbDev:=/dev/stderr} ; 
+   local IsVerboseState=${VerbState:=False} ;
+   local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+   local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+   local IsDisplayFormatted=${VerbFormated:=True} ;
+   local IsAppendMode=${VerbAppendDev:=False} ; 
+   if [ "${IsVerboseState:=False}" == "True" ] ; then 
+    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+     if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
+     else  
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+     fi
+    else
+     if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+        echo "${StrMsg}" ;  
+     else
+      if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo "${StrMsg}" >> ${StrDevOut} ;
+      else
+       echo "${StrMsg}" > ${StrDevOut} ;
+      fi
+     fi 
+    fi 
+   fi
+  } 
+  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
+
+  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+   local __call_locality=( GIDL GetIdDpkgListing ) ;
+   local ArrayArg=( $* ) ;
+   local Arg0=${ArrayArg[0]} ; 
+   local StrParentApps=${__call_locality[1]} ;
+   local StrStartMain=${GDIFuncStart:=__main_StartServices} ;
+  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+   eval $( eval CAFunctName=GetIdDpkgListing CAIsAddParent=False __Call_Argument ) :  
+  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+   eval $( eval CAFunctName=GetIdDpkgListing CAIsAddParent=False CallArgument ) :  
+  fi   
   local StrPackageID=${GIDLPackageUUID:=DefaultID} ;
-  local StrTplSnap=${GIDLTplSnapshoot:=ADD SNAPSHOT\nDATE:__TRANSACTION_START__:ID:__PACKAGE_ID__\n} ; 
-  local StrTplList=${GIDLTplList:=ID of listing:__PACKAGE_ID__\n} ; 
+  local StrTransactionStart=${GIDLPackageStartID:=DefaultStartID} ;
+  local StrTplSnap=${GIDLTplSnapshoot:="ADD SNAPSHOT\nDATE:__TRANSACTION_START__:ID:__PACKAGE_ID__\n"} ; 
+  local StrTplList=${GIDLTplList:="ID of listing:__PACKAGE_ID__\n"} ; 
   local StrID=${StrSnapShotUUID} ; 
-  ### Note, moving UUID Creation at the top.
-  ### Assuming we need at least an UUID for the Package-naming deposition and 
-  ### another one to name a package-listing... ( Having --add-snapshoot and PkgRepoMgmtAddPkgLst Prefixed-Var managing listing )
-  StrTplSnap=${StrTplSnap//__TRANSACTION_START__/${StrTransactionStart}} ; 
-  StrTplSnap=${StrTplSnap//__PACKAGE_ID__/${StrPackageID}} ; 
-  StrTplList=${StrTplList//__PACKAGE_ID__/${StrPackageID}} ; 
-  echo -ne "ADD SNAPSHOT\nDATE:${StrTransactionStart}:ID:${StrPackageID}\n" >> ${StrIndexFile} ; 
-  echo -ne "ID of listing:${StrPackageID}\n"  > /dev/stderr ; 
+  local BoolDisplayDebug=${GIDLIsDebugDisplay:=False} ; 
+  local StrVarList="StrPackageID,StrTplSnap,StrTplList,StrID,StrVarList,BoolDisplayDebug,StrTransactionStart" ;
+   
+  function __main_StartServices()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local __call_locality=( Main __main_StartServices ) ;
+    local ArrayArg=( $* ) ;
+    local Arg0=${ArrayArg[0]} ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) :  
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) :  
+   fi   
+   StrTplSnap=${StrTplSnap//__TRANSACTION_START__/${StrTransactionStart}} ; 
+   StrTplSnap=${StrTplSnap//__PACKAGE_ID__/${StrPackageID}} ; 
+   StrTplList=${StrTplList//__PACKAGE_ID__/${StrPackageID}} ; 
+
+   ### Send information on /dev/stderr ; 
+   VerbMsg=${StrTplList} VerbHeader="DEBUG-${__call_locality[1]}" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis   ; 
+   
+   ### Send information on File-Log ; 
+   VerbMsg=${StrTplSnap} VerbDev=${StrIndexFile} VerbEvalForm=False VerbAppendDev=True  VerbFormated=False VerbState=True Verbosis   ; 
+
+   #echo -ne "ADD SNAPSHOT\nDATE:${StrTransactionStart}:ID:${StrPackageID}\n" >> ${StrIndexFile} ; 
+   echo -ne "ID of listing:${StrPackageID}\n"  > /dev/stderr ;   
+  }
+  
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+  
+  
+  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   GVRIsName=False     \
+   GVRIsSynopsis=False \
+   GVRIsSummary=False  \
+   GVRIsDesc=False     \
+   GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;	
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  StrMsg="__FUNCT__ version versionTP=__VER_TP__, versionCA=__VER_CA__, versionGPI=__VER_GPI__" ; 
+  StrMsg=${StrMsg//__FUNCT__/${__call_locality[1]}} ; 
+  StrMsg=${StrMsg//__VER_CA__/${versionCA}} ; 
+  StrMsg=${StrMsg//__VER_TP__/${versionTP}} ; 
+  StrMsg=${StrMsg//__VER_GPI__/${versionGPI}} ; 
+  VerbMsg="${StrMsg}" VerbHeader="VERSION" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ; 
+  eval $( eval VTVIsArrayStyleInsert=True \
+       VTVValueEntry=${StrVarList}   \
+       VTVIsValueReAssign=True       \
+       VTVIsValueToConvert=False     \
+       VTVIsArrayStyleInsert=True    \
+       ValueToVariable ) ${StrStartMain} ; 
+ fi
+
  }
-    
+ 
+ unset StreamCprEnvlTxt ; 
  function StreamCprEnvlTxt()
  {
-  
-  local __call_locality=( StreamCET StreamCprEnvlTxt ) ;
-  local Arg0=( ${ArrayArg[0]} ) ;
-  local ArrayArg=( $* ) ; 
+  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+   local __call_locality=( SCET StreamCprEnvlTxt ) ;
+   local ArrayArg=( $* ) ;
+   local Arg0=${ArrayArg[0]} ; 
+   local StrParentApps=${__call_locality[1]} ;
+   local StrStartMain=${GDIFuncStart:=__main_StartServices} ;
+  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+   eval $( eval CAFunctName=StreamCprEnvlTxt CAIsAddParent=False __Call_Argument ) :  
+  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+   eval $( eval CAFunctName=StreamCprEnvlTxt CAIsAddParent=False CallArgument ) :  
+  fi   
+  #local __call_locality=( StreamCET StreamCprEnvlTxt ) ;
+  #local Arg0=( ${ArrayArg[0]} ) ;
+  #local ArrayArg=( $* ) ; 
   #local StrPackageID=${StreamCETPackageUUID:=None} GetIdDpkgListing=${StrSnapShotUUID}
-  local StrFile=${StreamCprEnvlTxtFile:=DefaultFileName}
-  bzip2 -9z | base64 --wrap=0 > ${StrFile} ; 
+  ### Note Prefixed-Change : StreamCprEnvlTxtFile -> SCETTxtFile
+  local StrFile=${StreamCprEnvlTxtFile:=DefaultFileName};
+  local StrApps=${SCETApps:=/bin/bzip2} ; 
+  local StrAppsOpt=${SCETAppsOpt:="-9z"}
+  local StrFilterApps=${SCETFilterApps:=/usr/bin/base64} ; 
+  local StrFilterOpt=${SCETFilterOpt:="--wrap=0"} ; 
+  local StrTpl=${SCETTemplate:="__APPS__ __APPS_OPT__ __PIPE__ __FILTER__ __FILTER_OPT__ > __FILE__"} ; 
+  local BoolDisplayDebug=${GIDLIsDebugDisplay:=False} ; 
+  local StrVarList="StrFile,StrApps,StrAppsOpt,StrFilterApps,StrFilterOpt,BoolDisplayDebug,StrVarList" ;
+   
+  function __main_StartServices()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local __call_locality=( Main __main_StartServices ) ;
+    local ArrayArg=( $* ) ;
+    local Arg0=${ArrayArg[0]} ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) :  
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) :  
+   fi
+   local StrDefaultVTVOpt="VTVIsArrayStyleInsert=True VTVIsValueReAssign=True VTVIsValueToConvert=False VTVIsArrayStyleInsert=True" ; 
+   local StrDefaultGPIOpt="GPIIsUUIDInstance=True GPIIsGenerateCode=True GPIIsExecuteEval=False GPIIsZenityHandlerOut=False GPIIsFileHandlerOut=True GPIFuncStart=__main_StartServices GPIRepoCreatEnabled=True GPIRepositoryCreation=True"
+   eval $( eval VTVValueEntry=${StrVarList} \
+        ${StrDefaultVTVOpt} ValueToVariable ) $( eval      \
+                          ${StrDefaultGPIOpt}              \
+                          GPITpl="${StrTpl}" \
+                          GPITagParserResult="StrCmdA"     \
+                          GPIFileName=${StrFile}           \
+                          GPIDpkgApps=${StrApps}           \
+                          GPIDpkgAppsOpt=\"${StrAppsOpt}\" \
+                          GPIFilterApps=${StrFilterApps}   \
+                          GPIFilterOpt=\"${StrFilterOpt}\" \
+                          GPIDisplayDebug=${BoolDisplayDebug} \
+                          GPIParserDebug=${BoolDisplayDebug}  \
+                          GnrlPrsrInfctr )  ; 
+   ### __APPS__ __APPS_OPT__ __PIPE__ __FILTER__ __FILTER_OPT__ > __FILE__
+   ###  bzip2   -9z          |        /usr/bin/base64     
+   ###                                           --wrap=0       > ${StrFile} ;
+  }
+  
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   GVRIsName=False     \
+   GVRIsSynopsis=False \
+   GVRIsSummary=False  \
+   GVRIsDesc=False     \
+   GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;	
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  StrMsg="__FUNCT__ version versionTP=__VER_TP__, versionCA=__VER_CA__, versionGPI=__VER_GPI__" ; 
+  StrMsg=${StrMsg//__FUNCT__/${__call_locality[1]}} ; 
+  StrMsg=${StrMsg//__VER_CA__/${versionCA}} ; 
+  StrMsg=${StrMsg//__VER_TP__/${versionTP}} ; 
+  StrMsg=${StrMsg//__VER_GPI__/${versionGPI}} ; 
+  VerbMsg="${StrMsg}" VerbHeader="VERSION" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ; 
+  eval $( eval VTVIsArrayStyleInsert=True \
+       VTVValueEntry=${StrVarList}   \
+       VTVIsValueReAssign=True       \
+       VTVIsValueToConvert=False     \
+       VTVIsArrayStyleInsert=True    \
+       ValueToVariable ) ${StrStartMain} ; 
+ fi   
  }	
   
+ unset GetDpkgListing ; 
  function GetDpkgListing()
  {
   ### Note 
@@ -237,7 +432,7 @@ function GetDpkgInstalled()
                  StrIndexFile=${StrIndexFile}               \
                  StrTransactionStart=${StrTransactionStart} \
                  GetIdDpkgListing                           ) 
-  GetDpkgInstalledAwkScript=${StrScriptAwkFilter} GetDpkgInstalled                                        | \
+  GetDpkgInstalledAwkScript=${StrScriptAwkFilter} GetDpkgInstalled                                       | \
                             StrPkgLstExt=${StrPkgLstExt}                                                 \
                             StreamCprEnvlTxtFile=${StrPathReposIndex}/${StrSnapShotUUID}.${StrPkgLstExt} \
                             StreamCprEnvlTxt  ; 
@@ -245,7 +440,8 @@ function GetDpkgInstalled()
   echo -ne "ShaSUM of snapshot, ID:${StrId} SHA:${StrSHASnap}\n" > /dev/stderr ; 
   echo -ne "SNAPSHOT:SHA1SUM:${StrSHASnap}\nSNAPSHOT END\n" >> ${StrIndexFile} ; 
  }
-   
+  
+ unset GetPackageList ; 
  function GetPackageList()
  {
   local __call_locality=( GetPackageList ) ;
@@ -272,6 +468,7 @@ function GetDpkgInstalled()
  #########################################################################
  ###### Part of TestDriveMount section 
  ######
+ unset TestPathIndex ; 
  function TestPathIndex()
  {
   local __call_locality=( TestPathIndex ) ;
@@ -284,7 +481,7 @@ function GetDpkgInstalled()
  }	
 
 
-
+ unset TestDriveMount ; 
  function TestDriveMount()
  {
   local __call_locality=( TestDriveMount ) ; 
@@ -618,6 +815,7 @@ function PackageRepositoryMgmt()
 ### PRRIsResolve variable is reserver to search the package following specific time
 ### inside an index, which is merely not working to restore whole packaging...
 ### lacking ID on every Package name index, which is not hard to modify.
+unset PackageRepositoryRest ; 
 function PackageRepositoryRest()
 {
 	local __call_locality=( PRR PackageRepositoryRest )	 ; 
