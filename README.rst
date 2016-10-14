@@ -461,12 +461,9 @@ Invocation
 
 Likewise Bsd Middle-age, a sub-entity was existing inside /etc/init or /etc/init.d and desapear or move inside /usr This design exist inside /etc/init.d/Fnct.D to  establish a __future__ development for integration inse loader and initrd for shell management and Integration. 
 
-** Updated **
-
 The original mechanism /etc/init.d/Fnct.D/fnct_lib allow loading of sub library.  Most important are fnct_debian_lib _sub_jack_script _sub_Git _sub_ssh_handler all available inside the /etc/init.d/Fnct.D Path .
 
 Example 1 :
-
 
 .. image:: https://raw.github.com/priendeau/Fnct.D/master/images/fnct_lib_loading.png
 		:target: https://github.com/priendeau/Fnct.D#Invocation
@@ -475,12 +472,11 @@ Example 1 :
 
 This is a result from loading /etc/init.d/Fnct.D/fnct_lib from a .bashrc 
 
-
 Example 2 :
 
 
 .. image:: https://raw.github.com/priendeau/Fnct.D/master/images/fnct_lib_loading_2.png
-		:target: https://github.com/priendeau/Fnct.D#Invocation
+		:target: https://github.com/priendeau/Fnct.D#Invocation-2
 
 
 
