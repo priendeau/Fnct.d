@@ -90,7 +90,8 @@ function GetDpkgInstalled()
  local StrFilterApps=${GDIFilterApps:=/usr/bin/gawk} ;
  local StrFilterOpt=${GDIFilterOpt:=-f __FILE__} ; 
  local StrParserResult=${GDITagParserResult:=StrCmd} ; 
- local StrVarList="StrVarList,StrStartMain,StrParentApps,StrParserResult,StrAwkScript,StrAppsTemplate,StrApps,StrAppsOpt,StrFilterApps,StrFilterOpt,StrParserTag" ; 
+ local BoolDisplayDebug=${GDIIsDisplayDebug:=False} ; 
+ local StrVarList="BoolDisplayDebug,StrVarList,StrStartMain,StrParentApps,StrParserResult,StrAwkScript,StrAppsTemplate,StrApps,StrAppsOpt,StrFilterApps,StrFilterOpt,StrParserTag" ; 
  
   function __main_StartServices()
   {
@@ -104,35 +105,41 @@ function GetDpkgInstalled()
     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) :  
    fi 
    StrMsg="Entry in function" ; 
-   VerbMsg=${StrMsg} VerbHeader="DEBUG-${__call_locality[1]}" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis  ; 
+   VerbMsg=${StrMsg} VerbHeader="DEBUG-${__call_locality[1]}" VerbEvalForm=False VerbFormated=True VerbState=${GDIIsDisplayDebug} VerbDev=/dev/stderr  Verbosis  ; 
    
    local StrMsg; 
    StrMsg="Awk-Script file: __FILE__" ; 
    StrMsg=${StrMsg//__FILE__/${StrAwkScript}} ; 
-   VerbMsg=${StrMsg} VerbHeader="DEBUG-${__call_locality[1]}" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis  ;
+   VerbMsg=${StrMsg} VerbHeader="DEBUG-${__call_locality[1]}" VerbEvalForm=False VerbFormated=True VerbState=${GDIIsDisplayDebug} VerbDev=/dev/stderr  Verbosis  ;
    
    StrMsg="Information Variable Topo:\nStrAwkScript: ${StrAwkScript}\nStrApps: ${StrApps}\nStrAppsOpt: ${StrAppsOpt}\n" ; 
-   VerbMsg=${StrMsg} VerbHeader="DEBUG-${__call_locality[1]}" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis  ;
+   VerbMsg=${StrMsg} VerbHeader="DEBUG-${__call_locality[1]}" VerbEvalForm=False VerbFormated=True VerbState=${GDIIsDisplayDebug} VerbDev=/dev/stderr  Verbosis  ;
    
-   ### removed GPIRepoCreatEnabled=True 
-   eval $( eval \
-     GPITagParserResult="StrCmdA" \
-     GPIIsUUIDInstance=True \
-     GPIFileName=${StrAwkScript} \
-     GPIDpkgApps=${StrApps} \
-     GPIDpkgAppsOpt=\"${StrAppsOpt}\" \
-     GPIFilterApps=${StrFilterApps} \
-     GPIFilterOpt=\"${StrFilterOpt}\" \
-     GPIIsGenerateCode=False \
-     GPIIsExecuteEval=True \
-     GPIIsZenityHandlerOut=False \
-     GPIIsFileHandlerOut=True \
-     GPIRepoCreatEnabled=True \
-     GPIRepositoryCreation=True \
-     GPIFuncStart=__main_StartServices \
-     GPIDisplayDebug=True \
-     GPIParserDebug=True \
-     GnrlPrsrInfctr ) ;
+   ###  at this moment configuration of StrCmdA is struggled somewhere because even the 
+   ### UUID is not available after the execution. 
+   eval $( eval VTVIsArrayStyleInsert=True \
+        VTVValueEntry=${StrVarList}   \
+        VTVIsValueReAssign=True       \
+        VTVIsValueToConvert=False     \
+        VTVIsArrayStyleInsert=True    \
+        ValueToVariable ) $( eval \
+                          GPITagParserResult="StrCmdA" \
+                          GPIIsUUIDInstance=True \
+                          GPIFileName=${StrAwkScript} \
+                          GPIDpkgApps=${StrApps} \
+                          GPIDpkgAppsOpt=\"${StrAppsOpt}\" \
+                          GPIFilterApps=${StrFilterApps} \
+                          GPIFilterOpt=\"${StrFilterOpt}\" \
+                          GPIIsGenerateCode=True \
+                          GPIIsExecuteEval=False \
+                          GPIIsZenityHandlerOut=False \
+                          GPIIsFileHandlerOut=True \
+                          GPIRepoCreatEnabled=True \
+                          GPIRepositoryCreation=True \
+                          GPIFuncStart=__main_StartServices \
+                          GPIDisplayDebug=${GDIIsDisplayDebug} \
+                          GPIParserDebug=${GDIIsDisplayDebug} \
+                          GnrlPrsrInfctr )  ;
    
    ### GPITagParserResult=StrParserResult 
    #StrMsg="GnrlPrsrInfctr cmdline: __CMD__" ;
@@ -140,11 +147,11 @@ function GetDpkgInstalled()
    #VerbMsg=${StrMsg} VerbHeader="DEBUG-${__call_locality[1]}" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis  ;
    #eval $( "${StrCmdLineGnr}" ) ; 
   
-   StrMsg="Cmd-line: from variable StrParserResult:(__CMD__), UUID information repository:(__UUID__)" ; 
-   StrMsg=${StrMsg//__CMD__/${StrCmd}} ; 
+   StrMsg="Cmd-line: from variable StrCmdA:(__CMD__), UUID information repository:(__UUID__)" ; 
+   StrMsg=${StrMsg//__CMD__/${StrCmdA}} ; 
    StrMsg=${StrMsg//__UUID__/${UUID}} ; 
    
-   VerbMsg=${StrMsg} VerbHeader="CMDLINE-${__call_locality[1]}" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis  ;
+   VerbMsg=${StrMsg} VerbHeader="CMDLINE-${__call_locality[1]}" VerbEvalForm=False VerbFormated=True VerbState=${GDIIsDisplayDebug} VerbDev=/dev/stderr  Verbosis  ;
    
   } 
   
