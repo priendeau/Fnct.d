@@ -48,50 +48,115 @@
 ### _sub_PackageRepository and crafting the rest in prototyping to deliver 
 ###  GnrlPrsrInfctr.... 
 
+unset GetDpkgInstalled ; 
 function GetDpkgInstalled()
 {
- local __call_locality=( GDI GetDpkgInstalled ) ;
- local ArrayArg=( $* ) ;
- local Arg0=( ${ArrayArg[0]} ) ; 
- local StrAwkScript=$( PackageRepositoryMgmt --get PkgRepoMgmtReposAwkLst ) ; 
+ function Verbosis()
+ {
+  local __call_locality=( Verbosis Verb );
+  local StrMsg=${VerbMsg:=__TEXT__} ; 
+  local StrDevOut=${VerbDev:=/dev/stderr} ; 
+  local IsVerboseState=${VerbState:=False} ;
+  local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+  local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+  local IsDisplayFormatted=${VerbFormated:=True} ;
+  local ArrayArg=( $* ) ; 
+  if [ "${IsVerboseState:=False}" == "True" ] ; then 
+   if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+    echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+   else
+    if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+     echo "${StrMsg}" ;  
+    else
+     echo "${StrMsg}" > ${StrDevOut} ;
+    fi 
+   fi 
+  fi
+ } ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis   
+ 
+ if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+  local __call_locality=( GDI GetDpkgInstalled ) ;
+  local ArrayArg=( $* ) ;
+  local Arg0=${ArrayArg[0]} ; 
+  local StrParentApps=${__call_locality[1]} ;
+  local StrStartMain=${GDIFuncStart:=__main_StartServices} ;
+ elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+  eval $( eval CAFunctName=GetDpkgInstalled CAIsAddParent=False __Call_Argument ) :  
+ elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+  eval $( eval CAFunctName=GetDpkgInstalled CAIsAddParent=False CallArgument ) :  
+ fi 
  local StrApps=${GDIDpkgApps:=/usr/bin/dpkg} ;
  local StrAppsOpt=${GDIDpkgAppsOpt:=--get-selections} ; 
  local StrFilterApps=${GDIFilterApps:=/usr/bin/gawk} ;
  local StrFilterOpt=${GDIFilterOpt:=-f __FILE__} ; 
  local StrParserResult=${GDITagParserResult:=StrCmd} ; 
- local StrParentApps=${__call_locality[1]} ; 
- local StrStartMain=${GDIFuncStart:=__main_StartServices} ;
  local StrVarList="StrVarList,StrStartMain,StrParentApps,StrParserResult,StrAwkScript,StrAppsTemplate,StrApps,StrAppsOpt,StrFilterApps,StrFilterOpt,StrParserTag" ; 
  
   function __main_StartServices()
   {
-   local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
-   local ArrayArg=( $* ) ;
-   local Arg0=${ArrayArg[0]};  
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local __call_locality=( Main __main_StartServices ) ;
+    local ArrayArg=( $* ) ;
+    local Arg0=${ArrayArg[0]} ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) :  
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) :  
+   fi 
+   StrMsg="Entry in function" ; 
+   VerbMsg=${StrMsg} VerbHeader="DEBUG-${__call_locality[1]}" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis  ; 
+   
+   local StrMsg; 
+   StrMsg="Awk-Script file: __FILE__" ; 
+   StrMsg=${StrMsg//__FILE__/${StrAwkScript}} ; 
+   VerbMsg=${StrMsg} VerbHeader="DEBUG-${__call_locality[1]}" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis  ;
+   
+   StrMsg="Information Variable Topo:\nStrAwkScript: ${StrAwkScript}\nStrApps: ${StrApps}\nStrAppsOpt: ${StrAppsOpt}\n" ; 
+   VerbMsg=${StrMsg} VerbHeader="DEBUG-${__call_locality[1]}" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis  ;
+   
    ### removed GPIRepoCreatEnabled=True 
-   GPIIsUUIDInstance=True \
-   GPIFileName=${StrAwkScript}   \
-   GPITagParserResult=${StrParserResult} \
-   GPIDpkgApps=${StrApps}            \
-   GPIDpkgAppsOpt='${StrAppsOpt}'    \
-   GPIFilterApps='${StrFilterApps}'  \
-   GPIFilterOpt='${StrFilterOpt}'    \
-   GPIIsGenerateCode=True            \
-   GPIIsZenityHandlerOut=False       \
-   GPIIsFileHandlerOut=True          \
-   GPIIsExecuteEval=False            \
-   GPIRepositoryCreation=True        \
-   GPIFuncStart=__main_StartServices \
-   GPIDisplayDebug=True              \
-   GPIParserDebug=True               \
-   GnrlPrsrInfctr ; 
+   eval $( eval \
+     GPITagParserResult="StrCmdA" \
+     GPIIsUUIDInstance=True \
+     GPIFileName=${StrAwkScript} \
+     GPIDpkgApps=${StrApps} \
+     GPIDpkgAppsOpt=\"${StrAppsOpt}\" \
+     GPIFilterApps=${StrFilterApps} \
+     GPIFilterOpt=\"${StrFilterOpt}\" \
+     GPIIsGenerateCode=False \
+     GPIIsExecuteEval=True \
+     GPIIsZenityHandlerOut=False \
+     GPIIsFileHandlerOut=True \
+     GPIRepoCreatEnabled=True \
+     GPIRepositoryCreation=True \
+     GPIFuncStart=__main_StartServices \
+     GPIDisplayDebug=True \
+     GPIParserDebug=True \
+     GnrlPrsrInfctr ) ;
+   
+   ### GPITagParserResult=StrParserResult 
+   #StrMsg="GnrlPrsrInfctr cmdline: __CMD__" ;
+   #StrMsg=${StrMsg//__CMD__/${StrCmdLineGnr}}
+   #VerbMsg=${StrMsg} VerbHeader="DEBUG-${__call_locality[1]}" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis  ;
+   #eval $( "${StrCmdLineGnr}" ) ; 
+  
+   StrMsg="Cmd-line: from variable StrParserResult:(__CMD__), UUID information repository:(__UUID__)" ; 
+   StrMsg=${StrMsg//__CMD__/${StrCmd}} ; 
+   StrMsg=${StrMsg//__UUID__/${UUID}} ; 
+   
+   VerbMsg=${StrMsg} VerbHeader="CMDLINE-${__call_locality[1]}" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis  ;
+   
   } 
   
   local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
   
   
   if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-   GVRIsName=False GVRIsSynopsis=False GVRIsSummary=False GVRIsDesc=False GetVarReference ${__call_locality[1]} ; 
+   GVRIsName=False     \
+   GVRIsSynopsis=False \
+   GVRIsSummary=False  \
+   GVRIsDesc=False     \
+   GetVarReference ${__call_locality[1]} ; 
    echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
   elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
    eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
@@ -99,12 +164,23 @@ function GetDpkgInstalled()
   elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
    eval $( __GetVarReferenceList ) ;	
   elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
-   eval $( VTVIsArrayStyleInsert=True \
+   ### This variable can not be inside  the first block it require to pass
+   ### by the Main function or it will query itself when a getter will be 
+   ### called . 
+   local StrAwkScript=$( PackageRepositoryMgmt --get PkgRepoMgmtReposAwkLst ) ; 
+   StrMsg="__FUNCT__ version versionTP=__VER_TP__, versionCA=__VER_CA__, versionGPI=__VER_GPI__" ; 
+   StrMsg=${StrMsg//__FUNCT__/${__call_locality[1]}} ; 
+   StrMsg=${StrMsg//__VER_CA__/${versionCA}} ; 
+   StrMsg=${StrMsg//__VER_TP__/${versionTP}} ; 
+   StrMsg=${StrMsg//__VER_GPI__/${versionGPI}} ; 
+   VerbMsg="${StrMsg}" VerbHeader="VERSION" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ; 
+
+   eval $( eval VTVIsArrayStyleInsert=True \
         VTVValueEntry=${StrVarList}   \
         VTVIsValueReAssign=True       \
         VTVIsValueToConvert=False     \
         VTVIsArrayStyleInsert=True    \
-        ValueToVariable ) ${StrStartMain}
+        ValueToVariable ) ${StrStartMain} ; 
   fi
 }
  
@@ -340,42 +416,6 @@ unset PackageRepositoryMgmt ;
 
 function PackageRepositoryMgmt()
 {
-	
-	local __call_locality=( PkgRepoMgmt PackageRepositoryMgmt ) ;
- local ArrayArg=( $* ) ; 
- local Arg0=( ${ArrayArg[0]} ) ;
-
-	local StrUUID=$( GetUUID ) ; 
- local StrSnapShotUUID=$( GetUUID )
-	local StrPathArchives=${PkgRepoMgmtPathArchives:=/var/cache/apt/archives} ; 
-	local StrFindStringFormat=${PkgRepoMgmtStrFmt:="%f "} ;
-	local StrPackageType=${PkgRepoMgmtFileFormat:=deb} ;
-	local StrPathRepository=${PkgRepoMgmtRepository:=/media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64} ;
-	local StrPathReposIndex=${PkgRepoMgmtReposIndex:=/media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64/index} ;
-	local StrIndexLatest=${PkgRepoMgmtLatestIndexName:=latest} ;
-	local StrAddPackageListing=${PkgRepoMgmtAddPkgLst:=False} ; 
-	local StrPkgLstExt=${PkgRepoMgmtPkgExt:=bz2.base64} ;
-	local StrAppsLinkerName=${PkgRepoMgmtLinkerName:=/bin/ln} ; 
-	local StrAppsLinkerOptionRecv=${PkgRepoMgmtLinkerOption:=-s} ; 
-	local StrAppsLinkerOption=( ${StrAppsLinkerOptionRecv//,/ }  ) ;
-	local StrDumpingFormat=${PkgRepoMgmtReposIndexFmt:=__ID__:__FILE__} ;
-	local StrDefaultActionIndex=${PkgRepoMgmtReposIndexAction:="mkdir -p __PATH__"} ;
-	local StrTestDriveDebug=${PkgRepoMgmtReposDriveDebug:=False} ;
-	local StrIndexTest=${PkgRepoMgmtReposIndexTest:=! -d} ;
-	local StrScriptAwkFilter=${PkgRepoMgmtReposAwkLst:=/etc/init.d/Fnct.D/awk-script/dpkg-col-display.awk} ;
- echo -ne "Reserved ID for COMMIT:${StrUUID}\nReserved ID for Listing:${StrSnapShotUUID}\n\n" > /dev/stderr ;
-
-	### Explained in GetOtherDate, GODReference can be negative and report yesterday date too. and not null will
-  ### give n-day after today... 	
-	local IntDefaultDayIndexName=${PkgRepoMgmtReposIndexDay:=0} ;
-	local StrBackupAction=${PkgRepoMgmtReposBkpAct:=mv __SRC__/__FILE__ __DEST__ __VIRG__ ln -s __DEST__/__FILE__ __SRC__/__FILE__} ;
-	local StrTransactionStart=$( GODFormat="%Y%m%d\ %H:%M:%S" GetOtherDate ) ; 
-	local StrTodatDateTransfert=$( GODReference=${IntDefaultDayIndexName} GetOtherDate ) ; 
-	local StrIndexFile=${StrPathReposIndex}/${StrTodatDateTransfert} ;
-	
-	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--add-snapshoot\tAdd DPKG Listing inside Current Index File.\n\t\t\tOnly Store an ID in the index-file and the content into UUID-name from index path.\n\n" ;
- local StrVarList="StrUUID,StrSnapShotUUID,StrPathArchives,StrFindStringFormat,StrPackageType,StrPathRepository,StrPathReposIndex,StrIndexLatest,StrAddPackageListing,StrPkgLstExt,StrAppsLinkerName,StrAppsLinkerOptionRecv,StrAppsLinkerOption,StrDumpingFormat,StrDefaultActionIndex,StrTestDriveDebug,StrIndexTest,StrScriptAwkFilter,IntDefaultDayIndexName,StrBackupAction,StrTransactionStart,StrTodatDateTransfert,StrIndexFile"
-
  function Verbosis()
  {
   local __call_locality=( Verbosis Verb );
@@ -397,8 +437,40 @@ function PackageRepositoryMgmt()
     fi 
    fi 
   fi
- } 
- ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis
+ } ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis   
+	
+	local __call_locality=( PkgRepoMgmt PackageRepositoryMgmt ) ;
+ local ArrayArg=( $* ) ; 
+ local Arg0="${ArrayArg[0]}"  ;
+
+	local StrPathArchives=${PkgRepoMgmtPathArchives:=/var/cache/apt/archives} ; 
+	local StrFindStringFormat=${PkgRepoMgmtStrFmt:="%f "} ;
+	local StrPackageType=${PkgRepoMgmtFileFormat:=deb} ;
+	local StrPathRepository=${PkgRepoMgmtRepository:=/media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64} ;
+	local StrPathReposIndex=${PkgRepoMgmtReposIndex:=/media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64/index} ;
+	local StrIndexLatest=${PkgRepoMgmtLatestIndexName:=latest} ;
+	local StrAddPackageListing=${PkgRepoMgmtAddPkgLst:=False} ; 
+	local StrPkgLstExt=${PkgRepoMgmtPkgExt:=bz2.base64} ;
+	local StrAppsLinkerName=${PkgRepoMgmtLinkerName:=/bin/ln} ; 
+	local StrAppsLinkerOptionRecv=${PkgRepoMgmtLinkerOption:=-s} ; 
+	local StrAppsLinkerOption=( ${StrAppsLinkerOptionRecv//,/ }  ) ;
+	local StrDumpingFormat=${PkgRepoMgmtReposIndexFmt:=__ID__:__FILE__} ;
+	local StrDefaultActionIndex=${PkgRepoMgmtReposIndexAction:="mkdir -p __PATH__"} ;
+	local StrTestDriveDebug=${PkgRepoMgmtReposDriveDebug:=False} ;
+	local StrIndexTest=${PkgRepoMgmtReposIndexTest:=! -d} ;
+	local StrScriptAwkFilter=${PkgRepoMgmtReposAwkLst:=/etc/init.d/Fnct.D/awk-script/dpkg-col-display.awk} ;
+
+	### Explained in GetOtherDate, GODReference can be negative and report yesterday date too. and not null will
+  ### give n-day after today... 	
+	local IntDefaultDayIndexName=${PkgRepoMgmtReposIndexDay:=0} ;
+	local StrBackupAction=${PkgRepoMgmtReposBkpAct:=mv __SRC__/__FILE__ __DEST__ __VIRG__ ln -s __DEST__/__FILE__ __SRC__/__FILE__} ;
+	local StrTransactionStart=$( GODFormat="%Y%m%d\ %H:%M:%S" GetOtherDate ) ; 
+	local StrTodatDateTransfert=$( GODReference=${IntDefaultDayIndexName} GetOtherDate ) ; 
+	local StrIndexFile=${StrPathReposIndex}/${StrTodatDateTransfert} ;
+	
+	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--add-snapshoot\tAdd DPKG Listing inside Current Index File.\n\t\t\tOnly Store an ID in the index-file and the content into UUID-name from index path.\n\n" ;
+ local StrVarList="StrUUID,StrSnapShotUUID,StrPathArchives,StrFindStringFormat,StrPackageType,StrPathRepository,StrPathReposIndex,StrIndexLatest,StrAddPackageListing,StrPkgLstExt,StrAppsLinkerName,StrAppsLinkerOptionRecv,StrAppsLinkerOption,StrDumpingFormat,StrDefaultActionIndex,StrTestDriveDebug,StrIndexTest,StrScriptAwkFilter,IntDefaultDayIndexName,StrBackupAction,StrTransactionStart,StrTodatDateTransfert,StrIndexFile"
+
 
  function CheckDrive()
  {
@@ -425,6 +497,7 @@ function PackageRepositoryMgmt()
  
  function __main_StartServices()
  {
+  echo -ne "Reserved ID for COMMIT:${StrUUID}\nReserved ID for Listing:${StrSnapShotUUID}\n\n" > /dev/stderr ;
   local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
   local ArrayArg=( $* ) ;
   local Arg0=${ArrayArg[0]};  
@@ -493,7 +566,7 @@ function PackageRepositoryMgmt()
 	### #############################################
 
 	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-			GetVarReference ${__call_locality[1]} ; 
+			GVRIOldPrefix=True  GetVarReference ${__call_locality[1]} ; 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
@@ -513,6 +586,9 @@ function PackageRepositoryMgmt()
           VTVIsValueToConvert=False   \
           ValueToVariable             )  AddSnapShoot ; 
 	elif [ "${Arg0:=--startservices}" == "--start-services" ] ; then
+   local ArrayUUID=( $(  GetUSeq=2 GetULoop=True GetUTimeBased=True GetUAppsRegisterName=PackageRepositoryMgmt GetUIDRegister=False GetUIsHelper=False  GetUUID ) ) ; 
+   local StrUUID=${ArrayUUID[0]} ; 
+   local StrSnapShotUUID=${ArrayUUID[1]} ;
 	 eval $( VTVValueEntry=${StrVarList} \ 
           VTVIsArrayStyleInsert=True  \
           VTVIsValueReAssign=True     \

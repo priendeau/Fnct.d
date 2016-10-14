@@ -436,18 +436,19 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
    ### and put the content of template and FeedParser .  
    eval "local ${StrParserResult}=\"${StrAppsTemplate} ${StrTagFeeder}\"" ;
    
-   StrMsg="Copy of StrAppsTemplate, named __VAR__ will hold __CONTENT__" ; 
+   StrMsg="From variable __VAR__ Copy of StrAppsTemplate, named __VAR2__ will hold __CONTENT__" ; 
    StrMsg=${StrMsg//__VAR__/${StrParserResult}} ;
    eval """StrMsg=\${StrMsg//__CONTENT__/\${${StrParserResult}}}"""  ;
    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-CMDLINE" VerbState=${BoolDisplayDebug} VerbFormated=True VerbDev=/dev/stderr Verbosis ; 
    
-   eval $( TPIsMatchRtoL=True                        \
-           TPVarNameParsed="${StrParserResult}"      \
-           TPDisplayDebug=${BoolDisplayDebug}        \
-           TPDisplayParserNotice=${BoolDisplayParserDebug}  \
-           TPArrayName=Array${__call_locality[0]}Tag \
-           TPListTag="${StrParserTag}"               \
-           TagParser ) ; 
+   eval $( eval \
+     TPIsMatchRtoL=True                        \
+     TPVarNameParsed="${StrParserResult}"      \
+     TPDisplayDebug=${BoolDisplayDebug}        \
+     TPDisplayParserNotice=${BoolDisplayParserDebug}  \
+     TPArrayName=Array${__call_locality[0]}Tag \
+     TPListTag="${StrParserTag}"               \
+     TagParser ) ; 
    
    
    ### Notice if this line is called with ${StrParentApps} which suppose to 
