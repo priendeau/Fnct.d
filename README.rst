@@ -4,11 +4,11 @@ Fnct.D
 ============
 
 
-.. image:: https://raw.github.com/priendeau/Fnct.d/master/images/Fnct_D_Cover.png
-		:target: https://github.com/priendeau/Fnct.d#Fnct.D
+.. image:: https://raw.github.com/priendeau/Fnct.D/master/images/Fnct_D_Cover.png
+		:target: https://github.com/priendeau/Fnct.D#Fnct.D
 		
 
-:Info: See `github <https://github.com/priendeau/Fnct.d/>`_ for the latest source.
+:Info: See `github <https://github.com/priendeau/Fnct.D/>`_ for the latest source.
 :Author: Patrick Riendeau
 :Stade: Pre-Alpha, Draft specification not terminated.
 
@@ -193,8 +193,8 @@ While Software development was observed in Compagny reaching CMM Level 2 ( Capab
   $> ZBFFunctionName=GnrlPrsrInfctr ZBFUUIDQuery=True ZenityBuildForm
 
 
-.. image:: https://github.com/priendeau/Fnct.d/blob/master/images/ZenityContentListing-UC.png
- :target: https://github.com/priendeau/Fnct.d#Example of Development
+.. image:: https://github.com/priendeau/Fnct.D/blob/master/images/ZenityContentListing-UC.png
+ :target: https://github.com/priendeau/Fnct.D#Example of Development
  :align: center
 
 .. code-block:: shell 
@@ -205,8 +205,8 @@ While Software development was observed in Compagny reaching CMM Level 2 ( Capab
   ### f646c9a8-8786-11e6-8b1d-001e4c8856d6
 
 
-.. image:: https://github.com/priendeau/Fnct.d/blob/master/images/ZenityBuildForm-UC.png
- :target: https://github.com/priendeau/Fnct.d#Example of Development
+.. image:: https://github.com/priendeau/Fnct.D/blob/master/images/ZenityBuildForm-UC.png
+ :target: https://github.com/priendeau/Fnct.D#Example of Development
  :align: center
 
 .. code-block:: shell 
@@ -220,8 +220,8 @@ While Software development was observed in Compagny reaching CMM Level 2 ( Capab
   ### This will execute the query and SHALL HAVE to print the output inside error-fix.txt to notify wrong comportement of the application or any error discovered by data output, verbosis. 
 
 
-.. image:: https://github.com/priendeau/Fnct.d/blob/master/images/ZenityBuildForm-out-UC.png
- :target: https://github.com/priendeau/Fnct.d#Example of Development
+.. image:: https://github.com/priendeau/Fnct.D/blob/master/images/ZenityBuildForm-out-UC.png
+ :target: https://github.com/priendeau/Fnct.D#Example of Development
  :align: center
 
 
@@ -403,7 +403,7 @@ This Document rely on uses of Bash. Uniformely implemented in Unix/Linux world, 
 
 Since Tuesday 16 august 2016, Twisted module had come out, magically for my first SSHFunctionController. Twisted version 16.3.1 being present to implement a DoController functionnality in second stage, to render easier the SQlite3 Access by sending a PostCard registration during connection, the pre-draft version will soon only require the public and private key segment to avoid uses of password and will have ssh access with option to send command line. Praised long by Network Administrator, SSH with sending command are most wanted knowledge to access to a specific problems when this one have to be stopped. Eliminating need to connect, brow and type, ssh with one command embedded in the connection is just perfect. To visit Twisted please visit :
 
-.. image:: https://raw.githubusercontent.com/priendeau/Fnct.d/master/images/Twisted.png
+.. image:: https://raw.githubusercontent.com/priendeau/Fnct.D/master/images/Twisted.png
  :scale: 25% 
  :align: right
  :target: http://bit.ly/XSARm5
@@ -459,21 +459,21 @@ Based on Python optparser we do see application were growing in number of switch
 Invocation
 ==========
 
-Likewise Bsd Middle-age, a sub-entity was existing inside /etc/init or /etc/init.d and desapear or move inside /usr This design exist inside /etc/init.d/Fnct.d to  establish a __future__ development for integration inse loader and initrd for shell management and Integration. 
+Likewise Bsd Middle-age, a sub-entity was existing inside /etc/init or /etc/init.d and desapear or move inside /usr This design exist inside /etc/init.d/Fnct.D to  establish a __future__ development for integration inse loader and initrd for shell management and Integration. 
 
 ** Updated **
 
-The original mechanism /etc/init.d/Fnct.d/fnct_lib allow loading of sub library.  Most important are fnct_debian_lib _sub_jack_script _sub_Git _sub_ssh_handler all available inside the /etc/init.d/Fnct.d Path .
+The original mechanism /etc/init.d/Fnct.D/fnct_lib allow loading of sub library.  Most important are fnct_debian_lib _sub_jack_script _sub_Git _sub_ssh_handler all available inside the /etc/init.d/Fnct.D Path .
 
 Example :
 
 
-.. image:: https://raw.github.com/priendeau/Fnct.d/master/images/fnct_lib_loading.png
-		:target: https://github.com/priendeau/Fnct.d#Invocation
+.. image:: https://raw.github.com/priendeau/Fnct.D/master/images/fnct_lib_loading.png
+		:target: https://github.com/priendeau/Fnct.D#Invocation
 
 
 
-This is a result from loading /etc/init.d/Fnct.d/fnct_lib from a .bashrc 
+This is a result from loading /etc/init.d/Fnct.D/fnct_lib from a .bashrc 
 
 	
 Example of .bashrc configuration file with fnct_lib and some usefull widget  configured thru uses of alias. 
@@ -481,7 +481,7 @@ Example of .bashrc configuration file with fnct_lib and some usefull widget  con
 .. code:: shell
 	
 	### Found on Top of my .bashrc 
-	. /etc/init.d/Fnct.d/fnct_lib 
+	. /etc/init.d/Fnct.D/fnct_lib 
 
 
 	export PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[01;36m\]@\[\033[01;32m\]\h\[\033[01;34m\] \W \$\[\033[00m\] '
@@ -490,7 +490,7 @@ Example of .bashrc configuration file with fnct_lib and some usefull widget  con
 	### Some common thing found inside a .bashrc example
 	### 
 	alias ls='ls -AlSr --color=tty' ; 
-	alias mkdir='/etc/init.d/Fnct.d/md_cd' ;
+	alias mkdir='/etc/init.d/Fnct.D/md_cd' ;
 	
 	
 	### 
@@ -499,12 +499,12 @@ Example of .bashrc configuration file with fnct_lib and some usefull widget  con
 	### of date-creation and location created and dumping file .gitignore, README.rst
 	### MANIFEST.in inside every creation... Useful to store story-board, File-list
 	### and avoiding to concurrent temporary file or useless file...  Also 
-	### /etc/init.d/Fnct.d/md_cd own an quantomic action, many selfuser may use 
+	### /etc/init.d/Fnct.D/md_cd own an quantomic action, many selfuser may use 
 	### different terminal and will have to wait until first one had done to use
 	### the mkdir, md... Before another user can use it... so ${HOME}/.ArrayMdCd
 	### can not hold uncoherent information or incomplete one . 
 	### 
-	alias md='/etc/init.d/Fnct.d/md_cd' ;
+	alias md='/etc/init.d/Fnct.D/md_cd' ;
 	alias iptables-list='iptables -L --numeric --line-numbers' ;
 	alias synaptic-search='sudo -s synaptic-search' ;
 	alias synaptic-up='sudo -s /usr/sbin/synaptic --update-at-startup'
@@ -580,14 +580,14 @@ Example of .bashrc configuration file with fnct_lib and some usefull widget  con
 Improvement
 ===========
 
-Now on latest relase ( 2013-09-04 ), the re-integration of /etc/init.d/Fnct.d/fnct_lib 
+Now on latest relase ( 2013-09-04 ), the re-integration of /etc/init.d/Fnct.D/fnct_lib 
 was added to Git repository. so now inside a simple .bashrc the following line will 
 call the Lib:
 
 .. code:: shell
 	
 	### Must be added inside ~/.bashrc 
-	. /etc/init.d/Fnct.d/fnct_lib 
+	. /etc/init.d/Fnct.D/fnct_lib 
 
 
 Assuming the Git developpement branch was cloned inside /etc/init.d/Fnct.D
@@ -701,8 +701,8 @@ symptoms like Freudian regression of psychiatric ill.
 :Title: Pumping performance problems, 
 :Method: Python Application versus Bash Shell. 
 
-.. image:: https://raw.github.com/priendeau/Fnct.d/master/images/Pumping_Performance.png
-		:target: https://github.com/priendeau/Fnct.d#Definitions
+.. image:: https://raw.github.com/priendeau/Fnct.D/master/images/Pumping_Performance.png
+		:target: https://github.com/priendeau/Fnct.D#Definitions
 (The desire to be pitied and surrounded some childishness and the continual use of enemas are, in some respects, of a narcissistic hypochondriac who declined to anal stage of psychoanalysis, concerned about the control of its I / O and everything about his person (Freudian quote) )
 
 
@@ -921,7 +921,7 @@ and result to a permanent verification of Repository path with :
 	NewIndexRepository=/media/COMST500GB/Linux-Debian/archives/Mint-15_x86-64/UnderscoreXDevlpt-001/index
 	NewRepository=/media/COMST500GB/Linux-Debian/archives/Mint-15_x86-64/UnderscoreXDevlpt-001
 	
-	alias PackageRepositoryMgmt='test -e  $( PkgRepoMgmtReposIndex=${NewIndexRepository} PackageRepositoryMgmt --get PkgRepoMgmtReposIndex ) && /etc/init.d/Fnct.d/md_cd $( PkgRepoMgmtReposIndex=${NewIndexRepository} PackageRepositoryMgmt --get PkgRepoMgmtReposIndex ) && PkgRepoMgmtAddPkgLst=True PkgRepoMgmtRepository=${NewRepository} PkgRepoMgmtReposIndex=${NewIndexRepository} PackageRepositoryMgmt'
+	alias PackageRepositoryMgmt='test -e  $( PkgRepoMgmtReposIndex=${NewIndexRepository} PackageRepositoryMgmt --get PkgRepoMgmtReposIndex ) && /etc/init.d/Fnct.D/md_cd $( PkgRepoMgmtReposIndex=${NewIndexRepository} PackageRepositoryMgmt --get PkgRepoMgmtReposIndex ) && PkgRepoMgmtAddPkgLst=True PkgRepoMgmtRepository=${NewRepository} PkgRepoMgmtReposIndex=${NewIndexRepository} PackageRepositoryMgmt'
  
 - This case is also exceptionnal, Attempting to use the variable without having new declaration of it thru uses of get might cumbershot the call 
 - But next uses of PackageRepositoryMgmt will not depend of 
@@ -1126,7 +1126,7 @@ The leaky method, it formely require something out of the crontab to not permit 
 .. code:: shell
 
 
- ### Script is called change_cpu_state, it's goal mentionned early does depend of file presence inside /root/sysctl/.cpuXXXXX , The investigator have found 2 cores inside /sys/devices/system/cpu and properly declare them having governor changeable and frequency changeable. Notice Logged inside this user it only start that script ( with properly configured fnct.D ). Afterall it's mainstream, you do test or final test-case, Like my python user it load idle over stripped-down mate or gnome or enriched xfce and python script are simply going faster . 
+ ### Script is called change_cpu_state, it's goal mentionned early does depend of file presence inside /root/sysctl/.cpuXXXXX , The investigator have found 2 cores inside /sys/devices/system/cpu and properly declare them having governor changeable and frequency changeable. Notice Logged inside this user it only start that script ( with properly configured Fnct.D ). Afterall it's mainstream, you do test or final test-case, Like my python user it load idle over stripped-down mate or gnome or enriched xfce and python script are simply going faster . 
  #!/bin/bash 
 
  ROOT_PWD_MAIN=/root/sysctl
@@ -1424,8 +1424,8 @@ While GetUUID will demonstrate TWO Mechanism to accheive registration requires i
   local StrUUIDActionName=${GetUActionFunc:=UUIDNoLoop,UUIDLoop} ;
 
   ### Section for GetUUID Registration with UUID.
-  local StrDbURI=${GetUDBPath:=/var/cache/fnct.D/db/sqlite/GetUUID.sqlite}
-  local StrDbSchema=${GetUDBSchema:=/etc/init.d/Fnct.d/getUUID.schema}
+  local StrDbURI=${GetUDBPath:=/var/cache/Fnct.D/db/sqlite/GetUUID.sqlite}
+  local StrDbSchema=${GetUDBSchema:=/etc/init.d/Fnct.D/getUUID.schema}
   local BoolCallRegistered=${GetUIDRegister:=False}; 
   local StrAppsRegister=${GetUAppsRegisterName:=None};
   local StrUUIDIndexName=${GetUIDName=.GetUUID};
@@ -1855,7 +1855,7 @@ mode.
 See the image 
 
 .. image:: http://4.bp.blogspot.com/-UGYpVcrcNxo/UhPOsCBfCaI/AAAAAAAAAFA/7VHwjDj1TsM/s1600/ZenityShellEval.png
-        :target: https://github.com/priendeau/Fnct.d#ZenityShellEval
+        :target: https://github.com/priendeau/Fnct.D#ZenityShellEval
 
 It Open by default a uuid-like temporary file. There is no actual was
 to modify the name, but assuming the implementation of ZenityShellEval
@@ -1969,18 +1969,18 @@ Everything start with calling ZenityBuildForm, let use the same interface held b
 
 ZenityBuildForm depend from frienf called ZenityPrefixedVarSelection It's the first windows appearing. This application have other sub-function being callable by uses of Prefixed-Variable BuildListInformation from ZenityPrefixedVarSelection is somewhat a DTD extration-tool. Because it extract the list of variable and do expand the extraction into TAG, having expanded TAG into Default Value Extracted we are not far from created a Dictionnary of common key and type-of-value. But first here the selectable windows from ZenityBuildForm.
 
-.. image:: https://github.com/priendeau/Fnct.d/blob/master/images/ZenityPrefixedVariable.png
-        :target: https://github.com/priendeau/Fnct.d#ZenityBuildForm
+.. image:: https://github.com/priendeau/Fnct.D/blob/master/images/ZenityPrefixedVariable.png
+        :target: https://github.com/priendeau/Fnct.D#ZenityBuildForm
 
 The second Windows we are exactly in Step 2 inside ZenityBuildForm which had extrated TAG from Prefixed-Variable and have created a Form made from Text-Entry wished to fill from Pre-Selected information. You don't have to go back to look for the Value example inside the previous windows, a set of them are displayed and probably some are taking to much place to enlarge from WIDTH ratio the windows. Zenity Form mode does not support checkable or set of True/False for Entry. Even inside the List mode from Zenity Form we can choose more than one title and not asking to select True-State one. Take in mind, the information you have selected need to be filled or you only have to not select them if they are correct the function will launch ith what the default are. 
 
-.. image:: https://github.com/priendeau/Fnct.d/blob/master/images/ZenityBuildForm.png
-        :target: https://github.com/priendeau/Fnct.d#ZenityBuildForm
+.. image:: https://github.com/priendeau/Fnct.D/blob/master/images/ZenityBuildForm.png
+        :target: https://github.com/priendeau/Fnct.D#ZenityBuildForm
 
 Here the 2 Type of Windows. One the Number 1 does store all yourtrial inside a repository and use Zenity Text-info to read an UUID-filename from the Repository location. The advantage against Number 2 it's you don't have to run the ZenityBuildForm once to get the same function and the Number 1 does certify what you have selected is finger-printed or clearly certify with SHA1SUM algorithm. Which made the call authentic and using some other tools inside the Librabry will let you see if it's authentic or not. This authenticity trace is part of this section from Draft Paper indicate some tools are contribuying to secure you code if this code will be integrated inside server with many level of management and many Administrator and/or Webmaster or Higher-priviledge with possibility to authentify runnable script mean having a clear vision f what's online should always be checked or it's possibly a trace of faillure. 
 
-.. image:: https://github.com/priendeau/Fnct.d/blob/master/images/ZenityBuildForm-output.png
-        :target: https://github.com/priendeau/Fnct.d#ZenityBuildForm
+.. image:: https://github.com/priendeau/Fnct.D/blob/master/images/ZenityBuildForm-output.png
+        :target: https://github.com/priendeau/Fnct.D#ZenityBuildForm
 
 
 
@@ -2057,13 +2057,13 @@ Integrity of chunk With ZenityShellEval Checksum algorithm .
 	### which was modified recently and will show a faillure . 
 	
 	$> ZSECheckSumTest=True \
-	   ZSEPathStorage=/etc/init.d/Fnct.d/ \
+	   ZSEPathStorage=/etc/init.d/Fnct.D/ \
 	   ZSEFileName=950966fa-0e67-11e3-98a2-001b3875b29c
 
 	### On screen it report the information 
 	File: 57eaab74b095e5d374cf15d5923fef2fb02eaab7
 	Footprint: fa3cd4782aa56e9c1725a06904af3293a6b5c532
-	file-shasum:/etc/init.d/Fnct.d/950966fa-0e67-11e3-98a2-001b3875b29c:FAILED
+	file-shasum:/etc/init.d/Fnct.D/950966fa-0e67-11e3-98a2-001b3875b29c:FAILED
 	
 	# Re-editing the file with ZenityShellEval and removing the FOOTPRINT will save
 	### it with newest information... Or possibly need to come back to original file
@@ -2075,7 +2075,7 @@ Integrity of chunk With ZenityShellEval Checksum algorithm .
 	
 	File: 223715eeac461ce63984fd5f9f0ddb749dc3909d
 	Footprint: 223715eeac461ce63984fd5f9f0ddb749dc3909d
-	file-shasum:/etc/init.d/Fnct.d/950966fa-0e67-11e3-98a2-001b3875b29c:MATCH
+	file-shasum:/etc/init.d/Fnct.D/950966fa-0e67-11e3-98a2-001b3875b29c:MATCH
 
 ***NOTE***, ZenityShellEval, IS changing the SHA1SUM header in any circumstance,
 having the chunk conform or not, correct or not...
@@ -2243,7 +2243,7 @@ variable parsing and be unable to acheive a better algorithm.
  Evolution of Variable with pre-designed called like ValueToVariable
  and presence of unified Getter .
  While some effort toward __fnctCreateLocalityFuncParam owning ability
- to interpret uses of __call_locality , predecessor from old_fnct.D does
+ to interpret uses of __call_locality , predecessor from old_Fnct.D does
  owning specificity of variable . Today having unified call of variable 
  thru uses of Array called __call_locality( Member-call Function-Name ), 
  the function __GetVarReferenceList and apparatus :
@@ -2735,13 +2735,13 @@ a functionnal-programmation stream behing show under many call from BoolVarTestV
 
 <SVG>
 
-.. image:: https://raw.github.com/priendeau/Fnct.d/master/images/950966fa-0e67-11e3-98a2-001b3875b29c-pseudo-code-Main.svg
-        :target: https://github.com/priendeau/Fnct.d#5f218798-0ec6-11e3-98a2-001b3875b29c
+.. image:: https://raw.github.com/priendeau/Fnct.D/master/images/950966fa-0e67-11e3-98a2-001b3875b29c-pseudo-code-Main.svg
+        :target: https://github.com/priendeau/Fnct.D#5f218798-0ec6-11e3-98a2-001b3875b29c
 
 <PNG>
 
-.. image:: https://raw.github.com/priendeau/Fnct.d/master/images/950966fa-0e67-11e3-98a2-001b3875b29c-pseudo-code-Main.png
-        :target: https://github.com/priendeau/Fnct.d#5f218798-0ec6-11e3-98a2-001b3875b29c
+.. image:: https://raw.github.com/priendeau/Fnct.D/master/images/950966fa-0e67-11e3-98a2-001b3875b29c-pseudo-code-Main.png
+        :target: https://github.com/priendeau/Fnct.D#5f218798-0ec6-11e3-98a2-001b3875b29c
 
 .. code:: shell
 	
@@ -2800,7 +2800,7 @@ can perform a fast way to recognize the format... Having it on screen, it's
 detection behave with on-sight display and were ignored from Scripter. Good 
 Practice at this moment it imply renaming file without extension into know one... 
 
-This FileNameConversion function had some root inside Original lib from fnct.d 
+This FileNameConversion function had some root inside Original lib from Fnct.D 
 three years ago, and was inclued inside fnct_lib. Being a major in name 
 conversion it  also include possibility to search for a type and convert it or 
 simply pass extra command.
@@ -3028,8 +3028,8 @@ The one only note is to respect the common Policy-format:
 	
 
 
-.. image:: https://raw.github.com/priendeau/Fnct.d/master/images/ZenityLibPolicyList.png
-		:target: https://github.com/priendeau/Fnct.d#7bd8c582-2ebe-11e3-98a2-001b3875b29c	
+.. image:: https://raw.github.com/priendeau/Fnct.D/master/images/ZenityLibPolicyList.png
+		:target: https://github.com/priendeau/Fnct.D#7bd8c582-2ebe-11e3-98a2-001b3875b29c	
 
 
 :Note: 75411766-1969-11e3-98a2-001b3875b29c
@@ -3158,8 +3158,8 @@ StartAgentSSH Helper:
 Schema relative dependency relation of AgentLoader and StartAgentSSH.
 
 
-.. image:: https://raw.github.com/priendeau/Fnct.d/master/images/AgentLoaderRelation.png
-		:target: https://github.com/priendeau/Fnct.d#6e61bab0-35eb-11e3-98a2-001b3875b29c
+.. image:: https://raw.github.com/priendeau/Fnct.D/master/images/AgentLoaderRelation.png
+		:target: https://github.com/priendeau/Fnct.D#6e61bab0-35eb-11e3-98a2-001b3875b29c
 
 
 :Note: 208d465e-f6d4-11e5-98a2-001e4c8856d6 
@@ -3229,8 +3229,8 @@ bad after all ...
 
 Default GUI when calling ZenityContentListing alone. 
 
-.. image:: https://raw.github.com/priendeau/Fnct.d/master/images/ZenityContentListing.png
-		:target: https://github.com/priendeau/Fnct.d#3d46895a-4f41-11e3-98a2-001b3875b29c
+.. image:: https://raw.github.com/priendeau/Fnct.D/master/images/ZenityContentListing.png
+		:target: https://github.com/priendeau/Fnct.D#3d46895a-4f41-11e3-98a2-001b3875b29c
 
 
 Help from ZenityContentListing
@@ -3313,8 +3313,8 @@ Extracting information based on Unique Key, case of Report file from PackageRepo
 
 	ZCLRegSearch="^ffb20698-0bbe-11e3-98a2-001b3875b29c" ZCLCSV=':' ZCLColExtr=2 ZCLFilePasswd=20130823 ZenityContentListing
 
-.. image:: https://raw.github.com/priendeau/Fnct.d/master/images/ZenityContentListing-002.png
-		:target: https://github.com/priendeau/Fnct.d#3d46895a-4f41-11e3-98a2-001b3875b29c
+.. image:: https://raw.github.com/priendeau/Fnct.D/master/images/ZenityContentListing-002.png
+		:target: https://github.com/priendeau/Fnct.D#3d46895a-4f41-11e3-98a2-001b3875b29c
 
 Example 2:
 
@@ -3326,8 +3326,8 @@ Example 2:
 	
 	ZCLRegSearch="^COMMIT TRANSACTION" ZCLCSV=':' ZCLColExtr=4 ZCLFilePasswd=20130823 ZenityContentListing	
 
-.. image:: https://raw.github.com/priendeau/Fnct.d/master/images/ZenityContentListing-001.png
-		:target: https://github.com/priendeau/Fnct.d#3d46895a-4f41-11e3-98a2-001b3875b29c
+.. image:: https://raw.github.com/priendeau/Fnct.D/master/images/ZenityContentListing-001.png
+		:target: https://github.com/priendeau/Fnct.D#3d46895a-4f41-11e3-98a2-001b3875b29c
 
 Example 3:
 
@@ -3371,8 +3371,8 @@ Example 4:
 	
 	ZCLIsCheckListMulti=True ZCLFilePasswd=latest ZCLColExtr=2 ZCLRegSearch=^fcb9ecc6-8389-11e6-8b1d-001e4c8856d6  ZenityContentListing
 
-.. image:: https://raw.github.com/priendeau/Fnct.d/master/images/ZenityContentListing-003.png
-		:target: https://github.com/priendeau/Fnct.d#b9a774fc-8425-11e6-8b1d-001e4c8856d6
+.. image:: https://raw.github.com/priendeau/Fnct.D/master/images/ZenityContentListing-003.png
+		:target: https://github.com/priendeau/Fnct.D#b9a774fc-8425-11e6-8b1d-001e4c8856d6
 
 
 :Note: ad9f62fc-8423-11e6-8b1d-001e4c8856d6
