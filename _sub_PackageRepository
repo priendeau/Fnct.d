@@ -260,7 +260,7 @@ function GetDpkgInstalled()
    local ArrayArg=( $* ) ;
    local Arg0=${ArrayArg[0]} ; 
    local StrParentApps=${__call_locality[1]} ;
-   local StrStartMain=${GDIFuncStart:=__main_StartServices} ;
+   local StrStartMain=${GIDLFuncStart:=__main_StartServices} ;
   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
    eval $( eval CAFunctName=GetIdDpkgListing CAIsAddParent=False __Call_Argument ) :  
   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
@@ -339,7 +339,7 @@ function GetDpkgInstalled()
    local ArrayArg=( $* ) ;
    local Arg0=${ArrayArg[0]} ; 
    local StrParentApps=${__call_locality[1]} ;
-   local StrStartMain=${GDIFuncStart:=__main_StartServices} ;
+   local StrStartMain=${SCETFuncStart:=__main_StartServices} ;
   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
    eval $( eval CAFunctName=StreamCprEnvlTxt CAIsAddParent=False __Call_Argument ) :  
   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
@@ -422,23 +422,76 @@ function GetDpkgInstalled()
  unset GetDpkgListing ; 
  function GetDpkgListing()
  {
+  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+   local __call_locality=( GDL GetDpkgListing ) ;
+   local ArrayArg=( $* ) ;
+   local Arg0=${ArrayArg[0]} ; 
+   local StrParentApps=${__call_locality[1]} ;
+   local StrStartMain=${GDLFuncStart:=__main_StartServices} ;
+  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+   eval $( eval CAFunctName=GetDpkgListing CAIsAddParent=False __Call_Argument ) :  
+  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+   eval $( eval CAFunctName=GetDpkgListing CAIsAddParent=False CallArgument ) :  
+  fi   
   ### Note 
   ### Transfert from External=>Root,StrSnapShotUUID inside GetDpkgListing, with same name. 
-  local __call_locality=( GetDpkgLst GetPackageListing ) ;
-  local ArrayArg=( $* ) ; 
-  local Arg0=( ${ArrayArg[0]} ) ;
-  local GetDpkgInstalledAwkScript=${StrScriptAwkFilter} ; 
-  local StrId=$( GIDLPackageUUID=${StrSnapShotUUID}         \
-                 StrIndexFile=${StrIndexFile}               \
-                 StrTransactionStart=${StrTransactionStart} \
-                 GetIdDpkgListing                           ) 
-  GetDpkgInstalledAwkScript=${StrScriptAwkFilter} GetDpkgInstalled                                       | \
-                            StrPkgLstExt=${StrPkgLstExt}                                                 \
-                            StreamCprEnvlTxtFile=${StrPathReposIndex}/${StrSnapShotUUID}.${StrPkgLstExt} \
-                            StreamCprEnvlTxt  ; 
-  local StrSHASnap=$( sha1sum --binary ${StrPathReposIndex}/${StrId}.${StrPkgLstExt} | cut -d ' ' -f 1 ) 
-  echo -ne "ShaSUM of snapshot, ID:${StrId} SHA:${StrSHASnap}\n" > /dev/stderr ; 
-  echo -ne "SNAPSHOT:SHA1SUM:${StrSHASnap}\nSNAPSHOT END\n" >> ${StrIndexFile} ; 
+  #local __call_locality=( GetDpkgLst GetPackageListing ) ;
+  #local ArrayArg=( $* ) ; 
+  #local Arg0=( ${ArrayArg[0]} ) ;
+  #local GetDpkgInstalledAwkScript=${StrScriptAwkFilter} ; 
+
+  function __main_StartServices()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local __call_locality=( Main __main_StartServices ) ;
+    local ArrayArg=( $* ) ;
+    local Arg0=${ArrayArg[0]} ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) :  
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) :  
+   fi  
+   local StrId=$( GIDLPackageUUID=${StrSnapShotUUID}         \
+                  StrIndexFile=${StrIndexFile}               \
+                  StrTransactionStart=${StrTransactionStart} \
+                  GetIdDpkgListing                           ) 
+   GetDpkgInstalledAwkScript=${StrScriptAwkFilter} GetDpkgInstalled                                       | \
+                             StrPkgLstExt=${StrPkgLstExt}                                                 \
+                             StreamCprEnvlTxtFile=${StrPathReposIndex}/${StrSnapShotUUID}.${StrPkgLstExt} \
+                             StreamCprEnvlTxt  ; 
+   local StrSHASnap=$( sha1sum --binary ${StrPathReposIndex}/${StrId}.${StrPkgLstExt} | cut -d ' ' -f 1 ) 
+   echo -ne "ShaSUM of snapshot, ID:${StrId} SHA:${StrSHASnap}\n" > /dev/stderr ; 
+   echo -ne "SNAPSHOT:SHA1SUM:${StrSHASnap}\nSNAPSHOT END\n" >> ${StrIndexFile} ; 
+  }
+  
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+  
+  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   GVRIsName=False     \
+   GVRIsSynopsis=False \
+   GVRIsSummary=False  \
+   GVRIsDesc=False     \
+   GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;	
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  StrMsg="__FUNCT__ version versionTP=__VER_TP__, versionCA=__VER_CA__, versionGPI=__VER_GPI__" ; 
+  StrMsg=${StrMsg//__FUNCT__/${__call_locality[1]}} ; 
+  StrMsg=${StrMsg//__VER_CA__/${versionCA}} ; 
+  StrMsg=${StrMsg//__VER_TP__/${versionTP}} ; 
+  StrMsg=${StrMsg//__VER_GPI__/${versionGPI}} ; 
+  VerbMsg="${StrMsg}" VerbHeader="VERSION" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ; 
+  eval $( eval VTVIsArrayStyleInsert=True \
+       VTVValueEntry=${StrVarList}   \
+       VTVIsValueReAssign=True       \
+       VTVIsValueToConvert=False     \
+       VTVIsArrayStyleInsert=True    \
+       ValueToVariable ) ${StrStartMain} ; 
+ fi    
  }
   
  unset GetPackageList ; 
