@@ -175,7 +175,7 @@ function GetDpkgInstalled()
    ### This variable can not be inside  the first block it require to pass
    ### by the Main function or it will query itself when a getter will be 
    ### called . 
-   local StrAwkScript=$( PackageRepositoryMgmt --get PkgRepoMgmtReposAwkLst ) ; 
+   local StrAwkScript=$( PackageRepositoryMngmt --get PRMReposAwkLst ) ; 
    StrMsg="__FUNCT__ version versionTP=__VER_TP__, versionCA=__VER_CA__, versionGPI=__VER_GPI__" ; 
    StrMsg=${StrMsg//__FUNCT__/${__call_locality[1]}} ; 
    StrMsg=${StrMsg//__VER_CA__/${versionCA}} ; 
@@ -268,6 +268,7 @@ function GetDpkgInstalled()
   fi   
   local StrPackageID=${GIDLPackageUUID:=DefaultID} ;
   local StrTransactionStart=${GIDLPackageStartID:=DefaultStartID} ;
+  local StrFileIndex=${GIDLFileIndex:=DefautlFileIndex} ;
   local StrTplSnap=${GIDLTplSnapshoot:="ADD SNAPSHOT\nDATE:__TRANSACTION_START__:ID:__PACKAGE_ID__\n"} ; 
   local StrTplList=${GIDLTplList:="ID of listing:__PACKAGE_ID__\n"} ; 
   local StrID=${StrSnapShotUUID} ; 
@@ -290,13 +291,13 @@ function GetDpkgInstalled()
    StrTplList=${StrTplList//__PACKAGE_ID__/${StrPackageID}} ; 
 
    ### Send information on /dev/stderr ; 
+   #echo -ne "ID of listing:${StrPackageID}\n"  > /dev/stderr ;   
    VerbMsg=${StrTplList} VerbHeader="DEBUG-${__call_locality[1]}" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis   ; 
    
    ### Send information on File-Log ; 
+   #echo -ne "ADD SNAPSHOT\nDATE:${StrTransactionStart}:ID:${StrPackageID}\n" >> ${StrIndexFile} ; 
    VerbMsg=${StrTplSnap} VerbDev=${StrIndexFile} VerbEvalForm=False VerbAppendDev=True  VerbFormated=False VerbState=True Verbosis   ; 
 
-   #echo -ne "ADD SNAPSHOT\nDATE:${StrTransactionStart}:ID:${StrPackageID}\n" >> ${StrIndexFile} ; 
-   echo -ne "ID of listing:${StrPackageID}\n"  > /dev/stderr ;   
   }
   
   local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
@@ -350,7 +351,7 @@ function GetDpkgInstalled()
   #local ArrayArg=( $* ) ; 
   #local StrPackageID=${StreamCETPackageUUID:=None} GetIdDpkgListing=${StrSnapShotUUID}
   ### Note Prefixed-Change : StreamCprEnvlTxtFile -> SCETTxtFile
-  local StrFile=${StreamCprEnvlTxtFile:=DefaultFileName};
+  local StrFile=${SCETTxtFile:=DefaultFileName};
   local StrApps=${SCETApps:=/bin/bzip2} ; 
   local StrAppsOpt=${SCETAppsOpt:="-9z"}
   local StrFilterApps=${SCETFilterApps:=/usr/bin/base64} ; 
@@ -422,6 +423,40 @@ function GetDpkgInstalled()
  unset GetDpkgListing ; 
  function GetDpkgListing()
  {
+  function Verbosis()
+    {
+     #eval $( CAFunctName=Verbosis CAIsAddParent=False __Call_Argument ) ; 
+     local -a ArrayArg=( $* ) ; 
+     local -a __call_locality=( Verb Verbosis )
+     local StrMsg=${VerbMsg:=__TEXT__} ; 
+     local StrDevOut=${VerbDev:=/dev/stderr} ; 
+     local IsVerboseState=${VerbState:=False} ;
+     local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+     local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+     local IsDisplayFormatted=${VerbFormated:=True} ;
+     local IsAppendMode=${VerbAppendDev:=False} ; 
+     if [ "${IsVerboseState:=False}" == "True" ] ; then 
+      if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+       if [ "${IsAppendMode:=False}" == "True" ] ; then 
+         echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
+       else  
+         echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+       fi
+      else
+       if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+          echo "${StrMsg}" ;  
+       else
+        if [ "${IsAppendMode:=False}" == "True" ] ; then 
+         echo "${StrMsg}" >> ${StrDevOut} ;
+        else
+         echo "${StrMsg}" > ${StrDevOut} ;
+        fi
+       fi 
+      fi 
+     fi
+    } 
+    ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
+  
   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
    local __call_locality=( GDL GetDpkgListing ) ;
    local ArrayArg=( $* ) ;
@@ -439,7 +474,16 @@ function GetDpkgInstalled()
   #local ArrayArg=( $* ) ; 
   #local Arg0=( ${ArrayArg[0]} ) ;
   #local GetDpkgInstalledAwkScript=${StrScriptAwkFilter} ; 
-
+  local StrDefaultVTVOpt=${GDLVTVOpt:="VTVIsArrayStyleInsert=True VTVIsValueReAssign=True VTVIsValueToConvert=False VTVIsArrayStyleInsert=True"} ; 
+  local StrDefaultGPIOpt=${GDLGPIOpt:="GPIIsUUIDInstance=True GPIIsGenerateCode=True GPIIsExecuteEval=False GPIIsZenityHandlerOut=False GPIIsFileHandlerOut=True GPIFuncStart=__main_StartServices GPIRepoCreatEnabled=True GPIRepositoryCreation=True"} ; 
+  local StrTransactionStart=${GDLPackageStartID:=DefaultStartID} ;
+  local StrReposIndex=${GDLRepositoryPath:=DefaultRepositoryIndexPath} ; 
+  local StrPkgLstExt=${GDLPkgLstExt:=DefaultPkgListExt} ;
+  local StrFileIndex=${GDLFileIndex:=DefautlFileIndex} ;  
+  local StrSnapUUID=${GDLSnapShootUUID:=DefaultSnapShootUUID} ; 
+  local StrPackageID=${GDLPackageUUID:=DefaultID} ;
+  local StrVarList="StrScriptAwkFilter,StrDefaultVTVOpt,StrDefaultGPIOpt,StrTransactionStart,StrFileIndex,StrPkgLstExt,StrSnapUUID,StrPackageID"
+ 
   function __main_StartServices()
   {
    if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
@@ -451,14 +495,18 @@ function GetDpkgInstalled()
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) :  
    fi  
-   local StrId=$( GIDLPackageUUID=${StrSnapShotUUID}         \
-                  StrIndexFile=${StrIndexFile}               \
-                  StrTransactionStart=${StrTransactionStart} \
-                  GetIdDpkgListing                           ) 
-   GetDpkgInstalledAwkScript=${StrScriptAwkFilter} GetDpkgInstalled                                       | \
-                             StrPkgLstExt=${StrPkgLstExt}                                                 \
-                             StreamCprEnvlTxtFile=${StrPathReposIndex}/${StrSnapShotUUID}.${StrPkgLstExt} \
-                             StreamCprEnvlTxt  ; 
+   local StrId=$( GIDLPackageUUID=${StrPackageID}           \
+                  GIDLFileIndex=${StrFileIndex}             \
+                  GIDLPackageStartID=${StrTransactionStart} \
+                  GetIdDpkgListing ) ; 
+   local StrStreamIndexFile=${StrPathReposIndex}/${StrSnapUUID}.${StrPkgLstExt} ; 
+   #GetDpkgInstalledAwkScript=${StrScriptAwkFilter} GetDpkgInstalled                                       | \
+   #                          StrPkgLstExt=${StrPkgLstExt}                                                 \
+   #                          StreamCprEnvlTxtFile=${StrPathReposIndex}/${StrSnapShotUUID}.${StrPkgLstExt} \
+   #                          StreamCprEnvlTxt  ; 
+   GetDpkgInstalledAwkScript=$( GetDpkgInstalled   | \
+                             SCETApps=/bin/bzip2 SCETAppsOpt="-9z" StrPkgLstExt=${StrPkgLstExt} ) | \
+                             SCETTxtFile=${StrStreamIndexFile} StreamCprEnvlTxt  ;
    local StrSHASnap=$( sha1sum --binary ${StrPathReposIndex}/${StrId}.${StrPkgLstExt} | cut -d ' ' -f 1 ) 
    echo -ne "ShaSUM of snapshot, ID:${StrId} SHA:${StrSHASnap}\n" > /dev/stderr ; 
    echo -ne "SNAPSHOT:SHA1SUM:${StrSHASnap}\nSNAPSHOT END\n" >> ${StrIndexFile} ; 
@@ -485,6 +533,7 @@ function GetDpkgInstalled()
   StrMsg=${StrMsg//__VER_TP__/${versionTP}} ; 
   StrMsg=${StrMsg//__VER_GPI__/${versionGPI}} ; 
   VerbMsg="${StrMsg}" VerbHeader="VERSION" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ; 
+  local StrScriptAwkFilter=$( PackageRepositoryMngmt --get PRMReposAwkLst ) ;
   eval $( eval VTVIsArrayStyleInsert=True \
        VTVValueEntry=${StrVarList}   \
        VTVIsValueReAssign=True       \
@@ -497,9 +546,19 @@ function GetDpkgInstalled()
  unset GetPackageList ; 
  function GetPackageList()
  {
-  local __call_locality=( GetPackageList ) ;
-  local ArrayArg=( $* ) ; 
-  local Arg0=( ${ArrayArg[0]} ) ;
+  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+   local __call_locality=( GPL GetPackageList ) ;
+   local ArrayArg=( $* ) ;
+   local Arg0=${ArrayArg[0]} ; 
+  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+   eval $( eval CAFunctName=TestPathIndex CAIsAddParent=False __Call_Argument ) :  
+  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+   eval $( eval CAFunctName=TestPathIndex CAIsAddParent=False CallArgument ) :  
+  fi   
+  
+  #local __call_locality=( GetPackageList ) ;
+  #local ArrayArg=( $* ) ; 
+  #local Arg0=( ${ArrayArg[0]} ) ;
   local StrPathArchives=${GetPackageListPathArchives:=/var/cache/apt/archives} ; 
   local StrPackageType=${GetPackageListFormat:=deb} ;
   local StrDisplayOutput="${GetPackageListStringFormat:='%f '}" ;
@@ -524,9 +583,19 @@ function GetDpkgInstalled()
  unset TestPathIndex ; 
  function TestPathIndex()
  {
-  local __call_locality=( TestPathIndex ) ;
-  local ArrayArg=( $* ) ; 
-  local Arg0=( ${ArrayArg[0]} ) ;
+  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+   local __call_locality=( TPI TestPathIndex ) ;
+   local ArrayArg=( $* ) ;
+   local Arg0=${ArrayArg[0]} ; 
+  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+   eval $( eval CAFunctName=TestPathIndex CAIsAddParent=False __Call_Argument ) :  
+  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+   eval $( eval CAFunctName=TestPathIndex CAIsAddParent=False CallArgument ) :  
+  fi   
+  
+  #local __call_locality=( TestPathIndex ) ;
+  #local ArrayArg=( $* ) ; 
+  #local Arg0=( ${ArrayArg[0]} ) ;
   local StrPathTest=${TestPathIndexName:=/media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64/index} ; 
   local StrTestType="${TestPathIndexTest:=! -d}" ;
   local StrTestResultAction="${TestPathIndexResultAction:=mkdir -p __PATH__}" ;
@@ -537,9 +606,19 @@ function GetDpkgInstalled()
  unset TestDriveMount ; 
  function TestDriveMount()
  {
-  local __call_locality=( TestDriveMount ) ; 
-  local ArrayArg=( $* ) ; 
-  local Arg0=( ${ArrayArg[0]} ) ;
+  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+   local __call_locality=( TDM TestDriveMount ) ;
+   local ArrayArg=( $* ) ;
+   local Arg0=${ArrayArg[0]} ; 
+  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+   eval $( eval CAFunctName=TestDriveMount CAIsAddParent=False __Call_Argument ) :  
+  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+   eval $( eval CAFunctName=TestDriveMount CAIsAddParent=False CallArgument ) :  
+  fi   
+  
+  #local __call_locality=( TestDriveMount ) ; 
+  #local ArrayArg=( $* ) ; 
+  #local Arg0=( ${ArrayArg[0]} ) ;
   local IsMountDrive="True";
   local StrScopeType="${TestDriveMountScope:=local -a}";
   local StrDriveList="${TestDriveMountList}";
@@ -668,81 +747,142 @@ function GetDpkgInstalled()
 ###   PkgRepoMgmtReposIndex and PkgRepoMgmtRepository anymore .
 ### 
 
+### Notice with old function name : PackageRepositoryMgmt did not return any
+### Short-name aka the Prefixed-Name with function/application GetStdPrefixName
+### which is an exception. Instead of adding inside the map-name PackageRepositoryMgmt:PRM
+### or actual prefixed choosed PkgRepoMgm, I do change the function name for PackageRepositoryMngmt
+### and stay an exception for this case... 
+### 
+### 
+unset PackageRepositoryMngmt ; 
 
-unset PackageRepositoryMgmt ; 
-
-function PackageRepositoryMgmt()
+function PackageRepositoryMngmt()
 {
- function Verbosis()
- {
-  local __call_locality=( Verbosis Verb );
-  local StrMsg=${VerbMsg:=__TEXT__} ; 
-  local StrDevOut=${VerbDev:=/dev/stderr} ; 
-  local IsVerboseState=${VerbState:=False} ;
-  local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
-  local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
-  local IsDisplayFormatted=${VerbFormated:=True} ;
-  local ArrayArg=( $* ) ; 
-  if [ "${IsVerboseState:=False}" == "True" ] ; then 
-   if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
-    echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
-   else
-    if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
-     echo "${StrMsg}" ;  
+  ### This is a specialized Verbosis mode :
+  ###  
+  ###  All condition required to set VerbState=True 
+  ###  All condition required to set a message with VerbMsg=STRING
+  ###  
+  ###  
+  ### It can be used to :
+  ###  - Echo result to be passed throught Value Result .
+  ###  Required :
+  ###  VerbEvalForm=True VerbFormated=False 
+  ###  
+  ###  VerbHeader Is ineffective
+  ###  
+  ### -Echo result can be append to file and not overwriting the content: 
+  ###  Required ;
+  ###  VerbFormated=False/True VerbAppendDev=True VerbDev=[ FILENAME | UUID ]
+  ###  - Appending to file also required to be unique-file were no instance of 
+  ###  Verbosis may point on same-file or loss of log will be CERTAIN.
+  ###  -Pointing to Same-Destination require a lock Mechanism which is 
+  ###  not implemented here
+  ###  
+  function Verbosis()
+  {
+   #eval $( CAFunctName=Verbosis CAIsAddParent=False __Call_Argument ) ; 
+   local -a ArrayArg=( $* ) ; 
+   local -a __call_locality=( Verb Verbosis )
+   local StrMsg=${VerbMsg:=__TEXT__} ; 
+   local StrDevOut=${VerbDev:=/dev/stderr} ; 
+   local IsVerboseState=${VerbState:=False} ;
+   local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+   local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+   local IsDisplayFormatted=${VerbFormated:=True} ;
+   local IsAppendMode=${VerbAppendDev:=False} ; 
+   if [ "${IsVerboseState:=False}" == "True" ] ; then 
+    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+     if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
+     else  
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+     fi
     else
-     echo "${StrMsg}" > ${StrDevOut} ;
+     if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+        echo "${StrMsg}" ;  
+     else
+      if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo "${StrMsg}" >> ${StrDevOut} ;
+      else
+       echo "${StrMsg}" > ${StrDevOut} ;
+      fi
+     fi 
     fi 
-   fi 
-  fi
- } ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis   
-	
-	local __call_locality=( PkgRepoMgmt PackageRepositoryMgmt ) ;
- local ArrayArg=( $* ) ; 
- local Arg0="${ArrayArg[0]}"  ;
+   fi
+  } 
+  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
+  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+   local __call_locality=( PRM PackageRepositoryMngmt ) ;
+   local ArrayArg=( $* ) ;
+   local Arg0=${ArrayArg[0]} ; 
+  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+   eval $( eval CAFunctName=PackageRepositoryMngmt CAIsAddParent=False __Call_Argument ) :  
+  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+   eval $( eval CAFunctName=PackageRepositoryMngmt CAIsAddParent=False CallArgument ) :  
+  fi 	
+	#local __call_locality=( PkgRepoMgmt PackageRepositoryMgmt ) ;
+ #local ArrayArg=( $* ) ; 
+ #local Arg0="${ArrayArg[0]}"  ;
 
-	local StrPathArchives=${PkgRepoMgmtPathArchives:=/var/cache/apt/archives} ; 
-	local StrFindStringFormat=${PkgRepoMgmtStrFmt:="%f "} ;
-	local StrPackageType=${PkgRepoMgmtFileFormat:=deb} ;
-	local StrPathRepository=${PkgRepoMgmtRepository:=/media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64} ;
-	local StrPathReposIndex=${PkgRepoMgmtReposIndex:=/media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64/index} ;
-	local StrIndexLatest=${PkgRepoMgmtLatestIndexName:=latest} ;
-	local StrAddPackageListing=${PkgRepoMgmtAddPkgLst:=False} ; 
-	local StrPkgLstExt=${PkgRepoMgmtPkgExt:=bz2.base64} ;
-	local StrAppsLinkerName=${PkgRepoMgmtLinkerName:=/bin/ln} ; 
-	local StrAppsLinkerOptionRecv=${PkgRepoMgmtLinkerOption:=-s} ; 
+	local StrPathArchives=${PRMPathArchives:=/var/cache/apt/archives} ; 
+	local StrFindStringFormat=${PRMStrFmt:="%f "} ;
+	local StrPackageType=${PRMFileFormat:=deb} ;
+	local StrPathRepository=${PRMRepository:=/media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64} ;
+	local StrPathReposIndex=${PRMReposIndex:=/media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64/index} ;
+	local StrIndexLatest=${PRMLatestIndexName:=latest} ;
+	local StrAddPackageListing=${PRMAddPkgLst:=False} ; 
+	local StrPkgLstExt=${PRMPkgExt:=bz2.base64} ;
+	local StrAppsLinkerName=${PRMLinkerName:=/bin/ln} ; 
+	local StrAppsLinkerOptionRecv=${PRMLinkerOption:=-s} ; 
 	local StrAppsLinkerOption=( ${StrAppsLinkerOptionRecv//,/ }  ) ;
-	local StrDumpingFormat=${PkgRepoMgmtReposIndexFmt:=__ID__:__FILE__} ;
-	local StrDefaultActionIndex=${PkgRepoMgmtReposIndexAction:="mkdir -p __PATH__"} ;
-	local StrTestDriveDebug=${PkgRepoMgmtReposDriveDebug:=False} ;
-	local StrIndexTest=${PkgRepoMgmtReposIndexTest:=! -d} ;
-	local StrScriptAwkFilter=${PkgRepoMgmtReposAwkLst:=/etc/init.d/Fnct.D/awk-script/dpkg-col-display.awk} ;
+	local StrDumpingFormat=${PRMReposIndexFmt:=__ID__:__FILE__} ;
+	local StrDefaultActionIndex=${PRMReposIndexAction:="/bin/mkdir -p __PATH__"} ;
+	local StrTestDriveDebug=${PRMReposDriveDebug:=False} ;
+	local StrIndexTest=${PRMReposIndexTest:=! -d} ;
+	local StrScriptAwkFilter=${PRMReposAwkLst:=/etc/init.d/Fnct.D/awk-script/dpkg-col-display.awk} ;
 
 	### Explained in GetOtherDate, GODReference can be negative and report yesterday date too. and not null will
   ### give n-day after today... 	
-	local IntDefaultDayIndexName=${PkgRepoMgmtReposIndexDay:=0} ;
-	local StrBackupAction=${PkgRepoMgmtReposBkpAct:=mv __SRC__/__FILE__ __DEST__ __VIRG__ ln -s __DEST__/__FILE__ __SRC__/__FILE__} ;
-	local StrTransactionStart=$( GODFormat="%Y%m%d\ %H:%M:%S" GetOtherDate ) ; 
-	local StrTodatDateTransfert=$( GODReference=${IntDefaultDayIndexName} GetOtherDate ) ; 
-	local StrIndexFile=${StrPathReposIndex}/${StrTodatDateTransfert} ;
+	local IntDefaultDayIndexName=${PRMReposIndexDay:=0} ;
+	local StrBackupAction=${PRMReposBkpAct:=mv __SRC__/__FILE__ __DEST__ __VIRG__ ln -s __DEST__/__FILE__ __SRC__/__FILE__} ;
 	
-	local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--add-snapshoot\tAdd DPKG Listing inside Current Index File.\n\t\t\tOnly Store an ID in the index-file and the content into UUID-name from index path.\n\n" ;
- local StrVarList="StrUUID,StrSnapShotUUID,StrPathArchives,StrFindStringFormat,StrPackageType,StrPathRepository,StrPathReposIndex,StrIndexLatest,StrAddPackageListing,StrPkgLstExt,StrAppsLinkerName,StrAppsLinkerOptionRecv,StrAppsLinkerOption,StrDumpingFormat,StrDefaultActionIndex,StrTestDriveDebug,StrIndexTest,StrScriptAwkFilter,IntDefaultDayIndexName,StrBackupAction,StrTransactionStart,StrTodatDateTransfert,StrIndexFile"
+ #local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+ local StrVarList="StrUUID,StrSnapShotUUID,StrPathArchives,StrFindStringFormat,StrPackageType,StrPathRepository,StrPathReposIndex,StrIndexLatest,StrAddPackageListing,StrPkgLstExt,StrAppsLinkerName,StrAppsLinkerOptionRecv,StrAppsLinkerOption,StrDumpingFormat,StrDefaultActionIndex,StrTestDriveDebug,StrIndexTest,StrScriptAwkFilter,IntDefaultDayIndexName,StrBackupAction,StrTransactionStart,StrToDateTransfert,StrIndexFile"
 
 
  function CheckDrive()
  {
-  local __call_locality=( CD CheckDrive ) ;
-  local Arg0=${ArrayArg[0]} ;
-  local ArrayArg=( $* ) ;   
+  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+   local __call_locality=( CD CheckDrive ) ;
+   local ArrayArg=( $* ) ;
+   local Arg0=${ArrayArg[0]} ; 
+  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+   eval $( eval CAFunctName=CheckDrive CAIsAddParent=True __Call_Argument ) :  
+  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+   eval $( eval CAFunctName=CheckDrive CAIsAddParent=True CallArgument ) :  
+  fi     
+  #local __call_locality=( CD CheckDrive ) ;
+  #local Arg0=${ArrayArg[0]} ;
+  #local ArrayArg=( $* ) ;   
 		test $( TestDriveMountDebug=${StrTestDriveDebug} TestDriveMountList=${StrPathRepository},${StrPathArchives} TestDriveMount ) && \
 		echo -ne "Status of IsMountDrive: ${IsMountDrive}\n" > /dev/stderr ; 
  }
 	
  function AddSnapShoot()
  {
-  local __call_locality=( ASS AddSnapShoot ) ;
-  local Arg0=${ArrayArg[0]} ;
-  local ArrayArg=( $* ) ;   
+  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+   local __call_locality=( ASS AddSnapShoot ) ;
+   local ArrayArg=( $* ) ;
+   local Arg0=${ArrayArg[0]} ; 
+  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+   eval $( eval CAFunctName=AddSnapShoot CAIsAddParent=True __Call_Argument ) :  
+  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+   eval $( eval CAFunctName=AddSnapShoot CAIsAddParent=True CallArgument ) :  
+  fi     
+  #local __call_locality=( ASS AddSnapShoot ) ;
+  #local Arg0=${ArrayArg[0]} ;
+  #local ArrayArg=( $* ) ;   
   echo -ne "File to store next SnapShoot: ${StrIndexFile}\n" > /dev/stderr ; 
 		test $( TestDriveMountDebug=${StrTestDriveDebug} TestDriveMountList=${StrPathRepository},${StrPathArchives} TestDriveMount ) && \
   eval $( VTVValueEntry=${StrVarList} \ 
@@ -754,10 +894,19 @@ function PackageRepositoryMgmt()
  
  function __main_StartServices()
  {
+  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+   local __call_locality=( Main __main_StartServices ) ;
+   local ArrayArg=( $* ) ;
+   local Arg0=${ArrayArg[0]} ; 
+  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+   eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) :  
+  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+   eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) :  
+  fi     
   echo -ne "Reserved ID for COMMIT:${StrUUID}\nReserved ID for Listing:${StrSnapShotUUID}\n\n" > /dev/stderr ;
-  local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
-  local ArrayArg=( $* ) ;
-  local Arg0=${ArrayArg[0]};  
+  #local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+  #local ArrayArg=( $* ) ;
+  #local Arg0=${ArrayArg[0]};  
     
   
   $( TestDriveMountDebug=${StrTestDriveDebug} TestDriveMountList=${StrPathRepository},${StrPathArchives} TestDriveMount ) ; 
@@ -767,15 +916,29 @@ function PackageRepositoryMgmt()
    TestPathIndexResultAction=${StrDefaultActionIndex} TestPathIndex ;
    
    local ArrayFileList=( $( GetPackageListPathArchives=${StrPathArchives} GetPackageListFormat=${StrPackageType} GetPackageListStringFormat="${StrFindStringFormat}" GetPackageList ) )
-   local ShaSum=$( echo ${ArrayFileList[@]} | sha1sum | cut -d ' ' -f 1 )
-   if [ ${StrAddPackageListing:=False} == "True" ] ; then 
-     StrPathReposIndex=${StrPathReposIndex}       \
-     StrIndexFile=${StrIndexFile}                 \
-     StrTransactionStart=${StrTransactionStart}   \
-     StrPkgLstExt=${StrPkgLstExt}                 \
-     GetDpkgInstalledAwkScript=${StrScriptAwkFilter} \
-     StrSnapShotUUID=${StrSnapShotUUID} GetDpkgListing ; 
-   fi
+   local ShaSum=$( echo ${ArrayFileList[@]} | sha1sum | cut -d ' ' -f 1 ) ;
+     #StrPathReposIndex=${StrPathReposIndex}       \
+     #StrIndexFile=${StrIndexFile}                 \
+     #StrTransactionStart=${StrTransactionStart}   \
+     #StrPkgLstExt=${StrPkgLstExt}                 \
+     #GetDpkgInstalledAwkScript=${StrScriptAwkFilter} \
+     #StrSnapShotUUID=${StrSnapShotUUID} GetDpkgListing ; 
+   eval $( eval \
+      BVTIsPreambule=False       \
+      BVTBoolCase=True           \
+      BVTIsValueToVarAssert=True \
+      BVTVTVTPLA="GDLRepositoryPath=\${StrPathReposIndex} GDLFileIndex=\${StrIndexFile} GDLPackageStartID=\${StrTransactionStart} GDLPkgLstExt=\${StrPkgLstExt} GDLSnapShootUUID=\${StrSnapShotUUID} __FNCT_ASRT__ "  \
+      BVTVTFnctA=GetDpkgListing  \
+      BVTBoolVarName=\${StrAddPackageListing:=False} \
+      BVTVTFnctA=GetDpkgListing  \
+      BoolVarTest ) ; 
+   #if [ ${StrAddPackageListing:=False} == "True" ] ; then 
+   #  GDLRepositoryPath=${StrPathReposIndex}          \
+   #  GDLFileIndex=${StrIndexFile}                        \
+   #  GDLPackageStartID=${StrTransactionStart}   \
+   #  GDLPkgLstExt=${StrPkgLstExt}                    \
+   #  GDLSnapShootUUID=${StrSnapShotUUID} GetDpkgListing
+   #fi
    local IntIsFile=0 ;
    test -e ${StrIndexFile} && IntIsFile=1 ; 
    if [ ${IntIsFile:=0} -eq 1 ] ; then 
@@ -808,7 +971,7 @@ function PackageRepositoryMgmt()
     eval """${StrAppsLinkerName} ${StrAppsLinkerOption[@]} ${StrIndexFile} ${StrPathReposIndex}/${StrIndexLatest} """; 
    else
     echo -ne "ArrayFileList return Empty List\n" > /dev/stderr . 
-    fi
+   fi
   else
    echo -ne "Exit on Path acces Problems\nStatus of IsMountDrive: ${IsMountDrive}\n" > /dev/stderr ;
    return 1 ;
@@ -821,9 +984,18 @@ function PackageRepositoryMgmt()
  ### #############################################
 	### Main Body 
 	### #############################################
-
+	local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n\t--add-snapshoot\tAdd DPKG Listing inside Current Index File.\n\t\t\tOnly Store an ID in the index-file and the content into UUID-name from index path.\n\t--checkdrive\tAllow to check the Linking Destination and to mount it if it's a Device.\n${StrCompWordMsgSwitches}" ;
+ local StrNameHelper="PackageRepositoryMngmt\tThe Fnct.D Application for APT/Debian installer repository Linker. ";
+ local StrSummary="One of the important action This application posses is to make snapshot after you do install couple of Debian-installer and make a SNAPSHOOT of the current database to you Fnct.D Database. Allowing you to see the daily content 'Snapshooted' with tool line ZenityContentListing and Allow you to revert to you last installation status more easy. Other application are delivered with PackageRepositoryMngmt like the Filter application and Restore application putting back Installer on demand. One important Method to be held with this application is to make you AptOnCD more easy from another point avoiding corrupting the /var/cache location. It also reduce the size of your /var/cache if your setup was designed with splitting your path accross many devices." ;
+ local StrSynopsis="This application is a Repository handler and File Database. It allow linking your Debian Installer file from know source (/var/cache/apt/archives) to a backup location or out of your /var/cache location. It come with handy solution to linking the file to your backup location to your installation path and does own severals other mechanism" ;
+ local StrDescription="Here important information to manage your Debian Installation-File.\n\nMore to come" ;
+  
 	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-			GVRIOldPrefix=True  GetVarReference ${__call_locality[1]} ; 
+			GVRIsName=True     \
+   GVRIsSynopsis=True \
+   GVRIsSummary=True  \
+   GVRIsDesc=True     \
+   GVRIOldPrefix=False  GetVarReference ${__call_locality[1]} ; 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
@@ -843,14 +1015,17 @@ function PackageRepositoryMgmt()
           VTVIsValueToConvert=False   \
           ValueToVariable             )  AddSnapShoot ; 
 	elif [ "${Arg0:=--startservices}" == "--start-services" ] ; then
+   local StrTransactionStart=$( GODFormat="%Y%m%d\ %H:%M:%S" GetOtherDate ) ; 
+   local StrToDateTransfert=$( GODReference=${IntDefaultDayIndexName} GetOtherDate ) ; 
+	  local StrIndexFile=${StrPathReposIndex}/${StrToDateTransfert} ;
    local ArrayUUID=( $(  GetUSeq=2 GetULoop=True GetUTimeBased=True GetUAppsRegisterName=PackageRepositoryMgmt GetUIDRegister=False GetUIsHelper=False  GetUUID ) ) ; 
    local StrUUID=${ArrayUUID[0]} ; 
    local StrSnapShotUUID=${ArrayUUID[1]} ;
-	 eval $( VTVValueEntry=${StrVarList} \ 
+	 eval $( eval VTVValueEntry=${StrVarList} \ 
           VTVIsArrayStyleInsert=True  \
           VTVIsValueReAssign=True     \
           VTVIsValueToConvert=False   \
-          ValueToVariable             ) __main_StartServices ; 
+          ValueToVariable             ) ${StrStartMain} ; 
  fi 
 }
 
@@ -1047,9 +1222,15 @@ function PackageRepositoryFilter()
    done ;
   done ;
  }
+  
+
  
 	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-			GetVarReference ${__call_locality[1]} ; 
+			GVRIsName=False     \
+   GVRIsSynopsis=False \
+   GVRIsSummary=False  \
+   GVRIsDesc=False     \
+   GetVarReference ${__call_locality[1]} ; 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
