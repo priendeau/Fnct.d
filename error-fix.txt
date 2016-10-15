@@ -455,3 +455,139 @@ Loading...		[ _sub_PythonBoost ]
 SOLUTION:
 for Getter from GnrlPrsrInfctr that cause a loop, replacing ${StrParentApps} --get ... by GnrlPrsrInfctr --get ...
 Notice : if this line is called with ${StrParentApps} which suppose to be the application GnrlPrsrInfctr --get ArrayMsg[3] <> ${StrParentApps} --get ArrayMsg[3], it enter inside a loop and never end... the test consist to add before the StrMsg=... the echo line "Before getting ArrayMsg[3]" and right under to put an echo line "After getting ArrayMsg[3]". On console you do never see the After getting ArrayMsg[3] !!! But this fixed with putting back the function name GnrlPrsrInfctr, work for versionCA=0.0.0 to 0.0.2 but exceptionnally does it for versionCA=0.0.1 and versionCA=0.0.2 ???
+
+Date:20161014-23:43:00
+Reference:5247d6176130268e37a1bb3f4f433f1414449cd7
+File: _sub_PackageRepository
+Function: GetDpkgInstalled
+With command line :
+--> reload_fnctd ; . _sub_PackageRepository ; unset UUID ; eval $( FnctDVersion ) GDIGPIOpt=$( GetDpkgInstalled --get GDIGPIOpt | sed 's/GPIIsZenityHandlerOut=False/GPIIsZenityHandlerOut=True/g;s/GPIIsFileHandlerOut=True/GPIIsFileHandlerOut=False/g') GetDpkgInstalled
+
+Description: 
+Still show the Zenity Error message:
+- other action getting result based on sed and querry of Getter of GetDpkgInstalled allow switch to Zenity text-entry instead of normal display.
+It show another interface rather than usual Debian package listing by loading zenity Text-entry and demostrate the appropriate command-line launched. This is done by 
+where reload_fnctd is an alias 
+alias reload_fnctd='source ~/.bashrc ; LibLoader --stopservices ; unset ArrayLib ; eval $( FnctDVersion ) . /etc/init.d/Fnct.D/fnct_lib'
+where FnctDVersion is a function already explained and available inside README.rst
+
+OUTPUT: 
+--------------------------------------------------------------------------------------------------------------
+Set FunctionTrigger:versionGCT Version:0.0.1
+Set FunctionTrigger:versionGSPN Version:0.0.2
+Set FunctionTrigger:versionTP Version:0.0.2
+Set FunctionTrigger:versionGPI Version:0.0.1
+Set FunctionTrigger:versionCA Version:0.0.2
+Testing Lib Fnct.D
+Loading...		[ _sub_Structure ]
+Loading...		[ fnct_debian_lib ]
+Loading...		[ _sub_Function_Appliance ]
+Loading...		[ _sub_jack_script ]
+Loading...		[ _sub_Git ]
+Loading...		[ _sub_setup_py_extra_cmd ]
+Loading...		[ _sub_ssh_handler ]
+Loading...		[ _sub_vlc_services ]
+Loading...		[ _sub_binary ]
+Loading...		[ _sub_PythonBoost ]
+Testing Lib Fnct.D
+Un-Loading...		[ _sub_Structure ]
+Un-Loading...		[ fnct_debian_lib ]
+Un-Loading...		[ _sub_Function_Appliance ]
+Un-Loading...		[ _sub_jack_script ]
+Un-Loading...		[ _sub_Git ]
+Un-Loading...		[ _sub_setup_py_extra_cmd ]
+Un-Loading...		[ _sub_ssh_handler ]
+Un-Loading...		[ _sub_vlc_services ]
+Un-Loading...		[ _sub_binary ]
+Un-Loading...		[ _sub_PythonBoost ]
+Set FunctionTrigger:versionGCT Version:0.0.1
+Set FunctionTrigger:versionGSPN Version:0.0.2
+Set FunctionTrigger:versionTP Version:0.0.2
+Set FunctionTrigger:versionGPI Version:0.0.1
+Set FunctionTrigger:versionCA Version:0.0.2
+Testing Lib Fnct.D
+Loading...		[ _sub_Structure ]
+Loading...		[ fnct_debian_lib ]
+Loading...		[ _sub_Function_Appliance ]
+Loading...		[ _sub_jack_script ]
+Loading...		[ _sub_Git ]
+Loading...		[ _sub_setup_py_extra_cmd ]
+Loading...		[ _sub_ssh_handler ]
+Loading...		[ _sub_vlc_services ]
+Loading...		[ _sub_binary ]
+Loading...		[ _sub_PythonBoost ]
+Set FunctionTrigger:versionGCT Version:0.0.1
+Set FunctionTrigger:versionGSPN Version:0.0.2
+Set FunctionTrigger:versionTP Version:0.0.2
+Set FunctionTrigger:versionGPI Version:0.0.1
+Set FunctionTrigger:versionCA Version:0.0.2
+VERSION:[ GetDpkgInstalled version versionTP=0.0.2, versionCA=0.0.2, versionGPI=0.0.1 ]
+VERSION:[ GnrlPrsrInfctr version versionTP=0.0.2, versionCA=0.0.2, versionGPI=0.0.1 ]
+
+** (zenity:31643): WARNING **: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files
+ accountsservice install
+ acl install
+ acpi-support install
+ acpid install
+ add-apt-key install
+ adduser install
+ adobe-flashplugin install
+ aglfn install
+ alsa-base install
+ alsa-utils install
+ anacron install
+ antlr3 install
+ anyremote install
+ anyremote-data install
+ apg install
+ apt install
+ apt-build install
+ apt-clone install
+ apt-file install
+ apt-src install
+ apt-transport-https install
+ apt-utils install
+ apt-xapian-index install
+ aptdaemon install
+ aptdaemon-data install
+ aptitude install
+ aptitude-common install
+ apturl install
+ apturl-common install
+ archdetect-deb install
+ archmage install
+ aspell install
+ aspell-en install
+ aspell-fr install
+ at-spi2-core deinstall
+ atril install
+ atril-common install
+ attr install
+ autoconf install
+ autogen install
+ automake install
+ autopoint install
+ autotalent install
+ autotools-dev install
+ autotrace install
+ avahi-autoipd install
+ avahi-daemon install
+ avahi-utils install
+ bamfdaemon install
+ banshee install
+ base-files install
+ base-passwd install
+ bash install
+ bash-completion install
+ bc install
+ beignet install
+ beignet-dev install
+ bicyclerepair install
+ bind9-host install
+
+--------------------------------------------------------------------------------------------------------------
+SOLUTION:
+to redirect to error from /dev/sdterr or called '2>' to /dev/null since the Dbus Services was ligthened or reduced for slowing down the development system.
+This should applied to GnrlPrsrInfctr inside this function. 
+- considering GetDpkgInstalled have pass the execution I should test the underlying layer of GetDpkgListing calling StreamCprEnvlTxt and GetDpkgInstalled after 
+adapting GetDpkgListing to GnrlPrsrInfctr call. 

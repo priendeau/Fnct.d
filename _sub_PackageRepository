@@ -91,8 +91,18 @@ function GetDpkgInstalled()
  local StrFilterApps=${GDIFilterApps:=/usr/bin/gawk} ;
  local StrFilterOpt=${GDIFilterOpt:=-f __FILE__} ; 
  local StrParserResult=${GDITagParserResult:=StrCmd} ; 
+ local StrDefaultVTVOpt=${GDIVTVOpt:=VTVIsArrayStyleInsert=True,VTVIsValueReAssign=True,VTVIsValueToConvert=False,VTVIsArrayStyleInsert=True} ; 
+ local StrDefaultGPIOpt=${GDIGPIOpt:=GPIIsUUIDInstance=True,GPIIsGenerateCode=True,GPIIsExecuteEval=False,GPIIsZenityHandlerOut=False,GPIIsFileHandlerOut=True,GPIRepoCreatEnabled=True,GPIRepositoryCreation=True,GPIFuncStart=__main_StartServices} ; 
  local BoolDisplayDebug=${GDIIsDisplayDebug:=False} ; 
- local StrVarList="BoolDisplayDebug,StrVarList,StrStartMain,StrParentApps,StrParserResult,StrAwkScript,StrAppsTemplate,StrApps,StrAppsOpt,StrFilterApps,StrFilterOpt,StrParserTag" ; 
+ 
+ ### Making Easyer to add parameter like string with no space, these following 
+ ### command allow replacing comman-separated value by a space. Specifiying on 
+ ### prompt/command line require quote for Prefixed-Variable GDIVTVOpt, 
+ ### GDIGPIOpt if space is choosed . 
+ StrDefaultVTVOpt=${StrDefaultVTVOpt//,/ } ; 
+ StrDefaultGPIOpt=${StrDefaultGPIOpt//,/ } ;
+ 
+ local StrVarList="StrDefaultVTVOpt,StrDefaultGPIOpt,BoolDisplayDebug,StrVarList,StrStartMain,StrParentApps,StrParserResult,StrAwkScript,StrAppsTemplate,StrApps,StrAppsOpt,StrFilterApps,StrFilterOpt,StrParserTag" ; 
  
   function __main_StartServices()
   {
@@ -118,29 +128,19 @@ function GetDpkgInstalled()
    
    ###  at this moment configuration of StrCmdA is struggled somewhere because even the 
    ### UUID is not available after the execution. 
-   eval $( eval VTVIsArrayStyleInsert=True \
-        VTVValueEntry=${StrVarList}   \
-        VTVIsValueReAssign=True       \
-        VTVIsValueToConvert=False     \
-        VTVIsArrayStyleInsert=True    \
-        ValueToVariable ) $( eval \
-                          GPITagParserResult="StrCmdA" \
-                          GPIIsUUIDInstance=True \
-                          GPIFileName=${StrAwkScript} \
-                          GPIDpkgApps=${StrApps} \
+   
+   eval $( eval ${StrDefaultVTVOpt} \
+        VTVValueEntry=${StrVarList} \
+        ValueToVariable ) $( eval ${StrDefaultGPIOpt}      \
+                          GPITagParserResult="StrCmdA"     \
+                          GPIFileName=${StrAwkScript}      \
+                          GPIDpkgApps=${StrApps}           \
                           GPIDpkgAppsOpt=\"${StrAppsOpt}\" \
-                          GPIFilterApps=${StrFilterApps} \
+                          GPIFilterApps=${StrFilterApps}   \
                           GPIFilterOpt=\"${StrFilterOpt}\" \
-                          GPIIsGenerateCode=True \
-                          GPIIsExecuteEval=False \
-                          GPIIsZenityHandlerOut=False \
-                          GPIIsFileHandlerOut=True \
-                          GPIRepoCreatEnabled=True \
-                          GPIRepositoryCreation=True \
-                          GPIFuncStart=__main_StartServices \
                           GPIDisplayDebug=${GDIIsDisplayDebug} \
-                          GPIParserDebug=${GDIIsDisplayDebug} \
-                          GnrlPrsrInfctr )  ;
+                          GPIParserDebug=${GDIIsDisplayDebug}  \
+                          GnrlPrsrInfctr 2> /dev/null )  ;
    
    ### GPITagParserResult=StrParserResult 
    #StrMsg="GnrlPrsrInfctr cmdline: __CMD__" ;
@@ -357,8 +357,13 @@ function GetDpkgInstalled()
   local StrFilterApps=${SCETFilterApps:=/usr/bin/base64} ; 
   local StrFilterOpt=${SCETFilterOpt:="--wrap=0"} ; 
   local StrTpl=${SCETTemplate:="__APPS__ __APPS_OPT__ __PIPE__ __FILTER__ __FILTER_OPT__ > __FILE__"} ; 
-  local BoolDisplayDebug=${GIDLIsDebugDisplay:=False} ; 
-  local StrVarList="StrFile,StrApps,StrAppsOpt,StrFilterApps,StrFilterOpt,BoolDisplayDebug,StrVarList" ;
+  local StrDefaultVTVOpt=${SCETVTVOpt:=VTVIsArrayStyleInsert=True,VTVIsValueReAssign=True,VTVIsValueToConvert=False,VTVIsArrayStyleInsert=True} ; 
+  local StrDefaultGPIOpt=${SCETGPIOpt:=GPIIsUUIDInstance=True,GPIIsGenerateCode=True,GPIIsExecuteEval=False,GPIIsZenityHandlerOut=False,GPIIsFileHandlerOut=True,GPIRepoCreatEnabled=True,GPIRepositoryCreation=True,GPIFuncStart=__main_StartServices} ; 
+  local BoolDisplayDebug=${SCETLIsDebugDisplay:=False} ; 
+  local StrVarList="StrDefaultVTVOpt,StrDefaultGPIOpt,StrFile,StrApps,StrAppsOpt,StrFilterApps,StrFilterOpt,BoolDisplayDebug,StrVarList" ;
+ 
+  StrDefaultVTVOpt=${StrDefaultVTVOpt//,/ } ; 
+  StrDefaultGPIOpt=${StrDefaultGPIOpt//,/ } ;
    
   function __main_StartServices()
   {
