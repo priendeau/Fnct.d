@@ -4706,5 +4706,106 @@ if [ ${VarFnctLib:=False} == "True" ] ; then
     }
 fi 
 
+### Note: This function is not ready and is also reserved for FitsServices.py / SkyViewFactory.py
+### and this script is a low-cost download of big file, like CSV reference required to explain
+### field of low-cadence fits files from keepler2 photometer. 
+function CurlFtpContentDownload()
+{
+  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+   local __call_locality=( CFCD CurlFtpContentDownload ) ;
+   local ArrayArg=( $* ) ;
+   local Arg0=${ArrayArg[0]} ; 
+   local StrParentApps=${__call_locality[1]} ;
+   local StrStartMain=${GSUFuncStart:=__main_StartServices} ; 
+  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+   eval $( eval CAFunctName=CurlFtpContentDownload CAIsAddParent=False __Call_Argument ) :  
+  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+   eval $( eval CAFunctName=CurlFtpContentDownload CAIsAddParent=False CallArgument ) :  
+  fi 
+  
+  local StrFileName=${CFCDFileName:=None} ;
+  local StrUrlTpl=${CFCDUrlTpl:=ftp://__USER__@__ADDR__} 
+  local StrUrl=${CFCDURL:=archive.stsci.edu/pub/k2/catalogs/} ;
+  local StrUserAccount=${CFCDUserAcc:=anonymous}
+  
+  ### Curl required option :
+  ### --output --> file
+  ###  Output is not qualifying for appending or literracy of curl is not informing 
+  ### of the possible action it take on local-destination . 
+  ### - Suggest to create a temporary file to drop the information inside and 
+  ### to join the information to file-name.  
+  ### --speed-limit, required to establish a download-weight 
+  ### --speed-time and --connect-timeout will required to be specified with same information
+  ### or belong to curl information it continue to download after period of time specified 
+  ### in --speed-time. 
+  function ExtractSize()
+  {
+   local __call_locality=( ES ExtractSize ) ;
+   local ArrayArg=( $* ) ;
+   local Arg0=${ArrayArg[0]} ;    
+   sed 's/\(^[rwxs\-]*[\ ]*\)\([0-9]*[\ ]*\)\([0-9]*[\ ]*\)\([0-9]*[\ ]*\)\([0-9]*\)/\5/g' | cut -d ' ' -f 1 ;
+   ### Note : last command : 
+   ###   cut -d ' ' -f 1 -> extract file-size
+   ###   cut -d ' ' -f 5 -> extract filename
+   ###   cut -d ' ' -f 1,5 -> extract file-size + filename
+  }
+  
+  function ListFile()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local __call_locality=( LF ListFile ) ;
+    local ArrayArg=( $* ) ;
+    local Arg0=${ArrayArg[0]} ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=ListFile CAIsAddParent=True __Call_Argument ) :  
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=ListFile CAIsAddParent=True CallArgument ) :  
+   fi 
+   
+   
+   ncftpls -u ${StrUser} -l ${URL}/${StrFile} | ExtractSize ; 
+   
+  }
+  
+  
+  function __main_StartServices()
+  {
+  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+   local __call_locality=( CFCD CurlFtpContentDownload ) ;
+   local ArrayArg=( $* ) ;
+   local Arg0=${ArrayArg[0]} ; 
+  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+   eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) :  
+  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+   eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) :  
+  fi 
+  
+  }
+  
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+  local StrNameHelper="CurlFtpContentDownload\tStand for Curl Based FTP File download with time-limited or bandwith limitation. To download a file from a Big Project without high home-cost of your internet bandwith.";
+  local StrSummary="This CurlFtpContentDownload is a tool for planning downloading heavy weighted file from public domain like Mines evlation of ground of Ministeredu Canada, NASA Keepler2 project, any big file avilable on the internet for distant developper and high-cost bandwith for home use." ; 
+  local StrSynopsis="Soon to fill it with lot of informations";
+  local StrDescription="Having surdose of informations, skip this part..." ;
+  
+  
+  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   GVRIsName=True GVRIsSummary=True GVRIsSynopsis=False GVRIsDesc=False GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;	
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+   eval $( eval \
+     VTVIsArrayStyleInsert=True  \
+     VTVValueEntry=${StrVarList} \
+     VTVIsValueReAssign=True     \
+     VTVIsValueToConvert=False   \
+     ValueToVariable ) ${StrStartMain}
+  fi
+   
+}
 
 
