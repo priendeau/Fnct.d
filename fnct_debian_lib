@@ -1617,28 +1617,11 @@ function AutoChown()
 unset ZenityShellEval ;
 function ZenityShellEval()    
 {
- if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then  
-  local -a ArrayArg=( $* ) ; 
-  local -a __call_locality=( ZSE ZenityShellEval ) ;
-  local Arg0=${ArrayArg[0]};
-  local StrStartMain=${ZSEFuncStart:=__main_StartServices} ;
- elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then  
-  eval $( eval CAFunctName=ZenityShellEval CAIsAddParent=False __Call_Argument ) ; 
- elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then  
-  eval $( eval CAFunctName=ZenityShellEval CAIsAddParent=False CallArgument )  ; 
- fi
- 
  function Verbosis()
  {
-  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
-   local -a ArrayArg=( $* ) ;
-   local -a __call_locality=( Verb Verbosis ) ; 
-   local Arg0=${ArrayArg[0]} ; 
-  elif [ ${versionGPI:=0.0.0} == "0.0.1" ] ; then 
-   eval $( CAFunctName=Verbosis CAIsAddParent=False __Call_Argument ) ; 
-  elif [ ${versionGPI:=0.0.0} == "0.0.2" ] ; then 
-   eval $( CAFunctName=Verbosis CAIsAddParent=False CallArgument ) ; 
-  fi 
+  local -a ArrayArg=( $* ) ;
+  local -a __call_locality=( Verb Verbosis ) ; 
+  local Arg0=${ArrayArg[0]} ; 
   local StrMsg=${VerbMsg:=__TEXT__} ; 
   local StrDevOut=${VerbDev:=/dev/stderr} ; 
   local IsVerboseState=${VerbState:=False} ;
@@ -1668,6 +1651,17 @@ function ZenityShellEval()
   fi
  } 
  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
+ if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then  
+  local -a ArrayArg=( $* ) ; 
+  local -a __call_locality=( ZSE ZenityShellEval ) ;
+  local Arg0=${ArrayArg[0]};
+  local StrStartMain=${ZSEFuncStart:=__main_StartServices} ;
+ elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then  
+  eval $( eval CAFunctName=ZenityShellEval CAIsAddParent=False __Call_Argument ) ; 
+ elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then  
+  eval $( eval CAFunctName=ZenityShellEval CAIsAddParent=False CallArgument )  ; 
+ fi
+ 
 
  local IntSleep=${ZSESleepInterval:=5}  ;
  local IntFontSize=${ZSEFontSize:=12}   ; 
@@ -1682,15 +1676,18 @@ function ZenityShellEval()
  local IntHeight=${ZSEWindowHeight:=400} ;
  local IsLoopOnSucc=${ZSELoopOnSucc:=True} ; 
  local IsCheckSumOnly=${ZSECheckSumTest:=False} ; 
- local StrVarList="StrStartMain,TmpUUIDEdit,IntSleep,IntFontSize,IsEditField,IsAddFootPrint,StrTitle,StrFileName,StrDateFormat,IntDefaultModeExec,StrFilePath,IntWidth,IntHeight,IsLoopOnSucc,IsCheckSumOnly"
+ local BoolDisplayDebug=${ZSEDisplayDebug:=False} ; 
+ local StrVarList="StrStartMain,TmpUUIDEdit,IntSleep,IntFontSize,IsEditField,IsAddFootPrint,StrTitle,StrFileName,StrDateFormat,IntDefaultModeExec,StrFilePath,IntWidth,IntHeight,IsLoopOnSucc,IsCheckSumOnly,BoolDisplayDebug,StrVarList" ; 
 
  
-	function __main_Editor()
+	function MainEditor()
  {
-		local __call_locality=( Editor __main_Editor ) ;
+		local __call_locality=( ME MainEditor ${StrParentApps} ) ;
 		local ArrayArg=( $* ) ;
 		local Arg0=${ArrayArg[0]} ;
-  
+  local StrMsg=""
+  VerbMsg="Entry in function" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
+    
   if [ ! -f ${StrFileTmp} ] ; then 
    touch ${StrFileTmp} ; 
   fi
@@ -1748,10 +1745,18 @@ function ZenityShellEval()
     ###
       function _NoFootPrint()
       {
+        local __call_locality=( _NFP NoFootPrint ${StrParentApps} ) ;
+        local ArrayArg=( $* ) ;
+        local Arg0=${ArrayArg[0]} ;
+        VerbMsg="Entry in function" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
         echo -ne "###\n### No FootPrint Added, see Prefixed-Var ZSEAddFootPrint from ZenityShellEval\n###\n###\n###\n###\n###\n###\n###\n###\n###\n" ; 
       }
       function _FootPrint()
       {
+        local __call_locality=( FP _FootPrint ${StrParentApps} ) ;
+        local ArrayArg=( $* ) ;
+        local Arg0=${ArrayArg[0]} ;
+        VerbMsg="Entry in function" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
         local StrUUID=$( uuidgen -t ) ; 
         local StrSha1Sum=$( echo "${CmdEval}" | sha1sum | cut -d ' ' -f 1)
         local StrSize=$( echo "${CmdEval}" | wc -c ) ; 
@@ -1761,6 +1766,10 @@ function ZenityShellEval()
       }
       function _DetectFootPrint()
       {
+       local __call_locality=( DFP _DetectFootPrint ${StrParentApps} ) ;
+       local ArrayArg=( $* ) ;
+       local Arg0=${ArrayArg[0]} ;
+       VerbMsg="Entry in function" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
        local IntFootPrintDetection=$( echo -ne "${CmdEval}" | head -n 11 | egrep -ic "FootPrint" ) ;
        eval $( BVTVarName=StrFootPrintMark BVTVarHold='$( StrDateFormat=${StrDateFormat} CmdEval=${CmdEval} _FootPrint )' BVTBoolVarName=\${IsAddFootPrint} BVTBoolCase=False BVTBoolAssertion='$( _NoFootPrint )' BVTScopeTest=local BoolVarTest ) ;
       }
@@ -1793,11 +1802,13 @@ function ZenityShellEval()
   rm -f ${HOME}/${TmpUUIDEdit}
  }
  
- function __main_CheckSum()
+ function MainCheckSum()
  {
-		local __call_locality=( CheckSum __main_CheckSum ) ;
-		local Arg0=${ArrayArg[0]} ;
-		local ArrayArg=( $* ) ;
+		local __call_locality=( MCS MainCheckSum ) ;
+  local ArrayArg=( $* ) ;
+  local Arg0=${ArrayArg[0]} ;
+  VerbMsg="Entry in function" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
+  
   local CheckSumFile=$( cat ${StrFilePath}/${StrFileName} | grep -v "^###" | sha1sum | cut -d ' ' -f 1  ) ; 
   local CheckSumIdentity=$( cat ${StrFilePath}/${StrFileName} | grep "^###Sha1Sum:" | cut -d ' ' -f 2  | sed 's/[\ \t]//g' ) ;
   echo -ne "File: ${CheckSumFile}\nFootprint: ${CheckSumIdentity}\n" > /dev/stderr ; 
@@ -1813,6 +1824,8 @@ function ZenityShellEval()
 		local __call_locality=( Main __main_StartServices ) ;
 		local Arg0=${ArrayArg[0]} ;
 		local ArrayArg=( $* ) ; 
+  VerbMsg="Entry in function" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
+  
   ### Note: f1161962-0ad8-11e3-b166-001b3875b29c 
   ### 
   ### Title : Variable Forwarding Example in BoolVarTest & mutation 
@@ -1858,6 +1871,9 @@ function ZenityShellEval()
           BVTBoolAssertion='${StrFilePath}/${TmpUUIDEdit}' \
           BVTScopeTest=local \
           BoolVarTest ) ;  
+  StrMsg="Value StrFileName:__FILE__" ; 
+  StrMsg=${StrMsg//__FILE__/${StrFileName}} ; 
+  VerbMsg=${StrMsg} VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
   
   ### Definition of StrActionClause
   ### 2 action are performed inside the variable StrActionClause, both using 
@@ -1875,23 +1891,20 @@ function ZenityShellEval()
   ###  
   ### so Building a if - else  - fi ; require 2 call of BoolVarTest .   
 
-  local StrActionClause=$( BVTIsPreambule=False BVTBoolVarName=\${IsCheckSumOnly} BVTIdType=4 BVTBoolCase=True BVTIsValueToVarAssert=True BVTVTVVarA=StrFilePath,StrFileName BVTVTFnctA=__main_CheckSum  BoolVarTest ; BVTIsPreambule=False BVTIsValueToVar=False BVTIsValueToVarAssert=True BVTIdType=5 BVTVTVVarA=\${StrVarList} BVTVTFnctA=__main_Editor BoolVarTest ) ; 
+  local StrActionClause=$( BVTConclude=';' BVTIsPreambule=False BVTBoolVarName="\${IsCheckSumOnly:=False}" BVTIdType=4 BVTBoolCase=True BVTIsValueToVarAssert=True BVTVTVVarA="StrFilePath,StrFileName" BVTVTFnctA=MainCheckSum  BoolVarTest ; BVTConclude=';' BVTIsPreambule=False BVTIsValueToVar=False BVTIsValueToVarAssert=True BVTIdType=5 BVTVTVVarA="${StrVarList}" BVTVTFnctA="MainEditor" BoolVarTest ) ; 
   
   ### Should replace next statement :
-  #if [ "${IsCheckSumOnly}" == "True" ] ; then 
-  # eval $( VTVValueEntry=StrFilePath,StrFileName \
-  #         VTVIsValueReAssign=True \
-  #         VTVIsValueToConvert=False \
-  #         VTVIsArrayStyleInsert=True \
-  #         ValueToVariable ) __main_CheckSum 
-  #else
-  # eval $( VTVValueEntry=${StrVarList} \
-  #         VTVIsValueReAssign=True \
-  #         VTVIsValueToConvert=False \
-  #         VTVIsArrayStyleInsert=True \
-  #         ValueToVariable ) __main_Editor 
-  #fi
-  eval ${StrActionClause} ; 
+  # if [ "${IsCheckSumOnly}" == "True" ] ; then 
+  #  eval $( VTVValueEntry=StrFilePath,StrFileName VTVIsValueReAssign=True VTVIsValueToConvert=False VTVIsArrayStyleInsert=True ValueToVariable ) MainCheckSum ; 
+  # else 
+  #  eval $( VTVValueEntry=${StrVarList} VTVIsValueReAssign=True VTVIsValueToConvert=False VTVIsArrayStyleInsert=True ValueToVariable ) MainEditor  ; 
+  # fi
+  StrMsg="Value IsCheckSumOnly:__VAR__ StrActionClause:__IF__" ; 
+  StrMsg=${StrMsg//__IF__/${StrActionClause}} ; 
+  StrMsg=${StrMsg//__VAR__/${IsCheckSumOnly}} ; 
+  VerbMsg=${StrMsg} VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
+
+  eval $( eval ${StrActionClause} ) ;   
 
  }
  
@@ -1913,6 +1926,7 @@ function ZenityShellEval()
   StrMsg=${StrMsg//__VER_CA__/${versionCA}} ;
   StrMsg=${StrMsg//__VER_BVT__/${versionBVT}} ;
   VerbMsg=${StrMsg} VerbHeader="VERSION" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ; 
+  VerbMsg="Entry in function ${StrStartMain}" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
   eval $( eval VTVIsArrayStyleInsert=True  \
           VTVValueEntry=${StrVarList} \
           VTVIsValueReAssign=True     \
@@ -4724,10 +4738,34 @@ function CurlFtpContentDownload()
   fi 
   
   local StrFileName=${CFCDFileName:=None} ;
-  local StrUrlTpl=${CFCDUrlTpl:=ftp://__USER__@__ADDR__} 
+  local StrUrlTpl=${CFCDUrlTpl:=ftp://__USER__@__ADDR__} ;
   local StrUrl=${CFCDURL:=archive.stsci.edu/pub/k2/catalogs/} ;
-  local StrUserAccount=${CFCDUserAcc:=anonymous}
+  local StrDefaultVTVOpt=${CFCDVTVOpt:=VTVIsArrayStyleInsert=True,VTVIsValueReAssign=True,VTVIsValueToConvert=False,VTVIsArrayStyleInsert=True} ; 
+  local StrDefaultGPIOpt=${CFCDGPIOpt:=GPIIsUUIDInstance=True,GPIIsGenerateCode=True,GPIIsExecuteEval=False,GPIIsZenityHandlerOut=False,GPIIsFileHandlerOut=True,GPIRepoCreatEnabled=True,GPIRepositoryCreation=True,GPIFuncStart=__main_StartServices} ; 
+  local BoolDisplayDebug=${CFCDIsDisplayDebug:=False} ; 
   
+  ### NCFTPLS PARSER:
+  local StrLSApps=${CFCDLsApps:=/usr/bin/ncftpls}
+  local StrLSAppsOpt=${CFCDLsAppsOpt:=-u __USER__ -l __URL__}
+  local StrLSFilterApps=${CFCDLsFilterApps:=ExtractSize}
+  ### GPITpl definition for CFCDLs section
+  local StrLSParser=${CFCDLsTpl:=__APPS__ __APPS_OPT__ __PIPE__ __FILTER__}
+  #local StrLSFilterOpt=${CFCDLsFilterOpt:=}
+  ### GPITagParser definition for CFCDLs
+  local StrLSTag=${CFCDLsDef:=StrDefaultPipe:__PIPE__,StrLSApps:__APPS__,StrLSAppsOpt:__APPS_OPT__,StrLSFilterApps:__FILTER__,StrUserAccount:__USER__,StrUrlTpl:__URL__,StrFileName:__FILE__};
+
+  ### Extracting address from URL and operator '/%' 
+  local StrAddr=${StrUrl/%\/[a-zA-Z0-9\_]*} ;
+  ### Extracting Server-path from erasing the address from URL.  
+  local StrPathSrv=${StrUrl//${StrAddr}/} ; 
+  StrPathSrv=${StrPathSrv//ftp:\/\//} ;
+  StrPathSrv=${StrPathSrv//http:\/\//} ;
+  
+  local StrUserAccount=${CFCDUserAcc:=anonymous}
+  StrUrlTpl=${StrUrlTpl//__USER__/${StrUserAccount}} ;
+  StrUrlTpl=${StrUrlTpl//__ADDR__/${StrAddr}/${StrPathSrv}} ;
+  
+  local StrVarList="StrFileName,StrUrlTpl,StrUrl,StrUserAccount,StrAddr,StrPathSrv,StrLSTag,StrLSParser,StrLSFilterApps,StrLSFilterApps,StrLSApps,BoolDisplayDebug,StrDefaultGPIOpt,StrDefaultVTVOpt"
   ### Curl required option :
   ### --output --> file
   ###  Output is not qualifying for appending or literracy of curl is not informing 
@@ -4761,9 +4799,20 @@ function CurlFtpContentDownload()
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
     eval $( eval CAFunctName=ListFile CAIsAddParent=True CallArgument ) :  
    fi 
-   
-   
-   ncftpls -u ${StrUser} -l ${URL}/${StrFile} | ExtractSize ; 
+   eval $( eval ${StrDefaultVTVOpt} \
+        VTVValueEntry=${StrVarList} \
+        ValueToVariable ) $( eval ${StrDefaultGPIOpt}       \
+                          GPITpl=${StrLSTag}                \
+                          GPITagParser=${StrLSTag}          \
+                          GPITagParserResult="StrCmdA"      \
+                          GPIFileName=${StrFileName}        \
+                          GPIDpkgApps=${StrLSApps}          \
+                          GPIDpkgAppsOpt=\"${StrLSAppsOpt}\"\
+                          GPIFilterApps=${StrLSFilterApps}  \
+                          GPIDisplayDebug=${BoolDisplayDebug} \
+                          GPIParserDebug=${BoolDisplayDebug}\
+                          GnrlPrsrInfctr )  ;
+   ###ncftpls -u ${StrUser} -l ${URL}/${StrFile} | ExtractSize ; 
    
   }
   

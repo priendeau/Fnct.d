@@ -1868,7 +1868,18 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
     StrLcTTpl=${StrLcTTpl//__TEE__/)} ;
       ### 2016-08-29, require a ';' at the end of a command or an error will occur 
       ### after the preambule or near the end after assertion
-    StrLcTTpl=${StrLcTTpl//__FNCT_ASRT__/${StrVTRAsrtVTFnct} } ;
+      ### 2016-10-18, The StrDefaultEndTest is required in case IntDefautlType=3,4
+      ### required to put a '; else' where case for IntDefautlType=3 imply elif...else
+      ### IntDefautlType=4 imply else .. fi
+      ### While the rest remain under __IF_STATEMENT for if-elif, and 2 condidition manage
+      ### their own assertion with semi-colon end-statement... 
+      if [ ${IntDefautlType:=0} -eq 3 ] ; then 
+       StrLcTTpl=${StrLcTTpl//__FNCT_ASRT__/${StrVTRAsrtVTFnct} ${StrDefaultEndTest}} ;
+      elif [ ${IntDefautlType:=0} -eq 4 ] ; then 
+       StrLcTTpl=${StrLcTTpl//__FNCT_ASRT__/${StrVTRAsrtVTFnct} ${StrDefaultEndTest}} ;
+      else
+       StrLcTTpl=${StrLcTTpl//__FNCT_ASRT__/${StrVTRAsrtVTFnct}} ;
+      fi 
    else
     StrLcTTpl=${StrLcTTpl//__ASSERTION__/${ArrayAssertion[0]}} ;
     StrLcTTpl=${StrLcTTpl//__ASRT_VAR__NAME__/${StrVarNamed}} ;
@@ -1952,7 +1963,7 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
        ###   less than 0 charlong it simply not working in this version .
        StrVarHoldTest=$( echo "${StrVarHoldTest}" | sed 's/True//g;s/False//g'  ) ; 
        local IntPolishBool=${#StrVarHoldTest};
-       local IntPolisgString ;
+       local IntPolishgString ;
        local IntPolishInteger ;
        if [ ${IntPolishBool:=0} -eq 0 ] ; then 
         ### It's a Boolean form notation 
@@ -1975,7 +1986,7 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
        ### If previous test did not transform the result into Int.
        if [ "${StrTypeVar:=None}" == "None" ] ; then 
         StrVarHoldTest=$( echo ${StrVarHoldTest} | sed 's/[A-Za-z\ ]//g'  | tr '[:graph:]' ' ' | tr '[:cntrl:]' ' ' | tr '[:punct:]' ' ' | tr '[:space:]' ' ' | sed 's/ //g' ) ;
-        IntPolisgString=${#StrVarHoldTest} ;
+        IntPolishgString=${#StrVarHoldTest} ;
         StrTypeVar="String"
         ### end of if-"${StrTypeVar:=None}" == "None" 
         ### here, still in "${IsTypePreamb:=False}" == "True"
@@ -1986,7 +1997,7 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
        if [ "${StrTypeVar:=None}" == "None" ] ; then 
         if [ ${IntPolishInteger:=0} -gt 0 ] ; then 
           ### it's not number 
-          if [ ${IntPolisgString:=0} -eq 0 ] ; then 
+          if [ ${IntPolishgString:=0} -eq 0 ] ; then 
            ### It own couple of extra char inside and should be see as String . 
            StrTypeVar="String" ; 
           fi 
@@ -2070,6 +2081,8 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
    elif [ ${IntDefautlType:=0} -eq 3 ] ; then 
     StrLcTTpl=${StrLcTTpl//__END_MARK__/} ; 
    elif [ ${IntDefautlType:=0} -eq 4 ] ; then 
+    StrLcTTpl=${StrLcTTpl//__END_MARK__/} ; 
+   elif [ ${IntDefautlType:=0} -eq 5 ] ; then 
     StrLcTTpl=${StrLcTTpl//__END_MARK__/} ; 
    else
     StrLcTTpl=${StrLcTTpl//__END_MARK__/${StrDefaultEndTest}} ;  
