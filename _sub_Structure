@@ -508,7 +508,7 @@ if [ "${versionGUUID:=0.0.2}" == "0.0.2" ] ; then
     fi 
    fi
   } 
-  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis
+  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
 
   
   function ApplicationRegistrationIndex()
@@ -1017,6 +1017,7 @@ if [ "${versionVTV:=0.0.2}" == "0.0.2" ] ; then
   local IsValueTransScript=${VTVIsTransHadScript:=False} ;
   local IsDisplayDebug=${VTVIsDebugDisplay:=False} ; 
   local IsSlowDebugOut=${VTVIsSlowDebug:=False} ; 
+  local BoolIsQuoteValue=${VTVIsQuotedValue:=False} ; 
   local StrDefaultTransScript=${VTVITransformScript:=None} ;
   local StrScriptApps=${VTVAppsScripter:=/usr/bin/gawk} ;
   local StrScriptAppsOpt=${VTVAppsScripterOpt:=--field-separator=__SEP__ --file=__FILE__ __VAR_ASSIGN__ }
@@ -1040,7 +1041,7 @@ if [ "${versionVTV:=0.0.2}" == "0.0.2" ] ; then
     fi 
    fi
   } 
-  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis
+  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
    
   ### Odd information treted by sed . 
   ### local StrAppsName=${VTVAppsName:=/bin/sed} ; 
@@ -1067,6 +1068,7 @@ if [ "${versionVTV:=0.0.2}" == "0.0.2" ] ; then
    local IsValueToReAssign=$( ValueToVariable --get IsValueToReAssign ) ; 
    local IsValueSimpleConvert=$( ValueToVariable --get IsValueSimpleConvert ) ; 
    local IsSlowDebugOut=$( ValueToVariable --get IsSlowDebugOut ) ; 
+   local BoolIsQuoteValue=$( ValueToVariable --get VTVIsQuotedValue ) ; 
    local IsWhiteList=$( ValueToVariable --get IsWhiteList ) ; 
    local StrWhiteListAgree=$( ValueToVariable --get StrWhiteListAgree ) ;
    local -a ArrayWhiteList=( ${StrWhiteListAgree//,/ } ) ;  
@@ -1081,26 +1083,31 @@ if [ "${versionVTV:=0.0.2}" == "0.0.2" ] ; then
    local IntSizeBuffe=0 ; 
    local StrNewVarEntry="" ; 
    ### Changing side , now becoming IsValueToReAssign 
+   
+   if [ "${BoolIsQuoteValue:=False}" == "True" ] ;  then 
+    StrMsg="Application is Quoting value from assignation." 
+    VerbMsg="${StrMsg}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
+   fi
    if [ "${IsValueToReAssign:=False}" == "False" ] ;  then 
     ### Now IsValueToReAssign == False 
     StrMsg="Application is not Transforming Variable during passing-thru action."
-    VerbMsg="${StrMsg//__VAR__/${StrNewVarEntry}}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
+    VerbMsg="${StrMsg//__VAR__/${StrNewVarEntry}}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
    ### End of if-"${IsValueToReAssign:=True}"
    else
     ### Now IsValueToReAssign == True 
     StrMsg="Application is Transforming Variable during passing-thru action."
-    VerbMsg="${StrMsg}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
+    VerbMsg="${StrMsg}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
     
     if [ "${StrPrefix:=None}" != "None" ] ; then 
      StrMsg="Application Add a Prefix named='__PREFIX__' during passing-thru action."
-     VerbMsg="${StrMsg//__PREFIX__/${StrPrefix}}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
+     VerbMsg="${StrMsg//__PREFIX__/${StrPrefix}}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
      StrNPrefix=${StrPrefix} ; 
     # End of if-${StrPrefix}
     fi
     
     if [ "${StrSuffix:=None}" != "None" ] ; then 
      StrMsg="Application Add a Suffix named='__SUFFIIX__' during passing-thru action."
-     VerbMsg="${StrMsg//__SUFFIIX__/${StrSuffix}}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
+     VerbMsg="${StrMsg//__SUFFIIX__/${StrSuffix}}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
      StrNSuffix=${StrSuffix} ; 
     # End of if-${StrSufix}
     fi 
@@ -1110,20 +1117,20 @@ if [ "${versionVTV:=0.0.2}" == "0.0.2" ] ; then
    ### Exchanging side : become IsValueSimpleConvert 
    if [ "${IsValueSimpleConvert:=False}" == "True" ] ; then 
     StrMsg="Application Does depend of a table-of Reassignation see VTVValueRe "
-    VerbMsg="${StrMsg}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
+    VerbMsg="${StrMsg}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
    else
     StrMsg="Application Does not depend of a table-of Reassignation see VTVValueRe "
-    VerbMsg="${StrMsg}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
+    VerbMsg="${StrMsg}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
  
    fi
   
    StrMsg="Initial Variable List: __VAR__ " ; 
-   VerbMsg="${StrMsg//__VAR__/${StrParserList}}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
+   VerbMsg="${StrMsg//__VAR__/${StrParserList}}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
    
    StrMsg="Initial Filter To Split Member between Separator '__SEP__' : '__FILTER__' " ; 
    StrMsg=${StrMsg//__SEP__/${StrCharSep}} ; 
    StrMsg=${StrMsg//__FILTER__/${StrFilter}} ; 
-   VerbMsg="${StrMsg}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
+   VerbMsg="${StrMsg}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
    local StrTestFilter="" ; 
    local IntPolishForm=0 ; 
    while [ ${IntNotEmptyList:=1} -ne 0 ] ; do
@@ -1137,7 +1144,7 @@ if [ "${versionVTV:=0.0.2}" == "0.0.2" ] ; then
      
      if [ "${StrParserList//${StrCharSep}/}" == "${StrParserList}" ] ; then 
       StrMsg="No New Separator '__SEP__' found inside Parsing String." ;
-      VerbMsg="${StrMsg//__SEP__/${StrCharSep}}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
+      VerbMsg="${StrMsg//__SEP__/${StrCharSep}}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
       StrNewVarEntry=${StrParserList} ;
       StrParserList=${StrParserList//${StrNewVarEntry}/} ; 
 
@@ -1164,12 +1171,12 @@ if [ "${versionVTV:=0.0.2}" == "0.0.2" ] ; then
       ### After a second-filter like more global in  StrRejectionFilter will erase it 
       ### consider having a Rejected var name. 
       StrMsg="New Entry:__VAR__" ;
-      VerbMsg="${StrMsg//__VAR__/${StrNewVarEntry}}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
+      VerbMsg="${StrMsg//__VAR__/${StrNewVarEntry}}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
       
       ### pass 1 , reduce with StrFilter.
       eval """StrTestFilter=${StrNewVarEntry//${StrFilter//${StrCharSep}/}/} ;"""
       StrMsg="Pass1 PolishNoted variable rejected:__VAR__" ;
-      VerbMsg="${StrMsg//__VAR__/${StrTestFilter:=None}}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
+      VerbMsg="${StrMsg//__VAR__/${StrTestFilter:=None}}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
 
       ### pass 1 will, only reduce to nil polish-like variable. 
       if [ "${StrTestFilter:=None}" == "None" ] ; then 
@@ -1201,7 +1208,7 @@ if [ "${versionVTV:=0.0.2}" == "0.0.2" ] ; then
      if [ "${IsValueSimpleConvert:=False}" == "True" ] ; then 
       if [ "${StrParserReassign//${StrCharSep}/}" == "${StrParserReassign}" ] ; then 
        StrMsg="No New Separator '__SEP__' found inside Re-Assignation List." ;
-       VerbMsg="${StrMsg//__SEP__/${StrCharSep}}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
+       VerbMsg="${StrMsg//__SEP__/${StrCharSep}}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
        StrNewVarReassign=${StrParserReassign} ; 
        StrParserList=${StrParserReassign//${StrNewVarReassign}/} ; 
       else
@@ -1234,12 +1241,20 @@ if [ "${versionVTV:=0.0.2}" == "0.0.2" ] ; then
          done
          if [ ${IntScanWhite:=0} -eq 1 ] ; then 
           StrMsg="Element __VAR__ is White-Listed, added to normal flow."
-          VerbMsg="${StrMsg//__VAR__/${StrNewVarEntry}}" VerbHeader="WHITELIST-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
-          ArrayVarList[${#ArrayVarList[@]}]="""${StrNewVarEntry}=\${${StrNewVarEntry}}""" ; 
+          VerbMsg="${StrMsg//__VAR__/${StrNewVarEntry}}" VerbHeader="WHITELIST-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
+          if [ "${BoolIsQuoteValue:=False}" == "True" ] ; then 
+           ArrayVarList[${#ArrayVarList[@]}]="""${StrNewVarEntry}=\"\${${StrNewVarEntry}}\"""" ; 
+          else
+           ArrayVarList[${#ArrayVarList[@]}]="""${StrNewVarEntry}=\${${StrNewVarEntry}}""" ; 
+          fi
          fi    
         ### end of elif "${IsWhiteList:=False}" from if-${IntPolishForm:=0}
         else
-          ArrayRejectionList[${#ArrayRejectionList[@]}]=${StrNewVarEntry} ;
+          if [ "${BoolIsQuoteValue:=False}" == "True" ] ; then 
+           ArrayRejectionList[${#ArrayRejectionList[@]}]="${StrNewVarEntry}" ;
+          else
+           ArrayRejectionList[${#ArrayRejectionList[@]}]=${StrNewVarEntry} ;
+          fi
         fi 
         ### IsValueSimpleConvert-> False, IsValueToReAssign->True
        ### End of if "${IsValueSimpleConvert:=False}"
@@ -1249,13 +1264,21 @@ if [ "${versionVTV:=0.0.2}" == "0.0.2" ] ; then
        ### Now IsValueToReAssign == False 
        ### Changing side, becoming IsValueSimpleConvert 
        if [ "${IsValueSimpleConvert:=False}" == "True" ] ; then 
-        ArrayVarList[${#ArrayVarList[@]}]="""${StrNewVarReassign}=\${${StrNewVarEntry}}""" ;
+        if [ "${BoolIsQuoteValue:=False}" == "True" ] ; then 
+         ArrayVarList[${#ArrayVarList[@]}]="""${StrNewVarReassign}=\"\${${StrNewVarEntry}}\"""" ;
+        else
+         ArrayVarList[${#ArrayVarList[@]}]="""${StrNewVarReassign}=\${${StrNewVarEntry}}""" ;
+        fi
         ### Note there is already protection inside if [ "${IsValueIndTransform:=False}... 
         ### and we do prevent putting nil-sized variable but should pose a problems . 
         ### IsValueSimpleConvert-> False IsValueToReAssign-> True
        else
         ### Now IsValueSimpleConvert == False 
-        ArrayVarList[${#ArrayVarList[@]}]="""${StrNewVarEntry}=\${${StrNewVarEntry}}""" ;
+        if [ "${BoolIsQuoteValue:=False}" == "True" ] ; then 
+          ArrayVarList[${#ArrayVarList[@]}]="""${StrNewVarEntry}=\"\${${StrNewVarEntry}}\"""" ;
+        else
+          ArrayVarList[${#ArrayVarList[@]}]="""${StrNewVarEntry}=\${${StrNewVarEntry}}""" ;
+        fi
         ### Note there is already protection inside if [ "${IsValueIndTransform:=False}... 
         ### and we do prevent putting nil-sized variable but should pose a problems . 
         ### End of if-IsValueToReAssign
@@ -1266,7 +1289,7 @@ if [ "${versionVTV:=0.0.2}" == "0.0.2" ] ; then
      if [ ${IntSizeBuffer:=0} -eq 0 ] ; then 
       IntNotEmptyList=0; 
       StrMsg="Reached end of StrParserList."
-      VerbMsg="${StrMsg}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
+      VerbMsg="${StrMsg}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
       ### we do set IntNotEmptyList to 0 meaning inspecting for 
       ### possibility of having an Not Empty List is now at 0 mean
       ### no we dont own it at all because it's now at 0;
@@ -1275,14 +1298,23 @@ if [ "${versionVTV:=0.0.2}" == "0.0.2" ] ; then
       
    done 
    StrMsg="Rejection List Parser:__VAR__" ; 
-   StrListReject=${ArrayRejectionList[@]} ; 
-   VerbMsg="${StrMsg//__VAR__/${StrListReject:=None}}" VerbHeader="" VerbFormated=True VerbState=${IsDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
+   StrListReject="${ArrayRejectionList[@]}" ; 
+   VerbMsg="${StrMsg//__VAR__/${StrListReject:=None}}" VerbHeader="" VerbFormated=True VerbState=${IsDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
+   
+   local StrStreamOut; 
+   if [ "${BoolIsQuoteValue:=False}" == "True" ] ; then 
+    StrStreamOut="${ArrayVarList[@]//=/=\"}" ;
+    StrStreamOut=${StrStreamOut// /\" } ;
+    StrStreamOut="${StrStreamOut}\" " ;
+   else
+   StrStreamOut=${ArrayVarList[@]} ; 
+   fi
+   ###VerbMsg="${ArrayVarList[@]}" VerbHeader="" VerbFormated=False VerbState=True StrDevOut=/dev/stdout  Verbosis ; 
    
    StrMsg="Variable Parser:__VAR__" ; 
-   VerbMsg="${StrMsg//__VAR__/${ArrayVarList[@]}}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
+   VerbMsg="${StrMsg//__VAR__/${StrStreamOut}}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
    
-   ###VerbMsg="${ArrayVarList[@]}" VerbHeader="" VerbFormated=False VerbState=True StrDevOut=/dev/stdout  Verbosis ; 
-   eval ${ArrayVarList[@]} ; 
+   eval ${StrStreamOut} ; 
  }
   
   function AppsParser()
@@ -1312,7 +1344,7 @@ if [ "${versionVTV:=0.0.2}" == "0.0.2" ] ; then
     $( eval """StrParserCmd=${StrParserCmd//${StrPairLeft}/\${${StrPairRight}}}""" ) ; 
    done 
    StrMsg="CmdLine: __CMDLINE__"
-   VerbMsg="${StrMsg//__CMDLINE__/${StrParserCmd}}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} StrDevOut=/dev/stderr Verbosis ; 
+   VerbMsg="${StrMsg//__CMDLINE__/${StrParserCmd}}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} VerbDev=/dev/stderr Verbosis ; 
    eval $( ${StrParserCmd} ) ; 
   
   }
@@ -1337,7 +1369,7 @@ if [ "${versionVTV:=0.0.2}" == "0.0.2" ] ; then
     else
     ### Changing role it's not VTVIsValueToConvert to use first , but VTVIsValueReAssign
      StrMsg="At least VTVIsValueReAssign or VTVIsTransHadScript should be True."
-     VerbMsg="${StrMsg}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=True StrDevOut=/dev/stderr Verbosis ; 
+     VerbMsg="${StrMsg}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=True VerbDev=/dev/stderr Verbosis ; 
     fi
   }
 
@@ -1358,7 +1390,7 @@ if [ "${versionVTV:=0.0.2}" == "0.0.2" ] ; then
 		 eval $( __GetVarReferenceCompWord ) ;
   elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
    StrMsg="Status BuildForm:__BF__, __call_locality:${__call_locality[1]}" ;
-   VerbMsg="${StrMsg//__BF__/${BuildForm}}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=True StrDevOut=/dev/stderr Verbosis ; 
+   VerbMsg="${StrMsg//__BF__/${BuildForm}}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=True VerbDev=/dev/stderr Verbosis ; 
    eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
   elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
    __main_StartServices; 

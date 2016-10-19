@@ -4308,6 +4308,204 @@ function RoundRobinSwapRealloc()
 }
 
 
+
+
+### Note: This function is not ready and is also reserved for FitsServices.py / SkyViewFactory.py
+### and this script is a low-cost download of big file, like CSV reference required to explain
+### field of low-cadence fits files from keepler2 photometer. 
+unset CurlFtpContentDownload ; 
+
+function CurlFtpContentDownload()
+{
+ function Verbosis()
+ {
+  local -a ArrayArg=( $* ) ; 
+  local -a __call_locality=( Verb Verbosis )
+  local StrMsg=${VerbMsg:=__TEXT__} ; 
+  local StrDevOut=${VerbDev:=/dev/stderr} ; 
+  local IsVerboseState=${VerbState:=False} ;
+  local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+  local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+  local IsDisplayFormatted=${VerbFormated:=True} ;
+  local IsAppendMode=${VerbAppendDev:=False} ; 
+  if [ "${IsVerboseState:=False}" == "True" ] ; then 
+   if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+    if [ "${IsAppendMode:=False}" == "True" ] ; then 
+      echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
+    else  
+      echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+    fi
+   else
+    if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+       echo "${StrMsg}" ;  
+    else
+     if [ "${IsAppendMode:=False}" == "True" ] ; then 
+      echo "${StrMsg}" >> ${StrDevOut} ;
+     else
+      echo "${StrMsg}" > ${StrDevOut} ;
+     fi
+    fi 
+   fi 
+  fi
+ } 
+ ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
+ 
+ if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+  local -a __call_locality=( CFCD CurlFtpContentDownload ) ;
+  local -a ArrayArg=( $* ) ;
+  local Arg0=${ArrayArg[0]} ; 
+  local StrParentApps=${__call_locality[1]} ;
+  local StrStartMain=${CFCDFuncStart:=__main_StartServices} ; 
+ elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
+  eval $( eval CAFunctName=CurlFtpContentDownload CAIsAddParent=False __Call_Argument ) ;
+ elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
+  eval $( eval CAFunctName=CurlFtpContentDownload CAIsAddParent=False CallArgument ) ;
+ fi 
+  
+ local StrDefaultVTVOpt=${CFCDVTVOpt:=VTVIsQuotedValue=True,VTVIsArrayStyleInsert=True,VTVIsValueReAssign=True,VTVIsValueToConvert=False,VTVIsArrayStyleInsert=True} ; 
+ local StrDefaultGPIOpt=${CFCDGPIOpt:=GPIIsUUIDInstance=True,GPIIsGenerateCode=True,GPIIsExecuteEval=False,GPIIsZenityHandlerOut=False,GPIIsFileHandlerOut=True,GPIRepoCreatEnabled=True,GPIRepositoryCreation=True,GPIFuncStart=__main_StartServices} ; 
+ ### Moving Transformation from Top-function to This function to avoid passing parameter with space. 
+ StrDefaultVTVOpt=${StrDefaultVTVOpt//,/ } ;
+ StrDefaultGPIOpt=${StrDefaultGPIOpt//,/ } ;
+   
+ local StrFileName=${CFCDFileName:=k2_epic_Sep_2016.csv.gz} ;
+ local StrUrlTpl=${CFCDUrlTpl:="ftp://__USER__@__ADDR__"} ;
+ local StrUrl=${CFCDUrl:=archive.stsci.edu/pub/k2/catalogs/} ;
+ local BoolDisplayDebug=${CFCDIsDisplayDebug:=False} ; 
+ 
+ ### NCFTPLS PARSER:
+ local StrLSApps=${CFCDLsApps:=/usr/bin/ncftpls} ;
+ local StrLSAppsOpt=${CFCDLsAppsOpt:="-u __USER__ -l __URL__"} ;
+ local StrLSFilterApps=${CFCDLsFilterApps:=ExtractSize} ;
+ ### GPITpl definition for CFCDLs section
+ local StrLSParser=${CFCDLsTpl:="__APPS__ __APPS_OPT__ __PIPE__ __FILTER__"} ;
+ #local StrLSFilterOpt=${CFCDLsFilterOpt:=}
+ ### GPITagParser definition for CFCDLs
+ local StrLSTag=${CFCDLsDef:="StrDefaultPipe:__PIPE__,StrLSApps:__APPS__,StrLSAppsOpt:__APPS_OPT__,StrLSFilterApps:__FILTER__,StrUserAccount:__USER__,StrUrlTpl:__URL__,StrFileName:__FILE__"} ;
+
+ ### Extracting address from URL and operator '/%' 
+ local StrAddr=${StrUrl/%\/[a-zA-Z0-9\_]*} ;
+ ### Extracting Server-path from erasing the address from URL.  
+ local StrPathSrv=${StrUrl//${StrAddr}/} ; 
+ StrPathSrv=${StrPathSrv//ftp:\/\//} ;
+ StrPathSrv=${StrPathSrv//http:\/\//} ;
+ 
+ local StrUserAccount=${CFCDUserAcc:=anonymous}
+ StrUrlTpl=${StrUrlTpl//__USER__/${StrUserAccount}} ;
+ StrUrlTpl=${StrUrlTpl//__ADDR__/${StrAddr}/${StrPathSrv}} ;
+ 
+ local StrVarList="StrFileName,StrUrlTpl,StrUrl,StrUserAccount,StrAddr,StrPathSrv,StrLSTag,StrLSParser,StrLSFilterApps,StrLSFilterApps,StrLSApps,BoolDisplayDebug,StrDefaultGPIOpt,StrDefaultVTVOpt"
+ ### Curl required option :
+ ### --output --> file
+ ###  Output is not qualifying for appending or literracy of curl is not informing 
+ ### of the possible action it take on local-destination . 
+ ### - Suggest to create a temporary file to drop the information inside and 
+ ### to join the information to file-name.  
+ ### --speed-limit, required to establish a download-weight 
+ ### --speed-time and --connect-timeout will required to be specified with same information
+ ### or belong to curl information it continue to download after period of time specified 
+ ### in --speed-time. 
+ function ExtractSize()
+ {
+  if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+   local __call_locality=( ES ExtractSize ) ;
+   local ArrayArg=( $* ) ;
+   local Arg0=${ArrayArg[0]} ; 
+  elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
+   eval $( eval CAFunctName=ExtractSize CAIsAddParent=True __Call_Argument ) ; 
+  elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
+   eval $( eval CAFunctName=ExtractSize CAIsAddParent=True CallArgument ) ;
+  fi    
+  #local __call_locality=( ES ExtractSize ) ;
+  #local ArrayArg=( $* ) ;
+  #local Arg0=${ArrayArg[0]} ;    
+  
+  VerbMsg="Entry in function"              \
+  VerbHeader="${__call_locality[1]}-DEBUG" \
+  VerbState=${BoolDisplayDebug}            \
+  VerbEvalForm=False VerbFormated=True     \
+  VerbDev=/dev/stderr                      \
+  Verbosis ; 
+
+  sed 's/\(^[rwxs\-]*[\ ]*\)\([0-9]*[\ ]*\)\([0-9]*[\ ]*\)\([0-9]*[\ ]*\)\([0-9]*\)/\5/g' | cut -d ' ' -f 1 ;
+  ### Note : last command : 
+  ###   cut -d ' ' -f 1 -> extract file-size
+  ###   cut -d ' ' -f 5 -> extract filename
+  ###   cut -d ' ' -f 1,5 -> extract file-size + filename
+ }
+ 
+ function ListFile()
+ {
+  if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+   local __call_locality=( LF ListFile ) ;
+   local ArrayArg=( $* ) ;
+   local Arg0=${ArrayArg[0]} ; 
+  elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
+   eval $( eval CAFunctName=ListFile CAIsAddParent=True __Call_Argument ) ;
+  elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
+   eval $( eval CAFunctName=ListFile CAIsAddParent=True CallArgument ) ; 
+  fi 
+  
+  VerbMsg="Entry in function" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;  
+  VerbMsg="Value of StrDefaultVTVOpt:${StrDefaultVTVOpt}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;  
+  VerbMsg="Value of StrDefaultGPIOpt:${StrDefaultGPIOpt}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;  
+  
+  eval $( eval VTVValueEntry="${StrVarList}" ${StrDefaultVTVOpt} ValueToVariable ) $( eval GPITpl="${StrLSTag}" GPITagParser="${StrLSTag}" GPITagParserResult="StrCmdA" GPIFileName=${StrFileName} GPIDpkgApps=${StrLSApps} GPIDpkgAppsOpt="${StrLSAppsOpt}"  GPIFilterApps=${StrLSFilterApps}  GPIDisplayDebug=${BoolDisplayDebug} GPIParserDebug=${BoolDisplayDebug} ${StrDefaultGPIOpt} GnrlPrsrInfctr )  ;
+  
+  ###ncftpls -u ${StrUser} -l ${URL}/${StrFile} | ExtractSize ; 
+  local StrMsg="StrCmdA: __CMD__" ; 
+  StrMsg=${StrMsg//__CMD__/${StrCmdA}} ;
+  VerbMsg=${StrMsg} VerbHeader="${__call_locality[1]}-CMDLINE" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ; 
+  
+ }
+ 
+ 
+ function __main_StartServices()
+ {
+ if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+  local __call_locality=( CFCD CurlFtpContentDownload ) ;
+  local ArrayArg=( $* ) ;
+  local Arg0=${ArrayArg[0]} ; 
+ elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
+  eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) :  
+ elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
+  eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) :  
+ fi 
+  VerbMsg="Entry in function" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ; 
+ 
+ }
+  
+ local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+ local StrNameHelper="CurlFtpContentDownload\t\tStand for Curl Based FTP File download with time-limited or bandwith limitation. To download a file from a Big Project without high home-cost of your internet bandwith." ;
+ local StrSummary="This CurlFtpContentDownload is a tool for planning downloading heavy weighted file from public domain like Mines evlation of ground of Ministeredu Canada, NASA Keepler2 project, any big file avilable on the internet for distant developper and high-cost bandwith for home use." ; 
+ local StrSynopsis="Soon to fill it with lot of informations" ;
+ local StrDescription="Having surdose of informations, skip this part..." ;
+ 
+ 
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+  GVRIIsShowCADecl=${GVRIIsShowCADecl:=False} \
+  GVRIsName=True        \
+  GVRIsSummary=True     \
+  GVRIsSynopsis=False   \
+  GVRIsDesc=False       \
+  GetVarReference ${__call_locality[1]} ; 
+  echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ;
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( __GetVarReferenceList ) ;	
+ elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  eval $( eval VTVValueEntry=${StrVarList} ${StrDefaultVTVOpt} ValueToVariable ) ${StrStartMain} ; 
+ fi
+   
+}
+
+
+
+
+
+
 ########### ###################################################################
 ########### 
 ########### End of normal Devlopment, upcoming devlopment or missing code from 
@@ -4720,196 +4918,6 @@ if [ ${VarFnctLib:=False} == "True" ] ; then
     }
 fi 
 
-### Note: This function is not ready and is also reserved for FitsServices.py / SkyViewFactory.py
-### and this script is a low-cost download of big file, like CSV reference required to explain
-### field of low-cadence fits files from keepler2 photometer. 
-unset CurlFtpContentDownload ; 
-function CurlFtpContentDownload()
-{
-  function Verbosis()
-  {
-   local -a ArrayArg=( $* ) ; 
-   local -a __call_locality=( Verb Verbosis )
-   local StrMsg=${VerbMsg:=__TEXT__} ; 
-   local StrDevOut=${VerbDev:=/dev/stderr} ; 
-   local IsVerboseState=${VerbState:=False} ;
-   local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
-   local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
-   local IsDisplayFormatted=${VerbFormated:=True} ;
-   local IsAppendMode=${VerbAppendDev:=False} ; 
-   if [ "${IsVerboseState:=False}" == "True" ] ; then 
-    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
-     if [ "${IsAppendMode:=False}" == "True" ] ; then 
-       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
-     else  
-       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
-     fi
-    else
-     if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
-        echo "${StrMsg}" ;  
-     else
-      if [ "${IsAppendMode:=False}" == "True" ] ; then 
-       echo "${StrMsg}" >> ${StrDevOut} ;
-      else
-       echo "${StrMsg}" > ${StrDevOut} ;
-      fi
-     fi 
-    fi 
-   fi
-  } 
-  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
-  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
-   local -a __call_locality=( CFCD CurlFtpContentDownload ) ;
-   local -a ArrayArg=( $* ) ;
-   local Arg0=${ArrayArg[0]} ; 
-   local StrParentApps=${__call_locality[1]} ;
-   local StrStartMain=${GSUFuncStart:=__main_StartServices} ; 
-  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
-   eval $( eval CAFunctName=CurlFtpContentDownload CAIsAddParent=False __Call_Argument ) ;
-  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-   eval $( eval CAFunctName=CurlFtpContentDownload CAIsAddParent=False CallArgument ) ;
-  fi 
-  
-  local StrFileName=${CFCDFileName:=k2_epic_Sep_2016.csv.gz} ;
-  local StrUrlTpl=${CFCDUrlTpl:=ftp://__USER__@__ADDR__} ;
-  local StrUrl=${CFCDURL:=archive.stsci.edu/pub/k2/catalogs/} ;
-  local StrDefaultVTVOpt=${CFCDVTVOpt:=VTVIsArrayStyleInsert=True,VTVIsValueReAssign=True,VTVIsValueToConvert=False,VTVIsArrayStyleInsert=True} ; 
-  local StrDefaultGPIOpt=${CFCDGPIOpt:=GPIIsUUIDInstance=True,GPIIsGenerateCode=True,GPIIsExecuteEval=False,GPIIsZenityHandlerOut=False,GPIIsFileHandlerOut=True,GPIRepoCreatEnabled=True,GPIRepositoryCreation=True,GPIFuncStart=__main_StartServices} ; 
-  local BoolDisplayDebug=${CFCDIsDisplayDebug:=False} ; 
-  
-  ### NCFTPLS PARSER:
-  local StrLSApps=${CFCDLsApps:=/usr/bin/ncftpls}
-  local StrLSAppsOpt=${CFCDLsAppsOpt:=-u __USER__ -l __URL__}
-  local StrLSFilterApps=${CFCDLsFilterApps:=ExtractSize}
-  ### GPITpl definition for CFCDLs section
-  local StrLSParser=${CFCDLsTpl:=__APPS__ __APPS_OPT__ __PIPE__ __FILTER__}
-  #local StrLSFilterOpt=${CFCDLsFilterOpt:=}
-  ### GPITagParser definition for CFCDLs
-  local StrLSTag=${CFCDLsDef:=StrDefaultPipe:__PIPE__,StrLSApps:__APPS__,StrLSAppsOpt:__APPS_OPT__,StrLSFilterApps:__FILTER__,StrUserAccount:__USER__,StrUrlTpl:__URL__,StrFileName:__FILE__};
 
-  ### Extracting address from URL and operator '/%' 
-  local StrAddr=${StrUrl/%\/[a-zA-Z0-9\_]*} ;
-  ### Extracting Server-path from erasing the address from URL.  
-  local StrPathSrv=${StrUrl//${StrAddr}/} ; 
-  StrPathSrv=${StrPathSrv//ftp:\/\//} ;
-  StrPathSrv=${StrPathSrv//http:\/\//} ;
-  
-  local StrUserAccount=${CFCDUserAcc:=anonymous}
-  StrUrlTpl=${StrUrlTpl//__USER__/${StrUserAccount}} ;
-  StrUrlTpl=${StrUrlTpl//__ADDR__/${StrAddr}/${StrPathSrv}} ;
-  
-  local StrVarList="StrFileName,StrUrlTpl,StrUrl,StrUserAccount,StrAddr,StrPathSrv,StrLSTag,StrLSParser,StrLSFilterApps,StrLSFilterApps,StrLSApps,BoolDisplayDebug,StrDefaultGPIOpt,StrDefaultVTVOpt"
-  ### Curl required option :
-  ### --output --> file
-  ###  Output is not qualifying for appending or literracy of curl is not informing 
-  ### of the possible action it take on local-destination . 
-  ### - Suggest to create a temporary file to drop the information inside and 
-  ### to join the information to file-name.  
-  ### --speed-limit, required to establish a download-weight 
-  ### --speed-time and --connect-timeout will required to be specified with same information
-  ### or belong to curl information it continue to download after period of time specified 
-  ### in --speed-time. 
-  function ExtractSize()
-  {
-   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
-    local __call_locality=( ES ExtractSize ) ;
-    local ArrayArg=( $* ) ;
-    local Arg0=${ArrayArg[0]} ; 
-   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
-    eval $( eval CAFunctName=ExtractSize CAIsAddParent=True __Call_Argument ) :  
-   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-    eval $( eval CAFunctName=ExtractSize CAIsAddParent=True CallArgument ) :  
-   fi    
-   #local __call_locality=( ES ExtractSize ) ;
-   #local ArrayArg=( $* ) ;
-   #local Arg0=${ArrayArg[0]} ;    
-   
-   VerbMsg="Entry in function"              \
-   VerbHeader="${__call_locality[1]}-DEBUG" \
-   VerbState=${BoolDisplayDebug}            \
-   VerbEvalForm=False VerbFormated=True     \
-   VerbDev=/dev/stderr                      \
-   Verbosis ; 
-
-   sed 's/\(^[rwxs\-]*[\ ]*\)\([0-9]*[\ ]*\)\([0-9]*[\ ]*\)\([0-9]*[\ ]*\)\([0-9]*\)/\5/g' | cut -d ' ' -f 1 ;
-   ### Note : last command : 
-   ###   cut -d ' ' -f 1 -> extract file-size
-   ###   cut -d ' ' -f 5 -> extract filename
-   ###   cut -d ' ' -f 1,5 -> extract file-size + filename
-  }
-  
-  function ListFile()
-  {
-   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
-    local __call_locality=( LF ListFile ) ;
-    local ArrayArg=( $* ) ;
-    local Arg0=${ArrayArg[0]} ; 
-   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
-    eval $( eval CAFunctName=ListFile CAIsAddParent=True __Call_Argument ) ;
-   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-    eval $( eval CAFunctName=ListFile CAIsAddParent=True CallArgument ) ; 
-   fi 
-   VerbMsg="Entry in function" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
-   eval $( eval ${StrDefaultVTVOpt} \
-        VTVValueEntry=${StrVarList} \
-        ValueToVariable ) $( eval ${StrDefaultGPIOpt}       \
-                          GPITpl=${StrLSTag}                \
-                          GPITagParser=${StrLSTag}          \
-                          GPITagParserResult="StrCmdA"      \
-                          GPIFileName=${StrFileName}        \
-                          GPIDpkgApps=${StrLSApps}          \
-                          GPIDpkgAppsOpt=\"${StrLSAppsOpt}\"\
-                          GPIFilterApps=${StrLSFilterApps}  \
-                          GPIDisplayDebug=${BoolDisplayDebug} \
-                          GPIParserDebug=${BoolDisplayDebug}\
-                          GnrlPrsrInfctr )  ;
-   ###ncftpls -u ${StrUser} -l ${URL}/${StrFile} | ExtractSize ; 
-   local StrMsg="StrCmdA: __CMD__" ; 
-   StrMsg=${StrMsg//__CMD__/${StrCmdA}} ;
-   VerbMsg=${StrMsg} VerbHeader="${__call_locality[1]}-CMDLINE" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ; 
-   
-  }
-  
-  
-  function __main_StartServices()
-  {
-  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
-   local __call_locality=( CFCD CurlFtpContentDownload ) ;
-   local ArrayArg=( $* ) ;
-   local Arg0=${ArrayArg[0]} ; 
-  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
-   eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) :  
-  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-   eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) :  
-  fi 
-  VerbMsg="Entry in function" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
-  
-  }
-  
-  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
-  local StrNameHelper="CurlFtpContentDownload\t\tStand for Curl Based FTP File download with time-limited or bandwith limitation. To download a file from a Big Project without high home-cost of your internet bandwith.";
-  local StrSummary="This CurlFtpContentDownload is a tool for planning downloading heavy weighted file from public domain like Mines evlation of ground of Ministeredu Canada, NASA Keepler2 project, any big file avilable on the internet for distant developper and high-cost bandwith for home use." ; 
-  local StrSynopsis="Soon to fill it with lot of informations";
-  local StrDescription="Having surdose of informations, skip this part..." ;
-  
-  
-  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-   GVRIIsShowCADecl=True GVRIsName=True GVRIsSummary=True GVRIsSynopsis=False GVRIsDesc=False GetVarReference ${__call_locality[1]} ; 
-   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-   echo -ne """${ArgGet}\n""" ;
-  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-   eval $( __GetVarReferenceList ) ;	
-  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
-   eval $( eval \
-     VTVIsArrayStyleInsert=True  \
-     VTVValueEntry=${StrVarList} \
-     VTVIsValueReAssign=True     \
-     VTVIsValueToConvert=False   \
-     ValueToVariable ) ${StrStartMain}
-  fi
-   
-}
 
 
