@@ -3,31 +3,32 @@
 ###
 
 ###File:/var/cache/Fnct.D/ZenityShellEval/6403c722-28a6-11e3-98a2-001b3875b29c
-###UUID-TIME-MARKER:92b3e61a-9572-11e6-8b1d-001e4c8856d6
+###UUID-TIME-MARKER:5ca71bdc-95a4-11e6-8b1d-001e4c8856d6
 ###Date: ${StrDateFormat}
-###Sha1Sum: fc5613bbf845491ce408e5db8f5ef46a042e4981
-### Size:5142
-### NbWord: 518\n
+###Sha1Sum: b11997314f19e6611bcf22aec5e4231a962ab08b
+### Size:5436
+### NbWord: 548\n
 
 
 
 
 function GetVarReference( )
 {
- local __call_locality=( GVR GetVarReference ) ;
- local ArrayArg=( $* ) ;
- local Arg0=${ArrayArg[0]} ;
+ local -a ArrayArg=( $* ) ;
+ local -a __call_locality=( GVR GetVarReference ) ;
+ local Arg0="${ArrayArg[0]}" ;
  local StrParent="GetVarReference" ;
- local BoolsSynopsis=${GVRIsSynopsis:=False} ;
- local BoolsName=${GVRIsName:=False} ;
- local BoolsSummary=${GVRIsSummary:=False} ;
- local BoolsDesc=${GVRIsDesc:=False} ;
+ local BoolSynopsis=${GVRIsSynopsis:=False} ;
+ local BoolName=${GVRIsName:=False} ;
+ local BoolSummary=${GVRIsSummary:=False} ;
+ local BoolDesc=${GVRIsDesc:=False} ;
  local BoolDisplayDebug=${GVRIsDebug:=False} ; 
  local BoolOldPrefix=${GVRIOldPrefix:=False} ; 
  local BoolSupportCA=${GVRIIsProvideCAArg:=True} ;  
+ local BoolDisplayCA=${GVRIIsShowCADecl:=False} ;
  local TextDescFunc="_NameHelp__Synopsis__Summary__Description_" ; 
  
- if  [ "${BoolsName:=False}" == "True" ]  ; then 
+ if  [ "${BoolName:=False}" == "True" ]  ; then 
   if [ "${BoolDisplayDebug:=False}" == "True" ] ; then
     echo "Status of StrNameHelper: ${#StrNameHelper} char(s): [ ${StrNameHelper}] " ; 
   fi 
@@ -40,7 +41,7 @@ function GetVarReference( )
  else
   TextDescFunc="""${TextDescFunc//_NameHelp_/}""" ;
  fi
- if  [ "${BoolsSynopsis:=False}" == "True" ]  ; then 
+ if  [ "${BoolSynopsis:=False}" == "True" ]  ; then 
   if [ ${#StrSynopsis} -gt 0 ] ; then
     TextDescFunc="""${TextDescFunc//_Synopsis_/\\nSynopsis\\n\\t\\t${StrSynopsis}\\n\\n}""" ; 
   else
@@ -49,7 +50,7 @@ function GetVarReference( )
  else
    TextDescFunc="""${TextDescFunc//_Synopsis_/}""" ; 
  fi 
- if  [ "${BoolsSummary:=False}" == "True" ]  ; then 
+ if  [ "${BoolSummary:=False}" == "True" ]  ; then 
    if [ ${#StrSummary} -gt 0 ] ; then
     TextDescFunc="""${TextDescFunc//_Summary_/\\nSummary\\n\\t\\t${StrSummary}\\n\\n}""" ;
    else
@@ -58,7 +59,7 @@ function GetVarReference( )
  else
    TextDescFunc="""${TextDescFunc//_Summary_/}""" ;
  fi
- if  [ "${BoolsDesc:=False}" == "True" ]  ; then 
+ if  [ "${BoolDesc:=False}" == "True" ]  ; then 
    if [ ${#StrDescription} -gt 0 ] ; then
     TextDescFunc="""${TextDescFunc//_Description_/\\nDescription\\n\\t\\t${StrDescription}\\n\\n}"""
    else
@@ -72,9 +73,9 @@ function GetVarReference( )
  # removed from function declaration, pattern  : "^[\t\ ]*#+" 
  function ParseInternalVar( )
  {
-   local ArrayArg=( $* ) ;
-   local Arg0=${ArrayArg[0]} ;
-   local __call_locality=( PIV ParseInternalVar ${StrParent} ) ;
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( PIV ParseInternalVar ${StrParent} ) ;
+   local Arg0="${ArrayArg[0]}" ;
    /bin/egrep -i ":=" | /bin/grep -v "^[\t\ ]*#+" | /bin/sed -r 's/(^[\ \t]*)//g;s/=\$/ \$/g;s/;//g' | /usr/bin/cut -d ' ' -f 3- | /bin/sed 's/\(:=\)/ /g;s/\${//g;s/}$//g;s/\(^[A-Za-z0-9=_]* \)/Variable \1,\n\tDefault Value:/g' | /bin/sed 's/[\}\{]//g' ;
  # date: Wed Sep 14 14:27:21 EDT 2016
  # Adding path to following application: grep, egrep, sed, cut . 
@@ -83,13 +84,11 @@ function GetVarReference( )
  
  function FunctionList()
  { 
-  local ArrayArg=( $* ) ;
-  local Arg0=${ArrayArg[0]} ;
-  local __call_locality=( FL FunctionList ${StrParent} ) ;
+  local -a ArrayArg=( $* ) ;
+  local -a __call_locality=( FL FunctionList ${StrParent} ) ;
+  local Arg0="${ArrayArg[0]}" ;
   local StrFunctionName=${FLFunctionName:=None} ; 
-  declare -f ${StrFunctionName} |\
-  egrep "^[\ \t]+function" |\
-  sed 's/\([\ \t]*function[\t\ ]*\)\([a-zA-Z0-9\_\-]*\)\([\t\ ]*[\)\(]*\)/\2/g' | tr '[:cntrl:]' ',' ;
+  declare -f ${StrFunctionName} | egrep "^[\ \t]+function" | sed 's/\([\ \t]*function[\t\ ]*\)\([a-zA-Z0-9\_\-]*\)\([\t\ ]*[\)\(]*\)/\2/g' | tr '[:cntrl:]' ',' ;
  }
  
  function ParseLocalityVar()
@@ -99,8 +98,12 @@ function GetVarReference( )
    local __call_locality=( PLV ParseLocalityVar ${StrParent} ) ;
    /bin/egrep "__call_locality" | /bin/sed 's/[\)\(]/ /g;s/;//g' | /usr/bin/cut -d ' ' -f 7 ;	
  }
- local StrInternalFunction=$( FLFunctionName=${ArrayArg[0]} FunctionList ) ; 
- StrInternalFunction=${StrInternalFunction:0:$(( ${StrInternalFunction}-1 ))}; 
+ 
+ local StrInternalFunction=$( FLFunctionName="${ArrayArg[0]}" FunctionList ) ; 
+ StrInternalFunction=${StrInternalFunction:0:$(( ${#StrInternalFunction}-1 ))}; 
+ if [ "${BoolDisplayCA:=False}" == "True" ] ; then 
+  echo -ne "\nCallArgument Inspected:${StrInternalFunction}\n" > /dev/stderr ; 
+ fi 
  local StrDisplayOutHelp="Help:\n\nFunction ${ArrayArg[0]}\n${TextDescFunc}\nFunction Member:\n\t_MEMBER_\n\nDefault Variable Value:\n" ; 
  StrDisplayOutHelp=${StrDisplayOutHelp//_MEMBER_/${StrInternalFunction}} ;
  echo -ne ${StrDisplayOutHelp} ;
@@ -112,12 +115,14 @@ function GetVarReference( )
  fi
  #declare -f ${ArrayArg[0]} | /bin/egrep "\$\{${CallLocalityInternalName}[A-Za-z0-9_\-]*:=" | ParseInternalVar ;
  local StrTypeCallArg="__Call_Argument" ;
- if [ ${versionCA:=0.0.1} == "0.0.2" ] ; then
+ if [ "${versionCA:=0.0.1}" == "0.0.2" ] ; then
   StrTypeCallArg="CallArgument" ; 
  fi  
  
  local StrCallArg=$( declare -f "${ArrayArg[0]}" | egrep --max-count=1 -i "${StrTypeCallArg}" | egrep -i "${ArrayArg[0]}" | sed -r  's/eval[\ \t]*\$\([\ \t]*eval//g;s/\)\;//g;s/^[\ \t]*//g'  ); 
- local StrFunctionList=$( declare -f "${ArrayArg[0]}" ; eval ${StrCallArg} ) ; 
+ local StrFunctionList=$( declare -f "${ArrayArg[0]}"   ) ; 
+ eval local StrCodeCallArg=$( eval ${StrCallArg} ) ; 
+ StrFunctionList="${StrFunctionList}${StrCodeCallArg}"
  
  if [ "${BoolSupportCA:=True}" == "False" ] ; then 
   declare -f ${ArrayArg[0]} | /bin/grep "\ *=\ *\${${CallLocalityInternalName}[A-Za-z0-9_\-]*:\=" | ParseInternalVar ;  

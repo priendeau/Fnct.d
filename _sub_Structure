@@ -939,7 +939,7 @@ if [ "${versionGBLD:=0.0.2}" == "0.0.2" ] ; then
            ValueToVariable ) __main_StartServices
   fi
 
-  unset Verbosis GetFile GetHeader GetContent FileSplitAction __main_StartServices ; 
+  ### unset Verbosis GetFile GetHeader GetContent FileSplitAction __main_StartServices ; 
  }
  ### end-of if-${versionGBLD}
 fi
