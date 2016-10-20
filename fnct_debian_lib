@@ -4362,9 +4362,8 @@ function CurlFtpContentDownload()
   eval $( eval CAFunctName=CurlFtpContentDownload CAIsAddParent=False CallArgument ) ;
  fi 
   
- local StrDefaultVTVOpt=${CFCDVTVOpt:=VTVIsQuotedValue=True,VTVIsArrayStyleInsert=True,VTVIsValueReAssign=True,VTVIsValueToConvert=False,VTVIsArrayStyleInsert=True} ; 
+ local StrDefaultVTVOpt=${CFCDVTVOpt:=VTVIsQuotedValue=True,VTVIsArrayStyleInsert=True,VTVIsValueReAssign=True,VTVIsValueToConvert=False,VTVIsArrayStyleInsert=True,VTVIsDebugDisplay=True} ; 
  local StrDefaultGPIOpt=${CFCDGPIOpt:=GPIIsUUIDInstance=True,GPIIsGenerateCode=True,GPIIsExecuteEval=False,GPIIsZenityHandlerOut=False,GPIIsFileHandlerOut=True,GPIRepoCreatEnabled=True,GPIRepositoryCreation=True,GPIFuncStart=__main_StartServices} ; 
- ### Moving Transformation from Top-function to This function to avoid passing parameter with space. 
  StrDefaultVTVOpt=${StrDefaultVTVOpt//,/ } ;
  StrDefaultGPIOpt=${StrDefaultGPIOpt//,/ } ;
    
@@ -4378,7 +4377,7 @@ function CurlFtpContentDownload()
  local StrLSAppsOpt=${CFCDLsAppsOpt:="-u __USER__ -l __URL__"} ;
  local StrLSFilterApps=${CFCDLsFilterApps:=ExtractSize} ;
  ### GPITpl definition for CFCDLs section
- local StrLSParser=${CFCDLsTpl:="__APPS__ __APPS_OPT__ __PIPE__ __FILTER__"} ;
+ local StrLSTplCmd=${CFCDLsTpl:="__APPS__ __APPS_OPT__ __PIPE__ __FILTER__"} ;
  #local StrLSFilterOpt=${CFCDLsFilterOpt:=}
  ### GPITagParser definition for CFCDLs
  local StrLSTag=${CFCDLsDef:="StrDefaultPipe:__PIPE__,StrLSApps:__APPS__,StrLSAppsOpt:__APPS_OPT__,StrLSFilterApps:__FILTER__,StrUserAccount:__USER__,StrUrlTpl:__URL__,StrFileName:__FILE__"} ;
@@ -4394,7 +4393,11 @@ function CurlFtpContentDownload()
  StrUrlTpl=${StrUrlTpl//__USER__/${StrUserAccount}} ;
  StrUrlTpl=${StrUrlTpl//__ADDR__/${StrAddr}/${StrPathSrv}} ;
  
- local StrVarList="StrFileName,StrUrlTpl,StrUrl,StrUserAccount,StrAddr,StrPathSrv,StrLSTag,StrLSParser,StrLSFilterApps,StrLSFilterApps,StrLSApps,BoolDisplayDebug,StrDefaultGPIOpt,StrDefaultVTVOpt"
+ ### Message Array Information :
+ local -a ArrayMsg ; 
+ ArrayMsg[0]="Value of __VARNAME__=__VARVALUE__" ; 
+ 
+ local StrVarList="StrFileName,StrUrlTpl,StrUrl,StrUserAccount,StrAddr,StrPathSrv,StrLSTag,StrLSTplCmd,StrLSFilterApps,StrLSFilterApps,StrLSApps,BoolDisplayDebug" ; 
  ### Curl required option :
  ### --output --> file
  ###  Output is not qualifying for appending or literracy of curl is not informing 
@@ -4405,6 +4408,7 @@ function CurlFtpContentDownload()
  ### --speed-time and --connect-timeout will required to be specified with same information
  ### or belong to curl information it continue to download after period of time specified 
  ### in --speed-time. 
+ 
  function ExtractSize()
  {
   if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
@@ -4434,6 +4438,7 @@ function CurlFtpContentDownload()
   ###   cut -d ' ' -f 1,5 -> extract file-size + filename
  }
  
+ 
  function ListFile()
  {
   if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
@@ -4446,11 +4451,32 @@ function CurlFtpContentDownload()
    eval $( eval CAFunctName=ListFile CAIsAddParent=True CallArgument ) ; 
   fi 
   
-  VerbMsg="Entry in function" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;  
-  VerbMsg="Value of StrDefaultVTVOpt:${StrDefaultVTVOpt}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;  
-  VerbMsg="Value of StrDefaultGPIOpt:${StrDefaultGPIOpt}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;  
+  local StrDefaultVTVOpt=$( CurlFtpContentDownload --get StrDefaultVTVOpt ) ; 
+  StrDefaultVTVOpt=${StrDefaultVTVOpt//,/ } ; 
   
-  eval $( eval VTVValueEntry="${StrVarList}" ${StrDefaultVTVOpt} ValueToVariable ) $( eval GPITpl="${StrLSTag}" GPITagParser="${StrLSTag}" GPITagParserResult="StrCmdA" GPIFileName=${StrFileName} GPIDpkgApps=${StrLSApps} GPIDpkgAppsOpt="${StrLSAppsOpt}"  GPIFilterApps=${StrLSFilterApps}  GPIDisplayDebug=${BoolDisplayDebug} GPIParserDebug=${BoolDisplayDebug} ${StrDefaultGPIOpt} GnrlPrsrInfctr )  ;
+  local StrDefaultGPIOpt=$( CurlFtpContentDownload --get StrDefaultGPIOpt ) ;
+  StrDefaultGPIOpt=${StrDefaultGPIOpt//,/ } ; 
+  
+  local StrGnrCmd="""GPITpl=\"${StrLSTplCmd}\" GPITagParser=\"${StrLSTag}\" GPITagParserResult=\"StrCmdA\" GPIFileName=${StrFileName} GPIApps=${StrLSApps} GPIAppsOpt=\"${StrLSAppsOpt}\" GPIFilterApps=\"${StrLSFilterApps}\" GPIDisplayDebug=${BoolDisplayDebug} GPIParserDebug=${BoolDisplayDebug} ${StrDefaultGPIOpt} GnrlPrsrInfctr""" ;
+  
+  
+  ### 
+  ### A Variable-screener, used to Display information on screen, using eval of variable,
+  ###  required variable are inserted inside the array and an evaluation StrEvalValue is 
+  ### done by feeding name of variable and value to StrMsg.
+  ### 
+  StrMsgTpl=$( CurlFtpContentDownload --get ArrayMsg[0] ) ;
+  local -a ArrayVarDisplay=( StrParentApps StrDefaultVTVOpt StrDefaultGPIOpt StrLSTplCmd StrLSTag StrFileName StrLSAppsOpt StrLSFilterApps StrGnrCmd StrUserAccount StrUrlTpl ) ; 
+  local StrEvalValue ;
+  for VarTypeName in ${ArrayVarDisplay[@]} ; do 
+   StrMsg=${StrMsgTpl} ; 
+   StrMsg=${StrMsg//__VARNAME__/${VarTypeName}} ;
+   eval "StrEvalValue=\${${VarTypeName}}" ;  
+   StrMsg=${StrMsg//__VARVALUE__/${StrEvalValue}} ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;  
+  done 
+  
+  eval $( eval VTVValueEntry="${StrVarList}" ${StrDefaultVTVOpt} ValueToVariable ) $( ${StrGnrCmd} )  ;
   
   ###ncftpls -u ${StrUser} -l ${URL}/${StrFile} | ExtractSize ; 
   local StrMsg="StrCmdA: __CMD__" ; 

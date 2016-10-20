@@ -3,12 +3,11 @@
 ###
 
 ###File:/var/cache/Fnct.D/ZenityShellEval/6403c722-28a6-11e3-98a2-001b3875b29c
-###UUID-TIME-MARKER:5ca71bdc-95a4-11e6-8b1d-001e4c8856d6
+###UUID-TIME-MARKER:4b87be82-95aa-11e6-8b1d-657bcfc54998
 ###Date: ${StrDateFormat}
-###Sha1Sum: b11997314f19e6611bcf22aec5e4231a962ab08b
-### Size:5436
-### NbWord: 548\n
-
+###Sha1Sum: 8b5967f509fca7e1e447e6c8702f32bf4ba23a58
+### Size:5580
+### NbWord: 567\n
 
 
 
@@ -102,7 +101,7 @@ function GetVarReference( )
  local StrInternalFunction=$( FLFunctionName="${ArrayArg[0]}" FunctionList ) ; 
  StrInternalFunction=${StrInternalFunction:0:$(( ${#StrInternalFunction}-1 ))}; 
  if [ "${BoolDisplayCA:=False}" == "True" ] ; then 
-  echo -ne "\nCallArgument Inspected:${StrInternalFunction}\n" > /dev/stderr ; 
+  echo -ne "\nFunctionList Inspected:${StrInternalFunction}\n" > /dev/stderr ; 
  fi 
  local StrDisplayOutHelp="Help:\n\nFunction ${ArrayArg[0]}\n${TextDescFunc}\nFunction Member:\n\t_MEMBER_\n\nDefault Variable Value:\n" ; 
  StrDisplayOutHelp=${StrDisplayOutHelp//_MEMBER_/${StrInternalFunction}} ;
@@ -121,7 +120,10 @@ function GetVarReference( )
  
  local StrCallArg=$( declare -f "${ArrayArg[0]}" | egrep --max-count=1 -i "${StrTypeCallArg}" | egrep -i "${ArrayArg[0]}" | sed -r  's/eval[\ \t]*\$\([\ \t]*eval//g;s/\)\;//g;s/^[\ \t]*//g'  ); 
  local StrFunctionList=$( declare -f "${ArrayArg[0]}"   ) ; 
- eval local StrCodeCallArg=$( eval ${StrCallArg} ) ; 
+ if [ "${BoolDisplayCA:=False}" == "True" ] ; then 
+  echo -ne "\nCallArgument Inspected:${StrCallArg}\n" > /dev/stderr ; 
+ fi 
+ eval local StrCodeCallArg=$( eval ${StrCallArg} | sed 's/;/\n/g' ) ; 
  StrFunctionList="${StrFunctionList}${StrCodeCallArg}"
  
  if [ "${BoolSupportCA:=True}" == "False" ] ; then 

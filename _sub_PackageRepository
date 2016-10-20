@@ -134,8 +134,8 @@ function GetDpkgInstalled()
         ValueToVariable ) $( eval ${StrDefaultGPIOpt}      \
                           GPITagParserResult="StrCmdA"     \
                           GPIFileName=${StrAwkScript}      \
-                          GPIDpkgApps=${StrApps}           \
-                          GPIDpkgAppsOpt=\"${StrAppsOpt}\" \
+                          GPIApps=${StrApps}           \
+                          GPIAppsOpt=\"${StrAppsOpt}\" \
                           GPIFilterApps=${StrFilterApps}   \
                           GPIFilterOpt=\"${StrFilterOpt}\" \
                           GPIDisplayDebug=${GDIIsDisplayDebug} \
@@ -384,8 +384,8 @@ function GetDpkgInstalled()
                           GPITpl="${StrTpl}" \
                           GPITagParserResult="StrCmdA"     \
                           GPIFileName=${StrFile}           \
-                          GPIDpkgApps=${StrApps}           \
-                          GPIDpkgAppsOpt=\"${StrAppsOpt}\" \
+                          GPIApps=${StrApps}           \
+                          GPIAppsOpt=\"${StrAppsOpt}\" \
                           GPIFilterApps=${StrFilterApps}   \
                           GPIFilterOpt=\"${StrFilterOpt}\" \
                           GPIDisplayDebug=${BoolDisplayDebug} \
