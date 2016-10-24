@@ -1,3 +1,4 @@
+#!/bin/bash
 
 ### Package : _sub_Structure
 
@@ -150,6 +151,7 @@ if [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then
     eval $( VTVIsArrayStyleInsert=True \
          VTVValueEntry=${StrVarList}   \
          VTVIsValueReAssign=True       \
+         VTVIsQuotedValue=True         \
          VTVIsValueToConvert=False     \
          VTVIsArrayStyleInsert=True    \
          ValueToVariable ) ${StrStartMain} ; 
@@ -285,6 +287,7 @@ if [ "${versionGOD:=0.0.2}" == "0.0.2" ] ; then
 
 
  unset GetOtherDate ;
+ unset Verbosis DateFunc ; 
  function GetOtherDate()
  {
    local -a ArrayArg=( $* ) ; 
@@ -409,6 +412,7 @@ if [ "${versionGUUID:=0.0.2}" == "0.0.2" ] ; then
   ### Pattern, variable-set will also own it's registration . 
 
  unset GetUUID 
+ unset Verbosis ApplicationRegistrationIndex UUIDNoLoop UUIDLoop __main_StartServices ; 
  function GetUUID ()
  {
   local -a ArrayArg=( $* ) ; 
@@ -587,8 +591,9 @@ if [ "${versionGUUID:=0.0.2}" == "0.0.2" ] ; then
    VerbState=${IsVerbosis} VerbMsg=${ArrayMsg[2]} VerbHeader="VERBOSE" Verbosis ;
    #echo -ne "[UUID ACTION: ${StrAction}]\n" > /dev/stderr  ;
    eval $( VTVIsArrayStyleInsert=True \
-           VTVIsValueReAssign=True \
-           VTVIsValueToConvert=False \
+           VTVIsValueReAssign=True    \
+           VTVIsQuotedValue=True      \
+           VTVIsValueToConvert=False  \
            VTVValueEntry=IsVerbosis,StrAction,StrUUIDHelper,IntSeqLoop ValueToVariable ) ${StrAction} ; 
   } 
   
@@ -607,8 +612,9 @@ if [ "${versionGUUID:=0.0.2}" == "0.0.2" ] ; then
    eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;	
   elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
    eval $( VTVIsArrayStyleInsert=True \
-           VTVIsValueReAssign=True \
-           VTVIsValueToConvert=False \
+           VTVIsValueReAssign=True    \
+           VTVIsQuotedValue=True      \
+           VTVIsValueToConvert=False  \
            VTVValueEntry=${StrVarList} ValueToVariable ) __main_StartServices 
   ### replacement IsVerbosis,BoolTimeBased,BoolLoop,IntSeqLoop,StrGetHelperName,StrUUIDHelperStream,StrUUIDActionName by StrVarList
   fi 
@@ -1605,6 +1611,7 @@ if [ "${versionTP:=0.0.2}" == "0.0.2" ] ; then
    eval $( eval VTVValueEntry=${StrVarList} \ 
            VTVIsArrayStyleInsert=True        \
            VTVIsValueReAssign=True           \
+           VTVIsQuotedValue=True         \
            VTVIsValueToConvert=False         \
            ValueToVariable   ) ${StrStartMain} ; 
   fi 
@@ -2186,6 +2193,7 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
    eval $( eval VTVValueEntry=${StrVarListTransfert} \
            VTVIsValueReAssign=True              \ 
            VTVIsValueToConvert=False            \
+           VTVIsQuotedValue=True         \
            VTVIsArrayStyleInsert=True           \
            ValueToVariable ) ${StrStartMain} 
   fi

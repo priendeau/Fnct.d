@@ -1,4 +1,6 @@
+#!/bin/bash
 
+# Package _sub_PythonBoost
 ### Add all seemlessly python module requiring uses of boot to developt
 ### A steady body for easy creation, configuration, compilation. 
 

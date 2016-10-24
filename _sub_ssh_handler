@@ -1,5 +1,8 @@
+#!/bin/bash
 
-#. /etc/init.d/Fnct.d/fnct_debian_lib 
+
+# Package _sub_ssh_handler 
+
 
 function ZenityPassPhrase()
 {

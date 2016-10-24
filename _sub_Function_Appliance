@@ -1,3 +1,4 @@
+#!/bin/bash
 
 ### Package : _sub_Function_Appliance
 
@@ -497,6 +498,7 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
              VTVValueEntry=${StrVarList},${StrParserResult},StrDestinationResult   \
              VTVIsValueReAssign=True       \
              VTVIsValueToConvert=False     \
+             VTVIsQuotedValue=True         \
              VTVIsArrayStyleInsert=True    \
              ValueToVariable ) ReportReference ;    
 
@@ -505,6 +507,7 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
               VTVValueEntry=${StrVarList},${StrParserResult},StrTplZenityTextInfo   \
               VTVIsValueReAssign=True       \
               VTVIsValueToConvert=False     \
+              VTVIsQuotedValue=True         \
               VTVIsArrayStyleInsert=True    \
               ValueToVariable ) ZenityHandlerOut ;    
     elif [ "${BoolOutToFile:=False}" == "True" ] ; then 
@@ -542,6 +545,7 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
     eval $( eval VTVIsArrayStyleInsert=True \
           VTVValueEntry=${StrVarList},${StrParserResult},StrDestinationResult   \
           VTVIsValueReAssign=True       \
+          VTVIsQuotedValue=True         \
           VTVIsValueToConvert=False     \
           VTVIsArrayStyleInsert=True    \
           ValueToVariable ) ReportReference ; 
@@ -633,6 +637,7 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
     if [ ! -d ${StrRepositoryQuery} ] ; then 
      eval $( eval VTVIsArrayStyleInsert=True \
          VTVValueEntry=${StrVarList}   \
+         VTVIsQuotedValue=True         \
          VTVIsValueReAssign=True       \
          VTVIsValueToConvert=False     \
          VTVIsArrayStyleInsert=True    \
@@ -642,6 +647,7 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
     
     eval $( eval VTVIsArrayStyleInsert=True \
         VTVValueEntry=${StrVarList},StrCmd   \
+        VTVIsQuotedValue=True         \
         VTVIsValueReAssign=True       \
         VTVIsValueToConvert=False     \
         VTVIsArrayStyleInsert=True    \
@@ -685,6 +691,7 @@ if [ ${versionGPI:=0.0.2} == "0.0.1" ] ; then
    
    eval $( eval VTVIsArrayStyleInsert=True  \
                 VTVValueEntry=${StrVarList} \
+                VTVIsQuotedValue=True       \
                 VTVIsValueReAssign=True     \
                 VTVIsValueToConvert=False   \
                 ValueToVariable ) ${StrStartMain}

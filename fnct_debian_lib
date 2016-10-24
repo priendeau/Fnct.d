@@ -1,6 +1,7 @@
+#!/bin/bash
 
-
-
+ ### Package : fnct_debian_lib
+ 
  ###	Specification : 
  ###	- This following Draft-Specification, offer a decent explanation of doing a function with
  ###	appropriate control proned-protocolar development for scalarity-design . 
@@ -540,13 +541,13 @@ function BoolVarTestVarCreation()
  local IsTypePreamb=${BVTestIsValueToVar:=False} ;
  local StrVTRPrbTpl=${BVTestVTVTPL:=eval __TES__  __REGISTRY_PRE__ VTVValueEntry=__VAR_ENTRY_PRE__ ValueToVariable __TEE__ __FNCT_PRE__} ;
  local StrVTRPrbVar=${BVTestVTVVar:=IsVerbose,IsDebug} ;
- local StrVTRPrbVTReg=${BVTestVTReg:=VTVIsArrayStyleInsert=True VTVIsValueReAssign=True VTVIsValueToConvert=False} ;
+ local StrVTRPrbVTReg=${BVTestVTReg:=VTVIsQuotedValue=True VTVIsArrayStyleInsert=True VTVIsValueReAssign=True VTVIsValueToConvert=False} ;
  local StrVTRPrbVTFnct=${BVTestVTFnct:=__FNCT__} ;
  ### Section ValueToVariable in Assertion .
  local IsTypeAssert=${BVTestIsValueToVarAssert:=False};
  local StrVTRAsrtTpl=${BVTestVTVTPLA:=eval __TES__  __REGISTRY_ASRT__ VTVValueEntry=__VAR_ENTRY_ASRT__ ValueToVariable __TEE__ __FNCT_ASRT__} ;
  local StrVTRAsrtVar=${BVTestVTVVarA:=IsVerbose,IsDebug};
- local StrVTRAsrtVTReg=${BVTestVTRegA:=VTVIsArrayStyleInsert=True VTVIsValueReAssign=True VTVIsValueToConvert=False}
+ local StrVTRAsrtVTReg=${BVTestVTRegA:=VTVIsQuotedValue=True VTVIsArrayStyleInsert=True VTVIsValueReAssign=True VTVIsValueToConvert=False}
  local StrVTRAsrtVTFnct=${BVTestVTFnctA:=__FNCT__}
  local StrKeyTestType=${BVTestType:='if:fi,if:elif,elif:elif,elif:else,if:else,else:fi'} ;
  local IntDefautlType=${BVTestIdType:=0} ; 
@@ -1629,6 +1630,7 @@ function ZenityShellEval()
   local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
   local IsDisplayFormatted=${VerbFormated:=True} ;
   local IsAppendMode=${VerbAppendDev:=False} ; 
+  local IsExtendedOutput=${VerbExtendedOut:=False} ; 
   local ArrayArg=( $* ) ; 
   if [ "${IsVerboseState:=False}" == "True" ] ; then 
    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
@@ -1639,12 +1641,24 @@ function ZenityShellEval()
     fi
    else
     if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+     if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+       echo -ne "${StrMsg}" ;  
+     else
        echo "${StrMsg}" ;  
+     fi
     else
      if [ "${IsAppendMode:=False}" == "True" ] ; then 
-      echo "${StrMsg}" >> ${StrDevOut} ;
+      if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+        echo -ne "${StrMsg}" >> ${StrDevOut} ;
+      else
+        echo "${StrMsg}" >> ${StrDevOut} ;
+      fi
      else
-      echo "${StrMsg}" > ${StrDevOut} ;
+      if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+       echo -ne "${StrMsg}" > ${StrDevOut} ;
+      else
+       echo "${StrMsg}" > ${StrDevOut} ;
+      fi 
      fi
     fi 
    fi 
@@ -1677,13 +1691,73 @@ function ZenityShellEval()
  local IsLoopOnSucc=${ZSELoopOnSucc:=True} ; 
  local IsCheckSumOnly=${ZSECheckSumTest:=False} ; 
  local BoolDisplayDebug=${ZSEDisplayDebug:=False} ; 
+ local StrCheckBoxAgree=${ZSECHReadyTxt:=I am ready to save this file and add a checksum certification.} ; 
  local StrVarList="StrStartMain,TmpUUIDEdit,IntSleep,IntFontSize,IsEditField,IsAddFootPrint,StrTitle,StrFileName,StrDateFormat,IntDefaultModeExec,StrFilePath,IntWidth,IntHeight,IsLoopOnSucc,IsCheckSumOnly,BoolDisplayDebug,StrVarList" ; 
-
+ local -a ArrayMsg=( ) ; 
  
+ ArrayMsg[0]="#\!/bin/bash\n###\n### FootPrint Added, see Prefixed-Var ZSEAddFootPrint from ZenityShellEval\n###\n\n###File:__FILE__\n###UUID-TIME-MARKER:__UUID_MAKER__\n###Date: __DATE_CONFIRM__\n###Sha1Sum: __SHA1SUM__\n### Size:__SIZE__\n### NbWord: __NB_WORD__\n\n" ; 
+ ArrayMsg[1]="###\n### THIS IS NOT A FOOTPRINT, ONLY CONFIRMATION of This code was parsed and do not return error after parsing.\n###No FootPrint Added, see Prefixed-Var ZSEAddFootPrint from ZenityShellEval\n###\n###\n###\n###\n###\n###\n###\n###\n###\n"
+ ArrayMsg[2]="Note: New FileName : __FILE__ " ; 
+ ArrayMsg[3]="### FileName: __FILE__" ; 
+ ArrayMsg[4]="Re-opening File : __FILE__ " ; 
+ ArrayMsg[5]="User Shell evaluation reported error" ; 
+ ArrayMsg[6]="User cancel the test." ; 
+ ArrayMsg[7]="Quitting Function :__FUNCT__" ; 
+ ArrayMsg[8]="Removing temporary UUID Holder : File: __TMP__/__UUID__" ; 
+ 
+ ### 
+ ### FootPrint Section
+ ###
+ ###
+ function _NoFootPrint()
+ {
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( _NFP NoFootPrint ${StrParentApps} ) ;
+   local Arg0="${ArrayArg[0]}" ;
+   VerbMsg="Entry in function" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
+   local StrMsg=$( ZenityShellEval --get ArrayMsg[1] ) ; 
+   VerbMsg="${StrMsg}" VerbExtendedOut=True VerbEvalForm=True VerbFormated=False VerbState=True Verbosis ; 
+ }
+ 
+ function _FootPrint()
+ {
+   local -a __call_locality=( FP _FootPrint ${StrParentApps} ) ;
+   local -a ArrayArg=( $* ) ;
+   local Arg0="${ArrayArg[0]}" ;
+   VerbMsg="Entry in function" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
+   local StrUUID=$( uuidgen -t ) ; 
+   local StrSha1Sum=$( echo "${CmdEval}" | sha1sum | cut -d ' ' -f 1 ) ; 
+   local StrSize=$( echo "${CmdEval}" | wc -c ) ; 
+   local StrNbWord=$( echo "${CmdEval}" | wc -w ) ; 
+   local StrDateConfirm=$( GODFormat='${StrDateFormat}' GetOtherDate ) ;
+   local StrMsg=$( ZenityShellEval --get ArrayMsg[0] ) ; 
+   StrMsg=${StrMsg//__NB_WORD__/${StrNbWord}}; 
+   StrMsg=${StrMsg//__SIZE__/${StrSize}};
+   StrMsg=${StrMsg//__SHA1SUM__/${StrSha1Sum}};
+   StrMsg=${StrMsg//__DATE_CONFIRM__/${StrDateConfirm}};
+   StrMsg=${StrMsg//__UUID_MAKER__/${StrUUID}};
+   StrMsg=${StrMsg//__FILE__/${StrFileTmp}};
+   VerbMsg="${StrMsg}" VerbExtendedOut=True VerbEvalForm=True VerbFormated=False VerbState=True Verbosis ; 
+   
+ }
+ 
+ function _DetectFootPrint()
+ {
+  local -a __call_locality=( DFP _DetectFootPrint ${StrParentApps} ) ;
+  local -a ArrayArg=( $* ) ;
+  local Arg0="${ArrayArg[0]}" ;
+  VerbMsg="Entry in function" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
+  local IntFootPrintDetection=$( echo -ne "${CmdEval}" | head -n 11 | egrep -ic "FootPrint" ) ;
+  eval $( eval BVTVarName=StrFootPrintMark BVTVarHold='$( StrDateFormat=${StrDateFormat} CmdEval=${CmdEval} _FootPrint )' BVTBoolVarName=\${IsAddFootPrint} BVTBoolCase=False BVTBoolAssertion='$( _NoFootPrint )' BVTScopeTest=local BoolVarTest ) ;
+ } 
+ ###
+ ### End FootPrint
+ ###
+
 	function MainEditor()
  {
-		local __call_locality=( ME MainEditor ${StrParentApps} ) ;
-		local ArrayArg=( $* ) ;
+		local -a ArrayArg=( $* ) ;
+		local -a __call_locality=( ME MainEditor ${StrParentApps} ) ;
 		local Arg0=${ArrayArg[0]} ;
   local StrMsg=""
   VerbMsg="Entry in function" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
@@ -1693,9 +1767,9 @@ function ZenityShellEval()
   fi
   #test ! -e ${StrFileTmp} && echo "" > ${StrFileTmp} ; 
   
-  local res=1 ; 
-  local shell_res=0 ; 
-  local shell_quit=0 ; 
+  local IntRes=1 ; 
+  local IntShellRes=0 ; 
+  local IntShellQuit=0 ; 
   eval $( BVTVarName=StrEditableAttr \
           BVTVarHold=\'--editable\' \
           BVTBoolVarName=\${IsEditField:=True} \
@@ -1703,20 +1777,17 @@ function ZenityShellEval()
           BVTBoolAssertion='' \
           BVTScopeTest=local \
           BoolVarTest ) ; 
-  local -a ArrayMsg=( ) ; 
-  ArrayMsg[0]="Note: New FileName : __FILE__ " ; 
-  ArrayMsg[1]="### FileName: __FILE__" ; 
-  ArrayMsg[2]="Re-opening File : __FILE__ " ; 
+  #local -a ArrayMsg=( ) ; 
   
   if [ ! -f ${StrFileTmp} ] ; then 
-   StrMsg=${ArrayMsg[0]} ; 
+   StrMsg=$( ZenityShellEval --get ArrayMsg[2] ) ; 
    StrMsg=${StrMsg//__FILE__/${StrFileTmp}} ; 
    VerbMsg=${StrMsg} VerbHeader="MESSAGE" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ; 
-   StrMsg=${ArrayMsg[1]} ; 
+   StrMsg=$( ZenityShellEval --get ArrayMsg[3] ) ; 
    StrMsg=${StrMsg//__FILE__/${StrFileTmp}} ; 
    VerbMsg=${StrMsg} VerbHeader="MESSAGE" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ; 
   elif [ -f ${StrFileTmp} ] ; then 
-   StrMsg=${ArrayMsg[2]} ; 
+   StrMsg=$( ZenityShellEval --get ArrayMsg[4] ) ; 
    StrMsg=${StrMsg//__FILE__/${StrFileTmp}} ; 
    VerbMsg=${StrMsg} VerbHeader="MESSAGE" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ; 
   fi   
@@ -1736,69 +1807,49 @@ function ZenityShellEval()
               --filename=${HOME}/${TmpUUIDEdit} \
               --title="${StrTitle}" \
               --width=${IntWidth} \
-              --height=${IntHeight} ) ; 
-   res=$? ; 
-   if [ ${res} -ne 1 ] ; then 
-    ### 
-    ### FootPrint Section
-    ###
-    ###
-      function _NoFootPrint()
-      {
-        local __call_locality=( _NFP NoFootPrint ${StrParentApps} ) ;
-        local ArrayArg=( $* ) ;
-        local Arg0=${ArrayArg[0]} ;
-        VerbMsg="Entry in function" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
-        echo -ne "###\n### No FootPrint Added, see Prefixed-Var ZSEAddFootPrint from ZenityShellEval\n###\n###\n###\n###\n###\n###\n###\n###\n###\n" ; 
-      }
-      function _FootPrint()
-      {
-        local __call_locality=( FP _FootPrint ${StrParentApps} ) ;
-        local ArrayArg=( $* ) ;
-        local Arg0=${ArrayArg[0]} ;
-        VerbMsg="Entry in function" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
-        local StrUUID=$( uuidgen -t ) ; 
-        local StrSha1Sum=$( echo "${CmdEval}" | sha1sum | cut -d ' ' -f 1)
-        local StrSize=$( echo "${CmdEval}" | wc -c ) ; 
-        local StrNbWord=$( echo "${CmdEval}" | wc -w ) ; 
-        local StrDateConfirm=$( GODFormat='${StrDateFormat}' GetOtherDate )
-        echo -ne "###\n### FootPrint Added, see Prefixed-Var ZSEAddFootPrint from ZenityShellEval\n###\n\n###File:${StrFileTmp}\n###UUID-TIME-MARKER:${StrUUID}\n###Date: ${StrDateConfirm}\n###Sha1Sum: ${StrSha1Sum}\n### Size:${StrSize}\n### NbWord: ${StrNbWord}\n\n" ; 
-      }
-      function _DetectFootPrint()
-      {
-       local __call_locality=( DFP _DetectFootPrint ${StrParentApps} ) ;
-       local ArrayArg=( $* ) ;
-       local Arg0=${ArrayArg[0]} ;
-       VerbMsg="Entry in function" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
-       local IntFootPrintDetection=$( echo -ne "${CmdEval}" | head -n 11 | egrep -ic "FootPrint" ) ;
-       eval $( BVTVarName=StrFootPrintMark BVTVarHold='$( StrDateFormat=${StrDateFormat} CmdEval=${CmdEval} _FootPrint )' BVTBoolVarName=\${IsAddFootPrint} BVTBoolCase=False BVTBoolAssertion='$( _NoFootPrint )' BVTScopeTest=local BoolVarTest ) ;
-      }
-      
-      eval $( BVTVarName=StrFootPrintMark BVTVarHold='$( StrDateFormat=${StrDateFormat} CmdEval=${CmdEval} _FootPrint )' BVTBoolVarName=\${IsAddFootPrint} BVTBoolCase=False BVTBoolAssertion='$( _NoFootPrint )' BVTScopeTest=local BoolVarTest ) ;       
-      
-    ###
-    ### End FootPrint
-    ###
-    
-    
+              --height=${IntHeight} \
+              --checkbox="${StrCheckBoxAgree}" ) ; 
+   IntRes=$? ; 
+   if [ ${IntRes} -ne 1 ] ; then 
+     eval $( eval BVTVarName=StrFootPrintMark BVTVarHold='$( StrDateFormat=${StrDateFormat} CmdEval=${CmdEval} _FootPrint )' BVTBoolVarName=\${IsAddFootPrint} BVTBoolCase=False BVTBoolAssertion='$( _NoFootPrint )' BVTScopeTest=local BoolVarTest ) ;       
     echo """${StrFootPrintMark}\n${CmdEval}""" > ${StrFileTmp} ; 
-    chmod 775 ${StrFileTmp} ; 
+    
+    /bin/chmod ${IntDefaultModeExec} ${StrFileTmp} ; 
     . ${StrFileTmp} ; 
-    shell_res=$?
-    if [ ${shell_res} -eq 1 ] ; then 
-     echo -ne "\n\n\tUser Shell evaluation reported error\n\n" > /dev/stderr ; 
-     res=1 ; 
-     shell_res=1 ; 
+    IntShellRes=$?
+    StrMsg=$( ZenityShellEval --get ArrayMsg[5] ) ; 
+    if [ ${IntShellRes:=1} -eq 1 ] ; then 
+     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-MESSAGE" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ; 
+     IntRes=1 ; 
+     IntShellRes=1 ; 
     fi 
    else 
-    echo -ne "\n\n\tUser cancel the test.\n\n" > /dev/stderr ; 
-    shell_quit=1 ; 
+     StrMsg=$( ZenityShellEval --get ArrayMsg[6] ) ; 
+     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-MESSAGE" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ; 
+    IntShellQuit=1 ; 
    fi ; 
    sleep ${IntSleep} ; 
-   test ${res} -eq 0 -a ${shell_res} -eq 0 && eval $( BVTVarName=res BVTVarHold='0' BVTBoolVarName=\${IsLoopOnSucc} BVTBoolCase=False BVTBoolAssertion='1' BVTScopeTest=local BoolVarTest ) ; 
+   if [ ${IntRes:=1} -eq 0 -a ${IntShellRes:=1} -eq 0 ] ; then 
+     eval $( eval \
+     BVTVarName=IntRes \
+     BVTVarHold='0' \
+     BVTBoolVarName=\${IsLoopOnSucc} \
+     BVTBoolCase=False \
+     BVTBoolAssertion='1' \
+     BVTScopeTest=local \
+     BoolVarTest ) ; 
+   fi 
   done
-  echo -ne "\n\tQuitting Function :${__call_locality[1]}\n\n" > /dev/stderr ;  
-  echo -ne "\n\tRemoving temporary UUID Holder : \n\tFile: ${HOME}/${TmpUUIDEdit}\n\n" > /dev/stderr ; 
+  
+  StrMsg=$( ZenityShellEval --get ArrayMsg[7] ) ; 
+  StrMsg=${StrMsg//__FUNCT__/${__call_locality[1]}} ; 
+  VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-MESSAGE" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ; 
+  
+  StrMsg=$( ZenityShellEval --get ArrayMsg[8] ) ; 
+  StrMsg=${StrMsg//__TMP__/${HOME}} ;
+  StrMsg=${StrMsg//__UUID__/${TmpUUIDEdit}} ;
+  VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-MESSAGE" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ; 
+  
   rm -f ${HOME}/${TmpUUIDEdit}
  }
  
@@ -1931,6 +1982,7 @@ function ZenityShellEval()
           VTVValueEntry=${StrVarList} \
           VTVIsValueReAssign=True     \
           VTVIsValueToConvert=False   \
+          VTVIsQuotedValue=True       \
           ValueToVariable ) ${StrStartMain} ; 
  fi
 
@@ -4314,7 +4366,9 @@ function RoundRobinSwapRealloc()
 ### and this script is a low-cost download of big file, like CSV reference required to explain
 ### field of low-cadence fits files from keepler2 photometer. 
 unset CurlFtpContentDownload ; 
-
+unset StrFileName StrUrlTpl StrUrl StrUserAccount StrAddr StrPathSrv StrLSTag StrLSTplCmd StrLSFilterApps StrLSFilterApps StrLSApps BoolDisplayDebug ; 
+unset Verbosis ExtractSize ListFile __main_StartServices ;
+ 
 function CurlFtpContentDownload()
 {
  function Verbosis()
@@ -4380,8 +4434,12 @@ function CurlFtpContentDownload()
  local StrLSTplCmd=${CFCDLsTpl:="__APPS__ __APPS_OPT__ __PIPE__ __FILTER__"} ;
  #local StrLSFilterOpt=${CFCDLsFilterOpt:=}
  ### GPITagParser definition for CFCDLs
- local StrLSTag=${CFCDLsDef:="StrDefaultPipe:__PIPE__,StrLSApps:__APPS__,StrLSAppsOpt:__APPS_OPT__,StrLSFilterApps:__FILTER__,StrUserAccount:__USER__,StrUrlTpl:__URL__,StrFileName:__FILE__"} ;
-
+ 
+ local StrLSTag=${CFCDLsDef:="StrUserAccount:__USER__,StrUrl:__URL__"} ;
+ ### Following Tag/Variable does not need to to be inserer inside the parser, the are commonly definied Through Prefixed-variable of GPI...
+ ### StrDefaultPipe:__PIPE__,StrLSApps:__APPS__,StrLSAppsOpt:__APPS_OPT__,StrLSFilterApps:__FILTER__,StrFileName:__FILE__
+ ### It's probably more GPITagFeeder that require to be feeded with exception . 
+ 
  ### Extracting address from URL and operator '/%' 
  local StrAddr=${StrUrl/%\/[a-zA-Z0-9\_]*} ;
  ### Extracting Server-path from erasing the address from URL.  
@@ -4457,26 +4515,40 @@ function CurlFtpContentDownload()
   local StrDefaultGPIOpt=$( CurlFtpContentDownload --get StrDefaultGPIOpt ) ;
   StrDefaultGPIOpt=${StrDefaultGPIOpt//,/ } ; 
   
-  local StrGnrCmd="""GPITpl=\"${StrLSTplCmd}\" GPITagParser=\"${StrLSTag}\" GPITagParserResult=\"StrCmdA\" GPIFileName=${StrFileName} GPIApps=${StrLSApps} GPIAppsOpt=\"${StrLSAppsOpt}\" GPIFilterApps=\"${StrLSFilterApps}\" GPIDisplayDebug=${BoolDisplayDebug} GPIParserDebug=${BoolDisplayDebug} ${StrDefaultGPIOpt} GnrlPrsrInfctr""" ;
   
-  
+  ### Removed from The query and replaced by GPITagFeeder, having too
+  ### much redefinition of recurrent variable and  some placement make conflicts with 
+  ### internal variable of GnrlPrsrInfctr.
+  ### GPITagParser=\"${StrLSTag}\" by GPITagFeeder and excess of tag where cleaned. 
+  ### GPIFileName, GPIApps GPIAppsOpt GPIFilterApps are used and are not required inside
+  ### The Dictionnary or GPITagParser element.  
+  local StrGnrCmd="""GPITpl=\"${StrLSTplCmd}\" GPITagFeeder=\"${StrLSTag}\"  GPITagParserResult=\"StrCmdA\" GPIFileName=${StrFileName} GPIApps=${StrLSApps} GPIAppsOpt=\"${StrLSAppsOpt}\" GPIFilterApps=\"${StrLSFilterApps}\" GPIDisplayDebug=${BoolDisplayDebug} GPIParserDebug=${BoolDisplayDebug} ${StrDefaultGPIOpt} GnrlPrsrInfctr""" ;
+    
   ### 
   ### A Variable-screener, used to Display information on screen, using eval of variable,
   ###  required variable are inserted inside the array and an evaluation StrEvalValue is 
   ### done by feeding name of variable and value to StrMsg.
   ### 
   StrMsgTpl=$( CurlFtpContentDownload --get ArrayMsg[0] ) ;
-  local -a ArrayVarDisplay=( StrParentApps StrDefaultVTVOpt StrDefaultGPIOpt StrLSTplCmd StrLSTag StrFileName StrLSAppsOpt StrLSFilterApps StrGnrCmd StrUserAccount StrUrlTpl ) ; 
+  local -a ArrayVarDisplay=( StrParentApps StrDefaultVTVOpt StrDefaultGPIOpt StrLSTplCmd StrLSTag StrFileName StrLSApps StrLSAppsOpt StrLSFilterApps StrGnrCmd StrUserAccount StrUrlTpl ) ; 
   local StrEvalValue ;
   for VarTypeName in ${ArrayVarDisplay[@]} ; do 
    StrMsg=${StrMsgTpl} ; 
    StrMsg=${StrMsg//__VARNAME__/${VarTypeName}} ;
-   eval "StrEvalValue=\${${VarTypeName}}" ;  
+   eval "local StrEvalValue=\${${VarTypeName}}" ;  
    StrMsg=${StrMsg//__VARVALUE__/${StrEvalValue}} ; 
    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;  
   done 
   
-  eval $( eval VTVValueEntry="${StrVarList}" ${StrDefaultVTVOpt} ValueToVariable ) $( ${StrGnrCmd} )  ;
+  ### Cleaning old UUID variable to allow creation of the new report:
+  unset UUID ; 
+  eval $( eval VTVValueEntry="${StrVarList}" ${StrDefaultVTVOpt} ValueToVariable ) $( eval ${StrGnrCmd} )  ;
+  
+  local StrFileRepoPath=$( GnrlPrsrInfctr --get GPIQueryRepository ) ;  
+  StrMsg="UUID Log-file for Command repository:(__UUID__) file : __PATH__/__UUID__" ; 
+  StrMsg=${StrMsg//__UUID__/${UUID:=None}} ; 
+  StrMsg=${StrMsg//__PATH__/${StrFileRepoPath:=None}} ; 
+  VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;  
   
   ###ncftpls -u ${StrUser} -l ${URL}/${StrFile} | ExtractSize ; 
   local StrMsg="StrCmdA: __CMD__" ; 

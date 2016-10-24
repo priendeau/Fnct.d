@@ -1,4 +1,6 @@
-# . /etc/init.d/Fnct.d/fnct_debian_lib
+#!/bin/bash
+
+
 # Package _sub_PackageRepository
 
 ### Yet Another Debian package Mangler and backup-management. 
