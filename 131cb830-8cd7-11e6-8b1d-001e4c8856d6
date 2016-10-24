@@ -1,21 +1,24 @@
+#!/bin/bash
 ###
 ### FootPrint Added, see Prefixed-Var ZSEAddFootPrint from ZenityShellEval
 ###
 
-###File:/home/maxiste/github/Fnct.D/131cb830-8cd7-11e6-8b1d-001e4c8856d6
-###UUID-TIME-MARKER:1e2ab934-8cd7-11e6-8b1d-001e4c8856d6
-###Date: ${StrDateFormat}
-###Sha1Sum: 0c2cfbfdac24a1187631f1eddbf86b5aa23e207e
-### Size:3534
-### NbWord: 348\n
+###File:/var/cache/Fnct.D/ZenityShellEval/131cb830-8cd7-11e6-8b1d-001e4c8856d6
+###UUID-TIME-MARKER:c66476d8-9a3f-11e6-8b1d-001e4c8856d6
+###Date: 20161024-19:15:38,1477350938
+###Sha1Sum: 7e00e15ee16b49569171bb82532373ef103bd99f
+###Size:3573
+###NbLine: 78
+###NbWord: 351
 
 
+unset GetStdPrefixName ;
 function GetStdPrefixName()
 {
   local -a ArrayArg=( $* ) ; 
   local -a __call_locality=( GSPN GetStdPrefixName  ) ; 
   local StrPrefixEntry=${GSPNArg0:=None} ;
-  local StrException=${GSPNPrefixExcepLst:=GetUUID:GetU} ;  
+  local StrException=${GSPNPrefixExcepLst:=GetUUID:GetU,Verbosis:Verb} ;  
   local Arg0=${ArrayArg[0]} ; 
   
   local StrSedDefFilter=${GSPNSedFilter:=s/[a-z\)\(\_\-]//g} ; 

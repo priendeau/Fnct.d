@@ -1,13 +1,16 @@
+#!/bin/bash
 ###
 ### FootPrint Added, see Prefixed-Var ZSEAddFootPrint from ZenityShellEval
 ###
 
-###File:023102e0-1833-11e3-98a2-001b3875b29c
-###UUID-TIME-MARKER:2b336e54-1963-11e3-98a2-001b3875b29c
-###Date: ${StrDateFormat}
-###Sha1Sum: b330cd36adbe81d9baa74f231c96939c3886a9d1
-### Size:798
-### NbWord: 75\n
+###File:/var/cache/Fnct.D/ZenityShellEval/023102e0-1833-11e3-98a2-001b3875b29c
+###UUID-TIME-MARKER:ecdcc62a-9a3b-11e6-8b1d-3de3cec4dffe
+###Date: 20161024-18:48:04,1477349284
+###Sha1Sum: e09c41161098da4414c58792f7d1aed060b370b1
+###Size:799
+###NbLine: 23
+###NbWord: 75
+
 
 unset __GetVarReferenceCompWord ;
 function __GetVarReferenceCompWord( )

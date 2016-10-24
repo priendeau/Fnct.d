@@ -1,16 +1,18 @@
+#!/bin/bash
 ###
 ### FootPrint Added, see Prefixed-Var ZSEAddFootPrint from ZenityShellEval
 ###
 
 ###File:/var/cache/Fnct.D/ZenityShellEval/6403c722-28a6-11e3-98a2-001b3875b29c
-###UUID-TIME-MARKER:4b87be82-95aa-11e6-8b1d-657bcfc54998
-###Date: ${StrDateFormat}
-###Sha1Sum: 8b5967f509fca7e1e447e6c8702f32bf4ba23a58
-### Size:5580
-### NbWord: 567\n
+###UUID-TIME-MARKER:ff6cc962-9a3f-11e6-8b1d-001e4c8856d6
+###Date: 20161024-19:17:14,1477351034
+###Sha1Sum: b03953379e8c856fd9eedd89412d0d6b5fdbf5b6
+###Size:5602
+###NbLine: 131
+###NbWord: 569
 
 
-
+unset GetVarReference;
 function GetVarReference( )
 {
  local -a ArrayArg=( $* ) ;

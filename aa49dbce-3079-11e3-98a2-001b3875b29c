@@ -1,13 +1,17 @@
+#!/bin/bash
 ###
 ### FootPrint Added, see Prefixed-Var ZSEAddFootPrint from ZenityShellEval
 ###
 
-###File:/etc/init.d/Fnct.d/aa49dbce-3079-11e3-98a2-001b3875b29c
-###UUID-TIME-MARKER:d506ac16-3079-11e3-98a2-001b3875b29c
-###Date: ${StrDateFormat}
-###Sha1Sum: 22f2cd35a31d7d792f4e065bb9375a113231f23c
-### Size:4808
-### NbWord: 381\n
+###File:/var/cache/Fnct.D/ZenityShellEval/aa49dbce-3079-11e3-98a2-001b3875b29c
+###UUID-TIME-MARKER:ba4101da-9a3c-11e6-8b1d-0f83db4bbfc0
+###Date: 20161024-18:53:49,1477349629
+###Sha1Sum: 9c61222b4892fdc53366679214a20584fe07dac3
+###Size:4810
+###NbLine: 101
+###NbWord: 381
+
+
 unset LoopJackConnection ;
 function LoopJackConnection()
 {

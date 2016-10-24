@@ -1695,7 +1695,7 @@ function ZenityShellEval()
  local StrVarList="StrStartMain,TmpUUIDEdit,IntSleep,IntFontSize,IsEditField,IsAddFootPrint,StrTitle,StrFileName,StrDateFormat,IntDefaultModeExec,StrFilePath,IntWidth,IntHeight,IsLoopOnSucc,IsCheckSumOnly,BoolDisplayDebug,StrVarList" ; 
  local -a ArrayMsg=( ) ; 
  
- ArrayMsg[0]="#\!/bin/bash\n###\n### FootPrint Added, see Prefixed-Var ZSEAddFootPrint from ZenityShellEval\n###\n\n###File:__FILE__\n###UUID-TIME-MARKER:__UUID_MAKER__\n###Date: __DATE_CONFIRM__\n###Sha1Sum: __SHA1SUM__\n### Size:__SIZE__\n### NbWord: __NB_WORD__\n\n" ; 
+ ArrayMsg[0]="#!/bin/bash\n###\n### FootPrint Added, see Prefixed-Var ZSEAddFootPrint from ZenityShellEval\n###\n\n###File:__FILE__\n###UUID-TIME-MARKER:__UUID_MAKER__\n###Date: __DATE_CONFIRM__\n###Sha1Sum: __SHA1SUM__\n###Size:__SIZE__\n###NbLine: __NB_LINE__\n###NbWord: __NB_WORD__\n\n" ; 
  ArrayMsg[1]="###\n### THIS IS NOT A FOOTPRINT, ONLY CONFIRMATION of This code was parsed and do not return error after parsing.\n###No FootPrint Added, see Prefixed-Var ZSEAddFootPrint from ZenityShellEval\n###\n###\n###\n###\n###\n###\n###\n###\n###\n"
  ArrayMsg[2]="Note: New FileName : __FILE__ " ; 
  ArrayMsg[3]="### FileName: __FILE__" ; 
@@ -1704,7 +1704,9 @@ function ZenityShellEval()
  ArrayMsg[6]="User cancel the test." ; 
  ArrayMsg[7]="Quitting Function :__FUNCT__" ; 
  ArrayMsg[8]="Removing temporary UUID Holder : File: __TMP__/__UUID__" ; 
- 
+ ArrayMsg[9]="\n\tFile: __FILE__\n\tFootprint: __CHECKSUM__" ; 
+ ArrayMsg[10]="file-shasum:__PATH__/__FILE__:__DIGEST__" ; 
+  
  ### 
  ### FootPrint Section
  ###
@@ -1716,7 +1718,7 @@ function ZenityShellEval()
    local Arg0="${ArrayArg[0]}" ;
    VerbMsg="Entry in function" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
    local StrMsg=$( ZenityShellEval --get ArrayMsg[1] ) ; 
-   VerbMsg="${StrMsg}" VerbExtendedOut=True VerbEvalForm=True VerbFormated=False VerbState=True Verbosis ; 
+   VerbMsg="${StrMsg}" VerbExtendedOut=True VerbEvalForm=True VerbFormated=False VerbState=True VerbDev=${StrFileTmp} Verbosis ; 
  }
  
  function _FootPrint()
@@ -1726,18 +1728,24 @@ function ZenityShellEval()
    local Arg0="${ArrayArg[0]}" ;
    VerbMsg="Entry in function" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
    local StrUUID=$( uuidgen -t ) ; 
-   local StrSha1Sum=$( echo "${CmdEval}" | sha1sum | cut -d ' ' -f 1 ) ; 
-   local StrSize=$( echo "${CmdEval}" | wc -c ) ; 
-   local StrNbWord=$( echo "${CmdEval}" | wc -w ) ; 
-   local StrDateConfirm=$( GODFormat='${StrDateFormat}' GetOtherDate ) ;
+     
+   local StrSha1Sum=$( /usr/bin/sha1sum ${StrFileContent} | cut -d ' ' -f 1 ) ; 
+   #rm -f ${HOME}/${StrUUID} ; 
+   local StrSize=$( /usr/bin/wc -c ${StrFileContent} | cut -d ' ' -f 1 ) ; 
+   local StrNbWord=$( /usr/bin/wc -w ${StrFileContent} | cut -d ' ' -f 1 ) ; 
+   local IntNbLine=$( /usr/bin/wc  -l ${StrFileContent} | cut -d ' ' -f 1 ) ; 
+   local StrDateFoot=$( GODFormat="${StrDateFormat}" GetOtherDate ) ;
    local StrMsg=$( ZenityShellEval --get ArrayMsg[0] ) ; 
    StrMsg=${StrMsg//__NB_WORD__/${StrNbWord}}; 
    StrMsg=${StrMsg//__SIZE__/${StrSize}};
    StrMsg=${StrMsg//__SHA1SUM__/${StrSha1Sum}};
-   StrMsg=${StrMsg//__DATE_CONFIRM__/${StrDateConfirm}};
+   StrMsg=${StrMsg//__DATE_CONFIRM__/${StrDateFoot}};
    StrMsg=${StrMsg//__UUID_MAKER__/${StrUUID}};
    StrMsg=${StrMsg//__FILE__/${StrFileTmp}};
-   VerbMsg="${StrMsg}" VerbExtendedOut=True VerbEvalForm=True VerbFormated=False VerbState=True Verbosis ; 
+   StrMsg=${StrMsg//__NB_LINE__/${IntNbLine}};
+   
+   VerbMsg="File To write:${StrFileTmp} FootPrint:${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr Verbosis ; 
+   VerbMsg="${StrMsg}" VerbExtendedOut=True VerbEvalForm=False VerbFormated=False VerbState=True VerbDev=${StrFileTmp} Verbosis ; 
    
  }
  
@@ -1748,7 +1756,14 @@ function ZenityShellEval()
   local Arg0="${ArrayArg[0]}" ;
   VerbMsg="Entry in function" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
   local IntFootPrintDetection=$( echo -ne "${CmdEval}" | head -n 11 | egrep -ic "FootPrint" ) ;
-  eval $( eval BVTVarName=StrFootPrintMark BVTVarHold='$( StrDateFormat=${StrDateFormat} CmdEval=${CmdEval} _FootPrint )' BVTBoolVarName=\${IsAddFootPrint} BVTBoolCase=False BVTBoolAssertion='$( _NoFootPrint )' BVTScopeTest=local BoolVarTest ) ;
+  eval $( eval \
+    BVTVarName=StrFootPrintMark \
+    BVTVarHold='$( StrDateFormat=${StrDateFormat} CmdEval=${CmdEval} _FootPrint )' \
+    BVTBoolVarName=\${IsAddFootPrint} \
+    BVTBoolCase=False \
+    BVTBoolAssertion='$( _NoFootPrint )' \
+    BVTScopeTest=local \
+    BoolVarTest ) ;
  } 
  ###
  ### End FootPrint
@@ -1795,13 +1810,41 @@ function ZenityShellEval()
   #test ! -e ${StrFileTmp} && echo -ne "\n\n### FileName: ${StrFileTmp}\n\n" > ${StrFileTmp} ; 
   #test -e ${StrFileTmp} && echo -ne "\n\nRe-opening File : ${StrFileTmp} \n\n" > /dev/stderr ; 
   
+  ### Header calculation of line :
+  local IntHeaderLength=$( ZenityShellEval --get ArrayMsg[0] | wc -l ) ; 
+  
+  ### Current detection of footprint:
+  local IntHeaderDetec=$( egrep -ic "### FootPrint Added" ${StrFileTmp}  ) ; 
   ### Copy File into Local HOME/path and removing the header and avoid to overwrite the initial 
   ### Protected file 
-  local IntNbLineInFile=$( wc -l ${StrFileTmp} | cut -d ' ' -f1  ) ; 
-  local IntNbLineNoHeader=$(( ${IntNbLineInFile} - 9 ))
-  test -e ${StrFileTmp} && tail -n ${IntNbLineNoHeader} ${StrFileTmp} > ${HOME}/${TmpUUIDEdit} 
-  while [ ${res} -eq 1 -a ${shell_quit} -eq 0 ] ; do 
-   CmdEval=$( zenity \
+  local IntNbLineInFile=0 ; 
+  local IntNbLineNoHeader=0 ; 
+  IntNbLineInFile=$( wc -l ${StrFileTmp} | cut -d ' ' -f1  ) ;  
+  ### Depend presence of header there is N-amount of line less the header or
+  ### only N-line if header is not present: 
+  if [ ${IntHeaderDetec:=0} -gt 0 ] ; then 
+    IntNbLineNoHeader=$(( ${IntNbLineInFile} - (( ${IntHeaderLength} - 2 )) )) ; 
+  else 
+   IntNbLineNoHeader=${IntNbLineInFile} ; 
+  fi 
+  StrMsg="Temporary file stats: IntNbLineInFile:__INTA__ IntNbLineNoHeader:__INTB__" ;
+  StrMsg=${StrMsg//__INTA__/${IntNbLineInFile}}  ; 
+  StrMsg=${StrMsg//__INTB__/${IntNbLineNoHeader}}  ; 
+  VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
+  
+  
+  
+  #test -e ${StrFileTmp} &&  
+  if [ -f ${StrFileTmp} ] ; then 
+   tail -n ${IntNbLineNoHeader} ${StrFileTmp} > ${HOME}/${TmpUUIDEdit}  ; 
+  fi
+  
+  StrMsg=$( ZenityShellEval --get ArrayMsg[2] ) ;
+  StrMsg=${StrMsg//__FILE__/${HOME}/${TmpUUIDEdit}}  ; 
+  VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
+     
+  while [ ${IntRes} -eq 1 -a ${IntShellQuit} -eq 0 ] ; do 
+   local CmdEval=$( zenity \
               --text-info ${StrEditableAttr} \
               --font=${IntFontSize} \
               --filename=${HOME}/${TmpUUIDEdit} \
@@ -1811,8 +1854,39 @@ function ZenityShellEval()
               --checkbox="${StrCheckBoxAgree}" ) ; 
    IntRes=$? ; 
    if [ ${IntRes} -ne 1 ] ; then 
-     eval $( eval BVTVarName=StrFootPrintMark BVTVarHold='$( StrDateFormat=${StrDateFormat} CmdEval=${CmdEval} _FootPrint )' BVTBoolVarName=\${IsAddFootPrint} BVTBoolCase=False BVTBoolAssertion='$( _NoFootPrint )' BVTScopeTest=local BoolVarTest ) ;       
-    echo """${StrFootPrintMark}\n${CmdEval}""" > ${StrFileTmp} ; 
+     local StrTypePrint="_NoFootPrint"
+     if [ "${IsAddFootPrint:=False}" == "True" ] ; then 
+      StrTypePrint="_FootPrint" ;
+     fi 
+     VerbMsg="Type of FootPrint: ${StrTypePrint}" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
+     
+     local StrUUID=$( uuidgen -t ) ; 
+     local StrFileContent=${HOME}/${StrUUID}
+     
+     VerbMsg="${CmdEval}"  \
+     VerbExtendedOut=False \
+     VerbEvalForm=False    \
+     VerbFormated=False    \
+     VerbState=True        \
+     VerbDev=${StrFileContent} Verbosis ;      
+     
+     VerbMsg="File StrFileContent Location: ${StrFileContent}" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
+     
+     ### For Function _NoFootPrint and _FootPrint
+     ### It SHOULD write down to the file 
+     ### the header first so we can use a Verbosis with 
+     ### VerbAppendDev=True to Append with rest of the 
+     ### Command edited previously . 
+     ### 
+     eval $( eval VTVIsArrayStyleInsert=True  \
+        VTVValueEntry=${StrVarList},StrFileContent \
+        VTVIsValueReAssign=True     \
+        VTVIsValueToConvert=False   \
+        VTVIsQuotedValue=True       \
+        ValueToVariable ) ${StrTypePrint} ; 
+
+    local StrStreamContent=$( cat ${StrFileContent} ) ; 
+    VerbMsg="${StrStreamContent}" VerbAppendDev=True VerbExtendedOut=False VerbEvalForm=False VerbFormated=False VerbState=True VerbDev=${StrFileTmp}  Verbosis ;
     
     /bin/chmod ${IntDefaultModeExec} ${StrFileTmp} ; 
     . ${StrFileTmp} ; 
@@ -1833,7 +1907,7 @@ function ZenityShellEval()
      eval $( eval \
      BVTVarName=IntRes \
      BVTVarHold='0' \
-     BVTBoolVarName=\${IsLoopOnSucc} \
+     BVTBoolVarName=\${IsLoopOnSucc:=False} \
      BVTBoolCase=False \
      BVTBoolAssertion='1' \
      BVTScopeTest=local \
@@ -1850,7 +1924,7 @@ function ZenityShellEval()
   StrMsg=${StrMsg//__UUID__/${TmpUUIDEdit}} ;
   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-MESSAGE" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ; 
   
-  rm -f ${HOME}/${TmpUUIDEdit}
+  rm -f ${HOME}/${TmpUUIDEdit} ${StrFileContent} ; 
  }
  
  function MainCheckSum()
@@ -1860,14 +1934,36 @@ function ZenityShellEval()
   local Arg0=${ArrayArg[0]} ;
   VerbMsg="Entry in function" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
   
-  local CheckSumFile=$( cat ${StrFilePath}/${StrFileName} | grep -v "^###" | sha1sum | cut -d ' ' -f 1  ) ; 
+  local IntNbSizeFileSum=$( cat ${StrFilePath}/${StrFileName} | grep "^###Size:" | sed 's/\(###Size:\)//g' ) ; 
+  local IntSizeTotal=$( wc -c ${StrFilePath}/${StrFileName} | cut -d ' ' -f 1 ) ; 
+  IntNbLineFileSum=$(( IntNbLineFileSum -1 )) ; 
+  ### replaced Mechanically extract with dd  in size of file reported by header from skipping the difference of the file size and thus report the the valid sha1sum to apply
+  ### Nb-line does not work for not starting to a specific line and sha1sum does add extra space
+  ### inside the diget. 
+  ### cat ${StrFilePath}/${StrFileName} | grep -v "^###" | /usr/bin/sha1sum | cut -d ' ' -f 1 
+  ### Getting the checksum by computed NbLine-1 of file to sum . 
+  local CheckSumFile=$( dd if=${StrFilePath}/${StrFileName} bs=1 skip=$(( ${IntSizeTotal} - ${IntNbSizeFileSum} )) count=${IntNbSizeFileSum} 2> /dev/null | /usr/bin/sha1sum | /usr/bin/cut -d ' ' -f 1 ) ; 
+  ### Getting the Checksum from the header-file.
   local CheckSumIdentity=$( cat ${StrFilePath}/${StrFileName} | grep "^###Sha1Sum:" | cut -d ' ' -f 2  | sed 's/[\ \t]//g' ) ;
-  echo -ne "File: ${CheckSumFile}\nFootprint: ${CheckSumIdentity}\n" > /dev/stderr ; 
-  if [ ${CheckSumFile} == ${CheckSumIdentity} ] ; then 
-   echo -ne "file-shasum:${StrFilePath}/${StrFileName}:MATCH\n" ; 
-  else
-   echo -ne "file-shasum:${StrFilePath}/${StrFileName}:FAILED\n" ; 
+  local ArrayResult=( MATCH FAILED ) ; 
+  local IntResult=0 ; 
+  
+  StrMsg=$( ZenityShellEval --get ArrayMsg[9] ) ; 
+  StrMsg=${StrMsg//__FILE__/${CheckSumFile}} ; 
+  StrMsg=${StrMsg//__CHECKSUM__/${CheckSumIdentity}} ; 
+  VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DIGEST" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ; 
+  
+  
+  if [ "${CheckSumFile}" != "${CheckSumIdentity}" ] ; then 
+   IntResult=1 ; 
   fi 
+  
+  StrMsg=$( ZenityShellEval --get ArrayMsg[10] ) ; 
+  StrMsg=${StrMsg//__PATH__/${StrFilePath}} ; 
+  StrMsg=${StrMsg//__FILE__/${StrFileName}} ; 
+  StrMsg=${StrMsg//__DIGEST__/${ArrayResult[${IntResult}]}} ; 
+  VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DIGEST" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ; 
+
  }
 
  function __main_StartServices()

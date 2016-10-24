@@ -1,15 +1,15 @@
+#!/bin/bash
 ###
 ### FootPrint Added, see Prefixed-Var ZSEAddFootPrint from ZenityShellEval
 ###
 
-###File:/home/maxiste/github/Fnct.D//6e063cbc-0ce2-11e3-8879-001b3875b29c
-###UUID-TIME-MARKER:5e66c0e2-8c64-11e6-8b1d-001e4c8856d6
-###Date: ${StrDateFormat}
-###Sha1Sum: 0beacd1adaaac83736211aa58e1113df0e2e5122
-### Size:4388
-### NbWord: 308\n
-
-
+###File:/var/cache/Fnct.D/ZenityShellEval/6e063cbc-0ce2-11e3-8879-001b3875b29c
+###UUID-TIME-MARKER:bc798d88-9a31-11e6-8b1d-001e4c8856d6
+###Date: 20161024-17:35:08,1477344908
+###Sha1Sum: 61e411af5827f0c6fca4275d0d9d6576c0bdae74
+###Size:4386
+###NbLine: 104
+###NbWord: 308
 
 
 
