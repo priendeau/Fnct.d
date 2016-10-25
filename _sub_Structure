@@ -411,55 +411,10 @@ if [ "${versionGUUID:=0.0.2}" == "0.0.2" ] ; then
   ### which uses of BodyFunct will depend on. Other alternative like ShortRegistration of 
   ### Pattern, variable-set will also own it's registration . 
 
- unset GetUUID 
+ unset GetUUID ;
  unset Verbosis ApplicationRegistrationIndex UUIDNoLoop UUIDLoop __main_StartServices ; 
  function GetUUID ()
  {
-  local -a ArrayArg=( $* ) ; 
-  local -a __call_locality=( GetU GetUUID ) ;
-  local Arg0="${ArrayArg[0]}" ;
-  local BoolTimeBased=${GetUTimeBased:=True}
-  local BoolLoop=${GetULoop:=False} ;
-  local IntSeqLoop=${GetUSeq:=1} ; 
-  local StrGetHelperName=${GetUHelperName:=UUIDHelper} ;
-  local StrUUIDHelperStream=${GetUHelper:=UUIDHApps= UUIDHSwitches= __HELPERNAME__} ; 
-  local BoolIsHelper=${GetUIsHelper:=False} ; 
-  ### No Need to transfert TypeAppsName, its recuperated by StrAppsNameCall .
-  local TypeAppsName=${GetUAppsDef:=__HELPERNAME__ --get UUIDHApps}
-  local StrUUIDActionName=${GetUActionFunc:=UUIDNoLoop,UUIDLoop} ;
-  local IsVerbosis=${GetUVerbosis:=False} ;
-  local IsUUIDDbCreation=${GetUDBCreation:=False};
-  local IsUUIDDbImport=${GetUDbImport:=False};
-  local StrDbURI=${GetUDBPath:=/var/cache/fnct.D/db/sqlite/GetUUID.sqlite}
-  local StrDbSchema=${GetUDBSchema:=/etc/init.d/Fnct.D/getUUID.schema}
-  local BoolCallRegistered=${GetUIDRegister:=False}; 
-  local StrAppsRegister=${GetUAppsRegisterName:=None};
-  local StrUUIDIndexName=${GetUIDName=.GetUUID};
-  local StrAppsNameCall=${TypeAppsName//__HELPERNAME__/${StrGetHelperName}} ; 
-  if [ "${BoolIsHelper:=False}" == "True" ] ; then 
-   ### Section not ready, use a Declaration to call it, but no Helper are 
-   ### available at this time. 
-   ### While it's not ready-yet it scheduled and 
-   ### only providers are ZenityPrefixedVarSelection->BuildListInformation which 
-   ### is usefull method to make __TAG__ from List variable from a function .
-   ### The first workable is GnrlPrsrInfctr->RepositoryCreation which is 
-   ### suppose to answer. So supposing we have to split-down GnrlPrsrInfctr to 
-   ### version 0.0.1 for restriction policy like "Not Allowing creation of path or
-   ### repository" we should receive "nothing or None" and GetUUID can not pass 
-   ### informations for creating Database location. Initially only the getter for  
-   ### UUIDHApps can be implemented. 
-   local StrAppsName=$( ${StrAppsNameCall} ) ; 
-  fi 
-  local StrParentApps=${__call_locality[1]} ; 
-  local StrVarList="StrAppsName,StrAppsNameCall,StrUUIDIndexName,StrAppsRegister,BoolCallRegistered,StrDbSchema,StrDbURI,IsUUIDDbImport,IsUUIDDbCreation,IsVerbosis,StrUUIDActionName,StrUUIDHelperStream,StrGetHelperName,IntSeqLoop,BoolLoop,BoolTimeBased,StrParentApps,StrVarList"; 
-  
-  ArrayMsg[1]="UUID StrAppsName: ${StrAppsName}" ; 
-  VerbState=${IsVerbosis} VerbMsg=${ArrayMsg[1]} Verbosis;
-
-  StrUUIDHelperStream=${StrUUIDHelperStream//__HELPERNAME__/${StrGetHelperName}} ;
-  StrUUIDHelperStream=${StrUUIDHelperStream//UUIDHApps=/UUIDHApps=${StrAppsName}} ; 
-
-
   ### This is a specialized Verbosis mode :
   ###  
   ###  All condition required to set VerbState=True 
@@ -511,9 +466,51 @@ if [ "${versionGUUID:=0.0.2}" == "0.0.2" ] ; then
      fi 
     fi 
    fi
-  } 
+  } ;
   ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
+  local -a ArrayArg=( $* ) ; 
+  local -a __call_locality=( GetU GetUUID ) ;
+  local Arg0="${ArrayArg[0]}" ;
+  local BoolTimeBased=${GetUTimeBased:=True}
+  local BoolLoop=${GetULoop:=False} ;
+  local IntSeqLoop=${GetUSeq:=1} ; 
+  local StrGetHelperName=${GetUHelperName:=UUIDHelper} ;
+  local StrUUIDHelperStream=${GetUHelper:=UUIDHApps= UUIDHSwitches= __HELPERNAME__} ; 
+  local BoolIsHelper=${GetUIsHelper:=False} ; 
+  ### No Need to transfert TypeAppsName, its recuperated by StrAppsNameCall .
+  local TypeAppsName=${GetUAppsDef:=__HELPERNAME__ --get UUIDHApps}
+  local StrUUIDActionName=${GetUActionFunc:=UUIDNoLoop,UUIDLoop} ;
+  local IsVerbosis=${GetUVerbosis:=False} ;
+  local IsUUIDDbCreation=${GetUDBCreation:=False};
+  local IsUUIDDbImport=${GetUDbImport:=False};
+  local StrDbURI=${GetUDBPath:=/var/cache/fnct.D/db/sqlite/GetUUID.sqlite}
+  local StrDbSchema=${GetUDBSchema:=/etc/init.d/Fnct.D/getUUID.schema}
+  local BoolCallRegistered=${GetUIDRegister:=False}; 
+  local StrAppsRegister=${GetUAppsRegisterName:=None};
+  local StrUUIDIndexName=${GetUIDName=.GetUUID};
+  local StrAppsNameCall=${TypeAppsName//__HELPERNAME__/${StrGetHelperName}} ; 
+  if [ "${BoolIsHelper:=False}" == "True" ] ; then 
+   ### Section not ready, use a Declaration to call it, but no Helper are 
+   ### available at this time. 
+   ### While it's not ready-yet it scheduled and 
+   ### only providers are ZenityPrefixedVarSelection->BuildListInformation which 
+   ### is usefull method to make __TAG__ from List variable from a function .
+   ### The first workable is GnrlPrsrInfctr->RepositoryCreation which is 
+   ### suppose to answer. So supposing we have to split-down GnrlPrsrInfctr to 
+   ### version 0.0.1 for restriction policy like "Not Allowing creation of path or
+   ### repository" we should receive "nothing or None" and GetUUID can not pass 
+   ### informations for creating Database location. Initially only the getter for  
+   ### UUIDHApps can be implemented. 
+   local StrAppsName=$( ${StrAppsNameCall} ) ; 
+  fi 
+  local StrParentApps=${__call_locality[1]} ; 
+  local StrVarList="StrAppsName,StrAppsNameCall,StrUUIDIndexName,StrAppsRegister,BoolCallRegistered,StrDbSchema,StrDbURI,IsUUIDDbImport,IsUUIDDbCreation,IsVerbosis,StrUUIDActionName,StrUUIDHelperStream,StrGetHelperName,IntSeqLoop,BoolLoop,BoolTimeBased,StrParentApps,StrVarList"; 
+  
+  ArrayMsg[1]="UUID StrAppsName: ${StrAppsName}" ; 
+  VerbState=${IsVerbosis} VerbMsg=${ArrayMsg[1]} Verbosis;
 
+  StrUUIDHelperStream=${StrUUIDHelperStream//__HELPERNAME__/${StrGetHelperName}} ;
+  StrUUIDHelperStream=${StrUUIDHelperStream//UUIDHApps=/UUIDHApps=${StrAppsName}} ; 
   
   function ApplicationRegistrationIndex()
   {
@@ -559,19 +556,30 @@ if [ "${versionGUUID:=0.0.2}" == "0.0.2" ] ; then
    local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
    local Arg0="${ArrayArg[0]}" ;
    local IntUUIDHelperIndex=0 ;
+   local IntUUIDActionIndex=0 ; 
    local StrUUIDOption="" ;
    local StrUUIDHelper=""
    local StrAction=""
+   local -a ArrayUUIDState=( Helper Action ) ; 
    local ArrayMsg=( ) ;
    ### Array conversion from StrUUIDActionName, using string delimiter char ',' ; 
    local ArrayUUIDAction=( ${StrUUIDActionName//,/ } ) ; 
-   local IntUUIDActionIndex=0 ; 
 
-   if [ "${BoolTimeBased:=True}" == "True" ] ; then 
-    StrUUIDOption="-t"
-   else 
-    StrUUIDOption="-r"
-   fi 
+   eval $( BVTDisplayShowDebug=${IsVerbosis}  \
+     BVTDisplayIf=${IsVerbosis}  \
+     BVTIsPreambule=True         \
+     BVTIsValueToVar=False       \
+     BVTBoolCase=False           \
+     BVTBoolVarName="\${BoolTimeBased:=True}" \
+     BVTVarName='StrUUIDOption'  \
+     BVTVarHold=\"-t\"           \
+     BVTBoolAssertion=\"-r\"     \
+     BoolVarTest ;           ) ; 
+   ### local StrUUIDOption="-t" ; 
+   ### if [ "${BoolTimeBased:=True}" == "False" ] ; then 
+   ###  StrUUIDOption="-r"
+   ### fi 
+   
    StrUUIDHelper=${StrUUIDHelperStream} ; 
    StrUUIDHelper=${StrUUIDHelper//UUIDHSwitches=/UUIDHSwitches=${StrUUIDOption}}  ;
    #StrUUIDHelper=$( eval ${StrUUIDHelperStream} ) ; 
@@ -579,13 +587,31 @@ if [ "${versionGUUID:=0.0.2}" == "0.0.2" ] ; then
    VerbState=${IsVerbosis} VerbMsg=${ArrayMsg[1]} VerbHeader="VERBOSE" Verbosis ;
    #echo -ne "[UUID __main_StartServices: content of StrUUIDHelper:[${StrUUIDHelper}]]\n" > /dev/stderr 
 
-   if [ "${BoolLoop:=False}" == "True" ] ; then 
-    IntUUIDHelperIndex=1 ;
-    IntUUIDActionIndex=1 ; 
-   else 
-    IntUUIDHelperIndex=0 ; 
-    IntUUIDActionIndex=0 ; 
-   fi 
+   ### BoolvarTest replace following into 2 If-clause made from an Array
+   ### creating a variable form "IntUUID[ Helper, Action ]Index"=1 if BoolLoop==True . 
+   ### if [ "${BoolLoop:=False}" == "True" ] ; then 
+   ###   IntUUIDHelperIndex=1 ;
+   ###   IntUUIDActionIndex=1 ; 
+   ### fi   
+   for StrUUIDState in ${ArrayUUIDState[@]} ; do  
+    eval $( eval BVTDisplayShowDebug=${IsVerbosis}  \
+      BVTDisplayIf=${IsVerbosis}  \
+      BVTIsPreambule=False        \
+      BVTIsValueToVar=False       \
+      BVTBoolCase=True            \
+      BVTBoolVarName="\${BoolLoop:=False}" \
+      BVTVarName='IntUUID${StrUUIDState}Index'  \
+      BVTBoolAssertion=1          \
+      BoolVarTest ;           ) ; 
+   done    
+   
+
+   ### Since variable are created with value==0, I can enforce the 
+   ### value to 1 on if it's true .
+   # else 
+   # IntUUIDHelperIndex=0 ; 
+   # IntUUIDActionIndex=0 ; 
+   
    StrAction=${ArrayUUIDAction[${IntUUIDActionIndex}]} ; 
    ArrayMsg[2]="UUID ACTION: ${StrAction}" ; 
    VerbState=${IsVerbosis} VerbMsg=${ArrayMsg[2]} VerbHeader="VERBOSE" Verbosis ;
@@ -1408,7 +1434,7 @@ fi
 
  ### TagParser :
  ###
- ### Tag Parser	 Ability To parse tagged Information from known varable name.
+ ### Tag Parser	 Ability To parse tagged Information from known variable name.
  ###	
  ### Synopsis 
  ### This is a simple application to provide to function conversion of String of 
@@ -1429,6 +1455,54 @@ if [ "${versionTP:=0.0.2}" == "0.0.2" ] ; then
  unset TagParser ; 
  function TagParser( )
  {
+  function Verbosis()
+  {
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( Verb Verbosis ) ; 
+   local Arg0=${ArrayArg[0]} ; 
+   local StrMsg=${VerbMsg:=__TEXT__} ; 
+   local StrDevOut=${VerbDev:=/dev/stderr} ; 
+   local IsVerboseState=${VerbState:=False} ;
+   local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+   local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+   local IsDisplayFormatted=${VerbFormated:=True} ;
+   local IsAppendMode=${VerbAppendDev:=False} ; 
+   local IsExtendedOutput=${VerbExtendedOut:=False} ; 
+   local ArrayArg=( $* ) ; 
+   if [ "${IsVerboseState:=False}" == "True" ] ; then 
+    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+     if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
+     else  
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+     fi
+    else
+     if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+      if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+        echo -ne "${StrMsg}" ;  
+      else
+        echo "${StrMsg}" ;  
+      fi
+     else
+      if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+         echo -ne "${StrMsg}" >> ${StrDevOut} ;
+       else
+         echo "${StrMsg}" >> ${StrDevOut} ;
+       fi
+      else
+       if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+        echo -ne "${StrMsg}" > ${StrDevOut} ;
+       else
+        echo "${StrMsg}" > ${StrDevOut} ;
+       fi 
+      fi
+     fi 
+    fi 
+   fi
+  } 
+  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
+
   local -a ArrayArg=( $* ) ; 
   local -a __call_locality=( TP TagParser ) ;
   local Arg0="${ArrayArg[0]}" ;
@@ -1451,65 +1525,6 @@ if [ "${versionTP:=0.0.2}" == "0.0.2" ] ; then
   
   ### Removed by confusion in code transformation . 
   ###local StrVarEntry=${TPVarEntry:=StrEntry} ; 
-   
-  
-  ### This is a specialized Verbosis mode :
-  ###  
-  ###  All condition required to set VerbState=True 
-  ###  All condition required to set a message with VerbMsg=STRING
-  ###  
-  ###  
-  ### It can be used to :
-  ###  - Echo result to be passed throught Value Result .
-  ###  Required :
-  ###  VerbEvalForm=True VerbFormated=False 
-  ###  
-  ###  VerbHeader Is ineffective
-  ###  
-  ### -Echo result can be append to file and not overwriting the content: 
-  ###  Required ;
-  ###  VerbFormated=False/True VerbAppendDev=True VerbDev=[ FILENAME | UUID ]
-  ###  - Appending to file also required to be unique-file were no instance of 
-  ###  Verbosis may point on same-file or loss of log will be CERTAIN.
-  ###  -Pointing to Same-Destination require a lock Mechanism which is 
-  ###  not implemented here
-  ###  
-  function Verbosis()
-  {
-   local -a ArrayArg=( $* ) ; 
-   local -a __call_locality=( Verbosis Verb ) ;
-   local Arg0="${ArrayArg[0]}" ;
-   local StrMsg=${VerbMsg:=__TEXT__} ; 
-   local StrDevOut=${VerbDev:=/dev/stderr} ; 
-   local IsVerboseState=${VerbState:=False} ;
-   local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
-   local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
-   local IsDisplayFormatted=${VerbFormated:=True} ;
-   local IsAppendMode=${VerbAppendDev:=False} ; 
-   if [ "${IsVerboseState:=False}" == "True" ] ; then 
-    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
-     if [ "${IsAppendMode:=False}" == "True" ] ; then 
-       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
-     else  
-       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
-     fi
-    else
-     if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
-        echo "${StrMsg}" ;  
-     else
-      if [ "${IsAppendMode:=False}" == "True" ] ; then 
-       echo "${StrMsg}" >> ${StrDevOut} ;
-      else
-       echo "${StrMsg}" > ${StrDevOut} ;
-      fi
-     fi 
-    fi 
-   fi
-  } 
-  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
-   
-  
-
   function __main_StartServices()
   {
    local -a ArrayArg=( $* ) ; 
@@ -1589,8 +1604,8 @@ if [ "${versionTP:=0.0.2}" == "0.0.2" ] ; then
    fi
   } 
   
-  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
-  local StrNameHelper="Tag Parser\t Ability To parse tagged Information from known varable name.";
+  local StrSwitchMessages="\n${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+  local StrNameHelper="Tag Parser\t Ability To parse tagged Information from known variable name.";
   local StrSynopsis="This is a simple application to provide to function conversion of String of text with Tag ( noted __TAG__ by default ). ";
   local StrSummary="Providing a Text transformation from provided varaible name inside  parameter. Content expect to exist inside a function, this is a provided evaluation of a loop transformaing an Entry variable name from tag supplied. Noted the evaluation brace is required, a.k.a \$( TP...=... eval TagParser ) to add the code directly inside your function. The mechanism allow uses of definied array of desired scope type it is not desctructive for array and does not give the destruct code for Variable name such Array inside Prefixed-Variable TPArrayName."
   local StrDescription="\nParser notice\n\n  TPListTag\tSTRING Depending of the Prefixed Variable TPIsMatchRtoL it taking form VARIABLE:__TAG__ and are comma separated value\n  TPArrayName\tSTRING Falcutative depending the number of reccurrence of the Parser not executed and may interfer if the Parser Code is mangled and if extended Choice are affected to erase the unset at the end. Sometimes the array name can already be in uses and may affect your operation.\n\n  TPIterNameVar\tSTRING Falcutative, change the String-Iterated item looped inside the Array.\n  TPVarNameParsed\tSTRING Is the entry varaible holding the CODE/Template with __TAG__ to be parsed. We advise using a copy of this Variable because it re-write the content of it.\n  TPScopeVar\tSTRING and can be single-quoted STRING, Inside function 'local' is important or your function will use external variable. making it public or external use declare instead.\n\n  TPLeftStrPtrn\tSTRING Regular expression from Variable substitution algorithm, it remove the Left Side to kept the right side Be careful with this.\n  TPRightStrPtrn\tSTRING Regular expression from Variable substitution algorithm suppress the __TAG__ form to keep the variable name usually, becarefull uses ${VAR/#PTRN/'SEP'} and ${VAR/%'SEP'PTRN} method see in Bash document.\n\nBoolean variable notice:\n\n  TPIsMatchRtoL\t\tSet To True/False Invert Composition of tag in your design, Set to TRUE Variable in TPListTag required to be composed in form VARIABLE:__TAG__, if FALSE in form __TAG__:Variable\n\n  TPDisplayDebug\t\tSet To True/False Display Extra Debug during action, all outputed to /dev/stderr to not confuse the parser.\n  TPDisplayEvalOnly\tSet To True/False Allow displaying the Injected code in eval function using the Tag Parser.\n  TPDisplayParserNotice\tSet To True/False For function equiped of a Verbosis see fnct_debian_list for Verbosis example and will display by Tag pair the result the exanche and actual qiery it should happen after the Parsing.\n" ; 
@@ -1599,7 +1614,12 @@ if [ "${versionTP:=0.0.2}" == "0.0.2" ] ; then
   
   if [ "${Arg0:=--startservices}" == "--help"	] ; then 
     GVRIsName=True GVRIsSynopsis=True GVRIsSummary=True GVRIsDesc=True GetVarReference ${__call_locality[1]} ; 
-    VerbMsg=${StrSwitchMessages} VerbDev=/dev/stderr VerbState=True VerbFormated=False VerbHeader="" Verbosis ; 
+    VerbMsg=${StrSwitchMessages} \
+    VerbExtendedOut=True   \
+    VerbDev=/dev/stderr    \
+    VerbState=True         \
+    VerbFormated=False     \
+    Verbosis ; 
   elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
    eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
    echo -ne """${ArgGet}\n""" ;
@@ -1608,10 +1628,10 @@ if [ "${versionTP:=0.0.2}" == "0.0.2" ] ; then
   elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
    eval $( __GetVarReferenceCompWord ) ;
   elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
-   eval $( eval VTVValueEntry=${StrVarList} \ 
+   eval $( eval VTVValueEntry=${StrVarList}  \ 
            VTVIsArrayStyleInsert=True        \
            VTVIsValueReAssign=True           \
-           VTVIsQuotedValue=True         \
+           VTVIsQuotedValue=True             \
            VTVIsValueToConvert=False         \
            ValueToVariable   ) ${StrStartMain} ; 
   fi 
@@ -2202,6 +2222,13 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
 
 ### End-of if-${versionBVT:=0.0.2}
 fi 
+
+case ${versionMC} in
+ "0.0.0"|"0.0.1") unset GetDateReportCreation MdCd ; versionMC=${versionMC} . ${FNCTDLIBPATH}/0f86b448-72f4-11e6-8b1d-001e4c8856d6 ;;
+ "0.0.2") versionMC=${versionMC:=0.0.2} . ${FNCTDLIBPATH}/0f86b448-72f4-11e6-8b1d-001e4c8856d6  ;;
+esac
+
+
 
 ### Unitary test command : unset BoolVarTest ; . /etc/init.d/Fnct.D/fnct_debian_lib BVTVarHold='' BVTVTVVar=BoolDisplayFnctD,StrUrlGetter,BoolEvalCmdExit,StrAppsPwdGenerator,IntDefaultPwdSize,IntDefaultFactor,IntRandomSeedFactor,StrPasswordTypeForm,IntPasswordType,IsAutoInstallPwgen,StrDebInstallMethod,StrDebianInstallerType,StrAptLineCmd,StrGdebiPackageName,StrGdebiDownloadPack,StrFnctDSvrBVTVC BVTVTFnct=__Display BVTBoolVarName=${BoolEvalCmdExit:=False} BVTBoolCase=False BVTBoolAssertion='' BVTIsPreambule=True BVTScopeTest=local BVTVTVVarA=BoolDisplayFnctD,StrUrlGetter,BoolEvalCmdExit,StrAppsPwdGenerator,IntDefaultPwdSize,IntDefaultFactor,IntRandomSeedFactor,StrPasswordTypeForm,IntPasswordType,IsAutoInstallPwgen,StrDebInstallMethod,StrDebianInstallerType,StrAptLineCmd,StrGdebiPackageName,StrGdebiDownloadPack,StrFnctDSvrBVTVC BVTVTFnctA=__Loop BVTIsValueToVar=True BVTIsValueToVarAssert=True BVTDisplayIf=True BoolVarTest
 

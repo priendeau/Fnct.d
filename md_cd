@@ -6,25 +6,35 @@
 ### working for a better algo . 
 
 if [ "${FNCTDLIBPATH:=None}" == "None" ] ; then 
- echo "Adding FNCTDLIBPATH has Path for Fnct.D" ; 
+ echo "Adding FNCTDLIBPATH as Path for Fnct.D" ; 
  #declare -xr FNCTDLIBPATH="/etc/init.d/Fnct.D" ; 
- ArrayLib=( fnct_debian_lib ) ;
+ declare -a ArrayLib=( _sub_Structure  ) ;
 fi 
 
 declare FnctFuncReq=$( declare -f GetVarReference | egrep -c GetVarReference ) ; 
 if [ ${FnctFuncReq:=0} -eq 0 ] ; then 
- echo "Loading [. ${FNCTDLIBPATH}/fnct_debian_lib] "  ; 
   ### Depend from ArrayLib, putting only inside fnct_debian_lib like previously declared
   ### make only this one be loaded. 
   OldArrayLib=( ${ArrayLib[@]} ) ; 
-  ArrayLib=( fnct_debian_lib ) ; . /etc/init.d/Fnct.D/fnct_lib 
-  #${FNCTDLIBPATH}/fnct_debian_lib ;  
+  declare -a ArrayLib=( _sub_Structure  ) ; 
+  versionGCT=0.0.1  \
+  versionGSPN=0.0.2 \
+  versionMC=0.0.2   \
+  versionTP=0.0.2   \
+  versionGPI=0.0.1  \
+  versionCA=0.0.2  LLDisplayProg=False . /etc/init.d/Fnct.D/fnct_lib 
 fi 
 
 test -d ${FNCTDLIBPATH} && declare LoadedFnctLib=True ; 
 
 if [ "${LoadedFnctLib:=False}" != "True" ] ; then 
- ArrayLib=( fnct_debian_lib ) ; . ${FNCTDLIBPATH}/fnct_lib ; 
+ ArrayLib=( _sub_Structure  ) ; 
+ versionGCT=0.0.1  \
+ versionGSPN=0.0.2 \
+ versionMC=0.0.2   \
+ versionTP=0.0.2   \
+ versionGPI=0.0.1  \
+ versionCA=0.0.2   LLDisplayProg=False . ${FNCTDLIBPATH}/fnct_lib ; 
 fi
 
 ### Use of md_cd 
@@ -70,12 +80,15 @@ test $? -ne 0 && sudo chown ${USER}.${USER} ${StrFileStoreInfo} 2> /dev/null
 test "${USER}" != "root" && test -f ${StrFileStoreLock} && chown ${USER}.${USER} ${StrFileStoreLock} 2> /dev/null ; 
 test $? -ne 0 && sudo chown ${USER}.${USER} ${StrFileStoreLock} 2> /dev/null
 
+
+### This test test the /dev/stderr or redirection of error through '2>'
+### in case of error I do redefine  MDDevOut or MCDevOut used with MdCd
 echo "" > /dev/stderr 2> /dev/null ; 
 res_err=$? ;
 if [ ${res_err:=0} -eq 1 ] ; then 
- MDDevOut=${HOME}/md_cd.out ;
+ export MCDevOut=${HOME}/md_cd.out ;
 else
- MDDevOut=/dev/stderr ; 
+ export MCDevOut=/dev/stderr ; 
 fi 
 
 ### MdCd Chunk Development .  
@@ -83,10 +96,10 @@ fi
 #unset GetDateReportCreation ;
 #unset GetterByLineData ;
 
-### Integrated inside fnct_debian_lib 
+### Integrated inside _sub_Structure  
 ### . ${FNCTDLIBPATH}/0f86b448-72f4-11e6-8b1d-001e4c8856d6
 
-declare -a UUID=( $( GetUIDRegister=True GetUAppsRegisterName=MdCd GetUTimeBased=True GetUUID | sed 's/-/ /g' ) )
+declare -a UUID=( $( GetUIDRegister=True GetUAppsRegisterName=MdCd GetUTimeBased=True GetUUID | sed 's/-/ /g' )   ) ; 
 
 evalName="IsLockArrayMdCd${UUID[0]}" ;
 eval "declare -i ${evalName}=0" ; 
