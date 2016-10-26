@@ -4,12 +4,13 @@
 ###
 
 ###File:/var/cache/Fnct.D/ZenityShellEval/0f86b448-72f4-11e6-8b1d-001e4c8856d6
-###UUID-TIME-MARKER:b894f9ec-9a30-11e6-8b1d-001e4c8856d6
-###Date: 20161024-17:27:52,1477344472
-###Sha1Sum: 44416a1c5e2359947302bc77dd22c6120a690245
-###Size:10702
-###NbLine: 258
-###NbWord: 1064
+###UUID-TIME-MARKER:41785b0c-9b10-11e6-8b1d-001e4c8856d6
+###Date: 20161025-20:08:00,1477440480
+###Sha1Sum: 0fa8312c4a11971a0319d6d79712dc82e9829b1e
+###Size:11672
+###NbLine: 284
+###NbWord: 1126
+
 
 unset GetDateReportCreation; 
 function GetDateReportCreation()
@@ -39,7 +40,7 @@ function GetDateReportCreation()
  elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
   eval $( __GetVarReferenceCompWord ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
-  eval $( VTVIsArrayStyleInsert=True           \
+  eval $( eval VTVIsArrayStyleInsert=True      \
           VTVValueEntry=${StrVarListTransfert} \
           VTVIsValueReAssign=True              \
           VTVIsValueToConvert=False            \
@@ -58,26 +59,27 @@ function GetDateReportCreation()
 unset MdCd ;
 function MdCd()
 { 
- local ArrayArg=( $* ) ;
- local __call_locality=( MC MdCd ) ;
- local Arg0=${ArrayArg[0]} ; 
-
+ local -a ArrayArg=( $* ) ;
+ local -a __call_locality=( MC MdCd ) ;
+ local Arg0="${ArrayArg[0]}" ; 
  local StrAppsExpandModel=${MCAppsExpandModel:=/bin/tar} ;
- local StrAppsCall=${MCAppsExpandCall:=__APPS__ __OPT__ __FILE__ __PATH__} ;
- local StrAppsExpandOpt=${MCAppsExpandOpt:=-x -j -f -C} ;
+ local StrAppsCall=${MCAppsExpandCall:=__APPS__ __OPT__} ;
+ local StrAppsExpandOpt=${MCAppsExpandOpt:=-x -j -f __FILE__ -C __PATH__} ;
  local StrMkDirApps=${MCMKDIRApps:=/bin/mkdir} ; 
  local StrLocationTemplate=${MCTemplatePath:=${StrBasePath}} ; 
  local StrPathModelTemplate=${MCTemplatePathModel:=NewPathModel.tar.bz2}
  local StrFileModel=${StrLocationTemplate}/${StrPathModelTemplate} ; 
  local IntGetContentId=${MCContentId:=2} ; 
  local StrDevOut=${MCDevOut:=/dev/stderr} ;
- local StrTagCmdParser=${MCCmdTagParserRules:=StrAppsExpandModel:__APPS__,StrFileModel:__FILE__,StrAppsExpandOpt:__OPT__,StrPathLoc:__PATH__}; 
+ local StrTagCmdParser=${MCCmdTagParserRules:=StrAppsExpandModel:__APPS__,StrAppsExpandOpt:__OPT__,StrFileModel:__FILE__,StrPathLoc:__PATH__}; 
  local StrFileList=${MCListFile:=None} ; 
- local ArrayFile=( ${StrFileList//,/ } ) ; 
+ local -a ArrayFile=( ${StrFileList//,/ } ) ; 
  local IntFile=$(( ${#ArrayFile[@]}-1 ))  ; 
  local StrPathCurPtr=${MCCurGetPath:=None} ; 
- local StrDevOut=${MCDevOut:=${MDDevOut}} ;
- local StrVarListTransfert="StrFileList,StrAppsCall,StrMkDirApps,StrTagCmdParser,GCID,GHID,IntFile,StrFileStoreInfo,StrDate,StrPathLoc,UserTypeLocationModel,GetHeaderId,IntGetContentId,StrAppsExpandModel,StrAppsExpandOpt" ;
+ local StrDevOut=${MCDevOut:=/dev/stderr} ;
+ local StrStoreTpl="__DATE__:__PATH__:__UTLM__:__RES__" ;
+ local BoolDisplayDebug=${MCDisplayDebug:=False} ; 
+ local StrVarListTransfert="BoolDisplayDebug,StrStoreTpl,StrFileList,StrAppsCall,StrMkDirApps,StrTagCmdParser,GCID,GHID,IntFile,StrFileStoreInfo,StrDate,StrPathLoc,UserTypeLocationModel,GetHeaderId,IntGetContentId,StrAppsExpandModel,StrAppsExpandOpt,StrFileModel" ;
  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
  local ArrayMsg=( ) ;
  ArrayMsg[0]="CMD: __CMD__, PATH: __PATH__  " ;
@@ -86,13 +88,13 @@ function MdCd()
  
  function Verbosis()
  {
-  local __call_locality=( Verbosis Verb );
+  local -a ArrayArg=( $* ) ; 
+  local -a __call_locality=( Verbosis Verb );
   local StrMsg=${VerbMsg:=__TEXT__} ; 
   local StrDevOut=${VerbDev:=/dev/stderr} ; 
   local IsVerboseState=${VerbState:=False} ;
   local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
   local IsDisplayFormatted=${VerbFormated:=True} ;
-  local ArrayArg=( $* ) ; 
   if [ "${IsVerboseState:=False}" == "True" ] ; then 
    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
      echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
@@ -101,7 +103,7 @@ function MdCd()
    fi 
   fi
  } 
- ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis
+ ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis
 
  function GetCol1()
  {
@@ -142,11 +144,11 @@ function MdCd()
   local Arg0=${ArrayArg[0]} ;  
 
 
-  echo -ne "StrFileStoreInfo : ${StrFileStoreInfo}\n" > ${MDDevOut} ; 
-  echo -ne "StrFileStoreLock : ${StrFileStoreLock}\n" > ${MDDevOut} ; 
+  echo -ne "StrFileStoreInfo : ${StrFileStoreInfo}\n" > ${MCDevOut} ; 
+  echo -ne "StrFileStoreLock : ${StrFileStoreLock}\n" > ${MCDevOut} ; 
 
   local UserTypeLocationModel="${StrLocationTemplate}/${StrPathModelTemplate}" ;
-  echo -ne "UserTypeLocationModel : ${UserTypeLocationModel}\n" > ${MDDevOut} ; 
+  echo -ne "UserTypeLocationModel : ${UserTypeLocationModel}\n" > ${MCDevOut} ; 
     
   local currentSHA=$( GBLDAction=GetHeader GBLDFileStoreInfo=${StrFileStoreInfo} IntGHId=1 GetterByLineData ) ;
   local ArrayMdCd=( ) ; 
@@ -161,9 +163,8 @@ function MdCd()
   fi 
   
   local StrPathLoc=""
-
-  
   local StrMsg="" ; 
+
   ### The Index of number of intem inside the array are initialized inside the Top
   ### Function MdCd under name IntFile and travel thru ValueToVAriable here.  
   local PathFromGetter="" ; 
@@ -174,19 +175,23 @@ function MdCd()
   for (( intx=0 ; intx <= ${IntFile} ; intx++ )) ; do 
    StrPathLoc=$( MdCd --get ArrayFile[${intx}] ) ; 
    StrMsg="Processing Creation of __PATH__" ; 
-   VerbMsg="${StrMsg//__PATH__/${StrPathLoc}}" VerbHeader="PATH" VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis
+   VerbMsg="${StrMsg//__PATH__/${StrPathLoc}}" \
+   VerbHeader="${__call_locality[1]}-PATH" \
+   VerbFormated=True \
+   VerbState=${BoolDisplayDebug} \
+   VerbDev=/dev/stderr  Verbosis ;
    
    ### PathFromGetter=$( MCCurGetPath="${StrPathLoc}" MdCd --get MCCurGetPath ) ; 
-   if [ ! -d	"${StrPathLoc}"  ] ; then 
+   if [ ! -d "${StrPathLoc}"  ] ; then 
     StrCmdLine="""${StrMkDirApps} -p ${StrPathLoc}""" ; 
-    VerbMsg="${StrCmdLine}" VerbHeader="CmdLine" VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis
+    VerbMsg="${StrCmdLine}" VerbHeader="${__call_locality[1]}-CmdLine" VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ;
     $( eval ${StrCmdLine} ) ;
    fi 
    ### Notice : 917a3c2a-e331-11e5-98a2-001e4c8856d6 
    ### Note : Problems in tar command fixed. Tar command works in different way
    ### unless somes libs where updated. 
    ######
-   # cd ${StrPathLoc} ###---> No longer needed, tar problems some account did not 
+   # cd ${StrPathLoc} ###---> No longer needed, tar problems ; Somes accounts did not 
    # drop de model-default file inside the path. 
    ######
    
@@ -194,9 +199,26 @@ function MdCd()
    #local ArrayMdCdTag=( ${StrTagCmdParser//,/ } ) ; 
    local StrCmdLineTar="${StrAppsCall}" ;  
 
-   StrTagCmd=$( eval TPDisplayDebug=False TPArrayName=ArrayMdCdTag TPVarNameParsed="StrCmdLineTar" TPListTag="${StrTagCmdParser}" TagParser  ) ; 
-   VerbMsg="${StrTagCmd}" VerbHeader="TagPArser-CmdLine" VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis ; 
-   $( eval """${StrTagCmd}""" ) ; 
+   eval StrTagCmd=$( eval \
+     TPDisplayParserNotice=${BoolDisplayDebug}  \
+     TPDisplayDebug=${BoolDisplayDebug}         \
+     TPArrayName=ArrayMdCdTag                   \
+     TPVarNameParsed="StrCmdLineTar"            \
+     TPListTag="${StrTagCmdParser}"             \
+     TagParser  ) ; 
+   VerbMsg="${StrTagCmd}" \
+   VerbHeader="${__call_locality[1]}-TagParser-Code" \
+   VerbFormated=True \
+   VerbState=${BoolDisplayDebug} \
+   VerbDev=/dev/stderr  Verbosis ; 
+   
+   eval $( eval """${StrTagCmd}""" ) ; 
+   
+   VerbMsg="${StrCmdLineTar}" \
+   VerbHeader="${__call_locality[1]}-TagParser-CmdLine" \
+   VerbFormated=True \
+   VerbState=${BoolDisplayDebug} \
+   VerbDev=/dev/stderr  Verbosis ; 
    #for StrPairTagVal in ${ArrayMdCdTag[@]} ; do
     ### In String ${.../%Pattern} will remove only the end
     ### In String ${.../#Pattern} will remove only the beginning
@@ -218,25 +240,28 @@ function MdCd()
     ### path when it's the time to ask about it. 
 
    #done
-   
-   VerbMsg="${StrCmdLineTar}" VerbHeader="CmdLine" VerbFormated=True VerbState=True StrDevOut=/dev/stderr  Verbosis
-   
+   VerbMsg="${StrCmdLineTar}" VerbHeader="${__call_locality[1]}-CmdLine" VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ;
    StrMsg=$( MdCd --get ArrayMsg[0] ) ; 
    StrMsg=${StrMsg//__CMD__/} ; 
    StrMsg=${StrMsg//__PATH__/} ; 
-   VerbHeader="DEBUG" VerbMsg=${StrMsg}  VerbDev=/dev/stderr VerbState=True
-   #echo -ne "Cmd:[ tar xvjfC ${UserTypeLocationModel} ${StrPathLoc} ]\n" > ${MDDevOut} ; 
+   VerbMsg=${StrMsg} VerbHeader="${__call_locality[1]}-DEBUG"  VerbDev=/dev/stderr VerbState=${BoolDisplayDebug} Verbosis ; 
+   #echo -ne "Cmd:[ tar xvjfC ${UserTypeLocationModel} ${StrPathLoc} ]\n" > ${MCDevOut} ; 
    #StrAppsExpandModel,
    #StrAppsExpandOpt
    if [ -f ${UserTypeLocationModel} ] ; then 
-    $( eval """${StrCmdLineTar}""" ) 2> /dev/null ;
+    eval $( eval """${StrCmdLineTar}""" ) 2> /dev/null ;
     resultTar=$? ; 
    fi 
+   local StrResult="No" ; 
+   local StrStoreStream=${StrStoreTpl} ; 
    if [ ${resultTar:=1} -eq 0 ] ; then 
-    StrStoreStream="${StrDate}:${StrPathLoc}:${UserTypeLocationModel}:Yes" ; 
-   else
-    StrStoreStream="${StrDate}:${StrPathLoc}:${UserTypeLocationModel}:No" ; 
-   fi 
+    StrResult="Yes" ; 
+   fi
+   StrStoreStream=${StrStoreStream//__DATE__/${StrDate}} ; 
+   StrStoreStream=${StrStoreStream//__PATH__/${StrPathLoc}} ; 
+   StrStoreStream=${StrStoreStream//__UTLM__/${UserTypeLocationModel}} ; 
+   StrStoreStream=${StrStoreStream//__RES__/${StrResult}} ; 
+
    ArrayMdCd[${#ArrayMdCd[@]}]="${StrStoreStream}" ;  
    #echo "cd ${StrPathLoc} ;" ;
   done 
@@ -257,13 +282,14 @@ function MdCd()
  elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
   eval $( __GetVarReferenceCompWord ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
-  eval $( VTVIsArrayStyleInsert=True           \
-          VTVValueEntry=${StrVarListTransfert} \
-          VTVIsValueReAssign=True              \
-          VTVIsValueToConvert=False            \
-          VTVIsArrayStyleInsert=True           \
-          VTVIsWhiteList=True                  \
+  eval $( eval VTVIsArrayStyleInsert=True      \
+          VTVValueEntry=${StrVarListTransfert}  \
+          VTVIsQuotedValue=True          \
+          VTVIsValueReAssign=True       \
+          VTVIsValueToConvert=False   \
+          VTVIsArrayStyleInsert=True  \
+          VTVIsWhiteList=True                 \
           VTVWhiteListTransfert=GCID,GHID      \
-          ValueToVariable ) __main_StartServices
+          ValueToVariable ) __main_StartServices ; 
  fi
 }

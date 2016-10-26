@@ -99,7 +99,7 @@ fi
 ### Integrated inside _sub_Structure  
 ### . ${FNCTDLIBPATH}/0f86b448-72f4-11e6-8b1d-001e4c8856d6
 
-declare -a UUID=( $( GetUIDRegister=True GetUAppsRegisterName=MdCd GetUTimeBased=True GetUUID | sed 's/-/ /g' )   ) ; 
+eval declare -a UUID=( $( eval GetUIDRegister=True GetUAppsRegisterName=MdCd GetUTimeBased=True GetUUID | sed 's/-/ /g' )   ) ; 
 
 evalName="IsLockArrayMdCd${UUID[0]}" ;
 eval "declare -i ${evalName}=0" ; 
@@ -117,7 +117,7 @@ while [ $( eval "echo \${${evalName}:=0}" ) -ne 1  ] ; do
 			test $? != 0 && sudo eval "echo \${${evalName}} > ${StrFileStoreLock} 2> /dev/null ";
 			echo -ne "loading $0\n" > /dev/stderr ;
    declare -a ArrayInPath=( $* ) ;
-			eval $( MCDevOut=${MDDevOut} MCListFile=${ArrayInPath[@]// /,} MdCd --startservices ) ; 
+			eval $( MCDevOut=${MCDevOut} MCListFile=${ArrayInPath[@]// /,} MdCd --startservices ) ; 
 			echo -ne "Removing lock.\n" > /dev/stderr  ; 
 			echo 0 > ${StrFileStoreLock} 2> /dev/null ; 
 			valueRet=$? ; 
