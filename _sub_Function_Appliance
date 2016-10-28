@@ -815,9 +815,9 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
    local StrDefaultFileFormat=${LSSFileFormat:=BZIP2+BASE64} ;
    local BoolIsExtraction=${LSSIsExtraction:=False} ; 
    local BoolListFile=${LSSIsListID:=False} ;
-   local BoolSearchId=${LSSIsListId:=False} ;  
-   local BoolSearchDate=${LSSIsListdate:=False} ; 
-   local BoolSearchFile=${LSSIsListFile:=False} ; 
+   local BoolSearchId=${LSSIsSearchID:=False} ;  
+   local BoolSearchDate=${LSSIsSearchDate:=False} ; 
+   local BoolSearchFile=${LSSIsSearchFile:=False} ; 
    local StrSearchQuery=${LSSSearchQuery:=None} ;  
    local BoolHideAppsDebug=${LSSIsHideScriptOutput:=False} ; 
    local BoolDisplayDebug=${LSSIsDisplayDebug:=False} ; 
@@ -986,10 +986,12 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
      ### 
      ###  Prototype is here but not tested. 
      ### 
-     StrIfBuildStatement=$( eval BVTIdType=${IntIfType} BVTIsPreambule=False BVTIsValueToVarAssert=True BVTBoolVarName=\${${StrBoolConditionName}:=False} BVTBoolCase=True  BVTVTVVarA=${StrVarList} BVTVTFnctA=StrFunctionName  BoolVarTest  ) ; 
+     StrIfBuildStatement=$( eval BVTDisplayIf=True BVTIdType=${IntIfType} BVTIsPreambule=False BVTIsValueToVarAssert=True BVTBoolVarName=\${${StrBoolConditionName}:=False} BVTBoolCase=True  BVTVTVVarA=${StrVarList} BVTVTFnctA=${StrFunctionName}  BoolVarTest  ) ; 
      StrIfElifBuild="${StrIfElifBuild}${StrIfBuildStatement}" ; 
     done 
     
+    StrMsg="Complete If Statement from DET:__VAR__" ; 
+    VerbMsg="${StrMsg//__VAR__/${StrIfElifBuild}}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
     eval ${StrIfElifBuild} ; 
     ###; BVTIdType=6 BVTIsPreambule=False BVTIsValueToVarAssert=True BVTBoolVarName=\${BoolSearchFile:=False} BVTBoolCase=True  BVTVTVVarA=\${StrVarList} BVTVTFnctA=SearchByFile BoolVarTest ; 
     
@@ -1006,7 +1008,10 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
      eval $( eval CAFunctName=SearchByFile CAIsAddParent=True __Call_Argument ) ; 
     elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
      eval $( eval CAFunctName=SearchByFile CAIsAddParent=True CallArgument ) ;
-    fi  
+    fi
+    StrMsg="Entry in function" ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+      
     StrMsg="Listing By FileName \nSHA1SUM\t\t\t\t\tFileName\n" ; 
     VerbMsg="${StrMsg}" VerbState=True VerbExtendedOut=True VerbEvalForm=False VerbFormated=False VerbDev=/dev/stderr  Verbosis ;
     cat ${StrStoreResult} | egrep -i "${StrSearchQuery}" | cut -d ' ' -f 2,3 ; 
@@ -1024,6 +1029,9 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
      eval $( eval CAFunctName=SearchDate CAIsAddParent=True CallArgument ) ;
     fi  
+    StrMsg="Entry in function" ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    
     StrMsg="Searching By Date\nDate\t\t\tSHA1SUM\t\t\t\t\tFileName\n" ; 
     VerbMsg="${StrMsg}" VerbState=True VerbExtendedOut=True VerbEvalForm=False VerbFormated=False VerbDev=/dev/stderr  Verbosis ;
     cat ${StrStoreResult} | egrep -i "${StrSearchQuery}" | cut -d ' ' -f 1,2,3 ; 
@@ -1042,6 +1050,9 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
      eval $( eval CAFunctName=SearchId CAIsAddParent=True CallArgument ) ;
     fi  
+    StrMsg="Entry in function" ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    
     StrMsg="Searching By ID\n\nSHA1SUM\t\t\t\t\tFileName\n" ; 
     VerbMsg="${StrMsg}" VerbState=True VerbExtendedOut=True VerbEvalForm=False VerbFormated=False VerbDev=/dev/stderr  Verbosis ;
     cat ${StrStoreResult} | egrep -i "${StrSearchQuery}" | cut -d ' ' -f 2,3 ; 
@@ -1059,6 +1070,9 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
      eval $( eval CAFunctName=ListFile CAIsAddParent=True CallArgument ) ;
     fi  
+    StrMsg="Entry in function" ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    
     StrMsg="Listing ID and FileName\nSHA1SUM\t\t\t\t\tFileName\n" ; 
     VerbMsg="${StrMsg}" VerbState=True VerbExtendedOut=True VerbEvalForm=False VerbFormated=False VerbDev=/dev/stderr  Verbosis ;
     cat ${StrStoreResult} | cut -d ' ' -f 2,3 ; 
@@ -1235,7 +1249,13 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     StrMsg="Entry in function" ; 
     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
    
-    local StrCmdAction=$( BVTIdType=4 BVTIsPreambule=False BVTIsValueToVarAssert=True BVTBoolVarName=\${BoolIsExtraction:=False} BVTBoolCase=False BVTVTVVarA=${StrVarList} BVTVTFnctA=ShellControlServices  BoolVarTest ; BVTIdType=5 BVTIsPreambule=False BVTIsValueToVarAssert=True BVTVTFnctA=DataExtractionTool BVTVTVVarA=${StrVarList}  BoolVarTest ) ; 
+    local StrCmdAction=$( BVTDisplayIf=True BVTIdType=4 BVTIsPreambule=False BVTIsValueToVarAssert=True BVTBoolVarName=\${BoolIsExtraction:=False} BVTBoolCase=False BVTVTVVarA=${StrVarList} BVTVTFnctA=ShellControlServices  BoolVarTest ; BVTIdType=5 BVTIsPreambule=False BVTIsValueToVarAssert=True BVTVTFnctA=DataExtractionTool BVTVTVVarA=${StrVarList}  BoolVarTest ) ; 
+    
+    StrMsg="Complete If Statement from __FUNCT__:__VAR__" ; 
+    StrMsg=${StrMsg//__VAR__/${StrCmdAction}}
+    StrMsg=${StrMsg//__FUNCT__/${__call_locality[1]}}
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    
     eval ${StrCmdAction} ; 
    }
    
