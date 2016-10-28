@@ -821,6 +821,7 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
    local StrSearchQuery=${LSSSearchQuery:=None} ;  
    local BoolHideAppsDebug=${LSSIsHideScriptOutput:=False} ; 
    local BoolDisplayDebug=${LSSIsDisplayDebug:=False} ; 
+   local BoolDisplayIf=${LSSIsDisplayIfDebug:=False} ; 
    
    local StrApps=${LSSApps:=bzip2} ;
    local StrAppsCmprOpt=${LSSAppsCmprOpt:='-9c'} ;
@@ -837,7 +838,7 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
    local UUID=${UUID:=${StrUUIDInstance}} ; 
    local StrTemplateShaStorage="__DATE__ __SHA__ __FILENAME__ __FORMAT__ __FILECONTENT__" ;
    
-   local StrVarList="BoolSearchId,BoolSearchDate,StrSearchQuery,BoolSearchFile,BoolListFile,BoolHideAppsDebug,StrVarList,StrStartFile,StrStoreResult,StrDateFormat,StrPathLoopState,StrUUIDInstance,StrTemplateShaStorage,StrDefaultFileFormat,StrShaSumExtract,BoolIsExtraction,StrApps,StrAppsCmprOpt,StrAppsDeCmprOpt,StrFilter,StrFilterCmprOpt,StrFilterDeCmprOpt,StrTagParser,StrCompressionTpl,StrDeCompressionTpl"
+   local StrVarList="BoolDisplayIf,BoolSearchId,BoolSearchDate,StrSearchQuery,BoolSearchFile,BoolListFile,BoolHideAppsDebug,StrVarList,StrStartFile,StrStoreResult,StrDateFormat,StrPathLoopState,StrUUIDInstance,StrTemplateShaStorage,StrDefaultFileFormat,StrShaSumExtract,BoolIsExtraction,StrApps,StrAppsCmprOpt,StrAppsDeCmprOpt,StrFilter,StrFilterCmprOpt,StrFilterDeCmprOpt,StrTagParser,StrCompressionTpl,StrDeCompressionTpl"
    
    function GetSha1Sum()
    {
@@ -886,11 +887,11 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
      StrEncapsulationMeth=${StrDefaultFileFormat/#${StrFileFormatMeth}+} ;
     fi 
 
-      StrMsg="Stream Information: __TYPEACTION__" ; 
-      VerbMsg="${StrMsg//__TYPEACTION__/${StrTypeAction}}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
-      
-      StrMsg="Template used: __TPL__" ; 
-      VerbMsg="${StrMsg//__TPL__/${StrTplTagParser}}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    StrMsg="Stream Information: __TYPEACTION__" ; 
+    VerbMsg="${StrMsg//__TYPEACTION__/${StrTypeAction}}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    
+    StrMsg="Template used: __TPL__" ; 
+    VerbMsg="${StrMsg//__TPL__/${StrTplTagParser}}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
 
     eval $( eval TPListTag=${StrTagParser}                 \
       TPArrayName=Array${__call_locality[0]}    \
@@ -986,12 +987,14 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
      ### 
      ###  Prototype is here but not tested. 
      ### 
-     StrIfBuildStatement=$( eval BVTDisplayIf=True BVTIdType=${IntIfType} BVTIsPreambule=False BVTIsValueToVarAssert=True BVTBoolVarName=\${${StrBoolConditionName}:=False} BVTBoolCase=True  BVTVTVVarA=${StrVarList} BVTVTFnctA=${StrFunctionName}  BoolVarTest  ) ; 
+     StrIfBuildStatement=$( eval BVTDisplayIf=${BoolDisplayIf} BVTIdType=${IntIfType} BVTIsPreambule=False BVTIsValueToVarAssert=True BVTBoolVarName=\${${StrBoolConditionName}:=False} BVTBoolCase=True  BVTVTVVarA=${StrVarList} BVTVTFnctA=${StrFunctionName}  BoolVarTest  ) ; 
      StrIfElifBuild="${StrIfElifBuild}${StrIfBuildStatement}" ; 
     done 
     
-    StrMsg="Complete If Statement from DET:__VAR__" ; 
-    VerbMsg="${StrMsg//__VAR__/${StrIfElifBuild}}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    StrMsg="Complete If Statement from __FUNCT__:__VAR__" ; 
+    StrMsg="${StrMsg//__FUNCT__/${__call_locality[0]}}" ;
+    StrMsg=${StrMsg//__VAR__/${StrIfElifBuild}}
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayIf} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
     eval ${StrIfElifBuild} ; 
     ###; BVTIdType=6 BVTIsPreambule=False BVTIsValueToVarAssert=True BVTBoolVarName=\${BoolSearchFile:=False} BVTBoolCase=True  BVTVTVVarA=\${StrVarList} BVTVTFnctA=SearchByFile BoolVarTest ; 
     
@@ -1249,7 +1252,23 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     StrMsg="Entry in function" ; 
     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
    
-    local StrCmdAction=$( BVTDisplayIf=True BVTIdType=4 BVTIsPreambule=False BVTIsValueToVarAssert=True BVTBoolVarName=\${BoolIsExtraction:=False} BVTBoolCase=False BVTVTVVarA=${StrVarList} BVTVTFnctA=ShellControlServices  BoolVarTest ; BVTIdType=5 BVTIsPreambule=False BVTIsValueToVarAssert=True BVTVTFnctA=DataExtractionTool BVTVTVVarA=${StrVarList}  BoolVarTest ) ; 
+    local StrCmdAction=$( \
+       BVTDisplayIf=${BoolDisplayIf}   \
+       BVTIdType=4                     \
+       BVTIsPreambule=False            \
+       BVTIsValueToVarAssert=True      \
+       BVTBoolVarName=\${BoolIsExtraction:=False} \
+       BVTBoolCase=False               \
+       BVTVTVVarA=${StrVarList}        \
+       BVTVTFnctA=ShellControlServices \
+       BoolVarTest                     ;
+       BVTDisplayIf=${BoolDisplayIf}   \
+       BVTIdType=5                     \
+       BVTIsPreambule=False            \
+       BVTIsValueToVarAssert=True      \
+       BVTVTFnctA=DataExtractionTool   \
+       BVTVTVVarA=${StrVarList}        \
+       BoolVarTest                    ); 
     
     StrMsg="Complete If Statement from __FUNCT__:__VAR__" ; 
     StrMsg=${StrMsg//__VAR__/${StrCmdAction}}
@@ -1263,11 +1282,15 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
    local StrNameHelper="LoopShellScript\t\tA Test-Unit to test command with many directive to test and report the working solution.";
    local StrSummary="This application does survey your script and run-it belong to a different SHA1SUM reported by the application and upon a result it store-it inside a File for working solution. " ; 
    local StrSynopsis="This application is also perfect for Shell-Script with TAG to replace or add directive. Coming with Start and Stop services, it expect to produce execution once and store the file inside file with SHA1SUM header from your script qualified of different from previous save or modification. Result is compressed and this application will deliver a method to extract the compressed file inside this SHA1SUM header. (END OF DRAFT INFORMATION)";
-   local StrDescription="A common way to use it is to test your source package requiring to change the configure with multiples option some may fail and require to change the information inside. This application will wait until the file is changed and report you if it work or not. File Specified by the application is compressing the working result ready to extract the working solution. This Application can be shutdown from a command from same USER by using --stopservices function. It require to specify a Uniform Ressource Identifier specified inside prefixed-variable, LSSUUIDInstance. Also UUID variable can be used instead. By starting a new instance of this application it show you a UUID identifier and a new file inside  prefixed-variable LSSLoopFile will exist the time the loop is testing and compiling succesfull script. Stopping the services will only remove the file and stop the Loop. (END OF DRAFT INFORMATION)" ;
+   local StrDescription="A common way to use it is to test your source package requiring to change the configure with multiples option some may fail and require to change the information inside. This application will wait until the file is changed and report you if it work or not. File Specified by the application is compressing the working result ready to extract the working solution. This Application can be shutdown from a command from same USER by using --stopservices function. It require to specify a Uniform Ressource Identifier specified inside prefixed-variable, LSSUUIDInstance. Also UUID variable can be used instead. By starting a new instance of this application it show you a UUID identifier and a new file inside  prefixed-variable LSSLoopFile will exist the time the loop is testing and compiling succesfull script. Stopping the services will only remove the file and stop the Loop.\n\nMaster Prefixed Variable\nLSSIsExtraction=False  ( by default )\nMaster Prefixed Variable\nLSSIsExtraction=False  ( by default )\nSwitch To ShellControlServices main function responsible of looping script and store working script inside file LSSFileStorage (by default .LoopShellScript)\n\n\nLSSIsExtraction=True\nSwitch To ,DataExtractionTool to access to your file LSSFileStorage (by default .LoopShellScript) by extracting script. Also access to the sub-function of DataExtractionTool, SearchByFile ,SearchDate ,SearchId ,ListFile. Only ListFile is not requiring a query to enter with prefixed variable LSSSearchQuery. Sub Function SearchByFile ,SearchDate ,SearchId require Prefixed-variable to allow a specific search and not working in same time than ListFile. Assuming ListFile can be accessed by using [ LSSIsListID=True, LSSIsExtraction=True ], sub-function SearchByFile ,SearchDate ,SearchId won't be accessible at same time. You do require to acces to them, just use [ LSSIsListID=True, LSSIsSearchID=True | LSSIsSearchDate=True | LSSIsSearchFile=True ] . Using the search facility, your query can be inserted inside Prefixed-Variable LSSSearchQuery=... . A Search engine only search it does not extract the information. \n\n\nLSSSHAIndexExtract=...\nIs the only one prefixed-parameter to use to extract the file under LoopShellScript. One full-length query to extract imply loading the DET ( DataExtractionTool ) by loading extraction:\n\n\nLSSIsExtraction=True LSSSHAIndexExtract=8fa097cd6652a6f3d106193a12ff4d5855e894a2.\n\nServices Engine Section :\nLoopShellScript can start many instance, and each instance information is stored inside /var/cache/Fnct.D/, where a file named Loop-LSS-UUID, where UUID is an UUID Identifier used to identify the active loop for your script detection. To stop a services running it's mandatory require to claim the shutdown by specifying the UUID on prompt with the switche '--stopservices' . \n\n\nex:\n$> UUID=938cc57c-9c73-11e6-8b1d-001e4c8856d6 LoopShellScript --stopservices\n\tOr\n$> LSSUUIDInstance=938cc57c-9c73-11e6-8b1d-001e4c8856d6 LoopShellScript --stopservices\n\n\nFollowing Prefixed-Variable can be used for the main-loop called ShellControlServices:\nLSSFileName\t\tString The Script, image, the collected data in chunk used to analysed with this application.\nLSSIsLockFile\t\tSet To True/False Default to False, allow multiple instance to store in the same file. \nLSSFileStorage\t\tString File The default file name to store all SHA1SUM + FILE, beware of multiples instance \nLSSLoopFile\t\tString File Identifier to manage the instance, To create your own repository consult GnrlPrsrInfctr Creation of repository.\nLSSFileFormat\t\tString Based on LSSApps LSSFilter prefixed-Var. it required to managed theses variable too to specify something else.\nLSSIsHideScriptOutput\tSet To True/False Hide from Stdout output of your script, does not affect the return statement.\nLSSIsDisplayDebug\tSet To True/False Display Debugging and verbose left inside.\nLSSIsDisplayIfDebug\tSet To True/False Display Debugging and verbose toward Generated-If clause from BoolVarTest.\nLSSDateFormat\t\tString and Quoted String required use Standard POSIX-date format and can use also Unix-TimeStamp.\n\n\nData Extraction Tool Section :\nExtracting the file from specified Prefixed-variable LSSFileStorage does overwrite your current file-name if this one is present inside the path where you do require to extract it. Mostly if you do have done a Shutdown request you may already own a copy of the file inside the Storage file.\n\n\nPrefixed-Variable for DataExtractionTool or ( DET ).\nLSSIsExtraction\t\tSet To True/False Mandatory to use DataExtractionTool search or extraction\nLSSSHAIndexExtract\tString The SHA1SUM Id information used to extract the file. \nLSSIsListID\t\tSet To True/False Only List all SHA1SUM Id and file \nLSSIsSearchID\t\tSet To True/False Actiave DET Search By ID\nLSSIsSearchDate\t\tSet To True/False Actiave DET Search By Date\nLSSIsSearchFile\t\tSet To True/False Actiave DET Search By File\nLSSSearchQuery\t\tString The query string used to seach by Date, File, ID.\n\n\nAvanced Prefixed-Variable for Both DataExtractionTool and ShellControlServices.\nLSSApps\t\t\tString Specify the active codec for compression, other suggestion can be gzip, lzma, 7z\nLSSAppsCmprOpt\t\tString Specify the Compression Codec parameter for compression.\nLSSAppsDeCmprOpt\tString Specify the De-Compression Codec parameter for de-compression.\nLSSFilter\t\tString Specify the encapsulation layer of compressed file stored inside declaration of  LSSFileStorage. Should support storage in one line with no EOL.\nLSSFilterCmprOpt\tString Specify the parameter to use the encapsulation to store inside the file declared by LSSFileStorage\nLSSFilterDeCmprOpt\tString Specify the paramter to extract from encapulation the compressed file. \n\n\nParser & Advanced Prefixed-Variable for Both DataExtractionTool and ShellControlServices\nThis section does manage uniquely your encapsulation layer and compression tool if you do provide other parameter to the application and will manage your information.\nLSSFileFormat\t\tString By Default its 'BZIP2+BASE64'\n\nLSSCmprTag\t\tString Parse your LSSFileFormat into command line to Store your script or file analysed by this application. \nLSSDeCmprTag\t\tString Parse your LSSFileFormat into command line to extract your script out of SHA1SUM Id out of the storage file. \nLSSTagParserDef\t\tString Unless your are not a ParserTag Aware it does transform TAG from Variable definition inside the application.\nLSSFuncStart\t\tString From Function member or existing function it's the function LoopShellScript.\n\nComment over LSSFileFormat:\nIn compression which is default, but internal function GetFileFormatCmd ( visible from Function Member section) callable from LSSFuncStart use the variable LSSIsExtraction and for one way compression the function read your LSSFileFormat into LSSCmprTag parameter from this String BZIP2+BASE64. Setting LSSIsExtraction=True the same function can revert this LSSFileFormat and apply BASE64+BZIP2 to getting your file out of storage file. This Parser will use LSSDeCmprTag and parsing your application BASE64+BZIP2 into a command line.\n\nComment over LSSTagParserDef:\nTouching-it play with the code and may not work, but quite usefull if you do have to add from Prefixed-Variable from prompt to One of internal function should specified with the affected tag.\n\nComment over LSSFuncStart:\nCan bypass the function design like GnrlPrsrInfctr function to implement the Repository Creation. To get familliar with use with GetFileFormatCmd and add prefixed-parameter LSSIsExtraction=[True/False] to test your compression design is throwing you correct parsing." ;
    
    
    if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-    GVRIsName=True GVRIsSummary=True GVRIsSynopsis=True GVRIsDesc=True GetVarReference ${__call_locality[1]} ; 
+    GVRIsName=True     \
+    GVRIsSummary=True  \
+    GVRIsSynopsis=True \
+    GVRIsDesc=True     \
+    GetVarReference ${__call_locality[1]} ; 
     echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
    elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
     eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
