@@ -795,11 +795,11 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
   ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
 
    if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
-    local __call_locality=( LSS LoopShellScript ) ;
-    local ArrayArg=( $* ) ;
-    local Arg0=${ArrayArg[0]} ; 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( LSS LoopShellScript ) ;
+    local Arg0="${ArrayArg[0]}" ; 
     local StrParentApps=${__call_locality[1]} ;
-    local StrStartMain=${GSUFuncStart:=__main_StartServices} ; 
+    local StrStartMain=${LSSFuncStart:=__main_StartServices} ; 
    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
     eval $( eval CAFunctName=LoopShellScript CAIsAddParent=False __Call_Argument ) ; 
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
@@ -814,12 +814,30 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
    local StrShaSumExtract=${LSSSHAIndexExtract:=None} ; 
    local StrDefaultFileFormat=${LSSFileFormat:=BZIP2+BASE64} ;
    local BoolIsExtraction=${LSSIsExtraction:=False} ; 
+   local BoolListFile=${LSSIsListID:=False} ;
+   local BoolSearchId=${LSSIsListId:=False} ;  
+   local BoolSearchDate=${LSSIsListdate:=False} ; 
+   local BoolSearchFile=${LSSIsListFile:=False} ; 
+   local StrSearchQuery=${LSSSearchQuery:=None} ;  
    local BoolHideAppsDebug=${LSSIsHideScriptOutput:=False} ; 
+   local BoolDisplayDebug=${LSSIsDisplayDebug:=False} ; 
+   
+   local StrApps=${LSSApps:=bzip2} ;
+   local StrAppsCmprOpt=${LSSAppsCmprOpt:='-9c'} ;
+   local StrAppsDeCmprOpt=${LSSAppsDeCmprOpt:='-dc'} ;
+   local StrFilter=${LSSFilter:=base64} ; 
+   local StrFilterCmprOpt=${LSSFilterCmprOpt:='--wrap=0'} ;
+   local StrFilterDeCmprOpt=${LSSFilterDeCmprOpt:=-d} ;
+   local StrPipeCmd=${LSSDefaultPipe:='|'} ; 
+   local StrTagParser=${LSSTagParserDef:=StrPipeCmd:__PIPE__,StrFilterDeCmprOpt:__FILTER_DECR_OPT__,StrApps:__APPS__,StrAppsCmprOpt:__APPS_CMPR_OPT__,StrAppsDeCmprOpt:__APPS_DECR_OPT__,StrFilter:__FILTER__,StrFilterCmprOpt:__FILTER_CMPR_OPT__} ; 
+   local StrCompressionTpl=${LSSCmprTag:=__APPS__ __APPS_CMPR_OPT__ __PIPE__ __FILTER__ __FILTER_CMPR_OPT__} ;
+   local StrDeCompressionTpl=${LSSDeCmprTag:=__FILTER__ __FILTER_DECR_OPT__ __PIPE__ __APPS__ __APPS_DECR_OPT__} ;
+  
    ### A short-cut to call uniformely an UUID used by this Application. 
    local UUID=${UUID:=${StrUUIDInstance}} ; 
    local StrTemplateShaStorage="__DATE__ __SHA__ __FILENAME__ __FORMAT__ __FILECONTENT__" ;
    
-   local StrVarList="BoolHideAppsDebug,StrVarList,StrStartFile,StrStoreResult,StrDateFormat,StrPathLoopState,StrUUIDInstance,StrTemplateShaStorage,StrDefaultFileFormat,StrShaSumExtract,BoolIsExtraction"
+   local StrVarList="BoolSearchId,BoolSearchDate,StrSearchQuery,BoolSearchFile,BoolListFile,BoolHideAppsDebug,StrVarList,StrStartFile,StrStoreResult,StrDateFormat,StrPathLoopState,StrUUIDInstance,StrTemplateShaStorage,StrDefaultFileFormat,StrShaSumExtract,BoolIsExtraction,StrApps,StrAppsCmprOpt,StrAppsDeCmprOpt,StrFilter,StrFilterCmprOpt,StrFilterDeCmprOpt,StrTagParser,StrCompressionTpl,StrDeCompressionTpl"
    
    function GetSha1Sum()
    {
@@ -829,45 +847,239 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
    function GetFileFormatCmd( )
    {
     if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
-     local __call_locality=( GFFC GetFileFormatCmd ) ;
-     local ArrayArg=( $* ) ;
-     local Arg0=${ArrayArg[0]} ; 
-     local StrParentApps=${__call_locality[1]} ;
+     local -a ArrayArg=( $* ) ;
+     local -a __call_locality=( GFFC GetFileFormatCmd ${StrParentApps} ) ;
+     local Arg0="${ArrayArg[0]}" ; 
     elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
      eval $( eval CAFunctName=GetFileFormatCmd CAIsAddParent=True __Call_Argument ) ; 
     elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
      eval $( eval CAFunctName=GetFileFormatCmd CAIsAddParent=True CallArgument ) ;
     fi  
+    StrMsg="Entry in function" ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+
+    local StrEncapsulationMeth="" ;
+    local StrFileFormatMeth="" ; 
+    local StrTplTagParser="" ; 
+    local StrMsg="" ; 
+    local StrTypeAction="Compression" ; 
+    if [ "${BoolIsExtraction:=False}" == "True" ] ; then 
+     ### The application is in decompression mode
+     ### I do retreive the encapsulation first 
+     ### Working with String-Substitution , retreiving the 
+     ### encapsulation from last-elements running 
+     ### ${/#__METHOD_REGEXP____CSV__} will retreive
+     ### the Encapsulation, reducing the string with the 
+     ### answer should give us minimal condition. 
+     StrTypeAction="De-Compression" ; 
+     StrTplTagParser=${StrDeCompressionTpl} ;
+     StrEncapsulationMeth=${StrDefaultFileFormat/#[A-Za-z0-9]*+} ;
+     StrFileFormatMeth=${StrDefaultFileFormat/%+${StrEncapsulationMeth}} ; 
+    else
+     ### The application is in compression mode 
+     ### I do retreive the Compression method first 
+     ### allowing compression of the result and retreive 
+     ### the encapsulation, so Parsing the StrDefaultFileFormat
+     ### will start from the end to the beginning, 
+     StrTplTagParser=${StrCompressionTpl} ;
+     StrFileFormatMeth=${StrDefaultFileFormat/%+[A-Za-z0-9]*} ; 
+     StrEncapsulationMeth=${StrDefaultFileFormat/#${StrFileFormatMeth}+} ;
+    fi 
+
+      StrMsg="Stream Information: __TYPEACTION__" ; 
+      VerbMsg="${StrMsg//__TYPEACTION__/${StrTypeAction}}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+      
+      StrMsg="Template used: __TPL__" ; 
+      VerbMsg="${StrMsg//__TPL__/${StrTplTagParser}}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+
+    eval $( eval TPListTag=${StrTagParser}                 \
+      TPArrayName=Array${__call_locality[0]}    \
+      TPVarNameParsed="StrTplTagParser"         \
+      TPDisplayDebug=${BoolDisplayDebug}        \
+      TPDisplayParserNotice=${BoolDisplayDebug} \
+      TagParser ) ; 
     
+      
+    StrMsg="Value StrTagParser: __VAR__" ; 
+    VerbMsg="${StrMsg//__VAR__/${StrTplTagParser}}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    ### This one display on common stdout the Parsing result. 
+    VerbMsg="${StrTplTagParser}" VerbState=True VerbEvalForm=True VerbFormated=False Verbosis ;
    }
+   
    function DataExtractionTool()
    {
     if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
-     local __call_locality=( DET DataExtractionTool ) ;
-     local ArrayArg=( $* ) ;
-     local Arg0=${ArrayArg[0]} ; 
-     local StrParentApps=${__call_locality[1]} ;
+     local -a ArrayArg=( $* ) ;
+     local -a __call_locality=( DET DataExtractionTool ${StrParentApps} ) ;
+     local Arg0="${ArrayArg[0]}" ; 
     elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
      eval $( eval CAFunctName=DataExtractionTool CAIsAddParent=True __Call_Argument ) ; 
     elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
      eval $( eval CAFunctName=DataExtractionTool CAIsAddParent=True CallArgument ) ;
     fi  
+    StrMsg="Entry in function" ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    
+    local ArrayFunction=( ListFile:BoolListFile SearchByFile:BoolSearchFile SearchId:BoolSearchId SearchDate:BoolSearchDate ) ; 
     
     ### Extraction Tool not ready....
+    local StrStreamCodec=$( eval \
+    $( eval \
+      VTVIsArrayStyleInsert=True  \
+      VTVValueEntry=${StrVarList} \
+      VTVIsValueReAssign=True     \
+      VTVIsValueToConvert=False   \
+      VTVIsQuotedValue=True       \
+      VTVIsWhiteList=True         \
+      VTVWhiteListTransfert=UUID  \
+      ValueToVariable ) GetFileFormatCmd ) ;     
+   
+    StrMsg="De-Compression Codec: __CODEC__\nSearching for SHA1SUM ID:__SHASUMID__ in file __FILE__" ; 
+    StrMsg=${StrMsg//__CODEC__/${StrDefaultFileFormat}} ;
+    StrMsg=${StrMsg//__SHASUMID__/${StrShaSumExtract}} ;
+    StrMsg=${StrMsg//__FILE__/${StrStoreResult}} ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+
+    #### This example require ArrayFunction in form 'FuctionName:VariableName' where 
+    #### function are code allowed to search inside the StoreFile and Variable name
+    #### are directly Binded Prefixed-Variable accessible from command line to specify
+    #### one and only one of them, The advantage of if-elif statement, only first meet
+    #### Variable test will execute the function and leave the if-elif bloc command . 
+    #### Specifying more than one of these Pair Variable from Prefixed-variable relation
+    #### will simply not execute the function and will requiert to remove the undesired 
+    #### variable from the prompt. Cibled like unidirectional action it does fill requirement
+    #### here function DataExtractionTool is multi tool pass-through where sub-function 
+    #### directly do an action.
+    #### 
+    ####  This is acheive with a 2 type of BoolVartest if-elif + elif-fi BVTIdType=1,BVTIdType=2 ,
+    ####  BVTIdType=6. This directive require inside a loop at index=0 it build a if-elif, where 
+    #### it's mandatory concatenation quired to build a elif state because BoolVarTest manage 
+    #### Preambule out of a condition and it's assertion from a test. While elif, else cannot use 
+    #### the preambule it erase the ending-statement segment and provide only the assertion. 
+    #### So looping after index 0 requiert BVTIdType=2 to build many elif and at loop index minus
+    #### maximum, closing the if-elif with elif-fi where BVTIdType=6 and We can acheive a one loop
+    #### building any elif clause for calling function from Boolean variable list associated with
+    #### them in a Array declaration. 
+    #### 
+    
+    local StrBoolConditionName="" ;
+    local StrFunctionName="" ; 
+    local StrPairFuncVar="" ;
+    local StrIfElifBuild ; 
+    ###eval $( eval BVTIsPreambule=False BVTIsValueToVarAssert=True BVTBoolVarName=\${BoolListFile:=False} BVTBoolCase=True  BVTVTVVarA=\${StrVarList} BVTVTFnctA=ListFile  BoolVarTest ) ;
+    local IntIfType=6 ; 
+    local IntMaxArrayIndex=$(( ${#ArrayFunction[@]}-1 )) ;
+    for (( intx=0 ; intx <= ${IntMaxArrayIndex} ; intx++ )) ; do 
+     StrPairFuncVar=${ArrayFunction[${intx}]} ; 
+     ### Simple way to build a if-elif depending of a Array Of function 
+     ### where One Boolean is require to select one of the required function
+     ### and will be yield once with this if-elif structure. 
+     if [ ${intx:=0} -eq 0 ] ; then 
+      IntIfType=1 ;
+     elif [ ${intx:=0} -gt 0 -a ${intx:=0} -lt ${IntMaxArrayIndex} ] ; then 
+      IntIfType=2 ;
+     elif [ ${intx:=0} -eq ${IntMaxArrayIndex} ] ; then 
+      IntIfType=6 ;
+     fi 
+     StrBoolConditionName=${StrPairFuncVar/#[a-zA-Z0-9_]*:} ; 
+     StrFunctionName=${StrPairFuncVar/%:${StrBoolConditionName/#[a-zA-Z0-9_]*:}} ; 
+     ### 
+     ###  Prototype is here but not tested. 
+     ### 
+     StrIfBuildStatement=$( eval BVTIdType=${IntIfType} BVTIsPreambule=False BVTIsValueToVarAssert=True BVTBoolVarName=\${${StrBoolConditionName}:=False} BVTBoolCase=True  BVTVTVVarA=${StrVarList} BVTVTFnctA=StrFunctionName  BoolVarTest  ) ; 
+     StrIfElifBuild="${StrIfElifBuild}${StrIfBuildStatement}" ; 
+    done 
+    
+    eval ${StrIfElifBuild} ; 
+    ###; BVTIdType=6 BVTIsPreambule=False BVTIsValueToVarAssert=True BVTBoolVarName=\${BoolSearchFile:=False} BVTBoolCase=True  BVTVTVVarA=\${StrVarList} BVTVTFnctA=SearchByFile BoolVarTest ; 
+    
+   
+   } 
+
+   function SearchByFile()
+   {
+    if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+     local -a ArrayArg=( $* ) ;
+     local -a __call_locality=( SBF SearchByFile ${StrParentApps} ) ;
+     local Arg0="${ArrayArg[0]}" ; 
+    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+     eval $( eval CAFunctName=SearchByFile CAIsAddParent=True __Call_Argument ) ; 
+    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+     eval $( eval CAFunctName=SearchByFile CAIsAddParent=True CallArgument ) ;
+    fi  
+    StrMsg="Listing By FileName \nSHA1SUM\t\t\t\t\tFileName\n" ; 
+    VerbMsg="${StrMsg}" VerbState=True VerbExtendedOut=True VerbEvalForm=False VerbFormated=False VerbDev=/dev/stderr  Verbosis ;
+    cat ${StrStoreResult} | egrep -i "${StrSearchQuery}" | cut -d ' ' -f 2,3 ; 
     
    } 
+
+   function SearchDate()
+   {
+    if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+     local -a ArrayArg=( $* ) ;
+     local -a __call_locality=( SD SearchDate ${StrParentApps} ) ;
+     local Arg0="${ArrayArg[0]}" ; 
+    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+     eval $( eval CAFunctName=SearchDate CAIsAddParent=True __Call_Argument ) ; 
+    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+     eval $( eval CAFunctName=SearchDate CAIsAddParent=True CallArgument ) ;
+    fi  
+    StrMsg="Searching By Date\nDate\t\t\tSHA1SUM\t\t\t\t\tFileName\n" ; 
+    VerbMsg="${StrMsg}" VerbState=True VerbExtendedOut=True VerbEvalForm=False VerbFormated=False VerbDev=/dev/stderr  Verbosis ;
+    cat ${StrStoreResult} | egrep -i "${StrSearchQuery}" | cut -d ' ' -f 1,2,3 ; 
+    
+   }
+
+   
+   function SearchId()
+   {
+    if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+     local -a ArrayArg=( $* ) ;
+     local -a __call_locality=( SI SearchId ${StrParentApps} ) ;
+     local Arg0="${ArrayArg[0]}" ; 
+    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+     eval $( eval CAFunctName=SearchId CAIsAddParent=True __Call_Argument ) ; 
+    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+     eval $( eval CAFunctName=SearchId CAIsAddParent=True CallArgument ) ;
+    fi  
+    StrMsg="Searching By ID\n\nSHA1SUM\t\t\t\t\tFileName\n" ; 
+    VerbMsg="${StrMsg}" VerbState=True VerbExtendedOut=True VerbEvalForm=False VerbFormated=False VerbDev=/dev/stderr  Verbosis ;
+    cat ${StrStoreResult} | egrep -i "${StrSearchQuery}" | cut -d ' ' -f 2,3 ; 
+    
+   }
+     
+   function ListFile()
+   {
+    if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+     local -a ArrayArg=( $* ) ;
+     local -a __call_locality=( LF ListFile ${StrParentApps} ) ;
+     local Arg0="${ArrayArg[0]}" ; 
+    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+     eval $( eval CAFunctName=ListFile CAIsAddParent=True __Call_Argument ) ; 
+    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+     eval $( eval CAFunctName=ListFile CAIsAddParent=True CallArgument ) ;
+    fi  
+    StrMsg="Listing ID and FileName\nSHA1SUM\t\t\t\t\tFileName\n" ; 
+    VerbMsg="${StrMsg}" VerbState=True VerbExtendedOut=True VerbEvalForm=False VerbFormated=False VerbDev=/dev/stderr  Verbosis ;
+    cat ${StrStoreResult} | cut -d ' ' -f 2,3 ; 
+    
+   }
+
+   
    function ShellControlServices()
    {
     if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
-     local __call_locality=( SCS ShellControlServices ) ;
-     local ArrayArg=( $* ) ;
-     local Arg0=${ArrayArg[0]} ; 
-     local StrParentApps=${__call_locality[1]} ;
+     local -a ArrayArg=( $* ) ;
+     local -a __call_locality=( SCS ShellControlServices ${StrParentApps} ) ;
+     local Arg0="${ArrayArg[0]}" ; 
     elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
      eval $( eval CAFunctName=LoopShellScript CAIsAddParent=True __Call_Argument ) ; 
     elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
      eval $( eval CAFunctName=LoopShellScript CAIsAddParent=True CallArgument ) ;
     fi  
+    StrMsg="Entry in function" ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    
     local StrUUID=$( GetUAppsRegisterName=LoopShellScript GetUTimeBased=True GetULoop=False GetUUID ) ; 
     StrPathLoopState=${StrPathLoopState//__UUID__/${StrUUID}}
     VerbMsg="Instance ID:${StrUUID}" VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ;
@@ -881,6 +1093,20 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     local IntFindCompiler ; 
     local StrScriptCpr ; 
     local StrDate ;
+    
+    local StrCompressionStream=$( eval \
+    $( eval \
+      VTVIsArrayStyleInsert=True  \
+      VTVValueEntry=${StrVarList} \
+      VTVIsValueReAssign=True     \
+      VTVIsValueToConvert=False   \
+      VTVIsQuotedValue=True       \
+      VTVIsWhiteList=True         \
+      VTVWhiteListTransfert=UUID  \
+      ValueToVariable ) GetFileFormatCmd ) ; 
+    
+    StrMsg="Compression Header:__VAR__";
+    VerbMsg=${StrMsg//__VAR__/${StrCompressionStream}}"" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=True VerbEvalForm=False VerbFormated=True  VerbDev=/dev/stderr  Verbosis ;
     
     while [ -f ${StrPathLoopState} ] ; do 
      StrCurrentSha=$( GSSFileName=${StrStartFile} GetSha1Sum ) ; 
@@ -946,7 +1172,7 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
       ### Time to analyse the result of shell-script 
       if [ ${IntReturn:=0} -eq 0  ] ; then 
        ArrayCompiler[${StrCurrentSha}]="OK"
-       StrScriptCpr=$( cat ${StrStartFile} | bzip2 -9c | base64 --wrap=0 ) ; 
+       StrScriptCpr=$( cat ${StrStartFile} | ${StrCompressionStream} ) ; 
        StrNewParserInfo=${StrTemplateShaStorage} ; 
        
        StrDate=$( GODFormat="${StrDateFormat}" GetOtherDate ) ; 
@@ -973,14 +1199,16 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
    function __main_StopServices()
    {
     if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
-     local __call_locality=( Main __main_StopServices ) ;
-     local ArrayArg=( $* ) ;
-     local Arg0=${ArrayArg[0]} ; 
+     local -a ArrayArg=( $* ) ;
+     local -a __call_locality=( Main __main_StopServices ${StrParentApps} ) ;
+     local Arg0="${ArrayArg[0]}" ; 
     elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
      eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True __Call_Argument ) ;
     elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
      eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True CallArgument ) ;
     fi 
+    StrMsg="Entry in function" ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
 
     local StrUUID=${UUID};
     if [ "${StrUUID:=None}" == "None" ] ; then 
@@ -996,14 +1224,16 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
    function __main_StartServices()
    {
     if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
-     local __call_locality=( CFCD CurlFtpContentDownload ) ;
-     local ArrayArg=( $* ) ;
-     local Arg0=${ArrayArg[0]} ; 
+     local -a ArrayArg=( $* ) ;
+     local -a __call_locality=( CFCD CurlFtpContentDownload ${StrParentApps} ) ;
+     local Arg0="${ArrayArg[0]}" ; 
     elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
      eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
     elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
      eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
     fi 
+    StrMsg="Entry in function" ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
    
     local StrCmdAction=$( BVTIdType=4 BVTIsPreambule=False BVTIsValueToVarAssert=True BVTBoolVarName=\${BoolIsExtraction:=False} BVTBoolCase=False BVTVTVVarA=${StrVarList} BVTVTFnctA=ShellControlServices  BoolVarTest ; BVTIdType=5 BVTIsPreambule=False BVTIsValueToVarAssert=True BVTVTFnctA=DataExtractionTool BVTVTVVarA=${StrVarList}  BoolVarTest ) ; 
     eval ${StrCmdAction} ; 
@@ -1034,8 +1264,9 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
       VTVWhiteListTransfert=UUID  \
       ValueToVariable ) __main_StopServices ; 
    elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
-    StrMsg="Application:${__call_locality[1]} , version:( versionVTV:__VER_VTV__, versionCA:__VER_CA__, versionBVT:__VER_BVT__)" ; 
+    StrMsg="Application:${__call_locality[1]} , version:( versionTP:__VER_TP__ versionVTV:__VER_VTV__, versionCA:__VER_CA__, versionBVT:__VER_BVT__)" ; 
     StrMsg=${StrMsg//__VER_CA__/${versionCA}} ;
+    StrMsg=${StrMsg//__VER_TP__/${versionTP}} ;
     StrMsg=${StrMsg//__VER_VTV__/${versionVTV}} ;
     StrMsg=${StrMsg//__VER_BVT__/${versionBVT}} ;
     VerbMsg=${StrMsg} VerbHeader="VERSION" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ; 
