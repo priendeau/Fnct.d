@@ -911,6 +911,38 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     VerbMsg="${StrTplTagParser}" VerbState=True VerbEvalForm=True VerbFormated=False Verbosis ;
    }
    
+   function FileDeCapsulation()
+   {
+    if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+     local -a ArrayArg=( $* ) ;
+     local -a __call_locality=( FDC FileDeCapsulation ${StrParentApps} ) ;
+     local Arg0="${ArrayArg[0]}" ; 
+    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+     eval $( eval CAFunctName=FileDeCapsulation CAIsAddParent=True __Call_Argument ) ; 
+    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+     eval $( eval CAFunctName=FileDeCapsulation CAIsAddParent=True CallArgument ) ;
+    fi  
+    StrMsg="Entry in function" ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    StrCodec=$( cat ${StrStoreResult} | grep -i "${StrShaSumExtract}" | cut -d ' ' -f 4 ) ;
+    StrFile=$( cat ${StrStoreResult} | grep -i "${StrShaSumExtract}" | cut -d ' ' -f 3 ) ;
+    if [ "${StrCodec:=None}" == "${StrDefaultFileFormat}" ] ; then 
+      StrMsg="Extracting File:__FILE__, with CODEC:__CODEC__,\nCMD: __CMD__,\npresent file will be overwritten." ;
+      StrMsg=${StrMsg//__FILE__/${StrFile}} ;
+      StrMsg=${StrMsg//__CODEC__/${StrCodec}} ;
+      StrMsg=${StrMsg//__CMD__/${StrStreamCodec}} ;
+      
+      VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+      cat ${StrStoreResult} | grep -i "${StrShaSumExtract}" | cut -d ' ' -f 5 | eval ${StrStreamCodec} > ${StrFile} ; 
+    else 
+      StrMsg=${StrMsg//__CODEC1__/${StrDefaultFileFormat}} ; 
+      StrMsg=${StrMsg//__CODEC2__/${StrCodec}} ; 
+      VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    fi 
+    
+    
+   }
+   
    function DataExtractionTool()
    {
     if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
@@ -939,10 +971,12 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
       VTVWhiteListTransfert=UUID  \
       ValueToVariable ) GetFileFormatCmd ) ;     
    
-    StrMsg="De-Compression Codec: __CODEC__\nSearching for SHA1SUM ID:__SHASUMID__ in file __FILE__" ; 
+    StrMsg="De-Compression Codec: __CODEC__\nCommand : __CMD__\nSearching for SHA1SUM ID:__SHASUMID__ in file __FILE__" ; 
     StrMsg=${StrMsg//__CODEC__/${StrDefaultFileFormat}} ;
     StrMsg=${StrMsg//__SHASUMID__/${StrShaSumExtract}} ;
     StrMsg=${StrMsg//__FILE__/${StrStoreResult}} ; 
+    StrMsg=${StrMsg//__CMD__/${StrStreamCodec}} ; 
+    
     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
 
     #### This example require ArrayFunction in form 'FuctionName:VariableName' where 
@@ -972,37 +1006,54 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     local StrPairFuncVar="" ;
     local StrIfElifBuild ; 
     ###eval $( eval BVTIsPreambule=False BVTIsValueToVarAssert=True BVTBoolVarName=\${BoolListFile:=False} BVTBoolCase=True  BVTVTVVarA=\${StrVarList} BVTVTFnctA=ListFile  BoolVarTest ) ;
-    local IntIfType=6 ; 
-    local IntMaxArrayIndex=$(( ${#ArrayFunction[@]}-1 )) ;
-    for (( intx=0 ; intx <= ${IntMaxArrayIndex} ; intx++ )) ; do 
-     StrPairFuncVar=${ArrayFunction[${intx}]} ; 
-     ### Simple way to build a if-elif depending of a Array Of function 
-     ### where One Boolean is require to select one of the required function
-     ### and will be yield once with this if-elif structure. 
-     if [ ${intx:=0} -eq 0 ] ; then 
-      IntIfType=1 ;
-     elif [ ${intx:=0} -gt 0 -a ${intx:=0} -lt ${IntMaxArrayIndex} ] ; then 
-      IntIfType=2 ;
-     elif [ ${intx:=0} -eq ${IntMaxArrayIndex} ] ; then 
-      IntIfType=6 ;
-     fi 
-     StrBoolConditionName=${StrPairFuncVar/#[a-zA-Z0-9_]*:} ; 
-     StrFunctionName=${StrPairFuncVar/%:${StrBoolConditionName/#[a-zA-Z0-9_]*:}} ; 
-     ### 
-     ###  Require some tuning of BoolVarTest, already changed and give good 
-     ###  result.
-     ### 
-     StrIfBuildStatement=$( eval BVTDisplayIf=${BoolDisplayIf} BVTIdType=${IntIfType} BVTIsPreambule=False BVTIsValueToVarAssert=True BVTBoolVarName=\${${StrBoolConditionName}:=False} BVTBoolCase=True  BVTVTVVarA=${StrVarList} BVTVTFnctA=${StrFunctionName}  BoolVarTest  ) ; 
-     StrIfElifBuild="${StrIfElifBuild}${StrIfBuildStatement}" ; 
-    done 
     
-    StrMsg="Complete If Statement from __FUNCT__:__VAR__" ; 
-    StrMsg="${StrMsg//__FUNCT__/${__call_locality[0]}}" ;
-    StrMsg=${StrMsg//__VAR__/${StrIfElifBuild}}
-    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayIf} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
-    eval ${StrIfElifBuild} ; 
-    ###; BVTIdType=6 BVTIsPreambule=False BVTIsValueToVarAssert=True BVTBoolVarName=\${BoolSearchFile:=False} BVTBoolCase=True  BVTVTVVarA=\${StrVarList} BVTVTFnctA=SearchByFile BoolVarTest ; 
+    ### Following statement, if LSSSHAIndexExtract Is different than None, 
+    ### it inform the application It did not choose the SHA1SUM Id to extract
+    ### and either have to search for one or simply call the ListFile.
+    StrMsg="Codec Problem, current configured Codec:(__CODEC1__) is not stored Codec:(__CODEC2__), you must specify a correct codec to extract this file." ;
+    if [ "${StrShaSumExtract:=None}" != "None" ] ; then 
+    $( eval \
+      VTVIsArrayStyleInsert=True  \
+      VTVValueEntry=${StrVarList},StrStreamCodec \
+      VTVIsValueReAssign=True     \
+      VTVIsValueToConvert=False   \
+      VTVIsQuotedValue=True       \
+      VTVIsWhiteList=True         \
+      VTVWhiteListTransfert=UUID  \
+      ValueToVariable ) FileDeCapsulation ;
+    else 
     
+     local IntIfType=6 ; 
+     local IntMaxArrayIndex=$(( ${#ArrayFunction[@]}-1 )) ;
+     for (( intx=0 ; intx <= ${IntMaxArrayIndex} ; intx++ )) ; do 
+      StrPairFuncVar=${ArrayFunction[${intx}]} ; 
+      ### Simple way to build a if-elif depending of a Array Of function 
+      ### where One Boolean is require to select one of the required function
+      ### and will be yield once with this if-elif structure. 
+      if [ ${intx:=0} -eq 0 ] ; then 
+       IntIfType=1 ;
+      elif [ ${intx:=0} -gt 0 -a ${intx:=0} -lt ${IntMaxArrayIndex} ] ; then 
+       IntIfType=2 ;
+      elif [ ${intx:=0} -eq ${IntMaxArrayIndex} ] ; then 
+       IntIfType=6 ;
+      fi 
+      StrBoolConditionName=${StrPairFuncVar/#[a-zA-Z0-9_]*:} ; 
+      StrFunctionName=${StrPairFuncVar/%:${StrBoolConditionName/#[a-zA-Z0-9_]*:}} ; 
+      ### 
+      ###  Require some tuning of BoolVarTest, already changed and give good 
+      ###  result.
+      ### 
+      StrIfBuildStatement=$( eval BVTDisplayIf=${BoolDisplayIf} BVTIdType=${IntIfType} BVTIsPreambule=False BVTIsValueToVarAssert=True BVTBoolVarName=\${${StrBoolConditionName}:=False} BVTBoolCase=True  BVTVTVVarA=${StrVarList} BVTVTFnctA=${StrFunctionName}  BoolVarTest  ) ; 
+      StrIfElifBuild="${StrIfElifBuild}${StrIfBuildStatement}" ; 
+     done 
+     
+     StrMsg="Complete If Statement from __FUNCT__:__VAR__" ; 
+     StrMsg="${StrMsg//__FUNCT__/${__call_locality[0]}}" ;
+     StrMsg=${StrMsg//__VAR__/${StrIfElifBuild}}
+     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayIf} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+     eval ${StrIfElifBuild} ; 
+     ###; BVTIdType=6 BVTIsPreambule=False BVTIsValueToVarAssert=True BVTBoolVarName=\${BoolSearchFile:=False} BVTBoolCase=True  BVTVTVVarA=\${StrVarList} BVTVTFnctA=SearchByFile BoolVarTest ; 
+    fi    
    
    } 
 
