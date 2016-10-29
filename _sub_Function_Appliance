@@ -1122,7 +1122,7 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     StrMsg="Compression :( cat ${StrStartFile} | ${StrCompressionStream} )";
     VerbMsg=${StrMsg}"" VerbHeader="${__call_locality[1]}-CMDLINE" VerbState=True VerbEvalForm=False VerbFormated=True  VerbDev=/dev/stderr  Verbosis ;
 
-    StrScriptCpr=$( cat ${StrStartFile} | ${StrCompressionStream} ) ; 
+    StrScriptCpr=$( cat ${StrStartFile} | eval ${StrCompressionStream} ) ; 
     StrNewParserInfo=${StrTemplateShaStorage} ; 
     
     StrDate=$( GODFormat="${StrDateFormat}" GetOtherDate ) ; 
