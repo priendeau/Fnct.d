@@ -743,7 +743,7 @@ fi
 
 if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then 
  
- unset LoopShellScript GetSha1Sum ; 
+ unset Verbosis GetSha1Sum GetFileFormatCmd FileDeCapsulation DataExtractionTool SearchByFile SearchDate SearchId ListFile FileWriterSupport ShellControlServices VersionApps __main_StopServices __main_StartServices ; 
  function LoopShellScript()
  {
    function Verbosis()
@@ -815,7 +815,10 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
    local StrShaSumExtract=${LSSSHAIndexExtract:=None} ; 
    local StrDefaultFileFormat=${LSSFileFormat:=BZIP2+BASE64} ;
    local BoolIsScriptRun=${LSSIsScriptFile:=True} ; 
-   local StrFileAlterateVrf=${LSSNonScriptValidator:=/usr/bin/file} ; 
+   local StrFileAlterateVrf=${LSSNonScriptValidator:=/usr/bin/file} ;
+   local BoolLoopScriptOnState=${LSSIsLoopOnErrorType:=False} ;
+   local IntDefaultErrorStateLoop=${LSSLoopOnError:=2} ; 
+   local IntMaxLoopOnError=${LSSMaxLoopOnError:=5} 
    local BoolIsLockFile=${LSSIsLockFile:=False} ; 
    local BoolIsExtraction=${LSSIsExtraction:=False} ; 
    local BoolListFile=${LSSIsListID:=False} ;
@@ -842,7 +845,32 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
    local UUID=${UUID:=${StrUUIDInstance}} ; 
    local StrTemplateShaStorage="__DATE__ __SHA__ __FILENAME__ __FORMAT__ __FILECONTENT__" ;
    
-   local StrVarList="BoolIsScriptRun,StrFileAlterateVrf,BoolIsLockFile,StrLockFileId,BoolDisplayIf,BoolSearchId,BoolSearchDate,StrSearchQuery,BoolSearchFile,BoolListFile,BoolHideAppsDebug,StrVarList,StrStartFile,StrStoreResult,StrDateFormat,StrPathLoopState,StrUUIDInstance,StrTemplateShaStorage,StrDefaultFileFormat,StrShaSumExtract,BoolIsExtraction,StrApps,StrAppsCmprOpt,StrAppsDeCmprOpt,StrFilter,StrFilterCmprOpt,StrFilterDeCmprOpt,StrTagParser,StrCompressionTpl,StrDeCompressionTpl"
+   local StrVarList="BoolLoopScriptOnState,IntDefaultErrorStateLoop,IntMaxLoopOnError,BoolIsScriptRun,StrFileAlterateVrf,BoolIsLockFile,StrLockFileId,BoolDisplayIf,BoolSearchId,BoolSearchDate,StrSearchQuery,BoolSearchFile,BoolListFile,BoolHideAppsDebug,StrVarList,StrStartFile,StrStoreResult,StrDateFormat,StrPathLoopState,StrUUIDInstance,StrTemplateShaStorage,StrDefaultFileFormat,StrShaSumExtract,BoolIsExtraction,StrApps,StrAppsCmprOpt,StrAppsDeCmprOpt,StrFilter,StrFilterCmprOpt,StrFilterDeCmprOpt,StrTagParser,StrCompressionTpl,StrDeCompressionTpl"
+
+   local -a ArrayMsg=() ;
+   ArrayMsg[0]="Entry in function" ; 
+   ArrayMsg[1]="Codec Problem, current configured Codec:(__CODEC1__) is not stored Codec:(__CODEC2__), you must specify a correct codec to extract this file." ; 
+   ArrayMsg[2]="Complete If Statement from __FUNCT__:__VAR__" ; 
+   ArrayMsg[3]="De-Compression Codec: __CODEC__\nCommand : __CMD__\nSearching for SHA1SUM ID:__SHASUMID__ in file __FILE__" ; 
+   ArrayMsg[4]="Add command-directive, SHA1SUM:__CURRSHA__, status: __STOREDSHA__" ; 
+   ArrayMsg[5]="Shell-Script SHA1SUM:__CURRSHA__, __STOREDSHA__" ; 
+   ArrayMsg[6]="Shell-Script returned state: __RET__" ; 
+   ArrayMsg[7]="Shell-Script classified:__CURRSHA__,\n\tdon't required to start over." ; 
+   ArrayMsg[8]="\nDate:__DATE__\nUUID-Instance:__UUID__\n" ; 
+   ArrayMsg[9]="Shell-scripts directive result:" ; 
+   ArrayMsg[10]="Shell-Script SHA1SUM:__CURRSHA__, result: __STOREDSHA__" ; 
+   ArrayMsg[11]="\n------------------------------------------------------------------------\n\n" ; 
+   ArrayMsg[12]="Stream Information: __TYPEACTION__" ; 
+   ArrayMsg[13]="Template used: __TPL__" ; 
+   ArrayMsg[14]="Value StrTagParser: __VAR__" ; 
+   ArrayMsg[15]="Listing   By FileName   \nSHA1SUM\t\t\t\t\tFileName\n" ; 
+   ArrayMsg[16]="Searching By Date       \nDate\t\t\tSHA1SUM\t\t\t\t\tFileName\n" ; 
+   ArrayMsg[17]="Searching By ID         \n\nSHA1SUM\t\t\t\t\tFileName\n" ; 
+   ArrayMsg[18]="Listing ID and FileName \nSHA1SUM\t\t\t\t\tFileName\n" ; 
+   ArrayMsg[19]="Compression Header:__VAR__" ; 
+   ArrayMsg[20]="Compression :( cat __FILE__ | __STREAMCMD__ )" ; 
+   ArrayMsg[21]="Execute Script Step __STEP__ of __STEPMAX__" ;
+   ArrayMsg[22]="!!! Warning IsLoopOnErrorType is Activated And require to know the ErrorLevel or your script !!!\n\tIsLoopOnErrorType is Activated, and Will loop by detecting ErrorLevel=__INT__ and will loop __LOOP__ time(s) to certify this problem." ;
    
    function GetSha1Sum()
    {
@@ -860,7 +888,7 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
      eval $( eval CAFunctName=GetFileFormatCmd CAIsAddParent=True CallArgument ) ;
     fi  
-    StrMsg="Entry in function" ; 
+    StrMsg=$( LoopShellScript --get ArrayMsg[0] ) ; 
     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
 
     local StrEncapsulationMeth="" ;
@@ -891,10 +919,12 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
      StrEncapsulationMeth=${StrDefaultFileFormat/#${StrFileFormatMeth}+} ;
     fi 
 
+    StrMsg=$( LoopShellScript --get ArrayMsg[12] ) ;
     StrMsg="Stream Information: __TYPEACTION__" ; 
     VerbMsg="${StrMsg//__TYPEACTION__/${StrTypeAction}}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
     
-    StrMsg="Template used: __TPL__" ; 
+    StrMsg=$( LoopShellScript --get ArrayMsg[13] ) ;
+    #StrMsg="Template used: __TPL__" ; 
     VerbMsg="${StrMsg//__TPL__/${StrTplTagParser}}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
 
     eval $( eval TPListTag=${StrTagParser}                 \
@@ -904,8 +934,8 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
       TPDisplayParserNotice=${BoolDisplayDebug} \
       TagParser ) ; 
     
-      
-    StrMsg="Value StrTagParser: __VAR__" ; 
+    StrMsg=$( LoopShellScript --get ArrayMsg[14] );
+    #StrMsg="Value StrTagParser: __VAR__" ; 
     VerbMsg="${StrMsg//__VAR__/${StrTplTagParser}}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
     ### This one display on common stdout the Parsing result. 
     VerbMsg="${StrTplTagParser}" VerbState=True VerbEvalForm=True VerbFormated=False Verbosis ;
@@ -922,8 +952,9 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
      eval $( eval CAFunctName=FileDeCapsulation CAIsAddParent=True CallArgument ) ;
     fi  
-    StrMsg="Entry in function" ; 
+    StrMsg=$( LoopShellScript --get ArrayMsg[0] ) ; 
     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    
     StrCodec=$( cat ${StrStoreResult} | grep -i "${StrShaSumExtract}" | cut -d ' ' -f 4 ) ;
     StrFile=$( cat ${StrStoreResult} | grep -i "${StrShaSumExtract}" | cut -d ' ' -f 3 ) ;
     if [ "${StrCodec:=None}" == "${StrDefaultFileFormat}" ] ; then 
@@ -939,8 +970,7 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
       StrMsg=${StrMsg//__CODEC2__/${StrCodec}} ; 
       VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
     fi 
-    
-    
+
    }
    
    function DataExtractionTool()
@@ -954,12 +984,11 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
      eval $( eval CAFunctName=DataExtractionTool CAIsAddParent=True CallArgument ) ;
     fi  
-    StrMsg="Entry in function" ; 
+    StrMsg=$( LoopShellScript --get ArrayMsg[0] ) ; 
     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
     
     local ArrayFunction=( ListFile:BoolListFile SearchByFile:BoolSearchFile SearchId:BoolSearchId SearchDate:BoolSearchDate ) ; 
     
-    ### Extraction Tool not ready....
     local StrStreamCodec=$( eval \
     $( eval \
       VTVIsArrayStyleInsert=True  \
@@ -971,7 +1000,7 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
       VTVWhiteListTransfert=UUID  \
       ValueToVariable ) GetFileFormatCmd ) ;     
    
-    StrMsg="De-Compression Codec: __CODEC__\nCommand : __CMD__\nSearching for SHA1SUM ID:__SHASUMID__ in file __FILE__" ; 
+    StrMsg=$( LoopShellScript --get ArrayMsg[3] ) ; 
     StrMsg=${StrMsg//__CODEC__/${StrDefaultFileFormat}} ;
     StrMsg=${StrMsg//__SHASUMID__/${StrShaSumExtract}} ;
     StrMsg=${StrMsg//__FILE__/${StrStoreResult}} ; 
@@ -1010,7 +1039,8 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     ### Following statement, if LSSSHAIndexExtract Is different than None, 
     ### it inform the application It did not choose the SHA1SUM Id to extract
     ### and either have to search for one or simply call the ListFile.
-    StrMsg="Codec Problem, current configured Codec:(__CODEC1__) is not stored Codec:(__CODEC2__), you must specify a correct codec to extract this file." ;
+    ###StrMsg="Codec Problem, current configured Codec:(__CODEC1__) is not stored Codec:(__CODEC2__), you must specify a correct codec to extract this file." ;
+    StrMsg=$( LoopShellScript --get ArrayMsg[1] ) ; 
     if [ "${StrShaSumExtract:=None}" != "None" ] ; then 
     $( eval \
       VTVIsArrayStyleInsert=True  \
@@ -1047,7 +1077,7 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
       StrIfElifBuild="${StrIfElifBuild}${StrIfBuildStatement}" ; 
      done 
      
-     StrMsg="Complete If Statement from __FUNCT__:__VAR__" ; 
+     StrMsg=$( LoopShellScript --get ArrayMsg[2] ) ;  
      StrMsg="${StrMsg//__FUNCT__/${__call_locality[0]}}" ;
      StrMsg=${StrMsg//__VAR__/${StrIfElifBuild}}
      VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayIf} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
@@ -1068,14 +1098,16 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
      eval $( eval CAFunctName=SearchByFile CAIsAddParent=True CallArgument ) ;
     fi
-    StrMsg="Entry in function" ; 
+    StrMsg=$( LoopShellScript --get ArrayMsg[0] ) ; 
     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
       
-    StrMsg="Listing By FileName \nSHA1SUM\t\t\t\t\tFileName\n" ; 
+    StrMsg=$( LoopShellScript --get ArrayMsg[15] ) ; 
+    #StrMsg="Listing By FileName \nSHA1SUM\t\t\t\t\tFileName\n" ; 
     VerbMsg="${StrMsg}" VerbState=True VerbExtendedOut=True VerbEvalForm=False VerbFormated=False VerbDev=/dev/stderr  Verbosis ;
     cat ${StrStoreResult} | egrep -i "${StrSearchQuery}" | cut -d ' ' -f 2,3 ; 
     
    } 
+
 
    function SearchDate()
    {
@@ -1088,10 +1120,11 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
      eval $( eval CAFunctName=SearchDate CAIsAddParent=True CallArgument ) ;
     fi  
-    StrMsg="Entry in function" ; 
+    StrMsg=$( LoopShellScript --get ArrayMsg[0] ) ; 
     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
     
-    StrMsg="Searching By Date\nDate\t\t\tSHA1SUM\t\t\t\t\tFileName\n" ; 
+    StrMsg=$( LoopShellScript --get ArrayMsg[16] ) ; 
+    #StrMsg="Searching By Date\nDate\t\t\tSHA1SUM\t\t\t\t\tFileName\n" ; 
     VerbMsg="${StrMsg}" VerbState=True VerbExtendedOut=True VerbEvalForm=False VerbFormated=False VerbDev=/dev/stderr  Verbosis ;
     cat ${StrStoreResult} | egrep -i "${StrSearchQuery}" | cut -d ' ' -f 1,2,3 ; 
     
@@ -1109,10 +1142,11 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
      eval $( eval CAFunctName=SearchId CAIsAddParent=True CallArgument ) ;
     fi  
-    StrMsg="Entry in function" ; 
+    StrMsg=$( LoopShellScript --get ArrayMsg[0] ) ; 
     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
     
-    StrMsg="Searching By ID\n\nSHA1SUM\t\t\t\t\tFileName\n" ; 
+    StrMsg=$( LoopShellScript --get ArrayMsg[17] ) ;
+    #StrMsg="Searching By ID\n\nSHA1SUM\t\t\t\t\tFileName\n" ; 
     VerbMsg="${StrMsg}" VerbState=True VerbExtendedOut=True VerbEvalForm=False VerbFormated=False VerbDev=/dev/stderr  Verbosis ;
     cat ${StrStoreResult} | egrep -i "${StrSearchQuery}" | cut -d ' ' -f 2,3 ; 
     
@@ -1129,10 +1163,11 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
      eval $( eval CAFunctName=ListFile CAIsAddParent=True CallArgument ) ;
     fi  
-    StrMsg="Entry in function" ; 
+    StrMsg=$( LoopShellScript --get ArrayMsg[0] ) ; 
     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
     
-    StrMsg="Listing ID and FileName\nSHA1SUM\t\t\t\t\tFileName\n" ; 
+    StrMsg=$( LoopShellScript --get ArrayMsg[18] ) ; 
+    ###StrMsg="Listing ID and FileName\nSHA1SUM\t\t\t\t\tFileName\n" ; 
     VerbMsg="${StrMsg}" VerbState=True VerbExtendedOut=True VerbEvalForm=False VerbFormated=False VerbDev=/dev/stderr  Verbosis ;
     cat ${StrStoreResult} | cut -d ' ' -f 2,3 ; 
     
@@ -1149,7 +1184,7 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
      eval $( eval CAFunctName=FileWriterSupport CAIsAddParent=True CallArgument ) ;
     fi  
-    StrMsg="Entry in function" ; 
+    StrMsg=$( LoopShellScript --get ArrayMsg[0] ) ; 
     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
 
     local StrCompressionStream=$( eval \
@@ -1163,14 +1198,17 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
       VTVWhiteListTransfert=UUID  \
       ValueToVariable ) GetFileFormatCmd ) ; 
     
-    StrMsg="Compression Header:__VAR__";
+    StrMsg=$( LoopShellScript --get ArrayMsg[19] ) ; 
+    #StrMsg="Compression Header:__VAR__";
     VerbMsg=${StrMsg//__VAR__/${StrCompressionStream}}"" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=True VerbEvalForm=False VerbFormated=True  VerbDev=/dev/stderr  Verbosis ;
-
 
     local IntLockInfo=0 ; 
     local StrLockHolder ; 
-
-    StrMsg="Compression :( cat ${StrStartFile} | ${StrCompressionStream} )";
+     
+    StrMsg=$( LoopShellScript --get ArrayMsg[20] ) ; 
+    #StrMsg="Compression :( cat __FILE__ | __STREAMCMD__ )";
+    StrMsg=${StrMsg//__FILE__/${StrStartFile}} ;
+    StrMsg=${StrMsg//__STREAMCMD__/${StrCompressionStream}} ;
     VerbMsg=${StrMsg}"" VerbHeader="${__call_locality[1]}-CMDLINE" VerbState=True VerbEvalForm=False VerbFormated=True  VerbDev=/dev/stderr  Verbosis ;
 
     StrScriptCpr=$( cat ${StrStartFile} | eval ${StrCompressionStream} ) ; 
@@ -1218,16 +1256,16 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
      local -a __call_locality=( SCS ShellControlServices ${StrParentApps} ) ;
      local Arg0="${ArrayArg[0]}" ; 
     elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
-     eval $( eval CAFunctName=LoopShellScript CAIsAddParent=True __Call_Argument ) ; 
+     eval $( eval CAFunctName=ShellControlServices CAIsAddParent=True __Call_Argument ) ; 
     elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-     eval $( eval CAFunctName=LoopShellScript CAIsAddParent=True CallArgument ) ;
+     eval $( eval CAFunctName=ShellControlServices CAIsAddParent=True CallArgument ) ;
     fi  
-    StrMsg="Entry in function" ; 
+    StrMsg=$( LoopShellScript --get ArrayMsg[0] ) ; 
     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
     
-    local StrUUID=$( GetUAppsRegisterName=LoopShellScript GetUTimeBased=True GetULoop=False GetUUID ) ; 
+    local StrUUID=$( GetUAppsRegisterName=${StrParentApps} GetUTimeBased=True GetULoop=False GetUUID ) ; 
     StrPathLoopState=${StrPathLoopState//__UUID__/${StrUUID}}
-    VerbMsg="Instance ID:${StrUUID}" VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ;
+    VerbMsg="Instance ID:${StrUUID}" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ;
     touch ${StrPathLoopState} ; 
 
     local -A ArrayCompiler  ; 
@@ -1239,6 +1277,19 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     local StrScriptCpr ; 
     local StrDate ;
     local StrOperatorExec="." ; 
+    local -a ArrayMsg=( ) ;
+    
+    ArrayMsg[0]=$( LoopShellScript --get ArrayMsg[4] ) ;  
+    ArrayMsg[1]=$( LoopShellScript --get ArrayMsg[5] ) ;  
+    ArrayMsg[2]=$( LoopShellScript --get ArrayMsg[5] ) ;  
+    ArrayMsg[3]=$( LoopShellScript --get ArrayMsg[6] ) ;  
+    ArrayMsg[4]=$( LoopShellScript --get ArrayMsg[7] ) ;  
+    ArrayMsg[5]=$( LoopShellScript --get ArrayMsg[8] ) ;  
+    ArrayMsg[6]=$( LoopShellScript --get ArrayMsg[9] ) ;  
+    ArrayMsg[7]=$( LoopShellScript --get ArrayMsg[10] ) ;  
+    ArrayMsg[8]=$( LoopShellScript --get ArrayMsg[11] ) ;  
+    ArrayMsg[9]=$( LoopShellScript --get ArrayMsg[21] ) ;  
+    ArrayMsg[10]=$( LoopShellScript --get ArrayMsg[22] ) ;  
     
     while [ -f ${StrPathLoopState} ] ; do 
      StrCurrentSha=$( GSSFileName=${StrStartFile} GetSha1Sum ) ; 
@@ -1260,16 +1311,27 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
       ### Do find a sha1sum compiler directive differ from previous version . 
       ### run the script and report it execution state, because the Compiler 
       ### directive are empty. 
-      echo -ne "Add command-directive, SHA1SUM:${StrCurrentSha}, status: ${ArrayCompiler[${StrCurrentSha}]}\n"  ; 
+      StrMsg=${ArrayMsg[0]};
+      StrMsg=${StrMsg//__CURRSHA__/${StrCurrentSha}} ; 
+      StrMsg=${StrMsg//__STOREDSHA__/${ArrayCompiler[${StrCurrentSha}]}} ;
+      VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DISPLAY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
       IntCompileAdd=1 ;
       IntFindCompiler=0 ;
       sleep 5 ; 
      elif [ "${ArrayCompiler[${StrCurrentSha}]}" == "OK" ] ; then 
-      echo -ne "Shell-Script SHA1SUM:${StrCurrentSha}, ${ArrayCompiler[${StrCurrentSha}]}\n" ;
+      ###echo -ne "Shell-Script SHA1SUM:__CURRSHA__, __STOREDSHA__" ;
+      StrMsg=${ArrayMsg[1]}
+      StrMsg=${StrMsg//__CURRSHA__/${StrCurrentSha}} ;
+      StrMsg=${StrMsg//__STOREDSHA__/${ArrayCompiler[${StrCurrentSha}]}} ;
+      VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DISPLAY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
       IntCompileAdd=0 ; 
       IntFindCompiler=0 ;
      elif [ "${ArrayCompiler[${StrCurrentSha}]}" == "FAILED" ] ; then 
-      echo -ne "Shell-Script SHA1SUM:${StrCurrentSha}, ${ArrayCompiler[${StrCurrentSha}]}\n" ;
+      StrMsg=${ArrayMsg[2]}
+      StrMsg=${StrMsg//__CURRSHA__/${ArrayCompiler[${StrCurrentSha}]}} ;
+      StrMsg=${StrMsg//__STOREDSHA__/${StrCurrentSha}} ;
+      VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DISPLAY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+      ###echo -ne "Shell-Script SHA1SUM:__CURRSHA__, __STOREDSHA__" ;
       IntCompileAdd=0 ; 
       IntFindCompiler=0 ;
      fi
@@ -1284,31 +1346,85 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
        if [ "${BoolIsScriptRun:=True}" == "False" ] ; then 
         StrOperatorExec=${StrFileAlterateVrf} ; 
        fi 
-       if [ "${BoolHideAppsDebug:=False}" == "True" ] ; then 
-         eval ${StrOperatorExec} ${StrStartFile} 2>&1 > /dev/null  ;
-         IntReturn=$? ;
-       else
-         eval ${StrOperatorExec} ${StrStartFile} ;
-         IntReturn=$? ;
-       fi
        
-       echo -ne "Shell-Script returned state: ${IntReturn}\n" ; 
+       IntMaxLoop=1 ;
+       IntStepScript=0 ; 
+       if [ "${BoolLoopScriptOnState:=False}" == "True" ] ; then 
+        IntMaxLoop=${IntMaxLoopOnError} ; 
+        StrMsg=${ArrayMsg[10]}
+        StrMsg=${StrMsg//__INT__/${IntDefaultErrorStateLoop}} ;
+        StrMsg=${StrMsg//__LOOP__/${IntMaxLoop}} ;
+        VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-EXECUTION" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+       fi
+       while [ ${IntStepScript} -ne ${IntMaxLoop}  ] ; do  
+        StrMsg=${ArrayMsg[9]}
+        StrMsg=${StrMsg//__STEP__/${IntStepScript}} ; 
+        StrMsg=${StrMsg//__STEPMAX__/$(( ${IntMaxLoop} - 1 ))} ; 
+        VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-EXECUTION" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+
+        if [ "${BoolHideAppsDebug:=False}" == "True" ] ; then 
+          eval ${StrOperatorExec} ${StrStartFile} 2>&1 > /dev/null  ;
+          IntReturn=$? ;
+        else
+          eval ${StrOperatorExec} ${StrStartFile} ;
+          IntReturn=$? ;
+        fi
+        StrMsg=${ArrayMsg[3]}
+        StrMsg=${StrMsg//__RET__/${IntReturn}} ;
+        VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DISPLAY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+        if [ ${IntReturn:=0} -eq ${IntDefaultErrorStateLoop} -a "${BoolLoopScriptOnState:=False}" == "True" ] ; then 
+         ### while are sure to obtain N-time the error-type in  
+         ### IntDefaultErrorStateLoop ( as example : return 
+         ### statement of a make with segmentation fault==2)
+         ### AND It support the loop on error-type loop
+         ### it should pass here . 
+         IntStepScript=$(( ${IntStepScript} + 1 )) ; 
+        elif [ "${BoolLoopScriptOnState:=False}" == "False" ] ; then 
+         ### If it not support the loop on error-type it should 
+         ### directly increase the counter . 
+         ### While default maximum is already set to one
+         ### the only way to define it to more is to enable 
+         ### BoolLoopScriptOnState=True 
+         IntStepScript=$(( ${IntStepScript} + 1 )) ; 
+        fi 
+        #IntStepScript=$(( ${IntStepScript} + 1 )) ;
+       done 
+       ### echo -ne "Shell-Script returned state: __RET__" ; 
+       StrMsg=${ArrayMsg[3]}
+       StrMsg=${StrMsg//__RET__/${IntReturn}} ;
+       VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DISPLAY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
        IntCompileState=1 ;  
-       IntCompileAdd = 0 ; 
+       IntCompileAdd=0 ; 
      else
       if [ "${ArrayCompiler[${StrCurrentSha}]}" != "UNKNOW" ] ; then 
-        echo -ne "Shell-Script classified:${StrCurrentSha},\n\tdon't required to start over.\n"
+        StrMsg=${ArrayMsg[4]}
+        StrMsg=${StrMsg//__CURRSHA__/${StrCurrentSha}} ;
+        VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DISPLAY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+        ###echo -ne "Shell-Script classified:__CURRSHA__,\n\tdon't required to start over."
       fi 
       sleep 5; 
       StrDate=$( GODFormat="${StrDateFormat}" GetOtherDate ) ; 
-      echo -ne "UUID-Instance:${StrUUID}\nDate:${StrDate}\n"
-      echo -ne "Shell-scripts directive result:\n" ;
+      ###echo -ne "UUID-Instance:__UUID__\nDate:__DATE__"
+      ###echo -ne "Shell-scripts directive result:" ;
+      StrMsg=${ArrayMsg[5]}
+      StrMsg=${StrMsg//__UUID__/${StrUUID}} ;
+      StrMsg=${StrMsg//__DATE__/${StrDate}} ;
+      StrMsg1=${ArrayMsg[6]}
+      VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DISPLAY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+      VerbMsg="${StrMsg1}" VerbHeader="${__call_locality[1]}-DISPLAY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+      
       for StrDirective in ${!ArrayCompiler[@]} ; do
        if [ "${ArrayCompiler[${StrDirective}]}" != "UNKNOW" ] ; then 
-         echo -ne "Shell-Script SHA1SUM:${StrDirective}, result: ${ArrayCompiler[${StrDirective}]}\n" ; 
+         StrMsg=${ArrayMsg[7]} ;
+         StrMsg=${StrMsg//__CURRSHA__/${StrDirective}} ;
+         StrMsg=${StrMsg//__STOREDSHA__/${ArrayCompiler[${StrDirective}]}} ;
+         VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DISPLAY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+         ###echo -ne "Shell-Script SHA1SUM:__CURRSHA__, result: __STOREDSHA__" ; 
        fi 
       done ;
-      echo -ne "------------------------------------------------------------------------\n\n" ; 
+      StrMsg=${ArrayMsg[8]} ;
+      ### VerbExtendedOut=True
+      VerbMsg="${StrMsg}" VerbFormated=False VerbState=True VerbEvalForm=False  VerbDev=/dev/stderr  Verbosis ;
      fi 
      
      if [ ${IntCompileState:=0} -eq 1  ] ; then 
@@ -1338,7 +1454,30 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     done ; 
     
    }
-
+   
+   function VersionApps()
+   {
+    if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+     local -a ArrayArg=( $* ) ;
+     local -a __call_locality=( VA VersionApps ${StrParentApps} ) ;
+     local Arg0="${ArrayArg[0]}" ; 
+    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+     eval $( eval CAFunctName=VersionApps CAIsAddParent=True __Call_Argument ) ;
+    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+     eval $( eval CAFunctName=VersionApps CAIsAddParent=True CallArgument ) ;
+    fi     
+    StrEvalCmd="""
+    StrMsg=\"Application:__FUNCT__ , version:( versionTP:__VER_TP__ versionVTV:__VER_VTV__, versionCA:__VER_CA__, versionBVT:__VER_BVT__)\" ; 
+    StrMsg=\${StrMsg//__VER_CA__/\${versionCA}} ;
+    StrMsg=\${StrMsg//__VER_TP__/\${versionTP}} ;
+    StrMsg=\${StrMsg//__VER_VTV__/\${versionVTV}} ;
+    StrMsg=\${StrMsg//__VER_BVT__/\${versionBVT}} ;
+    StrMsg=\${StrMsg//__FUNCT__/\${__call_locality[1]}} ;
+    VerbMsg=\${StrMsg} VerbHeader=\"VERSION\" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ; 
+    """ ; 
+    echo -ne "${StrEvalCmd}" ; 
+   }
+   
    function __main_StopServices()
    {
     if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
@@ -1375,7 +1514,7 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
      eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
     fi 
-    StrMsg="Entry in function" ; 
+    StrMsg=$( LoopShellScript --get ArrayMsg[0] ) ; 
     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
    
     local StrCmdAction=$( \
@@ -1408,7 +1547,7 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
    local StrNameHelper="LoopShellScript\t\tA Test-Unit to test command with many directive to test and report the working solution.";
    local StrSummary="This application does survey your script and run-it belong to a different SHA1SUM reported by the application and upon a result it store-it inside a File for working solution. " ; 
    local StrSynopsis="This application is also perfect for Shell-Script with TAG to replace or add directive. Coming with Start and Stop services, it expect to produce execution once and store the file inside file with SHA1SUM header from your script qualified of different from previous save or modification. Result is compressed and this application will deliver a method to extract the compressed file inside this SHA1SUM header. (END OF DRAFT INFORMATION)";
-   local StrDescription="A common way to use it is to test your source package requiring to change the configure with multiples option some may fail and require to change the information inside. This application will wait until the file is changed and report you if it work or not. File Specified by the application is compressing the working result ready to extract the working solution. This Application can be shutdown from a command from same USER by using --stopservices function. It require to specify a Uniform Ressource Identifier specified inside prefixed-variable, LSSUUIDInstance. Also UUID variable can be used instead. By starting a new instance of this application it show you a UUID identifier and a new file inside  prefixed-variable LSSLoopFile will exist the time the loop is testing and compiling succesfull script. Stopping the services will only remove the file and stop the Loop.\n\nMaster Prefixed Variable\nLSSIsExtraction=False  ( by default )\nMaster Prefixed Variable\nLSSIsExtraction=False  ( by default )\nSwitch To ShellControlServices main function responsible of looping script and store working script inside file LSSFileStorage (by default .LoopShellScript)\n\n\nLSSIsExtraction=True\nSwitch To ,DataExtractionTool to access to your file LSSFileStorage (by default .LoopShellScript) by extracting script. Also access to the sub-function of DataExtractionTool, SearchByFile ,SearchDate ,SearchId ,ListFile. Only ListFile is not requiring a query to enter with prefixed variable LSSSearchQuery. Sub Function SearchByFile ,SearchDate ,SearchId require Prefixed-variable to allow a specific search and not working in same time than ListFile. Assuming ListFile can be accessed by using [ LSSIsListID=True, LSSIsExtraction=True ], sub-function SearchByFile ,SearchDate ,SearchId won't be accessible at same time. You do require to acces to them, just use [ LSSIsListID=True, LSSIsSearchID=True | LSSIsSearchDate=True | LSSIsSearchFile=True ] . Using the search facility, your query can be inserted inside Prefixed-Variable LSSSearchQuery=... . A Search engine only search it does not extract the information. \n\n\nLSSSHAIndexExtract=...\nIs the only one prefixed-parameter to use to extract the file under LoopShellScript. One full-length query to extract imply loading the DET ( DataExtractionTool ) by loading extraction:\n\n\nLSSIsExtraction=True LSSSHAIndexExtract=8fa097cd6652a6f3d106193a12ff4d5855e894a2.\n\nServices Engine Section :\nLoopShellScript can start many instance, and each instance information is stored inside /var/cache/Fnct.D/, where a file named Loop-LSS-UUID, where UUID is an UUID Identifier used to identify the active loop for your script detection. To stop a services running it's mandatory require to claim the shutdown by specifying the UUID on prompt with the switche '--stopservices' . \n\n\nex:\n$> UUID=938cc57c-9c73-11e6-8b1d-001e4c8856d6 LoopShellScript --stopservices\n\tOr\n$> LSSUUIDInstance=938cc57c-9c73-11e6-8b1d-001e4c8856d6 LoopShellScript --stopservices\n\n\nFollowing Prefixed-Variable can be used for the main-loop called ShellControlServices:\n\nLSSFileName\t\tString The Script, image, the collected data in chunk used to analysed with this application.\nLSSFileStorageLock\tString File location to control all Lock-ready Instance of LoopShellScript.\nLSSNonScriptValidator\tString default to ('/usr/bin/file') replace Operator Dot [.] in file-script execution.\nLSSIsScriptFile\t\tSet To True/False Default to True, if LSSFileName is not a script but a file to monitor it's have to turn it to False.\nLSSIsLockFile\t\tSet To True/False Default to False, allow multiple instance to store in the same file. \nLSSFileStorage\t\tString File The default file name to store all SHA1SUM + FILE, beware of multiples instance \nLSSLoopFile\t\tString File Identifier to manage the instance, To create your own repository consult GnrlPrsrInfctr Creation of repository.\nLSSFileFormat\t\tString Based on LSSApps LSSFilter prefixed-Var. it required to managed theses variable too to specify something else.\nLSSIsHideScriptOutput\tSet To True/False Hide from Stdout output of your script, does not affect the return statement.\nLSSIsDisplayDebug\tSet To True/False Display Debugging and verbose left inside.\nLSSIsDisplayIfDebug\tSet To True/False Display Debugging and verbose toward Generated-If clause from BoolVarTest.\nLSSDateFormat\t\tString and Quoted String required use Standard POSIX-date format and can use also Unix-TimeStamp.\n\n\nData Extraction Tool Section :\nExtracting the file from specified Prefixed-variable LSSFileStorage does overwrite your current file-name if this one is present inside the path where you do require to extract it. Mostly if you do have done a Shutdown request you may already own a copy of the file inside the Storage file.\n\n\nPrefixed-Variable for DataExtractionTool or ( DET ).\n\nLSSIsExtraction\t\tSet To True/False Mandatory to use DataExtractionTool search or extraction\nLSSSHAIndexExtract\tString The SHA1SUM Id information used to extract the file. \nLSSIsListID\t\tSet To True/False Only List all SHA1SUM Id and file \nLSSIsSearchID\t\tSet To True/False Actiave DET Search By ID\nLSSIsSearchDate\t\tSet To True/False Actiave DET Search By Date\nLSSIsSearchFile\t\tSet To True/False Actiave DET Search By File\nLSSSearchQuery\t\tString The query string used to seach by Date, File, ID.\n\n\nAvanced Prefixed-Variable for Both DataExtractionTool and ShellControlServices.\n\nLSSApps\t\t\tString Specify the active codec for compression, other suggestion can be gzip, lzma, 7z\nLSSAppsCmprOpt\t\tString Specify the Compression Codec parameter for compression.\nLSSAppsDeCmprOpt\tString Specify the De-Compression Codec parameter for de-compression.\nLSSFilter\t\tString Specify the encapsulation layer of compressed file stored inside declaration of  LSSFileStorage. Should support storage in one line with no EOL.\nLSSFilterCmprOpt\tString Specify the parameter to use the encapsulation to store inside the file declared by LSSFileStorage\nLSSFilterDeCmprOpt\tString Specify the paramter to extract from encapulation the compressed file. \n\n\nParser & Advanced Prefixed-Variable for Both DataExtractionTool and ShellControlServices\n\nThis section does manage uniquely your encapsulation layer and compression tool if you do provide other parameter to the application and will manage your information.\nLSSFileFormat\t\tString By Default its 'BZIP2+BASE64'\n\nLSSCmprTag\t\tString Parse your LSSFileFormat into command line to Store your script or file analysed by this application. \nLSSDeCmprTag\t\tString Parse your LSSFileFormat into command line to extract your script out of SHA1SUM Id out of the storage file. \nLSSTagParserDef\t\tString Unless your are not a ParserTag Aware it does transform TAG from Variable definition inside the application.\nLSSFuncStart\t\tString From Function member or existing function it's the function LoopShellScript.\n\nComment over LSSFileFormat:\nIn compression which is default, but internal function GetFileFormatCmd ( visible from Function Member section) callable from LSSFuncStart use the variable LSSIsExtraction and for one way compression the function read your LSSFileFormat into LSSCmprTag parameter from this String BZIP2+BASE64. Setting LSSIsExtraction=True the same function can revert this LSSFileFormat and apply BASE64+BZIP2 to getting your file out of storage file. This Parser will use LSSDeCmprTag and parsing your application BASE64+BZIP2 into a command line.\n\nComment over LSSTagParserDef:\nTouching-it play with the code and may not work, but quite usefull if you do have to add from Prefixed-Variable from prompt to One of internal function should specified with the affected tag.\n\nComment over LSSFuncStart:\nCan bypass the function design like GnrlPrsrInfctr function to implement the Repository Creation. To get familliar with use with GetFileFormatCmd and add prefixed-parameter LSSIsExtraction=[True/False] to test your compression design is throwing you correct parsing." ;
+   local StrDescription="A common way to use it is to test your source package requiring to change the configure with multiples option some may fail and require to change the information inside. This application will wait until the file is changed and report you if it work or not. File Specified by the application is compressing the working result ready to extract the working solution. This Application can be shutdown from a command from same USER by using --stopservices function. It require to specify a Uniform Ressource Identifier specified inside prefixed-variable, LSSUUIDInstance. Also UUID variable can be used instead. By starting a new instance of this application it show you a UUID identifier and a new file inside  prefixed-variable LSSLoopFile will exist the time the loop is testing and compiling succesfull script. Stopping the services will only remove the file and stop the Loop.\n\nMaster Prefixed Variable\nLSSIsExtraction=False  ( by default )\nMaster Prefixed Variable\nLSSIsExtraction=False  ( by default )\nSwitch To ShellControlServices main function responsible of looping script and store working script inside file LSSFileStorage (by default .LoopShellScript)\n\n\nLSSIsExtraction=True\nSwitch To ,DataExtractionTool to access to your file LSSFileStorage (by default .LoopShellScript) by extracting script. Also access to the sub-function of DataExtractionTool, SearchByFile ,SearchDate ,SearchId ,ListFile. Only ListFile is not requiring a query to enter with prefixed variable LSSSearchQuery. Sub Function SearchByFile ,SearchDate ,SearchId require Prefixed-variable to allow a specific search and not working in same time than ListFile. Assuming ListFile can be accessed by using [ LSSIsListID=True, LSSIsExtraction=True ], sub-function SearchByFile ,SearchDate ,SearchId won't be accessible at same time. You do require to acces to them, just use [ LSSIsListID=True, LSSIsSearchID=True | LSSIsSearchDate=True | LSSIsSearchFile=True ] . Using the search facility, your query can be inserted inside Prefixed-Variable LSSSearchQuery=... . A Search engine only search it does not extract the information. \n\n\nLSSSHAIndexExtract=...\nIs the only one prefixed-parameter to use to extract the file under LoopShellScript. One full-length query to extract imply loading the DET ( DataExtractionTool ) by loading extraction:\n\n\nLSSIsExtraction=True LSSSHAIndexExtract=8fa097cd6652a6f3d106193a12ff4d5855e894a2.\n\nServices Engine Section :\nLoopShellScript can start many instance, and each instance information is stored inside /var/cache/Fnct.D/, where a file named Loop-LSS-UUID, where UUID is an UUID Identifier used to identify the active loop for your script detection. To stop a services running it's mandatory require to claim the shutdown by specifying the UUID on prompt with the switche '--stopservices' . \n\n\nex:\n$> UUID=938cc57c-9c73-11e6-8b1d-001e4c8856d6 LoopShellScript --stopservices\n\tOr\n$> LSSUUIDInstance=938cc57c-9c73-11e6-8b1d-001e4c8856d6 LoopShellScript --stopservices\n\n\nFollowing Prefixed-Variable can be used for the main-loop called ShellControlServices:\n\nLSSFileName\t\tSTRING The Script, image, the collected data in chunk used to analysed with this application.\nLSSFileStorageLock\tSTRING File location to control all Lock-ready Instance of LoopShellScript.\nLSSNonScriptValidator\tSTRING default to ('/usr/bin/file') replace Operator Dot [.] in file-script execution.\nLSSIsScriptFile\t\tSet To True/False Default to True, if LSSFileName is not a script but a file to monitor it's have to turn it to False.\nLSSIsLockFile\t\tSet To True/False Default to False, allow multiple instance to store in the same file. \nLSSFileStorage\t\tSTRING File The default file name to store all SHA1SUM + FILE, beware of multiples instance \nLSSLoopFile\t\tSTRING File Identifier to manage the instance, To create your own repository consult GnrlPrsrInfctr Creation of repository.\nLSSFileFormat\t\tSTRING Based on LSSApps LSSFilter prefixed-Var. it required to managed theses variable too to specify something else.\nLSSIsHideScriptOutput\tSet To True/False Hide from Stdout output of your script, does not affect the return statement.\nLSSIsDisplayDebug\tSet To True/False Display Debugging and verbose left inside.\nLSSIsDisplayIfDebug\tSet To True/False Display Debugging and verbose toward Generated-If clause from BoolVarTest.\nLSSDateFormat\t\tSTRING and Quoted STRING required use Standard POSIX-date format and can use also Unix-TimeStamp.\nLSSIsLoopOnErrorType\tSet To True/False Does Enable Script Looping. This Parameter are for OS or hardware problem\nLSSLoopOnError\t\tINT This is once a script does return alternatively no error and error, must specify the error to filter\nLSSMaxLoopOnError\tINT Number of Iteration the script should run to certify for error.\n\n\nComment over LSSIsLoopOnErrorType:\nThis is another section used to test and strength scritp, some script like configure loading Makefile and this one using the compiler, does sometimes return no error and the moment after it start to generate Segment-fault with or withour changes on your system, this facility is here to give a try on your night-build.\n\nComment over LSSLoopOnError:\nThis Prefixed-variable require you do know about recurrent error, like compiler like gcc give ErrorLevel of 2 and enabling suppose your script only loop after detecting Segmentation fault.\n\nData Extraction Tool Section :\nExtracting the file from specified Prefixed-variable LSSFileStorage does overwrite your current file-name if this one is present inside the path where you do require to extract it. Mostly if you do have done a Shutdown request you may already own a copy of the file inside the Storage file.\n\nPrefixed-Variable for DataExtractionTool or ( DET ).\n\nLSSIsExtraction\t\tSet To True/False Mandatory to use DataExtractionTool search or extraction\nLSSSHAIndexExtract\tSTRING The SHA1SUM Id information used to extract the file. \nLSSIsListID\t\tSet To True/False Only List all SHA1SUM Id and file \nLSSIsSearchID\t\tSet To True/False Actiave DET Search By ID\nLSSIsSearchDate\t\tSet To True/False Actiave DET Search By Date\nLSSIsSearchFile\t\tSet To True/False Actiave DET Search By File\nLSSSearchQuery\t\tSTRING The query string used to seach by Date, File, ID.\n\n\nAvanced Prefixed-Variable for Both DataExtractionTool and ShellControlServices.\n\nLSSApps\t\t\tSTRING Specify the active codec for compression, other suggestion can be gzip, lzma, 7z\nLSSAppsCmprOpt\t\tSTRING Specify the Compression Codec parameter for compression.\nLSSAppsDeCmprOpt\tSTRING Specify the De-Compression Codec parameter for de-compression.\nLSSFilter\t\tSTRING Specify the encapsulation layer of compressed file stored inside declaration of  LSSFileStorage. Should support storage in one line with no EOL.\nLSSFilterCmprOpt\tSTRING Specify the parameter to use the encapsulation to store inside the file declared by LSSFileStorage\nLSSFilterDeCmprOpt\tSTRING Specify the paramter to extract from encapulation the compressed file. \n\n\nParser & Advanced Prefixed-Variable for Both DataExtractionTool and ShellControlServices\n\nThis section does manage uniquely your encapsulation layer and compression tool if you do provide other parameter to the application and will manage your information.\nLSSFileFormat\t\tSTRING By Default its 'BZIP2+BASE64'\nLSSCmprTag\t\tSTRING Parse your LSSFileFormat into command line to Store your script or file analysed by this application. \nLSSDeCmprTag\t\tSTRING Parse your LSSFileFormat into command line to extract your script out of SHA1SUM Id out of the storage file. \nLSSTagParserDef\t\tSTRING Unless your are not a ParserTag Aware it does transform TAG from Variable definition inside the application.\nLSSFuncStart\t\tSTRING From Function member or existing function it's the function LoopShellScript.\n\nComment over LSSFileFormat:\nIn compression which is default, but internal function GetFileFormatCmd ( visible from Function Member section) callable from LSSFuncStart use the variable LSSIsExtraction and for one way compression the function read your LSSFileFormat into LSSCmprTag parameter from this STRING BZIP2+BASE64. Setting LSSIsExtraction=True the same function can revert this LSSFileFormat and apply BASE64+BZIP2 to getting your file out of storage file. This Parser will use LSSDeCmprTag and parsing your application BASE64+BZIP2 into a command line.\n\nComment over LSSTagParserDef:\nTouching-it play with the code and may not work, but quite usefull if you do have to add from Prefixed-Variable from prompt to One of internal function should specified with the affected tag.\n\nComment over LSSFuncStart:\nCan bypass the function design like GnrlPrsrInfctr function to implement the Repository Creation. To get familliar with use with GetFileFormatCmd and add prefixed-parameter LSSIsExtraction=[True/False] to test your compression design is throwing you correct parsing." ;
    
    
    if [ "${Arg0:=--startservices}" == "--help"	] ; then 
@@ -1433,13 +1572,15 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
       VTVWhiteListTransfert=UUID  \
       ValueToVariable ) __main_StopServices ; 
    elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
-    StrMsg="Application:${__call_locality[1]} , version:( versionTP:__VER_TP__ versionVTV:__VER_VTV__, versionCA:__VER_CA__, versionBVT:__VER_BVT__)" ; 
-    StrMsg=${StrMsg//__VER_CA__/${versionCA}} ;
-    StrMsg=${StrMsg//__VER_TP__/${versionTP}} ;
-    StrMsg=${StrMsg//__VER_VTV__/${versionVTV}} ;
-    StrMsg=${StrMsg//__VER_BVT__/${versionBVT}} ;
-    VerbMsg=${StrMsg} VerbHeader="VERSION" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ; 
-    VerbMsg="Entry in function ${StrStartMain}" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
+    #StrMsg="Application:${__call_locality[1]} , version:( versionTP:__VER_TP__ versionVTV:__VER_VTV__, versionCA:__VER_CA__, versionBVT:__VER_BVT__)" ; 
+    #StrMsg=${StrMsg//__VER_CA__/${versionCA}} ;
+    #StrMsg=${StrMsg//__VER_TP__/${versionTP}} ;
+    #StrMsg=${StrMsg//__VER_VTV__/${versionVTV}} ;
+    #StrMsg=${StrMsg//__VER_BVT__/${versionBVT}} ;
+    #VerbMsg=${StrMsg} VerbHeader="VERSION" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ; 
+    eval $( eval VersionApps ) ; 
+    StrMsg=$( LoopShellScript --get ArrayMsg[0] ) ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
     eval $( eval \
       VTVIsArrayStyleInsert=True  \
       VTVValueEntry=${StrVarList} \
