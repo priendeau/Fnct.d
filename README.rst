@@ -2005,6 +2005,230 @@ Chapter 0x200, Programming
 Hacking us a term used both by those who write code and those exploit it. Even thought these two groups of hackers have different end goals, both groups use similar problems-solvingtechniques. And because an understanding of programming helps those who exploit, and an understanding of exploitation helps those who program, many hackers do both. There are interesting hacks found in both the techniques uses to write elegant code and the techniques used to exploit programs. Hacking is really just the act of finding a clever conerintuitive solution to a problem.
 
 
+:Note: 7b295e46-9e53-11e6-8b1d-001e4c8856d6
+:Title: Sensitive OS / Instant Hardware problems, rely on location where you are 
+:Method: Monitoring tools and Experimentation tools
+:Function: LoopShellScript
+:Reference: Implementation. 
+:Reference: Development
+
+It's irrevelant, but System depend of night build and progressive build, delivering an OS like Mint, Ubuntu and many Debian like OS and unfortunately, Fedora, CentOS, Red Hat, they have all the same compiler and sometimes a certified and original package do compile first and the day after it's like nightmare. The Night Build or expression brought from Unix root in late 1970-1980, it does work silently on a mainframe and does produce an answer .... Also having many type of processor quality and memory should produce different result, but pieces of hardware does answer to manufacturing standard and accute place on earth like North-America does produce really strong test to certify material and we should'nt fall on miserable faulty design.... It's sure laptop are subject to to weakness and do produce more interference than a fully isolated desktop case made of metal... Physically easy to spot your processor acrros your keyboard because it heat, your lucky to know it's plastic that slowly heat.... Some keayboard have a weak metal plate, but not wrapping the whole computer so it make interfereces... Other problems, Solar storm doe produce magnetic variation too and since I do developped this script in a non-solar activity or it was simply low, the prototype of few hundred lines does run a script itself, a configure with make command to build a bash 4.3 version with some extra option mot mentionned inside Debian-Mint Version 17.3, like history like echo on network socket which can help demonstrating other artefact but facing-out This script does store successive run and store it inside a file to later retreive it and try it just happens and show a computer can compile a Whole package of bash-4.3 once and not the day after and having the explicit truth with only 668 line of code generating a Function to run a script, keep the SHA1SUM it make and storing it inside associative Array to analyse future occurence of the change of the script... I do doubt over step behind of a configure with too much option, make with too much Cflags, Ldflags, too recent compiler and many option may influence the build of a component. So by definition the Fnct.D have increase of main tool to offer simple proof it's might be the deterministic moment to start thing and wait until condition are satisfying... Like stability of electricity another good point why laptop may perform on this case, relying on huge power protection a.k.a. the battery of laptop is seriously what pushing life of your laptop beyond normal uses and normal decay. Also another point is underpower of all elements like less voltage and amps for a video-card, running cpu-core under fewer watts of energy may keep things older... More stable, maybe not ! 
+
+LoopShellScript is built with idea of managing a script where this one if feeded of tag, parsed and give the ultimate script to monitor. This one runned by this function does run correctly and was backuped on Caching-idea and not real backup method. This application is also not able to start from a cold-boot with sha1sum from last run, it may but not at this stade, but if the application run long enough to produce correct script, the answer is storing inside a file where this file is [MANDATORY] the same as long it's not specified for another file. This file store your file by rank. One rank hold the sha1sum prooving the storage had memory of what it does and information like date where it was stored, the CODEC used for this task and the file encasulated in readeable format... This application have severals operation inside it's design and SHALL run and store sucessive run, DO run also for a survey of file like Image File, file from a depot, file from a conversion file from an action, but principaly operate for and operation the execution of a script. Other action are to list and or Filter the Storage file to seek-in and evaluate information. And Important role to restore the proposed run where this one match successfully. It's also an idea to come over making diff from a configure & make, but a script that do ask for item to configure over non modified source and non modified result I mean the compiled project have surely much important consideration than saving config cache... Extraction from this Storage file is uniquely by querying the SHA1SUM Id generated by this wisdom and there is Search facility inside this application but will never produce an extraction from a search. Since this script save the file-name inside the Storage you can really ask to search for a possible multi-recurrent answer to drop the file where it was.... How many time it will and will really answer to a question, Which one was good ?
+
+So here some clue from Helper, it long enough to give more than important information, simply type 
+
+.. code:: shell
+
+ ### Helper 
+ $> LoopShellScript --help 
+
+And will give your this description, coming with a Synopsis, Summary and a Description, the description can also inform you on Prefixed-Variable to use and inside this Description you can also have important Prefixed-Variable to use. Some explaination will come soon with example.  
+
+LoopShellScript
+~~~~~~~~~~~~~~~
+
+ From _sub_Function_Appliance
+
+Information from command-shell Helper : 
+
+.. code:: shell
+
+  versionGCT=0.0.1 versionGSPN=0.0.2 versionMC=0.0.2 versionTP=0.0.2 versionGPI=0.0.2 versionCA=0.0.2 versionLSS=0.0.1
+  Help:
+
+  Function LoopShellScript
+  Name
+  LoopShellScript		A Test-Unit to test command with many directive to test and report the working solution.
+
+
+  Synopsis
+    This application is also perfect for Shell-Script with TAG to replace or add directive. Coming with Start and Stop services, it expect to produce execution once and store the file inside file with SHA1SUM header from your script qualified of different from previous save or modification. Result is compressed and this application will deliver a method to extract the compressed file inside this SHA1SUM header. (END OF DRAFT INFORMATION)
+
+
+  Summary
+    This application does survey your script and run-it belong to a different SHA1SUM reported by the application and upon a result it store-it inside a File for working solution. 
+
+
+  Description
+    A common way to use it is to test your source package requiring to change the configure with multiples option some may fail and require to change the information inside. This application will wait until the file is changed and report you if it work or not. File Specified by the application is compressing the working result ready to extract the working solution. This Application can be shutdown from a command from same USER by using --stopservices function. It require to specify a Uniform Ressource Identifier specified inside prefixed-variable, LSSUUIDInstance. Also UUID variable can be used instead. By starting a new instance of this application it show you a UUID identifier and a new file inside prefixed-variable LSSLoopFile will exist the time the loop is testing and compiling succesfull script. Stopping the services will only remove the file and stop the Loop.
+
+  Master Prefixed Variable
+  LSSIsExtraction=False ( by default )
+  Master Prefixed Variable
+  LSSIsExtraction=False ( by default )
+  Switch To ShellControlServices main function responsible of looping script and store working script inside file LSSFileStorage (by default .LoopShellScript)
+
+
+  LSSIsExtraction=True
+  Switch To ,DataExtractionTool to access to your file LSSFileStorage (by default .LoopShellScript) by extracting script. Also access to the sub-function of DataExtractionTool, SearchByFile ,SearchDate ,SearchId ,ListFile. Only ListFile is not requiring a query to enter with prefixed variable LSSSearchQuery. Sub Function SearchByFile ,SearchDate ,SearchId require Prefixed-variable to allow a specific search and not working in same time than ListFile. Assuming ListFile can be accessed by using [ LSSIsListID=True, LSSIsExtraction=True ], sub-function SearchByFile ,SearchDate ,SearchId won't be accessible at same time. You do require to acces to them, just use [ LSSIsListID=True, LSSIsSearchID=True | LSSIsSearchDate=True | LSSIsSearchFile=True ] . Using the search facility, your query can be inserted inside Prefixed-Variable LSSSearchQuery=... . A Search engine only search it does not extract the information. 
+
+
+  LSSSHAIndexExtract=...
+  Is the only one prefixed-parameter to use to extract the file under LoopShellScript. One full-length query to extract imply loading the DET ( DataExtractionTool ) by loading extraction:
+
+
+  LSSIsExtraction=True LSSSHAIndexExtract=8fa097cd6652a6f3d106193a12ff4d5855e894a2.
+
+  Services Engine Section :
+  LoopShellScript can start many instance, and each instance information is stored inside /var/cache/Fnct.D/, where a file named Loop-LSS-UUID, where UUID is an UUID Identifier used to identify the active loop for your script detection. To stop a services running it's mandatory require to claim the shutdown by specifying the UUID on prompt with the switche '--stopservices' . 
+
+
+  ex:
+  $> UUID=938cc57c-9c73-11e6-8b1d-001e4c8856d6 LoopShellScript --stopservices
+   Or
+  $> LSSUUIDInstance=938cc57c-9c73-11e6-8b1d-001e4c8856d6 LoopShellScript --stopservices
+
+
+  Following Prefixed-Variable can be used for the main-loop called ShellControlServices:
+
+  LSSFileName		STRING The Script, image, the collected data in chunk used to analysed with this application.
+  LSSFileStorageLock	STRING File location to control all Lock-ready Instance of LoopShellScript.
+  LSSNonScriptValidator	STRING default to ('/usr/bin/file') replace Operator Dot [.] in file-script execution.
+  LSSIsScriptFile		Set To True/False Default to True, if LSSFileName is not a script but a file to monitor it's have to turn it to False.
+  LSSIsLockFile		Set To True/False Default to False, allow multiple instance to store in the same file. 
+  LSSFileStorage		STRING File The default file name to store all SHA1SUM + FILE, beware of multiples instance 
+  LSSLoopFile		STRING File Identifier to manage the instance, To create your own repository consult GnrlPrsrInfctr Creation of repository.
+  LSSFileFormat		STRING Based on LSSApps LSSFilter prefixed-Var. it required to managed theses variable too to specify something else.
+  LSSIsHideScriptOutput	Set To True/False Hide from Stdout output of your script, does not affect the return statement.
+  LSSIsDisplayDebug	Set To True/False Display Debugging and verbose left inside.
+  LSSIsDisplayIfDebug	Set To True/False Display Debugging and verbose toward Generated-If clause from BoolVarTest.
+  LSSDateFormat		STRING and Quoted STRING required use Standard POSIX-date format and can use also Unix-TimeStamp.
+  LSSIsLoopOnErrorType	Set To True/False Does Enable Script Looping. This Parameter are for OS or hardware problem
+  LSSLoopOnError		INT This is once a script does return alternatively no error and error, must specify the error to filter
+  LSSMaxLoopOnError	INT Number of Iteration the script should run to certify for error.
+
+
+  Comment over LSSIsLoopOnErrorType:
+  This is another section used to test and strength scritp, some script like configure loading Makefile and this one using the compiler, does sometimes return no error and the moment after it start to generate Segment-fault with or withour changes on your system, this facility is here to give a try on your night-build.
+
+  Comment over LSSLoopOnError:
+  This Prefixed-variable require you do know about recurrent error, like compiler like gcc give ErrorLevel of 2 and enabling suppose your script only loop after detecting Segmentation fault.
+
+  Data Extraction Tool Section :
+  Extracting the file from specified Prefixed-variable LSSFileStorage does overwrite your current file-name if this one is present inside the path where you do require to extract it. Mostly if you do have done a Shutdown request you may already own a copy of the file inside the Storage file.
+
+  Prefixed-Variable for DataExtractionTool or ( DET ).
+
+  LSSIsExtraction		Set To True/False Mandatory to use DataExtractionTool search or extraction
+  LSSSHAIndexExtract	STRING The SHA1SUM Id information used to extract the file. 
+  LSSIsListID		Set To True/False Only List all SHA1SUM Id and file 
+  LSSIsSearchID		Set To True/False Actiave DET Search By ID
+  LSSIsSearchDate		Set To True/False Actiave DET Search By Date
+  LSSIsSearchFile		Set To True/False Actiave DET Search By File
+  LSSSearchQuery		STRING The query string used to seach by Date, File, ID.
+
+
+  Avanced Prefixed-Variable for Both DataExtractionTool and ShellControlServices.
+
+  LSSApps			STRING Specify the active codec for compression, other suggestion can be gzip, lzma, 7z
+  LSSAppsCmprOpt		STRING Specify the Compression Codec parameter for compression.
+  LSSAppsDeCmprOpt	STRING Specify the De-Compression Codec parameter for de-compression.
+  LSSFilter		STRING Specify the encapsulation layer of compressed file stored inside declaration of LSSFileStorage. Should support storage in one line with no EOL.
+  LSSFilterCmprOpt	STRING Specify the parameter to use the encapsulation to store inside the file declared by LSSFileStorage
+  LSSFilterDeCmprOpt	STRING Specify the paramter to extract from encapulation the compressed file. 
+
+
+  Parser & Advanced Prefixed-Variable for Both DataExtractionTool and ShellControlServices
+
+  This section does manage uniquely your encapsulation layer and compression tool if you do provide other parameter to the application and will manage your information.
+  LSSFileFormat		STRING By Default its 'BZIP2+BASE64'
+  LSSCmprTag		STRING Parse your LSSFileFormat into command line to Store your script or file analysed by this application. 
+  LSSDeCmprTag		STRING Parse your LSSFileFormat into command line to extract your script out of SHA1SUM Id out of the storage file. 
+  LSSTagParserDef		STRING Unless your are not a ParserTag Aware it does transform TAG from Variable definition inside the application.
+  LSSFuncStart		STRING From Function member or existing function it's the function LoopShellScript.
+
+  Comment over LSSFileFormat:
+  In compression which is default, but internal function GetFileFormatCmd ( visible from Function Member section) callable from LSSFuncStart use the variable LSSIsExtraction and for one way compression the function read your LSSFileFormat into LSSCmprTag parameter from this STRING BZIP2+BASE64. Setting LSSIsExtraction=True the same function can revert this LSSFileFormat and apply BASE64+BZIP2 to getting your file out of storage file. This Parser will use LSSDeCmprTag and parsing your application BASE64+BZIP2 into a command line.
+
+  Comment over LSSTagParserDef:
+  Touching-it play with the code and may not work, but quite usefull if you do have to add from Prefixed-Variable from prompt to One of internal function should specified with the affected tag.
+
+  Comment over LSSFuncStart:
+  Can bypass the function design like GnrlPrsrInfctr function to implement the Repository Creation. To get familliar with use with GetFileFormatCmd and add prefixed-parameter LSSIsExtraction=[True/False] to test your compression design is throwing you correct parsing.
+
+
+  Function Member:
+   Verbosis ,GetSha1Sum ,GetFileFormatCmd ,FileDeCapsulation ,DataExtractionTool ,SearchByFile ,SearchDate ,SearchId ,ListFile ,FileWriterSupport ,ShellControlServices ,VersionApps ,__main_StopServices ,__main_StartServices 
+
+  Default Variable Value:
+  Variable LSSFuncStart ,
+   Default Value:__main_StartServices
+  Variable LSSFileName ,
+   Default Value:start-configure.sh
+  Variable LSSFileStorage ,
+   Default Value:.LoopShellScript
+  Variable LSSFileStorageLock ,
+   Default Value:/var/cache/Fnct.D/Lock-LSS
+  Variable LSSDateFormat ,
+   Default Value:'%Y%m%d-%H:%M:%S'
+  Variable LSSLoopFile ,
+   Default Value:/var/cache/Fnct.D/Loop-LSS-__UUID__
+  Variable LSSUUIDInstance ,
+   Default Value:Last-instance-UUID
+  Variable LSSSHAIndexExtract ,
+   Default Value:None
+  Variable LSSFileFormat ,
+   Default Value:BZIP2+BASE64
+  Variable LSSIsScriptFile ,
+   Default Value:True
+  Variable LSSNonScriptValidator ,
+   Default Value:/usr/bin/file
+  Variable LSSIsLoopOnErrorType ,
+   Default Value:False
+  Variable LSSLoopOnError ,
+   Default Value:2
+  Variable LSSMaxLoopOnError ,
+   Default Value:5
+  Variable LSSIsLockFile ,
+   Default Value:False
+  Variable LSSIsExtraction ,
+   Default Value:False
+  Variable LSSIsListID ,
+   Default Value:False
+  Variable LSSIsSearchID ,
+   Default Value:False
+  Variable LSSIsSearchDate ,
+   Default Value:False
+  Variable LSSIsSearchFile ,
+   Default Value:False
+  Variable LSSSearchQuery ,
+   Default Value:None
+  Variable LSSIsHideScriptOutput ,
+   Default Value:False
+  Variable LSSIsDisplayDebug ,
+   Default Value:False
+  Variable LSSIsDisplayIfDebug ,
+   Default Value:False
+  Variable LSSApps ,
+   Default Value:bzip2
+  Variable LSSAppsCmprOpt ,
+   Default Value:'-9c'
+  Variable LSSAppsDeCmprOpt ,
+   Default Value:'-dc'
+  Variable LSSFilter ,
+   Default Value:base64
+  Variable LSSFilterCmprOpt ,
+   Default Value:'--wrap=0'
+  Variable LSSFilterDeCmprOpt ,
+   Default Value:-d
+  Variable LSSDefaultPipe ,
+   Default Value:'|'
+  Variable LSSTagParserDef ,
+   Default Value:StrPipeCmd:__PIPE__,StrFilterDeCmprOpt:__FILTER_DECR_OPT__,StrApps:__APPS__,StrAppsCmprOpt:__APPS_CMPR_OPT__,StrAppsDeCmprOpt:__APPS_DECR_OPT__,StrFilter:__FILTER__,StrFilterCmprOpt:__FILTER_CMPR_OPT__
+  Variable LSSCmprTag ,
+   Default Value:__APPS__ __APPS_CMPR_OPT__ __PIPE__ __FILTER__ __FILTER_CMPR_OPT__
+  Variable LSSDeCmprTag ,
+   Default Value:__FILTER__ __FILTER_DECR_OPT__ __PIPE__ __APPS__ __APPS_DECR_OPT__
+  Following switch are available:
+
+   --startservices	Start the application normally.
+   --stopservices	Stop the application normally.
+   --get		Return value of Internal Variable.
+   --list		List all Internal Pre-fixed Variable available to query or get.
+   --compword	Word Completion Provide a services to Extract on Demand all Pre-fixed Variable
+    \String inside this function.
+
 
 ---------------------------------------
 Step forward the ZenityBuildForm sample
