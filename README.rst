@@ -608,7 +608,7 @@ With BoolVarTest / BoolVarTestVarCreation, and expecially BoolVarTest which is p
 
 
 The BNF If-Statement
-~~~~~~~~~~~~~~~~~~~~
+--------------------
 
 
 This example suggest use of a Boolean operation where is 100% the case of BoolVarTest purposes create simply from BoolVarTestVarCreation and both doing this finite task to generate the if-statement by holding theses prefixed parameter for
