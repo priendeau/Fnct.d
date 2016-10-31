@@ -605,8 +605,11 @@ With BoolVarTest / BoolVarTestVarCreation, and expecially BoolVarTest which is p
 .. image:: https://github.com/priendeau/Fnct.d/blob/master/images/minimal-if-statement.png
   :target: https://github.com/priendeau/Fnct.D#Broking Down If-Statement with
 
+
+
 The BNF If-Statement
 ~~~~~~~~~~~~~~~~~~~~
+
 
 This example suggest use of a Boolean operation where is 100% the case of BoolVarTest purposes create simply from BoolVarTestVarCreation and both doing this finite task to generate the if-statement by holding theses prefixed parameter for
  - Creating a variable Called StrNewVar
