@@ -596,7 +596,7 @@ Example of .bashrc configuration file with fnct_lib and some usefull widget  con
    :target: https://github.com/priendeau/Fnct.D#Broking Down If-Statement with
 
 
-Broking Down If-Statement with ...
+Breaking Down If-Statement with ...
 ----------------------------------
 
 With BoolVarTest / BoolVarTestVarCreation, and expecially BoolVarTest which is part of Library _sub_Structure the tinyest part to load to have the greates effect in composing and creating easy-structure. This Section talk about Invocation of many-types of If-Statement expressed by J. W. BACKUS, inside BNF ( Backus–Naur form expression). The minimalistic case offer by BoolVarTest will expect having no ELSE because It intent to produce an artefact from something existing or non existing and give a behavior comportment with specific attribute. This minimalistic IF statement does handle a "Theorical" case having a variable to use named "StrNewVar" when a behavior made from Prefixed-Parameter from YOUR FUNCTION called IsChangedStatus controlled externally by the command prompt and finalized by it's internal relation with IsChangedStatus being automatically changed, it pass inside your WILL to use IsChangedStatus to assign a new value to StrNewVar. Perhaps StrNewVar have an existance, but considering handling a Preambule or the minimalistic environment of "YOUR CODE" you can let it be managed by the BoolVarTest application to let the function change it's state. It's state have nothing or even the value "NoStatus" and the behavior mechanism from IsChangedStatus to change "YOUR" StrNewVar="NoStatus" into StrNewVar="NewStatus". It requiert IsChangedStatus first correspond to "True" which is purely the reason why a Boolean expression from BNF syntax don't require ELSE STATEMENT at this first statement. Because It already come with the "Theorical" reason of "YOUR CODE" come with a situation of never heard of StrNewVar and you do beleive leaving the BoolVarTest having at least a function after taking this variable StrNewVar and start your function action over a situation where "NoStatus" will bring a message about nothing done and "NewStatus" you have done something... 
@@ -644,6 +644,30 @@ And this case explain, you will never-ever have to doubt where is the error unle
 Connector to report it when you are introspecting your code... 
 
 
+Else, an extended Assertion inside an If-Statement
+--------------------------------------------------
+
+It's important to consider, IF-statement also comming in today's world with it's protected counter part. The Else statement being developped in Objective statement, pseudo code, does include it's presence in case the Pseudo-code come to a conclusion to Evaluate a statement, in case it's True It does some important task in Objective or object handling/mangling and if this unilaterally this Object to handle and either have a True/False statement to worry, the Else case statement to worry of this objective statement for this particulary case to alter an object with instruction. I do understand this counterpart let the system have a Behavior having a unique clause to mandatory satisfiy and this require to shallow specific information. If the context can be seized properly an Objective context like Database does explain more in depth appearing of Else statement more in Objective goal to configure rather than only pure BNF statement. Understanding a program have many root to get a file-information it's evolution of file-information is database. A contextual needs imply having it's duplication of the information to serve different public and this application offered to light-user does depend of a cheaper version of file-acces which is 'as example' Sqlite. Stronger user like privileged user an root user do have to use the same application with Stronger Database like 'MySQL', the acces of the information is uniformely easy and made both Sqlite and MySQL sharing SQL syntax which allow them accessing to a "common oriented way" to use our shell-script with same SQL request. Being way out of talking about database here our goal in Fnct.D is to bring a shell-script to load on privilege-basis user type and do handle it on lesser code to introduce in a function to let the application decide with your User access to Sqlite or MySQL. 
+
+Here It define an object Called File-Acces for information which is the Database. And the File-acces is also coded by a Branched condition. 
+
+Which is merely a Boolean Expression
+
+.. code:: shell
+  
+  ### 
+  ### A => path to file-acces Or B => path to file acces 
+  ### 
+  ### By mean A is the MySQL Database and B is the Sqlite Database. 
+  ###
+  ### 
+
+
+.. image:: https://github.com/priendeau/Fnct.d/blob/master/images/Else-extended-statement.png
+  :target: https://github.com/priendeau/Fnct.D#Else, an extended Assertion inside an If-Statement
+
+
+Because File-access is an environment We can consider using a Tunnel-function called Loading_Database_Type which are considered Protected information manage by this If-Else Statement. This protected environment are called Assertion. Inside a If Statement, the first BNF Statement is having 1 Assertion , after the evaluation of the condition is Protecting the assignation and does only making the change of the status from NewStatus only the Actor have the masterpiece IsChangeStatus . This If - Else or Extended Assertion does manage a Higher-field of the Assertion assuming the Tunnel is a Uniform ressource to acces to different Database type and mange into Upper Field or first If statement with it's Assertion. And Lower field of the Else - Extended Assertion. BoolVarTest is having similar comportment to design an Higher Field and an Lower Field. And Of course to produce condition of Changing our way to acces to a Database from A Type to B Type Database
 
 Improvement
 ===========
