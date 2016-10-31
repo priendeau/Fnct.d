@@ -591,7 +591,8 @@ Example of .bashrc configuration file with fnct_lib and some usefull widget  con
  ArrayLib=( ${OldArrayLib[@]} ) ; LLDisplayProg=False . /etc/init.d/Fnct.D/fnct_lib 
 
 
- .. image:: https://github.com/priendeau/Fnct.d/blob/master/images/BoolVarTestSymbol.png
+
+.. image:: https://github.com/priendeau/Fnct.d/blob/master/images/BoolVarTestSymbol.png
    :target: https://github.com/priendeau/Fnct.D#Broking Down If-Statement with
 
 
