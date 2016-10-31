@@ -669,6 +669,24 @@ Which is merely a Boolean Expression
 
 Because File-access is an environment We can consider using a Tunnel-function called Loading_Database_Type which are considered Protected information manage by this If-Else Statement. This protected environment are called Assertion. Inside a If Statement, the first BNF Statement is having 1 Assertion , after the evaluation of the condition is Protecting the assignation and does only making the change of the status from NewStatus only the Actor have the masterpiece IsChangeStatus . This If - Else or Extended Assertion does manage a Higher-field of the Assertion assuming the Tunnel is a Uniform ressource to acces to different Database type and mange into Upper Field or first If statement with it's Assertion. And Lower field of the Else - Extended Assertion. BoolVarTest is having similar comportment to design an Higher Field and an Lower Field. And Of course to produce condition of Changing our way to acces to a Database from A Type to B Type Database
 
+.. code:: shell
+  
+  $> StrIf=$( BVTIdType=4 BVTIsPreambule=False BVTIsValueToVarAssert=True BVTBoolVarName=\${UserPrivilege:=ROOT} BVTBoolCase="ROOT" BVTVTVTPLA="UserPrivilege=ROOT __FNCT_ASRT__" BVTVTFnctA=Loading_DataBase_Type BoolVarTest ;\
+   BVTIdType=5 BVTIsPreambule=False BVTIsValueToVarAssert=True BVTBoolVarName=\${UserPrivilege:=ROOT} BVTBoolCase="ROOT" BVTVTVTPLA="UserPrivilege=${USER} __FNCT_ASRT__" BVTVTFnctA=Loading_DataBase_Type BoolVarTest ) ;
+  $> echo "${StrIf}"
+
+Give the following Output :
+
+
+.. code:: shell
+  
+  $> echo "${StrIf}"
+  if [ "${UserPrivilege:=ROOT}" == "ROOT" ] ; then UserPrivilege=ROOT Loading_DataBase_Type ; else UserPrivilege=maxiste Loading_DataBase_Type ; fi 
+  
+  
+ Some restriction may apply. The two Call of BoolVarTest are binded together with the same variable StrIf with a execution statement and usually like described by the DataExtractionTool Example followed, the string is concatenated at the end because it's an open process adding condition ne-after one. Alos to reduce the output explanation to it's simplest form the two BoolVarTest statement was re-writing an important pieces of this application the Prefixed-Variable BVTVTVTPLA which is a ValueToVariable pass-through not explained here but if your function design require internal variable created inside a function they loosing their existence and maybe you have defined important relation. It's like card you have in hand and to confirm you win you do have to show everything to all memeber to win the bet. Explanned a different moment the pass-through ValueToVariable using a static template in either Preambule statement and Assertion Statement. And belong the blue line to this diagram it show either you are inside the if-assertion inside the section A or inside the else-assertion inside section B the tunnel application Loading_DataBase_Type loading the required database base on type of user, here we do show it's the value that differ from the two assertion. In next example it's the Variable being different and do require the common background variable inherent to DataExtractionTool to allow knowing about codec, file even the action. But in short the Prefixed-Variable BVTVTVTPLA Stand for ( BoolVarTest ValueToVariable Assertion ) Pretty long accronym. And to keep it working it require the TAG __FNCT_ASRT__ Standing for ( Function Assertion ) and also Prefixed-Variable BVTVTFnctA to commonly add your function name to If-generation in this case Loading_DataBase_Type . 
+
+
 
 Generation of Plural Assertion in Elif-[ N ]elif case 
 -----------------------------------------------------
