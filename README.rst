@@ -595,7 +595,6 @@ Example of .bashrc configuration file with fnct_lib and some usefull widget  con
    :target: https://github.com/priendeau/Fnct.D#Broking Down If-Statement with
 
 
-----------------------------------
 Broking Down If-Statement with ...
 ----------------------------------
 
