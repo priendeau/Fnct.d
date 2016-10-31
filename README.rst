@@ -613,6 +613,31 @@ This example suggest use of a Boolean operation where is 100% the case of BoolVa
  - Your Actor is IsChangeStatus which is by default False Statement, and you intention is WHEN it's True it's good to change it to StrNewVar="NewStatus" .
 
 
+.. code:: shell
+
+  ### Your Actor in BVTBoolVarName ---> IsChangeStatus:=False ( Common BNF Atribute := Value )
+  ### Your intention inside in case of 'True' ---> BVTBoolCase 
+  ### Your default StrNewVar should start existing with "NoStatus" ---> BVTVarHold 
+  ### Actor Change it to NewStatus ---> BVTBoolAssertion
+  BVTVarName=StrNewVar BVTVarHold=\"NoStatus\" BVTBoolVarName=\${IsChangeStatus:=False} BVTBoolCase="True" BVTBoolAssertion=\"NewStatus\"  BoolVarTest
+
+
+So executing this line and BoolVarTest does generate a complete BNF IF Statement correctly.
+
+
+.. code:: shell
+ 
+ ### Your Generated IF:
+ local StrNewVar="NoStatus";  if [ "${IsChangeStatus:=False}" == "True" ]  ; then   StrNewVar="NewStatus"  ; fi
+ 
+ 
+
+
+
+And this case explain, you will never-ever have to doubt where is the error unless BoolVarTest will comme with a 
+Connector to report it when you are introspecting your code... 
+
+
 
 Improvement
 ===========
