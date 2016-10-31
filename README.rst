@@ -603,9 +603,7 @@ With BoolVarTest / BoolVarTestVarCreation, and expecially BoolVarTest which is p
 
 
 The BNF If Statement.
-~~~~~~~~~~~~~~~~~~~~~
-
-
+---------------------
 
 
 
