@@ -669,6 +669,78 @@ Which is merely a Boolean Expression
 
 Because File-access is an environment We can consider using a Tunnel-function called Loading_Database_Type which are considered Protected information manage by this If-Else Statement. This protected environment are called Assertion. Inside a If Statement, the first BNF Statement is having 1 Assertion , after the evaluation of the condition is Protecting the assignation and does only making the change of the status from NewStatus only the Actor have the masterpiece IsChangeStatus . This If - Else or Extended Assertion does manage a Higher-field of the Assertion assuming the Tunnel is a Uniform ressource to acces to different Database type and mange into Upper Field or first If statement with it's Assertion. And Lower field of the Else - Extended Assertion. BoolVarTest is having similar comportment to design an Higher Field and an Lower Field. And Of course to produce condition of Changing our way to acces to a Database from A Type to B Type Database
 
+
+Generation of Plural Assertion in Elif-[ N ]elif case 
+-----------------------------------------------------
+
+
+This example it not giving the answer to connect many database-type as It was showed previously but, depend of a common elements, the File-acces Object. This example also depend from DataExtractionTool sub-function part of application LoopShellScript, a monitor for Builded script where a Point-to-point example generated parameter to generate the file and once the script is generated it create a script-shell, monitoring this script shell is a main key because We do survey what this script generating as file, and error, much more error because in fact it's a script to generate a Makefile and a compilation. We do help an environment to grow and offer multiples possibilitites and one of the possibilities is to give a hand in Generated elements from a Really important package... Bash package for Mint a simple distribution that do offer somes functionnality with bash but not all of them. We do also introduce adding inclusion of library in inner declaration, inherent of the compilation and we do realize it broke or compilation is not done... We do offer ability to understand which elements is breaking appart and for that purposes, the shell-script starting the Makefile and the compilation does a Monitor on it and every sucessive built there is a mechanis inside the LoopShellScript that store the working solution inside a file. That File-access does have Id for each script and there is also a FileName, a Date and it's compressed and encapsulated format to be stored easily. For thid purposes the whole Package called LoopShellScript own a sub-function called DET stand for Data Extraction Tool. This one master for the first time a shell-code generating an Objective view of accessing to the Content by Listing simple the information inside the File-Storage like a database and we do have couple of key callable by the prompt declaration to Use the simple ListFile which is listing everything, a searc for a Specific ID, a search by a specific name of File and also a search by date . The application LoopShellScript have an interressant Document can be read by using the switches '--help' a section called Description does inform on it's way to work an eventually a complete example will be introduced inside the README. For the moment Demonstrating with a couple of indice inside an Array can simply relate The Objective view of using If-statement from creating Assertion-region showed in green, are the location where the function are starting-up and are protected by the Boolean Expression covered by ELIF statement . 
+
+
+.. image:: https://github.com/priendeau/Fnct.d/blob/master/images/Elif-Generated.png
+  :target: https://github.com/priendeau/Fnct.D#Broking Down If-Statement with
+
+
+Which is exeptionnally true it's creating the Elif clause by type of field we have created, and it's come with 4 Type of search, a default list, by date, by file, by Id, and this structure is clever enough to grow to a impressive amount without creating extra code. The DataExtraTool os actually inside the LoopShellScript and Array did not expose data to an external view leaving the Actor to redefine the action, but doing it can make impressive amount of elif anf make Creator of Bash asking can we define an example big enough to make it explode and see if we do have to add more extra-information inside the Bash-configure package to let the design expand to a Much more realistic need... 
+
+In caveat, This structure does also have a tiny if-elif condition prior of talking of the For..Done structure that simple feeding a String and once the code is generated it evaluate this String and you do have your manager...  The internal If-elif can be re-coded to include a Whole setup of DataExtractionTool, but there is a unacheive statement inside BoolVarTest, each test are One Operator for instance and since we do require to make 3 BoolVarStatement to acheive One Big If-Elif-Fi evaluation command it analyse the Array Border to claim:
+
+- Border of beginning at instance 0 -> start the If with no preambule
+- Between Boorder and Before the End, we do generate Elif statement by meeted Boolean Variable name.
+- At the end we do closing it with a common FI word reserved to close a if-fi, if-elif-fi, if-elif-else-fi, even if-else-fi require to close the If statement. In Pascal we do use EndIf, in C, C++, Java, we close the Brace, in Python we do respect the tab according to statement. 
+
+.. code:: shell
+
+
+  local ArrayFunction=( ListFile:BoolListFile SearchByFile:BoolSearchFile SearchId:BoolSearchId SearchDate:BoolSearchDate ) ; 
+
+  StrMsg=$( LoopShellScript --get ArrayMsg[1] ) ; 
+  if [ "${StrShaSumExtract:=None}" != "None" ] ; then 
+  $( eval \
+    VTVIsArrayStyleInsert=True  \
+    VTVValueEntry=${StrVarList},StrStreamCodec \
+    VTVIsValueReAssign=True     \
+    VTVIsValueToConvert=False   \
+    VTVIsQuotedValue=True       \
+    VTVIsWhiteList=True         \
+    VTVWhiteListTransfert=UUID  \
+    ValueToVariable ) FileDeCapsulation ;
+  else 
+  
+   local IntIfType=6 ; 
+   local IntMaxArrayIndex=$(( ${#ArrayFunction[@]}-1 )) ;
+   for (( intx=0 ; intx <= ${IntMaxArrayIndex} ; intx++ )) ; do 
+    StrPairFuncVar=${ArrayFunction[${intx}]} ; 
+    ### Simple way to build a if-elif depending of a Array Of function 
+    ### where One Boolean is require to select one of the required function
+    ### and will be yield once with this if-elif structure. 
+    if [ ${intx:=0} -eq 0 ] ; then 
+     IntIfType=1 ;
+    elif [ ${intx:=0} -gt 0 -a ${intx:=0} -lt ${IntMaxArrayIndex} ] ; then 
+     IntIfType=2 ;
+    elif [ ${intx:=0} -eq ${IntMaxArrayIndex} ] ; then 
+     IntIfType=6 ;
+    fi 
+    StrBoolConditionName=${StrPairFuncVar/#[a-zA-Z0-9_]*:} ; 
+    StrFunctionName=${StrPairFuncVar/%:${StrBoolConditionName/#[a-zA-Z0-9_]*:}} ; 
+    ### 
+    ###  Require some tuning of BoolVarTest, already changed and give good 
+    ###  result.
+    ### 
+    StrIfBuildStatement=$( eval BVTDisplayIf=${BoolDisplayIf} BVTIdType=${IntIfType} BVTIsPreambule=False BVTIsValueToVarAssert=True BVTBoolVarName=\${${StrBoolConditionName}:=False} BVTBoolCase=True  BVTVTVVarA=${StrVarList} BVTVTFnctA=${StrFunctionName}  BoolVarTest  ) ; 
+    StrIfElifBuild="${StrIfElifBuild}${StrIfBuildStatement}" ; 
+   done 
+   
+   StrMsg=$( LoopShellScript --get ArrayMsg[2] ) ;  
+   StrMsg="${StrMsg//__FUNCT__/${__call_locality[0]}}" ;
+   StrMsg=${StrMsg//__VAR__/${StrIfElifBuild}}
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayIf} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   eval ${StrIfElifBuild} ; 
+   ###; BVTIdType=6 BVTIsPreambule=False BVTIsValueToVarAssert=True BVTBoolVarName=\${BoolSearchFile:=False} BVTBoolCase=True  BVTVTVVarA=\${StrVarList} BVTVTFnctA=SearchByFile BoolVarTest ; 
+  fi
+
+
+
 Improvement
 ===========
 
