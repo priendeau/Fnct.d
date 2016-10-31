@@ -17,7 +17,7 @@ Copyright
 
 ::
 	
-	Copyright (c) 2009-2015 << Patrick. Riendeau, Maxiste Deams >>.
+	Copyright (c) 2009-2016 << Patrick. Riendeau, Maxiste Deams >>.
 	All rights reserved.
 	
 	Redistribution and use in source and binary forms are permitted
@@ -591,6 +591,13 @@ Example of .bashrc configuration file with fnct_lib and some usefull widget  con
  ArrayLib=( ${OldArrayLib[@]} ) ; LLDisplayProg=False . /etc/init.d/Fnct.D/fnct_lib 
 
 
+.. image:: https://raw.github.com/priendeau/Fnct.D/master/images/BoolVarTestSymbol.svgz
+		:target: https://github.com/priendeau/Fnct.D#Broking Down If-Statement with
+
+Broking Down If-Statement with ...
+----------------------------------
+
+With BoolVarTest / BoolVarTestVarCreation, and expecially BoolVarTest which is part of Library _sub_Structure the tinyest part to load to have the greates effect in composing and creating easy-structure. This Section talk about Invocation of many-types of If-Statement expressed by J. W. BACKUS, inside BNF ( Backus–Naur form expression)
 
 Improvement
 ===========
