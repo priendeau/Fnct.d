@@ -599,6 +599,7 @@ Broking Down If-Statement with ...
 
 With BoolVarTest / BoolVarTestVarCreation, and expecially BoolVarTest which is part of Library _sub_Structure the tinyest part to load to have the greates effect in composing and creating easy-structure. This Section talk about Invocation of many-types of If-Statement expressed by J. W. BACKUS, inside BNF ( Backus–Naur form expression). The minimalistic case offer by BoolVarTest will expect having no ELSE because It intent to produce an artefact from something existing or non existing and give a behavior comportment with specific attribute. This minimalistic IF statement does handle a "Theorical" case having a variable to use named "StrNewVar" when a behavior made from Prefixed-Parameter from YOUR FUNCTION called IsChangedStatus controlled externally by the command prompt and finalized by it's internal relation with IsChangedStatus being automatically changed, it pass inside your WILL to use IsChangedStatus to assign a new value to StrNewVar. Perhaps StrNewVar have an existance, but considering handling a Preambule or the minimalistic environment of "YOUR CODE" you can let it be managed by the BoolVarTest application to let the function change it's state. It's state have nothing or even the value "NoStatus" and the behavior mechanism from IsChangedStatus to change "YOUR" StrNewVar="NoStatus" into StrNewVar="NewStatus". It requiert IsChangedStatus first correspond to "True" which is purely the reason why a Boolean expression from BNF syntax don't require ELSE STATEMENT at this first statement. Because It already come with the "Theorical" reason of "YOUR CODE" come with a situation of never heard of StrNewVar and you do beleive leaving the BoolVarTest having at least a function after taking this variable StrNewVar and start your function action over a situation where "NoStatus" will bring a message about nothing done and "NewStatus" you have done something... 
 
+
 The BNF If-Statement
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -606,12 +607,15 @@ The BNF If-Statement
 		:target: https://github.com/priendeau/Fnct.D#Broking Down If-Statement with
 
 This example suggest use of a Boolean operation where is 100% the case of BoolVarTest purposes create simply from BoolVarTestVarCreation and both doing this finite task to generate the if-statement by holding theses prefixed parameter for :
-- Creating a variable Called StrNewVar
-- Once created, It's better to assign it a default value. And your code should act in this way to let the behavior do something with the answer. 
- - Describe early, your function if it's setuped properly with Getter and ShortName function, You have exrernalize the Actor into a Variable, and informing your script this Actor Having the choice of Pass over BoolVarTest with expection, the variable does mastering the pass-through to transform your variable. 
-- Your Actor is IsChangeStatus which is by default False Statement, and you intention is WHEN it's True it's good to change it to StrNewVar="NewStatus" .
+
+ - Creating a variable Called StrNewVar
+ - Once created, It's better to assign it a default value. And your code should act in this way to let the behavior do something with the answer. 
+  - Describe early, your function if it's setuped properly with Getter and ShortName function, You have exrernalize the Actor into a Variable, and informing your script this Actor Having the choice of Pass over BoolVarTest with expection, the variable does mastering the pass-through to transform your variable. 
+ - Your Actor is IsChangeStatus which is by default False Statement, and you intention is WHEN it's True it's good to change it to StrNewVar="NewStatus" .
 
 .. code:: shell
+
+
   ### Your Actor in BVTBoolVarName ---> IsChangeStatus:=False ( Common BNF Atribute := Value )
   ### Your intention inside in case of 'True' ---> BVTBoolCase 
   ### Your default StrNewVar should start existing with "NoStatus" ---> BVTVarHold 
