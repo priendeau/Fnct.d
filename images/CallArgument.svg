@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/PR-SVG-20010719/DTD/svg10.dtd">
+<svg width="90cm" height="33cm" viewBox="207 -291 1792 652" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <g>
+    <ellipse style="fill: #ffffff" cx="1334.64" cy="98.0182" rx="10.067" ry="10.067"/>
+    <ellipse style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" cx="1334.64" cy="98.0182" rx="10.067" ry="10.067"/>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1294.37" y1="118.152" x2="1374.91" y2="118.152"/>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1334.64" y1="108.085" x2="1334.64" y2="158.42"/>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1334.64" y1="158.42" x2="1294.37" y2="206.111"/>
+    <line style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x1="1334.64" y1="158.42" x2="1374.91" y2="206.111"/>
+    <text font-size="14.1109" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="1334.64" y="239.345">
+      <tspan x="1334.64" y="239.345">User launching </tspan>
+      <tspan x="1334.64" y="256.984">an application</tspan>
+      <tspan x="1334.64" y="274.623"></tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="463.174" y="-195.76" width="749.2" height="44"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="463.174" y="-195.76" width="749.2" height="44"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:middle;font-family:monospace;font-style:normal;font-weight:normal" x="837.774" y="-179.76">&lt;&lt;Code-evaluation&gt;&gt;</text>
+    <text font-size="16" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:700" x="837.774" y="-160.76">CallArgument</text>
+    <rect style="fill: #ffffff" x="463.174" y="-151.76" width="749.2" height="100"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="463.174" y="-151.76" width="749.2" height="100"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="466.174" y="-137.76"> CAFunctName: String = Parametric</text>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #000000" x1="473.874" y1="-132.16" x2="720.274" y2="-132.16"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="466.174" y="-121.76"> CACodeScope: String = local, declare</text>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #000000" x1="473.874" y1="-116.16" x2="751.074" y2="-116.16"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="466.174" y="-105.76"> CAUsingSedTrim: Boolean = True/False</text>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #000000" x1="473.874" y1="-100.16" x2="751.074" y2="-100.16"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="466.174" y="-89.7601"> CAIsAddParent: StringBoolean = True/False</text>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #000000" x1="473.874" y1="-84.1601" x2="789.574" y2="-84.1601"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="466.174" y="-73.7601"> CAIsChildBoot: Boolean = True/False</text>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #000000" x1="473.874" y1="-68.1601" x2="743.374" y2="-68.1601"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="466.174" y="-57.7601"> CAFuncStart: String = parametric or by default to __main_StartServices</text>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #000000" x1="473.874" y1="-52.1601" x2="1012.87" y2="-52.1601"/>
+    <rect style="fill: #ffffff" x="463.174" y="-51.7601" width="749.2" height="36"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="463.174" y="-51.7601" width="749.2" height="36"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="466.174" y="-37.7601">+&lt;&lt;Boot-Strap&gt;&gt; __main_StartServices(in Arg0:String=$1): Function</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="466.174" y="-21.7601">+&lt;&lt;Switches IF-ELIF-Statement&gt;&gt; End-If-Block-Statement(in Arg0:Derivative=--startservices): Code</text>
+    <rect style="fill: #ffffff" x="1166.37" y="-289.76" width="831.9" height="100"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 6; stroke: #000000" x="1166.37" y="-289.76" width="831.9" height="100"/>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1172.37" y="-275.76">__call_locality:Parameter existing for naming the function</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1172.37" y="-259.76">Variable-Block:variable</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1172.37" y="-243.76">StrVarList:List of Variable-Bloc name</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1172.37" y="-227.76">Boot-Strap:Function</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1172.37" y="-211.76">Documentation-Block:Variable(StrSwitchMessages,StrNameHelper,StrSummary,StrSynopsis,StrDescription)</text>
+    <text font-size="12.8" style="fill: #000000;text-anchor:start;font-family:monospace;font-style:normal;font-weight:normal" x="1172.37" y="-195.76">End-If-Block-Statement:bash-code, if-elif structure to hold Arg0 switches ( --get, --list, --startservices)</text>
+  </g>
+  <g>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke-dasharray: 8; stroke: #000000" points="460.651,-97.1468 419.617,-97.1468 419.617,-94.908 394.57,-94.908 "/>
+    <polyline style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" points="407.217,-99.908 391.217,-94.908 407.217,-89.908 "/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="300.06" y="37.2374" width="371.65" height="70"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="300.06" y="37.2374" width="371.65" height="70"/>
+    <rect style="fill: #ffffff" x="280.06" y="51.2374" width="40" height="14"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="280.06" y="51.2374" width="40" height="14"/>
+    <rect style="fill: #ffffff" x="280.06" y="79.2374" width="40" height="14"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="280.06" y="79.2374" width="40" height="14"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="328.06" y="63.1374">
+      <tspan x="328.06" y="63.1374">Variable List and all declaration visible from outside </tspan>
+      <tspan x="328.06" y="79.1374"></tspan>
+    </text>
+  </g>
+  <g>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke-dasharray: 8; stroke: #000000" x1="380.865" y1="-221.741" x2="380.865" y2="-114.908"/>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke-dasharray: 8; stroke: #000000" x1="380.865" y1="-74.908" x2="380.865" y2="-74.908"/>
+    <rect style="fill: #ffffff" x="373.865" y="-114.908" width="14" height="40"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 2; stroke: #000000" x="373.865" y="-114.908" width="14" height="40"/>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="770.767" y="141.406" width="349.55" height="121.9"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 4; stroke: #000000" x="770.767" y="141.406" width="349.55" height="121.9"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="945.542" y="163.306">
+      <tspan x="945.542" y="163.306">Function from an Application</tspan>
+      <tspan x="945.542" y="179.306"></tspan>
+      <tspan x="945.542" y="195.306"></tspan>
+      <tspan x="945.542" y="211.306"></tspan>
+    </text>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #000000" x1="853.642" y1="166.356" x2="1037.44" y2="166.356"/>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #000000" x1="945.542" y1="182.356" x2="945.542" y2="182.356"/>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #000000" x1="945.542" y1="198.356" x2="945.542" y2="198.356"/>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #000000" x1="945.542" y1="214.356" x2="945.542" y2="214.356"/>
+    <line style="fill: none; fill-opacity:0; stroke-width: 4; stroke: #000000" x1="770.767" y1="225.406" x2="1120.32" y2="225.406"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="780.767" y="247.306">
+      <tspan x="780.767" y="247.306">CallArgument,return statement, echo from function</tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="208.848" y="135.697" width="405.45" height="89.9"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 4; stroke: #000000" x="208.848" y="135.697" width="405.45" height="89.9"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="411.573" y="157.597">
+      <tspan x="411.573" y="157.597">__main_StartServices</tspan>
+      <tspan x="411.573" y="173.597"></tspan>
+    </text>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #000000" x1="343.348" y1="160.647" x2="479.798" y2="160.647"/>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #000000" x1="411.573" y1="176.647" x2="411.573" y2="176.647"/>
+    <line style="fill: none; fill-opacity:0; stroke-width: 4; stroke: #000000" x1="208.848" y1="187.697" x2="614.298" y2="187.697"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="218.848" y="209.597">
+      <tspan x="218.848" y="209.597">CallArgument,return statement, Use of Function BoolVarTest</tspan>
+    </text>
+  </g>
+  <g>
+    <rect style="fill: #ffffff" x="208.293" y="270.339" width="405.45" height="89.9"/>
+    <rect style="fill: none; fill-opacity:0; stroke-width: 4; stroke: #000000" x="208.293" y="270.339" width="405.45" height="89.9"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:middle;font-family:sans-serif;font-style:normal;font-weight:normal" x="411.018" y="292.239">
+      <tspan x="411.018" y="292.239">__main_StopServices</tspan>
+      <tspan x="411.018" y="308.239"></tspan>
+    </text>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #000000" x1="343.843" y1="295.289" x2="478.193" y2="295.289"/>
+    <line style="fill: none; fill-opacity:0; stroke-width: 1; stroke: #000000" x1="411.018" y1="311.289" x2="411.018" y2="311.289"/>
+    <line style="fill: none; fill-opacity:0; stroke-width: 4; stroke: #000000" x1="208.293" y1="322.339" x2="613.743" y2="322.339"/>
+    <text font-size="12.7998" style="fill: #000000;text-anchor:start;font-family:sans-serif;font-style:normal;font-weight:normal" x="218.293" y="344.239">
+      <tspan x="218.293" y="344.239">CallArgument,return statement, Use of Function BoolVarTest</tspan>
+    </text>
+  </g>
+</svg>
