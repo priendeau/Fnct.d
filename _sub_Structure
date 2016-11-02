@@ -253,7 +253,7 @@ if [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then
 ### End-of if-versionCA == 0.0.1 . 
 fi
 
-if [ "${versionGOD:=0.0.2}" == "0.0.2" ] ; then 
+if [ "${versionGOD:=0.0.1}" == "0.0.1" ] ; then 
 
   ### GetOtherDate :
   ###
@@ -316,6 +316,11 @@ if [ "${versionGOD:=0.0.2}" == "0.0.2" ] ; then
     fi
     
    }
+   
+   
+   ### Example, must supplied a date from N and start counting from 
+   ### date --date='20000101 00:00:00' +"%StrDateFormat"
+   ### where StrDateFormat = Y%m%d %s %s 
    
    function DateFunc()
    {
@@ -387,8 +392,303 @@ if [ "${versionGOD:=0.0.2}" == "0.0.2" ] ; then
    fi 
  }
 
+ ### End-of if-${versionGOD}
+fi
 
- ### End-of if-${versionGVR}
+if [ "${versionGOD:=0.0.1}" == "0.0.2" ] ; then 
+
+ unset GetOtherDate ;
+ unset Verbosis DateFunc VersionApps __main_StartServices ; 
+ function GetOtherDate()
+ {
+  function Verbosis()
+  {
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( Verb Verbosis ) ; 
+   local Arg0="${ArrayArg[0]}" ; 
+   local StrMsg=${VerbMsg:=__TEXT__} ; 
+   local StrDevOut=${VerbDev:=/dev/stderr} ; 
+   local IsVerboseState=${VerbState:=False} ;
+   local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+   local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+   local IsDisplayFormatted=${VerbFormated:=True} ;
+   local IsAppendMode=${VerbAppendDev:=False} ; 
+   local IsExtendedOutput=${VerbExtendedOut:=False} ; 
+   local ArrayArg=( $* ) ; 
+   if [ "${IsVerboseState:=False}" == "True" ] ; then 
+    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+     if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
+     else  
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+     fi
+    else
+     if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+      if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+        echo -ne "${StrMsg}" ;  
+      else
+        echo "${StrMsg}" ;  
+      fi
+     else
+      if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+         echo -ne "${StrMsg}" >> ${StrDevOut} ;
+       else
+         echo "${StrMsg}" >> ${StrDevOut} ;
+       fi
+      else
+       if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+        echo -ne "${StrMsg}" > ${StrDevOut} ;
+       else
+        echo "${StrMsg}" > ${StrDevOut} ;
+       fi 
+      fi
+     fi 
+    fi 
+   fi
+  } 
+  function VersionApps()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( VA VersionApps ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=VersionApps CAIsAddParent=True __Call_Argument ) ;
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=VersionApps CAIsAddParent=True CallArgument ) ;
+   fi     
+   local StrEvalCmd="""StrMsg=\"Application:__FUNCT__ , version:( versionTP:__VER_TP__ versionVTV:__VER_VTV__, versionCA:__VER_CA__, versionBVT:__VER_BVT__)\" ; 
+   StrMsg=\${StrMsg//__VER_CA__/\${versionCA}} ;
+   StrMsg=\${StrMsg//__VER_TP__/\${versionTP}} ;
+   StrMsg=\${StrMsg//__VER_VTV__/\${versionVTV}} ;
+   StrMsg=\${StrMsg//__VER_BVT__/\${versionBVT}} ;
+   StrMsg=\${StrMsg//__FUNCT__/\${__call_locality[1]}} ;
+   VerbMsg=\${StrMsg} VerbHeader=\"VERSION\" VerbEvalForm=False VerbFormated=True VerbState=${IsShowVersion:=True} VerbDev=/dev/stderr  Verbosis ; 
+   """ ; 
+   echo -ne "${StrEvalCmd}" ; 
+  }     
+  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( GOD GetOtherDate ${StrParentApps} ) ;
+   local Arg0="${ArrayArg[0]}" ; 
+  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+   eval $( eval CAFunctName=GetOtherDate CAIsAddParent=False __Call_Argument ) ;
+  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+   eval $( eval CAFunctName=GetOtherDate CAIsAddParent=False CallArgument ) ;
+  fi 
+   
+  local StrDateUnitPattern=${GODDateUnitPatrn:=__DATEUNIT__};
+  local StrDateUnitReference=${GODDateUnit:="day"};
+  local StrDateFormat=${GODFormat:=%Y%m%d} ;
+  local StrDateIndicatorFormat=${GODReferenceFormat:=__INT__ ${StrDateUnitPattern}};
+  local IntDayDiff=${GODReference:=0} ; 
+  local StrDateApps=${GODMainApp:=/bin/date} ; 
+  local BoolScriptConversion=${GODIsScriptConv:=False} ; 
+  local BoolScriptIsDateSupplied=${GODIsWithDS:=False} ;
+  local BoolNanoRefScript=${GODScriptNanoVar:=False}
+  local StrScriptTagNano=${GODScriptNano:=--assign=UnitRef=__NANO_SEC_REF__} ;
+  local IntUnitNSRef=${GODNanoSecRef:=1000000000} ;
+  local StrScriptTagSupplied=${GODScriptDS:=--assign=DateSupplied=__START_REF__} ;
+  local StrTagOptManager=${GODBoolToTag:=BoolScriptIsDateSupplied:__FILTER_OPT__,BoolNanoRefScript:__FILTER_TIME_OPT__} ;
+  local StrScriptFile=${GODScriptFile:=/etc/init.d/Fnct.D/awk-script/GODDateToNS.awk} ;
+  local StrFilterApps=${GODFilterApps:=/usr/bin/gawk} ; 
+  local StrDateStart=${GODStartRef:=now} ; 
+  local StrPipeCmd=${GODDefaultPipe:='|'} ; 
+  local StrTagParser=${GODTagParserDef:=StrScriptTagNano:__FILTER_TIME_OPT__,StrScriptTagSupplied:__FILTER_OPT__,StrPipeCmd:__PIPE__,StrFilterApps:__FILTER__,StrScriptFile:__FILE_NAME__,IntUnitNSRef:__NANO_SEC_REF__,StrDateStart:__START_REF__} ; 
+  local StrScriptTpl=${GODFilterTag:=__FILTER__ __FILTER_OPT__ __FILTER_TIME_OPT__ -f __FILE_NAME__ } ;
+  local IsLoop=${GODIsLoop:=False} ;
+  local IntLoopRange=${GODLoop:=0,3} ;
+  local IsVerbose=${GODVerbose:=False} ;
+  local IsShowVersion=${GODShowVersion:=True} ; 
+  local IsShowParsedInfo=${GODShowParsing:=False} ;
+  local IsShowEvalCmd=${GODShowEvalCmd:=False} ; 
+  
+  local StrVarList="IsShowEvalCmd,IsShowParsedInfo,IsShowVersion,StrTagOptManager,StrScriptTagNano,BoolNanoRefScript,IntUnitNSRef,StrPipeCmd,StrTagParser,StrScriptTpl,BoolScriptConversion,BoolScriptIsDateSupplied,StrScriptTagSupplied,StrScriptFile,StrFilterApps,StrDateStart,StrDateUnitPattern,StrDateUnitReference,StrDateFormat,StrDateIndicatorFormat,IntDayDiff,StrDateApps,IsLoop,IntLoopRange,IsVerbose" ; 
+
+  local -a ArrayMsg ;
+  ArrayMsg[0]="Entry in function" ;   
+   
+
+   ### Example, must supplied a date from N and start counting from 
+   ### date --date='20000101 00:00:00' +"%StrDateFormat"
+   ### where StrDateFormat = Y%m%d %s %s 
+   
+   function DateFunc()
+   {
+    if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+     local -a ArrayArg=( $* ) ;
+     local -a __call_locality=( DF DateFunc ${StrParentApps} ) ;
+     local Arg0="${ArrayArg[0]}" ; 
+    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+     eval $( eval CAFunctName=DateFunc CAIsAddParent=True __Call_Argument ) ;
+    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+     eval $( eval CAFunctName=DateFunc CAIsAddParent=True CallArgument ) ;
+    fi 
+    StrMsg=$( GetOtherDate --get ArrayMsg[0] ) ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${IsVerbose} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+
+    local StrPairVarTag ;
+    local StrVar ;
+    local StrTag ;
+    local StrEval="""${StrDateApps} +\"${StrDateFormat:=%Y%m%d}\" -d '${StrDateStart} ${StrDateParsed}'""" ; 
+    
+    ### This is the array managing the Relation between Boolean declared in the 
+    ### top-function and ability to suppress parsing of __TAG__ because 
+    ### boolean value are false and don't require to append option to FILTER. 
+    local ArrayBooleanTagRemove=( ${StrTagOptManager//,/ } ) ; 
+    
+    ### At this step belong to BoolScriptConversion to use a script to pass a date 
+    ### for transformation start here and I supply the '|' or __PIPE__ and the template
+    ### script to add the gawk options to it. 
+    if [ "${BoolScriptConversion:=False}" == "True" ] ; then 
+     StrEval="${StrEval} __PIPE__ ${StrScriptTpl}" ; 
+    fi 
+    
+    ### This section generate IF-Statement to keep or remove the __TAG__
+    ### from Filter Option it manage Presence of --assign=DateSupplied and 
+    ### --assign=UnitRef in uses of a Parser for application gawk used 
+    ### as filter . Representation of this parse : __APPS__ | __FILTER__
+    ### where __APPS__ is the /bin/date and __FILTER__ the filter application
+    ### to issue "something" from the output of __APPS__ . 
+    
+    for (( intx=0 ; intx <= ${#ArrayBooleanTagRemove[@]}-1 ; intx++  )) ; do 
+      StrPairVarTag=${ArrayBooleanTagRemove[${intx}]} ; 
+      StrTag=${StrPairVarTag/#[A-Za-z0-9]*:} ; 
+      StrVar=${StrPairVarTag/%:${StrTag}} ;
+      eval $( eval BVTIsPreambule=False                      \
+                   BVTBoolVarName=\\\${\${StrVar}:=False}    \
+                   BVTVarName=StrEval                        \
+                   BVTBoolAssertion="\\"\${StrEval//${StrTag}/}\\"" \
+                   BVTDisplayIf=${IsShowParsedInfo}          \
+                   BVTBoolCase=False BoolVarTest             ) ; 
+    done  
+
+    
+    ### TagParser Command-line 
+    ### that evaluate the rest of the Query started by StrEval .     
+    eval $( eval TPListTag=${StrTagParser}      \
+      TPArrayName=Array${__call_locality[0]}    \
+      TPVarNameParsed="StrEval"                 \
+      TPDisplayDebug=${IsShowParsedInfo}        \
+      TPDisplayParserNotice=${IsShowParsedInfo} \
+      TagParser ) ; 
+    
+    VerbMsg="${StrEval}" VerbHeader="${__call_locality[1]}-EVALCMD" VerbState=${IsShowEvalCmd} VerbDev=/dev/stderr Verbosis ;
+    eval ${StrEval} 
+   }
+      
+   function __main_StartServices()
+   {
+    if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+     local -a ArrayArg=( $* ) ;
+     local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+     local Arg0="${ArrayArg[0]}" ; 
+    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
+    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+    fi 
+    StrMsg=$( GetOtherDate --get ArrayMsg[0] ) ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${IsVerbose} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    
+    local -a ArrayRange=( ${IntLoopRange/,/ } ) ;
+    local OperRange="<=" ;  
+    local OperRangeIn="Intx++" ;
+    local OperBaseStart=${ArrayRange[0]} ;
+    local IntEndLoop=$(( ${ArrayRange[$((${#ArrayRange[@]}-1))]} ));
+    local StrDateParsed=${StrDateIndicator};
+    local StrDebugMsg ;
+    
+    ### First Step, applying Incremental Unit to application Date:
+    local StrDateIndicator=${StrDateIndicatorFormat} ;
+    StrDateIndicator=${StrDateIndicator/${StrDateUnitPattern}/${StrDateUnitReference}} ;
+    if [ "${IsLoop:=False}" == "False" ] ; then 
+     StrDateIndicator=${StrDateIndicator/__INT__/${IntDayDiff:=0}} 
+    fi
+    ### Temporary debug removed after found the bug.
+    ### local StrDbg="Content of StrDateIndicator: [${StrDateIndicator}]\nContent of StrDateUnitReference: [${StrDateUnitReference}]" ; 
+    ### VerbosisMsg=${StrDbg} VerboseState=${IsVerbose} Verbosis ;
+     
+    #local StrDateIndicator=${StrDateIndicatorFormat/__INT__/${IntDayDiff:=0}}  ;
+    #StrDateIndicator=${StrDateIndicator/${StrDateUnitPattern}/${StrDateUnitReference}} ;
+   
+    if [ "${IsLoop:=False}" == "True" ] ; then 
+     StrDebugMsg="ArrayRange, nb-element:${#ArrayRange[@]}, hold [ ${ArrayRange[@]} ]\n" ;
+     
+     VerbMsg=${StrDebugMsg} VerbState=${IsVerbose} VerbHeader="${__call_locality[1]}-VERBOSE" VerbDev=/dev/stderr Verbosis  ;
+     
+     if (( ${ArrayRange[0]} > ${IntEndLoop} )) ; then 
+      OperRange=">=" ;
+      OperRangeIn="Intx--" ; 
+      OperBaseStart=${ArrayRange[$((${#ArrayRange[@]-1))}]} ;
+     fi
+     StrDebugMsg="Looping from ${OperBaseStart} to ${IntEndLoop} \n" ;
+     
+     VerbMsg=${StrDebugMsg} VerbState=${IsVerbose} VerbHeader="${__call_locality[1]}-VERBOSE" VerbDev=/dev/stderr Verbosis  ;
+     
+     for (( Intx=${OperBaseStart} ;  Intx ${OperRange} ${IntEndLoop} ; ${OperRangeIn} )) ; do 
+       #StrDateIndicator="${StrDateIndicatorFormat/__INT__/${Intx}}" ; 
+       
+       StrDateParsed=${StrDateParsed/__INT__/${Intx}} ; 
+       eval $( eval \
+        VTVValueEntry=${StrVarList},StrDateParsed \
+        VTVIsArrayStyleInsert=True  \
+        VTVIsValueReAssign=True     \
+        VTVIsValueToConvert=False   \
+        VTVIsQuotedValue=True       \
+        ValueToVariable ) DateFunc ; 
+     done
+    else 
+      eval $( eval \
+       VTVValueEntry=${StrVarList},StrDateParsed \
+       VTVIsArrayStyleInsert=True  \
+       VTVIsValueReAssign=True     \
+       VTVIsValueToConvert=False   \
+       VTVIsQuotedValue=True       \
+       ValueToVariable ) DateFunc ; 
+    fi
+   
+   }   
+   
+   #local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
+   local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+   local StrNameHelper="A way to get a date already marshalled" ;
+   
+   ### StrNameHelper=${StrNameHelper}
+   
+   if [ "${Arg0:=--startservices}" == "--help" ] ; then 
+    GVRIsName=True GetVarReference ${__call_locality[1]} ; 
+    echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+   elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+    eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+    echo -ne """${ArgGet}\n""" ; 			
+   elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+    eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
+   elif [ "${Arg0:=--startservices}" == "--startservices"  ] ; then 
+    ### Show the Application used function and their actual version. 
+    eval $( VersionApps ) ;
+    StrMsg=$( GetOtherDate --get ArrayMsg[0] ) ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${IsVerbose} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    ### Sanity check and clean-up during development. Common Prefixed Variable does exist in global scope
+    ### during their uses with internal declaration in local... But it's not because 
+    ### variable create in local accept variable in prefixed-name GOD... start in local too
+    ### extracted from by-default they are global and some seem to be consider more important
+    ### than new variable definition... 
+    unset $( ValueToVariable --list ; TagParser --list ; BoolVarTest --list ) ;
+
+    eval $( eval \
+      VTVIsArrayStyleInsert=True  \
+      VTVValueEntry=${StrVarList} \
+      VTVIsValueReAssign=True     \
+      VTVIsValueToConvert=False   \
+      VTVIsQuotedValue=True       \
+      ValueToVariable ) ${StrStartMain} ; 
+       
+   fi 
+ }
+
+ ### End-of if-${versionGOD}
 fi
 
 if [ "${versionGUUID:=0.0.2}" == "0.0.2" ] ; then 
