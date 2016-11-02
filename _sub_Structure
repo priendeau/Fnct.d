@@ -481,7 +481,7 @@ if [ "${versionGOD:=0.0.1}" == "0.0.2" ] ; then
   local StrDateUnitPattern=${GODDateUnitPatrn:=__DATEUNIT__};
   local StrDateUnitReference=${GODDateUnit:="day"};
   local StrDateFormat=${GODFormat:=%Y%m%d} ;
-  local StrDateIndicatorFormat=${GODReferenceFormat:=__INT__ ${StrDateUnitPattern}};
+  #local StrDateIndicatorFormat=${GODReferenceFormat:=__INT__ __DATE_FORMAT__};
   local IntDayDiff=${GODReference:=0} ; 
   local StrDateApps=${GODMainApp:=/bin/date} ; 
   local BoolScriptConversion=${GODIsScriptConv:=False} ; 
@@ -490,13 +490,14 @@ if [ "${versionGOD:=0.0.1}" == "0.0.2" ] ; then
   local StrScriptTagNano=${GODScriptNano:=--assign=UnitRef=__NANO_SEC_REF__} ;
   local IntUnitNSRef=${GODNanoSecRef:=1000000000} ;
   local StrScriptTagSupplied=${GODScriptDS:=--assign=DateSupplied=__START_REF__} ;
-  local StrTagOptManager=${GODBoolToTag:=BoolScriptIsDateSupplied:__FILTER_OPT__,BoolNanoRefScript:__FILTER_TIME_OPT__} ;
   local StrScriptFile=${GODScriptFile:=/etc/init.d/Fnct.D/awk-script/GODDateToNS.awk} ;
   local StrFilterApps=${GODFilterApps:=/usr/bin/gawk} ; 
   local StrDateStart=${GODStartRef:=now} ; 
   local StrPipeCmd=${GODDefaultPipe:='|'} ; 
-  local StrTagParser=${GODTagParserDef:=StrScriptTagNano:__FILTER_TIME_OPT__,StrScriptTagSupplied:__FILTER_OPT__,StrPipeCmd:__PIPE__,StrFilterApps:__FILTER__,StrScriptFile:__FILE_NAME__,IntUnitNSRef:__NANO_SEC_REF__,StrDateStart:__START_REF__} ; 
+  local StrTagParser=${GODTagParserDef:=StrDateApps:__APPS__,IntDateIndex:__INT__,StrScriptTagNano:__FILTER_TIME_OPT__,StrScriptTagSupplied:__FILTER_OPT__,StrPipeCmd:__PIPE__,StrFilterApps:__FILTER__,StrScriptFile:__FILE_NAME__,IntUnitNSRef:__NANO_SEC_REF__,StrDateStart:__START_REF__,StrDateFormat:__DATE_FORMAT__,StrDateUnitReference:__DATEUNIT__} ; 
   local StrScriptTpl=${GODFilterTag:=__FILTER__ __FILTER_OPT__ __FILTER_TIME_OPT__ -f __FILE_NAME__ } ;
+  local StrDateTpl=${GODDateTpl:="""__APPS__ +\"__DATE_FORMAT__\" --date '__START_REF__ __INT__ __DATEUNIT__'"""}
+  local StrTagOptManager=${GODBoolToTag:=IsLoop:__INT__,BoolScriptIsDateSupplied:__FILTER_OPT__,BoolNanoRefScript:__FILTER_TIME_OPT__} ;
   local IsLoop=${GODIsLoop:=False} ;
   local IntLoopRange=${GODLoop:=0,3} ;
   local IsVerbose=${GODVerbose:=False} ;
@@ -531,7 +532,7 @@ if [ "${versionGOD:=0.0.1}" == "0.0.2" ] ; then
     local StrPairVarTag ;
     local StrVar ;
     local StrTag ;
-    local StrEval="""${StrDateApps} +\"${StrDateFormat:=%Y%m%d}\" -d '${StrDateStart} ${StrDateParsed}'""" ; 
+    local StrEval=${StrDateTpl} ; 
     
     ### This is the array managing the Relation between Boolean declared in the 
     ### top-function and ability to suppress parsing of __TAG__ because 
@@ -552,8 +553,8 @@ if [ "${versionGOD:=0.0.1}" == "0.0.2" ] ; then
     ### where __APPS__ is the /bin/date and __FILTER__ the filter application
     ### to issue "something" from the output of __APPS__ . 
     
-    for (( intx=0 ; intx <= ${#ArrayBooleanTagRemove[@]}-1 ; intx++  )) ; do 
-      StrPairVarTag=${ArrayBooleanTagRemove[${intx}]} ; 
+    for (( Intx=0 ; Intx <= ${#ArrayBooleanTagRemove[@]}-1 ; Intx++  )) ; do 
+      StrPairVarTag=${ArrayBooleanTagRemove[${Intx}]} ; 
       StrTag=${StrPairVarTag/#[A-Za-z0-9]*:} ; 
       StrVar=${StrPairVarTag/%:${StrTag}} ;
       eval $( eval BVTIsPreambule=False                      \
@@ -594,45 +595,39 @@ if [ "${versionGOD:=0.0.1}" == "0.0.2" ] ; then
     
     local -a ArrayRange=( ${IntLoopRange/,/ } ) ;
     local OperRange="<=" ;  
-    local OperRangeIn="Intx++" ;
+    local OperRangeIn="IntDateIndex++" ;
     local OperBaseStart=${ArrayRange[0]} ;
     local IntEndLoop=$(( ${ArrayRange[$((${#ArrayRange[@]}-1))]} ));
-    local StrDateParsed=${StrDateIndicator};
+    #local StrDateParsed=${StrDateIndicator};
     local StrDebugMsg ;
     
-    ### First Step, applying Incremental Unit to application Date:
-    local StrDateIndicator=${StrDateIndicatorFormat} ;
-    StrDateIndicator=${StrDateIndicator/${StrDateUnitPattern}/${StrDateUnitReference}} ;
-    if [ "${IsLoop:=False}" == "False" ] ; then 
-     StrDateIndicator=${StrDateIndicator/__INT__/${IntDayDiff:=0}} 
-    fi
-    ### Temporary debug removed after found the bug.
-    ### local StrDbg="Content of StrDateIndicator: [${StrDateIndicator}]\nContent of StrDateUnitReference: [${StrDateUnitReference}]" ; 
-    ### VerbosisMsg=${StrDbg} VerboseState=${IsVerbose} Verbosis ;
-     
-    #local StrDateIndicator=${StrDateIndicatorFormat/__INT__/${IntDayDiff:=0}}  ;
-    #StrDateIndicator=${StrDateIndicator/${StrDateUnitPattern}/${StrDateUnitReference}} ;
+    ### Since the TagParser does convert the __INT__ into number from for_loop issueing
+    ### a variable IntDateIndex, it's propagated with ValueToVariable and does it's 
+    ### transformation from __INT__ to value IntDateIndex. 
+    ### In case the application it not sollicitated to loop to extract a precise date in
+    ### time, __INT__ is removed because it pass through the StrTagOptManager, 
+    ### the StrTagOptManager from DateFunc does removing __TAG__ if an Boolean option
+    ### it set to false. Noted if IsLoop==False, the StrDateTpl will be instantiated inside
+    ### DateFunc and will remove __INT__ . Here The If-statement for IsLoop is only to start
+    ### the Loop and alter IntDateIndex. 
    
     if [ "${IsLoop:=False}" == "True" ] ; then 
      StrDebugMsg="ArrayRange, nb-element:${#ArrayRange[@]}, hold [ ${ArrayRange[@]} ]\n" ;
-     
      VerbMsg=${StrDebugMsg} VerbState=${IsVerbose} VerbHeader="${__call_locality[1]}-VERBOSE" VerbDev=/dev/stderr Verbosis  ;
      
      if (( ${ArrayRange[0]} > ${IntEndLoop} )) ; then 
       OperRange=">=" ;
-      OperRangeIn="Intx--" ; 
+      OperRangeIn="IntDateIndex--" ; 
       OperBaseStart=${ArrayRange[$((${#ArrayRange[@]-1))}]} ;
      fi
      StrDebugMsg="Looping from ${OperBaseStart} to ${IntEndLoop} \n" ;
      
      VerbMsg=${StrDebugMsg} VerbState=${IsVerbose} VerbHeader="${__call_locality[1]}-VERBOSE" VerbDev=/dev/stderr Verbosis  ;
      
-     for (( Intx=${OperBaseStart} ;  Intx ${OperRange} ${IntEndLoop} ; ${OperRangeIn} )) ; do 
-       #StrDateIndicator="${StrDateIndicatorFormat/__INT__/${Intx}}" ; 
+     for (( IntDateIndex=${OperBaseStart} ;  IntDateIndex ${OperRange} ${IntEndLoop} ; ${OperRangeIn} )) ; do 
        
-       StrDateParsed=${StrDateParsed/__INT__/${Intx}} ; 
        eval $( eval \
-        VTVValueEntry=${StrVarList},StrDateParsed \
+        VTVValueEntry=${StrVarList},IntDateIndex \
         VTVIsArrayStyleInsert=True  \
         VTVIsValueReAssign=True     \
         VTVIsValueToConvert=False   \
@@ -675,8 +670,7 @@ if [ "${versionGOD:=0.0.1}" == "0.0.2" ] ; then
     ### variable create in local accept variable in prefixed-name GOD... start in local too
     ### extracted from by-default they are global and some seem to be consider more important
     ### than new variable definition... 
-    unset $( ValueToVariable --list ; TagParser --list ; BoolVarTest --list ) ;
-
+    #unset $( ValueToVariable --list ; TagParser --list ; BoolVarTest --list ) ; 
     eval $( eval \
       VTVIsArrayStyleInsert=True  \
       VTVValueEntry=${StrVarList} \
@@ -685,7 +679,7 @@ if [ "${versionGOD:=0.0.1}" == "0.0.2" ] ; then
       VTVIsQuotedValue=True       \
       ValueToVariable ) ${StrStartMain} ; 
        
-   fi 
+   fi
  }
 
  ### End-of if-${versionGOD}
