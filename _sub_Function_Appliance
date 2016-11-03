@@ -1214,8 +1214,12 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     StrScriptCpr=$( cat ${StrStartFile} | eval ${StrCompressionStream} ) ; 
     StrNewParserInfo=${StrTemplateShaStorage} ; 
     
-    StrDate=$( GODFormat="${StrDateFormat}" GetOtherDate ) ; 
-       
+    if [ "${versionGOD:=0.0.1}" == "0.0.1" ] ; then 
+      StrDate=$( GODFormat="${StrDateFormat}" GetOtherDate ) ; 
+    elif [ "${versionGOD:=0.0.1}" == "0.0.2" ] ; then 
+      StrDate=$( GODFormat="${StrDateFormat}" GODShowVersion=False GetOtherDate ) ; 
+    fi
+     
     StrNewParserInfo=${StrNewParserInfo//__DATE__/${StrDate}}
     StrNewParserInfo=${StrNewParserInfo//__SHA__/${StrCurrentSha}}
     StrNewParserInfo=${StrNewParserInfo//__FILENAME__/${StrStartFile}}
@@ -1403,7 +1407,12 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
         ###echo -ne "Shell-Script classified:__CURRSHA__,\n\tdon't required to start over."
       fi 
       sleep 5; 
-      StrDate=$( GODFormat="${StrDateFormat}" GetOtherDate ) ; 
+      ### StrDate=$( GODFormat="${StrDateFormat}" GetOtherDate ) ; 
+      if [ "${versionGOD:=0.0.1}" == "0.0.1" ] ; then 
+       StrDate=$( GODFormat="${StrDateFormat}" GetOtherDate ) ; 
+      elif [ "${versionGOD:=0.0.1}" == "0.0.2" ] ; then 
+       StrDate=$( GODFormat="${StrDateFormat}" GODShowVersion=False GetOtherDate ) ; 
+      fi
       ###echo -ne "UUID-Instance:__UUID__\nDate:__DATE__"
       ###echo -ne "Shell-scripts directive result:" ;
       StrMsg=${ArrayMsg[5]}
