@@ -726,7 +726,7 @@ function __old_vlc_rate()
  local IntRateInsert ; 
  local ArrayMsg=( )
  local StrDisplayHeader="DEBUG" ; 
- ArrayMsg[0]="List or range [ __ARRAY__ ], Nb Item: __ITEM__" ;
+ ArrayMsg[0]="Nb Item: __ITEM__ , List or range [ __ARRAY__ ] " ;
  ArrayMsg[1]="Rate Fixed to __RATE__, for __SEC__ seconds" ;
  ArrayMsg[2]="Pushing VLC-Cli command:[ __CMD__ ]"
  ArrayMsg[3]="Highest Rate :[ __INT__ ]"
