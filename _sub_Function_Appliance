@@ -826,6 +826,7 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
    local BoolSearchDate=${LSSIsSearchDate:=False} ; 
    local BoolSearchFile=${LSSIsSearchFile:=False} ; 
    local StrSearchQuery=${LSSSearchQuery:=None} ;  
+   local BoolImportStoreResult=${LSSIsImportStoreResult:=False} ; 
    local BoolHideAppsDebug=${LSSIsHideScriptOutput:=False} ; 
    local BoolDisplayDebug=${LSSIsDisplayDebug:=False} ; 
    local BoolDisplayIf=${LSSIsDisplayIfDebug:=False} ; 
@@ -845,7 +846,7 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
    local UUID=${UUID:=${StrUUIDInstance}} ; 
    local StrTemplateShaStorage="__DATE__ __SHA__ __FILENAME__ __FORMAT__ __FILECONTENT__" ;
    
-   local StrVarList="BoolLoopScriptOnState,IntDefaultErrorStateLoop,IntMaxLoopOnError,BoolIsScriptRun,StrFileAlterateVrf,BoolIsLockFile,StrLockFileId,BoolDisplayIf,BoolSearchId,BoolSearchDate,StrSearchQuery,BoolSearchFile,BoolListFile,BoolHideAppsDebug,StrVarList,StrStartFile,StrStoreResult,StrDateFormat,StrPathLoopState,StrUUIDInstance,StrTemplateShaStorage,StrDefaultFileFormat,StrShaSumExtract,BoolIsExtraction,StrApps,StrAppsCmprOpt,StrAppsDeCmprOpt,StrFilter,StrFilterCmprOpt,StrFilterDeCmprOpt,StrTagParser,StrCompressionTpl,StrDeCompressionTpl"
+   local StrVarList="BoolImportStoreResult,BoolLoopScriptOnState,IntDefaultErrorStateLoop,IntMaxLoopOnError,BoolIsScriptRun,StrFileAlterateVrf,BoolIsLockFile,StrLockFileId,BoolDisplayIf,BoolSearchId,BoolSearchDate,StrSearchQuery,BoolSearchFile,BoolListFile,BoolHideAppsDebug,StrVarList,StrStartFile,StrStoreResult,StrDateFormat,StrPathLoopState,StrUUIDInstance,StrTemplateShaStorage,StrDefaultFileFormat,StrShaSumExtract,BoolIsExtraction,StrApps,StrAppsCmprOpt,StrAppsDeCmprOpt,StrFilter,StrFilterCmprOpt,StrFilterDeCmprOpt,StrTagParser,StrCompressionTpl,StrDeCompressionTpl"
 
    local -a ArrayMsg=() ;
    ArrayMsg[0]="Entry in function" ; 
@@ -1253,6 +1254,33 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     
    }
    
+   function ImportStoreResult()
+   {
+    if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+     local -a ArrayArg=( $* ) ;
+     local -a __call_locality=( SCS ShellControlServices ${StrParentApps} ) ;
+     local Arg0="${ArrayArg[0]}" ; 
+    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+     eval $( eval CAFunctName=ImportStoreResult CAIsAddParent=True __Call_Argument ) ; 
+    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+     eval $( eval CAFunctName=ImportStoreResult CAIsAddParent=True CallArgument ) ;
+    fi  
+    StrMsg=$( LoopShellScript --get ArrayMsg[0] ) ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    
+    local StrEvalCmd="""local StrMsgTpl=\"Importing previous SHA1SUM result:__SHA__\" ;
+    local StrMsg ; 
+    local ArrayShaImport=( \$( cat \${StrStoreResult} | cut -d ' ' -f 2  ) ) ;
+    for StrShaSumPair in \${ArrayShaImport[@]} ; do 
+     StrMsg=\${StrMsgTpl} ; 
+     StrMsg=\${StrMsg//__SHA__/\${StrShaSumPair}} ;
+     VerbMsg=\"\${StrMsg}\" VerbHeader=\"\${__call_locality[1]}-IMPORT\" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+     ArrayCompiler[\${StrShaSumPair}]=\"OK\" ; 
+    done  ;
+    """ ; 
+    echo -ne  "${StrEvalCmd}" ; 
+     
+   }
    function ShellControlServices()
    {
     if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
@@ -1273,6 +1301,17 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     touch ${StrPathLoopState} ; 
 
     local -A ArrayCompiler  ; 
+    ### Load StrStoreResult, all Sha1Sum to avoid starting over some test. 
+    ### Also dependend of BoolImportStoreResult, and wrapped with a BoolVarTest.
+    eval $( BVTBoolVarName=\${BoolImportStoreResult:=False} \
+      BVTIsPreambule=False          \
+      BVTIsValueToVarAssert=True    \
+      BVTVTVVarA=${StrVarList}      \
+      BVTBoolCase=True              \
+      BVTVTFnctA=ImportStoreResult  \
+      BVTVTVTPLA="eval __TES__ eval __FNCT_ASRT__ __TEE__ " \
+      BoolVarTest                   ) ;  
+    
     local StrCurrentSha ; 
     local IntCompileState=0 ; 
     local IntCompileAdd=0 ;  
