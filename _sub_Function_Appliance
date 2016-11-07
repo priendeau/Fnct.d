@@ -742,11 +742,177 @@ fi
 
 
 if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then 
+
+ unset LSSServices ; 
+ function LSSServices()
+ {
+  function Verbosis()
+  {
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( Verb Verbosis ) ; 
+   local Arg0=${ArrayArg[0]} ; 
+   local StrMsg=${VerbMsg:=__TEXT__} ; 
+   local StrDevOut=${VerbDev:=/dev/stderr} ; 
+   local IsVerboseState=${VerbState:=False} ;
+   local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+   local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+   local IsDisplayFormatted=${VerbFormated:=True} ;
+   local IsAppendMode=${VerbAppendDev:=False} ; 
+   local IsExtendedOutput=${VerbExtendedOut:=False} ; 
+   local ArrayArg=( $* ) ; 
+   if [ "${IsVerboseState:=False}" == "True" ] ; then 
+    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+     if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
+     else  
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+     fi
+    else
+     if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+      if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+        echo -ne "${StrMsg}" ;  
+      else
+        echo "${StrMsg}" ;  
+      fi
+     else
+      if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+         echo -ne "${StrMsg}" >> ${StrDevOut} ;
+       else
+         echo "${StrMsg}" >> ${StrDevOut} ;
+       fi
+      else
+       if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+        echo -ne "${StrMsg}" > ${StrDevOut} ;
+       else
+        echo "${StrMsg}" > ${StrDevOut} ;
+       fi 
+      fi
+     fi 
+    fi 
+   fi
+  } 
+  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
+  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( LSSS LSSServices ) ;
+   local Arg0="${ArrayArg[0]}" ; 
+   local StrParentApps=${__call_locality[1]} ;
+   local StrStartMain=${LSSFuncStart:=__main_StartServices} ; 
+  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+   eval $( eval CAFunctName=LSSServices CAIsAddParent=False __Call_Argument ) ; 
+  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+   eval $( eval CAFunctName=LSSServices CAIsAddParent=False CallArgument ) ;
+  fi  
+     
+  local StrPathLoopState=${LSSSInstancePath:=/var/cache/Fnct.D} ;  
+  local StrTextZenityEmpty="""<span font_family=\"monospace\" size=\"large\">List of LoopShellScript is empty</span>""" ;
+  local StrTextZenityList="""Select UUID instance to Shutdown""" ; 
+  local StrUUID="" ; 
+  local StrVarList="StrPathLoopState,StrTextZenityEmpty,StrTextZenityList" ;
+  
+  local -a ArrayMsg ;
+  
+  ArrayMsg[0]="Entry in function" ;   
+  
+  function __main_StartServices()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( CFCD CurlFtpContentDownload ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+   fi 
+   StrMsg=$( LoopShellScript --get ArrayMsg[0] ) ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   
+   local StrZenityListUUID=$( find ${StrPathLoopState} -maxdepth 1 -type f -iname "Loop-LSS*" -printf "FALSE %f\n" | sed 's/-/ /g' | cut -d ' ' -f 1,4-8 | sed 's/ /-/g;s/FALSE-/FALSE /g' | tr '[:cntrl:]' ' '  ) ; 
+   StrMsg="Element(s) inside StrZenityListUUID:( __STR__)" ;
+   StrMsg=${StrMsg//__STR__/${StrZenityListUUID}} 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   local IntLenZenityList=${#StrZenityListUUID}
+   ### IntLenZenityList is size of all UUID file, and minimal form is "FALSE XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX" 43 chars long
+   if [ ${IntLenZenityList:=0} -gt 43 ] ; then 
+    local ArrayServicesStop=( $( zenity --width=400 --height=400 --list --text=${StrTextZenityList} --column="Selection" --column="UUID Instance" --separator=' ' --checklist --multiple  ${StrZenityListUUID} ) ) ; 
+    local IntCountID=${#ArrayServicesStop[@]} ; 
+    
+    StrMsg="Nb Element inside ArrayServicesStop: __INT__" ;
+    StrMsg=${StrMsg//__INT__/${#ArrayServicesStop[@]}} 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    
+    if [ ${IntCountID:=0} -gt 0 ] ; then 
+     for (( intx=0 ; intx <= ${IntCountID}-1 ; intx++ )) ; do 
+      StrUUID=${ArrayServicesStop[${intx}]} ; 
+      UUID=${StrUUID} LoopShellScript --stopservices ;
+     done 
+    fi 
+   else
+    zenity --info --text="${StrTextZenityEmpty}" ; 
+   fi 
+  }
+  function __main_StopServices()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Main __main_StopServices ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True __Call_Argument ) ;
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True CallArgument ) ;
+   fi 
+   StrMsg="Entry in function" ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+  }
+      
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+  local StrNameHelper="${__call_locality[1]}\tAn application to manage LoopShellScript instance.";
+  local StrSummary="This application does survey your LoopShellScript Instance By UUID, Selecting the UUID instance from Zenity List will terminate the application." ; 
+  local StrSynopsis="This application is also perfect to clean residual instance from LoopShellScript terminated interrupted or aged.";
+  local StrDescription="Not finished yet." ;
+  
+   
+  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   GVRIsName=True     \
+   GVRIsSummary=True  \
+   GVRIsSynopsis=True \
+   GVRIsDesc=True     \
+   GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;	
+  elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
+   eval $( eval \
+     VTVIsArrayStyleInsert=True  \
+     VTVValueEntry=${StrVarList} \
+     VTVIsValueReAssign=True     \
+     VTVIsValueToConvert=False   \
+     VTVIsWhiteList=True         \
+     VTVWhiteListTransfert=UUID  \
+     ValueToVariable ) __main_StopServices ; 
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+   # eval $( eval VersionApps ) ; 
+   StrMsg=$( LoopShellScript --get ArrayMsg[0] ) ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   eval $( eval \
+     VTVIsArrayStyleInsert=True  \
+     VTVValueEntry=${StrVarList} \
+     VTVIsValueReAssign=True     \
+     VTVIsValueToConvert=False   \
+     ValueToVariable ) ${StrStartMain}
+  fi   
+ }
  
  unset Verbosis GetSha1Sum GetFileFormatCmd FileDeCapsulation DataExtractionTool SearchByFile SearchDate SearchId ListFile FileWriterSupport ShellControlServices VersionApps __main_StopServices __main_StartServices ; 
  function LoopShellScript()
  {
-   function Verbosis()
+  function Verbosis()
   {
    local -a ArrayArg=( $* ) ;
    local -a __call_locality=( Verb Verbosis ) ; 
@@ -872,6 +1038,7 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
    ArrayMsg[20]="Compression :( cat __FILE__ | __STREAMCMD__ )" ; 
    ArrayMsg[21]="Execute Script Step __STEP__ of __STEPMAX__" ;
    ArrayMsg[22]="!!! Warning IsLoopOnErrorType is Activated And require to know the ErrorLevel or your script !!!\n\tIsLoopOnErrorType is Activated, and Will loop by detecting ErrorLevel=__INT__ and will loop __LOOP__ time(s) to certify this problem." ;
+   ArrayMsg[23]="Evaluated Command: __CMD__" ; 
    
    function GetSha1Sum()
    {
@@ -1269,15 +1436,34 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
     
     local StrEvalCmd="""local StrMsgTpl=\"Importing previous SHA1SUM result:__SHA__\" ;
+    local StrMsgDup=\"Existing Duplicate of SHA1SUM: __SHA__, not importing\" ; 
     local StrMsg ; 
     local ArrayShaImport=( \$( cat \${StrStoreResult} | cut -d ' ' -f 2  ) ) ;
+    local StrTestTbl ;
+    local IntSetNotAdd=0 ; 
     for StrShaSumPair in \${ArrayShaImport[@]} ; do 
      StrMsg=\${StrMsgTpl} ; 
      StrMsg=\${StrMsg//__SHA__/\${StrShaSumPair}} ;
      VerbMsg=\"\${StrMsg}\" VerbHeader=\"\${__call_locality[1]}-IMPORT\" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
-     ArrayCompiler[\${StrShaSumPair}]=\"OK\" ; 
-    done  ;
-    """ ; 
+     IntSetNotAdd=0 ; 
+     for StrPairTest in \${!ArrayCompiler[@]} ; do 
+      if [ \"\${StrPairTest:=None}\" == \"\${StrShaSumPair}\" ] ; then 
+       IntSetNotAdd=1 ; 
+      fi ; 
+     done 
+     if [ \${IntSetNotAdd:=0} -ne 1 ] ; then 
+      ArrayCompiler[\${StrShaSumPair}]=\"OK\" ;  
+     else
+      StrMsg=\${StrMsgDup} ;
+      VerbMsg=\"\${StrMsg//__SHA__/\${StrShaSumPair}}\" VerbHeader=\"\${__call_locality[1]}-IMPORT\" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+     fi ;  
+    done """ ; 
+    
+    local StrEvalTpl=$( LoopShellScript --get ArrayMsg[23] ) ; 
+    StrMsg=${StrEvalTpl} ; 
+    StrMsg=${StrMsg//__CMD__/${StrEvalCmd}} ;
+    VerbMsg=${StrMsg} VerbHeader="${__call_locality[1]}-EVALCMD" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    
     echo -ne  "${StrEvalCmd}" ; 
      
    }
