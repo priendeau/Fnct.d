@@ -1450,7 +1450,7 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
       if [ \"\${StrPairTest:=None}\" == \"\${StrShaSumPair}\" ] ; then 
        IntSetNotAdd=1 ; 
       fi ; 
-     done 
+     done ;
      if [ \${IntSetNotAdd:=0} -ne 1 ] ; then 
       ArrayCompiler[\${StrShaSumPair}]=\"OK\" ;  
      else
