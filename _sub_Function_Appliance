@@ -829,13 +829,19 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
    StrMsg=$( LoopShellScript --get ArrayMsg[0] ) ; 
    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
    
+   local IntGrepResult=$( find ${StrPathLoopState} -maxdepth 1 -type f -iname "Loop-LSS*" | egrep -ic "[a-fA-F0-9]*-[a-fA-F0-9]*-[a-fA-F0-9]*-[a-fA-F0-9]*-[a-fA-F0-9]*" ) ; 
+   
    local StrZenityListUUID=$( find ${StrPathLoopState} -maxdepth 1 -type f -iname "Loop-LSS*" -printf "FALSE %f\n" | sed 's/-/ /g' | cut -d ' ' -f 1,4-8 | sed 's/ /-/g;s/FALSE-/FALSE /g' | tr '[:cntrl:]' ' '  ) ; 
-   StrMsg="Element(s) inside StrZenityListUUID:( __STR__)" ;
-   StrMsg=${StrMsg//__STR__/${StrZenityListUUID}} 
+   
+   StrMsg="Element(s) inside StrZenityListUUID:( __STR__) Detected Item: __INT__" ;
+   StrMsg=${StrMsg//__STR__/${StrZenityListUUID}} ;
+   StrMsg=${StrMsg//__INT__/${IntGrepResult}} ;
+   
    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
    local IntLenZenityList=${#StrZenityListUUID}
-   ### IntLenZenityList is size of all UUID file, and minimal form is "FALSE XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX" 43 chars long
-   if [ ${IntLenZenityList:=0} -gt 43 ] ; then 
+   ### IntLenZenityList is size of all UUID file, and minimal form is 
+   ### "FALSE XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX" 43 chars long
+   if [ ${IntGrepResult:=0} -gt 0 ] ; then 
     local ArrayServicesStop=( $( zenity --width=400 --height=400 --list --text=${StrTextZenityList} --column="Selection" --column="UUID Instance" --separator=' ' --checklist --multiple  ${StrZenityListUUID} ) ) ; 
     local IntCountID=${#ArrayServicesStop[@]} ; 
     
