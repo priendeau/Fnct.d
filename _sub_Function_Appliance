@@ -1833,3 +1833,779 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
 ### end-if versionLSS
 fi 
 
+if [ "${versionNM:=0.0.0}" == "0.0.0" ] ; then 
+  
+ unset NtpdMonitor ; 
+ function NtpdMonitor()
+ {
+   local StrHeader=$( ntpq -pn | head -n 2 ) ; 
+   local StrContent ; 
+   while [ 1 ] ; do 
+    StrContent=$( ntpq -pn | head -n 7 | tail -n 5 | sort -g -k 5 ) ; 
+    echo -ne "${StrHeader}\n${StrContent}\n"  ; 
+    sleep 5 ; 
+    clear ; 
+   done
+ }
+elif [ "${versionNM:=0.0.0}" == "0.0.1" ] ; then 
+ IntIsFunc=$( declare -F | egrep -c "NtpdMonitor" ) ; 
+ if [ ${IntIsFunc:=0} -gt 0 ] ; then 
+  unset $( NtpdMonitor --list  ) ; 
+  unset $( GetVarReference NtpdMonitor | egrep -i "Function Member:" -A1 | tail -n1 | sed -r 's/,/ /g;s/[\t\ ]+/ /g' ) ; 
+ fi 
+ unset IntIsFunc ;
+ 
+ function NtpdMonitor()
+ {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( NM NtpdMonitor ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+    local StrParentApps=${__call_locality[1]} ;
+    local StrStartMain=${NMFuncStart:=__main_StartServices} ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=NtpdMonitor CAIsAddParent=False __Call_Argument ) ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=NtpdMonitor CAIsAddParent=False CallArgument ) ;
+   fi 
+
+  local StrVarList=""
+  
+  function __main_StartServices()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+   fi 
+   local StrHeader=$( ntpq -pn | head -n 2 ) ; 
+   local StrContent ; 
+   while [ 1 ] ; do 
+    StrContent=$( ntpq -pn | head -n 7 | tail -n 5 | sort -g -k 5 ) ; 
+    echo -ne "${StrHeader}\n${StrContent}\n"  ; 
+    sleep 5 ; 
+    clear ; 
+   done
+  
+  }
+    local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+    local StrNameHelper;
+    local StrSummary;
+    local StrSynopsis;
+    local StrDescription;
+    
+    
+    if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+     GVRIsName=False     \
+     GVRIsSummary=False  \
+     GVRIsSynopsis=False \
+     GVRIsDesc=False     \
+     GetVarReference ${__call_locality[1]} ; 
+     VerbMsg="${StrSwitchMessages}" VerbExtendedOut=True VerbState=True VerbEvalForm=False VerbFormated=False VerbDev=/dev/stderr Verbosis ;
+    elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+     eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+     echo -ne """${ArgGet}\n""" ;
+    elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+     eval $( __GetVarReferenceList ) ;	
+    elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+     VerbMsg=${ArrayMsg[0]} VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolShowEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
+     eval $( eval \
+       VTVIsQuotedValue=True       \
+       VTVIsArrayStyleInsert=True  \
+       VTVValueEntry=${StrVarList} \
+       VTVIsValueReAssign=True     \
+       VTVIsValueToConvert=False   \
+       ValueToVariable ) ${StrStartMain} ; 
+    fi  
+
+ }
+elif [ "${versionNM:=0.0.0}" == "0.0.2" ] ; then 
+ IntIsFunc=$( declare -F | egrep -c "NtpdMonitor" ) ; 
+ if [ ${IntIsFunc:=0} -gt 0 ] ; then 
+  unset $( NtpdMonitor --list  ) ; 
+  unset $( GetVarReference NtpdMonitor | egrep -i "Function Member:" -A1 | tail -n1 | sed -r 's/,/ /g;s/[\t\ ]+/ /g' ) ; 
+ fi 
+ unset IntIsFunc ;
+  
+ function NtpdMonitor()
+ {
+   function Verbosis()
+   {
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Verb Verbosis ) ; 
+    local Arg0=${ArrayArg[0]} ; 
+    local StrMsg=${VerbMsg:=__TEXT__} ; 
+    local StrDevOut=${VerbDev:=/dev/stderr} ; 
+    local IsVerboseState=${VerbState:=False} ;
+    local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+    local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+    local IsDisplayFormatted=${VerbFormated:=True} ;
+    local IsAppendMode=${VerbAppendDev:=False} ; 
+    local IsExtendedOutput=${VerbExtendedOut:=False} ; 
+    local ArrayArg=( $* ) ; 
+    if [ "${IsVerboseState:=False}" == "True" ] ; then 
+     if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+      if [ "${IsAppendMode:=False}" == "True" ] ; then 
+        echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
+      else  
+        echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+      fi
+     else
+      if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+       if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+         echo -ne "${StrMsg}" ;  
+       else
+         echo "${StrMsg}" ;  
+       fi
+      else
+       if [ "${IsAppendMode:=False}" == "True" ] ; then 
+        if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+          echo -ne "${StrMsg}" >> ${StrDevOut} ;
+        else
+          echo "${StrMsg}" >> ${StrDevOut} ;
+        fi
+       else
+        if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+         echo -ne "${StrMsg}" > ${StrDevOut} ;
+        else
+         echo "${StrMsg}" > ${StrDevOut} ;
+        fi 
+       fi
+      fi 
+     fi 
+    fi
+   } 
+   ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
+  
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( NM NtpdMonitor ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+    local StrParentApps=${__call_locality[1]} ;
+    local StrStartMain=${NMFuncStart:=__main_StartServices} ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=NtpdMonitor CAIsAddParent=False __Call_Argument ) ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=NtpdMonitor CAIsAddParent=False CallArgument ) ;
+   fi 
+  
+  local StrPathLoopState=${NMLoopFile:=/var/cache/Fnct.D/Loop-NM-__UUID__} ;
+  local StrUUIDInstance=${NMUUIDInstance:=Last-instance-UUID};
+  local IntDefaultSleep=${NMSleepTime:=5} ; 
+  local BoolShowEntry=${NMShowEntry:=False} ; 
+  local BoolDisplayDebug=${NMDisplayDebug:=False} ; 
+  local BoolShowInstance=${NMShowInstance:=True} ; 
+  local UUID=${UUID:=${StrUUIDInstance}} ; 
+  local StrVarList="UUID,BoolShowInstance,BoolDisplayDebug,BoolShowEntry,IntDefaultSleep,StrUUIDInstance,UUID,StrPathLoopState" ; 
+  
+  local -a ArrayMsg ;
+  ArrayMsg[0]="Entry in function" ;  
+  ArrayMsg[1]="Shutdown Instance ID:__UUID__, file: __FILE__" ;
+  ArrayMsg[2]="Instance ID:__UUID__" ;
+  
+  function __main_StopServices()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Main __main_StopServices ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True __Call_Argument ) ;
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True CallArgument ) ;
+   fi 
+   StrMsg=$( NtpdMonitor --get ArrayMsg[0] )
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolShowEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+
+   local StrUUID=${UUID};
+   if [ "${StrUUID:=None}" == "None" ] ; then 
+    StrUUID=${StrUUIDInstance} ; 
+   fi 
+   local StrPathLoopState=${StrPathLoopState//__UUID__/${StrUUID}} ; 
+   StrMsg=$( NtpdMonitor --get ArrayMsg[1] ) ; 
+   StrMsg=${StrMsg//__UUID__/${StrUUID}} ; 
+   StrMsg=${StrMsg//__FILE__/${StrPathLoopState}} ; 
+    
+   VerbMsg=${StrMsg} VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolShowInstance} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   if [ -f ${StrPathLoopState} ] ; then 
+    rm -f ${StrPathLoopState} ; 
+   fi 
+  }
+     
+  function __main_StartServices()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+   fi 
+   StrMsg=$( NtpdMonitor --get ArrayMsg[0] ) ;
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolShowEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+
+   local StrUUID=$( GetUAppsRegisterName=${StrParentApps} GetUTimeBased=True GetULoop=False GetUUID ) ; 
+   
+   StrMsg=$( NtpdMonitor --get ArrayMsg[2] ) ; 
+   StrMsg=${StrMsg//__UUID__/${StrUUID}} ; 
+   VerbMsg=${StrMsg} VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ;
+   
+   StrPathLoopState=${StrPathLoopState//__UUID__/${StrUUID}}
+   touch ${StrPathLoopState} ; 
+   
+  
+   ### Draw The Header.  
+   local StrHeader=$( /usr/bin/ntpq -pn | head -n 2 ) ; 
+   local StrContent ; 
+   local StrMsg ; 
+   while [ -f ${StrPathLoopState} ] ; do 
+    StrContent=$( /usr/bin/ntpq -pn | /usr/bin/head -n 7 | /usr/bin/tail -n 5 | /usr/bin/sort -g -k 5 ); 
+    StrMsg="${StrHeader}\n${StrContent}\n" ; 
+    VerbMsg=${StrMsg}  VerbEvalForm=False VerbFormated=False VerbState=True VerbDev=/dev/stderr  Verbosis ;
+    sleep ${IntDefaultSleep} ; 
+    clear ; 
+   done 
+  } 
+
+    local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+    local StrNameHelper="NtpdMonitor\t\tUtility To loop collected information from ntp.conf server information fro Network Time Protocol deamon";
+    local StrSummary="Display a All column sorted by the column When to seek for weak server or instable server reference. " ; 
+    local StrSynopsis="This is only using ntpq and basic parameter, was also used to monitor a python application.";
+    local StrDescription="NtpdMonitor is uniquely to test the name ntpdshm python's module. Standing for Ntpd shared-memory a swig port of C code compiled memory reference. This was also to monitor the \"Off by one second\" script. It does produce a reference time different than behavior. By example where code looped inside a Python application does reduce by 1000 ms (or 1 sec) your Ntpd server and does reflect with command ntpq -nm. Also project started in 2016-2017 to simulate virtual station with qemu application, it does simulate problems of multiple stations experiencing synchronisation problems with File mapping Deamon Protocol like Unix NFS, samba protocol and different alternative to minimize synchronisation. Therefore it require different IP (or virtual localhost) with projected delay/jitter an this application does report if a server cause a fallback and/or cause delay in synchronisation." ;
+    
+    
+    if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+     GVRIsName=True     \
+     GVRIsSummary=True  \
+     GVRIsSynopsis=True \
+     GVRIsDesc=True     \
+     GetVarReference ${__call_locality[1]} ; 
+     VerbMsg="${StrSwitchMessages}" VerbExtendedOut=True VerbState=True VerbEvalForm=False VerbFormated=False VerbDev=/dev/stderr Verbosis ;
+    elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+     eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+     echo -ne """${ArgGet}\n""" ;
+    elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+     eval $( __GetVarReferenceList ) ;	
+    elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
+     eval $( eval \
+       VTVIsQuotedValue=True \
+       VTVIsArrayStyleInsert=True  \
+       VTVValueEntry=${StrVarList} \
+       VTVIsValueReAssign=True     \
+       VTVIsValueToConvert=False   \
+       VTVIsWhiteList=True         \
+       VTVWhiteListTransfert=UUID  \
+       ValueToVariable ) __main_StopServices ; 
+    elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+     VerbMsg=${ArrayMsg[0]} VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolShowEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
+     eval $( eval \
+       VTVIsQuotedValue=True       \
+       VTVIsArrayStyleInsert=True  \
+       VTVValueEntry=${StrVarList} \
+       VTVIsValueReAssign=True     \
+       VTVIsValueToConvert=False   \
+       ValueToVariable ) ${StrStartMain} ; 
+    fi  
+
+ }
+
+fi 
+### end-if versionNM
+
+
+unset $( Bzip2DataTool --list  ) ; 
+unset $( GetVarReference Bzip2DataTool | egrep -i "Function Member:" -A1 | tail -n1 | sed -r 's/,/ /g;s/[\t\ ]+/ /g' ) ; 
+
+if [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then 
+
+ function Bzip2DataTool()
+ {
+   function Verbosis()
+   {
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Verb Verbosis ) ; 
+    local Arg0=${ArrayArg[0]} ; 
+    local StrMsg=${VerbMsg:=__TEXT__} ; 
+    local StrDevOut=${VerbDev:=/dev/stderr} ; 
+    local IsVerboseState=${VerbState:=False} ;
+    local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+    local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+    local IsDisplayFormatted=${VerbFormated:=True} ;
+    local IsAppendMode=${VerbAppendDev:=False} ; 
+    local IsExtendedOutput=${VerbExtendedOut:=False} ; 
+    local ArrayArg=( $* ) ; 
+    if [ "${IsVerboseState:=False}" == "True" ] ; then 
+     if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+      if [ "${IsAppendMode:=False}" == "True" ] ; then 
+        echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
+      else  
+        echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+      fi
+     else
+      if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+       if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+         echo -ne "${StrMsg}" ;  
+       else
+         echo "${StrMsg}" ;  
+       fi
+      else
+       if [ "${IsAppendMode:=False}" == "True" ] ; then 
+        if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+          echo -ne "${StrMsg}" >> ${StrDevOut} ;
+        else
+          echo "${StrMsg}" >> ${StrDevOut} ;
+        fi
+       else
+        if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+         echo -ne "${StrMsg}" > ${StrDevOut} ;
+        else
+         echo "${StrMsg}" > ${StrDevOut} ;
+        fi 
+       fi
+      fi 
+     fi 
+    fi
+   } 
+   ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( B2DT Bzip2DataTool ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+    local StrParentApps=${__call_locality[1]} ;
+    local StrStartMain=${B2DTFuncStart:=__main_StartServices} ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=Bzip2DataTool CAIsAddParent=False __Call_Argument ) ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=Bzip2DataTool CAIsAddParent=False CallArgument ) ;
+   fi 
+
+  ### Variable common to All.
+  local StrPipeCmd=${B2DTPipeCmd:=\|} ;
+  local StrRegXBlockFileContent=${B2DTRegXFile:='"^[\t\ ]*writing block [0-9]*"'} ;
+  local StrRegXBlockHeader=${B2DTRegXHeader:='"^[\t\ ]*block [0-9]*"'} ;
+  local StrSubRegExpFileContent=${B2DTSubRegXFile:='"block _INT__ to"'}
+  local StrSubRegExpHeader=${B2DTSubRegXHeader:='"block __INT__ runs"'}
+  local StrAppsHead=${B2DTAppsRangeStart:=/usr/bin/head} ;
+  local StrAppsHeadOpt=${B2DTAppsRangeStartOpt:=-n 1} ;
+  local StrAppsTail=${B2DTAppsRangeEnd:=/usr/bin/tail} ;
+  local StrAppsTailOpt=${B2DTAppsRangeEndOpt:=-n 1} ;
+
+  ### Variable Member for BlockFile,  BlockInformation
+  local StrBlockFileRef=${B2DTFileCount:=block-count.txt} ; 
+   
+  ### Variable Member for BlockExtraction 
+  local StrFilter2Apps=${B2DTFilter2:=/usr/bin/cut} ; 
+  local StrFilter2AppsOpt=${B2DTFilter2Opt:=-d \' \' -f 3} ; 
+  local StrAppsRange=${B2DTAppsRange:=/bin/grep} ;
+  local StrFilter1Apps=${B2DTFilter1:=/bin/sed} ; 
+  local StrFilter1AppsOpt=${B2DTFilter1Opt:=-r \'s/\ +/ /g\'} ; 
+  
+  ### Variable Member for BlockFile
+  local StrFileRecover=${B2DTBzip2File:=PathDocuments/work-PathDocuments-maxiste.tar.bz2} ;
+  local StrAppsRecover=${B2DTAppsRecovery:=/bin/bzip2recover} ; 
+  local BoolMoveBlocToPath=${B2DTMoveBlockToPath:=False} ; 
+  local StrBlockPath=${B2DTBlockLocation:=./} ; 
+
+  ### Variable Member for BlockInformation 
+  local StrFilter3Apps=${B2DTFilter3:=/usr/bin/cut} ; 
+  local StrFilter3AppsOpt=${B2DTFilter3Opt:=-d \' \' -f 6,8} ; 
+  local StrFilter4Apps=${B2DTFilter3:=/usr/bin/cut} ; 
+  local StrFilter4AppsOpt=${B2DTFilter3Opt:=-d \' \' -f 6} ; 
+  local StrFilter5Apps=${B2DTFilter5:=/usr/bin/sed} ;
+  local StrFilter5AppsOpt=${B2DTFilter5Opt:='s/^['\`''\'']//g;s/.['\`''\'']//g'}
+  
+  ### Pair Tpl/Parser for BlockFile
+  local StrRecoverParser=${B2DTAppsRecoverParser:=StrBlockFileRef:__BLOCK_FILE__,StrFileRecover:__FILE_RECOVER__,StrAppsRecover:__APPS_RECOVER__} ;
+  local StrAppsRecoverTpl=${B2DTAppsRecoverTpl:='__APPS_RECOVER__ __FILE_RECOVER__'} ;
+  
+  ### Pair Tpl/Parser for BlockExtraction 
+  local StrRangeParser=${B2DTRangeParser:=StrPipeCmd:__PIPE__,StrAppsRange:__APPS_RANGE__,StrRegXBlockHeader:__REGEXP__,StrBlockFileRef:__BLOCK_FILE__,StrFilter1Apps:__FILTER1__,StrFilter1AppsOpt:__FILTER1OPT__,StrFilter2Apps:__FILTER2__,StrFilter2AppsOpt:__FILTER2OPT__} ;
+  local StrAppsRangeTpl=${B2DTAppsRangeTpl:=__APPS_RANGE__ __REGEXP__ __BLOCK_FILE__ __PIPE__ __RANGETYPEAPPS__ __RANGETYPEAPPSOPT__ __PIPE__ __FILTER1__ __FILTER1OPT__ __PIPE__ __FILTER2__ __FILTER2OPT__} ;
+  
+  ### Pair Tpl/Parser for BlockInformation
+  local StrBlockInforParser=${B2DTInfoParser:=StrAppsRange:__APPS_RANGE__,StrBlockFileRef:__BLOCK_FILE__,StrPipeCmd:__PIPE__,StrFilter1Apps:__FILTER1__,StrFilter1AppsOpt:__FILTER1OPT__,StrFilter3Apps:__FILTER3__,StrFilter3AppsOpt:__FILTER3OPT__,StrFilter4Apps:__FILTER4__,StrFilter4AppsOpt:__FILTER4OPT__,StrFilter5Apps:__FILTER5__,StrFilter5AppsOpt:__FILTER5OPT__} ;
+  local StrAppsBlockInfoTpl=${B2DTAppsBlockInfo:=__APPS_RANGE__ __REGEXP__ __BLOCK_FILE__ __PIPE__ __APPS_RANGE__ \"__REGEXP2__\" __PIPE__ __POST_FILTER__}
+  local StrBlkInfoTplRank=${B2DTAppsBlkInfoRnkTpl:= __FILTER1__ __FILTER1OPT__ __PIPE__ __FILTER3__ __FILTER3OPT__}
+  local StrBlkInfoTplHeader=${B2DTAppsBlkInfoHdrTpl:=__FILTER1__ __FILTER1OPT__ __PIPE__ __FILTER4__ __FILTER4OPT__ __PIPE__ __FILTER5__ __FILTER5OPT__}
+  
+  ### Bolean to change Event controlled inside __main_StartServices 
+  local BoolGenerateBlockFile=${B2DTGenerateBlockFile:=False} ; 
+
+  
+  ### Common Boolean to allow display some debug content 
+  local BoolDisplayDebug=${B2DTDisplayDebug:=False} ; 
+  local BoolParserInfo=${B2DTParserDebug:=False}
+  local BoolShowEntry=${B2DTShowEntryFunc:=True} ; 
+  
+  local StrVarList="StrBlockFileRef,StrFileRecover,StrRecoverParser,StrAppsRecoverTpl,StrAppsRecover,StrRegXBlockHeader,StrRegXBlockFileContent,StrAppsHead,StrAppsTail,StrAppsRange,StrRangeParser,BoolDisplayDebug,BoolShowEntry,BoolParserInfo,BoolGenerateBlockFile,StrAppsRangeTpl,StrPipeCmd,StrFilter2AppsOpt,StrFilter2Apps,StrFilter1AppsOpt,StrFilter1Apps,StrAppsTailOpt,StrAppsHeadOpt" ;
+  
+  local -a ArrayMsg ;
+  ArrayMsg[0]="Entry in function" ;   
+  ArrayMsg[1]="Remain Parser Extracted from : \n\tBEExtraction:__VALUE__\n\tcontent:__TAG__" ; 
+  ArrayMsg[2]="CmdLine: __CMD__";
+  ArrayMsg[3]="Remain Template from StrAppsRecoverTpl: content:__TAG__" ; 
+  ArrayMsg[4]="Remain Template from __VARNAME__: content:__TAG__" ; 
+  ArrayMsg[5]="Inspecting Variable:__VAR__, Value: __VALUE__" ; 
+  
+  
+  local -A ArrayFileRank;
+  ArrayFileRank["start"]="StrAppsHeadOpt:__RANGETYPEAPPSOPT__,StrAppsHead:__RANGETYPEAPPS__" ;
+  ArrayFileRank["end"]="StrAppsTailOpt:__RANGETYPEAPPSOPT__,StrAppsTail:__RANGETYPEAPPS__" ;
+  ArrayFileRank["Rank"]="StrBlkInfoTplRank:__POST_FILTER__,StrRegXBlockHeader:__REGEXP__,StrSubRegExpHeader:__REGEXP2__" ;
+  ArrayFileRank["Header"]="StrBlkInfoTplHeader:__POST_FILTER__,StrRegXBlockFileContent:__REGEXP__,StrSubRegExpFileContent:__REGEXP2__" ; 
+
+  ### Required to test the BlockInformation from Prefixed-variable Query 
+  ### B2DTFuncStart=BlockInformation
+  local -A ArrayFileHeader ; 
+  
+  function BlockInformation()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( BI BlockInformation ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=BlockInformation CAIsAddParent=True __Call_Argument ) ;
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=BlockInformation CAIsAddParent=True CallArgument ) ;
+   fi 
+   StrMsg=$( LoopShellScript --get ArrayMsg[0] ) ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolShowEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   local IntStartBlock=${BIStartBlock:=0} ; 
+   local IntEndBlock=${BIEndBlock:=0} ; 
+   local StrArrayName=${BIArrayName:=ArrayFileHeader} ;
+   
+   ### StrIdName is under This name all paired information
+   ### from Query inside StrBlockFileRef will be stored inside 
+   ### StrArrayName. 
+   ### like form ArrayFileHeader[BlockID]=${ArrayFileHeader[BlockID]};StrIdName:Value
+   ### StrIdName can be either location / file 
+   ### When StrIdName = location, value are Begin,End of a Block
+   ### When StrIdName = file , value are FileName. 
+   local StrIdName=${BIIndexStoreName:=location} ; 
+     
+   ### StrFieldLineExtr is a default index in an associative 
+   ### array where some extra definition for TagParser 
+   ### are stored. Depending of call of BlockInformation
+   ### with BILineExtractionField=Rank or 
+   ### BILineExtractionField=Hearder it extract 
+   ### where is the HEADER goes inside a File ( Start location and End location of the date)
+   ### while calling BILineExtractionField=Hearder will give the 
+   ### file-namededicated to the block to place inside our 
+   ### re-constructed Bzip2 file. 
+   local StrFieldLineExtr=${BILineExtractionField:=Rank} ;
+   
+   local StrTagParser=$( Bzip2DataTool --get ArrayFileRank[${StrFieldLineExtr}] ) ; 
+   StrTagParser="${StrTagParser},${StrBlockInforParser}" ;
+   
+   ### Value Inspection
+   StrMsgTpl=$( Bzip2DataTool --get ArrayMsg[5] ) ;
+   StrMsg=${StrMsgTpl//__VAR__/StrBlockInforParser} ;   
+   StrMsg=${StrMsg//__VALUE__/${StrBlockInforParser}} ;   
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-Variable" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   
+   ### Value Inspection
+   StrMsgTpl=$( Bzip2DataTool --get ArrayMsg[5] ) ;
+   StrMsg=${StrMsgTpl//__VAR__/ArrayFileRank[${StrFieldLineExtr}]} ;   
+   StrMsg=${StrMsg//__VALUE__/${StrTagParser}} ;   
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-Variable" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+
+
+    
+   ### Require to Parse the Command Query to allow having one 
+   ### The IntX to parse from __INT__ from sub-regular-expression 
+   ### StrSubRegExpHeader or StrSubRegExpFileContent . 
+   local StrVarNameP=StrParser${__call_locality[0]} ;
+   eval """local ${StrVarNameP}=\"${StrAppsBlockInfoTpl}\"""" ; 
+   
+   StrMsgTpl=$( Bzip2DataTool --get ArrayMsg[4] ) ;
+   StrMsg=${StrMsgTpl//__VARNAME__/${StrVarNameP}} ;   
+   eval "StrMsg=\${StrMsg//__TAG__/\${${StrVarNameP}}}" ;   
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-TPL" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+
+   StrMsg=${StrMsgTpl//__VARNAME__/StrTagParser} ;   
+   StrMsg=${StrMsg//__TAG__/${StrTagParser}};
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-Parser" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   
+   eval $( eval TPListTag=${StrTagParser}  \
+       TPArrayName=Array${__call_locality[0]}  \
+       TPVarNameParsed="${StrVarNameP}"     \
+       TPDisplayDebug=${BoolParserInfo}     \
+       TPDisplayParserNotice=${BoolParserInfo} \
+       TagParser ) ;   
+
+   StrMsg=$( Bzip2DataTool --get ArrayMsg[2] ) ; 
+   eval """StrMsg=\${StrMsg//__CMD__/\${${StrVarNameP}}}"""  ;
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-CMDLINE" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   
+   local IntX=0 ; 
+   local StrLoopParser ; 
+   local StrValueFromCmd ; 
+   local StrAllEvalCmd ; 
+   local StrStartEvalCmd ="""local StrContentArray;""" ; 
+   
+   for (( IntX=${IntStartBlock} ; IntX <= ${IntEndBlock} ; IntX++ )) ; do 
+     StrValueFromCmd="" ; 
+     eval StrLoopParser=\${${StrVarNameP}} ; 
+     StrLoopParser=${StrLoopParser//__INT__/${IntX}};
+     eval "StrValueFromCmd=\$( eval ${StrLoopParser} )" ; 
+     
+     if [ "${StrIdName:=location}" == "location" ] ; then 
+      ### in case StrIdName==location we do own 2 data, begin and end of a 
+      ### block, this require to add a CSV to separate the information
+      StrValueFromCmd=${StrValueFromCmd// /,} ; 
+     fi 
+     ### External part, this are echoed and evaluated by the calling 
+     ### Member which is __main_StartServices or called by B2DTFuncStart which is 
+     ### located at root level of the function. ( in this case another Associative 
+     ### array must exist or information won't rely exist if BlockInformation is 
+     ### calling nobody ) . 
+     eval StrPartBodyEvalCmd="""
+     StrContentArray=\${${StrArrayName}[${IntX}]} ; 
+     if [ \"${StrContentArray:=None}\" == \"None\" ] ; then
+      ${StrArrayName}[${IntX}]=\"${StrIdName}:${StrValueFromCmd};\" ;
+     else
+      ${StrArrayName}[${IntX}]=\";${StrIdName}:${StrValueFromCmd}\";
+     fi ;
+     """ ; 
+     StrBodyEvalCmd="${StrBodyEvalCmd}${StrPartBodyEvalCmd}" ; 
+   done 
+   StrAllEvalCmd="${StrStartEvalCmd}${StrBodyEvalCmd}"
+   echo -ne "${StrAllEvalCmd}" ; 
+  }
+
+  
+  function BlockFile( )
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( BF BlockFile ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=BlockFile CAIsAddParent=True __Call_Argument ) ;
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=BlockFile CAIsAddParent=True CallArgument ) ;
+   fi
+   StrMsg=$( Bzip2DataTool --get ArrayMsg[0] ) ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolShowEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   
+   local StrVarNameP=StrParser${__call_locality[0]} ;
+   eval """local ${StrVarNameP}=\"${StrAppsRecoverTpl}\"""" ; 
+   
+   StrMsg=$( Bzip2DataTool --get ArrayMsg[3] ) ;
+   StrMsg=${StrMsg//__TAG__/${StrAppsRecoverTpl}} ;   
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-TPL" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   
+   eval $( eval TPListTag=${StrRecoverParser}   \
+       TPArrayName=Array${__call_locality[0]}    \
+       TPVarNameParsed="${StrVarNameP}" \
+       TPDisplayDebug=${BoolParserInfo}        \
+       TPDisplayParserNotice=${BoolParserInfo} \
+       TagParser ) ;   
+   
+   StrMsg=$( Bzip2DataTool --get ArrayMsg[2] ) ; 
+   eval """StrMsg=\${StrMsg//__CMD__/\${${StrVarNameP}}}"""  ;
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-CMDLINE" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   
+   #eval "\${${StrVarNameP}}" ;    
+   eval "\${${StrVarNameP}}" 2> ${StrBlockFileRef}  ; 
+   
+  
+  }
+  
+  function BlockExtraction()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( BE BlockExtraction ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=BlockExtraction CAIsAddParent=True __Call_Argument ) ;
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=BlockExtraction CAIsAddParent=True CallArgument ) ;
+   fi
+   ###grep "^[\t\ ]*block [0-9]*" block-count.txt | head -n1  
+   StrMsg=$( Bzip2DataTool --get ArrayMsg[0] ) ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolShowEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   
+   local StrParserBE=${StrAppsRangeTpl} ;
+   
+   local StrExtractionType=${BEExtraction:=start} ; 
+   
+   local StrTagParser=$( Bzip2DataTool --get ArrayFileRank[${StrExtractionType}] ) ; 
+   StrTagParser="${StrRangeParser},${StrTagParser}" ;
+   
+   StrMsg=$( Bzip2DataTool --get ArrayMsg[1] ) ;
+   StrMsg=${StrMsg//__VALUE__/${StrExtractionType}} ; 
+   StrMsg=${StrMsg//__TAG__/${StrTagParser}} ; 
+    
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-CMDLINE" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   
+   eval $( eval TPListTag=${StrTagParser}        \
+       TPArrayName=Array${__call_locality[0]}    \
+       TPVarNameParsed="StrParserBE"  \
+       TPDisplayDebug=${BoolParserInfo}        \
+       TPDisplayParserNotice=${BoolParserInfo} \
+       TagParser ) ; 
+   
+   StrMsg=$( Bzip2DataTool --get ArrayMsg[2] ) ; 
+   StrMsg=${StrMsg//__CMD__/${StrParserBE}} ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-CMDLINE" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+       
+   eval ${StrParserBE} ; 
+  }
+  
+  function __main_StartServices()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+   fi 
+   StrMsg=$( Bzip2DataTool --get ArrayMsg[0] ) ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolShowEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+
+   ### This Associative array will store By Index :
+   ### Index ---> referred to Block ID
+   ### each index will hold, 
+   ### 1-> block start-offset 
+   ### 2-> end-offset
+   ### 3-> corresponding segment 
+   ### Required to test the BlockInformation from __main_StartServices function by
+   ### not using  
+   ### B2DTFuncStart=BlockInformation but B2DTFuncStart=__main_StartServices which is 
+   ### the default case. 
+   local -A ArrayFileHeader ;
+   
+   local -a ArrayGroupAssociate=( "Rank" "Header" ) ;  
+   
+   ### Used for Association in BlockExtraction function require
+   ### BEExtraction Prefixed parameter for seeking in head or bottom
+   ### of the file to search for first and last block information . 
+   local -a ArrayIndex=( IntStartBlock:start IntEndBlock:end ) ; 
+   local IntStartBlock ;
+   local IntEndBlock ; 
+   local StrLeftPair ; 
+   local StrRightPair ;
+   
+   local StrVarBEList="StrAppsRangeTpl,StrExtractionType,StrRangeParser,BoolShowEntry,BoolParserInfo,BoolDisplayDebug" ; 
+   local StrVarBFList="StrBlockFileRef,StrAppsRecoverTpl,StrRecoverParser,BoolDisplayDebug,BoolParserInfo,BoolShowEntry" ; 
+   local StrVarBIList="StrBlockInforParser,StrAppsBlockInfoTpl,BoolDisplayDebug,BoolParserInfo,BoolShowEntry" ; 
+   
+   ### In case Block-File don't exist or require to generate a new-one . 
+   eval $( eval                 \
+     BVTIsPreambule=False       \
+     BVTIsValueToVarAssert=True \
+     BVTBoolVarName=\${BoolGenerateBlockFile:=False} \
+     BVTBoolCase=True           \
+     BVTVTFnctA=BlockFile       \
+     BVTVTVVarA=${StrVarBFList}  \
+     BoolVarTest                ) ; 
+   
+   
+   for StrIndexIter in ${ArrayIndex[@]} ; do 
+     StrLeftPair=${StrIndexIter/%:[a-zA-Z0-9]*} ; 
+     StrRightPair=${StrIndexIter/#${StrLeftPair}:} ;
+     eval ${StrLeftPair}=$( eval $( eval \
+       VTVIsQuotedValue=True \
+       VTVIsArrayStyleInsert=True  \
+       VTVValueEntry=${StrVarBEList}  \
+       VTVIsValueReAssign=True     \
+       VTVIsValueToConvert=False   \
+       VTVIsWhiteList=True         \
+       VTVWhiteListTransfert=UUID  \
+       ValueToVariable ) BEExtraction="${StrRightPair}" BlockExtraction ) ; 
+   done 
+
+
+   StrMsg="Block List:[ Start:__INTSTART__, End:__INTEND__ ]" ; 
+   StrMsg=${StrMsg//__INTSTART__/${IntStartBlock}} ; 
+   StrMsg=${StrMsg//__INTEND__/${IntEndBlock}} ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+  
+   eval $( eval            \
+       VTVIsQuotedValue=True       \
+       VTVIsArrayStyleInsert=True  \
+       VTVValueEntry=${StrVarBEList}  \
+       VTVIsValueReAssign=True     \
+       VTVIsValueToConvert=False   \
+       VTVIsQuotedValue=True       \
+       ValueToVariable ) BIStartBlock=${IntStartBlock} \
+                         BIEndBlock=5                  \
+                         BILineExtractionField=Rank    \
+                         BIIndexStoreName=location     \
+                         BIArrayName=ArrayFileHeader   \
+                         BlockInformation ; 
+  ### replace BIEndBlock=${IntEndBlock} by BIEndBlock=5
+  }
+  
+  function __main_StopServices()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Main __main_StopServices ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True __Call_Argument ) ;
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True CallArgument ) ;
+   fi 
+   StrMsg=$( LoopShellScript --get ArrayMsg[0] ) ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolShowEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+  
+  }
+
+   local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+   local StrNameHelper="Bzip2DataTool\n\tAn Application that recover from Bzip2 encapsulation problem or corruption. ";
+   local StrSummary="This application does using Recovery application to generated external header information and use mechanical application to recombine the file." ; 
+   local StrSynopsis="This application does also try to save Tar file and archive under tar file-format to analyse the file with bzip2recover or any application that do wor on same method then bzip2recover and generate an output of part-header and file allocation of part-content and recombine, assumming this application does remove the corrupted information.";
+   local StrDescription="more to come..." ;
+    
+    
+    if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+     GVRIsName=True     \
+     GVRIsSummary=True  \
+     GVRIsSynopsis=True \
+     GVRIsDesc=True     \
+     GetVarReference ${__call_locality[1]} ; 
+     echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+    elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+     eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+     echo -ne """${ArgGet}\n""" ;
+    elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+     eval $( __GetVarReferenceList ) ;	
+    elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
+     eval $( eval \
+       VTVIsQuotedValue=True \
+       VTVIsArrayStyleInsert=True  \
+       VTVValueEntry=${StrVarList} \
+       VTVIsValueReAssign=True     \
+       VTVIsValueToConvert=False   \
+       VTVIsWhiteList=True         \
+       VTVWhiteListTransfert=UUID  \
+       ValueToVariable ) __main_StopServices ; 
+    elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+     #eval $( eval VersionApps ) ; 
+     StrMsg=$( LoopShellScript --get ArrayMsg[0] ) ; 
+     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolShowEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+     eval $( eval \
+       VTVIsQuotedValue=True \
+       VTVIsArrayStyleInsert=True  \
+       VTVValueEntry=${StrVarList} \
+       VTVIsValueReAssign=True     \
+       VTVIsValueToConvert=False   \
+       ValueToVariable ) ${StrStartMain}
+    fi  
+ }
+fi
+### End of versionB2DT
