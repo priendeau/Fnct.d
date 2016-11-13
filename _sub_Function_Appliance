@@ -1847,7 +1847,9 @@ if [ "${versionNM:=0.0.0}" == "0.0.0" ] ; then
     clear ; 
    done
  }
+
 elif [ "${versionNM:=0.0.0}" == "0.0.1" ] ; then 
+ 
  IntIsFunc=$( declare -F | egrep -c "NtpdMonitor" ) ; 
  if [ ${IntIsFunc:=0} -gt 0 ] ; then 
   unset $( NtpdMonitor --list  ) ; 
@@ -1924,6 +1926,7 @@ elif [ "${versionNM:=0.0.0}" == "0.0.1" ] ; then
 
  }
 elif [ "${versionNM:=0.0.0}" == "0.0.2" ] ; then 
+ 
  IntIsFunc=$( declare -F | egrep -c "NtpdMonitor" ) ; 
  if [ ${IntIsFunc:=0} -gt 0 ] ; then 
   unset $( NtpdMonitor --list  ) ; 
@@ -2119,10 +2122,22 @@ fi
 ### end-if versionNM
 
 
-unset $( Bzip2DataTool --list  ) ; 
-unset $( GetVarReference Bzip2DataTool | egrep -i "Function Member:" -A1 | tail -n1 | sed -r 's/,/ /g;s/[\t\ ]+/ /g' ) ; 
+#unset $( Bzip2DataTool --list  ) ; 
+#unset $( GetVarReference Bzip2DataTool | egrep -i "Function Member:" -A1 | tail -n1 | sed -r 's/,/ /g;s/[\t\ ]+/ /g' ) ; 
 
-if [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then 
+if [ "${versionB2DT:=0.0.0}" == "0.0.0" ] ; then 
+ echo -ne "\n\033[01;33m**************************************************\n\033[01;43mNo Bzip2DataTool / Bzip2DataTool in version 0.0.0\n\033[00m\033[01;33m**************************************************\033[00m\n" ; 
+elif [ "${versionB2DT:=0.0.0}" == "0.0.1" ] ; then 
+ echo -ne "\n\033[01;33m************************************************************\n\033[00m\033[00m \033[01;45mNo Regression of Bzip2DataTool available in version 0.0.1\033[00m\n\033[00m\033[00m\033[01;33m************************************************************\033[00m\n\033[00m\033[00m" ; 
+
+elif [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then 
+
+ IntIsFunc=$( declare -F | egrep -c "Bzip2DataTool" ) ; 
+ if [ ${IntIsFunc:=0} -gt 0 ] ; then 
+  unset $( StrPrefix=$( GetStdPrefixName Bzip2DataTool ) ; GetVarReference Bzip2DataTool | egrep -i "^Variable" | sed 's/\(Variable \)\('${StrPrefix}'[a-zA-Z0-9]*\)\( ,\)/\2/g' | tr '[:cntrl:]' ' '  ) ; 
+  unset $( GetVarReference Bzip2DataTool | egrep -i "Function Member:" -A1 | tail -n1 | sed -r 's/,/ /g;s/[\t\ ]+/ /g' ) ; 
+ fi 
+ unset IntIsFunc StrPrefix ;
 
  function Bzip2DataTool()
  {
@@ -2189,7 +2204,7 @@ if [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then
   local StrPipeCmd=${B2DTPipeCmd:=\|} ;
   local StrRegXBlockFileContent=${B2DTRegXFile:='"^[\t\ ]*writing block [0-9]*"'} ;
   local StrRegXBlockHeader=${B2DTRegXHeader:='"^[\t\ ]*block [0-9]*"'} ;
-  local StrSubRegExpFileContent=${B2DTSubRegXFile:='"block _INT__ to"'}
+  local StrSubRegExpFileContent=${B2DTSubRegXFile:='"block __INT__ to"'}
   local StrSubRegExpHeader=${B2DTSubRegXHeader:='"block __INT__ runs"'}
   local StrAppsHead=${B2DTAppsRangeStart:=/usr/bin/head} ;
   local StrAppsHeadOpt=${B2DTAppsRangeStartOpt:=-n 1} ;
@@ -2315,13 +2330,11 @@ if [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then
    StrMsg=${StrMsgTpl//__VAR__/ArrayFileRank[${StrFieldLineExtr}]} ;   
    StrMsg=${StrMsg//__VALUE__/${StrTagParser}} ;   
    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-Variable" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
-
-
     
    ### Require to Parse the Command Query to allow having one 
    ### The IntX to parse from __INT__ from sub-regular-expression 
    ### StrSubRegExpHeader or StrSubRegExpFileContent . 
-   local StrVarNameP=StrParser${__call_locality[0]} ;
+   local StrVarNameP="StrParser${__call_locality[0]}" ;
    eval """local ${StrVarNameP}=\"${StrAppsBlockInfoTpl}\"""" ; 
    
    StrMsgTpl=$( Bzip2DataTool --get ArrayMsg[4] ) ;
@@ -2348,13 +2361,15 @@ if [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then
    local StrLoopParser ; 
    local StrValueFromCmd ; 
    local StrAllEvalCmd ; 
-   local StrStartEvalCmd ="""local StrContentArray;""" ; 
+   local StrStartEvalCmd ="""local StrContentArray ;""" ; 
    
    for (( IntX=${IntStartBlock} ; IntX <= ${IntEndBlock} ; IntX++ )) ; do 
      StrValueFromCmd="" ; 
      eval StrLoopParser=\${${StrVarNameP}} ; 
      StrLoopParser=${StrLoopParser//__INT__/${IntX}};
-     eval "StrValueFromCmd=\$( eval ${StrLoopParser} )" ; 
+     eval "StrValueFromCmd=\$( ${StrLoopParser} )" ; 
+     StrMsg="Variable StrValueFromCmd, value:[__VALUE__]" ; 
+     VerbMsg="${StrMsg//__VALUE__/${StrValueFromCmd}}" VerbHeader="${__call_locality[1]}-CMDLINE-LOOP" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
      
      if [ "${StrIdName:=location}" == "location" ] ; then 
       ### in case StrIdName==location we do own 2 data, begin and end of a 
@@ -2366,15 +2381,52 @@ if [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then
      ### located at root level of the function. ( in this case another Associative 
      ### array must exist or information won't rely exist if BlockInformation is 
      ### calling nobody ) . 
-     eval StrPartBodyEvalCmd="""
+     
+     ### Suggested replacement:
+     ### Not implemented yet but should give same result. 
+     ### - This taking the advantage of Life-Cycle Termination of BVTVarName="StrContentArray" allowing 
+     ### another variable to exist.
+     ### Imply to Add BVTIsPrmblVarCylceEnd=True, 
+     ### must require BVTNewVarAssertion=VariableName in this case \${StrArrayName}[\${IntX}] is 
+     ### the Associative array with it's allocation. Index is in Int but should be about anything
+     ### 
+     ### Exceptionnally here the type of If-Test is based on Integer format rather than String ? 
+     ###  - It's evaluation from code injection does not instantly evaluate Deep Variable field
+     ### Inside the __main_StartServices, line to call the code for BlockInformation stipulate 
+     ### eval $( eval $(
+     ###        VTV
+     ###        ...
+     ###        ValueToVariable ) BI
+     ###                          ...
+     ###                          BlockInformation ) 
+     ### A double evaluation with Double Executive brace which remove per evaluation a back-quoted 
+     ### '\' Back-slash and from un-back-slashed variable it transform it's value and remain back-quoted, 
+     ### back-slashed variable will lost their '\' or last evaluation or an error should pop-out... 
+     ### So this case suggest working with variable without quote to let back-quoting with back-slash
+     ### not interfering in evaluation. So it's important to prefer having default value exist in 
+     ### in common uses of BVTBoolVarName and forget about possibility to replace a variable ${__VAR__}
+     ### by $__VAR__ it's exclued from codeability and this code is entirely existing for full brace 
+     ### the variable by their Expanser operator ( expanser are '{' and '}' ) .
+     ### 
+     ### suggestion for replacement :
+     ### StrPartBodyEvalCmd=$( BVTIsPreambule=True BVTIdType=4 BVTVarName="StrContentArray" BVTIsPrmblVarCylceEnd=True BVTNewVarAssertion=\${StrArrayName}[\${IntX}] BVTVarHold=\${ArrayFileHeader[\${IntX}]} BVTBoolVarName=\\\"\\\\\${StrContentArray:=None}\\\" BVTIfType=Int BVTBoolCase=\\\"None\\\" BVTBoolAssertion="\"\${StrIdName}:\${StrValueFromCmd};\""  BoolVarTest ; \
+     ### BVTIsPreambule=False BVTIdType=5 BVTVarName=\${StrArrayName}[\${IntX}] BVTVarHold=\${ArrayFileHeader[\${IntX}]}   BVTBoolAssertion="\\\";\${StrIdName}:\${StrValueFromCmd}\\\""  BoolVarTest ) ; 
+     ### 
+     ### And for the exam, of course removing the eval from StrPartBodyEvalCmd prevent parsing the 
+     ### String uselessly and allow the generated list of code for adding Block locating inside the 
+     ### Associative Array does display the code by removing the other eval from calling BlockInformation
+     ### or leaving the eval does let exist the assciative array with the information. 
+     ### 
+     
+     StrPartBodyEvalCmd="""
      StrContentArray=\${${StrArrayName}[${IntX}]} ; 
-     if [ \"${StrContentArray:=None}\" == \"None\" ] ; then
+     if [ \"\${StrContentArray:=None}\" == \"None\" ] ; then
       ${StrArrayName}[${IntX}]=\"${StrIdName}:${StrValueFromCmd};\" ;
      else
       ${StrArrayName}[${IntX}]=\";${StrIdName}:${StrValueFromCmd}\";
      fi ;
      """ ; 
-     StrBodyEvalCmd="${StrBodyEvalCmd}${StrPartBodyEvalCmd}" ; 
+     StrBodyEvalCmd="${StrBodyEvalCmd} ${StrPartBodyEvalCmd}" ; 
    done 
    StrAllEvalCmd="${StrStartEvalCmd}${StrBodyEvalCmd}"
    echo -ne "${StrAllEvalCmd}" ; 
@@ -2509,7 +2561,8 @@ if [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then
      BVTBoolVarName=\${BoolGenerateBlockFile:=False} \
      BVTBoolCase=True           \
      BVTVTFnctA=BlockFile       \
-     BVTVTVVarA=${StrVarBFList}  \
+     BVTVTVVarA=${StrVarBFList} \
+     BVTIdType=0                \
      BoolVarTest                ) ; 
    
    
@@ -2527,25 +2580,38 @@ if [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then
        ValueToVariable ) BEExtraction="${StrRightPair}" BlockExtraction ) ; 
    done 
 
-
+                       
    StrMsg="Block List:[ Start:__INTSTART__, End:__INTEND__ ]" ; 
    StrMsg=${StrMsg//__INTSTART__/${IntStartBlock}} ; 
    StrMsg=${StrMsg//__INTEND__/${IntEndBlock}} ; 
    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
   
-   eval $( eval            \
-       VTVIsQuotedValue=True       \
-       VTVIsArrayStyleInsert=True  \
-       VTVValueEntry=${StrVarBEList}  \
-       VTVIsValueReAssign=True     \
-       VTVIsValueToConvert=False   \
-       VTVIsQuotedValue=True       \
-       ValueToVariable ) BIStartBlock=${IntStartBlock} \
-                         BIEndBlock=5                  \
-                         BILineExtractionField=Rank    \
-                         BIIndexStoreName=location     \
-                         BIArrayName=ArrayFileHeader   \
-                         BlockInformation ; 
+   eval $( eval $( VTVIsQuotedValue=True       \
+           VTVIsArrayStyleInsert=True  \
+           VTVValueEntry=${StrVarBEList}  \
+           VTVIsValueReAssign=True     \
+           VTVIsValueToConvert=False   \
+           VTVIsQuotedValue=True       \
+           ValueToVariable ) BIStartBlock=${IntStartBlock} \
+                             BIEndBlock=${IntEndBlock}      \
+                             BILineExtractionField=Rank    \
+                             BIIndexStoreName=location     \
+                             BIArrayName=ArrayFileHeader   \
+                             BlockInformation ) ; 
+  
+  ### 
+  ### This test purposes is present to test BlockInformation Correct work.
+  ### It does generate enough line in reason of 1 per Assignation to the 
+  ### ArrayFileHeader and the braced if surrounding the way it store the informaion
+  ### ( by possibility to call BILineExtractionField=Rank BlockInformation & 
+  ### BILineExtractionField=Header BlockInformation ) in different order and 
+  ### Shall have correct syntax to allow a CSV-filter to extracteither location
+  ### or filename without having empty csv definied to ';' semicolon due to presence
+  ### of ',' for value, ':' for pair of value ( Name for this storage and it's value)
+  ### where name will differ if it's Rank or Header to be stored . 
+  for StrIndex in ${!ArrayFileHeader[@]} ; do 
+   echo -ne "ArrayFileHeader[${StrIndex}]=${ArrayFileHeader[${StrIndex}]}\n" ; 
+  done 
   ### replace BIEndBlock=${IntEndBlock} by BIEndBlock=5
   }
   
