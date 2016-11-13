@@ -1496,6 +1496,7 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     ### Load StrStoreResult, all Sha1Sum to avoid starting over some test. 
     ### Also dependend of BoolImportStoreResult, and wrapped with a BoolVarTest.
     eval $( BVTBoolVarName=\${BoolImportStoreResult:=False} \
+      BVTIdType=0                   \
       BVTIsPreambule=False          \
       BVTIsValueToVarAssert=True    \
       BVTVTVVarA=${StrVarList}      \

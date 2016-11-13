@@ -208,7 +208,7 @@ function ValueParser()
 				local ArrayArg=( $* ) ; 
 				local Arg0=${ArrayArg[0]} ;
 				local StrDebug=${GetScopeDebug:=False}
-    eval $( BVTVarName=StrReturn BVTVarHold="0" BVTBoolVarName=\${Arg0:=local} BVTBoolCase="global" BVTBoolAssertion="1" BoolVarTest ) ;
+    eval $( BVTIdType=0 BVTVarName=StrReturn BVTVarHold="0" BVTBoolVarName=\${Arg0:=local} BVTBoolCase="global" BVTBoolAssertion="1" BoolVarTest ) ;
 				echo -ne "${StrReturn}" ; 
 
 		}
@@ -1355,7 +1355,7 @@ function MakeLink()
            BVTBoolVarName=\${IsRenameDest} \
            BVTBoolCase=True \
            BVTBoolAssertion='$( mv ${StrFile} ${StrFileReplace} )' \
-           BVTScopeTest=local \
+           BVTScopeTest=local BVTIdType=0 \
            BoolVarTest ) ;   
    eval "${StrEval}" ;
   else
@@ -1374,7 +1374,7 @@ function MakeLink()
           BVTBoolVarName=\${IsMake} \
           BVTBoolCase=True \
           BVTBoolAssertion='$( ${StrAction} )' \
-          BVTScopeTest=local \
+          BVTScopeTest=local BVTIdType=0       \
           BoolVarTest ) ; 
   
  }
@@ -1466,8 +1466,8 @@ function AutoChown()
 		local Arg0=${ArrayArg[0]};
   local ArrayPath=( ${StrPathList//:/ } ) ; 
   
-  eval $( BVTVarName=StrRecurrent BVTVarHold='-R' BVTBoolVarName=\${IsPathRecurr} BVTBoolCase=False BVTBoolAssertion='' BVTScopeTest=local BoolVarTest ) ; 
-  eval $( BVTVarName=IntXWh BVTVarHold='1' BVTBoolVarName='\${IsLoop}' BVTBoolCase=False BVTBoolAssertion='0' BVTScopeTest=local BoolVarTest ) ; 
+  eval $( BVTIdType=0 BVTVarName=StrRecurrent BVTVarHold='-R' BVTBoolVarName=\${IsPathRecurr} BVTBoolCase=False BVTBoolAssertion='' BVTScopeTest=local BoolVarTest ) ; 
+  eval $( BVTIdType=0 BVTVarName=IntXWh BVTVarHold='1' BVTBoolVarName='\${IsLoop}' BVTBoolCase=False BVTBoolAssertion='0' BVTScopeTest=local BoolVarTest ) ; 
   
   while [ ${IntXWh} -eq 1 ] ; do 
     for (( x=0 ; x <= ${#ArrayPath[@]}-1 ; x++ )) ; do 
@@ -1762,7 +1762,7 @@ function ZenityShellEval()
     BVTBoolVarName=\${IsAddFootPrint} \
     BVTBoolCase=False \
     BVTBoolAssertion='$( _NoFootPrint )' \
-    BVTScopeTest=local \
+    BVTScopeTest=local BVTIdType=0       \
     BoolVarTest ) ;
  } 
  ###
@@ -1785,13 +1785,14 @@ function ZenityShellEval()
   local IntRes=1 ; 
   local IntShellRes=0 ; 
   local IntShellQuit=0 ; 
-  eval $( BVTVarName=StrEditableAttr \
-          BVTVarHold=\'--editable\' \
+  eval $( BVTIdType=0                \
+          BVTVarName=StrEditableAttr \
+          BVTVarHold=\'--editable\'  \
           BVTBoolVarName=\${IsEditField:=True} \
-          BVTBoolCase=False \
-          BVTBoolAssertion='' \
-          BVTScopeTest=local \
-          BoolVarTest ) ; 
+          BVTBoolCase=False          \
+          BVTBoolAssertion=''        \
+          BVTScopeTest=local         \
+          BoolVarTest                ) ; 
   #local -a ArrayMsg=( ) ; 
   
   if [ ! -f ${StrFileTmp} ] ; then 
@@ -1904,12 +1905,13 @@ function ZenityShellEval()
    fi ; 
    sleep ${IntSleep} ; 
    if [ ${IntRes:=1} -eq 0 -a ${IntShellRes:=1} -eq 0 ] ; then 
-     eval $( eval \
-     BVTVarName=IntRes \
-     BVTVarHold='0' \
+     eval $( eval       \
+     BVTIdType=0        \
+     BVTVarName=IntRes  \
+     BVTVarHold='0'     \
      BVTBoolVarName=\${IsLoopOnSucc:=False} \
-     BVTBoolCase=False \
-     BVTBoolAssertion='1' \
+     BVTBoolCase=False  \
+     BVTBoolAssertion='1'       \
      BVTScopeTest=local \
      BoolVarTest ) ; 
    fi 
@@ -2011,12 +2013,13 @@ function ZenityShellEval()
   ### Also Note f1161962-0ad8-11e3-b166-001b3875b29c introduce explanation on mutation of BoolVarTest from True/False test into None and moving uuid-file-id variable inside BVTBoolAssertion
   ### 
   ### 
-  eval $( eval BVTVarName=StrFileTmp \
+  eval $( eval BVTIdType=0        \
+          BVTVarName=StrFileTmp   \
           BVTVarHold='${StrFilePath}/${StrFileName}' \
-          BVTBoolVarName=\${StrFileName:=None} \
-          BVTBoolCase=None \
+          BVTBoolVarName=\${StrFileName:=None}       \
+          BVTBoolCase=None        \
           BVTBoolAssertion='${StrFilePath}/${TmpUUIDEdit}' \
-          BVTScopeTest=local \
+          BVTScopeTest=local      \
           BoolVarTest ) ;  
   StrMsg="Value StrFileName:__FILE__" ; 
   StrMsg=${StrMsg//__FILE__/${StrFileName}} ; 
@@ -2038,7 +2041,7 @@ function ZenityShellEval()
   ###  
   ### so Building a if - else  - fi ; require 2 call of BoolVarTest .   
 
-  local StrActionClause=$( BVTConclude=';' BVTIsPreambule=False BVTBoolVarName="\${IsCheckSumOnly:=False}" BVTIdType=4 BVTBoolCase=True BVTIsValueToVarAssert=True BVTVTVVarA="StrFilePath,StrFileName" BVTVTFnctA=MainCheckSum  BoolVarTest ; BVTConclude=';' BVTIsPreambule=False BVTIsValueToVar=False BVTIsValueToVarAssert=True BVTIdType=5 BVTVTVVarA="${StrVarList}" BVTVTFnctA="MainEditor" BoolVarTest ) ; 
+  local StrActionClause=$( BVTIdType=4 BVTConclude=';' BVTIsPreambule=False BVTBoolVarName="\${IsCheckSumOnly:=False}" BVTBoolCase=True BVTIsValueToVarAssert=True BVTVTVVarA="StrFilePath,StrFileName" BVTVTFnctA=MainCheckSum  BoolVarTest ; BVTIdType=5 BVTConclude=';' BVTIsPreambule=False BVTIsValueToVar=False BVTIsValueToVarAssert=True BVTVTVVarA="${StrVarList}" BVTVTFnctA="MainEditor" BoolVarTest ) ; 
   
   ### Should replace next statement :
   # if [ "${IsCheckSumOnly}" == "True" ] ; then 
@@ -4082,22 +4085,24 @@ function GkSuZenityLoader()
 		local ArrayArg=( $* ) ; 
 		local __call_locality=( L Loader ) ; 
   local Arg0=${ArrayArg[0]} ; 
-  eval $( eval BVTVarName=StrAppsLd \ 
-          BVTDisplayIf=${BoolDisplayDebug} \
+  eval $( eval BVTIdType=0          \
+          BVTVarName=StrAppsLd      \ 
+          BVTDisplayIf=${BoolDisplayDebug}        \
           BVTDisplayShowDebug=${BoolDisplayDebug} \
           BVTVarHold='StrLdconfigGreeting='${StrLdconfigGreeting}' ScreenDisplayLdconfigHint' \
-          BVTBoolVarName=\${BoolUpdateLdconfig} \
-          BVTBoolCase=True \
+          BVTBoolVarName=\${BoolUpdateLdconfig}   \
+          BVTBoolCase=True           \
           BVTBoolAssertion='LdconfigNotification' \
-          BVTScopeTest=local \
+          BVTScopeTest=local         \
           BoolVarTest ) ; 
-  eval $( eval BVTDisplayIf=${BoolDisplayDebug} \
+  eval $( eval BVTIdType=0           \
+          BVTDisplayIf=${BoolDisplayDebug}        \
           BVTDisplayShowDebug=${BoolDisplayDebug} \
           BVTVarName=StrLdConfigLoad \
-          BVTVarHold='$( eval ${StrAppsLd} )' \
-          BVTBoolVarName=\${BoolUpdateLdconfig} \
+          BVTVarHold='$( eval ${StrAppsLd} )'     \
+          BVTBoolVarName=\${BoolUpdateLdconfig}   \
           BVTBoolCase=True BVTBoolAssertion='$( eval ${StrAppsLd} )' \
-          BVTScopeTest=local \
+          BVTScopeTest=local         \
           BoolVarTest ) ; 
 		gksu --user ${StrUser} ${StrApps} ${StrAppsOpt} 
 	}
@@ -4128,6 +4133,7 @@ function GkSuZenityLoader()
            BVTVTFnctA="\${StrUserListApps}"         \
            BVTVTVVarA="${StrVarList}"               \
            BVTVTVTPLA="${StrNewTemplateAssertion}"  \
+           BVTIdType=0 \
            BoolVarTest ) ; 
    local StrMsg="User inside varible StrUser:__VAR__" ;
    
