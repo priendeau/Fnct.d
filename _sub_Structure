@@ -2037,6 +2037,32 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
   ### BVTVarName, like default one StrAttrHold="" ... but should hold a trace of 
   ### $ eval $( VTV...=... VTV...=... ValueToVariable ) Function-Name
   local StrVarNamed=${BVTVarName:='StrAttrHold'} ; 
+  
+  local StrNewVarNamed=${BVTNewVarAssertion:='StrNewVarAssertion'}
+  ###
+  ### New Variable is cretead inside the Assertion Field 
+  ### after forced expiration by uses of BVTIsPrmblVarCylceEnd( BoolEndLifeCycleInAssert )
+  ### - it require BVTIsPreambule( IsPreambule ) == True or either 
+  ### case implicitly uses of BVTIdType=4 + 5 for if-else-fi in portion
+  ### BVTIdType=4 to make the section if-else does own an assertion field where we can suspect 
+  ### forcing termination of life cycle in Assertion. While BVTIdType=5 for Else does
+  ### already start-your assignation inside an assertion without presence of a if-statement 
+  ### because we are inside an unilateral region, after the If where the condition does
+  ### not fit and offering objective alternative. So we keep uses of BoolVarName and 
+  ### Not BVTNewVarAssertion. 
+  ### Best way to explain it is feeding an Array and this one can receive a portion of information
+  ### in case BVTBoolAssertion requiere information from a test. Like the case where a 
+  ### content tested from the IF operator suggest to submit a empty value and test does 
+  ### create a BVTBoolAssertion to Feed the Array with message "EMPTY" instead of nothing.
+  ### and in case of Else depicted by BVTIdType=5 also receive it from BVTBoolAssertion 
+  ### and gather a situation where it non-empty information from what the Array will receive.
+  ### Suggest in case of BVTIdType=4 to uses it's option of BVTNewVarAssertion( StrNewVarNamed )
+  ### holding the information of the Array, BVTBoolAssertion the content because It does hold a 
+  ### BVTVarHold from relation ( BVTVarName <-- BVTVarHold ) and if BVTVarHold is empty
+  ### It's useless inside Assertion to talk about BVTVarName and better to submit a 
+  ### BVTNewVarAssertion inside the Assertion. 
+ 
+  
   local StrVarNamedHold=${BVTVarHold:='CONTENT'} ; 
   ### Following variable Stand for Is-Preambule-Polish-Notation-Respect is respected ( 
   ### like allow cleaning content and validate output for easy-Integer respect instead 
@@ -2051,6 +2077,26 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
   ### set this to True. Setting this to false will:
   ### Remove the Preambule section and avoid creating an Executive-Assertion at this place. 
   local IsPreambule=${BVTIsPreambule:=True} ; 
+  
+  local BoolEndLifeCycleInAssert=${BVTIsPrmblVarCylceEnd:=False} ;
+  ### This Boolean is only available for case where ValueToVariable is not 
+  ### activate for having template parsing of ValueToVariable calling a function.
+  ### It does suspect life-cycle does end life-cycle any variable pre-declared  
+  ### because it suspect launching it an reporting active declared variable inside 
+  ### Variable registry of BVTVTVVarA. 
+  ### For This Preambule is does let exist BVTVarName Inside the Preambule, 
+  ### may re-use it for a test inside the IF operator and explicitly terminate
+  ### the uses of BVTVarName and does supply another variable name like 
+  ### BVTNewVarAssertion, because it suppose affecting remain dedicated information
+  ### inside Prefixed-Variable BVTBoolAssertion. so instead of having 
+  ### 
+  ### StrVarNamed <-- BVTBoolAssertion  
+  ### It will do :
+  ### StrNewVarNamed <-- BVTBoolAssertion 
+  ### 
+  ### 
+  
+  
   ### Stand for Is there is a Preambule with Variable uses, To Start creating a 
   ### Variable with name LIKE CC, CFLAGS, LDFLAGS is not a good idea as long yo do 
   ### set BVTIsPrmblPlNt to False, this will avoid filtering the variable and 
@@ -2118,6 +2164,15 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
   ### 
   local StrVarBoolTest=${BVTBoolVarName:=IsVarShould} ; 
   local StrDefaultBoolTest=${BVTBoolCase:=False} ;
+  
+  ### BVTBoolAssertion
+  ### In case where BVTIsPreambule==True it's the holder of any information for assignation 
+  ### of BVTVarName( StrVarNamed ) to receive the information, so at the end of the BoolVarTest
+  ### StrVarNamed will exist in you code with the value of BVTBoolAssertion . In case where 
+  ### BVTIsPrmblVarCylceEnd==True (BoolEndLifeCycleInAssert ) it does not change the role of 
+  ### BVTBoolAssertion except BVTBoolAssertion will assign it's content to another variable 
+  ### name. This case the new-variable name is BVTNewVarAssertion( StrNewVarNamed ) 
+  ### 
   local StrNotAsserted=${BVTBoolAssertion:=\"\"} ;
   local StrScopeType=${BVTScopeTest:='local'} ;
   local StrIfTestType=${BVTIfType:='String'} ; 
@@ -2135,7 +2190,7 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
   local IsShowDebug=${BVTDisplayShowDebug:=False} ;
   local IsDisplayIfStatement=${BVTDisplayIf:=False} ; 
   local -a ArrayVarTestType=( "String" "File" "Test" "Int" "Shell" ) ;
-  local StrVarListTransfert="StrTestTemplate,IsDisplayIfStatement,IntDefautlType,StrKeyTestType,StrVTRAsrtVTFnct,StrVTRAsrtVTReg,StrVTRAsrtVar,StrVTRAsrtTpl,IsTypeAssert,StrVTRPrbVTFnct,StrVTRPrbVTReg,StrVTRPrbVar,StrVTRPrbTpl,IsTypePreamb,StrDefaultEndTest,IsPreambule,StrIfStringOp,StrIfTestType,StrScopeType,StrNotAsserted,StrDefaultBoolTest,StrVarBoolTest,IsPreambulePolNtRespt,StrVarNamedHold,StrVarNamed,StrParentApps" ; 
+  local StrVarListTransfert="StrNewVarNamed,BoolEndLifeCycleInAssert,StrTestTemplate,IsDisplayIfStatement,IntDefautlType,StrKeyTestType,StrVTRAsrtVTFnct,StrVTRAsrtVTReg,StrVTRAsrtVar,StrVTRAsrtTpl,IsTypeAssert,StrVTRPrbVTFnct,StrVTRPrbVTReg,StrVTRPrbVar,StrVTRPrbTpl,IsTypePreamb,StrDefaultEndTest,IsPreambule,StrIfStringOp,StrIfTestType,StrScopeType,StrNotAsserted,StrDefaultBoolTest,StrVarBoolTest,IsPreambulePolNtRespt,StrVarNamedHold,StrVarNamed,StrParentApps" ; 
   
   local StrTestTemplate=""" __PREAMBULE__ \
  __IF_PATTERN__  \
@@ -2181,7 +2236,17 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
    
    local -a ArrayAssertion=( ) ; 
    ArrayAssertion[0]="__ASRT_VAR__NAME__=__ASRT_VAR_VALUE__" ;
+   ArrayAssertion[1]="__ASRT_VAR__NAME1__=__ASRT_VAR_VALUE__" ;
+   local IntDefaultCycleAssert=0 ; 
    
+   ### Referred by this section: DEFINITION of PREAMBULE-LIFE-CYCLE
+   ### It requiert to change the ArrayAssertion index to 0 to 1 in 
+   ### case It does receive a termination of the variable from Preambule
+   ### being tested and should not mention it everywhere and even provide 
+   ### Another Variable. 
+   if [ ${BoolEndLifeCycleInAssert:=False} == "True" ] ; then 
+    IntDefaultCycleAssert=1 ; 
+   fi 
    ###
    ### ArrayIfPattern, Loop and test to select proper 
    ### StrIfTestType and it's Operator StrIfStringOp.
@@ -2241,8 +2306,28 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
       # StrLcTTpl=${StrLcTTpl//__FNCT_ASRT__/${StrVTRAsrtVTFnct}} ;
       #fi 
    else
-    StrLcTTpl=${StrLcTTpl//__ASSERTION__/${ArrayAssertion[0]}} ;
+    StrLcTTpl=${StrLcTTpl//__ASSERTION__/${ArrayAssertion[${IntDefaultCycleAssert}]}} ;
+    ### TITLE: DEFINITION of PREAMBULE-LIFE-CYCLE in Preambule to Assertion .
+    ### Location to supply another variable name if Variable from Preambule does
+    ### only receive information from outside assignation ( reveive a value from a $( ... ) )
+    ### and test is only to qualify another operation like other type of assignation
+    ### or even uses in Not-only Assertion-field comming from IsPreambule==False 
+    ### ...
+    ### In this case a Prefixed-Variable with value True/False To expire Lifetime of 
+    ### StrVarNamed should be set to false and in case of True for expiration of 
+    ### cycle life of StrVarNamed, to supply inside another prefixed-variable 
+    ### to hold the name of this new variable.  
+    
+    ### Life-Cycle opposition : 
+    ### Since a life cycle from a variable may end before entering inside the 
+    ### assertion, changing the variable name of __ASRT_VAR__NAME__ and __ASRT_VAR__NAME1__
+    ### in the same time did not interfe Because ArrayAssertion depend of IntDefaultCycleAssert
+    ### and this allow reporting the proper name inside the StrLcTTpl which is not existing 
+    ### in case IntDefaultCycleAssert=0 for case of feeding the TAG __ASRT_VAR__NAME1__ 
+    ### As long it noticed here. 
     StrLcTTpl=${StrLcTTpl//__ASRT_VAR__NAME__/${StrVarNamed}} ;
+    StrLcTTpl=${StrLcTTpl//__ASRT_VAR__NAME1__/${StrNewVarNamed}} ;
+    
     StrLcTTpl=${StrLcTTpl//__ASRT_VAR_VALUE__/${StrNotAsserted}} ;
    fi 
    
