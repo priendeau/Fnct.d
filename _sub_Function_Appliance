@@ -2234,7 +2234,7 @@ elif [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then
   local StrFilter4Apps=${B2DTFilter3:=/usr/bin/cut} ; 
   local StrFilter4AppsOpt=${B2DTFilter3Opt:=-d \' \' -f 6} ; 
   local StrFilter5Apps=${B2DTFilter5:=/usr/bin/sed} ;
-  local StrFilter5AppsOpt=${B2DTFilter5Opt:='s/^['\`''\'']//g;s/.['\`''\'']//g'}
+  local StrFilter5AppsOpt=${B2DTFilter5Opt:="""'s/^[\'\`]//g;s/.[\'\`]//g'"""}
   
   ### Pair Tpl/Parser for BlockFile
   local StrRecoverParser=${B2DTAppsRecoverParser:=StrBlockFileRef:__BLOCK_FILE__,StrFileRecover:__FILE_RECOVER__,StrAppsRecover:__APPS_RECOVER__} ;
@@ -2422,9 +2422,9 @@ elif [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then
      StrPartBodyEvalCmd="""
      StrContentArray=\${${StrArrayName}[${IntX}]} ; 
      if [ \"\${StrContentArray:=None}\" == \"None\" ] ; then
-      ${StrArrayName}[${IntX}]=\"${StrIdName}:${StrValueFromCmd};\" ;
+      ${StrArrayName}[${IntX}]=\"${StrIdName}:${StrValueFromCmd}\" ;
      else
-      ${StrArrayName}[${IntX}]=\";${StrIdName}:${StrValueFromCmd}\";
+      ${StrArrayName}[${IntX}]=\"\${${StrArrayName}[${IntX}]};${StrIdName}:${StrValueFromCmd}\";
      fi ;
      """ ; 
      StrBodyEvalCmd="${StrBodyEvalCmd} ${StrPartBodyEvalCmd}" ; 
@@ -2540,7 +2540,9 @@ elif [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then
    ### the default case. 
    local -A ArrayFileHeader ;
    
-   local -a ArrayGroupAssociate=( "Rank" "Header" ) ;  
+   local -A ArrayGroupAssociate ;
+   ArrayGroupAssociate["Rank"]="location"
+   ArrayGroupAssociate["Header"]="file" ;  
    
    ### Used for Association in BlockExtraction function require
    ### BEExtraction Prefixed parameter for seeking in head or bottom
@@ -2587,18 +2589,21 @@ elif [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then
    StrMsg=${StrMsg//__INTEND__/${IntEndBlock}} ; 
    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
   
-   eval $( eval $( VTVIsQuotedValue=True       \
-           VTVIsArrayStyleInsert=True  \
-           VTVValueEntry=${StrVarBEList}  \
-           VTVIsValueReAssign=True     \
-           VTVIsValueToConvert=False   \
-           VTVIsQuotedValue=True       \
-           ValueToVariable ) BIStartBlock=${IntStartBlock} \
-                             BIEndBlock=${IntEndBlock}      \
-                             BILineExtractionField=Rank    \
-                             BIIndexStoreName=location     \
-                             BIArrayName=ArrayFileHeader   \
-                             BlockInformation ) ; 
+   ### Section to load Location and File-chunk from BlockInformation
+   for StrIndexBlock in ${!ArrayGroupAssociate[@]} ; do 
+    eval $( eval $( VTVIsQuotedValue=True       \
+            VTVIsArrayStyleInsert=True  \
+            VTVValueEntry=${StrVarBEList}  \
+            VTVIsValueReAssign=True     \
+            VTVIsValueToConvert=False   \
+            VTVIsQuotedValue=True       \
+            ValueToVariable ) BIStartBlock=${IntStartBlock} \
+                              BIEndBlock=${IntEndBlock}      \
+                              BILineExtractionField=${StrIndexBlock}  \
+                              BIIndexStoreName=${ArrayGroupAssociate[${StrIndexBlock}]} \
+                              BIArrayName=ArrayFileHeader   \
+                              BlockInformation ) ; 
+  done 
   
   ### 
   ### This test purposes is present to test BlockInformation Correct work.
