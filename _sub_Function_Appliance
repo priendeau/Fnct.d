@@ -2202,7 +2202,11 @@ elif [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then
    fi 
 
   ### Variable common to All.
-  local StrPipeCmd=${B2DTPipeCmd:=\|} ;
+  local -a ArraySpecialChar=( "\`" "'" "|" ) ; 
+  local StrExecutiveChar=${B2DTExecutiveCharCmd:=${ArraySpecialChar[0]}} ; 
+  local StrSingleQuote=${B2DTSingleQuoteCmd:=${ArraySpecialChar[1]}} ; 
+  local StrPipeCmd=${B2DTPipeCmd:=${ArraySpecialChar[2]}} ;
+ 
   local StrRegXBlockFileContent=${B2DTRegXFile:='"^[\t\ ]*writing block [0-9]*"'} ;
   local StrRegXBlockHeader=${B2DTRegXHeader:='"^[\t\ ]*block [0-9]*"'} ;
   local StrSubRegExpFileContent=${B2DTSubRegXFile:='"block __INT__ to"'}
@@ -2233,8 +2237,8 @@ elif [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then
   local StrFilter3AppsOpt=${B2DTFilter3Opt:=-d \' \' -f 6,8} ; 
   local StrFilter4Apps=${B2DTFilter3:=/usr/bin/cut} ; 
   local StrFilter4AppsOpt=${B2DTFilter3Opt:=-d \' \' -f 6} ; 
-  local StrFilter5Apps=${B2DTFilter5:=/usr/bin/sed} ;
-  local StrFilter5AppsOpt=${B2DTFilter5Opt:="""'s/^[\'\`]//g;s/.[\'\`]//g'"""}
+  local StrFilter5Apps=${B2DTFilter5:=/bin/sed} ;
+  local StrFilter5AppsOpt=${B2DTFilter5Opt:=\'s/^[\\__EXECCHR____SINGLQUT__\\__SINGLQUT____SINGLQUT__]//g;s/.[\\__EXECCHR____SINGLQUT__\\__SINGLQUT____SINGLQUT__]//g\'} ; 
   
   ### Pair Tpl/Parser for BlockFile
   local StrRecoverParser=${B2DTAppsRecoverParser:=StrBlockFileRef:__BLOCK_FILE__,StrFileRecover:__FILE_RECOVER__,StrAppsRecover:__APPS_RECOVER__} ;
@@ -2245,7 +2249,7 @@ elif [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then
   local StrAppsRangeTpl=${B2DTAppsRangeTpl:=__APPS_RANGE__ __REGEXP__ __BLOCK_FILE__ __PIPE__ __RANGETYPEAPPS__ __RANGETYPEAPPSOPT__ __PIPE__ __FILTER1__ __FILTER1OPT__ __PIPE__ __FILTER2__ __FILTER2OPT__} ;
   
   ### Pair Tpl/Parser for BlockInformation
-  local StrBlockInforParser=${B2DTInfoParser:=StrAppsRange:__APPS_RANGE__,StrBlockFileRef:__BLOCK_FILE__,StrPipeCmd:__PIPE__,StrFilter1Apps:__FILTER1__,StrFilter1AppsOpt:__FILTER1OPT__,StrFilter3Apps:__FILTER3__,StrFilter3AppsOpt:__FILTER3OPT__,StrFilter4Apps:__FILTER4__,StrFilter4AppsOpt:__FILTER4OPT__,StrFilter5Apps:__FILTER5__,StrFilter5AppsOpt:__FILTER5OPT__} ;
+  local StrBlockInforParser=${B2DTInfoParser:=StrAppsRange:__APPS_RANGE__,StrBlockFileRef:__BLOCK_FILE__,StrFilter1Apps:__FILTER1__,StrFilter1AppsOpt:__FILTER1OPT__,StrFilter3Apps:__FILTER3__,StrFilter3AppsOpt:__FILTER3OPT__,StrFilter4Apps:__FILTER4__,StrFilter4AppsOpt:__FILTER4OPT__,StrFilter5Apps:__FILTER5__,StrFilter5AppsOpt:__FILTER5OPT__,StrExecutiveChar:__EXECCHR__,StrSingleQuote:__SINGLQUT__,StrPipeCmd:__PIPE__} ;
   local StrAppsBlockInfoTpl=${B2DTAppsBlockInfo:=__APPS_RANGE__ __REGEXP__ __BLOCK_FILE__ __PIPE__ __APPS_RANGE__ \"__REGEXP2__\" __PIPE__ __POST_FILTER__}
   local StrBlkInfoTplRank=${B2DTAppsBlkInfoRnkTpl:= __FILTER1__ __FILTER1OPT__ __PIPE__ __FILTER3__ __FILTER3OPT__}
   local StrBlkInfoTplHeader=${B2DTAppsBlkInfoHdrTpl:=__FILTER1__ __FILTER1OPT__ __PIPE__ __FILTER4__ __FILTER4OPT__ __PIPE__ __FILTER5__ __FILTER5OPT__}
@@ -2604,6 +2608,7 @@ elif [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then
                               BIArrayName=ArrayFileHeader   \
                               BlockInformation ) ; 
   done 
+  ### replace BIEndBlock=${IntEndBlock} by BIEndBlock=5
   
   ### 
   ### This test purposes is present to test BlockInformation Correct work.
@@ -2618,7 +2623,6 @@ elif [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then
   for StrIndex in ${!ArrayFileHeader[@]} ; do 
    echo -ne "ArrayFileHeader[${StrIndex}]=${ArrayFileHeader[${StrIndex}]}\n" ; 
   done 
-  ### replace BIEndBlock=${IntEndBlock} by BIEndBlock=5
   }
   
   function __main_StopServices()
