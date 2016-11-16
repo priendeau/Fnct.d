@@ -690,7 +690,7 @@ Some restriction may apply. The two Call of BoolVarTest are binded together with
 
 
 Generation of Plural Assertion in Elif-[ N ]elif case 
------------------------------------------------------
+------------------------------------------------------
 
 
 This example it not giving the answer to connect many database-type as It was showed previously but, depend of a common elements, the File-acces Object. This example also depend from DataExtractionTool sub-function part of application LoopShellScript, a monitor for Builded script where a Point-to-point example generated parameter to generate the file and once the script is generated it create a script-shell, monitoring this script shell is a main key because We do survey what this script generating as file, and error, much more error because in fact it's a script to generate a Makefile and a compilation. We do help an environment to grow and offer multiples possibilitites and one of the possibilities is to give a hand in Generated elements from a Really important package... Bash package for Mint a simple distribution that do offer somes functionnality with bash but not all of them. We do also introduce adding inclusion of library in inner declaration, inherent of the compilation and we do realize it broke or compilation is not done... We do offer ability to understand which elements is breaking appart and for that purposes, the shell-script starting the Makefile and the compilation does a Monitor on it and every sucessive built there is a mechanis inside the LoopShellScript that store the working solution inside a file. That File-access does have Id for each script and there is also a FileName, a Date and it's compressed and encapsulated format to be stored easily. For thid purposes the whole Package called LoopShellScript own a sub-function called DET stand for Data Extraction Tool. This one master for the first time a shell-code generating an Objective view of accessing to the Content by Listing simple the information inside the File-Storage like a database and we do have couple of key callable by the prompt declaration to Use the simple ListFile which is listing everything, a searc for a Specific ID, a search by a specific name of File and also a search by date . The application LoopShellScript have an interressant Document can be read by using the switches '--help' a section called Description does inform on it's way to work an eventually a complete example will be introduced inside the README. For the moment Demonstrating with a couple of indice inside an Array can simply relate The Objective view of using If-statement from creating Assertion-region showed in green, are the location where the function are starting-up and are protected by the Boolean Expression covered by ELIF statement . 
@@ -757,6 +757,19 @@ In caveat, This structure does also have a tiny if-elif condition prior of talki
    eval ${StrIfElifBuild} ; 
    ###; BVTIdType=6 BVTIsPreambule=False BVTIsValueToVarAssert=True BVTBoolVarName=\${BoolSearchFile:=False} BVTBoolCase=True  BVTVTVVarA=\${StrVarList} BVTVTFnctA=SearchByFile BoolVarTest ; 
   fi
+
+
+Life Cycle in Preambule & Assertion with Prefixed-Variable of BoolVarTest
+-------------------------------------------------------------------------
+
+It's important to define the Existence of viariable inside BoolVarTest since this function 'project' to generate code for "future" existence of code in a current existing code-flow. The integration of Prefixed-variable such 
+BVTIsPrmblVarCylceEnd and BVTNewVarAssertion does alter life-cycle of the code generation and give focus to other variable name. Other variables name are commonly Array since this type of variable does have different 
+comportement and may be subject to evaluation prior to do an action on it, it's a focused object the prefixed-variable BVTNewVarAssertion may emmit during Assertion passes to shallow this element into argument for altering the
+array and/or code-statement that depend in part of the array. 
+
+.. image:: https://github.com/priendeau/Fnct.d/blob/master/images/BoolVarTest-life-cycle.png
+  :target: https://github.com/priendeau/Fnct.D#Life Cycle in Preambule
+
 
 
 
