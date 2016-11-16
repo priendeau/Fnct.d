@@ -764,13 +764,110 @@ Life Cycle in Preambule & Assertion with Prefixed-Variable of BoolVarTest
 
 It's important to define the Existence of viariable inside BoolVarTest since this function 'project' to generate code for "future" existence of code in a current existing code-flow. The integration of Prefixed-variable such 
 BVTIsPrmblVarCylceEnd and BVTNewVarAssertion does alter life-cycle of the code generation and give focus to other variable name. Other variables name are commonly Array since this type of variable does have different 
-comportement and may be subject to evaluation prior to do an action on it, it's a focused object the prefixed-variable BVTNewVarAssertion may emmit during Assertion passes to shallow this element into argument for altering the
+comportement and may be subject to evaluation prior to do an action on it, it's a focused object the prefixed-variable BVTNewVarAssertion may emmit during Assertion pases to shallow this element into argument for altering the
 array and/or code-statement that depend in part of the array. 
+
+
 
 .. image:: https://github.com/priendeau/Fnct.d/blob/master/images/BoolVarTest-life-cycle.png
   :target: https://github.com/priendeau/Fnct.D#Life Cycle in Preambule
 
 
+
+This example coming with Library _sub_Function_Appliance called Bzip2DataTool is an interreting tools to read information from output of bzip2recover. Aim to really get the solution in many corrupted file from Tar file compressed with bzip2 filter all possibilities related already compressed bzip2 file re-compressed may in some moment pertube activity of the compressor. It's also touching big files which is relatively huge to manage by hand. Using bzip2recover is very straight forward, ou specified a bzip2 file name  and it cut in many block your original file. Some simple action like performing  a loop and decompressing part does show where is the block in problems. It also allow you to decompress manually the huge list of block. Appending them one-after one can be long and confusing. So this script developped to handle the output of bzip2recover help you find solution. It does read the generated output as keeping you an Array of information on block number and file associated with. In third stage of development it also store an instance in UUID form leaving you updating the block-count again or taking back the operation. The third stage also acting in environment analysis and does count more in user action and time-spend . Allowing you to stop the engine with the usual '--stopservices' so it can stop in one of the step the application have to do before block re-composition. As late as nov-16-2016 the application is in stage-2 and have merely end the development toward persistent Array-storing and block recompistion and did not acheive the UUID-instance and stop-services. Acknowledging this application just end the task and en-proof the limited purposes of bzip2recover and does pose a view of using other alternatives like using the native-tar module from python to analyse the action under other alternative and using python-module crccheck 0.6 and beyond to re-check if there is a checksum not correctly applied to a block which is probably what bzip2recover acheive and re-update huffman table... This application have severals acheivement like code generation, code-alternative and uses of another goal in BoolVarTest which is applying a definition of life-time in a BoolVarTest cycle and moving the focus out of the Main variable name used in Preambule to subscribe another  variable much usefull called New-variable uses during an assertion . 
+
+
+This example is part of Bzip2DataTool sub function called BlockInformation and does generate code inside the application __main_StartServices after initializing important thing like the role of this function in generating either First offset and last offset of every block being stored in a Associative array, the other role can associate the block Index of this Associative array and store the file or the whole block information. This If statement is an example of Oriented Object with alternative and does store the information in case the Array is empty or holding something. The storage syntax is important to avoid Getting wrong information by retreiving the information with CSV (Comma Separated Value) . This BoolVarTest come with BVTIdType=4 + BVTIdType=5 which is the method to construct in 2 BoolVarTest a Full If-statement with Else part acting as oriented resultor alternative isolation-part for specifying the way it store the information. 
+
+.. code:: shell
+   
+   ### suggestion for replacement :
+   ### StrPartBodyEvalCmd=$( BVTIsPreambule=True BVTIdType=4 BVTVarName="StrContentArray" BVTIsPrmblVarCylceEnd=True BVTNewVarAssertion=\${StrArrayName}[\${IntX}] BVTVarHold=\${ArrayFileHeader[\${IntX}]} BVTBoolVarName=\\\"\\\\\${StrContentArray:=None}\\\" BVTIfType=Int BVTBoolCase=\\\"None\\\" BVTBoolAssertion="\"\${StrIdName}:\${StrValueFromCmd};\""  BoolVarTest ; \
+   ### BVTIsPreambule=False BVTIdType=5 BVTVarName=\${StrArrayName}[\${IntX}] BVTVarHold=\${ArrayFileHeader[\${IntX}]}   BVTBoolAssertion="\\\";\${StrIdName}:\${StrValueFromCmd}\\\""  BoolVarTest ) ; 
+
+   ### Does replace the following lines :
+   StrPartBodyEvalCmd="""
+   StrContentArray=\${${StrArrayName}[${IntX}]} ; 
+   if [ \"\${StrContentArray:=None}\" == \"None\" ] ; then
+    ${StrArrayName}[${IntX}]=\"${StrIdName}:${StrValueFromCmd}\" ;
+   else
+    ${StrArrayName}[${IntX}]=\"\${${StrArrayName}[${IntX}]};${StrIdName}:${StrValueFromCmd}\";
+   fi ;
+   """ ; 
+
+
+The Entire section of this code is here:
+
+
+.. code:: shell
+
+  for (( IntX=${IntStartBlock} ; IntX <= ${IntEndBlock} ; IntX++ )) ; do 
+    StrValueFromCmd="" ; 
+    eval StrLoopParser=\${${StrVarNameP}} ; 
+    StrLoopParser=${StrLoopParser//__INT__/${IntX}};
+    eval "StrValueFromCmd=\$( ${StrLoopParser} )" ; 
+    StrMsg="Variable StrValueFromCmd, value:[__VALUE__]" ; 
+    VerbMsg="${StrMsg//__VALUE__/${StrValueFromCmd}}" VerbHeader="${__call_locality[1]}-CMDLINE-LOOP" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    
+    if [ "${StrIdName:=location}" == "location" ] ; then 
+     ### in case StrIdName==location we do own 2 data, begin and end of a 
+     ### block, this require to add a CSV to separate the information
+     StrValueFromCmd=${StrValueFromCmd// /,} ; 
+    fi 
+    ### External part, this are echoed and evaluated by the calling 
+    ### Member which is __main_StartServices or called by B2DTFuncStart which is 
+    ### located at root level of the function. ( in this case another Associative 
+    ### array must exist or information won't rely exist if BlockInformation is 
+    ### calling nobody ) . 
+    
+    ### Suggested replacement:
+    ### Not implemented yet but should give same result. 
+    ### - This taking the advantage of Life-Cycle Termination of BVTVarName="StrContentArray" allowing 
+    ### another variable to exist.
+    ### Imply to Add BVTIsPrmblVarCylceEnd=True, 
+    ### must require BVTNewVarAssertion=VariableName in this case \${StrArrayName}[\${IntX}] is 
+    ### the Associative array with it's allocation. Index is in Int but should be about anything
+    ### 
+    ### Exceptionnally here the type of If-Test is based on Integer format rather than String ? 
+    ###  - It's evaluation from code injection does not instantly evaluate Deep Variable field
+    ### Inside the __main_StartServices, line to call the code for BlockInformation stipulate 
+    ### eval $( eval $(
+    ###        VTV
+    ###        ...
+    ###        ValueToVariable ) BI
+    ###                          ...
+    ###                          BlockInformation ) 
+    ### A double evaluation with Double Executive brace which remove per evaluation a back-quoted 
+    ### '\' Back-slash and from un-back-slashed variable it transform it's value and remain back-quoted, 
+    ### back-slashed variable will lost their '\' or last evaluation or an error should pop-out... 
+    ### So this case suggest working with variable without quote to let back-quoting with back-slash
+    ### not interfering in evaluation. So it's important to prefer having default value exist in 
+    ### in common uses of BVTBoolVarName and forget about possibility to replace a variable ${__VAR__}
+    ### by $__VAR__ it's exclued from codeability and this code is entirely existing for full brace 
+    ### the variable by their Expanser operator ( expanser are '{' and '}' ) .
+    ### 
+    ### suggestion for replacement :
+    ### StrPartBodyEvalCmd=$( BVTIsPreambule=True BVTIdType=4 BVTVarName="StrContentArray" BVTIsPrmblVarCylceEnd=True BVTNewVarAssertion=\${StrArrayName}[\${IntX}] BVTVarHold=\${ArrayFileHeader[\${IntX}]} BVTBoolVarName=\\\"\\\\\${StrContentArray:=None}\\\" BVTIfType=Int BVTBoolCase=\\\"None\\\" BVTBoolAssertion="\"\${StrIdName}:\${StrValueFromCmd};\""  BoolVarTest ; \
+    ### BVTIsPreambule=False BVTIdType=5 BVTVarName=\${StrArrayName}[\${IntX}] BVTVarHold=\${ArrayFileHeader[\${IntX}]}   BVTBoolAssertion="\\\";\${StrIdName}:\${StrValueFromCmd}\\\""  BoolVarTest ) ; 
+    ### 
+    ### And for the exam, of course removing the eval from StrPartBodyEvalCmd prevent parsing the 
+    ### String uselessly and allow the generated list of code for adding Block locating inside the 
+    ### Associative Array does display the code by removing the other eval from calling BlockInformation
+    ### or leaving the eval does let exist the assciative array with the information. 
+    ### 
+    
+    StrPartBodyEvalCmd="""
+    StrContentArray=\${${StrArrayName}[${IntX}]} ; 
+    if [ \"\${StrContentArray:=None}\" == \"None\" ] ; then
+     ${StrArrayName}[${IntX}]=\"${StrIdName}:${StrValueFromCmd}\" ;
+    else
+     ${StrArrayName}[${IntX}]=\"\${${StrArrayName}[${IntX}]};${StrIdName}:${StrValueFromCmd}\";
+    fi ;
+    """ ; 
+    StrBodyEvalCmd="${StrBodyEvalCmd} ${StrPartBodyEvalCmd}" ; 
+  done 
+  StrAllEvalCmd="${StrStartEvalCmd}${StrBodyEvalCmd}"
+  echo -ne "${StrAllEvalCmd}" ; 
 
 
 Improvement
