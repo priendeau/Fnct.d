@@ -3581,6 +3581,7 @@ Delayed until End-December 2016.
  COMMIT;
 
 
+
 And Registrant like Application choosed in _sub_Function_Appliance will all be candidate to 
 start registering through GetUUID and own First type of Registration called a voluntary
 registration mean they itself require to de-register .
@@ -3588,9 +3589,11 @@ registration mean they itself require to de-register .
 This step reduced by a Listener like SSHServicesRequest.py also provide link to table "Application" and 
 does load the database .
 
+
 - Application SSHServicesRequest.py which the Services or listner for registration
 management can load the same database however for the moment SSHServicesRequest.py does own 
 some property problems and remain not ready . 
+
 
 
 :Note: 6e61bab0-35eb-11e3-98a2-001b3875b29c
