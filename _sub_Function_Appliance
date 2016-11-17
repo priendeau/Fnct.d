@@ -2206,6 +2206,7 @@ elif [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then
   local StrExecutiveChar=${B2DTExecutiveCharCmd:=${ArraySpecialChar[0]}} ; 
   local StrSingleQuote=${B2DTSingleQuoteCmd:=${ArraySpecialChar[1]}} ; 
   local StrPipeCmd=${B2DTPipeCmd:=${ArraySpecialChar[2]}} ;
+  local StrSuffixFile=${B2DTBzip2Suffix:=.repair} ; 
  
   local StrRegXBlockFileContent=${B2DTRegXFile:='"^[\t\ ]*writing block [0-9]*"'} ;
   local StrRegXBlockHeader=${B2DTRegXHeader:='"^[\t\ ]*block [0-9]*"'} ;
@@ -2231,6 +2232,9 @@ elif [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then
   local StrAppsRecover=${B2DTAppsRecovery:=/bin/bzip2recover} ; 
   local BoolMoveBlocToPath=${B2DTMoveBlockToPath:=False} ; 
   local StrBlockPath=${B2DTBlockLocation:=./} ; 
+  
+  ### Variable Member for BlockCreation
+  local StrFileRepair=${StrFileRecover//.bz2/${StrSuffixFile}.bz2}
 
   ### Variable Member for BlockInformation 
   local StrFilter3Apps=${B2DTFilter3:=/usr/bin/cut} ; 
@@ -2240,6 +2244,15 @@ elif [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then
   local StrFilter5Apps=${B2DTFilter5:=/bin/sed} ;
   local StrFilter5AppsOpt=${B2DTFilter5Opt:=\'s/^[\\__EXECCHR____SINGLQUT__\\__SINGLQUT____SINGLQUT__]//g;s/.[\\__EXECCHR____SINGLQUT__\\__SINGLQUT____SINGLQUT__]//g\'} ; 
   
+  local StrBCAppsHdr=${B2DTAppsBC:=/bin/dd} ;
+  ### other dd flag: status=none oflag=append seek=0
+  local StrBCAppsStatus=${B2DTBCStatus:=status=none} ;
+  local StrBCAppsOFlags=${B2DTBCOFlags:=oflag=append} ;
+  local StrBCAppsOptTpl=${B2DTBCOpt:=__APPSBC__ if=__BLOCK_FILE__ of=__FILE_REPAIR__ __APPSBCOPT__ }
+  local StrBCAppsHdrOptTpl=${B2DTBCAppsHdrOpt:=bs=__BLOCK_SIZE__ __STATUS__ }
+  local StrBCAppsCntOptTpl=${B2DTBCAppsCntOpt:=bs=__BLOCK_SIZE__ __OFLAGS__ seek=__SIZE__ __STATUS__};
+  local StrBCAppsParser=${B2DTBCAppsParser:=StrFileRepair:__FILE_REPAIR__,StrBCAppsHdr:__APPSBC__,StrBCAppsStatus:__STATUS__,StrBCAppsOFlags:__OFLAGS__} ; 
+    
   ### Pair Tpl/Parser for BlockFile
   local StrRecoverParser=${B2DTAppsRecoverParser:=StrBlockFileRef:__BLOCK_FILE__,StrFileRecover:__FILE_RECOVER__,StrAppsRecover:__APPS_RECOVER__} ;
   local StrAppsRecoverTpl=${B2DTAppsRecoverTpl:='__APPS_RECOVER__ __FILE_RECOVER__'} ;
@@ -2263,7 +2276,7 @@ elif [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then
   local BoolParserInfo=${B2DTParserDebug:=False}
   local BoolShowEntry=${B2DTShowEntryFunc:=True} ; 
   
-  local StrVarList="StrBlockFileRef,StrFileRecover,StrRecoverParser,StrAppsRecoverTpl,StrAppsRecover,StrRegXBlockHeader,StrRegXBlockFileContent,StrAppsHead,StrAppsTail,StrAppsRange,StrRangeParser,BoolDisplayDebug,BoolShowEntry,BoolParserInfo,BoolGenerateBlockFile,StrAppsRangeTpl,StrPipeCmd,StrFilter2AppsOpt,StrFilter2Apps,StrFilter1AppsOpt,StrFilter1Apps,StrAppsTailOpt,StrAppsHeadOpt" ;
+  local StrVarList="StrBCAppsHdr,StrBCAppsStatus,StrBCAppsOFlags,StrBCAppsOptTpl,StrBCAppsHdrOptTpl,StrBCAppsCntOptTpl,StrBCAppsParser,StrSuffixFile,StrFileRepair,StrBlockFileRef,StrFileRecover,StrRecoverParser,StrAppsRecoverTpl,StrAppsRecover,StrRegXBlockHeader,StrRegXBlockFileContent,StrAppsHead,StrAppsTail,StrAppsRange,StrRangeParser,BoolDisplayDebug,BoolShowEntry,BoolParserInfo,BoolGenerateBlockFile,StrAppsRangeTpl,StrPipeCmd,StrFilter2AppsOpt,StrFilter2Apps,StrFilter1AppsOpt,StrFilter1Apps,StrAppsTailOpt,StrAppsHeadOpt" ;
   
   local -a ArrayMsg ;
   ArrayMsg[0]="Entry in function" ;   
@@ -2272,7 +2285,7 @@ elif [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then
   ArrayMsg[3]="Remain Template from StrAppsRecoverTpl: content:__TAG__" ; 
   ArrayMsg[4]="Remain Template from __VARNAME__: content:__TAG__" ; 
   ArrayMsg[5]="Inspecting Variable:__VAR__, Value: __VALUE__" ; 
-  
+  ArrayMsg[6]="Test Array Extraction: ArrayName:__ARRAY__, Index:__INDEX__, PairName:__PAIR__, Value:__VALUE__" ; 
   
   local -A ArrayFileRank;
   ArrayFileRank["start"]="StrAppsHeadOpt:__RANGETYPEAPPSOPT__,StrAppsHead:__RANGETYPEAPPS__" ;
@@ -2280,9 +2293,133 @@ elif [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then
   ArrayFileRank["Rank"]="StrBlkInfoTplRank:__POST_FILTER__,StrRegXBlockHeader:__REGEXP__,StrSubRegExpHeader:__REGEXP2__" ;
   ArrayFileRank["Header"]="StrBlkInfoTplHeader:__POST_FILTER__,StrRegXBlockFileContent:__REGEXP__,StrSubRegExpFileContent:__REGEXP2__" ; 
 
+  local -A ArrayFileCreation;
+  ArrayFileCreation["header"]="StrBCAppsHdrOpt:__APPSBCOPT__," ; 
+  ArrayFileCreation["content"]="StrBCAppsCntOpt:__APPSBCOPT__," ; 
+  
+  
+
   ### Required to test the BlockInformation from Prefixed-variable Query 
   ### B2DTFuncStart=BlockInformation
   local -A ArrayFileHeader ; 
+  
+  
+  ### function BlockCreation
+  ### 
+  ### This function does mapping The repaired file . It require to paste the Header from 
+  ### the old file, and know the whole size of the file. After it append information
+  ### block after block. 
+  ### 
+  ### Decription : Function work with two possibles modes :
+  ###  - Mode Header-Creation 
+  ###  - Mode Content-Creation 
+  ### 
+  ### Requirement : 
+  ###  - Mode Header-Creation 
+  ###   - Require the file-name 
+  ###   - require block location of 1st rank . 
+  ###   - Suffix Bzip2 to create the new file. 
+  ### 
+  ###  - Mode Content-Creation 
+  ###   - Require the file-name 
+  ###   - require all information of block location  
+  ###   - require all information of file.
+  ###   - Suffix Bzip2 to append to the new file. 
+  ### 
+  function BlockCreation()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( BC BlockCreation ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=BlockCreation CAIsAddParent=True __Call_Argument ) ;
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=BlockCreation CAIsAddParent=True CallArgument ) ;
+   fi 
+   StrMsg=$( Bzip2DataTool --get ArrayMsg[0] ) ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolShowEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   local -A ArrayCmdEval ;
+   local StrAction=${BCAction:=header} ; 
+   
+   local StrLocalParser=$( Bzip2DataTool --get ArrayFileCreation[${StrAction}] )
+   StrTagParser="${StrBCAppsParser},${StrLocalParser}" ;
+
+   local StrVarNameP="StrParser${__call_locality[0]}" ;
+   eval """local ${StrVarNameP}=\"${StrBCAppsOptTpl}\"""" ; 
+
+
+   eval $( eval TPListTag=${StrTagParser}  \
+       TPArrayName=Array${__call_locality[0]}  \
+       TPVarNameParsed="${StrVarNameP}"     \
+       TPDisplayDebug=${BoolParserInfo}     \
+       TPDisplayParserNotice=${BoolParserInfo} \
+       TagParser ) ; 
+
+   ArrayCmdEval["header"]="""
+   \${${StrVarNameP}}
+   """ ; 
+   
+   ArrayCmdEval["content"]="""
+   """ ; 
+    
+   echo -ne ${ArrayCmdEval[${StrAction}]} ; 
+  
+  }
+  
+  
+  function GetArrayItem()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( GAI GetArrayItem ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=GetArrayItem CAIsAddParent=True __Call_Argument ) ;
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=GetArrayItem CAIsAddParent=True CallArgument ) ;
+   fi 
+   StrMsg=$( Bzip2DataTool --get ArrayMsg[0] ) ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolShowEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+
+   local StrArrayName=${GAIArrayName:=Array} ; 
+   local StrIndexName=${GAIIndex:=None} ; 
+   local StrPairName=${GAIPairName:=None} ; 
+   local StrVarName=${GAIVarName:=StrItem} ; 
+   local StrEvalCmd="""
+   local StrTmpValue=\"\${${StrArrayName}[${StrIndexName}]}\";
+   local ArrayTmp=( \${StrTmpValue//;/ } ) ; 
+   local StrTmpPair;
+   local StrTmpTestPair ; 
+   local IntPairLen; 
+   local IntPairTestLen ;
+   local StrPairName ; 
+   local StrPairValue ; 
+   local IntC=0 ; 
+   local IntMaxCount=\${#ArrayTmp[@]} ;
+   local StrMsg=\"Variable StrTmpPair Value:(__TMPVALUE__)\\\nVariable StrTmpTestPair Value:(__TEST_PAIR__)\" ;
+   for (( IntC=0 ; IntC <= \${IntMaxCount} - 1 ; IntC++ )) ; do 
+    StrTmpPair=\"\${ArrayTmp[\${IntC}]}\" ; 
+    StrTmpTestPair=\"\${StrTmpPair/#${StrPairName}:}\" ; 
+    IntPairLen=\${#StrTmpPair} ; 
+    IntPairTestLen=\${#StrTmpTestPair} ;
+    if [ \${IntPairLen:=0} -ne \${IntPairTestLen:=0} ] ; then
+     ${StrVarName}=\"\${StrTmpTestPair}\" ;
+     StrMsg=\${StrMsg//__TMPVALUE__/\${StrTmpValue}} ;
+     StrMsg=\${StrMsg//__TEST_PAIR__/\${StrTmpTestPair}} ;
+     VerbMsg=\${StrMsg} VerbHeader=\"\${__call_locality[1]}-DEBUG\" VerbState=\${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    fi  
+   done ;
+   echo -ne \"\${${StrVarName}}\"
+   """ ;
+   
+    
+   StrMsg=$( Bzip2DataTool --get ArrayMsg[2] ) ; 
+   VerbMsg="${StrMsg/__CMD__/${StrEvalCmd}}" VerbHeader="${__call_locality[1]}-CMDLINE" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   
+   echo -ne  "${StrEvalCmd}" ; 
+   
+  }
   
   function BlockInformation()
   {
@@ -2295,7 +2432,7 @@ elif [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
     eval $( eval CAFunctName=BlockInformation CAIsAddParent=True CallArgument ) ;
    fi 
-   StrMsg=$( LoopShellScript --get ArrayMsg[0] ) ; 
+   StrMsg=$( Bzip2DataTool --get ArrayMsg[0] ) ; 
    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolShowEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
    local IntStartBlock=${BIStartBlock:=0} ; 
    local IntEndBlock=${BIEndBlock:=0} ; 
@@ -2504,9 +2641,10 @@ elif [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then
     
    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-CMDLINE" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
    
-   eval $( eval TPListTag=${StrTagParser}        \
-       TPArrayName=Array${__call_locality[0]}    \
-       TPVarNameParsed="StrParserBE"  \
+   eval $( eval \
+       TPListTag=${StrTagParser}               \
+       TPArrayName=Array${__call_locality[0]}  \
+       TPVarNameParsed="StrParserBE"           \
        TPDisplayDebug=${BoolParserInfo}        \
        TPDisplayParserNotice=${BoolParserInfo} \
        TagParser ) ; 
@@ -2562,6 +2700,8 @@ elif [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then
    local StrVarBIList="StrBlockInforParser,StrAppsBlockInfoTpl,BoolDisplayDebug,BoolParserInfo,BoolShowEntry" ; 
    
    ### In case Block-File don't exist or require to generate a new-one . 
+   ### This is also controlled by B2DTGenerateBlockFile( BoolGenerateBlockFile )
+   ### 
    eval $( eval                 \
      BVTIsPreambule=False       \
      BVTIsValueToVarAssert=True \
@@ -2572,7 +2712,12 @@ elif [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then
      BVTIdType=0                \
      BoolVarTest                ) ; 
    
-   
+   ###
+   ### This section will extract 
+   ### - first instance the Location information where to put the 
+   ### Block-file information
+   ### - second instance the file-name of the block-file. 
+   ### 
    for StrIndexIter in ${ArrayIndex[@]} ; do 
      StrLeftPair=${StrIndexIter/%:[a-zA-Z0-9]*} ; 
      StrRightPair=${StrIndexIter/#${StrLeftPair}:} ;
@@ -2595,17 +2740,18 @@ elif [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then
   
    ### Section to load Location and File-chunk from BlockInformation
    for StrIndexBlock in ${!ArrayGroupAssociate[@]} ; do 
-    eval $( eval $( VTVIsQuotedValue=True       \
-            VTVIsArrayStyleInsert=True  \
+    eval $( eval $( 
+            VTVIsQuotedValue=True          \
+            VTVIsArrayStyleInsert=True     \
             VTVValueEntry=${StrVarBEList}  \
-            VTVIsValueReAssign=True     \
-            VTVIsValueToConvert=False   \
-            VTVIsQuotedValue=True       \
-            ValueToVariable ) BIStartBlock=${IntStartBlock} \
-                              BIEndBlock=${IntEndBlock}      \
+            VTVIsValueReAssign=True        \
+            VTVIsValueToConvert=False      \
+            VTVIsQuotedValue=True          \
+            ValueToVariable ) BIStartBlock=${IntStartBlock}  \
+                              BIEndBlock=50      \
                               BILineExtractionField=${StrIndexBlock}  \
                               BIIndexStoreName=${ArrayGroupAssociate[${StrIndexBlock}]} \
-                              BIArrayName=ArrayFileHeader   \
+                              BIArrayName=ArrayFileHeader    \
                               BlockInformation ) ; 
   done 
   ### replace BIEndBlock=${IntEndBlock} by BIEndBlock=5
@@ -2623,6 +2769,44 @@ elif [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then
   for StrIndex in ${!ArrayFileHeader[@]} ; do 
    echo -ne "ArrayFileHeader[${StrIndex}]=${ArrayFileHeader[${StrIndex}]}\n" ; 
   done 
+  
+  ### Test function GetArrayItem 
+  ### Test extraction of ArrayFileHeader for 
+  ### 1- test extraction of block-location aka start and end of block
+  ### 2- Must provide information like Array Name, The Index and one of the possible
+  ### pair inside the Array stored by pair. actually there is 2 pairs of information
+  ### but this syntax applied to UlimitSystem Associative Array can hold 8 pairs  
+  ### and each pair own 2 subset of information. While this GetArrayItem own location
+  ### pair and 2 subset for start,end location. 
+  ### 3- and SHOULD supply a variable name to put the content inside. 
+  ### Since this function does generate code it's easier a this step to declare 
+  ### who will hold this information.  
+  StrMsgTpl=$( Bzip2DataTool --get ArrayMsg[6] ) ; 
+  eval $( GAIArrayName="ArrayFileHeader" \
+          GAIVarName="StrLocation" \
+          GAIIndex=34              \
+          GAIPairName="location"   \
+          GetArrayItem             ) ;  
+    
+  StrMsg=${StrMsgTpl} ; 
+  StrMsg=${StrMsg//__ARRAY__/ArrayFileHeader} ; 
+  StrMsg=${StrMsg//__INDEX__/34} ; 
+  StrMsg=${StrMsg//__PAIR__/location} ; 
+  StrMsg=${StrMsg//__VALUE__/${StrLocation}} ; 
+  VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+  
+  eval $( GAIArrayName="ArrayFileHeader" \
+          GAIVarName="StrFile" \
+          GAIIndex=17              \
+          GAIPairName="file"   \
+          GetArrayItem             ) ;  
+  StrMsg=${StrMsgTpl} ; 
+  StrMsg=${StrMsg//__ARRAY__/ArrayFileHeader} ; 
+  StrMsg=${StrMsg//__INDEX__/17} ; 
+  StrMsg=${StrMsg//__PAIR__/file} ; 
+  StrMsg=${StrMsg//__VALUE__/${StrFile}} ; 
+  VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+  
   }
   
   function __main_StopServices()
@@ -2636,7 +2820,7 @@ elif [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
     eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True CallArgument ) ;
    fi 
-   StrMsg=$( LoopShellScript --get ArrayMsg[0] ) ; 
+   StrMsg=$( Bzip2DataTool --get ArrayMsg[0] ) ; 
    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolShowEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
   
   }
@@ -2672,7 +2856,7 @@ elif [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then
        ValueToVariable ) __main_StopServices ; 
     elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
      #eval $( eval VersionApps ) ; 
-     StrMsg=$( LoopShellScript --get ArrayMsg[0] ) ; 
+     StrMsg=$( Bzip2DataTool --get ArrayMsg[0] ) ; 
      VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolShowEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
      eval $( eval \
        VTVIsQuotedValue=True \
