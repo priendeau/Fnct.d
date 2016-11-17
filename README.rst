@@ -2508,9 +2508,11 @@ Information from command-shell Helper :
     \String inside this function.
 
 
----------------------------------------
-Step forward the ZenityBuildForm sample
----------------------------------------
+*** More documentation to come and example with LoopShellScript ***
+
+
+
+
 
 ---------------------------------------
 Step forward the ZenityShellEval sample
