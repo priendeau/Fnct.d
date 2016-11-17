@@ -1,483 +1,57 @@
-Following command produce this error inside the function.
 
-Date:20160930-17:33:00
-Reference:472de1ad3899ab7a0aa52869a073c19c52178940
-file: _sub_Function_Appliance 
-function: GnrlPrsrInfctr
-With command line : 
-unset ArrayLib ; versionGPI=0.0.1 . /etc/init.d/Fnct.D/fnct_lib  ; GPIDisplayDebug=True GPIIsUUIDInstance=True GPIRepoCreatEnabled=False GPIRepositoryCreation=True  GPIFuncStart=RepositoryCreation GPIRepoUser=maxiste.root GPIRepoPerm=775 GnrlPrsrInfctr 
-description : Parser-line extracted from ZenityBuildForm does re-use tag __PERM__ inside line for mkdir and chown but not chmod, while __PERM__ is only present inside Association TAG nd not Template. In term, StrAction is not changing even if there
-is a loop and Associative Array query via Getter from $( GnrlPrsrInfctr --get ArrayTplAction[${IterActionName}] ) 
-
-
-OUTPUT:
---------------------------------------------------------------------------------------------------------------
-GnrlPrsrInfctr-DEBUG:[ Instance will use UUID reference: a590e8c2-8754-11e6-8b1d-001e4c8856d6 ]
-Entry-Start : RepositoryCreation
-RepositoryCreation-DEBUG:[ Prefixed Variable: BoolCreateRepository=True
-This is an assistant creating the Repository (location: /var/log/Fnct.D/GnrlPrsrInfctr)
-.This is reserved to store your Query for future uses. Prepare to enter into
-Credential action to create the Repository. In case your haven't chooses Variable
-	GPIRepoUser GPIRepoPerm
-to set your user(s)/Group accessing the repository or Permission to read and write,
-you can stop the application and start over. If you haven't choose a Function Name
-for this step it will pop-you a warning and stop the application. ]
-RepositoryCreation-DEBUG:[ Creation of PATH /var/log/Fnct.D/GnrlPrsrInfctr, Right Attribution : 775, Owner: maxiste.root ]
-RepositoryCreation-CMDLINE:[ Parser TAG-List Variable name : StrTagRepoMkdir: Template:[ __SUDO__ __OPT__ __APPS__ __OWNER__ __PATH__] : content: [ StrAppsSudo:__SUDO__,StrAppsSudoOpt:__OPT__,StrAppsMkdir:__APPS__,StrRepositoryQuery:__PATH__ ] ]
-TAGPARSER:[ PairLeft: StrAppsSudo, PairRight: __SUDO__, Query: __SUDO__ __OPT__ __APPS__ __OWNER__ __PATH__ ]
-TAGPARSER:[ PairLeft: StrAppsSudoOpt, PairRight: __OPT__, Query: /usr/bin/sudo __OPT__ __APPS__ __OWNER__ __PATH__ ]
-TAGPARSER:[ PairLeft: StrAppsMkdir, PairRight: __APPS__, Query: /usr/bin/sudo -s -H __APPS__ __OWNER__ __PATH__ ]
-TAGPARSER:[ PairLeft: StrRepositoryQuery, PairRight: __PATH__, Query: /usr/bin/sudo -s -H /bin/mkdir __OWNER__ __PATH__ ]
-RepositoryCreation-CMDLINE:[ /usr/bin/sudo -s -H /bin/mkdir __OWNER__ /var/log/Fnct.D/GnrlPrsrInfctr  ]
-RepositoryCreation-CMDLINE:[ Parser TAG-List Variable name : StrTagRepoChmod: Template:[ __SUDO__ __OPT__ __APPS__ __OWNER__ __PATH__] : content: [ StrAppsSudo:__SUDO__,StrAppsSudoOpt:__OPT__,StrAppsChmod:__APPS__,StrRepositoryQuery:__PATH__,StrDefaultPerm:__PERM__ ] ]
-TAGPARSER:[ PairLeft: StrAppsSudo, PairRight: __SUDO__, Query: __SUDO__ __OPT__ __APPS__ __OWNER__ __PATH__ ]
-TAGPARSER:[ PairLeft: StrAppsSudoOpt, PairRight: __OPT__, Query: /usr/bin/sudo __OPT__ __APPS__ __OWNER__ __PATH__ ]
-TAGPARSER:[ PairLeft: StrAppsChmod, PairRight: __APPS__, Query: /usr/bin/sudo -s -H __APPS__ __OWNER__ __PATH__ ]
-TAGPARSER:[ PairLeft: StrRepositoryQuery, PairRight: __PATH__, Query: /usr/bin/sudo -s -H /bin/chmod __OWNER__ __PATH__ ]
-TAGPARSER:[ PairLeft: StrDefaultPerm, PairRight: __PERM__, Query: /usr/bin/sudo -s -H /bin/chmod __OWNER__ /var/log/Fnct.D/GnrlPrsrInfctr ]
-RepositoryCreation-CMDLINE:[ /usr/bin/sudo -s -H /bin/chmod __OWNER__ /var/log/Fnct.D/GnrlPrsrInfctr  ]
-RepositoryCreation-CMDLINE:[ Parser TAG-List Variable name : StrTagRepoChown: Template:[ __SUDO__ __OPT__ __APPS__ __OWNER__ __PATH__] : content: [ StrAppsSudo:__SUDO__,StrAppsSudoOpt:__OPT__,StrAppsChown:__APPS__,StrRepositoryQuery:__PATH__,StrDefaultUser:__OWNER__ ] ]
-TAGPARSER:[ PairLeft: StrAppsSudo, PairRight: __SUDO__, Query: __SUDO__ __OPT__ __APPS__ __OWNER__ __PATH__ ]
-TAGPARSER:[ PairLeft: StrAppsSudoOpt, PairRight: __OPT__, Query: /usr/bin/sudo __OPT__ __APPS__ __OWNER__ __PATH__ ]
-TAGPARSER:[ PairLeft: StrAppsChown, PairRight: __APPS__, Query: /usr/bin/sudo -s -H __APPS__ __OWNER__ __PATH__ ]
-TAGPARSER:[ PairLeft: StrRepositoryQuery, PairRight: __PATH__, Query: /usr/bin/sudo -s -H /bin/chown __OWNER__ __PATH__ ]
-TAGPARSER:[ PairLeft: StrDefaultUser, PairRight: __OWNER__, Query: /usr/bin/sudo -s -H /bin/chown __OWNER__ /var/log/Fnct.D/GnrlPrsrInfctr ]
-RepositoryCreation-CMDLINE:[ /usr/bin/sudo -s -H /bin/chown maxiste.root /var/log/Fnct.D/GnrlPrsrInfctr  ]
-
-SOLUTION:
-Verifying the Array declaration:
-'local -a ArrayTplAction' ;
-changed for 'local -A ArrayTplAction ;'
---------------------------------------------------------------------------------------------------------------
-
-Date:20160930-20:38:00
-Reference:9dc33d066343344b204856f7f6d6779799af486f
-file: _sub_Function_Appliance 
-function: GnrlPrsrInfctr
-With command line : 
-unset ArrayLib ; versionGPI=0.0.1 . /etc/init.d/Fnct.D/fnct_lib  ; GPIDisplayDebug=False GPIIsUUIDInstance=True GPIRepoCreatEnabled=True GPIRepositoryCreation=True GPIParserDebug=False  GPIFuncStart=RepositoryCreation GPIRepoUser=maxiste.root GPIRepoPerm=775 GnrlPrsrInfctr
-description: Creation is not possible with actual command mkdir.
-
-OUTPUT:
---------------------------------------------------------------------------------------------------------------
-Entry-Start : RepositoryCreation
-RepositoryCreation-DEBUG:[ Prefixed Variable: BoolCreateRepository=True
-This is an assistant creating the Repository (location: /var/log/Fnct.D/GnrlPrsrInfctr)
-.This is reserved to store your Query for future uses. Prepare to enter into
-Credential action to create the Repository. In case your haven't chooses Variable
-	GPIRepoUser GPIRepoPerm
-to set your user(s)/Group accessing the repository or Permission to read and write,
-you can stop the application and start over. If you haven't choose a Function Name
-for this step it will pop-you a warning and stop the application. ]
-RepositoryCreation-DEBUG:[ Creation of PATH /var/log/Fnct.D/GnrlPrsrInfctr, Right Attribution : 775, Owner: maxiste.root ]
-RepositoryCreation-CMDLINE:[ /usr/bin/sudo -s -H /bin/mkdir /var/log/Fnct.D/GnrlPrsrInfctr  ]
-[sudo] password for maxiste: 
-/bin/mkdir: cannot create directory ‘/var/log/Fnct.D/GnrlPrsrInfctr’: No such file or directory
-RepositoryCreation-CMDLINE:[ /usr/bin/sudo -s -H /bin/chmod 775 /var/log/Fnct.D/GnrlPrsrInfctr  ]
-/bin/chmod: cannot access ‘/var/log/Fnct.D/GnrlPrsrInfctr’: No such file or directory
-RepositoryCreation-CMDLINE:[ /usr/bin/sudo -s -H /bin/chown maxiste.root /var/log/Fnct.D/GnrlPrsrInfctr  ]
-/bin/chown: cannot access ‘/var/log/Fnct.D/GnrlPrsrInfctr’: No such file or directory
-
---------------------------------------------------------------------------------------------------------------
-SOLUTION:
-mkdir -p for parent creation as need. Since this application is exempt of uses of aliases, using only
-mkdir which is sometimes aliasing to 'mkdir -p' is counter solution not working in system administrator.
-- Adding __APPS_OPTS__ inside Mkdir Tag Association and entry-point ( GPIFuncStart=RepositoryCreation )
-does working and can be used in more generalistic way to manage path creation. 
-command : 
-unset ArrayLib ; versionGPI=0.0.1 . /etc/init.d/Fnct.D/fnct_lib  ; GPIDisplayDebug=False GPIIsUUIDInstance=True GPIRepoCreatEnabled=True GPIRepositoryCreation=True GPIParserDebug=False  GPIFuncStart=RepositoryCreation GPIRepoUser=maxiste.root GPIRepoPerm=775 GnrlPrsrInfctr 
-
-Date:20160930-22:36:00
-Reference:fb51fdaecc2ec8feb1fa4881bf1d7fc839b5a60c
+VERSION:[ Application:GetOtherDate , version:( versionTP:0.0.2 versionVTV:0.0.2, versionCA:0.0.2, versionBVT:0.0.2) ]
+Date:20161117-22:53:00
+Reference:18c5a91d3b28f82dfc9bc3a9e1a9e8a4490826c8
 File: _sub_Function_Appliance 
-Function: GnrlPrsrInfctr
-With command line :unset ArrayLib ; versionGPI=0.0.1 . /etc/init.d/Fnct.D/fnct_lib ; eval $( GBLDFileStoreInfo=/var/cache/Fnct.D/BuildForm/6e5b6d0c-890f-11e6-8b1d-001e4c8856d6 GBLDAction=GetContent GetterByLineData )   ;
--->
-OUTPUT: 
---------------------------------------------------------------------------------------------------------------
-GnrlPrsrInfctr-DEBUG:[ Instance will use UUID reference: da52ab2e-877f-11e6-8b1d-001e4c8856d6 ]
-Entry-Start : __main_StartServices
-__APPS_OPT__: command not found
-ParserFunctionEval-CMDLINE:[ Copy of StrAppsTemplate, named StrCmd will hold __APPS__ __APPS_OPT__ __PIPE__ __FILTER__ __FILTER_OPT__  ]
- : command not found
-DEBUG:__main_StartServices:[ CmdLine: local StrPairLeft ; 
-   local StrPairRight ; 
-   local ArrayPFETag=( StrDefaultPipe:__PIPE__ StrApps:__APPS__ StrAppsOpt:__APPS_OPT__ StrFilterApps:__FILTER__ StrFilterOpt:__FILTER_OPT__ StrFileName:__FILE__ ) ; 
-   local StrMsg="PairLeft: __LEFT__, PairRight: __RIGHT__, Query: __QUERY__" ; 
-   for TagParser in ${ArrayPFETag[@]}  ; do 
-     AStrMsg="${StrMsg}" ;
-     StrPairRight="${TagParser/#[SIB][tnos][a-zA-Z0-9_]*:/}" ; 
-     StrPairLeft="${TagParser/%:__[A-Za-z0-9_,]*/}" ; 
-     AStrMsg=${AStrMsg//__LEFT__/${StrPairLeft}} ;
-     AStrMsg=${AStrMsg//__RIGHT__/${StrPairRight}} ;
-     AStrMsg=${AStrMsg//__QUERY__/${StrCmd}} ;
-     VerbMsg=${AStrMsg} VerbHeader=TAGPARSER VerbState=True VerbFormated=True VerbDev=/dev/stderr Verbosis ; 
-     eval StrCmd=\${\StrCmd//${StrPairRight}/\${${StrPairLeft}}}  ; 
-   done ; 
-   unset StrPairRight StrPairLeft ArrayPFETag ; ]
-TAGPARSER:[ PairLeft: StrDefaultPipe, PairRight: __PIPE__, Query: __APPS__ __APPS_OPT__ __PIPE__ __FILTER__ __FILTER_OPT__  ]
-TAGPARSER:[ PairLeft: StrApps, PairRight: __APPS__, Query: __APPS__ __APPS_OPT__ | __FILTER__ __FILTER_OPT__  ]
-TAGPARSER:[ PairLeft: StrAppsOpt, PairRight: __APPS_OPT__, Query: /usr/bin/dpkg __APPS_OPT__ | __FILTER__ __FILTER_OPT__  ]
-TAGPARSER:[ PairLeft: StrFilterApps, PairRight: __FILTER__, Query: /usr/bin/dpkg --get-selections | __FILTER__ __FILTER_OPT__  ]
-TAGPARSER:[ PairLeft: StrFilterOpt, PairRight: __FILTER_OPT__, Query: /usr/bin/dpkg --get-selections | /usr/bin/gawk __FILTER_OPT__  ]
-TAGPARSER:[ PairLeft: StrFileName, PairRight: __FILE__, Query: /usr/bin/dpkg --get-selections | /usr/bin/gawk -f __FILE__  ]
-ParserFunctionEval-CMDLINE:[ Parsed CmdLine: /usr/bin/dpkg --get-selections | /usr/bin/gawk -f /home/maxiste/github/Fnct.D/awk-script/dpkg-col-display.awk  ]
-dpkg: no packages found matching |
-dpkg: no packages found matching /usr/bin/gawk
-dpkg: no packages found matching -f
-dpkg: no packages found matching /home/maxiste/github/Fnct.D/awk-script/dpkg-col-display.awk
-${StrCmd}
-
-SOLUTION:
-Based on Query BuilForm : unset ArrayLib ; versionGPI=0.0.1 . /etc/init.d/Fnct.D/fnct_lib ; eval $( GBLDFileStoreInfo=/var/cache/Fnct.D/BuildForm/6e5b6d0c-890f-11e6-8b1d-001e4c8856d6 GBLDAction=GetContent GetterByLineData )   ;
-- Changing for a double eval will execute the query :
-eval eval "\${${StrParserResult}}" inside if [ ${BoolExecuteEval:=True} ] ... 
-${${StrParserResult}} is by default a Variable Named $StrCmd which Verbosiscan display the content.
-evaluating once it turn into ${StrCmd} but have no chance to turn into a executable compound elements.
-The double eval eval allow to re-evaluate the statement into real command line.  
-
-Date:20161003-15:07:00
-Reference:3a823d9f23772dc301c947a641e0a4f5bd7e56b2
-File: _sub_Function_Appliance 
-Function: GnrlPrsrInfctr
+Function: Bzip2DataTool
 With command line :
---> unset ArrayLib ; versionGPI=0.0.1 . /etc/init.d/Fnct.D/fnct_lib ; eval $( GBLDFileStoreInfo=/var/cache/Fnct.D/BuildForm/def9e256-8990-11e6-8b1d-001e4c8856d6 GBLDAction=GetContent GetterByLineData )   ;  IntSize=$( wc -c /var/log/Fnct.D/GnrlPrsrInfctr/${UUID} | cut -d ' ' -f 1 ) ; echo -ne "Size of File: /var/log/Fnct.D/GnrlPrsrInfctr/${UUID}: ${IntSize}\n" ;
-Description: 
-OUTPUT: 
---------------------------------------------------------------------------------------------------------------
-GnrlPrsrInfctr-DEBUG:[ Instance will use UUID reference: 8be2f07e-899c-11e6-8b1d-001e4c8856d6 ]
-Entry-Start : __main_StartServices
-__APPS_OPT__: command not found
-ParserFunctionEval-CMDLINE:[ Copy of StrAppsTemplate, named StrCmd will hold __APPS__ __APPS_OPT__ __PIPE__ __FILTER__ __FILTER_OPT__ ]
- : command not found
-DEBUG:__main_StartServices:[ CmdLine: local StrPairLeft ; 
-   local StrPairRight ; 
-   local ArrayPFETag=( StrDefaultPipe:__PIPE__ StrApps:__APPS__ StrAppsOpt:__APPS_OPT__ StrFilterApps:__FILTER__ StrFilterOpt:__FILTER_OPT__ StrFileName:__FILE__ ) ; 
-   local StrMsg="PairLeft: __LEFT__, PairRight: __RIGHT__, Query: __QUERY__" ; 
-   for TagParser in ${ArrayPFETag[@]}  ; do 
-     AStrMsg="${StrMsg}" ;
-     StrPairRight="${TagParser/#[SIB][tnos][a-zA-Z0-9_]*:/}" ; 
-     StrPairLeft="${TagParser/%:__[A-Za-z0-9_,]*/}" ; 
-     AStrMsg=${AStrMsg//__LEFT__/${StrPairLeft}} ;
-     AStrMsg=${AStrMsg//__RIGHT__/${StrPairRight}} ;
-     AStrMsg=${AStrMsg//__QUERY__/${StrCmd}} ;
-     VerbMsg=${AStrMsg} VerbHeader=TAGPARSER VerbState=True VerbFormated=True VerbDev=/dev/stderr Verbosis ; 
-     eval StrCmd=\${\StrCmd//${StrPairRight}/\${${StrPairLeft}}}  ; 
-   done ; 
-   unset StrPairRight StrPairLeft ArrayPFETag ; ]
-TAGPARSER:[ PairLeft: StrDefaultPipe, PairRight: __PIPE__, Query: __APPS__ __APPS_OPT__ __PIPE__ __FILTER__ __FILTER_OPT__ ]
-TAGPARSER:[ PairLeft: StrApps, PairRight: __APPS__, Query: __APPS__ __APPS_OPT__ | __FILTER__ __FILTER_OPT__ ]
-TAGPARSER:[ PairLeft: StrAppsOpt, PairRight: __APPS_OPT__, Query: /usr/bin/dpkg __APPS_OPT__ | __FILTER__ __FILTER_OPT__ ]
-TAGPARSER:[ PairLeft: StrFilterApps, PairRight: __FILTER__, Query: /usr/bin/dpkg --get-selections | __FILTER__ __FILTER_OPT__ ]
-TAGPARSER:[ PairLeft: StrFilterOpt, PairRight: __FILTER_OPT__, Query: /usr/bin/dpkg --get-selections | /usr/bin/gawk __FILTER_OPT__ ]
-TAGPARSER:[ PairLeft: StrFileName, PairRight: __FILE__, Query: /usr/bin/dpkg --get-selections | /usr/bin/gawk -f __FILE__ ]
-ParserFunctionEval-CMDLINE:[ Parsed CmdLine: /usr/bin/dpkg --get-selections | /usr/bin/gawk -f awk-script/dpkg-col-display.awk ]
-EXECUTE-ParserFunctionEval:[ Query Executed, UUID-Variable Reference:[ UUID ] ]
-Size of File: /var/log/Fnct.D/GnrlPrsrInfctr/8be2f07e-899c-11e6-8b1d-001e4c8856d6: 106161
---------------------------------------------------------------------------------------------------------------
-SOLUTION:
-Using Verbosis function with this form:
-VerbMsg=$( eval eval "\${${StrParserResult}}" ) \
-VerbDev=${StrDestinationResult} \
-VerbEvalForm=False \
-VerbHeader="" \
-VerbState=True \
-VerbFormated=False Verbosis ; 
-- Where VerbMsg=MSG is usually the form or accepting a variable, using double-eval with executive brace does
-working and we are using the VerbDev=Device usually to specified the /dev/stdout, /dev/stderr do support file
-as well. Notice,  StrDestinationResult is uniformely supporting the UUID and .GnrlPrsrInfctr for prior 
-assignation. 
-
-Date:20161003-15:56:00
-Reference:37079008981c26ab709918d0fbf04179c0bcc0d8
-File: _sub_Function_Appliance 
-Function: GnrlPrsrInfctr
-With command line : 
--->unset ArrayLib ; versionGPI=0.0.1 . /etc/init.d/Fnct.D/fnct_lib ; eval $( GBLDFileStoreInfo=/var/cache/Fnct.D/BuildForm/bb7e1d60-899f-11e6-8b1d-001e4c8856d6 GBLDAction=GetContent GetterByLineData )   ;  IntSize=$( wc -c /var/log/Fnct.D/GnrlPrsrInfctr/${UUID} | cut -d ' ' -f 1 ) ; echo -ne "Size of File: /var/log/Fnct.D/GnrlPrsrInfctr/${UUID}: ${IntSize}\n" ;
-Description: 
-Should Throw the output of the command-line inside UUID File repository and launch Zenity in --text-info mode to read the content. 
-OUTPUT: 
---------------------------------------------------------------------------------------------------------------
-GnrlPrsrInfctr-DEBUG:[ Instance will use UUID reference: a541232a-89a5-11e6-8b1d-001e4c8856d6 ]
-Entry-Start : __main_StartServices
-__APPS_OPT__: command not found
-ParserFunctionEval-CMDLINE:[ Copy of StrAppsTemplate, named StrCmd will hold __APPS__ __APPS_OPT__ __PIPE__ __FILTER__ __FILTER_OPT__ ]
- : command not found
-DEBUG:__main_StartServices:[ CmdLine: local StrPairLeft ; 
-   local StrPairRight ; 
-   local ArrayPFETag=( StrDefaultPipe:__PIPE__ StrApps:__APPS__ StrAppsOpt:__APPS_OPT__ StrFilterApps:__FILTER__ StrFilterOpt:__FILTER_OPT__ StrFileName:__FILE__ ) ; 
-   local StrMsg="PairLeft: __LEFT__, PairRight: __RIGHT__, Query: __QUERY__" ; 
-   for TagParser in ${ArrayPFETag[@]}  ; do 
-     AStrMsg="${StrMsg}" ;
-     StrPairRight="${TagParser/#[SIB][tnos][a-zA-Z0-9_]*:/}" ; 
-     StrPairLeft="${TagParser/%:__[A-Za-z0-9_,]*/}" ; 
-     AStrMsg=${AStrMsg//__LEFT__/${StrPairLeft}} ;
-     AStrMsg=${AStrMsg//__RIGHT__/${StrPairRight}} ;
-     AStrMsg=${AStrMsg//__QUERY__/${StrCmd}} ;
-     VerbMsg=${AStrMsg} VerbHeader=TAGPARSER VerbState=True VerbFormated=True VerbDev=/dev/stderr Verbosis ; 
-     eval StrCmd=\${\StrCmd//${StrPairRight}/\${${StrPairLeft}}}  ; 
-   done ; 
-   unset StrPairRight StrPairLeft ArrayPFETag ; ]
-TAGPARSER:[ PairLeft: StrDefaultPipe, PairRight: __PIPE__, Query: __APPS__ __APPS_OPT__ __PIPE__ __FILTER__ __FILTER_OPT__ ]
-TAGPARSER:[ PairLeft: StrApps, PairRight: __APPS__, Query: __APPS__ __APPS_OPT__ | __FILTER__ __FILTER_OPT__ ]
-TAGPARSER:[ PairLeft: StrAppsOpt, PairRight: __APPS_OPT__, Query: /usr/bin/dpkg __APPS_OPT__ | __FILTER__ __FILTER_OPT__ ]
-TAGPARSER:[ PairLeft: StrFilterApps, PairRight: __FILTER__, Query: /usr/bin/dpkg --get-selections | __FILTER__ __FILTER_OPT__ ]
-TAGPARSER:[ PairLeft: StrFilterOpt, PairRight: __FILTER_OPT__, Query: /usr/bin/dpkg --get-selections | /usr/bin/gawk __FILTER_OPT__ ]
-TAGPARSER:[ PairLeft: StrFileName, PairRight: __FILE__, Query: /usr/bin/dpkg --get-selections | /usr/bin/gawk -f __FILE__ ]
-ParserFunctionEval-CMDLINE:[ Parsed CmdLine: /usr/bin/dpkg --get-selections | /usr/bin/gawk -f awk-script/dpkg-col-display.awk ]
-EXECUTE-ParserFunctionEval:[ Query Executed, UUID-Variable Reference:[ UUID ] ]
---------------------------------------------------------------------------------------------------------------
-SOLUTION:
-- working, Zenity --text-info does provide a solution to see the outputed information.
-
-Date:20161003-17:01:00
-Reference:ddca85e09c11af1a7f3bb2133dc76121fed89efa
-File: _sub_Function_Appliance 
-Function: GnrlPrsrInfctr
-With command line :
--->unset ArrayLib ; versionGPI=0.0.1 . /etc/init.d/Fnct.D/fnct_lib ; eval $( GBLDFileStoreInfo=/var/cache/Fnct.D/BuildForm/bb7e1d60-899f-11e6-8b1d-001e4c8856d6 GBLDAction=GetContent GetterByLineData | sed 's/GPIIsUUIDInstance=True/GPIIsUUIDInstance=False/g' ) ;  
-Description: BuildForm UUID:bb7e1d60-899f-11e6-8b1d-001e4c8856d6 was slightly changed from it's query to use sed tool to exchange value from 
-, changing GPIIsUUIDInstance=True to False to test creation of local file .GnrlPrsrInfctr and dumpimg the content and see if there is error on the 
-debug ouput generated by this trial.  
-OUTPUT: 
---------------------------------------------------------------------------------------------------------------
-__APPS_OPT__: command not found
-ParserFunctionEval-CMDLINE:[ Copy of StrAppsTemplate, named StrCmd will hold __APPS__ __APPS_OPT__ __PIPE__ __FILTER__ __FILTER_OPT__ ]
- : command not found
-DEBUG:__main_StartServices:[ CmdLine: local StrPairLeft ; 
-   local StrPairRight ; 
-   local ArrayPFETag=( StrDefaultPipe:__PIPE__ StrApps:__APPS__ StrAppsOpt:__APPS_OPT__ StrFilterApps:__FILTER__ StrFilterOpt:__FILTER_OPT__ StrFileName:__FILE__ ) ; 
-   local StrMsg="PairLeft: __LEFT__, PairRight: __RIGHT__, Query: __QUERY__" ; 
-   for TagParser in ${ArrayPFETag[@]}  ; do 
-     AStrMsg="${StrMsg}" ;
-     StrPairRight="${TagParser/#[SIB][tnos][a-zA-Z0-9_]*:/}" ; 
-     StrPairLeft="${TagParser/%:__[A-Za-z0-9_,]*/}" ; 
-     AStrMsg=${AStrMsg//__LEFT__/${StrPairLeft}} ;
-     AStrMsg=${AStrMsg//__RIGHT__/${StrPairRight}} ;
-     AStrMsg=${AStrMsg//__QUERY__/${StrCmd}} ;
-     VerbMsg=${AStrMsg} VerbHeader=TAGPARSER VerbState=True VerbFormated=True VerbDev=/dev/stderr Verbosis ; 
-     eval StrCmd=\${\StrCmd//${StrPairRight}/\${${StrPairLeft}}}  ; 
-   done ; 
-   unset StrPairRight StrPairLeft ArrayPFETag ; ]
-TAGPARSER:[ PairLeft: StrDefaultPipe, PairRight: __PIPE__, Query: __APPS__ __APPS_OPT__ __PIPE__ __FILTER__ __FILTER_OPT__ ]
-TAGPARSER:[ PairLeft: StrApps, PairRight: __APPS__, Query: __APPS__ __APPS_OPT__ | __FILTER__ __FILTER_OPT__ ]
-TAGPARSER:[ PairLeft: StrAppsOpt, PairRight: __APPS_OPT__, Query: /usr/bin/dpkg __APPS_OPT__ | __FILTER__ __FILTER_OPT__ ]
-TAGPARSER:[ PairLeft: StrFilterApps, PairRight: __FILTER__, Query: /usr/bin/dpkg --get-selections | __FILTER__ __FILTER_OPT__ ]
-TAGPARSER:[ PairLeft: StrFilterOpt, PairRight: __FILTER_OPT__, Query: /usr/bin/dpkg --get-selections | /usr/bin/gawk __FILTER_OPT__ ]
-TAGPARSER:[ PairLeft: StrFileName, PairRight: __FILE__, Query: /usr/bin/dpkg --get-selections | /usr/bin/gawk -f __FILE__ ]
-ParserFunctionEval-CMDLINE:[ Parsed CmdLine: /usr/bin/dpkg --get-selections | /usr/bin/gawk -f awk-script/dpkg-col-display.awk ]
-EXECUTE-StatementExecution:[ Query Executed, No UUID used, Reference file:[ .GnrlPrsrInfctr ] ]
-
-** (zenity:20983): WARNING **: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files
---------------------------------------------------------------------------------------------------------------
-SOLUTION:
-Does provide the .GnrlPrsrInfctr and does not affect output quality. Does also retreive the message 
-GnrlPrsrInfctr-DEBUG:[ Instance will use UUID reference: __UUID__ ]
-and message:
-EXECUTE-ParserFunctionEval:[ Query Executed, UUID-Variable Reference:[ UUID ] ] by showing instead:
-EXECUTE-StatementExecution:[ Query Executed, No UUID used, Reference file:[ .GnrlPrsrInfctr ] ]
-- Zenity is openning and showing the content of the executed command. 
-- This test is in regard of creating function ZenityHandlerOut and ReportReference and proove
-uses of ValueToVariable does reduce transformation of code and allow moving part into tinier part 
-as long the small moved part should not transform a variable and next-code unmoved SHALL not inherit from
-this infortmation or mechanism to transfert the value should be added. 
-
-Date:20161003-17:53:00
-Reference:cdded9951311cf433f2c08fda464131714b091cf
-File: _sub_Function_Appliance 
-Function: GnrlPrsrInfctr
-With command line :
---> unset ArrayLib ; versionGPI=0.0.1 . /etc/init.d/Fnct.D/fnct_lib ; IsUUID=True IsZenity=True IsFile=False eval $( GBLDFileStoreInfo=/var/cache/Fnct.D/BuildForm/bf35dfa8-89b1-11e6-8b1d-001e4c8856d6 GBLDAction=GetContent GetterByLineData ) ;  IntSize=$( wc -c /var/log/Fnct.D/GnrlPrsrInfctr/${UUID} | cut -d ' ' -f 1 ) ; echo -ne "Size of File: /var/log/Fnct.D/GnrlPrsrInfctr/${UUID}: ${IntSize}\n" ;
-Description: Display ${StrCmd} and after the command line. This test run with BuildFormn bf35dfa8-89b1-11e6-8b1d-001e4c8856d6, from /var/cache/Fnct.D/BuildForm/ but can be reproduced with Form deposed inside path examples/BuildForm/bf35dfa8-89b1-11e6-8b1d-001e4c8856d6, variable IsUUID=True IsZenity=True IsFile=False are used to exchange value of GPIIsUUIDInstance, GPIIsZenityHandlerOut GPIIsFileHandlerOut which are shorted to write down ; can explicitly load the Zenity Windows and drop the command inside. 
-OUTPUT: 
---------------------------------------------------------------------------------------------------------------
-GnrlPrsrInfctr-DEBUG:[ Instance will use UUID reference: 9cd79cb6-8a66-11e6-8b1d-001e4c8856d6 ]
-Entry-Start : __main_StartServices
-__APPS_OPT__: command not found
-ParserFunctionEval-CMDLINE:[ Copy of StrAppsTemplate, named StrCmd will hold __APPS__ __APPS_OPT__ __PIPE__ __FILTER__ __FILTER_OPT__ ]
- : command not found
-DEBUG:__main_StartServices:[ CmdLine: local StrPairLeft ; 
-   local StrPairRight ; 
-   local ArrayPFETag=( StrDefaultPipe:__PIPE__ StrApps:__APPS__ StrAppsOpt:__APPS_OPT__ StrFilterApps:__FILTER__ StrFilterOpt:__FILTER_OPT__ StrFileName:__FILE__ ) ; 
-   local StrMsg="PairLeft: __LEFT__, PairRight: __RIGHT__, Query: __QUERY__" ; 
-   for TagParser in ${ArrayPFETag[@]}  ; do 
-     AStrMsg="${StrMsg}" ;
-     StrPairRight="${TagParser/#[SIB][tnos][a-zA-Z0-9_]*:/}" ; 
-     StrPairLeft="${TagParser/%:__[A-Za-z0-9_,]*/}" ; 
-     AStrMsg=${AStrMsg//__LEFT__/${StrPairLeft}} ;
-     AStrMsg=${AStrMsg//__RIGHT__/${StrPairRight}} ;
-     AStrMsg=${AStrMsg//__QUERY__/${StrCmd}} ;
-     VerbMsg=${AStrMsg} VerbHeader=TAGPARSER VerbState=True VerbFormated=True VerbDev=/dev/stderr Verbosis ; 
-     eval StrCmd=\${\StrCmd//${StrPairRight}/\${${StrPairLeft}}}  ; 
-   done ; 
-   unset StrPairRight StrPairLeft ArrayPFETag ; ]
-TAGPARSER:[ PairLeft: StrDefaultPipe, PairRight: __PIPE__, Query: __APPS__ __APPS_OPT__ __PIPE__ __FILTER__ __FILTER_OPT__ ]
-TAGPARSER:[ PairLeft: StrApps, PairRight: __APPS__, Query: __APPS__ __APPS_OPT__ | __FILTER__ __FILTER_OPT__ ]
-TAGPARSER:[ PairLeft: StrAppsOpt, PairRight: __APPS_OPT__, Query: /usr/bin/dpkg __APPS_OPT__ | __FILTER__ __FILTER_OPT__ ]
-TAGPARSER:[ PairLeft: StrFilterApps, PairRight: __FILTER__, Query: /usr/bin/dpkg --get-selections | __FILTER__ __FILTER_OPT__ ]
-TAGPARSER:[ PairLeft: StrFilterOpt, PairRight: __FILTER_OPT__, Query: /usr/bin/dpkg --get-selections | /usr/bin/gawk __FILTER_OPT__ ]
-TAGPARSER:[ PairLeft: StrFileName, PairRight: __FILE__, Query: /usr/bin/dpkg --get-selections | /usr/bin/gawk -f __FILE__ ]
-ParserFunctionEval-CMDLINE:[ Parsed CmdLine: /usr/bin/dpkg --get-selections | /usr/bin/gawk -f awk-script/dpkg-col-display.awk ]
-EXECUTE-ReportReference:[ Query Executed, UUID-Variable Reference:[ UUID ] ]
-${StrCmd}
-/usr/bin/dpkg --get-selections | /usr/bin/gawk -f awk-script/dpkg-col-display.awk
---------------------------------------------------------------------------------------------------------------
-SOLUTION:
-to remove the extra code after 
-elif BoolGenerateCode== True , it contain the Variable name holding the command and it's not usefull at this step,
-This step to main use ReportRefence to generate the UUID variable if the file report is a UUID or a .GnrlPrsrInfctr 
-report. 
-
-Date:20161004-15:51:00
-Reference:cdded9951311cf433f2c08fda464131714b091cf
-File: _sub_Function_Appliance 
-Function: GnrlPrsrInfctr
-With command line :
---> unset ArrayLib ; versionGPI=0.0.1 . /etc/init.d/Fnct.D/fnct_lib ; IsUUID=True IsZenity=True IsFile=False ; eval $( GBLDFileStoreInfo=/var/cache/Fnct.D/BuildForm/bf35dfa8-89b1-11e6-8b1d-001e4c8856d6 GBLDAction=GetContent GetterByLineData | sed 's/GPIParserDebug=True/GPIParserDebug=False/g;s/GPIDisplayDebug=True/GPIDisplayDebug=False/g' ) ;  IntSize=$( wc -c /var/log/Fnct.D/GnrlPrsrInfctr/${UUID} | cut -d ' ' -f 1 ) ; echo -ne "Size of File: /var/log/Fnct.D/GnrlPrsrInfctr/${UUID}: ${IntSize}\n" ;
-Description: The Query to display no debug and Keeping actual choice for Evaluation based of BuildForm UUID:bf35dfa8-89b1-11e6-8b1d-001e4c8856d6 display anormal '__APPS_OPT__: command not found',  and  ' : command not found' . Note it display the command line parsed and mean it can be evaluated or placed inside Executive Brace.  
-OUTPUT: 
---------------------------------------------------------------------------------------------------------------
-__APPS_OPT__: command not found
- : command not found
-/usr/bin/dpkg --get-selections | /usr/bin/gawk -f awk-script/dpkg-col-display.awk
---------------------------------------------------------------------------------------------------------------
-SOLUTION:
-inside ParserFunctionEval, evaluation require quoted string for 
-${StrParserResult}
-full line : eval "local ${StrParserResult}=\"${StrAppsTemplate} ${StrTagFeeder}\"" ;
-this remove only the __APPS_OPT__ and a redundant StrCmd was erased from __main_StartServices.
-
-Date:20161004-20:00:00
-Reference:70edde5ecd935399f26bdf77a863e9af1fdccf03
-File: _sub_Function_Appliance 
-Function: GnrlPrsrInfctr
-With command line :
---> sudo -s -H ldconfig -f /etc/ld.so.conf ; clear ; source /home/maxiste/.bashrc ; unset ArrayLib ; LibLoader --stopservices ;  eval $( FnctDVersion )  . /etc/init.d/Fnct.D/fnct_lib ; IsUUID=True IsZenity=True IsFile=False ; eval $( eval $( FnctDVersion ; GBLDFileStoreInfo=/var/cache/Fnct.D/BuildForm/bf35dfa8-89b1-11e6-8b1d-001e4c8856d6 GBLDAction=GetContent GetterByLineData | sed 's/GPIParserDebug=True/GPIParserDebug=False/g;s/GPIDisplayDebug=True/GPIDisplayDebug=False/g' ) ) | more ;  IntSize=$( wc -c /var/log/Fnct.D/GnrlPrsrInfctr/${UUID} | cut -d ' ' -f 1 ) ; echo -ne "Size of File: /var/log/Fnct.D/GnrlPrsrInfctr/${UUID}: ${IntSize}\n"
-Description: Only one ': command not found' not comming from TagParser or unexpected result from GnrlPrsrInfctr, and somes error coming from zenity from Dbus services which not causing under-sides effetcts. bus address: org.freedesktop.DBus.Error.ServiceUnknown
-OUTPUT: 
---------------------------------------------------------------------------------------------------------------
- : command not found
-
-** (zenity:9576): WARNING **: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files
- accountsservice install
- acl install
- acpi-support install
- acpid install
- add-apt-key install
- adduser install
- adobe-flashplugin install
- aglfn install
- alsa-base install
- alsa-utils install
- anacron install
- antlr3 install
- anyremote install
-...
---------------------------------------------------------------------------------------------------------------
-SOLUTION: System may require installation of package to fix dependency, but this introspection of the Dbus with dbus-send on destination org.a11y.Bus /org/a11y/bus org.a11y.Bus.GetAddress does produce the same error. 
-sudo dbus-send --session --print-reply --dest=org.a11y.Bus /org/a11y/bus org.a11y.Bus.GetAddress
-wrapping zenity in need of '2> /dev/null' at end may only eliminate the error.
-
-Date:20161007-00:13:00
-Reference:2d1e06e81f613e21552c81d70e3a424e6913ebd0
-File: _sub_Function_Appliance 
-Function: GnrlPrsrInfctr
-With command line :
---> sudo -s -H ldconfig -f /etc/ld.so.conf ; clear ; source /home/maxiste/.bashrc ; unset ArrayLib ;  eval $( FnctDVersion )  . /etc/init.d/Fnct.D/fnct_lib ; IsUUID=True IsZenity=True IsFile=False ; eval $( eval $( GBLDFileStoreInfo=/var/cache/Fnct.D/BuildForm/bf35dfa8-89b1-11e6-8b1d-001e4c8856d6 GBLDAction=GetContent GetterByLineData | sed 's/GPIParserDebug=True/GPIParserDebug=False/g;s/GPIDisplayDebug=True/GPIDisplayDebug=False/g' ) ) | more ;  IntSize=$( wc -c /var/log/Fnct.D/GnrlPrsrInfctr/${UUID} | cut -d ' ' -f 1 ) ; echo -ne "Size of File: /var/log/Fnct.D/GnrlPrsrInfctr/${UUID}: ${IntSize}\n" 
-Description: 
-here some complement from constant loop after added couple of added package , restart the system and 
-seeing GnrlPrsrInfctr is not working anymore . 
-first here the script FnctDVersion from this command line:
-from .bashrc 
-------------------------------------------------
-export THISVERSION=0.0.2 ; 
-export DEVELVERSION=0.0.1
-
-declare -A ArrayFnctDVersion ;
-ArrayFnctDVersion["versionGCT"]=${THISVERSION}
-ArrayFnctDVersion["versionGPI"]=${DEVELVERSION}
-ArrayFnctDVersion["versionCA"]=${THISVERSION} 
-
-function FnctDVersion()
-{
- local StrExportVar="__VAR__" ; 
- for VerName in ${!ArrayFnctDVersion[@]} ; do 
-  StrVersion=${ArrayFnctDVersion[${VerName}]} ;
-  echo -ne "Set FunctionTrigger:${VerName} Version:${StrVersion}\n" > /dev/stderr ; 
-  StrExportVar=${StrExportVar//__VAR__/${VerName}=${StrVersion} __VAR__}
- done 
- StrExportVar=${StrExportVar//__VAR__/} ;
- echo ${StrExportVar} ;  
-}
-------------------------------------------------
-on the other windows after each package removed I should start THIS command-line described inside command-line:
-
-for item in ${ArrayPackage[@]} ; do echo "Removing package ${item}" ; apt-get remove ${item} ; ldconfig -f /etc/ld.so.conf ; done 
-where all package are inserted inside an Array declaration:
-declare -a ArrayPackage=(  sssd-common gnome-packagekit-data libsecret-1-dev gnome-packagekit packagekit-backend-aptcc gnome-packagekit-session ibpackagekit-qt2 libpackagekit-glib2-dev libatk3.0-cil python-sss packagekit-tools gnome-packagekit-tools sssd-dbus mdbus2 libini-config3 libjson-glib-dev libdee-qt5 libpackagekit-qt2-dev libsss-idmap0 libdbusmenu-tools libdbusmenu-jsonloader4 libbasicobjects0  dee-tools libdbusmenu-jsonloader-dev libdbustest1-dev gir1.2-hud-client gir1.2-hud pam-dbus-notify libref-array1 cairo-dock-plug-ins-dbus-interface-mono libpath-utils1 libdhash1 libbasicobjects0 libc-ares2 libcollection2 libdhash1 libini-config3 libpath-utils1 libref-array1 libsss-idmap0  python-sss ) ;
-OUTPUT: 
---------------------------------------------------------------------------------------------------------------
-[sudo] password for maxiste: 
-
-Testing Lib Fnct.D
-Loading...		[ _sub_Structure ]
-Loading...		[ fnct_debian_lib ]
-Loading...		[ _sub_Function_Appliance ]
-Loading...		[ _sub_jack_script ]
-Loading...		[ _sub_Git ]
-Loading...		[ _sub_setup_py_extra_cmd ]
-Loading...		[ _sub_ssh_handler ]
-Loading...		[ _sub_vlc_services ]
-Loading...		[ _sub_binary ]
-Loading...		[ _sub_PythonBoost ]
-Set FunctionTrigger:versionGCT Version:0.0.2
-Set FunctionTrigger:versionGPI Version:0.0.1
-Set FunctionTrigger:versionCA Version:0.0.2
-Testing Lib Fnct.D
-Loading...		[ _sub_Structure ]
-Loading...		[ fnct_debian_lib ]
-Loading...		[ _sub_Function_Appliance ]
-Loading...		[ _sub_jack_script ]
-Loading...		[ _sub_Git ]
-Loading...		[ _sub_setup_py_extra_cmd ]
-Loading...		[ _sub_ssh_handler ]
-Loading...		[ _sub_vlc_services ]
-Loading...		[ _sub_binary ]
-Loading...		[ _sub_PythonBoost ]
- : command not found
- : command not found
- : command not found
- : command not found
- : command not found
- : command not found
-
---------------------------------------------------------------------------------------------------------------
-SOLUTION:
-for Getter from GnrlPrsrInfctr that cause a loop, replacing ${StrParentApps} --get ... by GnrlPrsrInfctr --get ...
-Notice : if this line is called with ${StrParentApps} which suppose to be the application GnrlPrsrInfctr --get ArrayMsg[3] <> ${StrParentApps} --get ArrayMsg[3], it enter inside a loop and never end... the test consist to add before the StrMsg=... the echo line "Before getting ArrayMsg[3]" and right under to put an echo line "After getting ArrayMsg[3]". On console you do never see the After getting ArrayMsg[3] !!! But this fixed with putting back the function name GnrlPrsrInfctr, work for versionCA=0.0.0 to 0.0.2 but exceptionnally does it for versionCA=0.0.1 and versionCA=0.0.2 ???
-
-Date:20161014-23:43:00
-Reference:5247d6176130268e37a1bb3f4f433f1414449cd7
-File: _sub_PackageRepository
-Function: GetDpkgInstalled
-With command line :
---> reload_fnctd ; . _sub_PackageRepository ; unset UUID ; eval $( FnctDVersion ) GDIGPIOpt=$( GetDpkgInstalled --get GDIGPIOpt | sed 's/GPIIsZenityHandlerOut=False/GPIIsZenityHandlerOut=True/g;s/GPIIsFileHandlerOut=True/GPIIsFileHandlerOut=False/g') GetDpkgInstalled
-
-Description: 
-Still show the Zenity Error message:
-- other action getting result based on sed and querry of Getter of GetDpkgInstalled allow switch to Zenity text-entry instead of normal display.
-It show another interface rather than usual Debian package listing by loading zenity Text-entry and demostrate the appropriate command-line launched. This is done by 
-where reload_fnctd is an alias 
-alias reload_fnctd='source ~/.bashrc ; LibLoader --stopservices ; unset ArrayLib ; eval $( FnctDVersion ) . /etc/init.d/Fnct.D/fnct_lib'
-where FnctDVersion is a function already explained and available inside README.rst
-
-OUTPUT: 
+-->unset $( Bzip2DataTool --list ) ; eval $( FnctDVersion ) B2DTShowEntryFunc=True         B2DTParserDebug=True B2DTDisplayDebug=True B2DTGenerateBlockFile=False B2DTFileCount=block-count.txt                                        B2DTBzip2File=PathDocuments/work-PathDocuments-maxiste.tar.bz2  Bzip2DataTool
+Description: Output generated for Bzip2DataTool for loading 50 blocks and testing GetArrayItem by Extracting Index 17 and 34 and display pair file and pair location.
+OUTPUT:  
 --------------------------------------------------------------------------------------------------------------
 Set FunctionTrigger:versionGCT Version:0.0.1
 Set FunctionTrigger:versionGSPN Version:0.0.2
+Set FunctionTrigger:versionB2DT Version:0.0.2
+Set FunctionTrigger:versionMC Version:0.0.2
 Set FunctionTrigger:versionTP Version:0.0.2
-Set FunctionTrigger:versionGPI Version:0.0.1
+Set FunctionTrigger:versionGPI Version:0.0.2
 Set FunctionTrigger:versionCA Version:0.0.2
+Set FunctionTrigger:versionNM Version:0.0.2
+Set FunctionTrigger:versionLSS Version:0.0.1
+Set FunctionTrigger:versionGOD Version:0.0.2
+Testing Lib Fnct.D
+Loading...		[ _sub_Structure ]
+Loading...		[ fnct_debian_lib ]
+Loading...		[ _sub_Function_Appliance ]
+bash: declare: write error: Broken pipe
+Loading...		[ _sub_jack_script ]
+Loading...		[ _sub_Git ]
+Loading...		[ _sub_setup_py_extra_cmd ]
+Loading...		[ _sub_ssh_handler ]
+Loading...		[ _sub_vlc_services ]
+Loading...		[ _sub_binary ]
+Loading...		[ _sub_PythonBoost ]
+[sudo] password for maxiste: 
+Set FunctionTrigger:versionGCT Version:0.0.1
+Set FunctionTrigger:versionGSPN Version:0.0.2
+Set FunctionTrigger:versionB2DT Version:0.0.2
+Set FunctionTrigger:versionMC Version:0.0.2
+Set FunctionTrigger:versionTP Version:0.0.2
+Set FunctionTrigger:versionGPI Version:0.0.2
+Set FunctionTrigger:versionCA Version:0.0.2
+Set FunctionTrigger:versionNM Version:0.0.2
+Set FunctionTrigger:versionLSS Version:0.0.1
+Set FunctionTrigger:versionGOD Version:0.0.2
+Set FunctionTrigger:versionGCT Version:0.0.1
+Set FunctionTrigger:versionGSPN Version:0.0.2
+Set FunctionTrigger:versionB2DT Version:0.0.2
+Set FunctionTrigger:versionMC Version:0.0.2
+Set FunctionTrigger:versionTP Version:0.0.2
+Set FunctionTrigger:versionGPI Version:0.0.2
+Set FunctionTrigger:versionCA Version:0.0.2
+Set FunctionTrigger:versionNM Version:0.0.2
+Set FunctionTrigger:versionLSS Version:0.0.1
+Set FunctionTrigger:versionGOD Version:0.0.2
 Testing Lib Fnct.D
 Loading...		[ _sub_Structure ]
 Loading...		[ fnct_debian_lib ]
@@ -502,9 +76,14 @@ Un-Loading...		[ _sub_binary ]
 Un-Loading...		[ _sub_PythonBoost ]
 Set FunctionTrigger:versionGCT Version:0.0.1
 Set FunctionTrigger:versionGSPN Version:0.0.2
+Set FunctionTrigger:versionB2DT Version:0.0.2
+Set FunctionTrigger:versionMC Version:0.0.2
 Set FunctionTrigger:versionTP Version:0.0.2
-Set FunctionTrigger:versionGPI Version:0.0.1
+Set FunctionTrigger:versionGPI Version:0.0.2
 Set FunctionTrigger:versionCA Version:0.0.2
+Set FunctionTrigger:versionNM Version:0.0.2
+Set FunctionTrigger:versionLSS Version:0.0.1
+Set FunctionTrigger:versionGOD Version:0.0.2
 Testing Lib Fnct.D
 Loading...		[ _sub_Structure ]
 Loading...		[ fnct_debian_lib ]
@@ -518,76 +97,379 @@ Loading...		[ _sub_binary ]
 Loading...		[ _sub_PythonBoost ]
 Set FunctionTrigger:versionGCT Version:0.0.1
 Set FunctionTrigger:versionGSPN Version:0.0.2
+Set FunctionTrigger:versionB2DT Version:0.0.2
+Set FunctionTrigger:versionMC Version:0.0.2
 Set FunctionTrigger:versionTP Version:0.0.2
-Set FunctionTrigger:versionGPI Version:0.0.1
+Set FunctionTrigger:versionGPI Version:0.0.2
 Set FunctionTrigger:versionCA Version:0.0.2
-VERSION:[ GetDpkgInstalled version versionTP=0.0.2, versionCA=0.0.2, versionGPI=0.0.1 ]
-VERSION:[ GnrlPrsrInfctr version versionTP=0.0.2, versionCA=0.0.2, versionGPI=0.0.1 ]
-
-** (zenity:31643): WARNING **: Error retrieving accessibility bus address: org.freedesktop.DBus.Error.ServiceUnknown: The name org.a11y.Bus was not provided by any .service files
- accountsservice install
- acl install
- acpi-support install
- acpid install
- add-apt-key install
- adduser install
- adobe-flashplugin install
- aglfn install
- alsa-base install
- alsa-utils install
- anacron install
- antlr3 install
- anyremote install
- anyremote-data install
- apg install
- apt install
- apt-build install
- apt-clone install
- apt-file install
- apt-src install
- apt-transport-https install
- apt-utils install
- apt-xapian-index install
- aptdaemon install
- aptdaemon-data install
- aptitude install
- aptitude-common install
- apturl install
- apturl-common install
- archdetect-deb install
- archmage install
- aspell install
- aspell-en install
- aspell-fr install
- at-spi2-core deinstall
- atril install
- atril-common install
- attr install
- autoconf install
- autogen install
- automake install
- autopoint install
- autotalent install
- autotools-dev install
- autotrace install
- avahi-autoipd install
- avahi-daemon install
- avahi-utils install
- bamfdaemon install
- banshee install
- base-files install
- base-passwd install
- bash install
- bash-completion install
- bc install
- beignet install
- beignet-dev install
- bicyclerepair install
- bind9-host install
+Set FunctionTrigger:versionNM Version:0.0.2
+Set FunctionTrigger:versionLSS Version:0.0.1
+Set FunctionTrigger:versionGOD Version:0.0.2
+versionGCT=0.0.1 versionGSPN=0.0.2 versionB2DT=0.0.2 versionMC=0.0.2 versionTP=0.0.2 versionGPI=0.0.2 versionCA=0.0.2 versionNM=0.0.2 versionLSS=0.0.1 versionGOD=0.0.2
+Set FunctionTrigger:versionGCT Version:0.0.1
+Set FunctionTrigger:versionGSPN Version:0.0.2
+Set FunctionTrigger:versionB2DT Version:0.0.2
+Set FunctionTrigger:versionMC Version:0.0.2
+Set FunctionTrigger:versionTP Version:0.0.2
+Set FunctionTrigger:versionGPI Version:0.0.2
+Set FunctionTrigger:versionCA Version:0.0.2
+Set FunctionTrigger:versionNM Version:0.0.2
+Set FunctionTrigger:versionLSS Version:0.0.1
+Set FunctionTrigger:versionGOD Version:0.0.2
+Bzip2DataTool-ENTRY:[ Entry in function ]
+__main_StartServices-ENTRY:[ Entry in function ]
+BlockExtraction-ENTRY:[ Entry in function ]
+BlockExtraction-CMDLINE:[ Remain Parser Extracted from : 
+	BEExtraction:start
+	content:StrPipeCmd:__PIPE__,StrAppsRange:__APPS_RANGE__,StrRegXBlockHeader:__REGEXP__,StrBlockFileRef:__BLOCK_FILE__,StrFilter1Apps:__FILTER1__,StrFilter1AppsOpt:__FILTER1OPT__,StrFilter2Apps:__FILTER2__,StrFilter2AppsOpt:__FILTER2OPT__,StrAppsHeadOpt:__RANGETYPEAPPSOPT__,StrAppsHead:__RANGETYPEAPPS__ ]
+DEBUG:__main_StartServices:[ CmdLine: local intx=0 ; local StrPairLeft ; 
+   local StrPairRight ; 
+   local -a ArrayBE=( StrPipeCmd:__PIPE__ StrAppsRange:__APPS_RANGE__ StrRegXBlockHeader:__REGEXP__ StrBlockFileRef:__BLOCK_FILE__ StrFilter1Apps:__FILTER1__ StrFilter1AppsOpt:__FILTER1OPT__ StrFilter2Apps:__FILTER2__ StrFilter2AppsOpt:__FILTER2OPT__ StrAppsHeadOpt:__RANGETYPEAPPSOPT__ StrAppsHead:__RANGETYPEAPPS__ ) ; 
+   local StrMsg="PairLeft( __LEFT__ ), PairRight( __RIGHT__ ), Query( __QUERY__)" ; 
+   for (( intx=0 ; intx <= ${#ArrayBE[@]}-1 ; intx++ )) ; do 
+     TagParser=${ArrayBE[${intx}]} ; 
+     AStrMsg="${StrMsg}" ;
+     StrPairRight="${TagParser/#[SIB][tnos][a-zA-Z0-9_]*:/}" ; 
+     StrPairLeft="${TagParser/%:__[A-Za-z0-9\_]*/}" ; 
+     AStrMsg=${AStrMsg//__LEFT__/${StrPairLeft}} ;
+     AStrMsg=${AStrMsg//__RIGHT__/${StrPairRight}} ;
+     AStrMsg=${AStrMsg//__QUERY__/${StrParserBE}} ;
+     VerbMsg=${AStrMsg} VerbHeader=TAGPARSER VerbState=True VerbFormated=True VerbDev=/dev/stderr Verbosis ; 
+     eval StrParserBE=\${\StrParserBE//${StrPairRight}/\${${StrPairLeft}}}  ; 
+   done ; 
+   unset intx StrPairRight StrPairLeft ArrayBE ; ]
+TAGPARSER:[ PairLeft( StrPipeCmd ), PairRight( __PIPE__ ), Query( __APPS_RANGE__ __REGEXP__ __BLOCK_FILE__ __PIPE__ __RANGETYPEAPPS__ __RANGETYPEAPPSOPT__ __PIPE__ __FILTER1__ __FILTER1OPT__ __PIPE__ __FILTER2__ __FILTER2OPT__) ]
+TAGPARSER:[ PairLeft( StrAppsRange ), PairRight( __APPS_RANGE__ ), Query( __APPS_RANGE__ __REGEXP__ __BLOCK_FILE__ | __RANGETYPEAPPS__ __RANGETYPEAPPSOPT__ | __FILTER1__ __FILTER1OPT__ | __FILTER2__ __FILTER2OPT__) ]
+TAGPARSER:[ PairLeft( StrRegXBlockHeader ), PairRight( __REGEXP__ ), Query( /bin/grep __REGEXP__ __BLOCK_FILE__ | __RANGETYPEAPPS__ __RANGETYPEAPPSOPT__ | __FILTER1__ __FILTER1OPT__ | __FILTER2__ __FILTER2OPT__) ]
+TAGPARSER:[ PairLeft( StrBlockFileRef ), PairRight( __BLOCK_FILE__ ), Query( /bin/grep "^[	\ ]*block [0-9]*" __BLOCK_FILE__ | __RANGETYPEAPPS__ __RANGETYPEAPPSOPT__ | __FILTER1__ __FILTER1OPT__ | __FILTER2__ __FILTER2OPT__) ]
+TAGPARSER:[ PairLeft( StrFilter1Apps ), PairRight( __FILTER1__ ), Query( /bin/grep "^[	\ ]*block [0-9]*" block-count.txt | __RANGETYPEAPPS__ __RANGETYPEAPPSOPT__ | __FILTER1__ __FILTER1OPT__ | __FILTER2__ __FILTER2OPT__) ]
+TAGPARSER:[ PairLeft( StrFilter1AppsOpt ), PairRight( __FILTER1OPT__ ), Query( /bin/grep "^[	\ ]*block [0-9]*" block-count.txt | __RANGETYPEAPPS__ __RANGETYPEAPPSOPT__ | /bin/sed __FILTER1OPT__ | __FILTER2__ __FILTER2OPT__) ]
+TAGPARSER:[ PairLeft( StrFilter2Apps ), PairRight( __FILTER2__ ), Query( /bin/grep "^[	\ ]*block [0-9]*" block-count.txt | __RANGETYPEAPPS__ __RANGETYPEAPPSOPT__ | /bin/sed -r 's/ +/ /g' | __FILTER2__ __FILTER2OPT__) ]
+TAGPARSER:[ PairLeft( StrFilter2AppsOpt ), PairRight( __FILTER2OPT__ ), Query( /bin/grep "^[	\ ]*block [0-9]*" block-count.txt | __RANGETYPEAPPS__ __RANGETYPEAPPSOPT__ | /bin/sed -r 's/ +/ /g' | /usr/bin/cut __FILTER2OPT__) ]
+TAGPARSER:[ PairLeft( StrAppsHeadOpt ), PairRight( __RANGETYPEAPPSOPT__ ), Query( /bin/grep "^[	\ ]*block [0-9]*" block-count.txt | __RANGETYPEAPPS__ __RANGETYPEAPPSOPT__ | /bin/sed -r 's/ +/ /g' | /usr/bin/cut -d ' ' -f 3) ]
+TAGPARSER:[ PairLeft( StrAppsHead ), PairRight( __RANGETYPEAPPS__ ), Query( /bin/grep "^[	\ ]*block [0-9]*" block-count.txt | __RANGETYPEAPPS__ -n 1 | /bin/sed -r 's/ +/ /g' | /usr/bin/cut -d ' ' -f 3) ]
+BlockExtraction-CMDLINE:[ CmdLine: /bin/grep "^[	\ ]*block [0-9]*" block-count.txt | /usr/bin/head -n 1 | /bin/sed -r 's/ +/ /g' | /usr/bin/cut -d ' ' -f 3 ]
+BlockExtraction-ENTRY:[ Entry in function ]
+BlockExtraction-CMDLINE:[ Remain Parser Extracted from : 
+	BEExtraction:end
+	content:StrPipeCmd:__PIPE__,StrAppsRange:__APPS_RANGE__,StrRegXBlockHeader:__REGEXP__,StrBlockFileRef:__BLOCK_FILE__,StrFilter1Apps:__FILTER1__,StrFilter1AppsOpt:__FILTER1OPT__,StrFilter2Apps:__FILTER2__,StrFilter2AppsOpt:__FILTER2OPT__,StrAppsTailOpt:__RANGETYPEAPPSOPT__,StrAppsTail:__RANGETYPEAPPS__ ]
+DEBUG:__main_StartServices:[ CmdLine: local intx=0 ; local StrPairLeft ; 
+   local StrPairRight ; 
+   local -a ArrayBE=( StrPipeCmd:__PIPE__ StrAppsRange:__APPS_RANGE__ StrRegXBlockHeader:__REGEXP__ StrBlockFileRef:__BLOCK_FILE__ StrFilter1Apps:__FILTER1__ StrFilter1AppsOpt:__FILTER1OPT__ StrFilter2Apps:__FILTER2__ StrFilter2AppsOpt:__FILTER2OPT__ StrAppsTailOpt:__RANGETYPEAPPSOPT__ StrAppsTail:__RANGETYPEAPPS__ ) ; 
+   local StrMsg="PairLeft( __LEFT__ ), PairRight( __RIGHT__ ), Query( __QUERY__)" ; 
+   for (( intx=0 ; intx <= ${#ArrayBE[@]}-1 ; intx++ )) ; do 
+     TagParser=${ArrayBE[${intx}]} ; 
+     AStrMsg="${StrMsg}" ;
+     StrPairRight="${TagParser/#[SIB][tnos][a-zA-Z0-9_]*:/}" ; 
+     StrPairLeft="${TagParser/%:__[A-Za-z0-9\_]*/}" ; 
+     AStrMsg=${AStrMsg//__LEFT__/${StrPairLeft}} ;
+     AStrMsg=${AStrMsg//__RIGHT__/${StrPairRight}} ;
+     AStrMsg=${AStrMsg//__QUERY__/${StrParserBE}} ;
+     VerbMsg=${AStrMsg} VerbHeader=TAGPARSER VerbState=True VerbFormated=True VerbDev=/dev/stderr Verbosis ; 
+     eval StrParserBE=\${\StrParserBE//${StrPairRight}/\${${StrPairLeft}}}  ; 
+   done ; 
+   unset intx StrPairRight StrPairLeft ArrayBE ; ]
+TAGPARSER:[ PairLeft( StrPipeCmd ), PairRight( __PIPE__ ), Query( __APPS_RANGE__ __REGEXP__ __BLOCK_FILE__ __PIPE__ __RANGETYPEAPPS__ __RANGETYPEAPPSOPT__ __PIPE__ __FILTER1__ __FILTER1OPT__ __PIPE__ __FILTER2__ __FILTER2OPT__) ]
+TAGPARSER:[ PairLeft( StrAppsRange ), PairRight( __APPS_RANGE__ ), Query( __APPS_RANGE__ __REGEXP__ __BLOCK_FILE__ | __RANGETYPEAPPS__ __RANGETYPEAPPSOPT__ | __FILTER1__ __FILTER1OPT__ | __FILTER2__ __FILTER2OPT__) ]
+TAGPARSER:[ PairLeft( StrRegXBlockHeader ), PairRight( __REGEXP__ ), Query( /bin/grep __REGEXP__ __BLOCK_FILE__ | __RANGETYPEAPPS__ __RANGETYPEAPPSOPT__ | __FILTER1__ __FILTER1OPT__ | __FILTER2__ __FILTER2OPT__) ]
+TAGPARSER:[ PairLeft( StrBlockFileRef ), PairRight( __BLOCK_FILE__ ), Query( /bin/grep "^[	\ ]*block [0-9]*" __BLOCK_FILE__ | __RANGETYPEAPPS__ __RANGETYPEAPPSOPT__ | __FILTER1__ __FILTER1OPT__ | __FILTER2__ __FILTER2OPT__) ]
+TAGPARSER:[ PairLeft( StrFilter1Apps ), PairRight( __FILTER1__ ), Query( /bin/grep "^[	\ ]*block [0-9]*" block-count.txt | __RANGETYPEAPPS__ __RANGETYPEAPPSOPT__ | __FILTER1__ __FILTER1OPT__ | __FILTER2__ __FILTER2OPT__) ]
+TAGPARSER:[ PairLeft( StrFilter1AppsOpt ), PairRight( __FILTER1OPT__ ), Query( /bin/grep "^[	\ ]*block [0-9]*" block-count.txt | __RANGETYPEAPPS__ __RANGETYPEAPPSOPT__ | /bin/sed __FILTER1OPT__ | __FILTER2__ __FILTER2OPT__) ]
+TAGPARSER:[ PairLeft( StrFilter2Apps ), PairRight( __FILTER2__ ), Query( /bin/grep "^[	\ ]*block [0-9]*" block-count.txt | __RANGETYPEAPPS__ __RANGETYPEAPPSOPT__ | /bin/sed -r 's/ +/ /g' | __FILTER2__ __FILTER2OPT__) ]
+TAGPARSER:[ PairLeft( StrFilter2AppsOpt ), PairRight( __FILTER2OPT__ ), Query( /bin/grep "^[	\ ]*block [0-9]*" block-count.txt | __RANGETYPEAPPS__ __RANGETYPEAPPSOPT__ | /bin/sed -r 's/ +/ /g' | /usr/bin/cut __FILTER2OPT__) ]
+TAGPARSER:[ PairLeft( StrAppsTailOpt ), PairRight( __RANGETYPEAPPSOPT__ ), Query( /bin/grep "^[	\ ]*block [0-9]*" block-count.txt | __RANGETYPEAPPS__ __RANGETYPEAPPSOPT__ | /bin/sed -r 's/ +/ /g' | /usr/bin/cut -d ' ' -f 3) ]
+TAGPARSER:[ PairLeft( StrAppsTail ), PairRight( __RANGETYPEAPPS__ ), Query( /bin/grep "^[	\ ]*block [0-9]*" block-count.txt | __RANGETYPEAPPS__ -n 1 | /bin/sed -r 's/ +/ /g' | /usr/bin/cut -d ' ' -f 3) ]
+BlockExtraction-CMDLINE:[ CmdLine: /bin/grep "^[	\ ]*block [0-9]*" block-count.txt | /usr/bin/tail -n 1 | /bin/sed -r 's/ +/ /g' | /usr/bin/cut -d ' ' -f 3 ]
+__main_StartServices-ENTRY:[ Block List:[ Start:1, End:374 ] ]
+BlockInformation-ENTRY:[ Entry in function ]
+BlockInformation-Variable:[ Inspecting Variable:StrBlockInforParser, Value: StrAppsRange:__APPS_RANGE__,StrBlockFileRef:__BLOCK_FILE__,StrFilter1Apps:__FILTER1__,StrFilter1AppsOpt:__FILTER1OPT__,StrFilter3Apps:__FILTER3__,StrFilter3AppsOpt:__FILTER3OPT__,StrFilter4Apps:__FILTER4__,StrFilter4AppsOpt:__FILTER4OPT__,StrFilter5Apps:__FILTER5__,StrFilter5AppsOpt:__FILTER5OPT__,StrExecutiveChar:__EXECCHR__,StrSingleQuote:__SINGLQUT__,StrPipeCmd:__PIPE__ ]
+BlockInformation-Variable:[ Inspecting Variable:ArrayFileRank[Rank], Value: StrBlkInfoTplRank:__POST_FILTER__,StrRegXBlockHeader:__REGEXP__,StrSubRegExpHeader:__REGEXP2__,StrAppsRange:__APPS_RANGE__,StrBlockFileRef:__BLOCK_FILE__,StrFilter1Apps:__FILTER1__,StrFilter1AppsOpt:__FILTER1OPT__,StrFilter3Apps:__FILTER3__,StrFilter3AppsOpt:__FILTER3OPT__,StrFilter4Apps:__FILTER4__,StrFilter4AppsOpt:__FILTER4OPT__,StrFilter5Apps:__FILTER5__,StrFilter5AppsOpt:__FILTER5OPT__,StrExecutiveChar:__EXECCHR__,StrSingleQuote:__SINGLQUT__,StrPipeCmd:__PIPE__ ]
+BlockInformation-TPL:[ Remain Template from StrParserBI: content:__APPS_RANGE__ __REGEXP__ __BLOCK_FILE__ __PIPE__ __APPS_RANGE__ __REGEXP2__ __PIPE__ __POST_FILTER__ ]
+BlockInformation-Parser:[ Remain Template from StrTagParser: content:StrBlkInfoTplRank:__POST_FILTER__,StrRegXBlockHeader:__REGEXP__,StrSubRegExpHeader:__REGEXP2__,StrAppsRange:__APPS_RANGE__,StrBlockFileRef:__BLOCK_FILE__,StrFilter1Apps:__FILTER1__,StrFilter1AppsOpt:__FILTER1OPT__,StrFilter3Apps:__FILTER3__,StrFilter3AppsOpt:__FILTER3OPT__,StrFilter4Apps:__FILTER4__,StrFilter4AppsOpt:__FILTER4OPT__,StrFilter5Apps:__FILTER5__,StrFilter5AppsOpt:__FILTER5OPT__,StrExecutiveChar:__EXECCHR__,StrSingleQuote:__SINGLQUT__,StrPipeCmd:__PIPE__ ]
+DEBUG:__main_StartServices:[ CmdLine: local intx=0 ; local StrPairLeft ; 
+   local StrPairRight ; 
+   local -a ArrayBI=( StrBlkInfoTplRank:__POST_FILTER__ StrRegXBlockHeader:__REGEXP__ StrSubRegExpHeader:__REGEXP2__ StrAppsRange:__APPS_RANGE__ StrBlockFileRef:__BLOCK_FILE__ StrFilter1Apps:__FILTER1__ StrFilter1AppsOpt:__FILTER1OPT__ StrFilter3Apps:__FILTER3__ StrFilter3AppsOpt:__FILTER3OPT__ StrFilter4Apps:__FILTER4__ StrFilter4AppsOpt:__FILTER4OPT__ StrFilter5Apps:__FILTER5__ StrFilter5AppsOpt:__FILTER5OPT__ StrExecutiveChar:__EXECCHR__ StrSingleQuote:__SINGLQUT__ StrPipeCmd:__PIPE__ ) ; 
+   local StrMsg="PairLeft( __LEFT__ ), PairRight( __RIGHT__ ), Query( __QUERY__)" ; 
+   for (( intx=0 ; intx <= ${#ArrayBI[@]}-1 ; intx++ )) ; do 
+     TagParser=${ArrayBI[${intx}]} ; 
+     AStrMsg="${StrMsg}" ;
+     StrPairRight="${TagParser/#[SIB][tnos][a-zA-Z0-9_]*:/}" ; 
+     StrPairLeft="${TagParser/%:__[A-Za-z0-9\_]*/}" ; 
+     AStrMsg=${AStrMsg//__LEFT__/${StrPairLeft}} ;
+     AStrMsg=${AStrMsg//__RIGHT__/${StrPairRight}} ;
+     AStrMsg=${AStrMsg//__QUERY__/${StrParserBI}} ;
+     VerbMsg=${AStrMsg} VerbHeader=TAGPARSER VerbState=True VerbFormated=True VerbDev=/dev/stderr Verbosis ; 
+     eval StrParserBI=\${\StrParserBI//${StrPairRight}/\${${StrPairLeft}}}  ; 
+   done ; 
+   unset intx StrPairRight StrPairLeft ArrayBI ; ]
+TAGPARSER:[ PairLeft( StrBlkInfoTplRank ), PairRight( __POST_FILTER__ ), Query( __APPS_RANGE__ __REGEXP__ __BLOCK_FILE__ __PIPE__ __APPS_RANGE__ __REGEXP2__ __PIPE__ __POST_FILTER__) ]
+TAGPARSER:[ PairLeft( StrRegXBlockHeader ), PairRight( __REGEXP__ ), Query( __APPS_RANGE__ __REGEXP__ __BLOCK_FILE__ __PIPE__ __APPS_RANGE__ __REGEXP2__ __PIPE__  __FILTER1__ __FILTER1OPT__ __PIPE__ __FILTER3__ __FILTER3OPT__) ]
+TAGPARSER:[ PairLeft( StrSubRegExpHeader ), PairRight( __REGEXP2__ ), Query( __APPS_RANGE__ "^[	\ ]*block [0-9]*" __BLOCK_FILE__ __PIPE__ __APPS_RANGE__ __REGEXP2__ __PIPE__  __FILTER1__ __FILTER1OPT__ __PIPE__ __FILTER3__ __FILTER3OPT__) ]
+TAGPARSER:[ PairLeft( StrAppsRange ), PairRight( __APPS_RANGE__ ), Query( __APPS_RANGE__ "^[	\ ]*block [0-9]*" __BLOCK_FILE__ __PIPE__ __APPS_RANGE__ "block __INT__ runs" __PIPE__  __FILTER1__ __FILTER1OPT__ __PIPE__ __FILTER3__ __FILTER3OPT__) ]
+TAGPARSER:[ PairLeft( StrBlockFileRef ), PairRight( __BLOCK_FILE__ ), Query( /bin/grep "^[	\ ]*block [0-9]*" __BLOCK_FILE__ __PIPE__ /bin/grep "block __INT__ runs" __PIPE__  __FILTER1__ __FILTER1OPT__ __PIPE__ __FILTER3__ __FILTER3OPT__) ]
+TAGPARSER:[ PairLeft( StrFilter1Apps ), PairRight( __FILTER1__ ), Query( /bin/grep "^[	\ ]*block [0-9]*" block-count.txt __PIPE__ /bin/grep "block __INT__ runs" __PIPE__  __FILTER1__ __FILTER1OPT__ __PIPE__ __FILTER3__ __FILTER3OPT__) ]
+TAGPARSER:[ PairLeft( StrFilter1AppsOpt ), PairRight( __FILTER1OPT__ ), Query( /bin/grep "^[	\ ]*block [0-9]*" block-count.txt __PIPE__ /bin/grep "block __INT__ runs" __PIPE__  /bin/sed __FILTER1OPT__ __PIPE__ __FILTER3__ __FILTER3OPT__) ]
+TAGPARSER:[ PairLeft( StrFilter3Apps ), PairRight( __FILTER3__ ), Query( /bin/grep "^[	\ ]*block [0-9]*" block-count.txt __PIPE__ /bin/grep "block __INT__ runs" __PIPE__  /bin/sed -r 's/ +/ /g' __PIPE__ __FILTER3__ __FILTER3OPT__) ]
+TAGPARSER:[ PairLeft( StrFilter3AppsOpt ), PairRight( __FILTER3OPT__ ), Query( /bin/grep "^[	\ ]*block [0-9]*" block-count.txt __PIPE__ /bin/grep "block __INT__ runs" __PIPE__  /bin/sed -r 's/ +/ /g' __PIPE__ /usr/bin/cut __FILTER3OPT__) ]
+TAGPARSER:[ PairLeft( StrFilter4Apps ), PairRight( __FILTER4__ ), Query( /bin/grep "^[	\ ]*block [0-9]*" block-count.txt __PIPE__ /bin/grep "block __INT__ runs" __PIPE__  /bin/sed -r 's/ +/ /g' __PIPE__ /usr/bin/cut -d ' ' -f 6,8) ]
+TAGPARSER:[ PairLeft( StrFilter4AppsOpt ), PairRight( __FILTER4OPT__ ), Query( /bin/grep "^[	\ ]*block [0-9]*" block-count.txt __PIPE__ /bin/grep "block __INT__ runs" __PIPE__  /bin/sed -r 's/ +/ /g' __PIPE__ /usr/bin/cut -d ' ' -f 6,8) ]
+TAGPARSER:[ PairLeft( StrFilter5Apps ), PairRight( __FILTER5__ ), Query( /bin/grep "^[	\ ]*block [0-9]*" block-count.txt __PIPE__ /bin/grep "block __INT__ runs" __PIPE__  /bin/sed -r 's/ +/ /g' __PIPE__ /usr/bin/cut -d ' ' -f 6,8) ]
+TAGPARSER:[ PairLeft( StrFilter5AppsOpt ), PairRight( __FILTER5OPT__ ), Query( /bin/grep "^[	\ ]*block [0-9]*" block-count.txt __PIPE__ /bin/grep "block __INT__ runs" __PIPE__  /bin/sed -r 's/ +/ /g' __PIPE__ /usr/bin/cut -d ' ' -f 6,8) ]
+TAGPARSER:[ PairLeft( StrExecutiveChar ), PairRight( __EXECCHR__ ), Query( /bin/grep "^[	\ ]*block [0-9]*" block-count.txt __PIPE__ /bin/grep "block __INT__ runs" __PIPE__  /bin/sed -r 's/ +/ /g' __PIPE__ /usr/bin/cut -d ' ' -f 6,8) ]
+TAGPARSER:[ PairLeft( StrSingleQuote ), PairRight( __SINGLQUT__ ), Query( /bin/grep "^[	\ ]*block [0-9]*" block-count.txt __PIPE__ /bin/grep "block __INT__ runs" __PIPE__  /bin/sed -r 's/ +/ /g' __PIPE__ /usr/bin/cut -d ' ' -f 6,8) ]
+TAGPARSER:[ PairLeft( StrPipeCmd ), PairRight( __PIPE__ ), Query( /bin/grep "^[	\ ]*block [0-9]*" block-count.txt __PIPE__ /bin/grep "block __INT__ runs" __PIPE__  /bin/sed -r 's/ +/ /g' __PIPE__ /usr/bin/cut -d ' ' -f 6,8) ]
+BlockInformation-CMDLINE:[ CmdLine: /bin/grep "^[	\ ]*block [0-9]*" block-count.txt | /bin/grep "block __INT__ runs" |  /bin/sed -r 's/ +/ /g' | /usr/bin/cut -d ' ' -f 6,8 ]
+bash: local: `=local StrContentArray ;': not a valid identifier
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[80 6695433] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[6695482 13932924] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[13932973 21077262] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[21077311 28307999] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[28308048 35540847] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[35540896 42769408] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[42769457 49368545] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[49368594 55811587] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[55811636 61709181] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[61709230 68889628] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[68889677 76096371] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[76096420 83247683] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[83247732 90215986] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[90216035 96918336] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[96918385 103436446] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[103436495 110444070] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[110444119 117496755] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[117496804 124504701] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[124504750 131620611] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[131620660 138414513] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[138414562 145007512] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[145007561 151963148] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[151963197 159013460] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[159013509 166069461] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[166069510 173125697] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[173125746 180156982] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[180157031 186808086] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[186808135 193720290] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[193720339 200730622] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[200730671 207808687] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[207808736 214883647] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[214883696 221884405] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[221884454 228904364] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[228904413 236010692] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[236010741 243063226] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[243063275 250128243] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[250128292 257192860] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[257192909 264299723] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[264299772 271378885] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[271378934 278419617] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[278419666 285505772] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[285505821 292605460] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[292605509 299691138] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[299691187 306832726] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[306832775 313751371] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[313751420 320764021] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[320764070 327849104] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[327849153 334910321] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[334910370 341900699] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[341900748 348965354] ]
+BlockInformation-ENTRY:[ Entry in function ]
+BlockInformation-Variable:[ Inspecting Variable:StrBlockInforParser, Value: StrAppsRange:__APPS_RANGE__,StrBlockFileRef:__BLOCK_FILE__,StrFilter1Apps:__FILTER1__,StrFilter1AppsOpt:__FILTER1OPT__,StrFilter3Apps:__FILTER3__,StrFilter3AppsOpt:__FILTER3OPT__,StrFilter4Apps:__FILTER4__,StrFilter4AppsOpt:__FILTER4OPT__,StrFilter5Apps:__FILTER5__,StrFilter5AppsOpt:__FILTER5OPT__,StrExecutiveChar:__EXECCHR__,StrSingleQuote:__SINGLQUT__,StrPipeCmd:__PIPE__ ]
+BlockInformation-Variable:[ Inspecting Variable:ArrayFileRank[Header], Value: StrBlkInfoTplHeader:__POST_FILTER__,StrRegXBlockFileContent:__REGEXP__,StrSubRegExpFileContent:__REGEXP2__,StrAppsRange:__APPS_RANGE__,StrBlockFileRef:__BLOCK_FILE__,StrFilter1Apps:__FILTER1__,StrFilter1AppsOpt:__FILTER1OPT__,StrFilter3Apps:__FILTER3__,StrFilter3AppsOpt:__FILTER3OPT__,StrFilter4Apps:__FILTER4__,StrFilter4AppsOpt:__FILTER4OPT__,StrFilter5Apps:__FILTER5__,StrFilter5AppsOpt:__FILTER5OPT__,StrExecutiveChar:__EXECCHR__,StrSingleQuote:__SINGLQUT__,StrPipeCmd:__PIPE__ ]
+BlockInformation-TPL:[ Remain Template from StrParserBI: content:__APPS_RANGE__ __REGEXP__ __BLOCK_FILE__ __PIPE__ __APPS_RANGE__ __REGEXP2__ __PIPE__ __POST_FILTER__ ]
+BlockInformation-Parser:[ Remain Template from StrTagParser: content:StrBlkInfoTplHeader:__POST_FILTER__,StrRegXBlockFileContent:__REGEXP__,StrSubRegExpFileContent:__REGEXP2__,StrAppsRange:__APPS_RANGE__,StrBlockFileRef:__BLOCK_FILE__,StrFilter1Apps:__FILTER1__,StrFilter1AppsOpt:__FILTER1OPT__,StrFilter3Apps:__FILTER3__,StrFilter3AppsOpt:__FILTER3OPT__,StrFilter4Apps:__FILTER4__,StrFilter4AppsOpt:__FILTER4OPT__,StrFilter5Apps:__FILTER5__,StrFilter5AppsOpt:__FILTER5OPT__,StrExecutiveChar:__EXECCHR__,StrSingleQuote:__SINGLQUT__,StrPipeCmd:__PIPE__ ]
+DEBUG:__main_StartServices:[ CmdLine: local intx=0 ; local StrPairLeft ; 
+   local StrPairRight ; 
+   local -a ArrayBI=( StrBlkInfoTplHeader:__POST_FILTER__ StrRegXBlockFileContent:__REGEXP__ StrSubRegExpFileContent:__REGEXP2__ StrAppsRange:__APPS_RANGE__ StrBlockFileRef:__BLOCK_FILE__ StrFilter1Apps:__FILTER1__ StrFilter1AppsOpt:__FILTER1OPT__ StrFilter3Apps:__FILTER3__ StrFilter3AppsOpt:__FILTER3OPT__ StrFilter4Apps:__FILTER4__ StrFilter4AppsOpt:__FILTER4OPT__ StrFilter5Apps:__FILTER5__ StrFilter5AppsOpt:__FILTER5OPT__ StrExecutiveChar:__EXECCHR__ StrSingleQuote:__SINGLQUT__ StrPipeCmd:__PIPE__ ) ; 
+   local StrMsg="PairLeft( __LEFT__ ), PairRight( __RIGHT__ ), Query( __QUERY__)" ; 
+   for (( intx=0 ; intx <= ${#ArrayBI[@]}-1 ; intx++ )) ; do 
+     TagParser=${ArrayBI[${intx}]} ; 
+     AStrMsg="${StrMsg}" ;
+     StrPairRight="${TagParser/#[SIB][tnos][a-zA-Z0-9_]*:/}" ; 
+     StrPairLeft="${TagParser/%:__[A-Za-z0-9\_]*/}" ; 
+     AStrMsg=${AStrMsg//__LEFT__/${StrPairLeft}} ;
+     AStrMsg=${AStrMsg//__RIGHT__/${StrPairRight}} ;
+     AStrMsg=${AStrMsg//__QUERY__/${StrParserBI}} ;
+     VerbMsg=${AStrMsg} VerbHeader=TAGPARSER VerbState=True VerbFormated=True VerbDev=/dev/stderr Verbosis ; 
+     eval StrParserBI=\${\StrParserBI//${StrPairRight}/\${${StrPairLeft}}}  ; 
+   done ; 
+   unset intx StrPairRight StrPairLeft ArrayBI ; ]
+TAGPARSER:[ PairLeft( StrBlkInfoTplHeader ), PairRight( __POST_FILTER__ ), Query( __APPS_RANGE__ __REGEXP__ __BLOCK_FILE__ __PIPE__ __APPS_RANGE__ __REGEXP2__ __PIPE__ __POST_FILTER__) ]
+TAGPARSER:[ PairLeft( StrRegXBlockFileContent ), PairRight( __REGEXP__ ), Query( __APPS_RANGE__ __REGEXP__ __BLOCK_FILE__ __PIPE__ __APPS_RANGE__ __REGEXP2__ __PIPE__ __FILTER1__ __FILTER1OPT__ __PIPE__ __FILTER4__ __FILTER4OPT__ __PIPE__ __FILTER5__ __FILTER5OPT__) ]
+TAGPARSER:[ PairLeft( StrSubRegExpFileContent ), PairRight( __REGEXP2__ ), Query( __APPS_RANGE__ "^[	\ ]*writing block [0-9]*" __BLOCK_FILE__ __PIPE__ __APPS_RANGE__ __REGEXP2__ __PIPE__ __FILTER1__ __FILTER1OPT__ __PIPE__ __FILTER4__ __FILTER4OPT__ __PIPE__ __FILTER5__ __FILTER5OPT__) ]
+TAGPARSER:[ PairLeft( StrAppsRange ), PairRight( __APPS_RANGE__ ), Query( __APPS_RANGE__ "^[	\ ]*writing block [0-9]*" __BLOCK_FILE__ __PIPE__ __APPS_RANGE__ "block __INT__ to" __PIPE__ __FILTER1__ __FILTER1OPT__ __PIPE__ __FILTER4__ __FILTER4OPT__ __PIPE__ __FILTER5__ __FILTER5OPT__) ]
+TAGPARSER:[ PairLeft( StrBlockFileRef ), PairRight( __BLOCK_FILE__ ), Query( /bin/grep "^[	\ ]*writing block [0-9]*" __BLOCK_FILE__ __PIPE__ /bin/grep "block __INT__ to" __PIPE__ __FILTER1__ __FILTER1OPT__ __PIPE__ __FILTER4__ __FILTER4OPT__ __PIPE__ __FILTER5__ __FILTER5OPT__) ]
+TAGPARSER:[ PairLeft( StrFilter1Apps ), PairRight( __FILTER1__ ), Query( /bin/grep "^[	\ ]*writing block [0-9]*" block-count.txt __PIPE__ /bin/grep "block __INT__ to" __PIPE__ __FILTER1__ __FILTER1OPT__ __PIPE__ __FILTER4__ __FILTER4OPT__ __PIPE__ __FILTER5__ __FILTER5OPT__) ]
+TAGPARSER:[ PairLeft( StrFilter1AppsOpt ), PairRight( __FILTER1OPT__ ), Query( /bin/grep "^[	\ ]*writing block [0-9]*" block-count.txt __PIPE__ /bin/grep "block __INT__ to" __PIPE__ /bin/sed __FILTER1OPT__ __PIPE__ __FILTER4__ __FILTER4OPT__ __PIPE__ __FILTER5__ __FILTER5OPT__) ]
+TAGPARSER:[ PairLeft( StrFilter3Apps ), PairRight( __FILTER3__ ), Query( /bin/grep "^[	\ ]*writing block [0-9]*" block-count.txt __PIPE__ /bin/grep "block __INT__ to" __PIPE__ /bin/sed -r 's/ +/ /g' __PIPE__ __FILTER4__ __FILTER4OPT__ __PIPE__ __FILTER5__ __FILTER5OPT__) ]
+TAGPARSER:[ PairLeft( StrFilter3AppsOpt ), PairRight( __FILTER3OPT__ ), Query( /bin/grep "^[	\ ]*writing block [0-9]*" block-count.txt __PIPE__ /bin/grep "block __INT__ to" __PIPE__ /bin/sed -r 's/ +/ /g' __PIPE__ __FILTER4__ __FILTER4OPT__ __PIPE__ __FILTER5__ __FILTER5OPT__) ]
+TAGPARSER:[ PairLeft( StrFilter4Apps ), PairRight( __FILTER4__ ), Query( /bin/grep "^[	\ ]*writing block [0-9]*" block-count.txt __PIPE__ /bin/grep "block __INT__ to" __PIPE__ /bin/sed -r 's/ +/ /g' __PIPE__ __FILTER4__ __FILTER4OPT__ __PIPE__ __FILTER5__ __FILTER5OPT__) ]
+TAGPARSER:[ PairLeft( StrFilter4AppsOpt ), PairRight( __FILTER4OPT__ ), Query( /bin/grep "^[	\ ]*writing block [0-9]*" block-count.txt __PIPE__ /bin/grep "block __INT__ to" __PIPE__ /bin/sed -r 's/ +/ /g' __PIPE__ /usr/bin/cut __FILTER4OPT__ __PIPE__ __FILTER5__ __FILTER5OPT__) ]
+TAGPARSER:[ PairLeft( StrFilter5Apps ), PairRight( __FILTER5__ ), Query( /bin/grep "^[	\ ]*writing block [0-9]*" block-count.txt __PIPE__ /bin/grep "block __INT__ to" __PIPE__ /bin/sed -r 's/ +/ /g' __PIPE__ /usr/bin/cut -d ' ' -f 6,8 __PIPE__ __FILTER5__ __FILTER5OPT__) ]
+TAGPARSER:[ PairLeft( StrFilter5AppsOpt ), PairRight( __FILTER5OPT__ ), Query( /bin/grep "^[	\ ]*writing block [0-9]*" block-count.txt __PIPE__ /bin/grep "block __INT__ to" __PIPE__ /bin/sed -r 's/ +/ /g' __PIPE__ /usr/bin/cut -d ' ' -f 6,8 __PIPE__ /bin/sed __FILTER5OPT__) ]
+TAGPARSER:[ PairLeft( StrExecutiveChar ), PairRight( __EXECCHR__ ), Query( /bin/grep "^[	\ ]*writing block [0-9]*" block-count.txt __PIPE__ /bin/grep "block __INT__ to" __PIPE__ /bin/sed -r 's/ +/ /g' __PIPE__ /usr/bin/cut -d ' ' -f 6,8 __PIPE__ /bin/sed 's/^[\__EXECCHR____SINGLQUT__\__SINGLQUT____SINGLQUT__]//g;s/.[\__EXECCHR____SINGLQUT__\__SINGLQUT____SINGLQUT__]//g') ]
+TAGPARSER:[ PairLeft( StrSingleQuote ), PairRight( __SINGLQUT__ ), Query( /bin/grep "^[	\ ]*writing block [0-9]*" block-count.txt __PIPE__ /bin/grep "block __INT__ to" __PIPE__ /bin/sed -r 's/ +/ /g' __PIPE__ /usr/bin/cut -d ' ' -f 6,8 __PIPE__ /bin/sed 's/^[\`__SINGLQUT__\__SINGLQUT____SINGLQUT__]//g;s/.[\`__SINGLQUT__\__SINGLQUT____SINGLQUT__]//g') ]
+TAGPARSER:[ PairLeft( StrPipeCmd ), PairRight( __PIPE__ ), Query( /bin/grep "^[	\ ]*writing block [0-9]*" block-count.txt __PIPE__ /bin/grep "block __INT__ to" __PIPE__ /bin/sed -r 's/ +/ /g' __PIPE__ /usr/bin/cut -d ' ' -f 6,8 __PIPE__ /bin/sed 's/^[\`'\'']//g;s/.[\`'\'']//g') ]
+BlockInformation-CMDLINE:[ CmdLine: /bin/grep "^[	\ ]*writing block [0-9]*" block-count.txt | /bin/grep "block __INT__ to" | /bin/sed -r 's/ +/ /g' | /usr/bin/cut -d ' ' -f 6,8 | /bin/sed 's/^[\`'\'']//g;s/.[\`'\'']//g' ]
+bash: local: `=local StrContentArray ;': not a valid identifier
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00001work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00002work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00003work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00004work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00005work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00006work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00007work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00008work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00009work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00010work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00011work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00012work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00013work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00014work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00015work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00016work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00017work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00018work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00019work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00020work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00021work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00022work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00023work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00024work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00025work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00026work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00027work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00028work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00029work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00030work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00031work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00032work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00033work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00034work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00035work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00036work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00037work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00038work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00039work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00040work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00041work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00042work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00043work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00044work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00045work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00046work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00047work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00048work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00049work-PathDocuments-maxiste.tar.bz] ]
+BlockInformation-CMDLINE-LOOP:[ Variable StrValueFromCmd, value:[PathDocuments/rec00050work-PathDocuments-maxiste.tar.bz] ]
+ArrayFileHeader[26]=location:173125746,180156982;file:PathDocuments/rec00026work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[27]=location:180157031,186808086;file:PathDocuments/rec00027work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[24]=location:159013509,166069461;file:PathDocuments/rec00024work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[25]=location:166069510,173125697;file:PathDocuments/rec00025work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[22]=location:145007561,151963148;file:PathDocuments/rec00022work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[23]=location:151963197,159013460;file:PathDocuments/rec00023work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[20]=location:131620660,138414513;file:PathDocuments/rec00020work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[21]=location:138414562,145007512;file:PathDocuments/rec00021work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[28]=location:186808135,193720290;file:PathDocuments/rec00028work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[29]=location:193720339,200730622;file:PathDocuments/rec00029work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[13]=location:83247732,90215986;file:PathDocuments/rec00013work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[12]=location:76096420,83247683;file:PathDocuments/rec00012work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[11]=location:68889677,76096371;file:PathDocuments/rec00011work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[10]=location:61709230,68889628;file:PathDocuments/rec00010work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[17]=location:110444119,117496755;file:PathDocuments/rec00017work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[16]=location:103436495,110444070;file:PathDocuments/rec00016work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[15]=location:96918385,103436446;file:PathDocuments/rec00015work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[14]=location:90216035,96918336;file:PathDocuments/rec00014work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[19]=location:124504750,131620611;file:PathDocuments/rec00019work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[18]=location:117496804,124504701;file:PathDocuments/rec00018work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[50]=location:341900748,348965354;file:PathDocuments/rec00050work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[48]=location:327849153,334910321;file:PathDocuments/rec00048work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[49]=location:334910370,341900699;file:PathDocuments/rec00049work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[44]=location:299691187,306832726;file:PathDocuments/rec00044work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[45]=location:306832775,313751371;file:PathDocuments/rec00045work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[46]=location:313751420,320764021;file:PathDocuments/rec00046work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[47]=location:320764070,327849104;file:PathDocuments/rec00047work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[40]=location:271378934,278419617;file:PathDocuments/rec00040work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[41]=location:278419666,285505772;file:PathDocuments/rec00041work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[42]=location:285505821,292605460;file:PathDocuments/rec00042work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[43]=location:292605509,299691138;file:PathDocuments/rec00043work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[39]=location:264299772,271378885;file:PathDocuments/rec00039work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[38]=location:257192909,264299723;file:PathDocuments/rec00038work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[1]=location:80,6695433;file:PathDocuments/rec00001work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[2]=location:6695482,13932924;file:PathDocuments/rec00002work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[3]=location:13932973,21077262;file:PathDocuments/rec00003work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[4]=location:21077311,28307999;file:PathDocuments/rec00004work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[5]=location:28308048,35540847;file:PathDocuments/rec00005work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[6]=location:35540896,42769408;file:PathDocuments/rec00006work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[7]=location:42769457,49368545;file:PathDocuments/rec00007work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[31]=location:207808736,214883647;file:PathDocuments/rec00031work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[8]=location:49368594,55811587;file:PathDocuments/rec00008work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[30]=location:200730671,207808687;file:PathDocuments/rec00030work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[9]=location:55811636,61709181;file:PathDocuments/rec00009work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[33]=location:221884454,228904364;file:PathDocuments/rec00033work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[32]=location:214883696,221884405;file:PathDocuments/rec00032work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[35]=location:236010741,243063226;file:PathDocuments/rec00035work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[34]=location:228904413,236010692;file:PathDocuments/rec00034work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[37]=location:250128292,257192860;file:PathDocuments/rec00037work-PathDocuments-maxiste.tar.bz
+ArrayFileHeader[36]=location:243063275,250128243;file:PathDocuments/rec00036work-PathDocuments-maxiste.tar.bz
+GetArrayItem-ENTRY:[ Entry in function ]
+GetArrayItem-CMDLINE:[ CmdLine: 
+   local StrTmpValue="${ArrayFileHeader[34]}";
+   local ArrayTmp=( ${StrTmpValue//;/ } ) ; 
+   local StrTmpPair;
+   local StrTmpTestPair ; 
+   local IntPairLen; 
+   local IntPairTestLen ;
+   local StrPairName ; 
+   local StrPairValue ; 
+   local IntC=0 ; 
+   local IntMaxCount=${#ArrayTmp[@]} ;
+   local StrMsg="Variable StrTmpPair Value:(__TMPVALUE__)\nVariable StrTmpTestPair Value:(__TEST_PAIR__)" ;
+   for (( IntC=0 ; IntC <= ${IntMaxCount} - 1 ; IntC++ )) ; do 
+    StrTmpPair="${ArrayTmp[${IntC}]}" ; 
+    StrTmpTestPair="${StrTmpPair/#location:}" ; 
+    IntPairLen=${#StrTmpPair} ; 
+    IntPairTestLen=${#StrTmpTestPair} ;
+    if [ ${IntPairLen:=0} -ne ${IntPairTestLen:=0} ] ; then
+     StrLocation="${StrTmpTestPair}" ;
+     StrMsg=${StrMsg//__TMPVALUE__/${StrTmpValue}} ;
+     StrMsg=${StrMsg//__TEST_PAIR__/${StrTmpTestPair}} ;
+     VerbMsg=${StrMsg} VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    fi  
+   done ;
+   echo -ne "${StrLocation}"
+    ]
+__main_StartServices-DEBUG:[ Variable StrTmpPair Value:(location:228904413,236010692;file:PathDocuments/rec00034work-PathDocuments-maxiste.tar.bz)
+Variable StrTmpTestPair Value:(228904413,236010692) ]
+228904413,236010692__main_StartServices-ENTRY:[ Test Array Extraction: ArrayName:ArrayFileHeader, Index:34, PairName:location, Value:228904413,236010692 ]
+GetArrayItem-ENTRY:[ Entry in function ]
+GetArrayItem-CMDLINE:[ CmdLine: 
+   local StrTmpValue="${ArrayFileHeader[17]}";
+   local ArrayTmp=( ${StrTmpValue//;/ } ) ; 
+   local StrTmpPair;
+   local StrTmpTestPair ; 
+   local IntPairLen; 
+   local IntPairTestLen ;
+   local StrPairName ; 
+   local StrPairValue ; 
+   local IntC=0 ; 
+   local IntMaxCount=${#ArrayTmp[@]} ;
+   local StrMsg="Variable StrTmpPair Value:(__TMPVALUE__)\nVariable StrTmpTestPair Value:(__TEST_PAIR__)" ;
+   for (( IntC=0 ; IntC <= ${IntMaxCount} - 1 ; IntC++ )) ; do 
+    StrTmpPair="${ArrayTmp[${IntC}]}" ; 
+    StrTmpTestPair="${StrTmpPair/#file:}" ; 
+    IntPairLen=${#StrTmpPair} ; 
+    IntPairTestLen=${#StrTmpTestPair} ;
+    if [ ${IntPairLen:=0} -ne ${IntPairTestLen:=0} ] ; then
+     StrFile="${StrTmpTestPair}" ;
+     StrMsg=${StrMsg//__TMPVALUE__/${StrTmpValue}} ;
+     StrMsg=${StrMsg//__TEST_PAIR__/${StrTmpTestPair}} ;
+     VerbMsg=${StrMsg} VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    fi  
+   done ;
+   echo -ne "${StrFile}"
+    ]
+__main_StartServices-DEBUG:[ Variable StrTmpPair Value:(location:110444119,117496755;file:PathDocuments/rec00017work-PathDocuments-maxiste.tar.bz)
+Variable StrTmpTestPair Value:(PathDocuments/rec00017work-PathDocuments-maxiste.tar.bz) ]
+PathDocuments/rec00017work-PathDocuments-maxiste.tar.bz__main_StartServices-ENTRY:[ Test Array Extraction: ArrayName:ArrayFileHeader, Index:17, PairName:file, Value:PathDocuments/rec00017work-PathDocuments-maxiste.tar.bz ]
 
 --------------------------------------------------------------------------------------------------------------
 SOLUTION:
-to redirect to error from /dev/sdterr or called '2>' to /dev/null since the Dbus Services was ligthened or reduced for slowing down the development system.
-This should applied to GnrlPrsrInfctr inside this function. 
-- considering GetDpkgInstalled have pass the execution I should test the underlying layer of GetDpkgListing calling StreamCprEnvlTxt and GetDpkgInstalled after 
-adapting GetDpkgListing to GnrlPrsrInfctr call. 
+Test is working and can retreive sollicited index and pair-name. However during call of function some broken-pipe appear but did not alter the code. May involve some latency and slowing code execution for error reporting but lots of error are corrected since TagParser is almost finished. 
