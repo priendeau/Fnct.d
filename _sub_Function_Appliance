@@ -2770,45 +2770,6 @@ elif [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then
    echo -ne "ArrayFileHeader[${StrIndex}]=${ArrayFileHeader[${StrIndex}]}\n" ; 
   done 
 
-  ### Test function GetArrayItem 
-  ### Test extraction of ArrayFileHeader for 
-  ### 1- test extraction of block-location aka start and end of block
-  ### 2- Must provide information like Array Name, The Index and one of the possible
-  ### pair inside the Array stored by pair. actually there is 2 pairs of information
-  ### but this syntax applied to UlimitSystem Associative Array can hold 8 pairs  
-  ### and each pair own 2 subset of information. While this GetArrayItem own location
-  ### pair and 2 subset for start,end location. 
-  ### 3- and SHOULD supply a variable name to put the content inside. 
-  ### Since this function does generate code it's easier a this step to declare 
-  ### who will hold this information.  
-  
-  StrMsgTpl=$( Bzip2DataTool --get ArrayMsg[6] ) ; 
-  eval $( GAIArrayName="ArrayFileHeader" \
-          GAIVarName="StrLocation" \
-          GAIIndex=34              \
-          GAIPairName="location"   \
-          GetArrayItem             ) ;  
-    
-  StrMsg=${StrMsgTpl} ; 
-  StrMsg=${StrMsg//__ARRAY__/ArrayFileHeader} ; 
-  StrMsg=${StrMsg//__INDEX__/34} ; 
-  StrMsg=${StrMsg//__PAIR__/location} ; 
-  StrMsg=${StrMsg//__VALUE__/${StrLocation}} ; 
-  VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
-  
-  eval $( GAIArrayName="ArrayFileHeader" \
-          GAIVarName="StrFile" \
-          GAIIndex=17              \
-          GAIPairName="file"   \
-          GetArrayItem             ) ;  
-  StrMsg=${StrMsgTpl} ; 
-  StrMsg=${StrMsg//__ARRAY__/ArrayFileHeader} ; 
-  StrMsg=${StrMsg//__INDEX__/17} ; 
-  StrMsg=${StrMsg//__PAIR__/file} ; 
-  StrMsg=${StrMsg//__VALUE__/${StrFile}} ; 
-  VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
-  
-  ### End-Test function GetArrayItem   
   
   }
   
