@@ -3589,10 +3589,7 @@ registration mean they itself require to de-register .
 This step reduced by a Listener like SSHServicesRequest.py also provide link to table "Application" and 
 does load the database .
 
-
-- Application SSHServicesRequest.py which the Services or listner for registration
-management can load the same database however for the moment SSHServicesRequest.py does own 
-some property problems and remain not ready . 
+- Application SSHServicesRequest.py which the Services or listner for registration management can load the same database however for the moment SSHServicesRequest.py does own some property problems and remain not ready . 
 
 
 
