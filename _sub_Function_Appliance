@@ -2781,6 +2781,7 @@ elif [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then
   ### 3- and SHOULD supply a variable name to put the content inside. 
   ### Since this function does generate code it's easier a this step to declare 
   ### who will hold this information.  
+  
   StrMsgTpl=$( Bzip2DataTool --get ArrayMsg[6] ) ; 
   eval $( GAIArrayName="ArrayFileHeader" \
           GAIVarName="StrLocation" \
@@ -2806,6 +2807,8 @@ elif [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then
   StrMsg=${StrMsg//__PAIR__/file} ; 
   StrMsg=${StrMsg//__VALUE__/${StrFile}} ; 
   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+  
+  ### End-Test function GetArrayItem 
   
   }
   
