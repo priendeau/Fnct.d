@@ -3554,10 +3554,43 @@ The one only note is to respect the common Policy-format:
 :Structural: Definition
 
 
-*** Still in pending ***
+*** Lesser, but Still in pending ***
 
-Delayed until End-December 2013. 
+Delayed until End-December 2016. 
 
+- Some important subset like Application register choosed GetUUID have some 
+ essential Sqlite definition :
+ 
+.. code:: shell
+ 
+ PRAGMA foreign_keys=OFF;
+ BEGIN TRANSACTION;
+ CREATE TABLE "Application" (
+     "ApplicationPkID" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+     "GetUUPkID" INTEGER NOT NULL,
+     "ApplicationName" TEXT NOT NULL DEFAULT ('GetUUID'),
+     "TimeCreation" INTEGER NOT NULL,
+     "UUIDSeqGen" INTEGER NOT NULL DEFAULT (1)
+ );
+ CREATE TABLE "FKGetUUID" (
+     "UUIDPkId" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+     "ApplicationID" INTEGER NOT NULL,
+     "UUIDInfo" TEXT,
+     "LeaseType" TEXT
+ );
+ COMMIT;
+
+
+And Registrant like Application choosed in _sub_Function_Appliance will all be candidate to 
+start registering through GetUUID and own First type of Registration called a voluntary
+registration mean they itself require to de-register .
+
+This step reduced by a Listener like SSHServicesRequest.py also provide link to table "Application" and 
+does load the database .
+
+- Application SSHServicesRequest.py which the Services or listner for registration
+management can load the same database however for the moment SSHServicesRequest.py does own 
+some property problems and remain not ready . 
 
 
 :Note: 6e61bab0-35eb-11e3-98a2-001b3875b29c
