@@ -721,6 +721,7 @@ function __old_vlc_rate()
  local StrSentCmd="" ;
  local IntHighestRate=${VLCRATEHIGHESTRATE:=100} ;    
  local IntLowestRate=${VLCRATELOWESTRATE:=70};
+ local IntSleep=${VLCSleepTime:=5} ; 
  local BoolVerb=${Verbose:=True} ;
  local StrParserCalcCmd ; 
  local IntRateInsert ; 
@@ -732,6 +733,8 @@ function __old_vlc_rate()
  ArrayMsg[3]="Highest Rate :[ __INT__ ]"
  ArrayMsg[4]="Lowest Rate :[ __INT__ ]"
  ArrayMsg[5]="Period Duration Max :[ __INT__ ]"
+ ArrayMsg[6]="Building  __ITEM__ random item(s) " ;
+ ArrayMsg[7]="Waiting for __INT__ sec(s)."
  
  function Verbosis()
 	{
@@ -746,20 +749,27 @@ function __old_vlc_rate()
 		fi
 	}
  
- ### Create the random-field olding N-range of Possible Rate.  
- intx=0;
  StrMsg=${ArrayMsg[3]//__INT__/${IntHighestRate}} ;
- VerbHeader=${StrDisplayHeader} VerbMsg=${StrMsg} VerbState=True VerbDev=/dev/stderr Verbosis
+ VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=True VerbDev=/dev/stderr Verbosis
  
  StrMsg=${ArrayMsg[4]//__INT__/${IntLowestRate}} ; 
- VerbHeader=${StrDisplayHeader} VerbMsg=${StrMsg} VerbState=True VerbDev=/dev/stderr Verbosis
+ VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=True VerbDev=/dev/stderr Verbosis
  
  StrMsg=${ArrayMsg[5]//__INT__/${VLCRATEDURATION}} ; 
- VerbHeader=${StrDisplayHeader} VerbMsg=${StrMsg} VerbState=True VerbDev=/dev/stderr Verbosis
+ VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=True VerbDev=/dev/stderr Verbosis
 
- while [ ${intx} -ne ${IntRandRange} ] ; do 
+ StrMsg=${ArrayMsg[6]//__ITEM__/${IntRandRange}} ; 
+ VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=True VerbDev=/dev/stderr Verbosis
+ 
+ StrMsg=${ArrayMsg[7]//__INT__/${IntSleep}} ; 
+ VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=True VerbDev=/dev/stderr Verbosis
+ sleep ${IntSleep} ; 
+ 
+ ### Create the random-field olding N-range of Possible Rate.  
+ local IntX=0;
+ while [ ${IntX} -ne ${IntRandRange} ] ; do 
  ### Retreiving for_loop and adding while to control lowest and highest rate. 
- #for (( intx=0 ; intx <= ${IntRandRange} ; intx++ )) ; do 
+ #for (( IntX=0 ; IntX <= ${IntRandRange} ; IntX++ )) ; do 
   IntRateInsert=$(( ${IntHighestRate} - ( ${RANDOM} %  ${IntRandRange} ) )) ;
   ### A Direct convertion of rate 0-100 to 0.0 to 1.0 is performed. 
   if [ ${IntRateInsert} -ge ${IntLowestRate} -a ${IntRateInsert} -le ${IntHighestRate} ] ; then
@@ -772,7 +782,7 @@ function __old_vlc_rate()
    ArrayRateLevel[${#ArrayRateLevel[@]}]="${StrRateFmt}" ;  
    ### We do confirm having 2  criteron meet to having a rate not higher than and lower than
    ### we can increase the counter until it meet the Range of selected item. 
-   intx=$(( ${intx} + 1 )) ; 
+   IntX=$(( ${IntX} + 1 )) ; 
   fi
  done  ;
  StrMsg=${ArrayMsg[0]//__ARRAY__/${ArrayRateLevel[@]}}
@@ -780,7 +790,6 @@ function __old_vlc_rate()
  ### Forced Message
  VerbHeader=${StrDisplayHeader} VerbMsg=${StrMsg} VerbState=True VerbDev=/dev/stderr Verbosis
  
- sleep 2 ; 
  #echo "List or range [ ${ArrayRateLevel[@]} ] " > /dev/stderr ; 
  while [ 1 ] ; do 
 
