@@ -2348,6 +2348,7 @@ elif [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then
    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolShowEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
    local -A ArrayCmdEval ;
    local StrAction=${BCAction:=header} ; 
+   local IntStartLineNo ; 
    
    local StrMsgTplCode=$( Bzip2DataTool --get ArrayMsg[7] ) ; 
    
@@ -2366,33 +2367,41 @@ elif [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then
        TPDisplayDebug=${BoolParserInfo}     \
        TPDisplayParserNotice=${BoolParserInfo} \
        TagParser ) ; 
+   
+   StrMsg=$( Bzip2DataTool --get ArrayMsg[2] ) ;
+   eval "StrMsg=\${StrMsg//__CMD__/\${${StrVarNameP}}}" ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-CMDLINE" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
 
-   local IntStartLineNo=${LINENO} ;    
+
+   IntStartLineNo=${LINENO} ;    
+   StrMsg=${StrMsgTplCode//__LINE__/${IntStartLineNo}} ; 
+   StrMsg=${StrMsg//__SEGNAME__/Markup} ; 
    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-LINENO" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
    
    ArrayCmdEval["header"]="""
    \$( GAIVarName=StrFileBlock GAIArrayName=ArrayFileHeader GAIIndex=1 GAIPairName=file GetArrayItem ) ; 
    ${StrVarNameP}=\${${StrVarNameP}\/\/__BLOCK_FILE__\/\${StrFileBlock}} ; 
-   \${${StrVarNameP} ; 
+   \${${StrVarNameP}} ; 
    """ ; 
    
    ArrayCmdEval["content"]="""
    """ ; 
 
+   IntStartLineNo=${LINENO} ;
    StrMsg=${StrMsgTplCode//__LINE__/${IntStartLineNo}} ; 
    StrMsg=${StrMsg//__SEGNAME__/Start} ; 
    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-LINENO" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
    
    StrMsg=$( Bzip2DataTool --get ArrayMsg[2] ) ; 
-   eval "StrMsg=\"${StrMsg/__CMD__/${ArrayCmdEval[${StrAction}]}}\"" ; 
+   StrMsg=${StrMsg/__CMD__/${ArrayCmdEval[${StrAction}]}} ; 
    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-CMDLINE" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
     
-   #echo -ne "${ArrayCmdEval[${StrAction}]}" ; 
-   local IntEndLineNo=${LINENO} ;    
+   IntEndLineNo=${LINENO} ;    
    
    StrMsg=${StrMsgTplCode//__LINE__/${IntEndLineNo}} ; 
-   StrMsg=${StrMsg//__SEGNAME__/Start} ; 
+   StrMsg=${StrMsg//__SEGNAME__/End} ; 
    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-LINENO" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   #echo -ne "${ArrayCmdEval[${StrAction}]}" ; 
  
   }
   
