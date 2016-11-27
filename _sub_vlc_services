@@ -404,7 +404,7 @@ function OldVLCServer()
  ### /bin/nc is a bind to /bin/nc.openbsd in Linux-Mint Distribution, depend what other 
  ### own ...
  local StrSocketApps=${OVLCSAppsSock:=/bin/nc};
- local StrSocketOption=${OVLCSAppsSockOpt:=-4 -n -k -i 1};
+ local StrSocketOption=${OVLCSAppsSockOpt:=-4 -n -k -i 3};
  local StrSocketBufferOption=${OVLCSAppsSockBuffer:=2097152};
  local StrAppsBufferOption=${OVLCSAppsBuffer:=-I};
  local StrAppsListenOption=${OVLCSAppsLiten:=-l}
@@ -723,6 +723,9 @@ function __old_vlc_rate()
  local IntLowestRate=${VLCRATELOWESTRATE:=70};
  local IntSleep=${VLCSleepTime:=5} ; 
  local BoolVerb=${Verbose:=True} ;
+ local IntSocketTimeExpr=${VLCSOCKETCLOSESEC:=3} ; 
+ local IntTimeCLick=${VLCTIMECLICK:=10000} ; 
+ local BoolNCinSubProcess=${VLCNCINSUBPROCESS:=False} ; 
  local StrParserCalcCmd ; 
  local IntRateInsert ; 
  local ArrayMsg=( )
@@ -791,9 +794,12 @@ function __old_vlc_rate()
  VerbHeader=${StrDisplayHeader} VerbMsg=${StrMsg} VerbState=True VerbDev=/dev/stderr Verbosis
  
  #echo "List or range [ ${ArrayRateLevel[@]} ] " > /dev/stderr ; 
+ local IntTimeInterleave ; 
+ local intCountTic ; 
+ local IntModulo ;
  while [ 1 ] ; do 
 
-  local IntModulo=$(( ${RANDOM} % ${#ArrayRateLevel[@]}  ))
+  IntModulo=$(( ${RANDOM} % ${#ArrayRateLevel[@]}  ))
   StrMsg="Query Size of Array ArrayRateLevel, get ${#ArrayRateLevel[@]}" ;
   VerbMsg=${StrMsg} VerbState=${BoolVerb} VerbDev=/dev/stderr Verbosis
   
@@ -824,8 +830,107 @@ function __old_vlc_rate()
   VerbHeader=${StrDisplayHeader} VerbMsg=${StrMsg} VerbState=True VerbDev=/dev/stderr Verbosis
   #echo "Pushing VLC-Cli comand:[ ${StrSentCmd} ]" > /dev/stderr ; 
   ### Forced Message
-  echo "${StrSentCmd}" | nc -4 -n ${VLCSERVER:=192.168.0.72} ${VLCSRVPORT:=5080}  2>&1 /dev/null  ; 
-  sleep ${IntSleep} ; 
+  
+  ### Implementing the BASH SECONDS interface:
+  ### Since the Variable ${SECONDS} represent the nb-second since the shell is 
+  ### open it can be used in a while and a predicate timer of SECONDS + IntSleep 
+  ### to let the command being pushed in correct time, replacing the sleep.
+  ### this is also good when The push command is a process send in parallel and 
+  ### require the Internal command called NC to wait appropriate time to talk2
+  ### to the services and not pushing tiny interleave like 3 sec @ .98, 2 sec @ 1.01
+  ### and 1 sec @ .90, both instance of 3 sec, 2 and 1  sec will have expired with 
+  ### sleep and will push 3 instance opening  the interface. While a while with 
+  ### SECONDS + IntSleep will correctly wait. So it supress the sleep having no
+  ### chance to caliber from Closing Socket time variable 
+  ### (IntSocketTimeExpr) + IntSleep to not represent the real interleave... 
+  IntTimeInterleave=$(( ${SECONDS} + ${IntSleep} )) ; 
+  
+  while [ ${IntTimeInterleave} -ge ${SECONDS} ] ; do 
+   intCountTic=0;
+   for ((intCT=0 ; intCT <= ${IntTimeCLick} ; intCT++ )) ; do 
+    let intCountTic=intCountTic+1 ; 
+    #intCountTic=$(( ${intCountTic} + 1 )) ;
+    ### It supressing the /bin/sleep call which is at least
+    ### less external call. Dealing with Tinyer interleave like 
+    ### having milliseconds acces require a quantumic variable
+    ### operate by bash to update like ${MILLISEC} which is not 
+    ### existing actually, having application that master this 
+    ### can be kernel module creating device to read from /dev/...
+    ### So calibrating the  IntTimeCLick from VLCTIMECLICK and
+    ### boosting value from VLCRATEDURATION can be possible. 
+    ### Question mind me: Does a simple for command to increase
+    ### a counter will turn slower in a higher load-average from  
+    ### many call made early by application that voluntary slow
+    ### slow your system ?
+   done 
+  done 
+  
+  ### Note: 
+  ### replacement of '2>&1' by '2>&1>' does : 
+  ### suppress all error message but does not remove the fact nc still sending 
+  ### 
+  ### error message : 
+  ###     'nc: getaddrinfo: Servname not supported for ai_socktype' 
+  ### 
+  ### The message is still valid when a TCP/IP connection is made with to an 
+  ### address. Managing it localy with 127.0.0.1 It does having background 
+  ### configuration to remove explicit services like resolution name because 
+  ### all network configuration made local address exempt of name resolution
+  ### layer, making it hard to reduce access time it's common choice for many
+  ### internal or virtual/loopback interface but because the information is
+  ### sended, we assume it's working . Except nc still bsd/netbsd application
+  ### where it's code still depend of presence of such facility. Such method
+  ### require to alter the system by altering the resolv.conf, hosts and IP
+  ### layer information to tell to nc to not force the resolution. Parameter  
+  ### like -n 'seems to be ineffective'. There is some trick like using TOS
+  ### where some of them force NC to not add the resolution... question of 
+  ### URGENCY we do not spend time to ask to DNS for something URGENT.
+  ### 
+  ### For the moment expecting having no return error is good for establishing 
+  ### a constant connection with know command may reduce the output in debug
+  ### ... 
+  ### 
+  ### Discover parameter -i 'was set to 1' for 'delay time'. Not agreed from
+  ### design to be "second" as delay, but __old_vlc_rate invite to understand
+  ### sending 1 echo to be one line does not making sense to increase it until 
+  ### Sat-Nov-26-2016 ( where at this point myself stand out of problem for ever )
+  ### still have to joggle with impaired translation. So called option '-i' using 
+  ### an  `echo "help" | nc -i 1 127.0.0.1 5083` Which is my server does not 
+  ### transmit the whole help, even `echo "help" | nc 127.0.0.1 5083` with no '-i'
+  ### option and buffer is empty with this line Guessing until I get all the help
+  ### take '-i 3' and buffer is not empty from previous attempt... but belong to 
+  ### help of netcat:
+  ### --------------------------------------------------------------------------------------
+  ### 
+  ### NC(1)                                                  BSD General Commands Manual                                                 NC(1)
+  ### 
+  ### NAME
+  ###      nc — arbitrary TCP and UDP connections and listens
+  ### ....
+  ###     Many lines not cited  
+  ### ....
+  ### 
+  ### -i interval
+  ###    Specifies a delay time interval between lines of text sent and received.  Also causes a delay time between connections to
+  ###    multiple ports.
+  ### 
+  ### --------------------------------------------------------------------------------------
+  ### 
+  ### It make sensitive to a quantity, it not making 3 seconds every line and not making 
+  ### +/- 15 seconds for 60 to 70 lines.... 
+  ### - So there is criteron being 'interval between lines of text sent and received' 
+  ### is compromising and making less cutted gap during rate-shift. 
+  ### 
+  ### So the interval is increased and developped a thread with a expiration mechanism based
+  ### on bash ${SECONDS}, to analyse latency of connection.
+  ### 
+  if [ "${BoolNCinSubProcess:=False}" == "True" ] ; then 
+    echo "${StrSentCmd}" | nc -i ${IntSocketTimeExpr} -4 -n ${VLCSERVER:=192.168.0.72} ${VLCSRVPORT:=5080}  2>&1> /dev/null & 
+  else  
+    echo "${StrSentCmd}" | nc -i ${IntSocketTimeExpr} -4 -n ${VLCSERVER:=192.168.0.72} ${VLCSRVPORT:=5080}  2>&1> /dev/null ; 
+  fi 
+  
+  #sleep ${IntSleep} ; 
  done ; 
   
 }
