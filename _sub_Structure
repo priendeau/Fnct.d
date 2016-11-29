@@ -397,6 +397,13 @@ fi
 
 if [ "${versionGOD:=0.0.1}" == "0.0.2" ] ; then 
 
+ IntIsFunc=$( declare -F | egrep -c "GetOtherDate" ) ; 
+ if [ ${IntIsFunc:=0} -gt 0 ] ; then 
+  unset $( StrPrefix=$( GetStdPrefixName GetOtherDate ) ; GetVarReference GetOtherDate | egrep -i "^Variable" | sed 's/\(Variable \)\('${StrPrefix}'[a-zA-Z0-9]*\)\( ,\)/\2/g' | tr '[:cntrl:]' ' '  ) ; 
+  unset $( GetVarReference GetOtherDate | egrep -i "Function Member:" -A1 | tail -n1 | sed -r 's/,/ /g;s/[\t\ ]+/ /g' ) ; 
+ fi 
+ unset IntIsFunc StrPrefix ;
+ 
  unset GetOtherDate ;
  unset Verbosis DateFunc VersionApps __main_StartServices ; 
  function GetOtherDate()
@@ -496,8 +503,8 @@ if [ "${versionGOD:=0.0.1}" == "0.0.2" ] ; then
   local StrPipeCmd=${GODDefaultPipe:='|'} ; 
   local StrTagParser=${GODTagParserDef:=StrDateApps:__APPS__,IntDateIndex:__INT__,StrScriptTagNano:__FILTER_TIME_OPT__,StrScriptTagSupplied:__FILTER_OPT__,StrPipeCmd:__PIPE__,StrFilterApps:__FILTER__,StrScriptFile:__FILE_NAME__,IntUnitNSRef:__NANO_SEC_REF__,StrDateStart:__START_REF__,StrDateFormat:__DATE_FORMAT__,StrDateUnitReference:__DATEUNIT__} ; 
   local StrScriptTpl=${GODFilterTag:=__FILTER__ __FILTER_OPT__ __FILTER_TIME_OPT__ -f __FILE_NAME__ } ;
-  local StrDateTpl=${GODDateTpl:="""__APPS__ +\"__DATE_FORMAT__\" --date '__START_REF__ __INT__ __DATEUNIT__'"""}
-  local StrTagOptManager=${GODBoolToTag:=IsLoop:__INT__,BoolScriptIsDateSupplied:__FILTER_OPT__,BoolNanoRefScript:__FILTER_TIME_OPT__} ;
+  local StrDateTpl=${GODDateTpl:="""__APPS__ +\"__DATE_FORMAT__\" --date '__START_REF__ __PERIOD__ __DATEUNIT__'"""}
+  local StrTagOptManager=${GODBoolToTag:=BoolScriptIsDateSupplied:__FILTER_OPT__,BoolNanoRefScript:__FILTER_TIME_OPT__} ;
   local IsLoop=${GODIsLoop:=False} ;
   local IntLoopRange=${GODLoop:=0,3} ;
   local IsVerbose=${GODVerbose:=False} ;
@@ -533,6 +540,29 @@ if [ "${versionGOD:=0.0.1}" == "0.0.2" ] ; then
     local StrVar ;
     local StrTag ;
     local StrEval=${StrDateTpl} ; 
+    
+    ### Principe of GODLoop
+    ### with a First,Last value should increase the counter inside the date 
+    ### query --date='__REFERENCE __INDICE__ __PERIOD_REFERENCE__'
+    ### where __PERIOD_REFERENCE__ is by default is 'day', but can be 'minute'
+    ### 'week', and severals forms of calendar word. 
+    ### like this 2 sequence does report a minute loop, but onw does not 
+    ### report 1 minutes in distam, time reference is not steady and does 
+    ### come from application execution delay:
+    ### GODFormat="%Y%m%d %H:%M:%S" GODShowEvalCmd=False GODShowParsing=False GODShowVersion=False GODVerbose=False GODIsLoop=True GODLoop=0,5 GODDateUnit='minute'  GetOtherDate
+    ### Other one depend of a precise date and give exact minute :
+    ### GODFormat="%Y%m%d %H:%M:%S" GODShowEvalCmd=False GODShowParsing=False GODShowVersion=False GODVerbose=False GODIsLoop=True GODLoop=0,5 GODDateUnit='minute' GODStartRef="20161128 22:53:18"  GetOtherDate
+    ### Analyse if it coming from a Loop Or not, should depend from IntDateIndex, 
+    ### but rely on IsLoop statement.
+    if [ "${IsLoop:=False}" == "True" ] ; then 
+     ### updating StrTagParser to include an updated value from __PERIOD__
+     StrTagParser="${StrTagParser},IntDateIndex:__PERIOD__" ; 
+    else
+     ### Updating to Know default value inside IntDayDiff 
+     StrTagParser="${StrTagParser},IntDayDiff:__PERIOD__" ; 
+    
+    fi 
+    
     
     ### This is the array managing the Relation between Boolean declared in the 
     ### top-function and ability to suppress parsing of __TAG__ because 
