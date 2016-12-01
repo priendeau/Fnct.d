@@ -80,7 +80,8 @@ echo -ne "\n\033[01;33m**************************************************\n\033[
 fi
 
 if [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
- unset CallArgument ; 
+ #unset CallArgument ; 
+ eval $( GFCFuncName=CallArgument GlobalFunctionCleaning ) ; 
  function CallArgument()
  {
    local -a ArrayArg=( $* ) ;
@@ -167,7 +168,8 @@ if [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then
  ### Arg0 and ArrayArg ... 
  ### It will create the appropriate code in correct order 
  ### to ensure Argument will be callable .
- unset __Call_Argument ; 
+ eval $( GFCFuncName=__Call_Argument GlobalFunctionCleaning ) ; 
+ #unset __Call_Argument ; 
  function __Call_Argument()
  {
    local -a __call_locality=( CA __Call_Argument ) ;
@@ -285,9 +287,10 @@ if [ "${versionGOD:=0.0.1}" == "0.0.1" ] ; then
   ###
   ###
 
+ eval $( GFCFuncName=GetOtherDate GlobalFunctionCleaning ) ; 
 
- unset GetOtherDate ;
- unset Verbosis DateFunc ; 
+ #unset GetOtherDate ;
+ #unset Verbosis DateFunc ; 
  function GetOtherDate()
  {
    local -a ArrayArg=( $* ) ; 
@@ -397,15 +400,16 @@ fi
 
 if [ "${versionGOD:=0.0.1}" == "0.0.2" ] ; then 
 
- IntIsFunc=$( declare -F | egrep -c "GetOtherDate" ) ; 
- if [ ${IntIsFunc:=0} -gt 0 ] ; then 
-  unset $( StrPrefix=$( GetStdPrefixName GetOtherDate ) ; GetVarReference GetOtherDate | egrep -i "^Variable" | sed 's/\(Variable \)\('${StrPrefix}'[a-zA-Z0-9]*\)\( ,\)/\2/g' | tr '[:cntrl:]' ' '  ) ; 
-  unset $( GetVarReference GetOtherDate | egrep -i "Function Member:" -A1 | tail -n1 | sed -r 's/,/ /g;s/[\t\ ]+/ /g' ) ; 
- fi 
- unset IntIsFunc StrPrefix ;
+ eval $( GFCFuncName=GetOtherDate GlobalFunctionCleaning ) ; 
+ #IntIsFunc=$( declare -F | egrep -c "GetOtherDate" ) ; 
+ #if [ ${IntIsFunc:=0} -gt 0 ] ; then 
+ # unset $( StrPrefix=$( GetStdPrefixName GetOtherDate ) ; GetVarReference GetOtherDate | egrep -i "^Variable" | sed 's/\(Variable \)\('${StrPrefix}'[a-zA-Z0-9]*\)\( ,\)/\2/g' | tr '[:cntrl:]' ' '  ) ; 
+ # unset $( GetVarReference GetOtherDate | egrep -i "Function Member:" -A1 | tail -n1 | sed -r 's/,/ /g;s/[\t\ ]+/ /g' ) ; 
+ #fi 
+ #unset IntIsFunc StrPrefix ;
  
- unset GetOtherDate ;
- unset Verbosis DateFunc VersionApps __main_StartServices ; 
+ #unset GetOtherDate ;
+ #unset Verbosis DateFunc VersionApps __main_StartServices ; 
  function GetOtherDate()
  {
   function Verbosis()
@@ -735,8 +739,10 @@ if [ "${versionGUUID:=0.0.2}" == "0.0.2" ] ; then
   ### which uses of BodyFunct will depend on. Other alternative like ShortRegistration of 
   ### Pattern, variable-set will also own it's registration . 
 
- unset GetUUID ;
- unset Verbosis ApplicationRegistrationIndex UUIDNoLoop UUIDLoop __main_StartServices ; 
+ #unset GetUUID ;
+ #unset Verbosis ApplicationRegistrationIndex UUIDNoLoop UUIDLoop __main_StartServices ; 
+ eval $( GFCFuncName=GetUUID GlobalFunctionCleaning ) ; 
+ 
  function GetUUID ()
  {
   ### This is a specialized Verbosis mode :
@@ -1072,7 +1078,9 @@ fi
 ### 
 
 if [ "${versionGBLD:=0.0.2}" == "0.0.2" ] ; then 
- unset GetterByLineData ; 
+ #unset GetterByLineData ; 
+ eval $( GFCFuncName=GetterByLineData GlobalFunctionCleaning ) ; 
+ 
  function GetterByLineData()
  {
   local -a ArrayArg=( $* ) ; 
@@ -1321,7 +1329,9 @@ fi
  ### confirmation of your design work... 
 
 if [ "${versionVTV:=0.0.2}" == "0.0.2" ] ; then 
- unset ValueToVariable
+ #unset ValueToVariable
+ eval $( GFCFuncName=ValueToVariable GlobalFunctionCleaning ) ; 
+
  function ValueToVariable( )
  {
    ### ----                                                                           ----
@@ -1776,7 +1786,9 @@ fi
  ###
 
 if [ "${versionTP:=0.0.2}" == "0.0.2" ] ; then 
- unset TagParser ; 
+ #unset TagParser ; 
+ eval $( GFCFuncName=TagParser GlobalFunctionCleaning ) ; 
+ 
  function TagParser( )
  {
   function Verbosis()
@@ -1966,9 +1978,11 @@ if [ "${versionTP:=0.0.2}" == "0.0.2" ] ; then
 fi 
 
 if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then 
- unset BoolVarTest IntDefautlType BVTIdType ; 
- unset StrVarBoolTest StrDefaultBoolTest StrNotAsserted StrScopeType StrIfTestType StrIfStringOp IsPreambule StrDefaultEndTest IsTypePreamb StrVTRPrbTpl StrVTRPrbVar StrVTRPrbVTReg StrVTRPrbVTFnct IsTypeAssert StrVTRAsrtTpl StrVTRAsrtVar StrVTRAsrtVTReg StrVTRAsrtVTFnct StrKeyTestType IntDefautlType IsDisplayIfStatement StrIfPattern ArrayIfPattern ArrayAssertion StrTestTemplate IsPreambulePolNtRespt ;
- unset Verbosis __main_StartServices ;
+ #unset BoolVarTest IntDefautlType BVTIdType ; 
+ #unset StrVarBoolTest StrDefaultBoolTest StrNotAsserted StrScopeType StrIfTestType StrIfStringOp IsPreambule StrDefaultEndTest IsTypePreamb StrVTRPrbTpl StrVTRPrbVar StrVTRPrbVTReg StrVTRPrbVTFnct IsTypeAssert StrVTRAsrtTpl StrVTRAsrtVar StrVTRAsrtVTReg StrVTRAsrtVTFnct StrKeyTestType IntDefautlType IsDisplayIfStatement StrIfPattern ArrayIfPattern ArrayAssertion StrTestTemplate IsPreambulePolNtRespt ;
+ #unset Verbosis __main_StartServices ;
+ eval $( GFCFuncName=BoolVarTest GlobalFunctionCleaning ) ; 
+ 
  function BoolVarTest()
  {
 

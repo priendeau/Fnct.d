@@ -180,6 +180,25 @@ function LibLoader()
 
 }
 
+function GlobalFunctionCleaning()
+{
+ local __call_locality=( GFC GlobalFunctionCleaning ) ;
+ local ArrayArg=( $* ) ; 
+ local Arg0=${ArrayArg[0]} ;
+ local StrFuncName=${GFCFuncName:=${Arg0}} ; 
+ local StrCleanFuncCmd="""
+ IntIsFunc=$( declare -F | egrep -c \"${StrFuncName}\" ) ; 
+ if [ \${IntIsFunc:=0} -gt 0 ] ; then 
+  unset \$( ${StrFuncName} --list  ) ; 
+  unset \$( GetVarReference ${StrFuncName} | egrep -i \"Function Member:\" -A1 | tail -n1 | sed -r 's/,/ /g;s/[\t\ ]+/ /g' ) ; 
+ fi ;
+ unset IntIsFunc ; 
+ """ ;
+ echo -ne "${StrCleanFuncCmd}" ;
+  
+}
+
+
 ### Don't worry it's not so easy to spell it up to your neighborhood. 
 LLDisplayProg=${LLDisplayProg:=True} LLStatusDev=${LLStatusDev:=0} LibLoader --startservices ; 
 
