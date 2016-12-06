@@ -694,6 +694,39 @@ function VLCSetVolume()
  
 }
 
+if [ "${versionNSS:=0.0.0}" == "0.0.0" ] ; then 
+ unset NetSocketServices ; 
+ unset NSSSocketApps NSSAddresses NSSPort NSSSocketAppsOpt ; 
+ function NetSocketServices()
+ {
+  local -a ArrayArg=( $* ) ;
+  local -a __call_locality=( NSS NetSocketServices ) ;
+  local Arg0=${ArrayArg[0]} ; 
+  local StrSocketApps=${NSSSocketApps:=/bin/nc} ; 
+  local StrSocketAddr=${NSSAddresses:=127.0.0.1} ; 
+  local StrSocketPort=${NSSPort:=5083} ; 
+  local StrSocketAppsParam=${NSSSocketAppsOpt:=-i 3} ;
+  ${StrSocketApps} ${StrSocketAppsParam} ${StrSocketAddr} ${StrSocketPort}  ; 
+ }
+fi 
+
+if [ "${versionVSC:=0.0.0}" == "0.0.0" ] ; then 
+ unset VlcSendCmd ; 
+ unset VSCAddr VSCPort VSCCmd ; 
+ function VlcSendCmd()
+ {
+    
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( VSC VlcSendCmd ) ;
+    local Arg0=${ArrayArg[0]} ; 
+    local StrAddr=${VSCAddr:=127.0.0.1} ; 
+    local StrPort=${VSCPort:=5083} ; 
+    local StrQueueCmd=${VSCCmd:='help'} ; 
+    echo "${StrQueueCmd}" | NSSAddresses=${StrAddr} NSSPort=${StrPort} NetSocketServices  ; 
+
+ }
+fi 
+
 if [ "${versionSSA:=0.0.0}" == "0.0.1" ] ; then 
  
  eval $( GFCFuncName=StartSlewAnalysis GlobalFunctionCleaning ) ; 
