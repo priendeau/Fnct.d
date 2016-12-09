@@ -2694,6 +2694,214 @@ case ${versionMC} in
 esac
 
 
+if [ "${versionSCH}" == "0.0.1" ] ; then 
+
+ eval $( GFCFuncName=ServiceControllerHandler GlobalFunctionCleaning ) ; 
+ 
+ function ServiceControllerHandler()
+ {
+  function Verbosis()
+  {
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( Verb Verbosis ) ; 
+   local Arg0=${ArrayArg[0]} ; 
+   local StrMsg=${VerbMsg:=__TEXT__} ; 
+   local StrDevOut=${VerbDev:=/dev/stderr} ; 
+   local IsVerboseState=${VerbState:=False} ;
+   local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+   local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+   local IsDisplayFormatted=${VerbFormated:=True} ;
+   local IsAppendMode=${VerbAppendDev:=False} ; 
+   local IsExtendedOutput=${VerbExtendedOut:=False} ; 
+   local ArrayArg=( $* ) ; 
+   if [ "${IsVerboseState:=False}" == "True" ] ; then 
+    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+     if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
+     else  
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+     fi
+    else
+     if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+      if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+        echo -ne "${StrMsg}" ;  
+      else
+        echo "${StrMsg}" ;  
+      fi
+     else
+      if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+         echo -ne "${StrMsg}" >> ${StrDevOut} ;
+       else
+         echo "${StrMsg}" >> ${StrDevOut} ;
+       fi
+      else
+       if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+        echo -ne "${StrMsg}" > ${StrDevOut} ;
+       else
+        echo "${StrMsg}" > ${StrDevOut} ;
+       fi 
+      fi
+     fi 
+    fi 
+   fi
+  } 
+  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
+  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( SCH ServiceControllerHandler ) ;
+   local Arg0="${ArrayArg[0]}" ; 
+   local StrParentApps=${__call_locality[1]} ;
+   local StrStartMain=${SCHFuncStart:=__main_StartServices} ; 
+  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+   eval $( eval CAFunctName=ServiceControllerHandler CAIsAddParent=False __Call_Argument ) ; 
+  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+   eval $( eval CAFunctName=ServiceControllerHandler CAIsAddParent=False CallArgument ) ;
+  fi  
+     
+  local StrPathLoopState=${SCHSInstancePath:=/var/cache/Fnct.D} ;  
+  local StrFunctionName=${SCHFunctionName:=None} ; 
+  local StrDefaultAction=${SCHAction:=Loop} ; 
+  local BoolRemoveFileAction=${SCHRemoveFileAction:=False} ; 
+  local StrPathActionState=${LSSLoopFile:=__PATH__/__ACTION__-__SHORTFUNC__-__UUID__} ; 
+  
+  local StrTextZenityEmpty="""<span font_family=\"monospace\" size=\"large\">List of instance for function __FUNCT__ is empty</span>""" ;
+  local StrTextZenityList="""Select UUID instance of function __FUNCT__ to Shutdown Application or interrupt action:__ACTION__""" ; 
+  local StrUUID="" ; 
+  local StrVarList="StrPathLoopState,StrTextZenityEmpty,StrTextZenityList,StrFunctionName,StrDefaultAction,BoolRemoveFileAction,StrPathActionState" ;
+  
+  local -a ArrayMsg ;
+  
+  ArrayMsg[0]="Entry in function" ;   
+  
+  function __main_StartServices()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+   fi 
+   StrMsg=$( LoopShellScript --get ArrayMsg[0] ) ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   
+   ### Difference with LSSServices , having a function-name filter to issues 
+   ### a search based on Function Criteron and Action-type. 
+   ### LSSServices does only interrupt Loop from LoopShellScript while 
+   ### this application will stop all UUID-instance from a specific /var/cache
+   ### initialized services . 
+   ### In action there is a default Loop, action but can handle other semantic 
+   ### word depending of the structure of the __main_StartServices, as example 
+   ### DoCtrlHandler will accept diferent action to take place, like 
+   ### environment, loop and conditional action inside a loop. 
+   local StrShortName=$( GetStdPrefixName ${StrFunctionName} ) ; 
+   
+   local IntGrepResult=$( find ${StrPathLoopState} -maxdepth 1 -type f -iname "${StrDefaultAction}-${StrShortName}*" | egrep -ic "[a-fA-F0-9]*-[a-fA-F0-9]*-[a-fA-F0-9]*-[a-fA-F0-9]*-[a-fA-F0-9]*" ) ; 
+   
+   local StrZenityListUUID=$( find ${StrPathLoopState} -maxdepth 1 -type f -iname "${StrDefaultAction}-${StrShortName}*" -printf "FALSE %f\n" | sed 's/-/ /g' | cut -d ' ' -f 1,4-8 | sed 's/ /-/g;s/FALSE-/FALSE /g' | tr '[:cntrl:]' ' '  ) ; 
+   
+   StrMsg="Element(s) inside StrZenityListUUID:( __STR__) Detected Item: __INT__" ;
+   StrMsg=${StrMsg//__STR__/${StrZenityListUUID}} ;
+   StrMsg=${StrMsg//__INT__/${IntGrepResult}} ;
+   
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   local IntLenZenityList=${#StrZenityListUUID}
+   StrTextZenityList=${StrTextZenityList//__FUNCT__/${StrFunctionName}} ;
+   StrTextZenityList=${StrTextZenityList//__ACTION__/${StrDefaultAction}} ; 
+   
+   if [ ${IntGrepResult:=0} -gt 0 ] ; then 
+    local ArrayServicesStop=( $( zenity --width=400 --height=400 --list --text="${StrTextZenityList}" --column="Selection" --column="UUID Instance" --separator=' ' --checklist --multiple  ${StrZenityListUUID} ) ) ; 
+    local IntCountID=${#ArrayServicesStop[@]} ; 
+    
+    StrMsg="Nb Element inside ArrayServicesStop: __INT__" ;
+    StrMsg=${StrMsg//__INT__/${#ArrayServicesStop[@]}} 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    
+    ### Prepare the StrPathActionState to hold Path, Action and Function. 
+    ### Will leave UUID field as tag to allow parsing-it inside the for-action. 
+    local StrActionTrigger=${StrPathActionState} ; 
+
+    StrActionTrigger=${StrActionTrigger//__PATH__/${StrPathLoopState}} ; 
+    StrActionTrigger=${StrActionTrigger//__ACTION__/${StrDefaultAction}} ; 
+    StrActionTrigger=${StrActionTrigger//__SHORTFUNC__/${StrShortName}} ; 
+    if [ ${IntCountID:=0} -gt 0 ] ; then 
+     for (( intx=0 ; intx <= ${IntCountID}-1 ; intx++ )) ; do 
+      StrUUID=${ArrayServicesStop[${intx}]} ; 
+      if [ "${BoolRemoveFileAction:=False}" == "True" ] ; then 
+        rm -f ${StrActionTrigger//__UUID__/${StrUUID}}  ; 
+      else
+        UUID=${StrUUID} ${StrFunctionName} --stopservices ;
+      fi 
+     done 
+    fi 
+   else
+    
+    StrTextZenityEmpty=${StrTextZenityEmpty//__FUNCT__/${StrFunctionName}} ; 
+    zenity --info --text="${StrTextZenityEmpty}" ; 
+   fi 
+  }
+  function __main_StopServices()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Main __main_StopServices ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True __Call_Argument ) ;
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True CallArgument ) ;
+   fi 
+   StrMsg="Entry in function" ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+  }
+      
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+  local StrNameHelper="${__call_locality[1]}\tAn application to manage Function instance having an Action like Loop, Iteration, initialisation to \n\t\t\t\tShutdown or to stop it's services.";
+  local StrSummary="This application does end an application. Require to specify SCHFunctionName=FunctionName it stop the services by calling it's stop-switches '--stopservices'. " ; 
+  local StrSynopsis="Here Some example to use this function\n\t\tSCHFunctionName=LoopShellScript ServiceControllerHandler\n\n\t\tWill display a Zenity List-container to select multiple instance or death-instance of the application and the \n\t\tServiceControllerHandler will remove them. \n\n\tUsing directly the remove mechanism to remove the file without using the application stop-services switches\n\tcan be called like this:\n\n\tSCHFunctionName=LoopShellScript SCHRemoveFileAction=True SCHFunctionName=StartSlewAnalysis ServiceControllerHandler\n\n\tWill remove the file only. ";
+  local StrDescription="This application Can Stop a services or remove a specific Action file held in cache path of Fnct.D or specified by SCHSInstancePath. This application can also remove file other than Loop-file, require to fill SCHAction  with 'Loop', 'Iteration', 'Env' or any prefix found inside the cache path of Fnct.D . If the application is launched with Prefixed-Variable SCHRemoveFileAction=True, it simply remove the file with parameter added like SCHAction, SCHFunctionName and even SCHSInstancePath. " ;
+  
+   
+  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   GVRIsName=True     \
+   GVRIsSummary=True  \
+   GVRIsSynopsis=True \
+   GVRIsDesc=True     \
+   GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;	
+  elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
+   eval $( eval \
+     VTVIsArrayStyleInsert=True  \
+     VTVValueEntry=${StrVarList} \
+     VTVIsValueReAssign=True     \
+     VTVIsValueToConvert=False   \
+     VTVIsWhiteList=True         \
+     VTVWhiteListTransfert=UUID  \
+     ValueToVariable ) __main_StopServices ; 
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+   # eval $( eval VersionApps ) ; 
+   StrMsg=$( LoopShellScript --get ArrayMsg[0] ) ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   eval $( eval \
+     VTVIsArrayStyleInsert=True  \
+     VTVValueEntry=${StrVarList} \
+     VTVIsValueReAssign=True     \
+     VTVIsValueToConvert=False   \
+     ValueToVariable ) ${StrStartMain}
+  fi   
+ }
+
+fi 
+
+
 
 ### Unitary test command : unset BoolVarTest ; . /etc/init.d/Fnct.D/fnct_debian_lib BVTVarHold='' BVTVTVVar=BoolDisplayFnctD,StrUrlGetter,BoolEvalCmdExit,StrAppsPwdGenerator,IntDefaultPwdSize,IntDefaultFactor,IntRandomSeedFactor,StrPasswordTypeForm,IntPasswordType,IsAutoInstallPwgen,StrDebInstallMethod,StrDebianInstallerType,StrAptLineCmd,StrGdebiPackageName,StrGdebiDownloadPack,StrFnctDSvrBVTVC BVTVTFnct=__Display BVTBoolVarName=${BoolEvalCmdExit:=False} BVTBoolCase=False BVTBoolAssertion='' BVTIsPreambule=True BVTScopeTest=local BVTVTVVarA=BoolDisplayFnctD,StrUrlGetter,BoolEvalCmdExit,StrAppsPwdGenerator,IntDefaultPwdSize,IntDefaultFactor,IntRandomSeedFactor,StrPasswordTypeForm,IntPasswordType,IsAutoInstallPwgen,StrDebInstallMethod,StrDebianInstallerType,StrAptLineCmd,StrGdebiPackageName,StrGdebiDownloadPack,StrFnctDSvrBVTVC BVTVTFnctA=__Loop BVTIsValueToVar=True BVTIsValueToVarAssert=True BVTDisplayIf=True BoolVarTest
 

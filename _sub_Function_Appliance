@@ -743,7 +743,9 @@ fi
 
 if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then 
 
- unset LSSServices ; 
+ eval $( GFCFuncName=LSSServices GlobalFunctionCleaning ) ; 
+ #unset LSSServices ; 
+ 
  function LSSServices()
  {
   function Verbosis()
@@ -806,10 +808,11 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
   fi  
      
   local StrPathLoopState=${LSSSInstancePath:=/var/cache/Fnct.D} ;  
+  local StrDefaultShortName=${LSSShortNameFunc:=LSS} ; 
   local StrTextZenityEmpty="""<span font_family=\"monospace\" size=\"large\">List of LoopShellScript is empty</span>""" ;
   local StrTextZenityList="""Select UUID instance to Shutdown""" ; 
   local StrUUID="" ; 
-  local StrVarList="StrPathLoopState,StrTextZenityEmpty,StrTextZenityList" ;
+  local StrVarList="StrPathLoopState,StrTextZenityEmpty,StrTextZenityList,StrDefaultShortName" ;
   
   local -a ArrayMsg ;
   
@@ -819,7 +822,7 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
   {
    if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
     local -a ArrayArg=( $* ) ;
-    local -a __call_locality=( CFCD CurlFtpContentDownload ${StrParentApps} ) ;
+    local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
     local Arg0="${ArrayArg[0]}" ; 
    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
@@ -829,9 +832,9 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
    StrMsg=$( LoopShellScript --get ArrayMsg[0] ) ; 
    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
    
-   local IntGrepResult=$( find ${StrPathLoopState} -maxdepth 1 -type f -iname "Loop-LSS*" | egrep -ic "[a-fA-F0-9]*-[a-fA-F0-9]*-[a-fA-F0-9]*-[a-fA-F0-9]*-[a-fA-F0-9]*" ) ; 
+   local IntGrepResult=$( find ${StrPathLoopState} -maxdepth 1 -type f -iname "Loop-${StrDefaultShortName}*" | egrep -ic "[a-fA-F0-9]*-[a-fA-F0-9]*-[a-fA-F0-9]*-[a-fA-F0-9]*-[a-fA-F0-9]*" ) ; 
    
-   local StrZenityListUUID=$( find ${StrPathLoopState} -maxdepth 1 -type f -iname "Loop-LSS*" -printf "FALSE %f\n" | sed 's/-/ /g' | cut -d ' ' -f 1,4-8 | sed 's/ /-/g;s/FALSE-/FALSE /g' | tr '[:cntrl:]' ' '  ) ; 
+   local StrZenityListUUID=$( find ${StrPathLoopState} -maxdepth 1 -type f -iname "Loop-${StrDefaultShortName}*" -printf "FALSE %f\n" | sed 's/-/ /g' | cut -d ' ' -f 1,4-8 | sed 's/ /-/g;s/FALSE-/FALSE /g' | tr '[:cntrl:]' ' '  ) ; 
    
    StrMsg="Element(s) inside StrZenityListUUID:( __STR__) Detected Item: __INT__" ;
    StrMsg=${StrMsg//__STR__/${StrZenityListUUID}} ;
@@ -842,7 +845,7 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
    ### IntLenZenityList is size of all UUID file, and minimal form is 
    ### "FALSE XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX" 43 chars long
    if [ ${IntGrepResult:=0} -gt 0 ] ; then 
-    local ArrayServicesStop=( $( zenity --width=400 --height=400 --list --text=${StrTextZenityList} --column="Selection" --column="UUID Instance" --separator=' ' --checklist --multiple  ${StrZenityListUUID} ) ) ; 
+    local ArrayServicesStop=( $( zenity --width=400 --height=400 --list --text="${StrTextZenityList}" --column="Selection" --column="UUID Instance" --separator=' ' --checklist --multiple  ${StrZenityListUUID} ) ) ; 
     local IntCountID=${#ArrayServicesStop[@]} ; 
     
     StrMsg="Nb Element inside ArrayServicesStop: __INT__" ;
@@ -852,7 +855,7 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     if [ ${IntCountID:=0} -gt 0 ] ; then 
      for (( intx=0 ; intx <= ${IntCountID}-1 ; intx++ )) ; do 
       StrUUID=${ArrayServicesStop[${intx}]} ; 
-      UUID=${StrUUID} LoopShellScript --stopservices ;
+      UUID=${StrUUID} LSSShortNameFunc=${StrDefaultShortName}  LoopShellScript --stopservices ;
      done 
     fi 
    else
@@ -915,7 +918,10 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
   fi   
  }
  
- unset Verbosis GetSha1Sum GetFileFormatCmd FileDeCapsulation DataExtractionTool SearchByFile SearchDate SearchId ListFile FileWriterSupport ShellControlServices VersionApps __main_StopServices __main_StartServices ; 
+ #unset Verbosis GetSha1Sum GetFileFormatCmd FileDeCapsulation DataExtractionTool SearchByFile SearchDate SearchId ListFile FileWriterSupport ShellControlServices VersionApps __main_StopServices __main_StartServices ; 
+ 
+ eval $( GFCFuncName=LoopShellScript GlobalFunctionCleaning ) ; 
+
  function LoopShellScript()
  {
   function Verbosis()
@@ -982,7 +988,8 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
    local StrStoreResult=${LSSFileStorage:=.LoopShellScript} ; 
    local StrLockFileId=${LSSFileStorageLock:=/var/cache/Fnct.D/Lock-LSS} ;
    local StrDateFormat=${LSSDateFormat:='%Y%m%d-%H:%M:%S'} ; 
-   local StrPathLoopState=${LSSLoopFile:=/var/cache/Fnct.D/Loop-LSS-__UUID__} ; 
+   local StrDefaultShortName=${LSSShortNameFunc:=LSS} ; 
+   local StrPathLoopState=${LSSLoopFile:=/var/cache/Fnct.D/Loop-__SHORTFUNC__-__UUID__} ; 
    local StrUUIDInstance=${LSSUUIDInstance:=Last-instance-UUID};
    local StrShaSumExtract=${LSSSHAIndexExtract:=None} ; 
    local StrDefaultFileFormat=${LSSFileFormat:=BZIP2+BASE64} ;
@@ -1018,7 +1025,7 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
    local UUID=${UUID:=${StrUUIDInstance}} ; 
    local StrTemplateShaStorage="__DATE__ __SHA__ __FILENAME__ __FORMAT__ __FILECONTENT__" ;
    
-   local StrVarList="BoolImportStoreResult,BoolLoopScriptOnState,IntDefaultErrorStateLoop,IntMaxLoopOnError,BoolIsScriptRun,StrFileAlterateVrf,BoolIsLockFile,StrLockFileId,BoolDisplayIf,BoolSearchId,BoolSearchDate,StrSearchQuery,BoolSearchFile,BoolListFile,BoolHideAppsDebug,StrVarList,StrStartFile,StrStoreResult,StrDateFormat,StrPathLoopState,StrUUIDInstance,StrTemplateShaStorage,StrDefaultFileFormat,StrShaSumExtract,BoolIsExtraction,StrApps,StrAppsCmprOpt,StrAppsDeCmprOpt,StrFilter,StrFilterCmprOpt,StrFilterDeCmprOpt,StrTagParser,StrCompressionTpl,StrDeCompressionTpl"
+   local StrVarList="BoolImportStoreResult,BoolLoopScriptOnState,IntDefaultErrorStateLoop,IntMaxLoopOnError,BoolIsScriptRun,StrFileAlterateVrf,BoolIsLockFile,StrLockFileId,BoolDisplayIf,BoolSearchId,BoolSearchDate,StrSearchQuery,BoolSearchFile,BoolListFile,BoolHideAppsDebug,StrVarList,StrStartFile,StrStoreResult,StrDateFormat,StrPathLoopState,StrUUIDInstance,StrTemplateShaStorage,StrDefaultFileFormat,StrShaSumExtract,BoolIsExtraction,StrApps,StrAppsCmprOpt,StrAppsDeCmprOpt,StrFilter,StrFilterCmprOpt,StrFilterDeCmprOpt,StrTagParser,StrCompressionTpl,StrDeCompressionTpl,StrDefaultShortName"
 
    local -a ArrayMsg=() ;
    ArrayMsg[0]="Entry in function" ; 
@@ -1737,7 +1744,11 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     if [ "${StrUUID:=None}" == "None" ] ; then 
      StrUUID=${StrUUIDInstance} ; 
     fi 
-    local StrPathLoopState=${StrPathLoopState//__UUID__/${StrUUID}} ; 
+    
+    local StrFSH=${StrDefaultShortName} ; 
+    
+    StrPathLoopState=${StrPathLoopState//__SHORTFUNC__/${StrFSH}} ; 
+    StrPathLoopState=${StrPathLoopState//__UUID__/${StrUUID}} ; 
     VerbMsg="Shutdown Instance ID:${StrUUID}, file: ${StrPathLoopState}" VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ;
     if [ -f ${StrPathLoopState} ] ; then 
      rm -f ${StrPathLoopState} ; 
@@ -1810,6 +1821,7 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
       VTVIsValueReAssign=True     \
       VTVIsValueToConvert=False   \
       VTVIsWhiteList=True         \
+      VTVIsQuotedValue=True       \
       VTVWhiteListTransfert=UUID  \
       ValueToVariable ) __main_StopServices ; 
    elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
@@ -1826,6 +1838,7 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
       VTVIsArrayStyleInsert=True  \
       VTVValueEntry=${StrVarList} \
       VTVIsValueReAssign=True     \
+      VTVIsQuotedValue=True       \
       VTVIsValueToConvert=False   \
       ValueToVariable ) ${StrStartMain}
    fi  
