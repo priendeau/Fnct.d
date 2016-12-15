@@ -61,7 +61,8 @@ class PipFreezeDict( dict ):
     self.list = []
     self.iLines = ''
     for self.iLines in item:
-      ### Codec New use, 
+      ### Official example of Branch StringCodecEx2 
+      ### Codec New use,  
       ### Register the 'iLines' to be the variable to apply a 
       ### conversion. It does, require to put some content inside the variable 
       ### self.iLines, like content of item . 
