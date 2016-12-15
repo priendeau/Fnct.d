@@ -2,9 +2,29 @@
 # -*- coding: utf-8 -*-
 # -*- file : SSHServicesRequest.py -*- 
 
+
+### Actual version is working under virtualenv setting :
+### Using Python 2.7. Twisted 16.6.0 still installed by
+### pipimport module loaded from python-startup.py from
+### my virtualenv which is an auto import and
+### installation of python module.
+### AttrDecorator, FnctDDef, FnctDException still in
+### local path and many uses of --extra-search-dir 
+### where used to form the virtualenv from 
+### 
+### but O'Reilly Twisted Network Programminf Essential
+### edition March 2013 derived work from sshserver.py
+### does work from this configuration. just read For
+### All detail about environment. just read
+### requirement.txt from pip_freeze command made 
+### from a iterpipes command extracted module. 
+### 
+### 
+
 from twisted.conch            import avatar, recvline
 from twisted.conch.interfaces import IConchUser, ISession
 from twisted.conch.ssh        import factory, keys, session
+from twisted.conch.insults    import insults
 from twisted.cred             import portal, checkers
 from twisted.internet         import reactor
 from zope.interface           import implements
