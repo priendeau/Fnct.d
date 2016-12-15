@@ -59,46 +59,33 @@ class PipFreezeDict( dict ):
   
   def SubDictFiltering( self ,item ):
     self.list = []
-    self.StrVer = ''
-    self.StrModuleName = '' 
-    for iLines in item:
-      print "Type of iLines:{}".format( type(iLines).__name__ )
+    self.iLines = ''
+    for self.iLines in item:
+      ### Codec New use, 
+      ### Register the 'iLines' to be the variable to apply a 
+      ### conversion. It does, require to put some content inside the variable 
+      ### self.iLines, like content of item . 
+      self.StringCodec =  'iLines'
+      self.iLines = self.StringCodec 
+      print "Type of iLines:{}".format( type(self.iLines).__name__ )
       IsSystemDepend=False 
-      if iLines.find( '===' ) > 0 :
+      if self.iLines.find( '===' ) > 0 :
         IsSystemDepend=True
         StrSplit='==='
       else:
         StrSplit='=='
       
-      ListPair=iLines.split( StrSplit )
+      ListPair=self.iLines.split( StrSplit )
       if len( ListPair ) < 2:
-        print "Rejected Pip-Freeze Lines information: {}".format( iLines )
+        print "Rejected Pip-Freeze Lines information: {}".format( self.iLines )
       else:
-        self.StrModuleName = ListPair[0]
-        ### Codec First use, 
-        ### Register the 'StrModuleName' to be the variable to apply a 
-        ### conversion. 
-        ### 
-        ### It does, require to put some content inside the variable 
-        ### self.StrModuleName, like content of ListPair[0]
-        ### and calling back the codec ( self.StringCodec ) will output  
-        ### the content of self.StrModuleName as converted. 
-
-        ### Set a github branch StringCodecEx1 before erasing the codec uses over
-        ### couple of item rather than directly use it on iLines.
-        
-        self.StringCodec =  'StrModuleName'
-        self.StrModuleName = self.StringCodec 
-
-        ### And doing the same for the self.StrVer
-        self.StrVer=ListPair[1].strip( '\n' )
-        self.StringCodec = 'StrVer'
-        self.StrVer = self.StringCodec
+        StrModuleName = ListPair[0]
+        StrVer=ListPair[1].strip( '\n' )
 
         ### The self.key is already in Normal-String form and don't require
         ### to be converted. 
         
-        self.__dict__[ self.key ][ self.StrModuleName ]=self.StrVer
+        self.__dict__[ self.key ][ StrModuleName ]=StrVer
     
 
   def __setitem__(self, key, item):
