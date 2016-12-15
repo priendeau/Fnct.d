@@ -59,6 +59,8 @@ class PipFreezeDict( dict ):
   
   def SubDictFiltering( self ,item ):
     self.list = []
+    self.StrVer = ''
+    self.StrModuleName = '' 
     for iLines in item:
       print "Type of iLines:{}".format( type(iLines).__name__ )
       IsSystemDepend=False 
@@ -72,9 +74,28 @@ class PipFreezeDict( dict ):
       if len( ListPair ) < 2:
         print "Rejected Pip-Freeze Lines information: {}".format( iLines )
       else:
-        StrModuleName = ListPair[0]
-        StrVer=ListPair[1].strip( '\n' )
-        self.__dict__[ self.key ][ StrModuleName ]=StrVer
+        self.StrModuleName = ListPair[0]
+        ### Codec First use, 
+        ### Register the 'StrModuleName' to be the variable to apply a 
+        ### conversion. 
+        ### 
+        ### It does, require to put some content inside the variable 
+        ### self.StrModuleName, like content of ListPair[0]
+        ### and calling back the codec ( self.StringCodec ) will output  
+        ### the content of self.StrModuleName as converted. 
+        
+        self.StringCodec =  'StrModuleName'
+        self.StrModuleName = self.StringCodec 
+
+        ### And doing the same for the self.StrVer
+        self.StrVer=ListPair[1].strip( '\n' )
+        self.StringCodec = 'StrVer'
+        self.StrVer = self.StringCodec
+
+        ### The self.key is already in Normal-String form and don't require
+        ### to be converted. 
+        
+        self.__dict__[ self.key ][ self.StrModuleName ]=self.StrVer
     
 
   def __setitem__(self, key, item):
@@ -90,7 +111,7 @@ time unless it's simple addition of key and must not be based on datetime type.
       print "Key is a datetime compatible module"
       if isinstance( self, PipFreezeDict ):
         ###
-        ### Which is good to proove the super implementation of 
+        ### Which is good to prove the super implementation of 
         ### PipFreezeDict Specialization forbid uses new key and only 
         ### allow declaration of self.GetDate from Class PipFreeze
         ### called here because super 'super( PipFreeze, self ).__init__(  )' 
@@ -183,8 +204,49 @@ resonnable to make this PipFreezeDict having it's own design to avoid important
 modification to module list and avoid evolution of Fnct.D design being flawed
 """
 
-  PipCommandFormat =  'pip {}'
+  ### String Encoding Property
+  def SetStringEncoder( self, value ):
+    print "StringEncoder property set to codec value : {}".format( value )
+    self.StrStringEncode = value
 
+  def GetStringEncoder( self ):
+    return self.StrStringEncode
+
+  StringEncoder = property( GetStringEncoder, SetStringEncoder )
+
+  ### String Codec Property.
+  ### Will work by assigning which variable from A class will
+  ### to apply the codec. Changing the codec information from
+  ### SetCodecAttribute ( uniformely 'equal' operator to
+  ### StringCodec property ) will trigger a new variable to be
+  ### returned by member of StringCodec ( Like GetStringCodec )
+
+  def SetStringCodec( self, value ):
+    print "Codec Aligned to Read information of Variable: {}".format( value )
+    self.StrStringCodecAttr = value
+
+  def GetStringCodec( self ):
+    """In Fact it's equivalent to a str(<variable>).encode('codec','ignore') where
+it's the variable name that goes inside '<variable>', and I Shall use the getattr
+to focus on ( object , variable ) first and reusing this getattr to push
+another getattr to align the encode property . Later The codec policy can be
+changed to bu require a try/except to raise and have a Error/Warning class.
+Notice, it's more concerned to use these Property outside of PipFreeze, like
+inherited dict named PipFreezeDict which require to filter the new coming
+dictionary information.
+"""
+    return getattr( getattr( self, self.StrStringCodecAttr ), 'encode' )( self.StringEncoder, 'ignore' )
+
+  StringCodec = property( GetStringCodec, SetStringCodec )
+  """Once StringCodec is configured through StringEncoder for choosing the String codec,
+StringCodec will require to hold a Varible Name. Proposed variable from PipFreezeDict will
+be key StrModuleName StrVer, or iLines which comming the iterpipes command; which require
+to be set from base class like self.StrModuleName,StrVer and property self.StringCodec will
+throw the information converted. """
+
+  PipCommandFormat =  'pip {}'
+  StrDisplayFmt = "module:{}, version:{}\n"
+  
   @property
   def TimeStamp( self ):
     self.date = Date.today() 
@@ -216,14 +278,40 @@ modification to module list and avoid evolution of Fnct.D design being flawed
   def CreatePipFreezeRequest( self ):
     self.pip_freeze = run( linecmd( self.PipCommand ) )
 
+  @property
+  def GetPipRunCmd( self ):
+    return self.pip_freeze
+
+  def SetOutputDisplayFmt( self, value ):
+    print "New Format for Outputing property SelectedOutputbyDate choosed:\n[{}]".format( value )
+    self.StrDisplayFmt = value 
+
+  def GetOutputDisplayFmt( self ):
+    return self.StrDisplayFmt 
+
+  OutputDisplayFmt = property( GetOutputDisplayFmt, SetOutputDisplayFmt )
+
+  def SetSelectedDateOutput( self, value ):
+    print "Selected date:{} to display".format( value )
+    self.StrDateSelection = value
+
+  def GetSelectedDateOutput( self ):
+    StrBuffer=''
+    for StrKey in self[ self.StrDateSelection ].keys():
+      StrBuffer+=self.OutputDisplayFmt.format( StrKey, self[self.StrDateSelection][StrKey] )
+    return StrBuffer 
+
+  SelectedOutputbyDate = property( GetSelectedDateOutput, SetSelectedDateOutput )
+  
   def __init__( self ):
     self.TimeStamp 
     self.DateFmt = "%Y%m%d-%H:%M:%S"
+    self.StringEncoder = "ascii"
     super( PipFreeze, self ).__init__(  )
     self.PipCommand = 'freeze'
     print "Creating PIP Freeze List from iterpipes cmd:( {} )".format( self.PipCommand )
     self.CreatePipFreezeRequest
-    self[ self.date ] = self.pip_freeze
+    self[ self.date ] = self.GetPipRunCmd 
       
    
       
