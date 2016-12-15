@@ -2,6 +2,20 @@
 # -*- coding: utf-8 -*-
 # -*- file : SSHServicesRequest.py -*- 
 
+import os
+from os import environ
+
+if environ.has_key('FNCTDLIBPATH'):
+  DEFAULT_SERVICE_SCRIPT="{}/python/".format( environ['FNCTDLIBPATH'] )
+else:
+  DEFAULT_SERVICE_SCRIPT="./python/"
+
+if environ.has_key( 'HOME' ):
+  DEFAULT_PATH=environ['HOME']
+else:
+  DEFAULT_PATH='./'
+  
+
 
 ### Actual version is working under virtualenv setting :
 ### Using Python 2.7. Twisted 16.6.0 still installed by
@@ -165,9 +179,9 @@ if __name__ == "__main__":
   KeyRing=SSHFunctionControllerRealm( FunctionPrefixHelper= "Fnct_",
                               AttrPrivateKey= 'privateBlobFile',
                               AttrPublicKey= 'publicBlobFile',
-                              RSA_Path="/home/maxiste/github/Fnct.D/python",
-                              RSA_Name="/home/maxiste/github/Fnct.D/python/rsa_id",
-                              RSA_File="/home/maxiste/github/Fnct.D/python/rsa_id.pub",
+                              RSA_Path="{}/{}".format( DEFAULT_PATH, DEFAULT_SERVICE_SCRIPT ),
+                              RSA_Name="{}/{}/rsa_id".format( DEFAULT_PATH , DEFAULT_SERVICE_SCRIPT ),
+                              RSA_File="{}/{}/rsa_id.pub".format( DEFAULT_PATH, DEFAULT_SERVICE_SCRIPT ),
                               users = {'admin': 'admin', 'fnct.d': 'fnctd'})
   sshFactory.portal = portal.Portal( KeyRing )
   
