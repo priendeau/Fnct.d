@@ -83,6 +83,9 @@ class PipFreezeDict( dict ):
         ### self.StrModuleName, like content of ListPair[0]
         ### and calling back the codec ( self.StringCodec ) will output  
         ### the content of self.StrModuleName as converted. 
+
+        ### Set a github branch StringCodecEx1 before erasing the codec uses over
+        ### couple of item rather than directly use it on iLines.
         
         self.StringCodec =  'StrModuleName'
         self.StrModuleName = self.StringCodec 
