@@ -53,7 +53,117 @@ except ImportError:
   print "Warning cmdformat not compatible or can not be loaded properly .\nLoading cmd, bincmd, linecmd, run, call, check_call, compose.\n"
   from iterpipes import cmd, bincmd, linecmd, run, call, check_call, compose
 
-class PipFreezeDict( dict ):
+
+class VerbHandler( object ):
+
+  VerboseValue        = False 
+  FunctionNameInfo    = None
+  IsRequireSynch      = False 
+  LoggingByFunction   = False 
+  DictVerbose = {} 
+
+  def __init__( self ):
+    print "Loading Verbose Handler"
+  
+  def SetVerbose( self, value ):
+    print "Status of Verbose Handler, does produce verbosity:{}".format( value ) 
+    self.VerboseValue = value
+
+  def GetVerbose( self ) :
+    return self.VerboseValue 
+
+  Verbose = property( GetVerbose, SetVerbose )
+
+  def SetFunctionName( self, value ):
+    self.FunctionNameInfo = value
+    self.DictVerbose[ self.FunctionNameInfo ]=list()
+
+  def GetFunctionName( self ):
+    return self.FunctionNameInfo
+
+  funtion_name = property( GetFunctionName, SetFunctionName )
+
+  def SetSynchVerbose( self, value ):
+    self.IsRequireSynch = value
+
+  def GetSynchVerbose( self ):
+    StrBuffer = ''
+    if self.IsRequireSynch == True:
+      if len( self.DictVerbose[ self.FunctionNameInfo ] ) > 0:
+        for item in self.DictVerbose[ self.FunctionNameInfo ]:
+          StrBuffer += "{}\n".format( item ) 
+    return StrBuffer 
+
+  SynchVerbose = property( GetSynchVerbose, SetSynchVerbose )
+
+  def GetLogByFunction( self ):
+    return self.LoggingByFunction 
+
+  def SetLogByFunction( self, value ):
+    self.LoggingByFunction = value 
+    if value == True :
+      print "Verbose will be cumuled and being pushed at the exist of a function."
+    else:
+      print "Verbose will be pushed at every verbose call."
+     
+
+  LogByFunction = property( GetLogByFunction, SetLogByFunction )
+
+  @property
+  def AddToBuffer( self, value ):
+    self.DictVerbose[ self.FunctionNameInfo ].append( value )
+
+  @property
+  def FlushCurrentVerbose( self ):
+    del self.DictVerbose[ self.FunctionNameInfo ]
+
+  def SetVerbosis( self, value ):
+    """A one-time Setter and Doing an action. This is not a getter because it
+require value like comment to show or display and it manage the Buffer for the
+LogByFunction=True property and print on received information with
+LogByFunction=False. The property verbosis is not accepting 2 parameters like
+changing the state of LogByFunction, for ineffective design and require a
+decorator to configure a function verbose . """
+    self.StrLineVerbose = value 
+    if self.Verbose == True:
+      if self.LogByFunction == True:
+        self.AddToBuffer = self.StrLineVerbose
+      else:
+        print self.StrLineVerbose
+
+  verbosis = property( None, SetVerbosis )
+  """verbosis, an half-property. The uses is like a print line except uses of
+__equal__ allowing to manage it's value entry and automatically print-it if
+it's require to print after receiving the information or to account it inside
+a buffer. Usually It's won't be usefull to call it once , and generate extra
+code to if it move the print inside a getter method. """
+
+  @staticmethod
+  def VerboseFunctionTrigger( ):
+    """
+    This Decorator Will:
+      Add information to class VerbHandler.
+      -- Trigger property of synchronisation after each function
+      tell to VerbHandler it as moved in/out from function.
+      If the VerbHandler is configured to cumul the information
+      during function execution it cumul information inside a Dict.
+      This is only possible if property LogByFunction = True 
+            
+    """
+    def decorator( func ):
+        def inner( *args ):
+          VerbHandler.funtion_name = func.func_name
+          VerbHandler.SynchVerbose = True 
+          func( *args )
+          print VerbHandler.SynchVerbose
+          VerbHandler.FlushCurrentVerbose
+        return inner
+    return decorator
+  
+
+class PipFreezeDict( VerbHandler , dict ):
+  
+
   """PipFreezeDict is a dict() based type to hold python module information from a virtualenv
 setting. While it can accept to not be instancianted inside a virtualenv it require pip from
 various version and do hold system information based on declaration of a new key. It's design
@@ -65,9 +175,12 @@ call or in-class datetime property / member from a combined class derivation, wi
 request to add an update of the freeze-list of pip. This class will also update a sqlite database
 to store the information in persistent format. """
 
+
   StrDefaultTimeFormat = "%Y%m%d-%H:%M:%S"
   """Default Variable of time format. Use internally, inherited instance of
 PipFreeze are using self.DateFmt """
+
+  list_keys = list() 
   
   def SubDictFiltering( self ,item ):
     """Definition called by __setitem__ and it's a private definition to manage
@@ -83,7 +196,7 @@ information based on command output. """
       ### self.iLines, like content of item . 
       self.StringCodec =  'iLines'
       self.iLines = self.StringCodec 
-      print "Type of iLines:{}".format( type(self.iLines).__name__ )
+      self.verbosis = "Type of iLines:{}".format( type(self.iLines).__name__ )
       IsSystemDepend=False 
       if self.iLines.find( '===' ) > 0 :
         IsSystemDepend=True
@@ -93,14 +206,13 @@ information based on command output. """
       
       ListPair=self.iLines.split( StrSplit )
       if len( ListPair ) < 2:
-        print "Rejected Pip-Freeze Lines information: {}".format( self.iLines )
+        self.verbosis = "Rejected Pip-Freeze Lines information: {}".format( self.iLines )
       else:
         StrModuleName = ListPair[0]
         StrVer=ListPair[1].strip( '\n' )
 
         ### The self.key is already in Normal-String form and don't require
         ### to be converted. 
-        
         self.__dict__[ self.key ][ StrModuleName ]=StrVer
     
 
@@ -112,9 +224,9 @@ by looking itself. For instance it's not clean as design to provide a no-key or
 not based datetime key but it's still a design to forbid it's own definition of
 time unless it's simple addition of key and must not be based on datetime type.
 """
-    print "New Dict Added, filtering the informations.\n\tInspecting Key type:{}\n".format( type( key ).__name__ )
+    self.verbosis = "New Dict Added, filtering the informations.\n\tInspecting Key type:{}\n".format( type( key ).__name__ )
     if type( key ).__name__ == 'datetime':
-      print "Key is a datetime compatible module"
+      self.verbosis = "Key is a datetime compatible module"
       if isinstance( self, PipFreezeDict ):
         ###
         ### Which is good to prove the super implementation of 
@@ -126,26 +238,30 @@ time unless it's simple addition of key and must not be based on datetime type.
         ### afformentionned.
 
         
-        print "This dict is an instance of {}.".format( self.__class__.__name__ )
+        self.verbosis = "This dict is an instance of {}.".format( self.__class__.__name__ )
         self.key = self.GetDate
-        print "New Key Specification : {}".format( self.key )
+        ### Adding self.key as known key inside a List to retreive it
+        ### from keys() opertor.
+        self.list_keys.append( self.key )
+
+        self.verbosis = "New Key Specification : {}".format( self.key )
       else:
-        print "setting independently Time-Format."
+        self.verbosis = "setting independently Time-Format."
         self.key = key.strftime( self.StrDefaultTimeFormat )
-      print "Item Specification:\n\tType:{}".format( type( item ).__name__ )
+      self.verbosis = "Item Specification:\n\tType:{}".format( type( item ).__name__ )
       if self.__dict__.has_key( self.key ) == False:
         self.__dict__[self.key]={}
       if hasattr( item , '__name__'):
-        print "Item added has a specific name."
+        self.verbosis = "Item added has a specific name."
         if getattr( item, '__name__') == 'iterdecode' :
           self.SubDictFiltering( item )
       else:
-        print "item detection did not found __name__ identification "
+        self.verbosis = "item detection did not found __name__ identification "
         if type( item ).__name__ == 'tuple':
-          print "Inspecting Tuple"
+          self.verbosis = "Inspecting Tuple"
           self.SubDictFiltering( item )
     else:
-      print "Adding to Dict normal sequence, not a datetime compatible-key"
+      self.verbosis = "Adding to Dict normal sequence, not a datetime compatible-key"
       self.__dict__[key] = item
 
   def __getitem__(self, key): 
@@ -176,7 +292,8 @@ time unless it's simple addition of key and must not be based on datetime type.
     return self.__dict__.update(*args, **kwargs)
 
   def keys(self):
-    return self.__dict__.keys()
+    return self.list_keys
+    #return self.__dict__.keys()
 
   def values(self):
     return self.__dict__.values()
@@ -213,7 +330,7 @@ modification to module list and avoid evolution of Fnct.D design being flawed
   def SetStringEncoder( self, value ):
     """Part of property of StringEncoder, it's the Setter method.
 """
-    print "StringEncoder property set to codec value : {}".format( value )
+    self.verbosis = "StringEncoder property set to codec value : {}".format( value )
     self.StrStringEncode = value
 
   def GetStringEncoder( self ):
@@ -244,7 +361,7 @@ sub-definition, called SubDictFiltering."""
   def SetStringCodec( self, value ):
     """Part of property of StringCodec, it's the Setter method.
 """
-    print "Codec Aligned to Read information of Variable: {}".format( value )
+    self.verbosis = "Codec Aligned to Read information of Variable: {}".format( value )
     self.StrStringCodecAttr = value
 
   def GetStringCodec( self ):
@@ -287,7 +404,7 @@ variable member of this module."""
     self.date = Date.today() 
 
   def SetFormatDate( self, value ):
-    print "Date Format changed to {}".format( value )
+    self.verbosis = "Date Format changed to {}".format( value )
     self.DateFmd=value
 
   def GetFormatDate( self ):
@@ -334,7 +451,7 @@ mechanism read from this run statement ."""
     return self.pip_freeze
 
   def SetOutputDisplayFmt( self, value ):
-    print "New Format for Outputing property SelectedOutputbyDate choosed:\n[{}]".format( value )
+    self.verbosis = "New Format for Outputing property SelectedOutputbyDate choosed:\n[{}]".format( value )
     self.StrDisplayFmt = value 
 
   def GetOutputDisplayFmt( self ):
@@ -348,7 +465,7 @@ property SelectedOutputbyDate, or it's on next SelectedOutputbyDate call it will
 take effect."""
 
   def SetSelectedDateOutput( self, value ):
-    print "Selected date:{} to display".format( value )
+    self.verbosis = "Selected date:{} to display".format( value )
     self.StrDateSelection = value
 
   def GetSelectedDateOutput( self ):
@@ -370,7 +487,10 @@ rivated dict class to get actual knows keys. """
     self.StringEncoder = "ascii"
     super( PipFreeze, self ).__init__(  )
     self.PipCommand = 'freeze'
-    print "Creating PIP Freeze List from iterpipes cmd:( {} )".format( self.PipCommand )
+    super( VerbHandler, self ).__init__(  )
+    self.Verbose = True
+    self.LogByFunction = False 
+    self.verbosis = "Creating PIP Freeze List from iterpipes cmd:( {} )".format( self.PipCommand )
     self.CreatePipFreezeRequest
     self.UpdateModuleList
     #self[ self.date ] = self.GetPipRunCmd 
