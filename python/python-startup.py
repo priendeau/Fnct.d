@@ -54,10 +54,25 @@ except ImportError:
   from iterpipes import cmd, bincmd, linecmd, run, call, check_call, compose
 
 class PipFreezeDict( dict ):
+  """PipFreezeDict is a dict() based type to hold python module information from a virtualenv
+setting. While it can accept to not be instancianted inside a virtualenv it require pip from
+various version and do hold system information based on declaration of a new key. It's design
+made from a dictionnary type, it allow to update the collection of key only if there is a
+signifiant modification of the Freeze list from a virtualenv instance. Actually using this
+Dictionnary is allowed to add a 'set of key' based on String type to add about everything, but
+as a reserved mechanism based on set of key made from 'datetime', adding from a new datetime
+call or in-class datetime property / member from a combined class derivation, will refer to a
+request to add an update of the freeze-list of pip. This class will also update a sqlite database
+to store the information in persistent format. """
 
   StrDefaultTimeFormat = "%Y%m%d-%H:%M:%S"
+  """Default Variable of time format. Use internally, inherited instance of
+PipFreeze are using self.DateFmt """
   
   def SubDictFiltering( self ,item ):
+    """Definition called by __setitem__ and it's a private definition to manage
+information of a iterpipes run( ) command. It parse the line and split the
+information based on command output. """
     self.list = []
     self.iLines = ''
     for self.iLines in item:
@@ -195,15 +210,29 @@ resonnable to make this PipFreezeDict having it's own design to avoid important
 modification to module list and avoid evolution of Fnct.D design being flawed
 """
 
-  ### String Encoding Property
   def SetStringEncoder( self, value ):
+    """Part of property of StringEncoder, it's the Setter method.
+"""
     print "StringEncoder property set to codec value : {}".format( value )
     self.StrStringEncode = value
 
   def GetStringEncoder( self ):
+    """Part of property of StringEncoder it's the Getter method.
+"""
     return self.StrStringEncode
 
   StringEncoder = property( GetStringEncoder, SetStringEncoder )
+  """Property of StringEncoder, it's the configuration purposes for string
+encoder type. Accept same parameter as String.encode( 'codec' ), codec accept.
+ex:
+ self.StringEncoder = 'ascii'
+ self.StringEncoder = 'iso8859-1'
+ 
+ Pip command made from iterpipes are unicode compliant in most case and do
+require to be formated to plain string type no unicode. This property allow to
+change the format of the command result. The example used in Codec conversion
+can be see inside PipFreezeDict for definition of __setitem__, using a
+sub-definition, called SubDictFiltering."""
 
   ### String Codec Property.
   ### Will work by assigning which variable from A class will
@@ -213,11 +242,19 @@ modification to module list and avoid evolution of Fnct.D design being flawed
   ### returned by member of StringCodec ( Like GetStringCodec )
 
   def SetStringCodec( self, value ):
+    """Part of property of StringCodec, it's the Setter method.
+"""
     print "Codec Aligned to Read information of Variable: {}".format( value )
     self.StrStringCodecAttr = value
 
   def GetStringCodec( self ):
-    """In Fact it's equivalent to a str(<variable>).encode('codec','ignore') where
+    """Part of property of StringCodec it the Getter method. Particularity
+to this method it return the string encoded through uses of
+getattr( getattr( self, String), 'encode' )( encode parameter ), and it's
+shortened by the SetStringCodec Setter side, who register the variable to
+encode.
+
+It's equivalent to a str(<variable>).encode('codec','ignore') where
 it's the variable name that goes inside '<variable>', and I Shall use the getattr
 to focus on ( object , variable ) first and reusing this getattr to push
 another getattr to align the encode property . Later The codec policy can be
@@ -236,10 +273,17 @@ to be set from base class like self.StrModuleName,StrVer and property self.Strin
 throw the information converted. """
 
   PipCommandFormat =  'pip {}'
+  """Default command and it's parsing field reserved. Changing this will either
+require more parameter or imply fixed parameter. Changing this String require
+to use self.PipCommand to change it ."""
+
   StrDisplayFmt = "module:{}, version:{}\n"
   
   @property
   def TimeStamp( self ):
+    """TimeStamp is the main Property to apply the date-synchronisation or
+date-update of this module. It initialize self.date allow to read from this
+variable member of this module."""
     self.date = Date.today() 
 
   def SetFormatDate( self, value ):
@@ -250,9 +294,14 @@ throw the information converted. """
     return self.DateFmd
 
   DateFmt = property( GetFormatDate, SetFormatDate )
+  """property used inside __init__( self ), and modify the key-format of a datetime-key
+formated key result from PipFreezeDict. It can be used to change to unix-timestamp format
+or any convenient format. """
 
   @property
   def GetDate( self ):
+    """This is the main Formating engine of this module. inspecting the self.date
+for correct member name, it use 'strftime' as default function/definition."""
     if hasattr( self.date, 'strftime' ):
       value=getattr( self.date , 'strftime')( self.DateFmt ) 
     return value
@@ -263,11 +312,22 @@ throw the information converted. """
   def GetPipCommand( self ):
     return self.PipCommandFormat.format( self.PipCmdArg )
 
-  PipCommand = property(  GetPipCommand, SetPipCommand ) 
+  PipCommand = property(  GetPipCommand, SetPipCommand )
+  """PipCommand is a property to alter and change self.PipCommandFormat allow
+to use more complex pip-command call and allow to add or retreive field parsing
+to the command called by iterpipes."""
 
   @property
   def CreatePipFreezeRequest( self ):
+    """The property to call the commandline, using an iteration from iterpipes run command.
+The rest of overloading definition from PipFreezeDict __setitems__ will by handle by property
+GetPipRunCmd, this one simply call the command and put it a queue-list until a iteration
+mechanism read from this run statement ."""
     self.pip_freeze = run( linecmd( self.PipCommand ) )
+
+  @property
+  def UpdateModuleList( self ):
+    self.__setitem__( self.date, self.GetPipRunCmd )
 
   @property
   def GetPipRunCmd( self ):
@@ -281,6 +341,11 @@ throw the information converted. """
     return self.StrDisplayFmt 
 
   OutputDisplayFmt = property( GetOutputDisplayFmt, SetOutputDisplayFmt )
+  """This property handle 2 field replacement and it's the main format property
+to change the display format. Default is "module:{}, version:{}\n", can accept
+carriage-return, tab  and many meta-character . require to be use before using
+property SelectedOutputbyDate, or it's on next SelectedOutputbyDate call it will
+take effect."""
 
   def SetSelectedDateOutput( self, value ):
     print "Selected date:{} to display".format( value )
@@ -293,6 +358,11 @@ throw the information converted. """
     return StrBuffer 
 
   SelectedOutputbyDate = property( GetSelectedDateOutput, SetSelectedDateOutput )
+  """The most revelant property to consult this Class and it's issued command from
+__init__. SelectedOutputbyDate require at least a key-name in str type and will accept
+the Date-Format in format "%Y%m%d-%H:%M:%S", or specified by property DateFmt. to get
+the actual key generated by this module you can also use the keys() property from de-
+rivated dict class to get actual knows keys. """
   
   def __init__( self ):
     self.TimeStamp 
@@ -302,7 +372,8 @@ throw the information converted. """
     self.PipCommand = 'freeze'
     print "Creating PIP Freeze List from iterpipes cmd:( {} )".format( self.PipCommand )
     self.CreatePipFreezeRequest
-    self[ self.date ] = self.GetPipRunCmd 
+    self.UpdateModuleList
+    #self[ self.date ] = self.GetPipRunCmd 
       
    
       
