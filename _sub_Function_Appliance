@@ -1495,6 +1495,7 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
     
     local StrUUID=$( GetUAppsRegisterName=${StrParentApps} GetUTimeBased=True GetULoop=False GetUUID ) ; 
+    StrPathLoopState=${StrPathLoopState//__SHORTFUNC__/${StrDefaultShortName}} ; 
     StrPathLoopState=${StrPathLoopState//__UUID__/${StrUUID}}
     VerbMsg="Instance ID:${StrUUID}" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ;
     touch ${StrPathLoopState} ; 
