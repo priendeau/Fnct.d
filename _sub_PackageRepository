@@ -51,7 +51,9 @@
 ### _sub_PackageRepository and crafting the rest in prototyping to deliver 
 ###  GnrlPrsrInfctr.... 
 
-unset GetDpkgInstalled ; 
+#unset GetDpkgInstalled ; 
+eval $( GFCFuncName=GetDpkgInstalled GlobalFunctionCleaning ) ;
+
 function GetDpkgInstalled()
 {
  function Verbosis()
@@ -199,7 +201,8 @@ function GetDpkgInstalled()
  ###### Part of Snapshoot section 
  ######
  
- unset GetIdDpkgListing ; 
+ #unset GetIdDpkgListing ; 
+ eval $( GFCFuncName=GetIdDpkgListing GlobalFunctionCleaning ) ;
  function GetIdDpkgListing()
  {
   ### This is a specialized Verbosis mode :
@@ -334,7 +337,8 @@ function GetDpkgInstalled()
 
  }
  
- unset StreamCprEnvlTxt ; 
+ #unset StreamCprEnvlTxt ; 
+ eval $( GFCFuncName=StreamCprEnvlTxt GlobalFunctionCleaning ) ;
  function StreamCprEnvlTxt()
  {
   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
@@ -427,7 +431,8 @@ function GetDpkgInstalled()
  fi   
  }	
   
- unset GetDpkgListing ; 
+ #unset GetDpkgListing ; 
+ eval $( GFCFuncName=GetDpkgListing GlobalFunctionCleaning ) ;
  function GetDpkgListing()
  {
   function Verbosis()
@@ -550,7 +555,10 @@ function GetDpkgInstalled()
  fi    
  }
   
- unset GetPackageList ; 
+ 
+ #unset GetPackageList ; 
+ 
+ eval $( GFCFuncName=GetPackageList GlobalFunctionCleaning ) ;
  function GetPackageList()
  {
   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
@@ -587,7 +595,9 @@ function GetDpkgInstalled()
  #########################################################################
  ###### Part of TestDriveMount section 
  ######
- unset TestPathIndex ; 
+ 
+ #unset TestPathIndex ; 
+ eval $( GFCFuncName=TestPathIndex GlobalFunctionCleaning ) ;
  function TestPathIndex()
  {
   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
@@ -610,7 +620,8 @@ function GetDpkgInstalled()
  }	
 
 
- unset TestDriveMount ; 
+ # unset TestDriveMount ; 
+ eval $( GFCFuncName=TestDriveMount GlobalFunctionCleaning ) ;
  function TestDriveMount()
  {
   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
@@ -761,7 +772,9 @@ function GetDpkgInstalled()
 ### and stay an exception for this case... 
 ### 
 ### 
-unset PackageRepositoryMngmt ; 
+#unset PackageRepositoryMngmt ; 
+
+eval $( GFCFuncName=PackageRepositoryMngmt GlobalFunctionCleaning ) ; 
 
 function PackageRepositoryMngmt()
 {
@@ -819,24 +832,26 @@ function PackageRepositoryMngmt()
    fi
   } 
   ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
-  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
-   local __call_locality=( PRM PackageRepositoryMngmt ) ;
-   local ArrayArg=( $* ) ;
-   local Arg0=${ArrayArg[0]} ; 
+  ### PRM PackageRepositoryMngmt
+ 
+ ### CALL_ARGUMENT_BLOCK
+ if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( PRM PackageRepositoryMngmt ) ;
+   local Arg0="${ArrayArg[0]}" ; 
+   local StrParentApps=${__call_locality[1]} ;
+   local StrStartMain=${PRMFuncStart:=__main_StartServices} ; 
   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
-   eval $( eval CAFunctName=PackageRepositoryMngmt CAIsAddParent=False __Call_Argument ) ;
+   eval $( eval CAFunctName=PackageRepositoryMngmt CAIsAddParent=False __Call_Argument ) ; 
   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-   eval $( eval CAFunctName=PackageRepositoryMngmt CAIsAddParent=False CallArgument ) ; 
-  fi 	
-	#local __call_locality=( PkgRepoMgmt PackageRepositoryMgmt ) ;
- #local ArrayArg=( $* ) ; 
- #local Arg0="${ArrayArg[0]}"  ;
+   eval $( eval CAFunctName=PackageRepositoryMngmt CAIsAddParent=False CallArgument ) ;
+  fi	
 
 	local StrPathArchives=${PRMPathArchives:=/var/cache/apt/archives} ; 
 	local StrFindStringFormat=${PRMStrFmt:="%f "} ;
 	local StrPackageType=${PRMFileFormat:=deb} ;
-	local StrPathRepository=${PRMRepository:=/media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64} ;
-	local StrPathReposIndex=${PRMReposIndex:=/media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64/index} ;
+	local StrPathRepository=${PRMRepository:=APT-CACHE-PATH} ;
+	local StrPathReposIndex=${PRMReposIndex:=APT-CACHE-INDEX-PATH} ;
 	local StrIndexLatest=${PRMLatestIndexName:=latest} ;
 	local StrAddPackageListing=${PRMAddPkgLst:=False} ; 
 	local StrPkgLstExt=${PRMPkgExt:=bz2.base64} ;
@@ -985,8 +1000,6 @@ function PackageRepositoryMngmt()
   fi
  
  }
-	
- 
  
  ### #############################################
 	### Main Body 
@@ -1050,7 +1063,10 @@ function PackageRepositoryMngmt()
 ### PRRIsResolve variable is reserver to search the package following specific time
 ### inside an index, which is merely not working to restore whole packaging...
 ### lacking ID on every Package name index, which is not hard to modify.
-unset PackageRepositoryRest ; 
+
+#unset PackageRepositoryRest ; 
+eval $( GFCFuncName=PackageRepositoryRest GlobalFunctionCleaning ) ;
+
 function PackageRepositoryRest()
 {
 	local __call_locality=( PRR PackageRepositoryRest )	 ; 
@@ -1195,7 +1211,9 @@ function PackageRepositoryRest()
 ######################################################################
 
 
-unset PackageRepositoryFilter ; 
+#unset PackageRepositoryFilter ; 
+eval $( GFCFuncName=PackageRepositoryFilter GlobalFunctionCleaning ) ;
+
 function PackageRepositoryFilter()
 {
 	local __call_locality=( PkgRepoFilter PackageRepositoryFilter ) ;
@@ -1229,8 +1247,6 @@ function PackageRepositoryFilter()
    done ;
   done ;
  }
-  
-
  
 	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
 			GVRIsName=False     \
