@@ -43,6 +43,120 @@
 ### 
 
 ######################################################################
+### Ressource Function of _sub_PackageRepository , SubPackageRessources
+### Share commune function callable through a entry-function mechanism.
+### Common mechanism can be, Verbosis, and somes others
+
+eval $( GFCFuncName=SubPackageRessources GlobalFunctionCleaning ) ;
+
+function SubPackageRessources()
+{
+  function Verbosis()
+  {
+   local -a ArrayArg=( $* ) ; 
+   local -a __call_locality=( Verb Verbosis )
+   local StrMsg=${VerbMsg:=__TEXT__} ; 
+   local StrDevOut=${VerbDev:=/dev/stderr} ; 
+   local IsVerboseState=${VerbState:=False} ;
+   local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+   local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+   local IsDisplayFormatted=${VerbFormated:=True} ;
+   local IsAppendMode=${VerbAppendDev:=False} ; 
+   if [ "${IsVerboseState:=False}" == "True" ] ; then 
+    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+     if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
+     else  
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+     fi
+    else
+     if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+        echo "${StrMsg}" ;  
+     else
+      if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo "${StrMsg}" >> ${StrDevOut} ;
+      else
+       echo "${StrMsg}" > ${StrDevOut} ;
+      fi
+     fi 
+    fi 
+   fi
+  } 
+  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
+
+ if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+  local -a __call_locality=( SPR SubPackageRessources ) ;
+  local -a ArrayArg=( $* ) ;
+  local Arg0=${ArrayArg[0]} ; 
+  local StrParentApps=${__call_locality[1]} ;
+  local StrStartMain=${SPRFuncStart:=__main_StartServices} ;
+ elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
+  eval $( eval CAFunctName=SubPackageRessources CAIsAddParent=False __Call_Argument ) ;
+ elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
+  eval $( eval CAFunctName=SubPackageRessources CAIsAddParent=False CallArgument ) ; 
+ fi 
+ 
+ local -a ArrayMsg ;
+ local BoolDisplayDebug=${SPRIsDisplayDebug:=False} ; 
+ local StrVarList="BoolDisplayDebug,VerbMsg,VerbDev,VerbState,VerbHeader,VerbEvalForm,VerbAppendDev,StrParentApps,StrStartMain" ; 
+ 
+ ArrayMsg[0]="Entry in function" ;  
+
+ function __main_StartServices()
+ {
+  if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+   local __call_locality=( Main __main_StartServices ) ;
+   local -a ArrayArg=( $* ) ;
+   local Arg0=${ArrayArg[0]} ; 
+  elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
+   eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
+  elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
+   eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+  fi   
+  StrMsg=${ArrayMsg[0]} ; 
+  VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+ 
+ }
+ 
+ local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
+ local StrNameHelper="SubPackageRessources\t\tRessource Function for Package _sub_Package Repository";
+ local StrSynopsis="This application does Provide and Centralise commune ressources for this package." ; 
+ local StrSummary="";
+ local StrDescription="" ;
+
+ 
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   GVRIsName=True     \
+   GVRIsSynopsis=True \
+   GVRIsSummary=False  \
+   GVRIsDesc=False     \
+   GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;	
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+   eval $( eval \
+     VTVIsArrayStyleInsert=True \
+     VTVIsQuotedValue=True         \
+     VTVWhiteListTransfert=VerbMsg,VerbDev,VerbState,VerbHeader,VerbEvalForm,VerbAppendDev \
+     VTVValueEntry=${StrVarList}   \
+     VTVIsWhiteList=True           \
+     VTVIsDebugDisplay=True        \
+     VTVIsValueReAssign=True       \
+     VTVIsValueToConvert=False     \
+     VTVIsArrayStyleInsert=True    \
+     ValueToVariable ) ${StrStartMain} ; 
+  fi
+
+}
+
+
+
+
+######################################################################
 ### Main Function of PackageRepositoryMgmt function
 ###
 ### Extruding the function GetDpkgInstalled out of GetIdDpkgListing
@@ -58,14 +172,14 @@ function GetDpkgInstalled()
 {
  function Verbosis()
  {
-  local __call_locality=( Verbosis Verb );
+  local -a __call_locality=( Verbosis Verb );
   local StrMsg=${VerbMsg:=__TEXT__} ; 
   local StrDevOut=${VerbDev:=/dev/stderr} ; 
   local IsVerboseState=${VerbState:=False} ;
   local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
   local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
   local IsDisplayFormatted=${VerbFormated:=True} ;
-  local ArrayArg=( $* ) ; 
+  local -a ArrayArg=( $* ) ; 
   if [ "${IsVerboseState:=False}" == "True" ] ; then 
    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
     echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
@@ -79,15 +193,15 @@ function GetDpkgInstalled()
   fi
  } ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis   
  
- if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
-  local __call_locality=( GDI GetDpkgInstalled ) ;
-  local ArrayArg=( $* ) ;
+ if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+  local -a __call_locality=( GDI GetDpkgInstalled ) ;
+  local -a ArrayArg=( $* ) ;
   local Arg0=${ArrayArg[0]} ; 
   local StrParentApps=${__call_locality[1]} ;
   local StrStartMain=${GDIFuncStart:=__main_StartServices} ;
- elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+ elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
   eval $( eval CAFunctName=GetDpkgInstalled CAIsAddParent=False __Call_Argument ) ;
- elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+ elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
   eval $( eval CAFunctName=GetDpkgInstalled CAIsAddParent=False CallArgument ) ; 
  fi 
  local StrApps=${GDIDpkgApps:=/usr/bin/dpkg} ;
@@ -110,13 +224,13 @@ function GetDpkgInstalled()
  
   function __main_StartServices()
   {
-   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
-    local __call_locality=( Main __main_StartServices ) ;
-    local ArrayArg=( $* ) ;
+   if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+    local -a __call_locality=( Main __main_StartServices ) ;
+    local -a ArrayArg=( $* ) ;
     local Arg0=${ArrayArg[0]} ; 
-   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+   elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
-   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+   elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
    fi 
    StrMsg="Entry in function" ; 
@@ -260,15 +374,15 @@ function GetDpkgInstalled()
   } 
   ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
 
-  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
-   local __call_locality=( GIDL GetIdDpkgListing ) ;
-   local ArrayArg=( $* ) ;
+  if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+   local -a __call_locality=( GIDL GetIdDpkgListing ) ;
+   local -a ArrayArg=( $* ) ;
    local Arg0=${ArrayArg[0]} ; 
    local StrParentApps=${__call_locality[1]} ;
    local StrStartMain=${GIDLFuncStart:=__main_StartServices} ;
-  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+  elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
    eval $( eval CAFunctName=GetIdDpkgListing CAIsAddParent=False __Call_Argument ) ;
-  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+  elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
    eval $( eval CAFunctName=GetIdDpkgListing CAIsAddParent=False CallArgument ) ;
   fi   
   local StrPackageID=${GIDLPackageUUID:=DefaultID} ;
@@ -282,13 +396,13 @@ function GetDpkgInstalled()
    
   function __main_StartServices()
   {
-   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
-    local __call_locality=( Main __main_StartServices ) ;
-    local ArrayArg=( $* ) ;
+   if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+    local -a __call_locality=( Main __main_StartServices ) ;
+    local -a ArrayArg=( $* ) ;
     local Arg0=${ArrayArg[0]} ; 
-   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+   elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
-   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+   elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ; 
    fi   
    StrTplSnap=${StrTplSnap//__TRANSACTION_START__/${StrTransactionStart}} ; 
@@ -341,20 +455,20 @@ function GetDpkgInstalled()
  eval $( GFCFuncName=StreamCprEnvlTxt GlobalFunctionCleaning ) ;
  function StreamCprEnvlTxt()
  {
-  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
-   local __call_locality=( SCET StreamCprEnvlTxt ) ;
-   local ArrayArg=( $* ) ;
+  if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+   local -a __call_locality=( SCET StreamCprEnvlTxt ) ;
+   local -a ArrayArg=( $* ) ;
    local Arg0=${ArrayArg[0]} ; 
    local StrParentApps=${__call_locality[1]} ;
    local StrStartMain=${SCETFuncStart:=__main_StartServices} ;
-  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+  elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
    eval $( eval CAFunctName=StreamCprEnvlTxt CAIsAddParent=False __Call_Argument ) ;
-  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+  elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
    eval $( eval CAFunctName=StreamCprEnvlTxt CAIsAddParent=False CallArgument ) ;
   fi   
-  #local __call_locality=( StreamCET StreamCprEnvlTxt ) ;
+  #local -a __call_locality=( StreamCET StreamCprEnvlTxt ) ;
   #local Arg0=( ${ArrayArg[0]} ) ;
-  #local ArrayArg=( $* ) ; 
+  #local -a ArrayArg=( $* ) ; 
   #local StrPackageID=${StreamCETPackageUUID:=None} GetIdDpkgListing=${StrSnapShotUUID}
   ### Note Prefixed-Change : StreamCprEnvlTxtFile -> SCETTxtFile
   local StrFile=${SCETTxtFile:=DefaultFileName};
@@ -373,13 +487,13 @@ function GetDpkgInstalled()
    
   function __main_StartServices()
   {
-   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
-    local __call_locality=( Main __main_StartServices ) ;
-    local ArrayArg=( $* ) ;
+   if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+    local -a __call_locality=( Main __main_StartServices ) ;
+    local -a ArrayArg=( $* ) ;
     local Arg0=${ArrayArg[0]} ; 
-   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+   elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
-   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+   elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
    fi
    local StrDefaultVTVOpt="VTVIsArrayStyleInsert=True VTVIsValueReAssign=True VTVIsValueToConvert=False VTVIsArrayStyleInsert=True" ; 
@@ -469,21 +583,21 @@ function GetDpkgInstalled()
     } 
     ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
   
-  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
-   local __call_locality=( GDL GetDpkgListing ) ;
-   local ArrayArg=( $* ) ;
+  if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+   local -a __call_locality=( GDL GetDpkgListing ) ;
+   local -a ArrayArg=( $* ) ;
    local Arg0=${ArrayArg[0]} ; 
    local StrParentApps=${__call_locality[1]} ;
    local StrStartMain=${GDLFuncStart:=__main_StartServices} ;
-  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+  elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
    eval $( eval CAFunctName=GetDpkgListing CAIsAddParent=False __Call_Argument ) ;
-  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+  elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
    eval $( eval CAFunctName=GetDpkgListing CAIsAddParent=False CallArgument ) ;
   fi   
   ### Note 
   ### Transfert from External=>Root,StrSnapShotUUID inside GetDpkgListing, with same name. 
-  #local __call_locality=( GetDpkgLst GetPackageListing ) ;
-  #local ArrayArg=( $* ) ; 
+  #local -a __call_locality=( GetDpkgLst GetPackageListing ) ;
+  #local -a ArrayArg=( $* ) ; 
   #local Arg0=( ${ArrayArg[0]} ) ;
   #local GetDpkgInstalledAwkScript=${StrScriptAwkFilter} ; 
   local StrDefaultVTVOpt=${GDLVTVOpt:="VTVIsArrayStyleInsert=True VTVIsValueReAssign=True VTVIsValueToConvert=False VTVIsArrayStyleInsert=True"} ; 
@@ -498,13 +612,13 @@ function GetDpkgInstalled()
  
   function __main_StartServices()
   {
-   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
-    local __call_locality=( Main __main_StartServices ) ;
-    local ArrayArg=( $* ) ;
+   if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+    local -a __call_locality=( Main __main_StartServices ) ;
+    local -a ArrayArg=( $* ) ;
     local Arg0=${ArrayArg[0]} ; 
-   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+   elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
-   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+   elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
    fi  
    local StrId=$( GIDLPackageUUID=${StrPackageID}           \
@@ -561,18 +675,18 @@ function GetDpkgInstalled()
  eval $( GFCFuncName=GetPackageList GlobalFunctionCleaning ) ;
  function GetPackageList()
  {
-  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
-   local __call_locality=( GPL GetPackageList ) ;
-   local ArrayArg=( $* ) ;
+  if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+   local -a __call_locality=( GPL GetPackageList ) ;
+   local -a ArrayArg=( $* ) ;
    local Arg0=${ArrayArg[0]} ; 
-  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+  elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
    eval $( eval CAFunctName=TestPathIndex CAIsAddParent=False __Call_Argument ) ;
-  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+  elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
    eval $( eval CAFunctName=TestPathIndex CAIsAddParent=False CallArgument ) ;
   fi   
   
-  #local __call_locality=( GetPackageList ) ;
-  #local ArrayArg=( $* ) ; 
+  #local -a __call_locality=( GetPackageList ) ;
+  #local -a ArrayArg=( $* ) ; 
   #local Arg0=( ${ArrayArg[0]} ) ;
   local StrPathArchives=${GetPackageListPathArchives:=/var/cache/apt/archives} ; 
   local StrPackageType=${GetPackageListFormat:=deb} ;
@@ -600,18 +714,18 @@ function GetDpkgInstalled()
  eval $( GFCFuncName=TestPathIndex GlobalFunctionCleaning ) ;
  function TestPathIndex()
  {
-  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
-   local __call_locality=( TPI TestPathIndex ) ;
-   local ArrayArg=( $* ) ;
+  if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+   local -a __call_locality=( TPI TestPathIndex ) ;
+   local -a ArrayArg=( $* ) ;
    local Arg0=${ArrayArg[0]} ; 
-  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+  elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
    eval $( eval CAFunctName=TestPathIndex CAIsAddParent=False __Call_Argument ) ;
-  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+  elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
    eval $( eval CAFunctName=TestPathIndex CAIsAddParent=False CallArgument ) ;
   fi   
   
-  #local __call_locality=( TestPathIndex ) ;
-  #local ArrayArg=( $* ) ; 
+  #local -a __call_locality=( TestPathIndex ) ;
+  #local -a ArrayArg=( $* ) ; 
   #local Arg0=( ${ArrayArg[0]} ) ;
   local StrPathTest=${TestPathIndexName:=/media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64/index} ; 
   local StrTestType="${TestPathIndexTest:=! -d}" ;
@@ -624,46 +738,136 @@ function GetDpkgInstalled()
  eval $( GFCFuncName=TestDriveMount GlobalFunctionCleaning ) ;
  function TestDriveMount()
  {
-  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
-   local __call_locality=( TDM TestDriveMount ) ;
-   local ArrayArg=( $* ) ;
+  
+  if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+   local -a __call_locality=( TDM TestDriveMount ) ;
+   local -a ArrayArg=( $* ) ;
    local Arg0=${ArrayArg[0]} ; 
-  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+   local StrStartMain=${TDMFuncStart:=__main_StartServices} ;
+  elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
    eval $( eval CAFunctName=TestDriveMount CAIsAddParent=False __Call_Argument ) ;
-  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+  elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
    eval $( eval CAFunctName=TestDriveMount CAIsAddParent=False CallArgument ) ;
   fi   
+  ### Verbosis wrapping with an alias by calling SubPackageRessources function Entry
+  ### name assigned with Verbosis, should launch the SubPackageRessources-Verbosis . 
   
-  #local __call_locality=( TestDriveMount ) ; 
-  #local ArrayArg=( $* ) ; 
-  #local Arg0=( ${ArrayArg[0]} ) ;
-  local IsMountDrive="True";
-  local StrScopeType="${TestDriveMountScope:=local -a}";
-  local StrDriveList="${TestDriveMountList}";
-  local MountDriveCheck=( ${StrDriveList//,/ } ) ;
-  local IsDisplayDebug=${TestDriveMountDebug:=False} ;
-  local Arg0="${ArrayArg[0]}" ;
-  local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n--list\t\tReturn Internal Variable List.\n" 
+  local StrMsg ; 
+  local VerbosisMsg=${TDMCodecVerbose:='SPRFuncStart=Verbosis SubPackageRessources'} ; 
+  local IsMountDrive=${TDMIsMountedDrive:=True};
+  local StrScopeType=${TDMScope:=local -a};
+  local StrDriveList=${TDMMountList:=/var/cache/apt};
+  local IsDisplayDebug=${TDMDebug:=False} ;
+  local IsDebugVTV=${TDMDebugVTV:=False} ;
+  
+  ArrayMsg[0]="Entry in function" ;
+  
+  local StrVarList="IsMountDrive,StrScopeType,StrDriveList,IsDisplayDebug,StrStartMain,StrParentApps,IsDebugVTV,VerbosisMsg" ; 
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ; 
+  
+   
+  ### "Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n--list\t\tReturn Internal Variable List.\n" 
+  function VersionApps()
+  {
+   if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( VA VersionApps ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+   elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=VersionApps CAIsAddParent=True __Call_Argument ) ;
+   elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=VersionApps CAIsAddParent=True CallArgument ) ;
+   fi     
+   StrEvalCmd="""
+   StrMsg=\"Application:__FUNCT__ , version:( versionTP:__VER_TP__ versionVTV:__VER_VTV__, versionCA:__VER_CA__, versionBVT:__VER_BVT__)\" ; 
+   StrMsg=\${StrMsg//__VER_CA__/\${versionCA}} ;
+   StrMsg=\${StrMsg//__VER_TP__/\${versionTP}} ;
+   StrMsg=\${StrMsg//__VER_VTV__/\${versionVTV}} ;
+   StrMsg=\${StrMsg//__VER_BVT__/\${versionBVT}} ;
+   StrMsg=\${StrMsg//__FUNCT__/\${__call_locality[1]}} ;
+   VerbMsg=\${StrMsg} VerbHeader=\"VERSION\" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ; 
+   """ ; 
+   echo -ne "${StrEvalCmd}" ; 
+  }
+  
+  function __main_StartServices()
+  {
+   if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+    local -a __call_locality=( Main __main_StartServices ) ;
+    local -a ArrayArg=( $* ) ;
+    local Arg0=${ArrayArg[0]} ; 
+   elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
+   elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+   fi  
+   local -a ArrayMsg ; 
+   local StrMsg ; 
+   StrMsg=$( TestDriveMount --get ArrayMsg[0] ) ; 
+   echo -ne "Verbose Codec: ${VerbosisMsg}\n" ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr ${VerbosisMsg} ;
+   
+   ArrayMsg[0]="Checking Path: __PATH__\n" ; 
+   ArrayMsg[1]="Check Variable PRMRepository, PRMReposIndex, some Path are inaccessible or not mounted" ; 
+   ArrayMsg[1]="__SCOPE__ IsMountDrive=__VAR__" ; 
+   
+   local MountDriveCheck=( ${StrDriveList//,/ } ) ;
+   VerbMsg="Content of MountDriveCheck:[ ${MountDriveCheck[@]} ]" VerbState="${IsDisplayDebug}" VerbHeader=MSG VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr ${VerbosisMsg} ; 
+   
+   for (( intx=0 ; intx <= ${#MountDriveCheck[@]}-1 ; intx++ )) ; do
+     StrMsg=${ArrayMsg[0]} ; 
+     StrMsg=${StrMsg//__PATH__//${MountDriveCheck[${intx}]}} ; 
+     VerbMsg="${StrMsg}" VerbState="${IsDisplayDebug}" VerbHeader="MSG" VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr ${VerbosisMsg} ; 
+     if [ ! -d "${MountDriveCheck[${intx}]}" ] ; then 
+      IsMountDrive="False" ;
+     fi 
+   done 
+   if [ "${IsMountDrive:=True}" == "False" ] ; then 
+    #echo -ne "\nCheck Variable PkgRepoMgmtRepository,PkgRepoMgmtPathArchives, some Path are inaccessible or not mounted\n" > /dev/stderr ; 
+    StrMsg=${ArrayMsg[1]} ; 
+    VerbMsg="${StrMsg}" VerbHeader=MSG VerbEvalForm=False VerbFormated=True VerbState="${IsDisplayDebug}" VerbDev=/dev/stderr ${VerbosisMsg} ; 
+   fi 
+   
+   StrMsg=${ArrayMsg[2]} ;
+   StrMsg=${StrMsg//__SCOPE__/{StrScopeType}} ; 
+   StrMsg=${StrMsg//__VAR__/${IsMountDrive}} ; 
+   ### Verbose to produce a command and should be evaluated. 
+   VerbMsg="${StrMsg}" VerbEvalForm=True VerbFormated=False VerbState=True ${VerbosisMsg} ; 
+  
+  }
+  local StrNameHelper="TestDriveMount\t\tSub-Function used by Package _sub_PackageRepository.";
+  local StrSynopsis="This application does report if a path or a mounted drive is accessible or not. Used by componnent of _sub_PackageRepository, for function PackageRepositoryMngmt, PackageRepositoryRest." ; 
+  local StrSummary="";
+  local StrDescription="" ;
+  
+  
   if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-    GetVarReference ${__call_locality[0]} ; 
+    GVRIsName=True        \
+    GVRIsSynopsis=True   \
+    GVRIsSummary=False     \
+    GVRIsDesc=False       \
+    GetVarReference ${__call_locality[1]} ; 
     echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
   elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
    eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
    echo -ne """${ArgGet}\n""" ;
   elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
    eval $( __GetVarReferenceList ) ;
-  else
-   for (( intx=0 ; intx <= ${#MountDriveCheck[@]}-1 ; intx++ )) ; do
-    if [ "${IsDisplayDebug:=False}" == "True" ] ; then 
-     echo -ne "Checking Path: ${MountDriveCheck[${intx}]}\n" > /dev/stderr ; 
-    fi
-    test ! -d "${MountDriveCheck[${intx}]}" && IsMountDrive="False" ;
-   done 
-   if [ "${IsMountDrive:=True}" == "False" ] ; then 
-    echo -ne "\nCheck Variable PkgRepoMgmtRepository,PkgRepoMgmtPathArchives, some Path are inaccessible or not mounted\n" > /dev/stderr ; 
-   fi 
-   echo -ne "${StrScopeType} IsMountDrive=${IsMountDrive}" ; 
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+   StrMsg=${ArrayMsg[0]} ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr ${VerbosisMsg} ;
+   #eval $( eval VersionApps ) ; 
+   eval $( eval VTVValueEntry=${StrVarList}  \ 
+           VTVWhiteListTransfert=VerbosisMsg \
+           VTVIsWhiteList=False              \
+           VTVIsDebugDisplay=${IsDebugVTV}   \
+           VTVIsArrayStyleInsert=True        \
+           VTVIsValueReAssign=True           \
+           VTVIsValueToConvert=False         \
+           ValueToVariable             ) ${StrStartMain} ;
+  
   fi 
+  
  }
  ###### End of TestDriveMount section 
  ######
@@ -835,15 +1039,15 @@ function PackageRepositoryMngmt()
   ### PRM PackageRepositoryMngmt
  
  ### CALL_ARGUMENT_BLOCK
- if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+ if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
    local -a ArrayArg=( $* ) ;
    local -a __call_locality=( PRM PackageRepositoryMngmt ) ;
    local Arg0="${ArrayArg[0]}" ; 
    local StrParentApps=${__call_locality[1]} ;
    local StrStartMain=${PRMFuncStart:=__main_StartServices} ; 
-  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+  elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
    eval $( eval CAFunctName=PackageRepositoryMngmt CAIsAddParent=False __Call_Argument ) ; 
-  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+  elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
    eval $( eval CAFunctName=PackageRepositoryMngmt CAIsAddParent=False CallArgument ) ;
   fi	
 
@@ -870,41 +1074,41 @@ function PackageRepositoryMngmt()
 	local StrBackupAction=${PRMReposBkpAct:=mv __SRC__/__FILE__ __DEST__ __VIRG__ ln -s __DEST__/__FILE__ __SRC__/__FILE__} ;
 	
  #local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
- local StrVarList="StrUUID,StrSnapShotUUID,StrPathArchives,StrFindStringFormat,StrPackageType,StrPathRepository,StrPathReposIndex,StrIndexLatest,StrAddPackageListing,StrPkgLstExt,StrAppsLinkerName,StrAppsLinkerOptionRecv,StrAppsLinkerOption,StrDumpingFormat,StrDefaultActionIndex,StrTestDriveDebug,StrIndexTest,StrScriptAwkFilter,IntDefaultDayIndexName,StrBackupAction,StrTransactionStart,StrToDateTransfert,StrIndexFile"
+ local StrVarList="StrUUID,StrSnapShotUUID,StrPathArchives,StrFindStringFormat,StrPackageType,StrPathRepository,StrPathReposIndex,StrIndexLatest,StrAddPackageListing,StrPkgLstExt,StrAppsLinkerName,StrAppsLinkerOptionRecv,StrAppsLinkerOption,StrDumpingFormat,StrDefaultActionIndex,StrTestDriveDebug,StrIndexTest,StrScriptAwkFilter,IntDefaultDayIndexName,StrBackupAction,StrTransactionStart,StrToDateTransfert,StrIndexFile,StrStartMain,StrParentApps"
 
 
  function CheckDrive()
  {
-  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
-   local __call_locality=( CD CheckDrive ) ;
-   local ArrayArg=( $* ) ;
+  if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+   local -a __call_locality=( CD CheckDrive ) ;
+   local -a ArrayArg=( $* ) ;
    local Arg0=${ArrayArg[0]} ; 
-  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+  elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
    eval $( eval CAFunctName=CheckDrive CAIsAddParent=True __Call_Argument ) :  
-  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+  elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
    eval $( eval CAFunctName=CheckDrive CAIsAddParent=True CallArgument ) :  
   fi     
-  #local __call_locality=( CD CheckDrive ) ;
+  #local -a __call_locality=( CD CheckDrive ) ;
   #local Arg0=${ArrayArg[0]} ;
-  #local ArrayArg=( $* ) ;   
+  #local -a ArrayArg=( $* ) ;   
 		test $( TestDriveMountDebug=${StrTestDriveDebug} TestDriveMountList=${StrPathRepository},${StrPathArchives} TestDriveMount ) && \
 		echo -ne "Status of IsMountDrive: ${IsMountDrive}\n" > /dev/stderr ; 
  }
 	
  function AddSnapShoot()
  {
-  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
-   local __call_locality=( ASS AddSnapShoot ) ;
-   local ArrayArg=( $* ) ;
+  if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+   local -a __call_locality=( ASS AddSnapShoot ) ;
+   local -a ArrayArg=( $* ) ;
    local Arg0=${ArrayArg[0]} ; 
-  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+  elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
    eval $( eval CAFunctName=AddSnapShoot CAIsAddParent=True __Call_Argument ) ; 
-  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+  elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
    eval $( eval CAFunctName=AddSnapShoot CAIsAddParent=True CallArgument ) ; 
   fi     
-  #local __call_locality=( ASS AddSnapShoot ) ;
+  #local -a __call_locality=( ASS AddSnapShoot ) ;
   #local Arg0=${ArrayArg[0]} ;
-  #local ArrayArg=( $* ) ;   
+  #local -a ArrayArg=( $* ) ;   
   echo -ne "File to store next SnapShoot: ${StrIndexFile}\n" > /dev/stderr ; 
 		test $( TestDriveMountDebug=${StrTestDriveDebug} TestDriveMountList=${StrPathRepository},${StrPathArchives} TestDriveMount ) && \
   eval $( VTVValueEntry=${StrVarList} \ 
@@ -916,18 +1120,18 @@ function PackageRepositoryMngmt()
  
  function __main_StartServices()
  {
-  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
-   local __call_locality=( Main __main_StartServices ) ;
-   local ArrayArg=( $* ) ;
+  if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+   local -a __call_locality=( Main __main_StartServices ) ;
+   local -a ArrayArg=( $* ) ;
    local Arg0=${ArrayArg[0]} ; 
-  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+  elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
-  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+  elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
   fi     
   echo -ne "Reserved ID for COMMIT:${StrUUID}\nReserved ID for Listing:${StrSnapShotUUID}\n\n" > /dev/stderr ;
-  #local __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
-  #local ArrayArg=( $* ) ;
+  #local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+  #local -a ArrayArg=( $* ) ;
   #local Arg0=${ArrayArg[0]};  
     
   
@@ -1069,8 +1273,8 @@ eval $( GFCFuncName=PackageRepositoryRest GlobalFunctionCleaning ) ;
 
 function PackageRepositoryRest()
 {
-	local __call_locality=( PRR PackageRepositoryRest )	 ; 
-	local ArrayArg=( $* ) ;
+	local -a __call_locality=( PRR PackageRepositoryRest )	 ; 
+	local -a ArrayArg=( $* ) ;
 	local IsLink=${PRRIsLink:=0} ; 
 	local IsResolve=${PRRIsResolve:=1} ; 
 	local IsDebug=${PRRIsDebug:=0} ; 
@@ -1216,8 +1420,8 @@ eval $( GFCFuncName=PackageRepositoryFilter GlobalFunctionCleaning ) ;
 
 function PackageRepositoryFilter()
 {
-	local __call_locality=( PkgRepoFilter PackageRepositoryFilter ) ;
-	local ArrayArg=( $* ) ; 
+	local -a __call_locality=( PkgRepoFilter PackageRepositoryFilter ) ;
+	local -a ArrayArg=( $* ) ; 
 	local Arg0=${ArrayArg[0]} ;
 	local StrPathRepository=${PkgRepoFilterRepository:=/media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64} ;
 	local StrPathReposIndex=${PkgRepoFilterReposIndex:=/media/COMST500GB/Linux-Debian/archives/Mint-14_x86-64/index} ;
