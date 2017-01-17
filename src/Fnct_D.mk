@@ -13,6 +13,7 @@ bash_lib 								= _sub_Structure \
 													_sub_PythonBoost
 
 
+
 define MakePathInstall
 @if [ ! -d $(PATH_INSTALL_LIB) ] ; then sudo -s mkdir $(PATH_INSTALL_LIB) ; fi 
 endef

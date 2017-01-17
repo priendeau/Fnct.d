@@ -9,6 +9,7 @@ SIGNED_EXTENSION				:=.signed
 
 ### Related to FILE_SIGNATURE 
 
+
 APPLY_SIGNATURE					:=$(SIGNATURE) enc -e
 REVERT_SIGNATURE				:=$(SIGNATURE) enc -d
 
