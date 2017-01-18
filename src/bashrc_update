@@ -1,0 +1,40 @@
+declare -xr FNCTDLIBPATH=/etc/init.d/Fnct.D 2> /dev/null ; 
+
+export ORIGINVERSION=0.0.0 ;
+export DEVELVERSION=0.0.1 ;
+export THISVERSION=0.0.2 ; 
+
+declare -A ArrayFnctDVersion ;
+ArrayFnctDVersion["versionTP"]=${THISVERSION}   ;
+ArrayFnctDVersion["versionGCT"]=${DEVELVERSION} ;
+ArrayFnctDVersion["versionGPI"]=${THISVERSION} ;
+ArrayFnctDVersion["versionCA"]=${THISVERSION}   ;
+ArrayFnctDVersion["versionGSPN"]=${THISVERSION} ;
+ArrayFnctDVersion["versionMC"]=${THISVERSION}   ;   
+ArrayFnctDVersion["versionLSS"]=${DEVELVERSION} ;
+ArrayFnctDVersion["versionGOD"]=${THISVERSION} ; 
+ArrayFnctDVersion["versionNM"]=${THISVERSION} ; 
+ArrayFnctDVersion["versionB2DT"]=${THISVERSION} ; 
+ArrayFnctDVersion["versionSSA"]=${THISVERSION} ; 
+ArrayFnctDVersion["versionVSC"]=${ORIGINVERSION} ; 
+ArrayFnctDVersion["versionNSS"]=${ORIGINVERSION} ; 
+ArrayFnctDVersion["versionSCH"]=${DEVELVERSION} ; 
+
+function FnctDVersion()
+{
+ local StrExportVar="__VAR__" ; 
+ for VerName in ${!ArrayFnctDVersion[@]} ; do 
+  StrVersion=${ArrayFnctDVersion[${VerName}]} ;
+  echo -ne "Set FunctionTrigger:${VerName} Version:${StrVersion}\n" > /dev/stderr ; 
+  StrExportVar=${StrExportVar//__VAR__/${VerName}=${StrVersion} __VAR__}
+  export ${VerName}=${StrVersion} ; 
+ done 
+ StrExportVar=${StrExportVar//__VAR__/} ;
+ echo ${StrExportVar} ;  
+}
+
+
+alias reload_fnctd='source ~/.bashrc ; LibLoader --stopservices ; unset ArrayLib ; eval $( FnctDVersion ) . /etc/init.d/Fnct.D/fnct_lib' 
+alias update_sys_lib='source ~/.bashrc ; sudo -s ldconfig -f /etc/ld.so.conf ; sync  ; eval $( FnctDVersion ) reload_fnctd ; FnctDVersion'
+
+test -L ${FNCTDLIBPATH} && unset ArrayLib ; eval $( FnctDVersion ) . ${FNCTDLIBPATH}/fnct_lib ;
