@@ -1,0 +1,14 @@
+.~
+~.~
+~
+.sav
+.tmp
+.mov
+.avi
+.flash
+.mpg
+.mp3
+.mv
+Makefile
+signed_file.mk
+source_mgmt.mk
