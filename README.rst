@@ -1102,7 +1102,98 @@ Example in Python :
 	
 	###
 
+Imaginary symptoms in Multi-version of Fnct.D
+---------------------------------------------
 
+From Prototype, or version 0.0.0 to 0.0.1, do we lost time in function reccurence,
+adding so much decoration and helper in Fnct.D.
+
+Actually it's visible to dated processor and aging old processor, but related to 
+decent processor, it's affordable to leave mark, debug-entry and helper.
+
+Following example is based on compiled application 'fib.cpp' producing an executable
+from Branch MakefileInstaller of Fnct.D located inside 'src' 
+
+.. code:: shell
+	
+  $> cd src ; make fib
+  $> sudo -s cp ./bin/fib /usr/local/bin 
+  $> fib 32
+  32th Fibonacci number is 2178309
+  ### ...
+
+Library _sub_binary is playing with special design to afford creation of logical
+disposition of the information. Have created MakeHuffmanPair, it's process lost
+speed by using loop inside loop where somes exception should be coded approperly
+to gain time. Render the task not so easy in this way It was keeped as is since 
+this generator generate branch of 0 or 1 in goal of finding unique sequence of 
+0 and 1 starting to 10, 010, 100, 110, 101, 0010, 0100 ... to 001000010. 
+
+And also some Wrapping uses of FIbonnacci number are also inside _sub_binary like 
+GetFibLevel,GetHighestFibHarmonic,GetValueScaledFibHarmonic,FibBinaryLevelRepr.
+
+GetFibLevel is the used one inside the demonstrated one, it wrap our compiled 
+fib into a Shell-wrapper to extract Fibonnacci Number by Level called. Using 
+GetHighestFibHarmonic that call GetFibLevel, calling the application 'fib' it
+extract the number within the example '32th Fibonacci number is 2178309', and 
+output only '2178309' . 
+
+GetHighestFibHarmonic is used here to demonstrate from it's prototype developped
+from a home-script and ported to Fcnt.D in version 0.0.0 and version 0.0.1. 
+Here is the demonstration from calling the function call 'home-made' and much
+simpler than version 0.0.0. It simple use the shell Argument1 from the function
+name GetHighestFibHarmonic and report ; The highest Level from a Fibonnacci 
+algorithm from a Number submitted, and it's remainder if is exist. It shall since
+you haven't specified a Fibonnacci Number.  
+
+Each version is timed with '/usr/bin/time' and report for choosed value, 
+2147483563, which should give the answer, Level 46 and remains 311171660. 
+
+.. code:: shell
+ 
+  ### Example with Homemade Function.
+  Fnct.D $> unset GetHighestFibHarmonic
+  Fnct.D $> . /home/maxiste/bin/fa483a3a-64ba-11e6-98a2-001e4c8856d6-1
+  Fnct.D $> time GetHighestFibHarmonic 2147483563
+  46,311171660
+
+  real	1m20.306s
+  user	1m19.712s
+  sys	0m0.464s
+
+  ### Example with version 0.0.0 of GetHighestFibHarmonic from _sub_binary
+  Fnct.D $> unset GetHighestFibHarmonic
+  Fnct.D $> versionGHFH=0.0.0 . /etc/init.d/Fnct.D/_sub_binary 
+  Fnct.D $> time GHFHIntNumber=2147483563 GetHighestFibHarmonic
+  46,311171660
+
+  real	1m42.341s
+  user	1m26.432s
+  sys	0m12.104s
+
+  ### Example with version 0.0.1 of GetHighestFibHarmonic from _sub_binary
+  Fnct.D $> unset GetHighestFibHarmonic
+  Fnct.D $> versionGHFH=0.0.1 . /etc/init.d/Fnct.D/_sub_binary 
+  Fnct.D $> time GHFHIntNumber=2147483563 GetHighestFibHarmonic
+  __main_StartServices-ENTRY:[ Entry in function ]
+  46,311171660
+
+  real	1m43.455s
+  user	1m26.148s
+  sys	0m12.072s
+
+
+  It does does generate some extra time, like all the If-statement used to print
+  or not the debug statement and uses ov ValueToVariable for variable transfert,
+  but some action within the Fnct.D layer are one-time action and does only impact
+  one time during a process call. 
+  
+  With this system, based on a Dual-code AMD x86-4 x2 processor @ 1900Mhz it take 
+  20 to 22 seconds for having a better structure, coming with helper and does have
+  debuging option let you follow the execution. 
+  
+  
+  
 Documentation
 -------------
 
