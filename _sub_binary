@@ -1,7 +1,758 @@
 #!/bin/bash
 
+### Package : _sub_binary
 
-unset MakeHuffmanPair ; 
+
+
+if [ "${versionGFL:=0.0.1}" == "0.0.0" ] ; then 
+ eval $( GFCFuncName=GetFibLevel GlobalFunctionCleaning ) ; 
+ function GetFibLevel()
+ {
+  local -a ArrayArg=( $* ) ;
+  local -a __call_locality=( GFL GetFibLevel ) ;
+  local Arg0=${ArrayArg[0]} ;   
+  local StrApps=${GFApps:=/home/maxiste/bin/src/bin/fib} ; 
+  local StrFilterApps=${GFFilterApps:=/usr/bin/gawk} ;
+  ${StrApps} ${Arg0} | ${StrFilterApps} -F ' ' 'BEGIN{}{printf("%s\n",$(NF))}END{}' ; 
+ }
+fi 
+
+if [ "${versionGFL:=0.0.1}" == "0.0.1" ] ; then 
+ eval $( GFCFuncName=GetFibLevel GlobalFunctionCleaning ) ; 
+ function GetFibLevel()
+ {
+  function Verbosis()
+  {
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( Verb Verbosis ) ; 
+   local Arg0=${ArrayArg[0]} ; 
+   local StrMsg=${VerbMsg:=__TEXT__} ; 
+   local StrDevOut=${VerbDev:=/dev/stderr} ; 
+   local IsVerboseState=${VerbState:=False} ;
+   local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+   local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+   local IsDisplayFormatted=${VerbFormated:=True} ;
+   local IsAppendMode=${VerbAppendDev:=False} ; 
+   local IsExtendedOutput=${VerbExtendedOut:=False} ; 
+   local ArrayArg=( $* ) ; 
+   if [ "${IsVerboseState:=False}" == "True" ] ; then 
+    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+     if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
+     else  
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+     fi
+    else
+     if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+      if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+        echo -ne "${StrMsg}" ;  
+      else
+        echo "${StrMsg}" ;  
+      fi
+     else
+      if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+         echo -ne "${StrMsg}" >> ${StrDevOut} ;
+       else
+         echo "${StrMsg}" >> ${StrDevOut} ;
+       fi
+      else
+       if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+        echo -ne "${StrMsg}" > ${StrDevOut} ;
+       else
+        echo "${StrMsg}" > ${StrDevOut} ;
+       fi 
+      fi
+     fi 
+    fi 
+   fi
+  } 
+  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
+  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( GFL GetFibLevel ) ;
+   local Arg0="${ArrayArg[0]}" ; 
+   local StrParentApps=${__call_locality[1]} ;
+   local StrStartMain=${GFLFuncStart:=__main_StartServices} ; 
+  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+   eval $( eval CAFunctName=GetFibLevel CAIsAddParent=False __Call_Argument ) ; 
+  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+   eval $( eval CAFunctName=GetFibLevel CAIsAddParent=False CallArgument ) ;
+  fi  
+  
+  local IntFibLevel=${GFLIntLevel:=1} ;
+  local StrApps=${GFLApps:=/usr/local/bin/fib} ; 
+  local StrFilterApps=${GFLFilterApps:=/usr/bin/gawk} ;
+  local BoolDisplayEntry=${GFLDisplayEntry:=False} ; 
+  local StrVarList="IntFibLevel,StrApps,StrFilterApps,BoolDisplayEntry" ; 
+  local -a ArrayMsg=() ;
+  ArrayMsg[0]="Entry in function" ; 
+  
+  function __main_StartServices()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+   fi 
+   StrMsg=$( GetFibLevel --get ArrayMsg[0] ) ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   
+   eval ${StrApps} ${IntFibLevel} | ${StrFilterApps} -F ' ' 'BEGIN{}{printf("%s\n",$(NF))}END{}' ; 
+  
+  }  
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+  local StrNameHelper="${__call_locality[1]}\tCompiled Fibonnacci Number generation by Level.";
+  local StrSummary="Does produce only Fibonnacci by calling compiled fib from repository." ; 
+  local StrSynopsis="";
+  local StrDescription="" ;
+  
+   
+  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   GVRIsName=True     \
+   GVRIsSummary=True  \
+   GVRIsSynopsis=False \
+   GVRIsDesc=False     \
+   GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;	
+  elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
+   $( VTVIsArrayStyleInsert=True  \
+      VTVValueEntry=${StrVarList} \
+      VTVIsValueReAssign=True     \
+      VTVIsValueToConvert=False   \
+      VTVIsWhiteList=True         \
+      VTVWhiteListTransfert=UUID  \
+      ValueToVariable ) __main_StopServices ; 
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+   # eval $( eval VersionApps ) ; 
+   StrMsg=$( GetFibLevel --get ArrayMsg[0] ) ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   $( VTVIsArrayStyleInsert=True  \
+      VTVValueEntry=${StrVarList} \
+      VTVIsValueReAssign=True     \
+      VTVIsValueToConvert=False   \
+      ValueToVariable ) ${StrStartMain}
+  fi   
+ }  
+
+fi 
+
+
+if [ "${versionGHFH:=0.0.0}" == "0.0.0" ] ; then 
+ eval $( GFCFuncName=GetHighestFibHarmonic GlobalFunctionCleaning ) ; 
+ function GetHighestFibHarmonic()    
+ { 
+  local -a ArrayArg=( $* ) ;
+  local -a __call_locality=( GHFH GetHighestFibHarmonic ) ;
+  local Arg0=${ArrayArg[0]} ; 
+  
+  local IntModSeek=${GHFHIntNumber:=20} ; 
+  #local IntModSeek=${Arg0} ; 
+  local IntResFib=0 ; 
+  local IntX=1 ;
+  local IntRemain=-1 ;  
+  local IntOldRemain=0 ; 
+  local IntOldLevel=0
+  local IntRestFibOld=0;
+  # ${resfib:=0} -lt ${IntModSeek} 
+  local BoolEndTest=False  ;
+  local IntDisplayLevel ;
+  local IntDisplayRemain ;
+  while [ "${BoolEndTest}" == "False" ] ; do  
+   IntResFib=$( GFLDisplayEntry=False GFLIntLevel=${IntX} GetFibLevel ) ; 
+   IntRemain=$(( ${IntResFib} - ${IntModSeek} )); 
+   #echo -ne "Level fib:${IntX}, Fibonacci:${IntResFib}, targeted modulo:${IntModSeek}, previous remain:${IntOldRemain} remain:${IntRemain}\n" ; 
+   if [ ${IntRemain} -eq 0 ] ; then 
+    BoolEndTest=True ;
+    IntDisplayLevel=${IntX};
+    IntDisplayRemain=${IntRemain} ; 
+   fi 
+   if [ ${IntRemain} -lt 0 ] ; then 
+    IntOldRemain=${IntRemain} ;
+    IntOldLevel=${IntX} ;
+    IntRestFibOld=${IntResFib} ; 
+    let IntX=IntX+1 ; 
+   fi
+   if [ ${IntOldRemain} -lt 0 -a ${IntRemain} -gt 0 ] ; then 
+    BoolEndTest=True ;
+    IntDisplayLevel=${IntOldLevel};
+    IntDisplayRemain=${IntOldRemain} ; 
+   fi 
+   
+  done  ; 
+  #echo -ne "Modulus ${IntModSeek}\n\thaving lowest Fibonacci level ${IntOldLevel}\n\tnumber ${IntRestFibOld}\n\tremain ${IntOldRemain}\n" ; 
+  echo "${IntDisplayLevel},${IntDisplayRemain//-/}" ; 
+  #if [ ${IntRemain} -eq 0 ] ; then 
+   #echo "${IntX},${IntRemain//-/}" ; 
+  #else
+   #echo "${IntOldLevel},${IntOldRemain//-/}" ; 
+  #fi
+ }
+fi
+
+if [ "${versionGHFH:=0.0.1}" == "0.0.1" ] ; then 
+ eval $( GFCFuncName=GetHighestFibHarmonic GlobalFunctionCleaning ) ; 
+ function GetHighestFibHarmonic()    
+ { 
+  function Verbosis()
+  {
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( Verb Verbosis ) ; 
+   local Arg0=${ArrayArg[0]} ; 
+   local StrMsg=${VerbMsg:=__TEXT__} ; 
+   local StrDevOut=${VerbDev:=/dev/stderr} ; 
+   local IsVerboseState=${VerbState:=False} ;
+   local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+   local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+   local IsDisplayFormatted=${VerbFormated:=True} ;
+   local IsAppendMode=${VerbAppendDev:=False} ; 
+   local IsExtendedOutput=${VerbExtendedOut:=False} ; 
+   local ArrayArg=( $* ) ; 
+   if [ "${IsVerboseState:=False}" == "True" ] ; then 
+    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+     if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
+     else  
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+     fi
+    else
+     if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+      if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+        echo -ne "${StrMsg}" ;  
+      else
+        echo "${StrMsg}" ;  
+      fi
+     else
+      if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+         echo -ne "${StrMsg}" >> ${StrDevOut} ;
+       else
+         echo "${StrMsg}" >> ${StrDevOut} ;
+       fi
+      else
+       if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+        echo -ne "${StrMsg}" > ${StrDevOut} ;
+       else
+        echo "${StrMsg}" > ${StrDevOut} ;
+       fi 
+      fi
+     fi 
+    fi 
+   fi
+  } 
+  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
+  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( GHFH GetHighestFibHarmonic ) ;
+   local Arg0="${ArrayArg[0]}" ; 
+   local StrParentApps=${__call_locality[1]} ;
+   local StrStartMain=${GHFHFuncStart:=__main_StartServices} ; 
+  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+   eval $( eval CAFunctName=GetHighestFibHarmonic CAIsAddParent=False __Call_Argument ) ; 
+  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+   eval $( eval CAFunctName=GetHighestFibHarmonic CAIsAddParent=False CallArgument ) ;
+  fi  
+
+  local IntModSeek=${GHFHIntNumber:=20} ; 
+  local BoolDisplayDebug=${GHFHIsDisplayDebug:=False} ; 
+  local BoolDisplayEntry=${GHFHIsDisplayEntry:=False} ; 
+  local StrVarList="IntModSeek,BoolDisplayDebug,BoolDisplayEntry"
+  local -a ArrayMsg=() ;
+  ArrayMsg[0]="Entry in function" ; 
+  ArrayMsg[1]="Modulus __IntModSeek__\n\thaving lowest Fibonacci level __IntOldLevel__\n\tnumber __IntRestFibOld__\n\tremain __IntOldRemain__\n" ;
+  ArrayMsg[2]="__INT1__,__INT2__" ; 
+
+  function __main_StartServices()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+   fi 
+   StrMsg=$( GetHighestFibHarmonic --get ArrayMsg[0] ) ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+
+   local IntResFib=0 ; 
+   local IntX=1 ;
+   local IntRemain=-1 ;  
+   local IntOldRemain=0 ; 
+   local IntOldLevel=0
+   local IntRestFibOld=0;
+   # ${resfib:=0} -lt ${IntModSeek} 
+   local BoolEndTest=False  ;
+   local IntDisplayLevel ;
+   local IntDisplayRemain ;
+   while [ "${BoolEndTest}" == "False" ] ; do  
+    IntResFib=$( GFLDisplayEntry=${BoolDisplayEntry} GFLIntLevel=${IntX} GetFibLevel ) ; 
+    IntRemain=$(( ${IntResFib} - ${IntModSeek} )); 
+    #echo -ne "Level fib:${IntX}, Fibonacci:${IntResFib}, targeted modulo:${IntModSeek}, previous remain:${IntOldRemain} remain:${IntRemain}\n" ; 
+    if [ ${IntRemain} -eq 0 ] ; then 
+     BoolEndTest=True ;
+     IntDisplayLevel=${IntX};
+     IntDisplayRemain=${IntRemain} ; 
+    fi 
+    if [ ${IntRemain} -lt 0 ] ; then 
+     IntOldRemain=${IntRemain} ;
+     IntOldLevel=${IntX} ;
+     IntRestFibOld=${IntResFib} ; 
+     let IntX=IntX+1 ; 
+    fi
+    if [ ${IntOldRemain} -lt 0 -a ${IntRemain} -gt 0 ] ; then 
+     BoolEndTest=True ;
+     IntDisplayLevel=${IntOldLevel};
+     IntDisplayRemain=${IntOldRemain} ; 
+    fi 
+    
+   done  ; 
+   StrMsg=$( GetHighestFibHarmonic --get ArrayMsg[1] ) ; 
+   StrMsg=${StrMsg//__IntModSeek__/${IntModSeek}} ; 
+   StrMsg=${StrMsg//__IntOldLevel__/${IntOldLevel}} ; 
+   StrMsg=${StrMsg//__IntRestFibOld__/${IntRestFibOld}} ; 
+   StrMsg=${StrMsg//__IntOldRemain__/${IntOldRemain}} ; 
+   VerbMsg=${StrMsg} VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
+   
+   StrMsg=$( GetHighestFibHarmonic --get ArrayMsg[2] ) ;
+   StrMsg=${StrMsg//__INT1__/${IntDisplayLevel}} ; 
+   StrMsg=${StrMsg//__INT2__/${IntDisplayRemain//-/}} ; 
+   VerbMsg=${StrMsg} VerbEvalForm=False VerbFormated=False VerbState=True VerbDev=/dev/stdout  Verbosis ; 
+    
+  }
+  
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+  local StrNameHelper="${__call_locality[1]}\n\tHighest Fibonnacci Level reacheable by submitted number without excedding it.";
+  local StrSummary="\n\tThis application does return the highest Fibonnacci level possible\n\twithout overflowing the value and does return a comma separated\n\tvalue a remainder. In case 0 is returned it give the comma and 0." ; 
+  local StrSynopsis="\n\tAs example following example are giving remainder not equal to 0.\n\t$> GetHighestFibHarmonic 53668\n\t24,7300\n\t$> GetHighestFibHarmonic 40014\n\t23,11357\n\t$> GetHighestFibHarmonic 12211\n\t21,1265\n\t$> GetHighestFibHarmonic 2147483563\n\t46,311171660.";
+  local StrDescription="\n\tThis application does come with _sub_binary bundle of application\n\tGetFibLevel, GetHighestFibHarmonic , GetValueScaledFibHarmonic,\n\tFibBinaryLevelRepr. And this application will be re-used in\n\tGetValueScaledFibHarmonic to extend de decompisition of a number.\n\tAs observed, it does produce a remainder lower than the Fibonnacci\n\tlevel. Accorded to this it should remain another possible\n\tdecomposition of the remainder until it get 0 remainder." ;
+  
+   
+  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   GVRIsName=True     \
+   GVRIsSummary=True  \
+   GVRIsSynopsis=True \
+   GVRIsDesc=True     \
+   GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;	
+  elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
+   $( VTVIsArrayStyleInsert=True  \
+      VTVValueEntry=${StrVarList} \
+      VTVIsValueReAssign=True     \
+      VTVIsValueToConvert=False   \
+      VTVIsWhiteList=True         \
+      VTVWhiteListTransfert=UUID  \
+      ValueToVariable ) __main_StopServices ; 
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+   # eval $( eval VersionApps ) ; 
+   StrMsg=$( GetHighestFibHarmonic --get ArrayMsg[0] ) ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   $( VTVIsArrayStyleInsert=True  \
+      VTVValueEntry=${StrVarList} \
+      VTVIsValueReAssign=True     \
+      VTVIsValueToConvert=False   \
+      ValueToVariable ) ${StrStartMain}
+  fi   
+ 
+ }
+
+fi
+
+if [ "${versionGVSFH:=0.0.0}" == "0.0.0" ] ; then 
+ eval $( GFCFuncName=GetValueScaledFibHarmonic GlobalFunctionCleaning ) ; 
+ function GetValueScaledFibHarmonic()
+ {
+  local -a ArrayArg=( $* ) ;
+  local -a __call_locality=( GVSFH GetValueScaledFibHarmonic ) ;
+  local Arg0=${ArrayArg[0]} ;   
+  local IntRemain=0 ; 
+  local -a ArrayScaledHarmonic=( ) ; 
+  local -a ArrayGF ;
+  local IntHarmonic=${GVSFHIntValue:=2147483563} ; 
+  local BoolDisplayDebug=${GVSFHDisplayDebug:=True} ; 
+  local BoolDisplayEntry=${GVSFHDisplayEntry:=False} ; 
+  
+  while [ ${IntHarmonic} -gt 0 ] ; do
+   StrFibFilter=$( GHFHIntNumber=${IntHarmonic}           \
+                   GHFHIsDisplayDebug=${BoolDisplayDebug} \
+                   GHFHIsDisplayEntry=${BoolDisplayEntry} \
+                   GetHighestFibHarmonic  ) ;
+   ArrayGF=( ${StrFibFilter//,/ } ) ; 
+   ArrayScaledHarmonic[${#ArrayScaledHarmonic[@]}]=${ArrayGF[0]} ; 
+   IntHarmonic=${ArrayGF[1]} ; 
+   
+  done
+  if [ ${BoolDisplayDebug:=False} == "True" ] ; then 
+    echo -ne "Scaled Harmonic of ${Arg0}:[${ArrayScaledHarmonic[@]// /|}]\n" > /dev/stderr  ;
+  fi
+  local StrTplNumber="\$( GFLIntLevel=__X__  GFLDisplayEntry=${BoolDisplayEntry} GetFibLevel)"; 
+  local StrParseTpl="" ; 
+  local StrAddNumber="" ;
+  
+  for (( intx=${#ArrayScaledHarmonic[@]}-1 ; intx >= 0 ; intx-- )) ; do 
+   IntHarmonic=${ArrayScaledHarmonic[${intx}]} ; 
+   StrParseTpl="${StrTplNumber//__X__/${IntHarmonic}}" ; 
+   eval "IntEvalRes=${StrParseTpl}" ;
+   StrAddNumber="${IntEvalRes} + ${StrAddNumber}" ; 
+   if [ ${intx} -eq 0 ] ; then 
+    StrAddNumber=${StrAddNumber:0:$((${#StrAddNumber}-2))}
+   fi 
+   
+  done 
+  IntFibSum=$(( ${StrAddNumber} )) ; 
+  if [ ${BoolDisplayDebug:=False} == "True" ] ; then 
+   echo -ne "Proof:${StrAddNumber} = ${IntFibSum}\n" > /dev/stderr ; 
+  fi 
+  echo -ne "${ArrayScaledHarmonic[@]}\n" > /dev/stdout ; 
+ }
+fi
+
+if [ "${versionGVSFH:=0.0.1}" == "0.0.1" ] ; then 
+ eval $( GFCFuncName=GetValueScaledFibHarmonic GlobalFunctionCleaning ) ; 
+
+ function GetValueScaledFibHarmonic()
+ {
+  function Verbosis()
+  {
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( Verb Verbosis ) ; 
+   local Arg0=${ArrayArg[0]} ; 
+   local StrMsg=${VerbMsg:=__TEXT__} ; 
+   local StrDevOut=${VerbDev:=/dev/stderr} ; 
+   local IsVerboseState=${VerbState:=False} ;
+   local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+   local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+   local IsDisplayFormatted=${VerbFormated:=True} ;
+   local IsAppendMode=${VerbAppendDev:=False} ; 
+   local IsExtendedOutput=${VerbExtendedOut:=False} ; 
+   local ArrayArg=( $* ) ; 
+   if [ "${IsVerboseState:=False}" == "True" ] ; then 
+    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+     if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
+     else  
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+     fi
+    else
+     if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+      if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+        echo -ne "${StrMsg}" ;  
+      else
+        echo "${StrMsg}" ;  
+      fi
+     else
+      if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+         echo -ne "${StrMsg}" >> ${StrDevOut} ;
+       else
+         echo "${StrMsg}" >> ${StrDevOut} ;
+       fi
+      else
+       if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+        echo -ne "${StrMsg}" > ${StrDevOut} ;
+       else
+        echo "${StrMsg}" > ${StrDevOut} ;
+       fi 
+      fi
+     fi 
+    fi 
+   fi
+  } 
+  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
+  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( GVSFH GetValueScaledFibHarmonic ) ;
+   local Arg0="${ArrayArg[0]}" ; 
+   local StrParentApps=${__call_locality[1]} ;
+   local StrStartMain=${GVSFHFuncStart:=__main_StartServices} ; 
+  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+   eval $( eval CAFunctName=GetValueScaledFibHarmonic CAIsAddParent=False __Call_Argument ) ; 
+  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+   eval $( eval CAFunctName=GetValueScaledFibHarmonic CAIsAddParent=False CallArgument ) ;
+  fi  
+  
+  local IntHarmonic=${GVSFHIntValue:=2147483563} ; 
+  local BoolDisplayDebug=${GVSFHDisplayDebug:=True} ; 
+  local BoolDisplayEntry=${GVSFHDisplayEntry:=False} ; 
+  local BoolDisplayProof=${GVSFHDisplayProof:=True} ; 
+  local StrVarList="IntHarmonic,BoolDisplayDebug,BoolDisplayEntry,BoolDisplayProof" ;
+  
+  local -a ArrayMsg=() ;
+  
+  ArrayMsg[0]="Entry in function" ; 
+  ArrayMsg[1]="Proof:__LIST_ADD__ = __FIB__\n" ;
+  ArrayMsg[2]="Scaled Harmonic of __INT__:[__LIST__]\n" ; 
+  ArrayMsg[3]="__LIST__\n" ; 
+  ArrayMsg[4]="" ; 
+  ArrayMsg[5]="" ; 
+  ArrayMsg[6]="" ; 
+
+  function __main_StartServices()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+   fi 
+   StrMsg=$( GetValueScaledFibHarmonic --get ArrayMsg[0] ) ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+
+    
+  
+  }  
+  
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+  local StrNameHelper="${__call_locality[1]}\n\t";
+  local StrSummary="\n\t" ; 
+  local StrSynopsis="\n\t";
+  local StrDescription="\n\t" ;
+  
+   
+  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   GVRIsName=True     \
+   GVRIsSummary=True  \
+   GVRIsSynopsis=True \
+   GVRIsDesc=True     \
+   GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;	
+  elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
+   $( VTVIsArrayStyleInsert=True  \
+      VTVValueEntry=${StrVarList} \
+      VTVIsValueReAssign=True     \
+      VTVIsValueToConvert=False   \
+      VTVIsWhiteList=True         \
+      VTVWhiteListTransfert=UUID  \
+      ValueToVariable ) __main_StopServices ; 
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+   # eval $( eval VersionApps ) ; 
+   StrMsg=$( GetValueScaledFibHarmonic --get ArrayMsg[0] ) ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   $( VTVIsArrayStyleInsert=True  \
+      VTVValueEntry=${StrVarList} \
+      VTVIsValueReAssign=True     \
+      VTVIsValueToConvert=False   \
+      ValueToVariable ) ${StrStartMain}
+  fi   
+ }
+
+fi
+
+if [ "${versionFBLR:=0.0.0}" == "0.0.0" ] ; then 
+ eval $( GFCFuncName=FibBinaryLevelRepr GlobalFunctionCleaning ) ; 
+
+ function FibBinaryLevelRepr()
+ {
+  local -a ArrayArg=( $* ) ;
+  local -a __call_locality=( FBLR FibBinaryLevelRepr ) ;
+  local Arg0=${ArrayArg[0]} ;   
+  
+  local StrReprFibLevel ;
+  local IntOldLevel=0 ;
+  local -a ArrayFibHarmonic=( $( GVSFHDisplayDebug=False GetValueScaledFibHarmonic ${Arg0} ) ) ; 
+  
+  IntLevelNb=$(( ${#ArrayFibHarmonic[@]} )) ;  
+  IntLevel=$(( ${IntLevelNb} - 1 )) ;
+  echo -ne "Representation over ${ArrayFibHarmonic[0]} binary-position, of number ${Arg0}\n" > /dev/stderr ;
+  for (( intx=1 ; intx <= ${ArrayFibHarmonic[0]} ; intx++ )) ; do 
+   IntLimitFix=${ArrayFibHarmonic[${IntLevel}]} ;
+   #echo -ne "Actual Limit:${IntLimitFix}, cursor at ${intx}\n" ; 
+   if [ ${intx} -eq ${IntLimitFix} ] ; then 
+    #echo -ne "Adding to parity for representing value ${intx}\n" ;
+    StrReprFibLevel="1${StrReprFibLevel}" ; 
+    IntLevel=$(( ${IntLevel} - 1 )) ; 
+   else
+    StrReprFibLevel="0${StrReprFibLevel}" ;
+   fi 
+  done 
+  echo -ne "Number: ${Arg0}\nFib Harmonic: [${ArrayFibHarmonic[@]}]\nBinary Level Repr:[${StrReprFibLevel}]\n" ; 
+ }
+fi
+
+if [ "${versionFBLR:=0.0.1}" == "0.0.1" ] ; then 
+ eval $( GFCFuncName=FibBinaryLevelRepr GlobalFunctionCleaning ) ; 
+ function FibBinaryLevelRepr()
+ {
+  function Verbosis()
+  {
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( Verb Verbosis ) ; 
+   local Arg0=${ArrayArg[0]} ; 
+   local StrMsg=${VerbMsg:=__TEXT__} ; 
+   local StrDevOut=${VerbDev:=/dev/stderr} ; 
+   local IsVerboseState=${VerbState:=False} ;
+   local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+   local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+   local IsDisplayFormatted=${VerbFormated:=True} ;
+   local IsAppendMode=${VerbAppendDev:=False} ; 
+   local IsExtendedOutput=${VerbExtendedOut:=False} ; 
+   local ArrayArg=( $* ) ; 
+   if [ "${IsVerboseState:=False}" == "True" ] ; then 
+    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+     if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
+     else  
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+     fi
+    else
+     if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+      if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+        echo -ne "${StrMsg}" ;  
+      else
+        echo "${StrMsg}" ;  
+      fi
+     else
+      if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+         echo -ne "${StrMsg}" >> ${StrDevOut} ;
+       else
+         echo "${StrMsg}" >> ${StrDevOut} ;
+       fi
+      else
+       if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+        echo -ne "${StrMsg}" > ${StrDevOut} ;
+       else
+        echo "${StrMsg}" > ${StrDevOut} ;
+       fi 
+      fi
+     fi 
+    fi 
+   fi
+  } 
+  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
+  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( FBLR FibBinaryLevelRepr ) ;
+   local Arg0="${ArrayArg[0]}" ; 
+   local StrParentApps=${__call_locality[1]} ;
+   local StrStartMain=${FBLRFuncStart:=__main_StartServices} ; 
+  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+   eval $( eval CAFunctName=FibBinaryLevelRepr CAIsAddParent=False __Call_Argument ) ; 
+  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+   eval $( eval CAFunctName=FibBinaryLevelRepr CAIsAddParent=False CallArgument ) ;
+  fi  
+  
+  local IntHarmonic=${GVSFHIntValue:=2147483563} ; 
+  local BoolDisplayDebug=${FBLRDisplayDebug:=True} ; 
+  local BoolDisplayEntry=${FBLRDisplayEntry:=False} ; 
+  local StrVarList="" ;
+  
+  local -a ArrayMsg=() ;
+  
+  ArrayMsg[0]="Entry in function" ; 
+  ArrayMsg[1]="" ;
+  ArrayMsg[2]="" ; 
+  ArrayMsg[3]="" ; 
+  ArrayMsg[4]="" ; 
+  ArrayMsg[5]="" ; 
+  ArrayMsg[6]="" ; 
+
+  function __main_StartServices()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+   fi 
+   StrMsg=$( FibBinaryLevelRepr --get ArrayMsg[0] ) ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+
+   local StrReprFibLevel ;
+   local IntOldLevel=0 ;
+   local -a ArrayFibHarmonic=( $( GVSFHDisplayDebug=False GetValueScaledFibHarmonic ${Arg0} ) ) ; 
+   
+   IntLevelNb=$(( ${#ArrayFibHarmonic[@]} )) ;  
+   IntLevel=$(( ${IntLevelNb} - 1 )) ;
+   echo -ne "Representation over ${ArrayFibHarmonic[0]} binary-position, of number ${Arg0}\n" > /dev/stderr ;
+   for (( intx=1 ; intx <= ${ArrayFibHarmonic[0]} ; intx++ )) ; do 
+    IntLimitFix=${ArrayFibHarmonic[${IntLevel}]} ;
+    #echo -ne "Actual Limit:${IntLimitFix}, cursor at ${intx}\n" ; 
+    if [ ${intx} -eq ${IntLimitFix} ] ; then 
+     #echo -ne "Adding to parity for representing value ${intx}\n" ;
+     StrReprFibLevel="1${StrReprFibLevel}" ; 
+     IntLevel=$(( ${IntLevel} - 1 )) ; 
+    else
+     StrReprFibLevel="0${StrReprFibLevel}" ;
+    fi 
+   done 
+   echo -ne "Number: ${Arg0}\nFib Harmonic: [${ArrayFibHarmonic[@]}]\nBinary Level Repr:[${StrReprFibLevel}]\n" ; 
+    
+  
+  }  
+  
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+  local StrNameHelper="${__call_locality[1]}\n\t";
+  local StrSummary="\n\t" ; 
+  local StrSynopsis="\n\t";
+  local StrDescription="\n\t" ;
+  
+   
+  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   GVRIsName=True     \
+   GVRIsSummary=True  \
+   GVRIsSynopsis=True \
+   GVRIsDesc=True     \
+   GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;	
+  elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
+   $( VTVIsArrayStyleInsert=True  \
+      VTVValueEntry=${StrVarList} \
+      VTVIsValueReAssign=True     \
+      VTVIsValueToConvert=False   \
+      VTVIsWhiteList=True         \
+      VTVWhiteListTransfert=UUID  \
+      ValueToVariable ) __main_StopServices ; 
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+   # eval $( eval VersionApps ) ; 
+   StrMsg=$( FibBinaryLevelRepr --get ArrayMsg[0] ) ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   $( VTVIsArrayStyleInsert=True  \
+      VTVValueEntry=${StrVarList} \
+      VTVIsValueReAssign=True     \
+      VTVIsValueToConvert=False   \
+      ValueToVariable ) ${StrStartMain}
+  fi   
+ }
+
+fi
+
+# Generate a List of Fibonnacci Level used to sum a Submitted number.
+# only generating this list, using neighborhood application like GetFibLevel 
+
+#unset MakeHuffmanPair ; 
+eval $( GFCFuncName=MakeHuffmanPair GlobalFunctionCleaning ) ; 
 
 function MakeHuffmanPair()
 {
@@ -16,7 +767,8 @@ function MakeHuffmanPair()
  local StrBasedTreeBranch=${MHPBaseTreeMemeber:=0__A__,__A__0,1__A__,__A__1}
  local StrParent="${__call_locality[1]}" ;
  local StrUUID=$( GetUUID ) ; 
- local ArrayMsg=( ) ; 
+ local -a ArrayMsg=( ) ; 
+
  ArrayMsg[0]="We should discover __INT__ number(s) of pair." ;
  ArrayMsg[1]="Starting Analysis to Pair «__PAIR__», CountingPair : __INT__" ;
  ArrayMsg[2]="We haven't hit Maximum number or Huffmann pair, __CURR__ / __MAX__" ;
@@ -124,11 +876,13 @@ function MakeHuffmanPair()
      IntFamilyPair=0 ;
      for Bpair in ${ArrayTypeExpansion[@]} ; do 
       
-      StrMsg=$( ${StrParent} --get ArrayMsg[3] ) ; 
+      #StrMsg=$( ${StrParent} --get ArrayMsg[3] ) ; 
+      StrMsg=${ArrayMsg[3]} ;
       VerbHeader="DEBUG" VerbMsg=${StrMsg//__TPL__/${Bpair}} VerbFormated=True VerbState=${BoolDisplayDebug} Verbosis
       
       TempPair=${Bpair//__A__/${Apair}} ; 
-      StrMsg=$( ${StrParent} --get ArrayMsg[4] ) ; 
+      #StrMsg=$( ${StrParent} --get ArrayMsg[4] ) ; 
+      StrMsg=${ArrayMsg[4]} ;
       StrMsg=${StrMsg//__PAIR__/${TempPair}} ;
       
       VerbHeader="DEBUG" VerbMsg="${StrMsg}" VerbFormated=True VerbState=${BoolDisplayDebug} Verbosis
@@ -215,7 +969,7 @@ function MakeHuffmanPair()
    LngMsg="${LngMsg}\n${StrMsg}" ; 
   done ;
   VerbHeader="" VerbMsg="${LngMsg}\n" VerbFormated=False VerbDev=${StrUUID} VerbState=True Verbosis ; 
-  cat ${StrUUID} | sort -k1 > ${StrFileStoreResult} ;
+  cat ${StrUUID} | egrep -i "^[0-9]+" | sort -k1 > ${StrFileStoreResult} ;
   test -f ${StrUUID} && rm -f ${StrUUID} ;
   cat ${StrFileStoreResult}   ; 
  }
