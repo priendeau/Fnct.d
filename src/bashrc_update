@@ -1,5 +1,8 @@
 declare -xr FNCTDLIBPATH=/etc/init.d/Fnct.D 2> /dev/null ; 
 
+StrArrayLib="_sub_Structure,fnct_debian_lib,_sub_Function_Appliance,_sub_jack_script,_sub_Git,_sub_setup_py_extra_cmd,_sub_ssh_handler,_sub_vlc_services,_sub_binary,_sub_PythonBoost" ; 
+declare -a ArrayLib=( ${StrArrayLib//,/ } ) ;
+
 export ORIGINVERSION=0.0.0 ;
 export DEVELVERSION=0.0.1 ;
 export THISVERSION=0.0.2 ; 
@@ -34,7 +37,7 @@ function FnctDVersion()
 }
 
 
-alias reload_fnctd='source ~/.bashrc ; LibLoader --stopservices ; unset ArrayLib ; eval $( FnctDVersion ) . /etc/init.d/Fnct.D/fnct_lib' 
-alias update_sys_lib='source ~/.bashrc ; sudo -s ldconfig -f /etc/ld.so.conf ; sync  ; eval $( FnctDVersion ) reload_fnctd ; FnctDVersion'
+alias reload_fnctd='LibLoader --stopservices ; eval $( FnctDVersion ) LibLoader --startservices' 
+alias update_sys_lib='source ~/.bashrc ; sudo -s ldconfig -f /etc/ld.so.conf ; sync  ; reload_fnctd'
 
-test -L ${FNCTDLIBPATH} && unset ArrayLib ; eval $( FnctDVersion ) . ${FNCTDLIBPATH}/fnct_lib ;
+eval $( FnctDVersion ) . ${FNCTDLIBPATH}/fnct_lib ;
