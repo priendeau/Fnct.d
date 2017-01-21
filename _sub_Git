@@ -3,6 +3,311 @@
 
 # Package _sub_Git
 
+
+if [ "${versionGCBE:=0.0.1}" == "0.0.0" ] ; then 
+ eval $( GFCFuncName=GitChckBranchEngine GlobalFunctionCleaning ) ;
+ function GitChckBranchEngine()
+ {
+  local -a ArrayArg=( $* ) ;
+  local -a __call_locality=( GCBE GitChckBranchEngine ) ;
+  local Arg0="${ArrayArg[0]}";  
+
+  local StrTitle="Zenity/Git Checkout Branch engine" ; 
+  local StrGetBranch=$( git branch -l ) ;
+  local StrText="Branch and activity, Selecting one will change\nthe default active branch by a checkout" ; 
+  local StrSpanText="<span font_family=\"monospace\" size=\"medium\">__TEXT__</span>" ; 
+  local IntHeight=300 ; 
+  local IntWidth=300; 
+  local -a ArrayColumn ; 
+  local StrDefaultOpt="--list --radiolist" ; 
+  ArrayColumn[0]="Active Branch" ; 
+  ArrayColumn[1]="Branch name" ; 
+  
+  ### This is transforming the star inside the text showed from 'git branch -l' 
+  ### into TRUE, and rest of the sed query does apply a FALSE on begin of line
+  ### where there is no star. Especially particular the second filter inside the 
+  ### sed does require to filter for [\t\ ] (tab and space) and '*' even it there
+  ### is already a transformation of the star into 'TRUE'.
+  local StrBranchToZenityField=$( echo "${StrGetBranch}" | sed -s 's/^[\t\ ]*\*/TRUE/g;s/^[\t\ ]\**/FALSE/g'  ; )
+  
+  local StrGetNewBranchName=$( zenity ${StrDefaultOpt} --height=${IntHeight} --width=${IntWidth} --title="${StrTitle}" --text="${StrSpanText//__TEXT__/${StrText}}" --column="${ArrayColumn[0]}" --column="${ArrayColumn[1]}"  ) ;  
+
+ function GitCheckoutBranchAction()
+ {
+  local -a ArrayArg=( $* ) ;
+  local -a __call_locality=( GCBA GitCheckoutBranchAction ) ;
+  local Arg0="${ArrayArg[0]}";  
+  local StrDefaultForceOpt="--force" ; 
+  local StrDefaultAction="checkout" ; 
+  local BoolForceCheckout=${GCBAIsForcedCheckout:=False} ; 
+  local StrDefaultBranch=${GCBABranchName:=master} ;  
+  local StrCmd="git __ACTION__ __OPT__ __BRANCH__"
+  
+  StrCmd=${StrCmd//__BRANCH__/${StrDefaultBranch}} ; 
+  StrCmd=${StrCmd//__ACTION__/${StrDefaultAction}} ; 
+  if [ "${BoolForceCheckout:=False}" == "True" ] ; then 
+   StrCmd=${StrCmd//__OPT__/${StrDefaultForceOpt}} ; 
+  else
+   StrCmd=${StrCmd//__OPT__/} ; 
+  fi 
+  
+  ${StrCmd} ; 
+ 
+ }
+
+ GCBABranchName=${StrGetNewBranchName} \
+ GCBAIsForcedCheckout=${GCBEForceCheckout:=False} \
+ GitCheckoutBranchAction  ; 
+
+
+ }
+
+fi
+
+if [ "${versionGCBE:=0.0.1}" == "0.0.1" ] ; then 
+  
+ eval $( GFCFuncName=GitChckBranchEngine GlobalFunctionCleaning ) ;
+ function GitChckBranchEngine()
+ {
+  function Verbosis()
+  {
+   local -a ArrayArg=( $* ) ; 
+   local -a __call_locality=( Verb Verbosis )
+   local StrMsg=${VerbMsg:=__TEXT__} ; 
+   local StrDevOut=${VerbDev:=/dev/stderr} ; 
+   local IsVerboseState=${VerbState:=False} ;
+   local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+   local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+   local IsDisplayFormatted=${VerbFormated:=True} ;
+   local IsAppendMode=${VerbAppendDev:=False} ; 
+   if [ "${IsVerboseState:=False}" == "True" ] ; then 
+    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+     if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
+     else  
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+     fi
+    else
+     if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+        echo "${StrMsg}" ;  
+     else
+      if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo "${StrMsg}" >> ${StrDevOut} ;
+      else
+       echo "${StrMsg}" > ${StrDevOut} ;
+      fi
+     fi 
+    fi 
+   fi
+  } 
+  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
+  
+  if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( GCBE GitChckBranchEngine ) ;
+   local Arg0="${ArrayArg[0]}";  
+   local StrStartMain=${GCBEFuncStart:=__main_StartServices} ; 
+   local StrParentApps=${__call_locality[1]} ; 
+  elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
+   eval $( eval CAFunctName=GitChckBranchEngine CAIsAddParent=False __Call_Argument ) ; 
+  elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
+   eval $( eval CAFunctName=GitChckBranchEngine CAIsAddParent=False CallArgument ) ; 
+  fi
+
+  local StrGitApps=${GCBEGitApps:=/usr/bin/git} ; 
+  local StrZenityApps=${GCBEZenityApps:=/usr/bin/zenity} ;
+  local StrFilterApps=${GCBEFilterApps:=/bin/sed} ; 
+  local StrGitBranchQuery=${GCBEGitBranchTpl:=__APPS__ branch -l} ;
+  local StrZenityTpl=${GCBEZenityTpl:="""__APPS__ __OPT__ --height=__HEIGHT__ --width=__WIDTH__ --title=\"__TITLE__\" --text=\" __TEXT__ \" --column=\"__COLS0__\" --column=\"__COLS1__\" """} ; 
+  local StrTitle=${GCBETitle:='Zenity/Git Checkout Branch engine'} ; 
+  local StrText=${GCBEText:="Branch and activity, Selecting one will change\\\nthe default active branch by a checkout"} ; 
+  local StrFontSize=${GCBEFontSize:=medium};
+  local StrFontFamily=${GCBEFontFamily:=monospace} ; 
+  local StrSpanText=${GCBETextSpanStyle:="""<span font_family='__FONT_NAME__' size='__FONT_SIZE__'> __TEXT__ </span>"""} ; 
+  local IntHeight=${GCBEWinHeight:=300} ; 
+  local IntWidth=${GCBEWinWidth:=300}; 
+  local BoolDisplayCheckOut=${GCBEDisplayCheckOut:=False} ; 
+  local BoolForceCheckout=${GCBEForceCheckout:=False} ; 
+  local BoolDisplayZenityCall=${GCBEDisplayZenity:=False} ; 
+  local BoolDisplayRegExpOp=${GCBEDisplayRegExpFilter:=False} ; 
+  local StrDefaultOpt=${GCBEZenityDefaultOpt:=--list --radiolist} ; 
+  
+  local -a ArrayColumn ; 
+  ArrayColumn[0]="Active Branch" ; 
+  ArrayColumn[1]="Branch name" ; 
+
+  local StrVarList="StrZenityTpl,StrFilterApps,StrZenityApps,StrGitBranchQuery,StrGitApps,StrTitle,StrText,StrFontSize,StrFontFamily,StrSpanText,IntHeight,IntWidth,StrDefaultOpt,BoolDisplayRegExpOp,BoolForceCheckout,BoolDisplayZenityCall,BoolDisplayCheckOut" ; 
+  
+  function GitCheckoutBranchAction()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( GCBA GitCheckoutBranchAction ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}";  
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=GitCheckoutBranchAction CAIsAddParent=True __Call_Argument ) ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=GitCheckoutBranchAction CAIsAddParent=True CallArgument ) ; 
+   fi 
+   local StrDefaultGitApps=${GCBAGitApps:=/usr/bin/git} ; 
+   local StrDefaultForceOpt=${GCBAForceOpt:=--force} ; 
+   local StrDefaultAction=${GCBAGitAction:=checkout} ; 
+   local BoolForceCheckout=${GCBAIsForcedCheckout:=False} ;
+   local StrDefaultBranch=${GCBABranchName:=master} ;  
+   local BoolDisplayCmd=${GCBADisplayCheckOut:=False} ; 
+   local StrCmd=${GCBACmdTpl:=__APPS__ __ACTION__ __OPT__ __BRANCH__} ; 
+   
+   
+   StrCmd=${StrCmd//__APPS__/${StrDefaultGitApps}} ; 
+   StrCmd=${StrCmd//__BRANCH__/${StrDefaultBranch}} ; 
+   StrCmd=${StrCmd//__ACTION__/${StrDefaultAction}} ; 
+   if [ "${BoolForceCheckout:=False}" == "True" ] ; then 
+    StrCmd=${StrCmd//__OPT__/${StrDefaultForceOpt}} ; 
+   else
+    StrCmd=${StrCmd//__OPT__/} ; 
+   fi 
+   
+   VerbMsg="${StrCmd}" VerbHeader="${__call_locality[1]}-CMD" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayCmd} VerbDev=/dev/stderr  Verbosis ; 
+   
+   ${StrCmd} ; 
+  
+  }
+  
+  function __main_StopServices()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Main __main_StopServices ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}";  
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True __Call_Argument ) ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True CallArgument ) ; 
+   fi 
+
+  }
+  
+  function FilterSed()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( FilterSed FS ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}";  
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ; 
+   fi 
+   
+   local StrFilterApps=${FSFilterApps:=/bin/sed} ; 
+   local StrFilterAppsTpl=${FSFilterAppsTpl:=__APPS__ __OPT__ __REGEXP__} ; 
+   local StrFilterOpt=${FSFilterOpt:=-s} ; 
+   local StrFilterReg=${FSFilterReg:="""'s/^[\t\ ]*\*/TRUE/g;s/^[\t\ ]\**/FALSE/g'"""} ;
+   local BoolDisplayDebug=${FSDisplayDebug:=False} ; 
+   
+   StrFilterAppsTpl=${StrFilterAppsTpl//__APPS__/${StrFilterApps}} ; 
+   StrFilterAppsTpl=${StrFilterAppsTpl//__OPT__/${StrFilterOpt}} ; 
+   StrFilterAppsTpl=${StrFilterAppsTpl//__REGEXP__/${StrFilterReg}} ; 
+   
+   VerbMsg="${StrFilterAppsTpl}" VerbHeader="${__call_locality[1]}-CMD" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
+   eval ${StrFilterAppsTpl} ; 
+  }
+  
+  function __main_StartServices()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}";  
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ; 
+   fi 
+  
+   local StrGetBranch=$( ${StrGitBranchQuery//__APPS__/${StrGitApps}} ) ;
+   ### This is transforming the star inside the text showed from 'git branch -l' 
+   ### into TRUE, and rest of the sed query does apply a FALSE on begin of line
+   ### where there is no star. Especially particular the second filter inside the 
+   ### sed does require to filter for [\t\ ] (tab and space) and '*' even it there
+   ### is already a transformation of the star into 'TRUE'.
+   local StrBranchToZenityField=$( echo "${StrGetBranch}" | \
+     FSFilterApps=${StrFilterApps}         \
+     FSDisplayDebug=${BoolDisplayRegExpOp} \
+     FilterSed | tr '[:cntrl:]' ' ' ) ; 
+
+   VerbMsg="${StrBranchToZenityField}" VerbHeader="${__call_locality[1]}-ZENITY-FIELD" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayZenityCall} VerbDev=/dev/stderr  Verbosis ; 
+        
+   
+   local StrSpanTextParsing="""${StrSpanText}""" ;
+   StrSpanTextParsing=${StrSpanTextParsing//__FONT_NAME__/${StrFontFamily}} ; 
+   StrSpanTextParsing=${StrSpanTextParsing//__FONT_SIZE__/${StrFontSize}} ; 
+   StrSpanTextParsing=${StrSpanTextParsing//__TEXT__/${StrText}} ; 
+   
+   local StrCol0=$( ${StrParentApps} --get ArrayColumn[0] )
+   local StrCol1=$( ${StrParentApps} --get ArrayColumn[1] )
+   local StrZenityParsing="""${StrZenityTpl}""" ; 
+   
+   StrZenityParsing=${StrZenityParsing//__APPS__/${StrZenityApps}} ;
+   StrZenityParsing=${StrZenityParsing//__OPT__/${StrDefaultOpt}} ;
+   StrZenityParsing=${StrZenityParsing//__HEIGHT__/${IntHeight}} ;
+   StrZenityParsing=${StrZenityParsing//__WIDTH__/${IntWidth}} ;
+   StrZenityParsing=${StrZenityParsing//__TITLE__/${StrTitle}} ;
+   StrZenityParsing=${StrZenityParsing//__TEXT__/${StrSpanTextParsing}} ;
+   StrZenityParsing=${StrZenityParsing//__COLS0__/${StrCol0}} ;
+   StrZenityParsing=${StrZenityParsing//__COLS1__/${StrCol1}} ;
+   
+   
+   VerbMsg="${StrZenityParsing} ${StrBranchToZenityField}" VerbHeader="${__call_locality[1]}-CMD" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayZenityCall} VerbDev=/dev/stderr  Verbosis ; 
+   local StrGetNewBranchName=$( eval ${StrZenityParsing} ${StrBranchToZenityField} ) ;  
+  
+   GCBAGitApps=${StrGitApps}                  \
+   GCBABranchName=${StrGetNewBranchName}      \
+   GCBAIsForcedCheckout=${BoolForceCheckout}  \
+   GCBADisplayCheckOut=${BoolDisplayCheckOut} \
+   GitCheckoutBranchAction  ; 
+ 
+ }
+  
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+  local StrNameHelper="${__call_locality[1]}\n\tEngine to Activate Checkout if Git having many branch.";
+  local StrSummary="\n\tThis appliaction turn git-branch into Zenity List windows with selection pointed to default choice, let you\n\tchange it to something else within listed branch." ; 
+  local StrSynopsis="\n\tCalling GitChckBranchEngine will directly load you the Branch inside a project. It remains your to be inside\n\ta Git project to see available information.\n\tOption like git checkout <BRANCH-NAME> --force are replaced by Prefixed variable GCBEForceCheckout=True:\n\tGCBEForceCheckout=True GitChckBranchEngine";
+  local StrDescription="\n\tAll SPAN markup from pango for Zenity project can be see at :\n\t\thttps://developer.gnome.org/pango/stable/PangoMarkupFormat.html.\n\tWhere Font-size is word representation such as \n\t\t:  'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large', rather than font='12.5' and size='12800'. \n\tFont-Family can be True-type, or any imported Open Text Format." ;
+
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   GVRIsName=True     \
+   GVRIsSynopsis=True \
+   GVRIsSummary=True  \
+   GVRIsDesc=True     \
+   GVRIOldPrefix=False  GetVarReference ${__call_locality[1]} ;
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;	
+  elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
+   eval $( eval VTVIsArrayStyleInsert=True  \
+             VTVValueEntry=${StrVarList} \
+             VTVIsQuotedValue=True       \
+             VTVIsValueReAssign=True     \
+             VTVIsValueToConvert=False   \
+             ValueToVariable ) __main_StopServices ;
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+   eval $( eval VTVIsArrayStyleInsert=True  \
+                VTVValueEntry=${StrVarList} \
+                VTVIsQuotedValue=True       \
+                VTVIsValueReAssign=True     \
+                VTVIsValueToConvert=False   \
+                ValueToVariable ) ${StrStartMain} ; 
+  fi
+ 
+ }
+
+
+fi
+
 ### Agreed Services, GitCommitTransaction
 if [ ${SubGitCommitTransaction:=False} == "True" ] ; then   
 
@@ -12,7 +317,8 @@ if [ ${versionGCT:=0.0.1} == "0.0.1" ] ; then
 ### sometimes font can change size erraticaly from instance 
 ### to another one . 
 
- unset GetFileBuffered ; 
+ eval $( GFCFuncName=GetFileBuffered GlobalFunctionCleaning ) ;
+ #unset GetFileBuffered ; 
  function GetFileBuffered()     
  {
   local StrQuestion="""Keep File selection\n\n__filelist__""" ;
@@ -23,7 +329,8 @@ if [ ${versionGCT:=0.0.1} == "0.0.1" ] ; then
   return ${IOStatus} ;
  } ;
 
- unset GetCommandQuit ; 
+ eval $( GFCFuncName=GetCommandQuit GlobalFunctionCleaning ) ;
+ #unset GetCommandQuit ; 
  function GetCommandQuit()    
  {
   local StrQuestion="""Quit Git Commit transaction ?""" ;
@@ -33,7 +340,8 @@ if [ ${versionGCT:=0.0.1} == "0.0.1" ] ; then
   return ${IOStatus} ;
  } ;
 
- unset GetCommitMsg ; 
+ eval $( GFCFuncName=GetCommitMsg GlobalFunctionCleaning ) ;
+ #unset GetCommitMsg ; 
  function GetCommitMsg()    
  {
   #echo > .commit-msg ;
@@ -48,8 +356,9 @@ if [ ${versionGCT:=0.0.1} == "0.0.1" ] ; then
   return ${IOStatus} ;
  } ;
 
- unset git_update ;
- git_update ()    
+ eval $( GFCFuncName=git_update GlobalFunctionCleaning ) ;
+ #unset git_update ;
+ function git_update ()    
  { 
      #sudo /etc/init.d/iptables-persistent restart ;
      #sleep 5 ;
@@ -63,7 +372,8 @@ if [ ${versionGCT:=0.0.1} == "0.0.1" ] ; then
      fi 
  } ; 
 
- unset ZenityFileSelection ; 
+ eval $( GFCFuncName=ZenityFileSelection GlobalFunctionCleaning ) ;
+ #unset ZenityFileSelection ; 
  function ZenityFileSelection()
  {
   local IOStatus=0;
@@ -77,7 +387,8 @@ if [ ${versionGCT:=0.0.1} == "0.0.1" ] ; then
  }
 
 
- unset GetFileInPath ; 
+ eval $( GFCFuncName=GetFileInPath GlobalFunctionCleaning ) ;
+ #unset GetFileInPath ; 
  function GetFileInPath()    
  {
    local IOStatus=0 ; 
@@ -104,7 +415,8 @@ if [ ${versionGCT:=0.0.1} == "0.0.1" ] ; then
   return ${IOStatus} ;   
  } ;
 
- unset CommitLevel ; 
+ eval $( GFCFuncName=CommitLevel GlobalFunctionCleaning ) ;
+ #unset CommitLevel ; 
  function CommitLevel()
  {
   StrMsg=$( cat .commit-msg ) ;
@@ -116,7 +428,8 @@ if [ ${versionGCT:=0.0.1} == "0.0.1" ] ; then
   git_update ;
  }
 
- unset GitCommitTransaction ; 
+ eval $( GFCFuncName=GitCommitTransaction GlobalFunctionCleaning ) ;
+ #unset GitCommitTransaction ; 
  function GitCommitTransaction()    
  {
    local IntQuit=1 ; 
@@ -172,7 +485,8 @@ if [ "${versionGCT:=0.0.1}" == "0.0.2" ] ; then
 ### conformant to Fnct.D Lib and having poor manageability 
 ### sometimes font can change size erraticaly from instance 
 ### to another one . 
- unset GitRessourceInformation;
+ eval $( GFCFuncName=GitRessourceInformation GlobalFunctionCleaning ) ;
+ #unset GitRessourceInformation;
  function GitRessourceInformation()
  {
   eval $( CAFunctName=GitRessourceInformation CAIsAddParent=False __Call_Argument ) ; 
@@ -283,7 +597,8 @@ if [ "${versionGCT:=0.0.1}" == "0.0.2" ] ; then
   
  }
 
- unset GetFileBuffered ; 
+ eval $( GFCFuncName=GetFileBuffered GlobalFunctionCleaning ) ;
+ #unset GetFileBuffered ; 
  function GetFileBuffered()     
  {
   eval $( CAFunctName=GetFileBuffered CAIsAddParent=False __Call_Argument ) ; 
@@ -328,7 +643,8 @@ if [ "${versionGCT:=0.0.1}" == "0.0.2" ] ; then
   fi
  } ;
 
- unset GetCommandQuit ; 
+ eval $( GFCFuncName=GetCommandQuit GlobalFunctionCleaning ) ;
+ #unset GetCommandQuit ; 
  function GetCommandQuit()    
  {
   eval $( CAFunctName=GetCommandQuit CAIsAddParent=False __Call_Argument ) ; 
@@ -340,7 +656,7 @@ if [ "${versionGCT:=0.0.1}" == "0.0.2" ] ; then
   
   function __main_StartServices()
   {
-   eval $( CAFunctName= CAIsAddParent=True __Call_Argument ) ; 
+   eval $( CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
 
    zenity --question --text "${StrQuestion}" ;  
    IOStatus=$?
@@ -371,7 +687,8 @@ if [ "${versionGCT:=0.0.1}" == "0.0.2" ] ; then
   fi
  } ;
 
- unset GetCommitMsg ; 
+ eval $( GFCFuncName=GetCommitMsg GlobalFunctionCleaning ) ;
+ #unset GetCommitMsg ; 
  function GetCommitMsg()    
  {
   eval $( CAFunctName=GetCommitMsg CAIsAddParent=False __Call_Argument ) ; 
@@ -426,7 +743,8 @@ if [ "${versionGCT:=0.0.1}" == "0.0.2" ] ; then
   fi
  } ;
 
- unset GitUpdate ;
+ eval $( GFCFuncName=GitUpdate GlobalFunctionCleaning ) ;
+ #unset GitUpdate ;
  function GitUpdate ()    
  { 
   eval $( CAFunctName=GitUpdate CAIsAddParent=False __Call_Argument ) ; 
@@ -476,7 +794,8 @@ if [ "${versionGCT:=0.0.1}" == "0.0.2" ] ; then
   fi
  } ; 
 
- unset ZenityFileSelection ; 
+ eval $( GFCFuncName=ZenityFileSelection GlobalFunctionCleaning ) ;
+ #unset ZenityFileSelection ; 
  function ZenityFileSelection()
  {
   eval $( CAFunctName=ZenityFileSelection CAIsAddParent=False __Call_Argument ) ; 
@@ -538,7 +857,8 @@ if [ "${versionGCT:=0.0.1}" == "0.0.2" ] ; then
  }
 
 
- unset GetFileInPath ; 
+ eval $( GFCFuncName=GetFileInPath GlobalFunctionCleaning ) ;
+ #unset GetFileInPath ; 
  function GetFileInPath()    
  {
   eval $( CAFunctName=GetFileInPath CAIsAddParent=False __Call_Argument ) ; 
@@ -606,7 +926,8 @@ if [ "${versionGCT:=0.0.1}" == "0.0.2" ] ; then
 
  } ;
 
- unset CommitLevel ; 
+ eval $( GFCFuncName=CommitLevel GlobalFunctionCleaning ) ;
+ #unset CommitLevel ; 
  function CommitLevel()
  {
   eval $( CAFunctName=CommitLevel CAIsAddParent=False __Call_Argument ) ; 
@@ -654,7 +975,8 @@ if [ "${versionGCT:=0.0.1}" == "0.0.2" ] ; then
 
  }
 
- unset GitCommitTransaction ; 
+ eval $( GFCFuncName=GitCommitTransaction GlobalFunctionCleaning ) ;
+ #unset GitCommitTransaction ; 
  function GitCommitTransaction()    
  {
   eval $( CAFunctName=GitCommitTransaction CAIsAddParent=False __Call_Argument ) ; 
@@ -752,7 +1074,7 @@ fi
 
 if [ "${GitHubCommitAlpha:=False}" == "True" ] ; then 
 
- unset GetSelectedFile ;
+ #unset GetSelectedFile ;
  function GetSelectedFile()    
  { 
   local __call_locality=( GSF GetSelectedFile )
