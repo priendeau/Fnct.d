@@ -119,6 +119,8 @@ if [ "${versionGCBE:=0.0.1}" == "0.0.1" ] ; then
   local StrFilterApps=${GCBEFilterApps:=/bin/sed} ; 
   local StrGitBranchQuery=${GCBEGitBranchTpl:=__APPS__ branch -l} ;
   local StrZenityTpl=${GCBEZenityTpl:="""__APPS__ __OPT__ --height=__HEIGHT__ --width=__WIDTH__ --title=\"__TITLE__\" --text=\" __TEXT__ \" --column=\"__COLS0__\" --column=\"__COLS1__\" """} ; 
+  local StrInternalVTVReg=${GCBEVTVRegistry:=VTVIsArrayStyleInsert=True VTVIsQuotedValue=True VTVIsValueReAssign=True VTVIsValueToConvert=False} ;
+  local StrTPRightRegexp=${GCBETPRReg:=':__[A-Za-z0-9\_]*__'} ;
   local StrTitle=${GCBETitle:='Zenity/Git Checkout Branch engine'} ; 
   local StrText=${GCBEText:="Branch and activity, Selecting one will change\\\nthe default active branch by a checkout"} ; 
   local StrFontSize=${GCBEFontSize:=medium};
@@ -128,7 +130,9 @@ if [ "${versionGCBE:=0.0.1}" == "0.0.1" ] ; then
   local IntWidth=${GCBEWinWidth:=300}; 
   local BoolDisplayCheckOut=${GCBEDisplayCheckOut:=False} ; 
   local BoolForceCheckout=${GCBEForceCheckout:=False} ; 
+  local BoolDisplayDebug=${GCBEIsDisplayDebug:=False} ;
   local BoolDisplayZenityCall=${GCBEDisplayZenity:=False} ; 
+  local BoolDisplayTPNotice=${GCBEDisplayTagParser:=False} ; 
   local BoolDisplayRegExpOp=${GCBEDisplayRegExpFilter:=False} ; 
   local StrDefaultOpt=${GCBEZenityDefaultOpt:=--list --radiolist} ; 
   
@@ -140,8 +144,10 @@ if [ "${versionGCBE:=0.0.1}" == "0.0.1" ] ; then
   ArrayMsg[0]="Entry in function" ;
   ArrayMsg[1]="Zenity Windows manager receive a cancel action by the user."
   ArrayMsg[2]="Application git have created an exception, ensure you are inside a git repository." ; 
-
-  local StrVarList="StrZenityTpl,StrFilterApps,StrZenityApps,StrGitBranchQuery,StrGitApps,StrTitle,StrText,StrFontSize,StrFontFamily,StrSpanText,IntHeight,IntWidth,StrDefaultOpt,BoolDisplayRegExpOp,BoolForceCheckout,BoolDisplayZenityCall,BoolDisplayCheckOut" ; 
+  ArrayMsg[3]="Status of\n\tBoolDisplayDebug: __DisplayDebug__\n\tBoolDisplayZenityCall__: __DisplayZenityCall__\n\tBoolDisplayTPNotice: __DisplayTPNotice__\n\tBoolDisplayRegExpOp: __DisplayRegExpOp__" ;
+  ArrayMsg[4]="Status returned __INT__" ; 
+  
+  local StrVarList="StrTPRightRegexp,StrInternalVTVReg,StrZenityTpl,StrFilterApps,StrZenityApps,StrGitBranchQuery,StrGitApps,StrTitle,StrText,StrFontSize,StrFontFamily,StrSpanText,IntHeight,IntWidth,StrDefaultOpt,BoolDisplayRegExpOp,BoolForceCheckout,BoolDisplayZenityCall,BoolDisplayCheckOut,BoolDisplayTPNotice,BoolDisplayDebug" ; 
   
   function GitCheckoutBranchAction()
   {
@@ -172,7 +178,10 @@ if [ "${versionGCBE:=0.0.1}" == "0.0.1" ] ; then
     StrCmd=${StrCmd//__OPT__/} ; 
    fi 
    
-   VerbMsg="${StrCmd}" VerbHeader="${__call_locality[1]}-CMD" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayCmd} VerbDev=/dev/stderr  Verbosis ; 
+   VerbMsg="${StrCmd}"                    \
+   VerbHeader="${__call_locality[1]}-CMD" \
+   VerbState=${BoolDisplayCmd}            \
+   VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ; 
    
    ${StrCmd} ; 
   
@@ -206,19 +215,39 @@ if [ "${versionGCBE:=0.0.1}" == "0.0.1" ] ; then
    
    local StrFilterApps=${FSFilterApps:=/bin/sed} ; 
    local StrFilterAppsTpl=${FSFilterAppsTpl:=__APPS__ __OPT__ __REGEXP__ | __FILTER__ __FILTER_OPT__ } ; 
+   local StrTagParserDef=${FSTagPArserDef:=StrFilterApps:__APPS__,StrFilterOpt:__OPT__,StrFilterReg:__REGEXP__,StrPostFilterApps:__FILTER__,StrPostFilterOpt:__FILTER_OPT__} ; 
    local StrFilterOpt=${FSFilterOpt:=-s} ; 
    local StrFilterReg=${FSFilterReg:="""'s/^[\t\ ]*\*/TRUE/g;s/^[\t\ ]\**/FALSE/g'"""} ;
    local StrPostFilterApps=${FSPostFilterApps:=/usr/bin/tr};
    local StrPostFilterOpt=${FSPostFilterOpt:=\'[:cntrl:]\' \' \'};
    local BoolDisplayDebug=${FSDisplayDebug:=False} ; 
    
-   StrFilterAppsTpl=${StrFilterAppsTpl//__APPS__/${StrFilterApps}} ; 
-   StrFilterAppsTpl=${StrFilterAppsTpl//__OPT__/${StrFilterOpt}} ; 
-   StrFilterAppsTpl=${StrFilterAppsTpl//__REGEXP__/${StrFilterReg}} ; 
-   StrFilterAppsTpl=${StrFilterAppsTpl//__FILTER__/${StrPostFilterApps}} ; 
-   StrFilterAppsTpl=${StrFilterAppsTpl//__FILTER_OPT__/${StrPostFilterOpt}} ; 
+   local StrMsg=$( ${StrParentApps} --get ArrayMsg[3] ) ;
    
-   VerbMsg="${StrFilterAppsTpl}" VerbHeader="${__call_locality[1]}-CMD" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
+   StrMsg=${StrMsg//__DisplayDebug__/${BoolDisplayDebug}} ; 
+   StrMsg=${StrMsg//__DisplayRegExpOp__/${BoolDisplayRegExpOp}} ; 
+   StrMsg=${StrMsg//__DisplayZenityCall__/${BoolDisplayZenityCall}} ; 
+   StrMsg=${StrMsg//__DisplayTPNotice__/${BoolDisplayTPNotice}} ; 
+   
+   VerbMsg="${StrMsg}" \
+   VerbHeader="${__call_locality[1]}-DEBUG" \
+   VerbState=${BoolDisplayDebug} \
+   VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ; 
+   
+   eval $( \
+       TPListTag=${StrTagParserDef}                   \
+       TPVarNameParsed=StrFilterAppsTpl               \
+       TPRightStrPtrn=${StrTPRightRegexp}             \
+       TPArrayName="Array${__call_locality[0]}Tag"    \
+       TPDisplayDebug=${BoolDisplayZenityCall}        \
+       TPDisplayParserNotice=${BoolDisplayTPNotice}   \
+       TagParser  ) ;
+   
+   VerbMsg="${StrFilterAppsTpl}"          \
+   VerbHeader="${__call_locality[1]}-CMD" \
+   VerbState=${BoolDisplayRegExpOp}       \
+   VerbEvalForm=False VerbFormated=True  VerbDev=/dev/stderr  Verbosis ; 
+   
    eval ${StrFilterAppsTpl} ; 
   }
   
@@ -233,8 +262,12 @@ if [ "${versionGCBE:=0.0.1}" == "0.0.1" ] ; then
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
     eval $( eval CAFunctName=ZenityWindowHandler CAIsAddParent=True CallArgument ) ; 
    fi 
-   VerbMsg="${StrBranchToZenityField}" VerbHeader="${__call_locality[1]}-ZENITY-FIELD" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayZenityCall} VerbDev=/dev/stderr  Verbosis ; 
-        
+   VerbMsg="${StrBranchToZenityField}" \
+   VerbHeader="${__call_locality[1]}-ZENITY-FIELD" \
+   VerbState=${BoolDisplayZenityCall} \
+   VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ; 
+   
+   local StrTagParserDef=${ZWHTagParserDef:="StrZenityApps:__APPS__,StrDefaultOpt:__OPT__,IntHeight:__HEIGHT__,IntWidth:__WIDTH__,StrTitle:__TITLE__,StrSpanTextParsing:__TEXT__,StrCol0:__COLS0__,StrCol1:__COLS1__"} ; 
    
    local StrSpanTextParsing="""${StrSpanText}""" ;
    StrSpanTextParsing=${StrSpanTextParsing//__FONT_NAME__/${StrFontFamily}} ; 
@@ -243,17 +276,17 @@ if [ "${versionGCBE:=0.0.1}" == "0.0.1" ] ; then
    
    local StrCol0=$( ${StrParentApps} --get ArrayColumn[0] )
    local StrCol1=$( ${StrParentApps} --get ArrayColumn[1] )
+   
    local StrZenityParsing="""${StrZenityTpl}""" ; 
    
-   StrZenityParsing=${StrZenityParsing//__APPS__/${StrZenityApps}} ;
-   StrZenityParsing=${StrZenityParsing//__OPT__/${StrDefaultOpt}} ;
-   StrZenityParsing=${StrZenityParsing//__HEIGHT__/${IntHeight}} ;
-   StrZenityParsing=${StrZenityParsing//__WIDTH__/${IntWidth}} ;
-   StrZenityParsing=${StrZenityParsing//__TITLE__/${StrTitle}} ;
-   StrZenityParsing=${StrZenityParsing//__TEXT__/${StrSpanTextParsing}} ;
-   StrZenityParsing=${StrZenityParsing//__COLS0__/${StrCol0}} ;
-   StrZenityParsing=${StrZenityParsing//__COLS1__/${StrCol1}} ;
-   
+   eval $( \
+       TPListTag=${StrTagParserDef}                   \
+       TPVarNameParsed=StrZenityParsing               \
+       TPRightStrPtrn=${StrTPRightRegexp}             \
+       TPArrayName="Array${__call_locality[0]}Tag"    \
+       TPDisplayDebug=${BoolDisplayZenityCall}        \
+       TPDisplayParserNotice=${BoolDisplayTPNotice} \
+       TagParser  ) ; 
    
    local StrBVTZenity="__IF__ __ELSE__" ;
    local StrMsg=$( ${StrParentApps} --get ArrayMsg[1] ) ; 
@@ -274,51 +307,65 @@ if [ "${versionGCBE:=0.0.1}" == "0.0.1" ] ; then
    ### both are parsed inside StrBVTZenity and can be evaluated later like inside
    ### StrGetNewBranchName  . 
    local StrBVTZenityIf=$( BVTBoolVarName=IntResultZenity:=0 \
-                           BVTIdType=4 \
+                           BVTIdType=4     \
                            BVTIfType="Int" \
-                           BVTQuoteIntLeftMember=True \
-                           BVTVarName=IntResultZenity \
-                           BVTVarHold="\${IntReturn}" \
-                           BVTIfOp=-eq \
-                           BVTBoolCase=0 \
-                           BVTIsValueToVarAssert=True \
+                           BVTQuoteIntLeftMember=True    \
+                           BVTVarName=IntResultZenity    \
+                           BVTVarHold="\${IntReturn}"    \
+                           BVTIfOp=-eq      \
+                           BVTBoolCase=0    \
+                           BVTIsValueToVarAssert=True    \
                            BVTVTFnctA=GitCheckoutBranchAction \
-                           BVTVTVTPLA="${StrIfTpl}" \
-                           BVTDisplayShowDebug=False \
+                           BVTVTVTPLA="${StrIfTpl}"      \
+                           BVTDisplayShowDebug=False     \
                            BoolVarTest ) ; 
-   local StrBVTZenityElse=$( BVTIdType=5 \
-                             BVTIsPreambule=False \
+   local StrBVTZenityElse=$( BVTIdType=5    \
+                             BVTIsPreambule=False       \
                              BVTIsValueToVarAssert=True \
-                             BVTVTFnctA=Verbosis \
-                             BVTVTVTPLA=${StrElseTpl} \
-                             BVTDisplayShowDebug=False \
+                             BVTVTFnctA=Verbosis        \
+                             BVTVTVTPLA=${StrElseTpl}   \
+                             BVTDisplayShowDebug=False  \
                              BoolVarTest ) ; 
    
    
    StrBVTZenity=${StrBVTZenity//__IF__/${StrBVTZenityIf}} ;
    StrBVTZenity=${StrBVTZenity//__ELSE__/${StrBVTZenityElse}} ;
-   VerbMsg="${StrBVTZenity}" VerbHeader="${__call_locality[1]}-CMD" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayZenityCall} VerbDev=/dev/stderr  Verbosis ; 
-   VerbMsg="${StrZenityParsing} ${StrBranchToZenityField}" VerbHeader="${__call_locality[1]}-CMD" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayZenityCall} VerbDev=/dev/stderr  Verbosis ; 
+   VerbMsg="${StrBVTZenity}" \
+   VerbHeader="${__call_locality[1]}-CMD" \
+   VerbState=${BoolDisplayZenityCall}  \
+   VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ; 
+   
+   VerbMsg="${StrZenityParsing} ${StrBranchToZenityField}" \
+   VerbHeader="${__call_locality[1]}-CMD" \
+   VerbState=${BoolDisplayZenityCall} \
+   VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ; 
    
    ### It's possible, to launch other evaluation insde an executive brace and 
    ### as long the output is going inside /dev/sdterr, it will not interfere
    ### with the reception of the informtaion from a function. 
    local IntReturn ;
    
-   eval ${StrZenityParsing} ${StrBranchToZenityField} > .ZenityWindowHandler ;
+   eval ${StrZenityParsing} ${StrBranchToZenityField} > ${HOME}/.${StrParentApps} ;
    IntReturn=$? ;
-   VerbMsg="Status returned ${IntReturn}" VerbHeader="${__call_locality[1]}-ERROR-LEVEL" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayZenityCall} VerbDev=/dev/stderr  Verbosis ; 
-   local StrGetNewBranchName=$( cat .ZenityWindowHandler )  ; 
+   
+   StrMsg=$( ${StrParentApps} --get ArrayMsg[4] ) ;
+   
+   VerbMsg="${StrMsg//__INT__/${IntReturn}}" \
+   VerbHeader="${__call_locality[1]}-ERROR-LEVEL" \
+   VerbState=${BoolDisplayZenityCall} \
+   VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ; 
+   
+   local StrGetNewBranchName=$( cat ${HOME}/.${StrParentApps} )  ; 
+   
+   ### StrBVTZenity is evaluated and executed here, made from variable  
+   ### StrBVTZenityIf, and StrBVTZenityElse generating BoolVarTest if-statement
+   ### execution was delayed. and should represent the execution of 
+   ### GitCheckoutBranchAction if there is no error during the StrZenityParsing
+   ### evaluation/execution (few-lines ahead).
    eval "${StrBVTZenity//__BRANCH__/${StrGetNewBranchName}}" ;
-   rm -f .ZenityWindowHandler ; 
    
-   
-   #eval ${StrBVTZenity} ; 
-
-
+   rm -f ${HOME}/.${StrParentApps} ; 
   
-   #GCBAGitApps=${StrGitApps} GCBABranchName=${StrGetNewBranchName} GCBAIsForcedCheckout=${BoolForceCheckout} GCBADisplayCheckOut=${BoolDisplayCheckOut} GitCheckoutBranchAction  ; 
-   
   }
   
   function __main_StartServices()
@@ -335,8 +382,8 @@ if [ "${versionGCBE:=0.0.1}" == "0.0.1" ] ; then
   
    ### This section is Preparing the If-Else statement where it sould be used right
    ### after execution of StrBranchToZenityField
-   local StrVarListZWH="BoolDisplayCheckOut,BoolDisplayZenityCall,BoolForceCheckout,IntHeight,IntWidth,StrBranchToZenityField,StrCol0,StrCol1,StrDefaultOpt,StrFontFamily,StrFontSize,StrGetNewBranchName,StrGitApps,StrParentApps,StrSpanText,StrSpanTextParsing,StrText,StrTitle,StrZenityApps,StrZenityParsing,StrZenityTpl" ;
-   
+   local StrVarListZWH="StrTPRightRegexp,StrInternalVTVReg,BoolDisplayDebug,BoolDisplayTPNotice,BoolDisplayCheckOut,BoolDisplayZenityCall,BoolForceCheckout,IntHeight,IntWidth,StrBranchToZenityField,StrCol0,StrCol1,StrDefaultOpt,StrFontFamily,StrFontSize,StrGetNewBranchName,StrGitApps,StrParentApps,StrSpanText,StrSpanTextParsing,StrText,StrTitle,StrZenityApps,StrZenityParsing,StrZenityTpl" ;
+   local StrVarListFS="StrTPRightRegexp,StrInternalVTVReg,BoolDisplayRegExpOp,BoolDisplayDebug,BoolDisplayTPNotice,BoolDisplayZenityCall" ;
 
    ### This is transforming the star inside the text showed from 'git branch -l' 
    ### into TRUE, and rest of the sed query does apply a FALSE on begin of line
@@ -344,25 +391,28 @@ if [ "${versionGCBE:=0.0.1}" == "0.0.1" ] ; then
    ### sed does require to filter for [\t\ ] (tab and space) and '*' even it there
    ### is already a transformation of the star into 'TRUE'.
    local IntResultZenity ; 
-   local StrBranchToZenityField=$( ${StrGitBranchQuery//__APPS__/${StrGitApps}} | FSFilterApps=${StrFilterApps} FSDisplayDebug=${BoolDisplayRegExpOp} FilterSed ) ;
+   local StrBranchToZenityField=$( \
+      ${StrGitBranchQuery//__APPS__/${StrGitApps}} | eval  \
+        $( eval ${StrInternalVTVReg}          \
+                VTVValueEntry=${StrVarListFS} \
+                ValueToVariable ) FSFilterApps=${StrFilterApps}         \
+                                  FSDisplayDebug=${BoolDisplayRegExpOp} \
+                                  FilterSed ) ;
    ### While StrBranchToZenityField is processing, it loosing the return-statement of 
    ### git branch -l and should be launched from a function where the code
    ### can isolate the return statement and filter error 128 from git branch -l 
    ### to define being outside of any repository and can't get a branch name at all.
-   $( VTVIsArrayStyleInsert=True  \
+   $(  ${StrInternalVTVReg}           \
        VTVValueEntry=${StrVarListZWH} \
-       VTVIsQuotedValue=True       \
-       VTVIsValueReAssign=True     \
-       VTVIsValueToConvert=False   \
        ValueToVariable ) ZenityWindowHandler ; 
     
  }
   
   local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
   local StrNameHelper="${__call_locality[1]}\n\tEngine to Activate Checkout if Git having many branch.";
-  local StrSummary="\n\tThis appliaction turn git-branch into Zenity List windows with selection pointed to default choice, let you\n\tchange it to something else within listed branch." ; 
-  local StrSynopsis="\n\tCalling GitChckBranchEngine will directly load you the Branch inside a project. It remains your to be inside\n\ta Git project to see available information.\n\tOption like git checkout <BRANCH-NAME> --force are replaced by Prefixed variable GCBEForceCheckout=True:\n\tGCBEForceCheckout=True GitChckBranchEngine";
-  local StrDescription="\n\tAll SPAN markup from pango for Zenity project can be see at :\n\t\thttps://developer.gnome.org/pango/stable/PangoMarkupFormat.html.\n\tWhere Font-size is word representation such as \n\t\t:  'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large', 'xx-large', rather than font='12.5' and size='12800'. \n\tFont-Family can be True-type, or any imported Open Text Format." ;
+  local StrSynopsis="\n\tCalling GitChckBranchEngine will directly load you the Branch inside\n\ta project. It remains your to be inside a Git project to see available\n\tinformation.Option like git checkout <BRANCH-NAME> --force are replaced\n\tby Prefixed variable GCBEForceCheckout=True:\n\tGCBEForceCheckout=True GitChckBranchEngine";
+  local StrSummary="\n\tThis appliaction turn git-branch into Zenity List windows with selection\n\tpointed to default choice, let you change it to something else within\n\tlisted branch." ; 
+  local StrDescription="\n\tAll SPAN markup from pango for Zenity project can be see at :\n\t\thttps://developer.gnome.org/pango/stable/PangoMarkupFormat.html.\n\tFont-Size Information:\n\tWhere Font-size is word representation such as \n\t\t:  'xx-small', 'x-small', 'small', 'medium', 'large', 'x-large',\n\t\t'xx-large', rather than font='12.5' and size='12800'. \n\tFont-Family can be True-type, or any imported Open Text Format.\n\n Zenity Variable Notice:\n\nGCBEWinHeight\tInt Height of Zenity Window.\nGCBEWinWidth\tInt Width of Zenity Window.\nGCBEZenityTpl\tString The Default template to call the zenity command.\nGCBETitle\tString Default Window Title\nGCBEText\tString Default Text before Selection.\nGCBEFontSize\tRefer to Font-Size Information inside Description\nGCBEFontFamily\tString Font-Name, ex:DejaVuSerif, FreeMonoBold,\n\t\tDejaVuSerif-Bold, UbuntuMono-B, Garuda,\n\t\tLiberationSerif-Bold, Junicode all True Type Name and\n\t\tOpen Text Format\nGCBETextSpanStyle\n\t\tString The default template to configure Text section of\n\t\tZenity allowing configuring Font and size of Text.\nGCBEZenityDefaultOpt\n\t\tString Default allowing selection of one item and option\n\t\tof List creation of zenity.\n\n Application Notice:\n\nGCBEGitApps\tString Default Git application to use with this engine.\nGCBEZenityApps\tString Default Zenity application/location to use with\n\t\tthis engine.\nGCBEFilterApps\tString Default Application used by sub-function ,FilterSed\nGCBEGitBranchTpl\n\t\tString Default Git Branch Interrogation method.\n\t\t__APPS__ refer to GCBEGitApps.\nGCBEVTVRegistry\tString Default ValueToVariable Parameter.\nGCBETPRReg\tString quoted with '''. TagParser Right Pattern selection of\n\t\t__TAG__ inside a parser definition.\nGCBEForceCheckout\n\t\tSet True/False Add Force option to your Git Command.\n\n Debug Information:\n\nGCBEDisplayCheckOut\n\t\tSet True/False Display the git command used to change the\n\t\tBranch.\nGCBEIsDisplayDebug\n\t\tSet True/False Display Extra debug during call of\n\t\tGitChckBranchEngine.\nGCBEDisplayZenity\n\t\tSet True/False Display the command-line of zenity once parsed.\nGCBEDisplayTagParser\n\t\tSet True/False Display Information toward uses of TagParser\n\t\tduring debug.\nGCBEDisplayRegExpFilter\n\t\tSet True/False Display the command resulting for a regexp\n\t\tparsed by option to function ZenityWindowHandler or FilterSed\n\n" ;
 
  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
    GVRIsName=True     \
