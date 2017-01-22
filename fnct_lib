@@ -37,8 +37,8 @@ IsApplianceNotReady="${IsApplianceNotReady:=True}" ;
 declare -r FNCTDLIBPATH=${FNCTDLIBPATH:=/etc/init.d/Fnct.D} 2> /dev/null ; 
 
 declare -r StrSwitchesShow="Following switch are available:\n\n" 2> /dev/null ; 
-declare -r StrCompWordMsgSwitches="\t--compword\tWord Completion Provide a services to Extract on Demand all Pre-fixed Variable\n\t\t\String inside this function.\n" 2> /dev/null ; 
-declare -r StrListMsgSwitches="\t--list\t\tList all Internal Pre-fixed Variable available to query or get." 2> /dev/null ; 
+declare -r StrCompWordMsgSwitches="\t--compword\tWord Completion Provide a services\n\t\t\tto Extract on Demand all Pre-fixed\n\t\t\tVariable String inside this function.\n" 2> /dev/null ; 
+declare -r StrListMsgSwitches="\t--list\t\tList all Internal Pre-fixed Variable\n\t\t\tavailable to query or get." 2> /dev/null ; 
 declare -r StrGetMsgSwitches="\t--get\t\tReturn value of Internal Variable." 2> /dev/null ; 
 declare -r StrStartSwitches="\t--startservices\tStart the application normally." 2> /dev/null ; 
 declare -r StrStopSwitches="\t--stopservices\tStop the application normally." 2> /dev/null ; 

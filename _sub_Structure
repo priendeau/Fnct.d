@@ -1839,9 +1839,22 @@ if [ "${versionTP:=0.0.2}" == "0.0.2" ] ; then
   } 
   ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
 
-  local -a ArrayArg=( $* ) ; 
-  local -a __call_locality=( TP TagParser ) ;
-  local Arg0="${ArrayArg[0]}" ;
+  #local -a ArrayArg=( $* ) ; 
+  #local -a __call_locality=( TP TagParser ) ;
+  #local Arg0="${ArrayArg[0]}" ;
+  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( TP TagParser ) ;
+   local Arg0="${ArrayArg[0]}" ; 
+   local StrParentApps=${__call_locality[1]} ;
+   local StrStartMain=${TPFuncStart:=__main_StartServices} ; 
+  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+   eval $( eval CAFunctName=TagParser CAIsAddParent=False __Call_Argument ) ; 
+  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+   eval $( eval CAFunctName=TagParser CAIsAddParent=False CallArgument ) ;
+  fi  
+  ### 20170122 - Officially added CallArgument Block
+  
   local StrTagList=${TPListTag:=StrA:__TAGA__,StrB:__TAGB__,IntA:__INT__} ; 
   local StrArrayName=${TPArrayName:=ArrayTagParser} ;
   local StrIterName=${TPIterNameVar:=TagParser} ;
@@ -1941,15 +1954,19 @@ if [ "${versionTP:=0.0.2}" == "0.0.2" ] ; then
   } 
   
   local StrSwitchMessages="\n${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
-  local StrNameHelper="Tag Parser\t Ability To parse tagged Information from known variable name.";
-  local StrSynopsis="This is a simple application to provide to function conversion of String of text with Tag ( noted __TAG__ by default ). ";
-  local StrSummary="Providing a Text transformation from provided varaible name inside  parameter. Content expect to exist inside a function, this is a provided evaluation of a loop transformaing an Entry variable name from tag supplied. Noted the evaluation brace is required, a.k.a \$( TP...=... eval TagParser ) to add the code directly inside your function. The mechanism allow uses of definied array of desired scope type it is not desctructive for array and does not give the destruct code for Variable name such Array inside Prefixed-Variable TPArrayName."
-  local StrDescription="\nParser notice\n\n  TPListTag\tSTRING Depending of the Prefixed Variable TPIsMatchRtoL it taking form VARIABLE:__TAG__ and are comma separated value\n  TPArrayName\tSTRING Falcutative depending the number of reccurrence of the Parser not executed and may interfer if the Parser Code is mangled and if extended Choice are affected to erase the unset at the end. Sometimes the array name can already be in uses and may affect your operation.\n\n  TPIterNameVar\tSTRING Falcutative, change the String-Iterated item looped inside the Array.\n  TPVarNameParsed\tSTRING Is the entry varaible holding the CODE/Template with __TAG__ to be parsed. We advise using a copy of this Variable because it re-write the content of it.\n  TPScopeVar\tSTRING and can be single-quoted STRING, Inside function 'local' is important or your function will use external variable. making it public or external use declare instead.\n\n  TPLeftStrPtrn\tSTRING Regular expression from Variable substitution algorithm, it remove the Left Side to kept the right side Be careful with this.\n  TPRightStrPtrn\tSTRING Regular expression from Variable substitution algorithm suppress the __TAG__ form to keep the variable name usually, becarefull uses ${VAR/#PTRN/'SEP'} and ${VAR/%'SEP'PTRN} method see in Bash document.\n\nBoolean variable notice:\n\n  TPIsMatchRtoL\t\tSet To True/False Invert Composition of tag in your design, Set to TRUE Variable in TPListTag required to be composed in form VARIABLE:__TAG__, if FALSE in form __TAG__:Variable\n\n  TPDisplayDebug\t\tSet To True/False Display Extra Debug during action, all outputed to /dev/stderr to not confuse the parser.\n  TPDisplayEvalOnly\tSet To True/False Allow displaying the Injected code in eval function using the Tag Parser.\n  TPDisplayParserNotice\tSet To True/False For function equiped of a Verbosis see fnct_debian_list for Verbosis example and will display by Tag pair the result the exanche and actual qiery it should happen after the Parsing.\n" ; 
+  local StrNameHelper="${__call_locality[1]}\n\t Ability To parse tagged Information from known variable name.";
+  local StrSynopsis="\n\tThis is a simple application to provide to function conversion\n\tof String of text with Tag ( noted __TAG__ by default ). ";
+  local StrSummary="\n\tProviding a Text transformation from provided varaible name inside\n\tparameter.Content expect to exist inside a function, this  is  a\n\tprovided evaluation of a loop transformaing an Entry variable name\n\tfrom tag supplied. Noted the evaluation brace is required, a.k.a\n\t\$( TP...=... eval TagParser ) to add the code directly inside your\n\tfunction. The mechanism allow uses of definied array of desired\n\tscope type it is not desctructive for array and does not give the\n\tdestruct code for Variable name such Array inside Prefixed-Variable\n\tTPArrayName."
+  local StrDescription="\nParser notice\n\n  TPListTag\tSTRING Depending of the Prefixed Variable TPIsMatchRtoL it\n\t\ttaking form VARIABLE:__TAG__ and are comma separated value\n  TPArrayName\tSTRING Falcutative depending the number of reccurrence of\n\t\tthe Parser not executed and may interfer if the Parser\n\t\tCode is mangled and if extended Choice are affected to erase\n\t\tthe unset at the end. Sometimes the array name can already\n\t\tbe in uses and may affect your operation.\n\n  TPIterNameVar\tSTRING Falcutative, change the String-Iterated item looped\n\t\tinside the Array.\n  TPVarNameParsed\n\t\tSTRING Is the entry varaible holding the CODE/Template with\n\t\t__TAG__ to be parsed. We advise using a copy of this Variable\n\t\tbecause it re-write the content of it.\n  TPScopeVar\tSTRING and can be single-quoted STRING, Inside function 'local'\n\t\tis important or your function will use external variable.\n\t\tmaking it public or external use declare instead.\n\n  TPLeftStrPtrn\tSTRING Regular expression from Variable substitution algorithm,\n\t\tit remove the Left Side to kept the right side Be careful with\n\t\tthis.\n  TPRightStrPtrn\tSTRING Regular expression from Variable substitution algorithm\n\t\tsuppress the __TAG__ form to keep the variable name usually,\n\t\tbecarefull uses ${VAR/#PTRN/'SEP'} and ${VAR/%'SEP'PTRN} method see in Bash document.\n\nBoolean variable notice:\n\n  TPIsMatchRtoL\tSet To True/False Invert Composition of tag in your design,\n\t\tSet to TRUE Variable in TPListTag required to be composed in\n\t\tform VARIABLE:__TAG__, if FALSE in form __TAG__:Variable\n\n  TPDisplayDebug\n\t\tSet To True/False Display Extra Debug during action, all\n\t\toutputed to /dev/stderr to not confuse the parser.\n  TPDisplayEvalOnly\n\t\tSet To True/False Allow displaying the Injected code in eval\n\t\tfunction using the Tag Parser.\n  TPDisplayParserNotice\n\t\tSet To True/False For function equiped of a Verbosis see\n\t\tfnct_debian_list for Verbosis example and will display by Tag\n\t\tpair the result the exanche and actual qiery it should happen\n\t\tafter the Parsing.\n" ; 
   
   ### End-function block for switches handling. 
   
   if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-    GVRIsName=True GVRIsSynopsis=True GVRIsSummary=True GVRIsDesc=True GetVarReference ${__call_locality[1]} ; 
+    GVRIsName=True         \
+    GVRIsSynopsis=True     \
+    GVRIsSummary=True      \
+    GVRIsDesc=True         \
+    GetVarReference ${__call_locality[1]} ; 
     VerbMsg=${StrSwitchMessages} \
     VerbExtendedOut=True   \
     VerbDev=/dev/stderr    \
