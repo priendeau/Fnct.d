@@ -2209,6 +2209,24 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
   local StrVarBoolTest=${BVTBoolVarName:=IsVarShould} ; 
   local StrDefaultBoolTest=${BVTBoolCase:=False} ;
   
+  ### BVTQuoteIntLeftMember
+  ### 
+  ### This is forcing a dollar quoting of a value of BVTBoolVarName
+  ### a.k.a the Left member in a if-statement. where usually from pattern
+  ### inside String Type (with BVTIfType=String, by default) we have
+  ### [ \"__VAR_BOOL_TEST__\" __OP__ \"__DEFAULT_BOOL_TEST__\" ]
+  ### Being guillemets quoted '"', but inside BVTIfType=Int, the 
+  ### default Test statement is :
+  ### [ __VAR_BOOL_TEST__ __OP__ __DEFAULT_BOOL_TEST__ ]
+  ### Where __VAR_BOOL_TEST__ may be specified by 
+  ### BVTBoolVarName=Variable
+  ### or StrVarBoolTest by a value or a variable. 
+  ### BVTQuoteIntLeftMember quote the Variable to ${Variable}
+  ###
+  ### BVTQuoteIntLeftMember works only with BVTIfType="Int" .
+  ###
+  local IsQuotedIntLeftMember=${BVTQuoteIntLeftMember:=False} ; 
+
   ### BVTBoolAssertion
   ### In case where BVTIsPreambule==True it's the holder of any information for assignation 
   ### of BVTVarName( StrVarNamed ) to receive the information, so at the end of the BoolVarTest
@@ -2234,14 +2252,55 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
   local IsShowDebug=${BVTDisplayShowDebug:=False} ;
   local IsDisplayIfStatement=${BVTDisplayIf:=False} ; 
   local -a ArrayVarTestType=( "String" "File" "Test" "Int" "Shell" ) ;
-  local StrVarListTransfert="StrNewVarNamed,BoolEndLifeCycleInAssert,StrTestTemplate,IsDisplayIfStatement,IntDefautlType,StrKeyTestType,StrVTRAsrtVTFnct,StrVTRAsrtVTReg,StrVTRAsrtVar,StrVTRAsrtTpl,IsTypeAssert,StrVTRPrbVTFnct,StrVTRPrbVTReg,StrVTRPrbVar,StrVTRPrbTpl,IsTypePreamb,StrDefaultEndTest,IsPreambule,StrIfStringOp,StrIfTestType,StrScopeType,StrNotAsserted,StrDefaultBoolTest,StrVarBoolTest,IsPreambulePolNtRespt,StrVarNamedHold,StrVarNamed,StrParentApps" ; 
+  local StrVarListTransfert="IsQuotedIntLeftMember,StrNewVarNamed,BoolEndLifeCycleInAssert,StrTestTemplate,IsDisplayIfStatement,IntDefautlType,StrKeyTestType,StrVTRAsrtVTFnct,StrVTRAsrtVTReg,StrVTRAsrtVar,StrVTRAsrtTpl,IsTypeAssert,StrVTRPrbVTFnct,StrVTRPrbVTReg,StrVTRPrbVar,StrVTRPrbTpl,IsTypePreamb,StrDefaultEndTest,IsPreambule,StrIfStringOp,StrIfTestType,StrScopeType,StrNotAsserted,StrDefaultBoolTest,StrVarBoolTest,IsPreambulePolNtRespt,StrVarNamedHold,StrVarNamed,StrParentApps" ; 
   
   local StrTestTemplate=""" __PREAMBULE__ \
  __IF_PATTERN__  \
  __ASSERTION__ \
  __END_TEST__ __END_MARK__ """ ;
 
-   
+  ### Comment of ArrayIfPattern[0]
+  ###  
+  ### BVTIfType="String", will pop ArrayIfPattern[0], inside 
+  ### ArrayIfPattern, Loop. Uses of BVTIfOp is by default '=='
+  
+  ### Comment of ArrayIfPattern[1]
+  ###  
+  ### BVTIfType="File", will pop ArrayIfPattern[1], inside 
+  ### ArrayIfPattern, Loop. Where tag __OP__ can be replaced by
+  ### BVTIfOp=-f (testing file), BVTIfOp=-L (testing link )
+  
+  ### Comment of ArrayIfPattern[2]
+  ###  
+  ### BVTIfType="Test", will pop ArrayIfPattern[2], inside 
+  ### ArrayIfPattern, Loop. Where tag __OP__ can be replaced by
+  ### BVTIfOp=-f (testing file), BVTIfOp=-L (testing link ) 
+  ### Actuall does not supply the rest of the statement which 
+  ### is experimental actually.
+  
+  ### Comment of ArrayIfPattern[3]
+  ###  
+  ### BVTIfType="Int", will pop ArrayIfPattern[3], inside 
+  ### ArrayIfPattern, Loop. Where tag __OP__ can be replaced by
+  ### BVTIfOp=-eq or '-lt', or '-gt' . Tag __DEFAULT_BOOL_TEST__
+  ### is not quoted and may suggest inserting Direct value. 
+  ### Tag __VAR_BOOL_TEST__ is not quoted and Suggest to quote it
+  ### by default unless execption is granted, like BVQuoteIntLeftMember.
+  ### dollar quoted value from prompt insertion. Suggested
+  
+  ### Comment of ArrayIfPattern[4]
+  ###  
+  ### BVTIfType="Shell", will pop ArrayIfPattern[4], inside 
+  ### ArrayIfPattern, Loop. Where there is no __VAR_BOOL_TEST__
+  ### and result some uniquely from $? or execute and returned
+  ### status. 
+  
+  ### In Future version of BoolVarTest, It can suspect moving  in 
+  ### ArrayIfPattern into associating array which cut in loop processing
+  ### and associative array have been strengthen by uses of LoopShellScript
+  ### and MakeHuffmanPair application which deal with extra factor like 
+  ### execution of time and multiplicity of test. 
+  ###
   ArrayIfPattern[0]="""__START_TEST__ [ \"__VAR_BOOL_TEST__\" __OP__ \"__DEFAULT_BOOL_TEST__\" ] """ ;
   ArrayIfPattern[1]="""__START_TEST__ [ \"__OP__ \"__DEFAULT_BOOL_TEST__\" ] """ ;
   ArrayIfPattern[2]="""__START_TEST__ \$( test \"__OP__ \"__DEFAULT_BOOL_TEST__\" ) """ ;
@@ -2326,7 +2385,23 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
    #done 
    ### replaced: StrIfPattern=${StrIfPattern//__VAR_BOOL_TEST__/$( ${StrParentApps} --get StrVarBoolTest )} ;
    ### This test is moved out from For-Loop, causing premature-evaluation. 
-   StrIfPattern=${StrIfPattern//__VAR_BOOL_TEST__/${StrVarBoolTest}} ; 
+   
+   ###
+   ### Section, Parsing the __VAR_BOOL_TEST__
+   ###
+   
+   ### In case IsQuotedIntLeftMember=True, and BVTIfType=Int
+   ### or __VAR_BOOL_TEST__ can be passed as value of the variable in
+   ### a left member test. 
+   if [ "${StrIfTestType:=String}" == "Int" ] ; then 
+    if [ "${IsQuotedIntLeftMember:=False}" == "True" ] ; then 
+     StrIfPattern=${StrIfPattern//__VAR_BOOL_TEST__/\${${StrVarBoolTest}'}'} ;
+    else
+     StrIfPattern=${StrIfPattern//__VAR_BOOL_TEST__/${StrVarBoolTest}} ;
+    fi
+   else 
+    StrIfPattern=${StrIfPattern//__VAR_BOOL_TEST__/${StrVarBoolTest}} ; 
+   fi 
    ### replace: StrIfPattern=${StrIfPattern//__DEFAULT_BOOL_TEST__/$( ${StrParentApps} --get StrDefaultBoolTest )} ;
    StrIfPattern=${StrIfPattern//__DEFAULT_BOOL_TEST__/${StrDefaultBoolTest}} ;
    ### replaced: StrIfPattern=${StrIfPattern//__VAR__NAMED__/$( ${StrParentApps} --get StrVarNamed )} ;
@@ -2350,9 +2425,9 @@ if [ "${versionBVT:=0.0.2}" == "0.0.2" ] ; then
       ### While the rest remain under __IF_STATEMENT for if-elif, and 2 condidition manage
       ### their own assertion with semi-colon end-statement... 
       case ${IntDefautlType:=0} in 
-       1|2|3|4) StrLcTTpl=${StrLcTTpl//__FNCT_ASRT__/${StrVTRAsrtVTFnct} ${StrDefaultEndTest}} ;; 
-       0|6) StrLcTTpl=${StrLcTTpl//__FNCT_ASRT__/${StrVTRAsrtVTFnct}} ;;
-       5) StrLcTTpl=${StrLcTTpl//__FNCT_ASRT__/${StrVTRAsrtVTFnct}} ;;
+       1 | 2 | 3 | 4 ) StrLcTTpl=${StrLcTTpl//__FNCT_ASRT__/${StrVTRAsrtVTFnct} ${StrDefaultEndTest}} ;; 
+       0 | 6 ) StrLcTTpl=${StrLcTTpl//__FNCT_ASRT__/${StrVTRAsrtVTFnct}} ;;
+       5 ) StrLcTTpl=${StrLcTTpl//__FNCT_ASRT__/${StrVTRAsrtVTFnct}} ;;
       esac ; 
       #if [ ${IntDefautlType:=0} -eq 3 ] ; then 
       # StrLcTTpl=${StrLcTTpl//__FNCT_ASRT__/${StrVTRAsrtVTFnct} ${StrDefaultEndTest}} ;

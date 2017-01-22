@@ -135,6 +135,11 @@ if [ "${versionGCBE:=0.0.1}" == "0.0.1" ] ; then
   local -a ArrayColumn ; 
   ArrayColumn[0]="Active Branch" ; 
   ArrayColumn[1]="Branch name" ; 
+  
+  local -a ArrayMsg ;
+  ArrayMsg[0]="Entry in function" ;
+  ArrayMsg[1]="Zenity Windows manager receive a cancel action by the user."
+  ArrayMsg[2]="Application git have created an exception, ensure you are inside a git repository." ; 
 
   local StrVarList="StrZenityTpl,StrFilterApps,StrZenityApps,StrGitBranchQuery,StrGitApps,StrTitle,StrText,StrFontSize,StrFontFamily,StrSpanText,IntHeight,IntWidth,StrDefaultOpt,BoolDisplayRegExpOp,BoolForceCheckout,BoolDisplayZenityCall,BoolDisplayCheckOut" ; 
   
@@ -200,42 +205,34 @@ if [ "${versionGCBE:=0.0.1}" == "0.0.1" ] ; then
    fi 
    
    local StrFilterApps=${FSFilterApps:=/bin/sed} ; 
-   local StrFilterAppsTpl=${FSFilterAppsTpl:=__APPS__ __OPT__ __REGEXP__} ; 
+   local StrFilterAppsTpl=${FSFilterAppsTpl:=__APPS__ __OPT__ __REGEXP__ | __FILTER__ __FILTER_OPT__ } ; 
    local StrFilterOpt=${FSFilterOpt:=-s} ; 
    local StrFilterReg=${FSFilterReg:="""'s/^[\t\ ]*\*/TRUE/g;s/^[\t\ ]\**/FALSE/g'"""} ;
+   local StrPostFilterApps=${FSPostFilterApps:=/usr/bin/tr};
+   local StrPostFilterOpt=${FSPostFilterOpt:=\'[:cntrl:]\' \' \'};
    local BoolDisplayDebug=${FSDisplayDebug:=False} ; 
    
    StrFilterAppsTpl=${StrFilterAppsTpl//__APPS__/${StrFilterApps}} ; 
    StrFilterAppsTpl=${StrFilterAppsTpl//__OPT__/${StrFilterOpt}} ; 
    StrFilterAppsTpl=${StrFilterAppsTpl//__REGEXP__/${StrFilterReg}} ; 
+   StrFilterAppsTpl=${StrFilterAppsTpl//__FILTER__/${StrPostFilterApps}} ; 
+   StrFilterAppsTpl=${StrFilterAppsTpl//__FILTER_OPT__/${StrPostFilterOpt}} ; 
    
    VerbMsg="${StrFilterAppsTpl}" VerbHeader="${__call_locality[1]}-CMD" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
    eval ${StrFilterAppsTpl} ; 
   }
   
-  function __main_StartServices()
+  function ZenityWindowHandler()
   {
    if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
     local -a ArrayArg=( $* ) ;
-    local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+    local -a __call_locality=( ZWH ZenityWindowHandler ${StrParentApps} ) ;
     local Arg0="${ArrayArg[0]}";  
    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
-    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
+    eval $( eval CAFunctName=ZenityWindowHandler CAIsAddParent=True __Call_Argument ) ; 
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ; 
+    eval $( eval CAFunctName=ZenityWindowHandler CAIsAddParent=True CallArgument ) ; 
    fi 
-  
-   local StrGetBranch=$( ${StrGitBranchQuery//__APPS__/${StrGitApps}} ) ;
-   ### This is transforming the star inside the text showed from 'git branch -l' 
-   ### into TRUE, and rest of the sed query does apply a FALSE on begin of line
-   ### where there is no star. Especially particular the second filter inside the 
-   ### sed does require to filter for [\t\ ] (tab and space) and '*' even it there
-   ### is already a transformation of the star into 'TRUE'.
-   local StrBranchToZenityField=$( echo "${StrGetBranch}" | \
-     FSFilterApps=${StrFilterApps}         \
-     FSDisplayDebug=${BoolDisplayRegExpOp} \
-     FilterSed | tr '[:cntrl:]' ' ' ) ; 
-
    VerbMsg="${StrBranchToZenityField}" VerbHeader="${__call_locality[1]}-ZENITY-FIELD" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayZenityCall} VerbDev=/dev/stderr  Verbosis ; 
         
    
@@ -258,15 +255,98 @@ if [ "${versionGCBE:=0.0.1}" == "0.0.1" ] ; then
    StrZenityParsing=${StrZenityParsing//__COLS1__/${StrCol1}} ;
    
    
+   local StrBVTZenity="__IF__ __ELSE__" ;
+   local StrMsg=$( ${StrParentApps} --get ArrayMsg[1] ) ; 
+   local StrIfTpl="""GCBAGitApps=\${StrGitApps} GCBABranchName=\${StrGetNewBranchName} GCBAIsForcedCheckout=\${BoolForceCheckout} GCBADisplayCheckOut=\${BoolDisplayCheckOut} __FNCT_ASRT__""" ; 
+   local StrElseTpl="""VerbMsg=\"__MSG__\" VerbHeader=\"__HEADER__\" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr __FNCT_ASRT__""" ; 
+   StrElseTpl=${StrElseTpl//__MSG__/$( ${StrParentApps} --get ArrayMsg[1] )} ; 
+   StrElseTpl=${StrElseTpl//__HEADER__/${__call_locality[1]}-ERROR} ; 
+   
+   ### This BoolVarTest use the BVTIfType="Int" property and the newly added 
+   ### BVTQuoteIntLeftMember=True that force puting 'Variable' into '${Variable}'
+   ### make easier for Integer test we don't have to wrap BVTVarName with quote
+   ### or dollar. Also making possible to apply a default value more easy:
+   ### BVTVarName="IntResultZenity:=0" will be quoted inside the if-statement into
+   ### [${IntResultZenity:=0} __OP__ __DEFAULT_BOOL_TEST__ ].  
+   ### BVTQuoteIntLeftMember=True, work only for BVTIfType="Int", it's innefective 
+   ### for String type .
+   ### Here description of 2-BoolVarTest 1, if statement, 2-else statement
+   ### both are parsed inside StrBVTZenity and can be evaluated later like inside
+   ### StrGetNewBranchName  . 
+   local StrBVTZenityIf=$( BVTBoolVarName=IntResultZenity \
+                           BVTIdType=4 \
+                           BVTIfType="Int" \
+                           BVTQuoteIntLeftMember=True \
+                           BVTVarName=IntResultZenity \
+                           BVTVarHold=\$? \
+                           BVTIfOp=-eq \
+                           BVTBoolCase=0 \
+                           BVTIsValueToVarAssert=True \
+                           BVTVTFnctA=GitCheckoutBranchAction \
+                           BVTVTVTPLA="${StrIfTpl}" \
+                           BVTDisplayShowDebug=False \
+                           BoolVarTest ) ; 
+   local StrBVTZenityElse=$( BVTIdType=5 \
+                             BVTIsPreambule=False \
+                             BVTIsValueToVarAssert=True \
+                             BVTVTFnctA=Verbosis \
+                             BVTVTVTPLA=${StrElseTpl} \
+                             BVTDisplayShowDebug=False \
+                             BoolVarTest ) ; 
+   
+   
+   StrBVTZenity=${StrBVTZenity//__IF__/${StrBVTZenityIf}} ;
+   StrBVTZenity=${StrBVTZenity//__ELSE__/${StrBVTZenityElse}} ;
+   VerbMsg="${StrBVTZenity}" VerbHeader="${__call_locality[1]}-CMD" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayZenityCall} VerbDev=/dev/stderr  Verbosis ; 
    VerbMsg="${StrZenityParsing} ${StrBranchToZenityField}" VerbHeader="${__call_locality[1]}-CMD" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayZenityCall} VerbDev=/dev/stderr  Verbosis ; 
-   local StrGetNewBranchName=$( eval ${StrZenityParsing} ${StrBranchToZenityField} ) ;  
+   
+   ### It's possible, to launch other evaluation insde an executive brace and 
+   ### as long the output is going inside /dev/sdterr, it will not interfere
+   ### with the reception of the informtaion from a function. 
+   local StrGetNewBranchName=$( eval ${StrZenityParsing} ${StrBranchToZenityField} ; eval "${StrBVTZenity}" ) ;  
+   #eval ${StrBVTZenity} ; 
+
+
   
-   GCBAGitApps=${StrGitApps}                  \
-   GCBABranchName=${StrGetNewBranchName}      \
-   GCBAIsForcedCheckout=${BoolForceCheckout}  \
-   GCBADisplayCheckOut=${BoolDisplayCheckOut} \
-   GitCheckoutBranchAction  ; 
- 
+   #GCBAGitApps=${StrGitApps} GCBABranchName=${StrGetNewBranchName} GCBAIsForcedCheckout=${BoolForceCheckout} GCBADisplayCheckOut=${BoolDisplayCheckOut} GitCheckoutBranchAction  ; 
+   
+  }
+  
+  function __main_StartServices()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}";  
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ; 
+   fi 
+  
+   ### This section is Preparing the If-Else statement where it sould be used right
+   ### after execution of StrBranchToZenityField
+   local StrVarListZWH="BoolDisplayCheckOut,BoolDisplayZenityCall,BoolForceCheckout,IntHeight,IntWidth,StrBranchToZenityField,StrCol0,StrCol1,StrDefaultOpt,StrFontFamily,StrFontSize,StrGetNewBranchName,StrGitApps,StrParentApps,StrSpanText,StrSpanTextParsing,StrText,StrTitle,StrZenityApps,StrZenityParsing,StrZenityTpl" ;
+   
+
+   ### This is transforming the star inside the text showed from 'git branch -l' 
+   ### into TRUE, and rest of the sed query does apply a FALSE on begin of line
+   ### where there is no star. Especially particular the second filter inside the 
+   ### sed does require to filter for [\t\ ] (tab and space) and '*' even it there
+   ### is already a transformation of the star into 'TRUE'.
+   local IntResultZenity ; 
+   local StrBranchToZenityField=$( ${StrGitBranchQuery//__APPS__/${StrGitApps}} | FSFilterApps=${StrFilterApps} FSDisplayDebug=${BoolDisplayRegExpOp} FilterSed ) ;
+   ### While StrBranchToZenityField is processing, it loosing the return-statement of 
+   ### git branch -l and should be launched from a function where the code
+   ### can isolate the return statement and filter error 128 from git branch -l 
+   ### to define being outside of any repository and can't get a branch name at all.
+   $( VTVIsArrayStyleInsert=True  \
+       VTVValueEntry=${StrVarListZWH} \
+       VTVIsQuotedValue=True       \
+       VTVIsValueReAssign=True     \
+       VTVIsValueToConvert=False   \
+       ValueToVariable ) ZenityWindowHandler ; 
+    
  }
   
   local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
