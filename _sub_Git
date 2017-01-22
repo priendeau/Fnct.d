@@ -257,7 +257,7 @@ if [ "${versionGCBE:=0.0.1}" == "0.0.1" ] ; then
    
    local StrBVTZenity="__IF__ __ELSE__" ;
    local StrMsg=$( ${StrParentApps} --get ArrayMsg[1] ) ; 
-   local StrIfTpl="""GCBAGitApps=\${StrGitApps} GCBABranchName=\${StrGetNewBranchName} GCBAIsForcedCheckout=\${BoolForceCheckout} GCBADisplayCheckOut=\${BoolDisplayCheckOut} __FNCT_ASRT__""" ; 
+   local StrIfTpl="""GCBAGitApps=\${StrGitApps} GCBABranchName=__BRANCH__ GCBAIsForcedCheckout=\${BoolForceCheckout} GCBADisplayCheckOut=\${BoolDisplayCheckOut} __FNCT_ASRT__""" ; 
    local StrElseTpl="""VerbMsg=\"__MSG__\" VerbHeader=\"__HEADER__\" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr __FNCT_ASRT__""" ; 
    StrElseTpl=${StrElseTpl//__MSG__/$( ${StrParentApps} --get ArrayMsg[1] )} ; 
    StrElseTpl=${StrElseTpl//__HEADER__/${__call_locality[1]}-ERROR} ; 
@@ -273,12 +273,12 @@ if [ "${versionGCBE:=0.0.1}" == "0.0.1" ] ; then
    ### Here description of 2-BoolVarTest 1, if statement, 2-else statement
    ### both are parsed inside StrBVTZenity and can be evaluated later like inside
    ### StrGetNewBranchName  . 
-   local StrBVTZenityIf=$( BVTBoolVarName=IntResultZenity \
+   local StrBVTZenityIf=$( BVTBoolVarName=IntResultZenity:=0 \
                            BVTIdType=4 \
                            BVTIfType="Int" \
                            BVTQuoteIntLeftMember=True \
                            BVTVarName=IntResultZenity \
-                           BVTVarHold=\$? \
+                           BVTVarHold="\${IntReturn}" \
                            BVTIfOp=-eq \
                            BVTBoolCase=0 \
                            BVTIsValueToVarAssert=True \
@@ -303,7 +303,16 @@ if [ "${versionGCBE:=0.0.1}" == "0.0.1" ] ; then
    ### It's possible, to launch other evaluation insde an executive brace and 
    ### as long the output is going inside /dev/sdterr, it will not interfere
    ### with the reception of the informtaion from a function. 
-   local StrGetNewBranchName=$( eval ${StrZenityParsing} ${StrBranchToZenityField} ; eval "${StrBVTZenity}" ) ;  
+   local IntReturn ;
+   
+   eval ${StrZenityParsing} ${StrBranchToZenityField} > .ZenityWindowHandler ;
+   IntReturn=$? ;
+   VerbMsg="Status returned ${IntReturn}" VerbHeader="${__call_locality[1]}-ERROR-LEVEL" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayZenityCall} VerbDev=/dev/stderr  Verbosis ; 
+   local StrGetNewBranchName=$( cat .ZenityWindowHandler )  ; 
+   eval "${StrBVTZenity//__BRANCH__/${StrGetNewBranchName}}" ;
+   rm -f .ZenityWindowHandler ; 
+   
+   
    #eval ${StrBVTZenity} ; 
 
 
