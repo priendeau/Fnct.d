@@ -410,14 +410,14 @@ versionMC=0.0.2   \
 versionTP=0.0.2   \
 versionGPI=0.0.1  \
 versionCA=0.0.2  	\
-LLDisplayProg=$(2) LLStatusDev=0 . $(FNCTLIBSTARTPATH)/fnct_lib  ;
+LLDisplayProg=$(2) LLStatusDev=0 . $(FNCTLIBSTARTPATH)/fnct_lib 
 endef
 
 define UpdateBashInit
-cp $(1)/$(BASH_INIT) $(USER)/$(BASH_INIT)-save ;\
+cp $(1)/$(BASH_INIT) $(USER)/$(BASH_INIT)-save ; \
 cat $(UPDATE_INIT_BASH) >> $(USER)/$(BASH_INIT) ; \
-$(DIFF) $(DIFF_FLAGS)$(USER)/$(BASH_INIT) $(USER)/$(BASH_INIT)-save > $(2) ;\
-endif
+$(DIFF) $(DIFF_FLAGS)$(USER)/$(BASH_INIT) $(USER)/$(BASH_INIT)-save > $(2) ;
+endef
 
 define RestoreBashInit
 $(PATCH) $(PATCH_FLAGS) .bashrc $(1) 
@@ -450,7 +450,8 @@ endef
 ### but 3 target to maintain an helper is just enought. 
 ### An theses target are wll expanded to be buffered with option like 
 ### pass the decoding to an application like Zenity. 
-helper.encode:
+
+helper.encode: 
 	@$(subst __FILE__,$@,$(subst __SRC__,$(subst .encode,.txt,$@),$(BASE64_ENCODER)))
 
 helper.decode: helper.encode
@@ -485,7 +486,7 @@ clean:
 	@$(RM) *.gdb 
 	@for StrObjects in $(objects) ; do $(RM) $(OBJ_PATH)/$$StrObjects ; done 
 	@if [ "$(ERASE_BIN)" == "True" ] ; then for StrCompiled in $(compiled) ; do $(RM) $(BIN_PATH)/$$StrCompiled ; done ; fi 
-	@$(foreach StrFile,helper.txt helper.decode,$(call TEST_FILE_ERASE,$(StrFile))) 
+	@$(foreach StrFile,helper.decode,$(call TEST_FILE_ERASE,$(StrFile))) 
 
 none:
 	@$(ECHO) did not specify a goal.
