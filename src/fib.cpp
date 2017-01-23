@@ -29,7 +29,20 @@ long f(int n)
 // Function f_print prints out n'th Fibonacci number
 void fib_print(int n) 
 {
- cout << n << "th Fibonacci number is " << f(n) << '\n';
+	if ( getEnvVar("fReadOnlyNumber") == "True" ) 
+	{
+		cout << f(n) << '\n' ; 
+	}
+	else
+	{
+   cout << n << "th Fibonacci number is " << f(n) << '\n';
+  }
+}
+
+string getEnvVar( std::string const & key )
+{
+    char * val = getenv( key.c_str() );
+    return val == NULL ? std::string("") : std::string(val);
 }
 // entry point:
 // convert the first argument to a number and calls fib_print
@@ -42,7 +55,8 @@ int main(int argc, char** argv)
   fib_print(stoi(args.at(1)));
  } catch ( exception& ) 
    {
-     cout << "Usage: " << args[0] << " <n>\n";
+     cout << "Application to Generate Fibonnacci number\n\nUsage: \n\t" << args[0] << " <n>\n\n\tDisplay:\n\t<N>th Fibonacci number is <n>\n";
+     cout << "\n\tfReadOnlyNumber=True " << args[0] << " <n>\n\n\tDisplay:\n\t<n>\n" ; 
    }
 }
 
