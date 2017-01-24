@@ -12,8 +12,18 @@ if [ "${versionGFL:=0.0.1}" == "0.0.0" ] ; then
   local -a __call_locality=( GFL GetFibLevel ) ;
   local Arg0=${ArrayArg[0]} ;   
   local StrApps=${GFApps:=/home/maxiste/bin/src/bin/fib} ; 
+  local StrAppsOpt=${GFLAppsOpt:='fReadOnlyNumber=True'} ; 
   local StrFilterApps=${GFFilterApps:=/usr/bin/gawk} ;
-  ${StrApps} ${Arg0} | ${StrFilterApps} -F ' ' 'BEGIN{}{printf("%s\n",$(NF))}END{}' ; 
+  local BoolDisplayCmd=${GFLDisplayCmd:=False} ; 
+  
+  if [ "${StrAppsOpt}" == "" ] ; then 
+    StrCmd="""${StrApps} ${IntFibLevel} | ${StrFilterApps} -F ' ' 'BEGIN{}{printf(\"%s\n\",\$(NF))}END{}'""" ; 
+  else
+    StrCmd="""${StrAppsOpt} ${StrApps} ${IntFibLevel} """;
+  fi
+  if [ "${BoolDisplayCmd:=False}" == "True" ] ; then 
+   echo -ne "${StrCmd}\n" > /dev/stderr ; 
+  fi
  }
 fi 
 
@@ -82,9 +92,13 @@ if [ "${versionGFL:=0.0.1}" == "0.0.1" ] ; then
   
   local IntFibLevel=${GFLIntLevel:=1} ;
   local StrApps=${GFLApps:=/usr/local/bin/fib} ; 
+  local StrAppsOpt=${GFLAppsOpt:='fReadOnlyNumber=True'} ; 
+  
   local StrFilterApps=${GFLFilterApps:=/usr/bin/gawk} ;
   local BoolDisplayEntry=${GFLDisplayEntry:=False} ; 
-  local StrVarList="IntFibLevel,StrApps,StrFilterApps,BoolDisplayEntry" ; 
+  local BoolDisplayCmd=${GFLDisplayCmd:=False} ; 
+  
+  local StrVarList="IntFibLevel,StrApps,StrFilterApps,BoolDisplayEntry,BoolDisplayCmd" ; 
   local -a ArrayMsg=() ;
   
   function __main_StartServices()
@@ -104,8 +118,15 @@ if [ "${versionGFL:=0.0.1}" == "0.0.1" ] ; then
    StrMsg=${StrMsg//__VAR__/versionGFL} ; 
    StrMsg=${StrMsg//__VER__/${versionGFL}} ; 
    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   local StrCmd ; 
    
-   ${StrApps} ${IntFibLevel} | ${StrFilterApps} -F ' ' 'BEGIN{}{printf("%s\n",$(NF))}END{}' ; 
+   if [ "${StrAppsOpt:=''}" != '' ] ; then 
+    StrCmd="""${StrApps} ${IntFibLevel} | ${StrFilterApps} -F ' ' 'BEGIN{}{printf(\"%s\n\",\$(NF))}END{}'""" ; 
+   else
+    StrCmd="""${StrAppsOpt} ${StrApps} ${IntFibLevel} """;
+   fi
+   VerbMsg="${StrCmd}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayCmd} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   ${StrCmd} ; 
   
   }  
   local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
@@ -210,17 +231,20 @@ if [ "${versionGHFH:=0.0.0}" == "0.0.0" ] ; then
   local IntModSeek=${GHFHIntNumber:=20} ; 
   local BoolDisplayDebug=${GHFHIsDisplayDebug:=False} ; 
   local BoolDisplayEntry=${GHFHIsDisplayEntry:=False} ; 
+  local BoolDisplayCmd=${GHFHIsDisplayCmd:=False} ; 
+  
   local -a ArrayMsg ;
   
   ArrayMsg[0]="Entry in function, __VAR__:__VER__" ;
   ArrayMsg[1]="Level fib:__INT__, Fibonacci:__FIB__, targeted modulo:__MOD__, previous remain:__PREMAIN__ remain:__REMAIN__" ;
   ArrayMsg[2]="Modulus __MOD__\n\thaving lowest Fibonacci level __LEVEL__\n\tnumber __INT__\n\tremain __REMAIN__\n" ;
   ArrayMsg[3]="__INTA__,__INTB__" ; 
-  ArrayMsg[4]="Status of \n\tBoolDisplayDebug: __DisplayDebug__\n\tBoolDisplayEntry: __DisplayEntry__" ; 
+  ArrayMsg[4]="Status of \n\tBoolDisplayDebug: __DisplayDebug__\n\tBoolDisplayEntry: __DisplayEntry__\n\tBoolDisplayCmd: __DisplayCmd__\n" ; 
 
   StrMsg=${ArrayMsg[4]} ; 
   StrMsg=${StrMsg//__DisplayDebug__/${BoolDisplayDebug}} ; 
   StrMsg=${StrMsg//__DisplayEntry__/${BoolDisplayEntry}} ; 
+  StrMsg=${StrMsg//__DisplayCmd__/${BoolDisplayCmd}} ; 
   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
   
   #local IntModSeek=${Arg0} ; 
@@ -240,7 +264,7 @@ if [ "${versionGHFH:=0.0.0}" == "0.0.0" ] ; then
   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
   #echo -ne "${StrMsg}\n" > /dev/stderr ; 
   while [ "${BoolEndTest}" == "False" ] ; do  
-   IntResFib=$( GFLDisplayEntry=${BoolDisplayEntry} GFLIntLevel=${IntX} GetFibLevel ) ; 
+   IntResFib=$( GFLDisplayCmd=${BoolDisplayCmd} GFLDisplayEntry=${BoolDisplayEntry} GFLIntLevel=${IntX} GetFibLevel ) ; 
    IntRemain=$(( ${IntResFib} - ${IntModSeek} )); 
    StrMsg=${ArrayMsg[1]} ; 
    StrMsg=${StrMsg//__INT__/${IntX}} ; 
@@ -356,6 +380,7 @@ if [ "${versionGHFH:=0.0.0}" == "0.0.1" ] ; then
   local IntModSeek=${GHFHIntNumber:=20} ; 
   local BoolDisplayDebug=${GHFHIsDisplayDebug:=False} ; 
   local BoolDisplayEntry=${GHFHIsDisplayEntry:=False} ; 
+  local BoolDisplayCmd=${GHFHIsDisplayCmd:=False} ; 
   local StrVarList="IntModSeek,BoolDisplayDebug,BoolDisplayEntry"
   
   local -a ArrayMsg=() ;
@@ -389,7 +414,7 @@ if [ "${versionGHFH:=0.0.0}" == "0.0.1" ] ; then
    local IntDisplayLevel ;
    local IntDisplayRemain ;
    while [ "${BoolEndTest}" == "False" ] ; do  
-    IntResFib=$( GFLDisplayEntry=${BoolDisplayEntry} GFLIntLevel=${IntX} GetFibLevel ) ; 
+    IntResFib=$( GFLDisplayCmd=${BoolDisplayCmd} GFLDisplayEntry=${BoolDisplayEntry} GFLIntLevel=${IntX} GetFibLevel ) ; 
     IntRemain=$(( ${IntResFib} - ${IntModSeek} )); 
     #echo -ne "Level fib:${IntX}, Fibonacci:${IntResFib}, targeted modulo:${IntModSeek}, previous remain:${IntOldRemain} remain:${IntRemain}\n" ; 
     if [ ${IntRemain} -eq 0 ] ; then 

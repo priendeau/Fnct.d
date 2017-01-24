@@ -1227,6 +1227,331 @@ if [ "${versionGBLD:=0.0.2}" == "0.0.2" ] ; then
    fi
   }
   
+
+  ### Part of MRU Engine, MRU Stand for 'Most Recent Unit', akin to
+  ### acheive example of function storing theirs answer from based 
+  ### Prefixed-variable configuration, somes application producing 
+  ### finite answer to deserve having the same result one and over.
+  ### MRU will accept to find the stored answer from Configured 
+  ### Call_Argument call.  Skip the function processing
+  ### If an identity was already find and does answer to same strict
+  ### Prefixed-Variable analyse.
+  ### While Call_Argument may take the control over the 
+  ###
+  ### By definition :
+  ### {PrefixedVariableSuffix}FuncStart, Generating during Call_Argument
+  ### by declaring it by default to __main_StartServices a sub-process
+  ### withing Call_Argument will change it to another function if the 
+  ### Query of Storage of the Prefixed-Variable have found an identity.
+  ### 
+  ### These type of line a Cumuling Prefixed-Parameter of function 
+  ### where They can change and surely grow in size. Application
+  ### FOSME does simply received a generated list of Prefixed-Variable
+  ### where no worry about Exception in packing that having Hard-coded
+  ### and fast method to process the information and Specialized
+  ### method are Packing the CSV with the Group of information. 
+  ###
+  ### Other uses will have to override some condition within this 
+  ### strictly design, Unique-ID based on UUID + SHA1SUM will have to 
+  ### provide or to override to work.
+  ###
+  ### Part of MRU Engine, FOSME, FunctOfStringMechnExtrc stand for
+  ### 'Function Of Sting Mechanical Extraction' 
+  ### - a Function receiving All Pair or Pre-Fixed Variable coming
+  ### from a Call-Argument compatible to marshall Prefixed-variable of a 
+  ### candidate Function Having MRU
+  ###
+  
+  ### Following this example, A Mechanical String is a result of a mechanical
+  ### addition of other String ( commonly happen inside CSV compactation) and 
+  ### does not observe a strict relation of number of Comma separated Value 
+  ### by number of element, to relate a presence of a correct chain of 
+  ### information. This correct chain of information may contains data located
+  ### at the end, having no data at all:
+  ### Example of Mechanical String:
+  ###
+  ### -> astr="StrValue:__TAG__,StrValue2:__TAG2__,IntValue:__INT__," ;
+  ###
+  ### Does contains 2 level of delimited value where CSV=':' is finite
+  ### and are strict relation of data, and CVS=',' are supplyed in excess
+  ### for having not verified the end or having a pattern of insertion 
+  ### that include the CSV=',':
+  ###
+  ### Data='Variable:__TAG__,'
+  ###
+  ### Where Data is the type of information present in a method that 
+  ### rapidly concatenate Value and CSV at once.
+  ###
+  ### This example is able to count The number of CSV and does present
+  ### a mechanical data-compaction and do have the ability to be separated 
+  ### in group of Variable:Value. Regardless uses of pattern matching it 
+  ### use directly the mechanism in bash called :
+  ###
+  ###  - Remove matching prefix pattern   [ Shortest: ${parameter#word} & 
+  ###                                       Longest:  ${parameter##word}
+  ###  - Remove  matching suffix pattern. [ Shortest: ${parameter%word} & 
+  ###                                       Longest:  ${parameter%%word}
+  ###
+  ### Where some parser like TagParser does require a Strict Pattern matching to 
+  ### produce a valid separation of the information. This one is free of Pattern
+  ### matching than CSV itself. Called 'Matching-reduction' by Removing all 
+  ### 'matching prefix pattern' inside the 'matching prefix pattern' , subsituting
+  ###  the present Stem by reducing the size of the String by it's size and 
+  ### re-processing the Matching-reduction.
+  ###
+  ### Apparatus:
+  ###
+  ### astr="StrValue:__TAG__,StrValue2:__TAG2__,IntValue:__INT__," ;  ;  ;      
+  ### IntCsvCount=$( cstr=${astr//,/} ; echo $(( ${#astr} - ${#cstr} )) ) ;
+  ### bstr="" ;
+  ### for (( intx=0 ; intx <= ${IntCsvCount}-1 ; intx++ )) ; do
+  ###   bstr=${astr%*${astr#*,}} ;
+  ###   astr=${astr:${#bstr}:$(( ${#astr} - ${#bstr}))} ;
+  ###   echo -ne "Element: ${bstr}\n" ;
+  ### done
+  ###
+  ### function FunctOfStringMechnExtrc()
+  ### - Function to Mechanically extract Group of Chainned-data and to call a 
+  ### function with this element. String Should be packed with CSV by definition
+  ### of Packing elements in order of :
+  ### 'Data1:Data2,' 
+  ###
+  ### Where :
+  ###  Data1 is a first group of chainned data.
+  ###  Data2 is a second group of chainned data.
+  ###  ':' is the CSV of the binded Data1 and Data2
+  ###  ',' is the unmonitored CSV where it may developt a long chain and 
+  ### not truncating the remainded second level CSV. 
+  ###
+  ### - This function Will pass to a Function The extracted information.
+  ### - This function may refuse to work on packed data with non 
+  ### mechanical-String packing. 
+  ### - This mean it require an Prefixed-variable to enforce the action. 
+  ###  - Enforced action will also alter the mechanical-string. 
+  ###  - Token of identity will be send in required case . 
+  ###  - In case receiving a Mechanical-String with information like
+  ###  Identity token, shall require to enforce the action in identity
+  ###  missmatch. 
+  ###
+  ###
+  ###
+  
+if [ "${versionFOSME:=0.0.1}" == "0.0.1" ] ; then 
+ 
+ eval $( GFCFuncName=FunctOfStringMechnExtrc GlobalFunctionCleaning ) ; 
+ 
+ function FunctOfStringMechnExtrc()
+ {
+  function Verbosis()
+  {
+   #eval $( CAFunctName=Verbosis CAIsAddParent=False __Call_Argument ) ; 
+   local -a ArrayArg=( $* ) ; 
+   local -a __call_locality=( Verb Verbosis )
+   local StrMsg=${VerbMsg:=__TEXT__} ; 
+   local StrDevOut=${VerbDev:=/dev/stderr} ; 
+   local IsVerboseState=${VerbState:=False} ;
+   local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+   local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+   local IsDisplayFormatted=${VerbFormated:=True} ;
+   local IsAppendMode=${VerbAppendDev:=False} ; 
+   if [ "${IsVerboseState:=False}" == "True" ] ; then 
+    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+     if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
+     else  
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+     fi
+    else
+     if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+        echo "${StrMsg}" ;  
+     else
+      if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo "${StrMsg}" >> ${StrDevOut} ;
+      else
+       echo "${StrMsg}" > ${StrDevOut} ;
+      fi
+     fi 
+    fi 
+   fi
+  } 
+  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
+  if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( FOSME FunctOfStringMechnExtrc ) ;
+   local Arg0="${ArrayArg[0]}";  
+   local StrStartMain=${FOSMEFuncStart:=__main_StartServices} ; 
+   local StrParentApps=${__call_locality[1]} ; 
+  elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
+   eval $( eval CAFunctName=FunctOfStringMechnExtrc CAIsAddParent=False __Call_Argument ) ; 
+  elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
+   eval $( eval CAFunctName=FunctOfStringMechnExtrc CAIsAddParent=False CallArgument ) ; 
+  fi  
+  
+  ### 
+  ### By Default
+  ### The configured application is SRU (Search Recent Unit)
+  ### and/or Create Storage Unit ( Prefixed-Variable SRU / CSU ).
+  ### 
+  local BoolDisplayDebug=${FOSMEIsDisplayDebug:=True} ; 
+  local BoolDisplayCmd=${FOSMEIsDisplayDebug:=False} ; 
+  local BoolDisplayEntry=${FOSMEIsDisplayDebug:=False} ; 
+  local BoolProvideToken=${FOSMEProvideToken:=False} ; 
+  local BoolStartUntoken=${FOSMEStartUntoken:=False} ; 
+  local BoolFuncIsVerb=${FOSMEUseVerbosisFunc:=False} ; 
+  local BoolFuncIsPrefix=${FOSMEUsePrefixedValue:=True} ; 
+  local BoolUseVTV=${FOSMEUseVTV:=False} ; 
+  local StrVTVTpl=${FOSMEVTVTPL:='eval __TES__ eval __REGISTRY__ VTVValueEntry=__VAR_ENTRY__ ValueToVariable __TEE__ __FNCT__'}
+  local StrVTVRegistry=${FOSMEVTVRegistry:='VTVIsArrayStyleInsert=True VTVIsQuotedValue=True VTVIsValueReAssign=True VTVIsValueToConvert=False'} ; 
+  local StrInternalVTVReg=${FOSMEInternalVTVReg:='VTVIsArrayStyleInsert=True VTVIsQuotedValue=True VTVIsValueReAssign=True VTVIsValueToConvert=False'} ; 
+  
+  local StrDefaultCSVGroup=${FOSMECsvByPacking:=','} ;
+  local StrDefaultCSVPair=${FOSMECsvByGroup:=':'} ;
+  local StrFuncName=${FOSMEFuncName:=None} ; 
+  local StrStreamInformation=${FOSMEStream:='StrValue:__TAG__,StrValue2:__TAG2__,IntValue:__INT__,'} ;
+  local StrStreamCodec=${FOSMECodec:=text,text} ; 
+  local StrStreamDTD=${FOSMEDtdCodec:=data CSVGROUP data CSVPACKING} ; 
+  local StrTokenID=${FOSMESHAToken:=None} ; 
+  local StrFuncOptPair=${FOSMEFuncParamPair:='CRUPair=__DATA__'} ;
+  local SrtCmdAppTplPrefix=${FOSMEAppTplPrefix:=UUID=__UUID__ __OPTPAIR__=__DATA__ __FNCT__} ; 
+  local StrCmdAppTplOptArg=${FOSMEAppTplOptArg:=UUID=__UUID__ __FNCT__ --__OPTPAIR__=__DATA__} ; 
+  
+  local StrVarList="BoolDisplayDebug,BoolDisplayCmd,BoolDisplayEntry,BoolProvideToken,BoolStartUntoken,BoolFuncIsVerb,BoolFuncIsPrefix,BoolUseVTV,StrVTVTpl,StrVTVRegistry,StrDefaultCSVGroup,StrDefaultCSVPair,StrFuncName,StrStreamInformation,StrStreamCodec,StrStreamDTD,StrTokenID,StrFuncOptPair,SrtCmdAppTplPrefix,StrCmdAppTplOptArg,StrInternalVTVReg" ; 
+
+  local -a ArrayMsg ;
+  ArrayMsg[0]="Entry in function __VAR__,__VER__" ;
+  ArrayMsg[1]="Status of \n\tBoolDisplayDebug: __DisplayDebug__\n\BoolDisplayCmd: __DisplayCmd__\n\BoolDisplayEntry: __DisplayEntry__\n" ; 
+  ArrayMsg[2]="Text Query: __TEXT__" ; 
+  
+  function MatchingReductionFilter()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}";  
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ; 
+   fi   
+   
+   local StrStreamLine=${StrStreamInformation} ;
+   local StrChunk="" ;
+   local StrTplDTD=${StrStreamDTD} ; 
+
+   StrMsg=$( ${StrParentApps} --get ArrayMsg[2] ) ;
+   StrMsg=${StrMsg//__TEXT__/${StrStreamLine}} ; 
+   VerbMsg=${StrMsg} VerbHeader=DEBUG VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis
+
+   ### A copy of the DTD and it require to parse the 1st level of CSV 
+   StrTplDTD="${StrTplDTD//CSVPACKING/${StrDefaultCSVGroup}}" ;
+   StrTplDTD="${StrTplDTD//${StrTplDTD//${StrTplDTD%*data ,}}/\${StrStreamLine#*,\}}" ; 
+   StrTplDTD="${StrTplDTD//astr/CSVGROUP /%}" ;
+   StrTplDTD="\${${StrTplDTD/data /StrStreamLine}}" ; 
+   
+   StrMsg="Chunk defined Algo:[__STR__]" ; 
+   StrMsg=${StrMsg//__STR__/${StrTplDTD}} ;
+   VerbMsg=${StrMsg} VerbHeader=DEBUG VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis
+   
+   # data CSVGROUP data ,
+   # ${astr%*data ,}
+   # data CSVGROUP
+   # ${astr//${astr//${astr%*data ,}}/\${StrStreamInformation#*,\}}
+   # data CSVGROUP ${StrStreamInformation#*,}
+   ### Remove all Packed csv for group packing and substract StreamLine by the substitutitued string length
+   ### where substitutitued string is the Packed csv removed String. 
+   local IntCsvCount=$( StrCh=${StrStreamLine//${${StrDefaultCSVGroup}}/} ; echo $(( ${#StrStreamLine} - ${#StrCh} )) ) ;
+   for (( intx=0 ; intx <= ${IntCsvCount}-1 ; intx++ )) ; do
+     eval "StrChunk=${StrTplDTD}" ; 
+     #StrChunk=${StrStreamInformation%*${StrStreamInformation#*,}} ;
+     
+     StrStreamLine=${StrStreamLine:${#StrChunk}:$(( ${#StrStreamLine} - ${#StrChunk}))} ;
+     StrMsg="Element: __VALUE__" ; 
+     VerbMsg=${StrMsg//__VALUE__/${StrChunk}} VerbHeader=DEBUG VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis
+   done
+   
+  }
+  
+  function __main_StopServices()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}";  
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ; 
+   fi   
+   
+   
+  }
+  
+  function __main_StartServices
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}";  
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ; 
+   fi   
+   StrMsg=$( ${StrParentApps} --get ArrayMsg[1] ) ; 
+   StrMsg=${StrMsg//__DisplayDebug__/${BoolDisplayDebug}} ; 
+   StrMsg=${StrMsg//__DisplayCmd__/${BoolDisplayCmd}} ; 
+   StrMsg=${StrMsg//__DisplayEntry__/${BoolDisplayEntry}} ; 
+   VerbMsg=${StrMsg} VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis
+   
+   $( eval \
+      VTVValueEntry=${StrVarList} \
+      ${StrInternalVTVReg} \
+      ValueToVariable ) MatchingReductionFilter ; 
+  
+  }
+  
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+  local StrNameHelper="${__call_locality[1]}\n\t";
+  local StrSynopsis="\n\t";
+  local StrSummary="\n\t" ; 
+  local StrDescription="\n\t" ;
+
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   GVRIsName=True     \
+   GVRIsSynopsis=True \
+   GVRIsSummary=True  \
+   GVRIsDesc=True     \
+   GVRIOldPrefix=False  GetVarReference ${__call_locality[1]} ;
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;	
+  elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
+   eval $( eval VTVIsArrayStyleInsert=True  \
+             VTVValueEntry=${StrVarList} \
+             VTVIsQuotedValue=True       \
+             VTVIsValueReAssign=True     \
+             VTVIsValueToConvert=False   \
+             ValueToVariable ) __main_StopServices ;
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+   StrMsg=${ArrayMsg[0]}; 
+   StrMsg=${StrMsg//__VAR__/FOSME} ; 
+   StrMsg=${StrMsg//__VER__/${versionFOSME}} ; 
+   VerbMsg=${StrMsg//__VALUE__/${StrChunk}} VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis
+
+   eval $( eval VTVIsArrayStyleInsert=True  \
+                VTVValueEntry=${StrVarList} \
+                VTVIsQuotedValue=True       \
+                VTVIsValueReAssign=True     \
+                VTVIsValueToConvert=False   \
+                ValueToVariable ) ${StrStartMain} ; 
+  fi
+ }
+  
+fi   
+
   function ShaSum1Content()
   {
    local -a ArrayArg=( $* ) ;
