@@ -344,80 +344,390 @@ function ValueParser()
 
 
 
-unset __default_test ;
-function __default_test()
+eval $( GFCFuncName=DefaultTest GlobalFunctionCleaning ) ;
+### 
+### Function DefaultTest :
+### 
+### Should found inside this function Sub-Function of common command-Syntax 
+### found inside library of Fnct.D where observation from this point make 
+### possible to substitute by replacing this sub-funtion in a call from 
+### 
+### As example: PipedAppsRunInVtv is a replicated line from __main_StartServices
+### of GitChckBranchEngine inside _sub_Git, where an application like 
+### git branch -l, does displaying in fact a start on selected item , Filter from
+### this application transform it into a Zenity List Windows ready for selection.
+### 
+### Imagining there is an easy way to paste the information in a buffer with a 
+### star '*', on selected information, to be a find command, a grep command or
+### any debugging tools like objdump parsed in this PipedAppsRunInVtv should 
+### make-it ready to configure a zenity instance for user selection. 
+### 
+### As example: AppsRunInVtv is replicated from many observation of common
+### ValueToVariable call and latest example found inside __main_StartServices
+### of GitChckBranchEngine inside _sub_Git, where code of Zenity where moved
+### of __main_StartServices and does require a direct cut of the command and 
+### transfert of sub-set of Var-List transfert exempt it to slow and receive
+### useless variable. 
+### 
+### 
+### 
+### 
+
+
+function DefaultTest()
 {
-	local ArrayArg=( $* ) ; 
-	local __call_locality=( DT __default_test  ) ; 
- local Arg0=${ArrayArg[0]} ; 
-	local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
-	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-	 GetVarReference ${__call_locality[1]} ;
-		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-		echo -ne """${ArgGet}\n""" ; 			
-	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
-	else
-		echo "__BODY__" > /dev/stderr ; 
-	fi 
-	
+  function Verbosis()
+  {
+   #eval $( CAFunctName=Verbosis CAIsAddParent=False __Call_Argument ) ; 
+   local -a ArrayArg=( $* ) ; 
+   local -a __call_locality=( Verb Verbosis )
+   local StrMsg=${VerbMsg:=__TEXT__} ; 
+   local StrDevOut=${VerbDev:=/dev/stderr} ; 
+   local IsVerboseState=${VerbState:=False} ;
+   local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+   local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+   local IsDisplayFormatted=${VerbFormated:=True} ;
+   local IsAppendMode=${VerbAppendDev:=False} ; 
+   if [ "${IsVerboseState:=False}" == "True" ] ; then 
+    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+     if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
+     else  
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+     fi
+    else
+     if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+        echo "${StrMsg}" ;  
+     else
+      if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo "${StrMsg}" >> ${StrDevOut} ;
+      else
+       echo "${StrMsg}" > ${StrDevOut} ;
+      fi
+     fi 
+    fi 
+   fi
+  } 
+  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
+  
+  if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( DT DefaultTest ) ;
+   local Arg0="${ArrayArg[0]}";  
+   local StrStartMain=${DTFuncStart:=__main_StartServices} ; 
+   local StrParentApps=${__call_locality[1]} ; 
+  elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
+   eval $( eval CAFunctName=DefaultTest CAIsAddParent=False __Call_Argument ) ; 
+  elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
+   eval $( eval CAFunctName=DefaultTest CAIsAddParent=False CallArgument ) ; 
+  fi
+  
+  local BoolDisplayDebug=${DTDisplayDebug:=False} ; 
+  local BoolDisplayEntry=${DTDisplayEntry:=False} ; 
+  local BoolDisplayCmd=${DTDisplayCmd:=False} ; 
+  local BoolDisplayParser=${DTDisplayParserNotice:=False} ; 
+  local BoolBodyIsEval=${DTBodyEvalCmd:=False} ; 
+  local StrBodyTag=${DTBodyTagTpl:='__BODY__'} ; 
+  local StrExecEvalStart=${DTStartExec:='\$('} ;
+  local StrExecEvalEnd=${DTEndExec:=')'} ;
+
+  ### Common for all.
+  local StrTPRightRegexp=${DTTPRReg:=':__[A-Za-z0-9\_]*__'} ;
+  local StrInternalVTVReg=${DTVTVRegistry:=VTVIsArrayStyleInsert=True VTVIsQuotedValue=True VTVIsValueReAssign=True VTVIsValueToConvert=False} ;
+  
+    
+  ### Common or required by PipedAppsRunInVtv
+  local StrPipedAppsTpl=${DTPipedAppsTpl:='__APPS__ __OPT__ | __VTV__ __FILTER__ __FILTER__OPT__'} ;
+  local StrVTVTpl=${DTVTVTpl:='eval __TES__ eval __REGISTRY__ VTVValueEntry=__LIST_TRANSFERT__ ValueToVariable __TEE__ '}
+  local StrPipedTagDef=${DTPipedTagDef:='StrVTVTpl:__VTV__,StrPipedApps:__APPS__,StrPipedAppsOpt:__OPT__,StrPipedFilter:__FILTER__,StrPipedFilterOpt:__FILTER__OPT__,StrInternalVTVReg:__REGISTRY__,StrVarList:__LIST_TRANSFERT__,StrExecEvalStart:__TES__,StrExecEvalEnd:__TEE__'};
+
+  ### Common or required by  AppsRunInVtv  
+  local StrArAppsTpl=${DTPipedAppsTpl:='__VTV__ __APPS__'} ;
+  local StrArVTVTpl=${DTVTVTpl:='__TES__ __REGISTRY__ VTVValueEntry=__LIST_TRANSFERT__ ValueToVariable __TEE__'}
+  local StrArTagDef=${DTAppsTagDef:='StrArVTVTpl:__VTV__,StrArAppsTpl:__APPS__,StrInternalVTVReg:__REGISTRY__,StrVarList:__LIST_TRANSFERT__,StrExecEvalStart:__TES__,StrExecEvalEnd:__TEE__'};
+
+ 
+  local StrVarList=${DTVarListTransfert:=BoolDisplayParser,BoolDisplayDebug,BoolDisplayEntry,BoolDisplayCmd,StrBodyTag,StrPipedAppsTpl,StrInternalVTVReg,StrVarList,StrExecEvalStart,StrExecEvalEnd,StrVTVTpl,StrPipedTagDef,StrTPRightRegexp} ; 
+  
+  local -a ArrayMsg ;
+  ArrayMsg[0]="Entry in function" ;
+  
+  ### comment over PipedAppsRunInVtv:
+  ### This is the after piped instruction VTV(ValueToVariable) is acting, since 
+  ### somes application like git did not require to use Prefixed-variable, our
+  ### Filter does and an entry point in configuring a Filter does require a lot
+  ### of variable to make it open as tools utility. 
+  ### 
+  ### 
+  ### 
+ function PipedAppsRunInVtv()
+ {
+  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( PARIV PipedAppsRunInVtv ${StrParentApps} ) ;
+   local Arg0="${ArrayArg[0]}";  
+  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+   eval $( eval CAFunctName=PipedAppsRunInVtv CAIsAddParent=True __Call_Argument ) ; 
+  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+   eval $( eval CAFunctName=PipedAppsRunInVtv CAIsAddParent=True CallArgument ) ; 
+  fi  
+  
+  local StrPipedTpl="${StrPipedAppsTpl}"
+  local StrPipedApps=${PARIVApps:=None} ; 
+  local StrPipedAppsOpt=${PARIVAppsOpt:=None} ; 
+  local StrPipedFilter=${PARIVFilter:=None} ;
+  local StrPipedFilterOpt=${PARIVFilterOpt:=None}; 
+  local StrEvalVar=${PARIVEvalVar:=StrPipedCmd} ; 
+  eval $( \
+       TPListTag=${StrPipedTagDef}                   \
+       TPVarNameParsed=StrPipedTpl               \
+       TPRightStrPtrn=${StrTPRightRegexp}             \
+       TPArrayName="Array${__call_locality[0]}Tag"    \
+       TPDisplayDebug=${BoolDisplayDebug}        \
+       TPDisplayParserNotice=${BoolDisplayTPNotice}   \
+       TagParser  ) ;
+  
+  ### After parsing offering to see the cmdline if 
+  ### it does satisfy debugging purposes. 
+  ### 
+  VerbMsg="${StrPipedTpl}"               \
+  VerbState=${BoolDisplayCmd}            \
+  VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ; 
+
+       
+  ### By Definition This code sample should reflect the same 
+  ### Defined Tag template in 
+  ### - StrPipedAppsTpl and __VTV__ TAG inside the variable should 
+  ### correspond to this following Tag Template in 
+  ### - StrVTVTpl
+  ###
+  ###local StrBranchToZenityField=$( \
+  ###    ${StrGitBranchQuery//__APPS__/${StrGitApps}} | eval  \
+  ###      $( eval ${StrInternalVTVReg}          \
+  ###              VTVValueEntry=${StrVarListFS} \
+  ###              ValueToVariable ) FSFilterApps=${StrFilterApps}         \
+  ###                                FSDisplayDebug=${BoolDisplayRegExpOp} \
+  ###                                FilterSed ) ;
+  ###
+  ###
+  eval "${StrEvalVar}=$( ${StrPipedTpl} )" 
+  
+ }
+ 
+  ### comment over AppsRunInVtv:
+  ### They are very common, simple function call requiring to pass some or 
+  ### all their Internal variable. They are code-chunk reduced because they are
+  ### too long or sometimes, some-part are totally different when a case/ switch
+  ### if does apply a condition where something else require code to work.
+  ### This is why they are evaluated to simply execute, but some case require 
+  ### to get back information after execution. 
+  ### 
+ function AppsRunInVtv()
+ {
+  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( ARIV AppsRunInVtv ${StrParentApps} ) ;
+   local Arg0="${ArrayArg[0]}";  
+  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+   eval $( eval CAFunctName=AppsRunInVtv CAIsAddParent=True __Call_Argument ) ; 
+  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+   eval $( eval CAFunctName=AppsRunInVtv CAIsAddParent=True CallArgument ) ; 
+  fi  
+  
+  local StrAppsTpl="${StrArAppsTpl}" ;
+  local StrEvalVar=${ARIVEvalVar:=StrAppsCmd} ; 
+  local StrApps=${ARIVApps:=None} ; 
+  local BoolIsEval=${ARIVIsEval:=False} ; 
+  
+  eval $( \
+       TPListTag=${StrArTagDef}                       \
+       TPVarNameParsed=StrAppsTpl                     \
+       TPRightStrPtrn=${StrTPRightRegexp}             \
+       TPArrayName="Array${__call_locality[0]}Tag"    \
+       TPDisplayDebug=${BoolDisplayDebug}             \
+       TPDisplayParserNotice=${BoolDisplayTPNotice}   \
+       TagParser  ) ;
+
+  ### After parsing offering to see the cmdline if 
+  ### it does satisfy debugging purposes. 
+  ### 
+  VerbMsg="${StrAppsTpl}"                \
+  VerbState=${BoolDisplayCmd}            \
+  VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ; 
+
+  
+  ### By Definition This code sample should reflect the same 
+  ### Defined Tag template in 
+  ### - StrArAppsTpl and __VTV__ TAG inside the variable should 
+  ### correspond to this following Tag Template in 
+  ### - StrArVTVTpl
+  ### 
+  ###  $(  ${StrInternalVTVReg}           \
+  ###       VTVValueEntry=${StrVarListZWH} \
+  ###       ValueToVariable ) ZenityWindowHandler ;
+  ### This example work with no eval. This application
+  ### will not use eval by default but offer the 
+  ### ARIVIsEval=True to let the eval take place . 
+  ### 
+
+  ###
+  ### Later version will offer a BoolVarTest If-solution . 
+  ### 
+  if [ "${BoolIsEval:=False}" == "True" ] ; then 
+   eval "${StrPipedTpl}" ; 
+  else
+   ${StrPipedTpl} ;  
+  fi 
+
+ }
+       
+       
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+  local StrNameHelper="\tA General-Purpose Test Application\n\n";
+  local StrSynopsis="\n\tSet to be a Default test in pass-through function not altering other function \n";
+  local StrSummary="\n\tSummary present, but unfinished\n" ; 
+  local StrDescription="\n\tMight come with a description in future.\n";
+ 
+ function __main_StartServices()
+ {
+  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+   local Arg0="${ArrayArg[0]}";  
+  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+   eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
+  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+   eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ; 
+  fi  
+  
+  ###
+  ### By Definition, this __BODY__ found inside DTBodyTagTpl, or internally 
+  ### known as StrBodyTag, may have to receive command to let it virtually 
+  ### be a command-wrapped . 
+  ### 
+  
+  VerbMsg="${StrBodyTag}"                \
+  VerbState=${BoolDisplayCmd}            \
+  VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ; 
+  ###
+  ### Later version will offer a BoolVarTest If-solution . 
+  ### 
+  if [ "${BoolBodyIsEval:=False}" == "True" ] ; then 
+   eval "${StrBodyTag}" ; 
+  else
+   ${StrBodyTag} ;  
+  fi 
+ } 
+ 
+ function __main_StopServices()
+ {
+  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( Main __main_StopServices ${StrParentApps} ) ;
+   local Arg0="${ArrayArg[0]}";  
+  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+   eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True __Call_Argument ) ; 
+  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+   eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True CallArgument ) ; 
+  fi 
+
+ } 
+ 
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   GVRIsName=True     \
+   GVRIsSynopsis=True \
+   GVRIsSummary=True  \
+   GVRIsDesc=True     \
+   GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ;
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
+ elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
+  eval $( __GetVarReferenceCompWord ) ;
+ elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  eval $( eval VTVIsArrayStyleInsert=True   \
+                VTVValueEntry=${StrVarList} \
+                VTVIsValueReAssign=True     \
+                VTVIsValueToConvert=False   \
+                ValueToVariable ) ${StrStartMain} ;
+ 
+ fi
+ 
 }
+ #"\n\tMost simplest way to call-it\n\n\tUsing Firefox as example:\n\n\tGSZLApps=/usr/bin/firefox GkSuZenityLoader\n\n\tHaving Some library update to do before, adding GSZLUpdadeLdconfig=True\n\tto command will enhance this task.\n\n\tGSZLUpdadeLdconfig=True GSZLApps=/usr/bin/firefox GkSuZenityLoader" ;
+ 
 
 
-unset AddPValueStore
+
+eval $( GFCFuncName=AddPValueStore GlobalFunctionCleaning ) ;
 function AddPValueStore()
 {
-	local ArrayArg=( $* ) ; 
-	local __call_locality=( APVS AddPValueStore  ) ; 
+ local ArrayArg=( $* ) ; 
+ local __call_locality=( APVS AddPValueStore  ) ; 
  local Arg0=${ArrayArg[0]} ; 
-	local StrAction=${APVSAction:=add} ; 
-	local StrFunction=${APVSFunction:=__default_test} ; 
-	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-	 GetVarReference ${__call_locality[1]} ;
-		local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
-		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+ local StrAction=${APVSAction:=add} ; 
+ local StrFunction=${APVSFunction:=__default_test} ; 
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+  GetVarReference ${__call_locality[1]} ;
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
+  echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
   eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-		echo -ne """${ArgGet}\n""" ; 			
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ; 			
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
-		echo -ne "__BODY__\n" > /dev/stderr ; 
-	fi 
+  echo -ne "__BODY__\n" > /dev/stderr ; 
+ fi 
 }
 
 
 
 ### AnsiCodeTest 
-unset AnsiCodeTest
+#unset AnsiCodeTest
+eval $( GFCFuncName=AnsiCodeTest GlobalFunctionCleaning ) ;
 . ${FNCTDLIBPATH}/6e063cbc-0ce2-11e3-8879-001b3875b29c 
 
 
 ### ZenityRadioOptionConfig, ZenityListOptionConfig, ZenityPrefixedVarBuilder 
-unset ZenityRadioOptionConfig
-unset ZenityListOptionConfig
-unset ZenityPrefixedVarBuilder
+#unset ZenityRadioOptionConfig
+#unset ZenityListOptionConfig
+#unset ZenityPrefixedVarBuilder
+eval $( GFCFuncName=ZenityRadioOptionConfig GlobalFunctionCleaning ) ;
+eval $( GFCFuncName=ZenityListOptionConfig GlobalFunctionCleaning ) ;
+eval $( GFCFuncName=ZenityPrefixedVarBuilder GlobalFunctionCleaning ) ;
 . ${FNCTDLIBPATH}/50ccda66-2ebb-11e3-98a2-001b3875b29c
 
 ### ZenityPythonInstaller 
-unset ZenityPythonInstaller ; 
+#unset ZenityPythonInstaller ; 
+eval $( GFCFuncName= GlobalFunctionCleaning ) ;
 . ${FNCTDLIBPATH}/950966fa-0e67-11e3-98a2-001b3875b29c
 
 ### FileNameConversion
 unset FileNameConversion ; 
+eval $( GFCFuncName= GlobalFunctionCleaning ) ;
 . ${FNCTDLIBPATH}/877d7e9a-1001-11e3-98a2-001b3875b29c
 
 ### MdCd GetDateReportCreation
-unset MdCd GetDateReportCreation ; 
-. ${FNCTDLIBPATH}/0f86b448-72f4-11e6-8b1d-001e4c8856d6
+#unset MdCd GetDateReportCreation ; 
+#. ${FNCTDLIBPATH}/0f86b448-72f4-11e6-8b1d-001e4c8856d6
 ### This is required code for MdCd, extruded from file md_cd it's code is 
 ### now part of fnct_debian_lib_code.  
+### Added 2017-01-25 : Since addition of MdCd to Makefile project from 
+### MakeFileInstaller branch of the project, MdCd is istalled first to it's
+### mandatory uses during path creation and file based model to be deployed 
+### on every creation of path, Creation of .ArrayMdCd as well. 
+### 
 
-unset PackageRepositoryFilter  PackageRepositoryMgmt    PackageRepositoryRest
+#unset PackageRepositoryFilter  PackageRepositoryMgmt    PackageRepositoryRest
 ### PackageRepositoryFilter  PackageRepositoryMgmt    PackageRepositoryRest 
-. ${FNCTDLIBPATH}/_sub_PackageRepository
+# . ${FNCTDLIBPATH}/_sub_PackageRepository
+### Added 2017-01-25 : Important restructuration of PackageRepositoryFilter  
+### PackageRepositoryMgmt    PackageRepositoryRest require to load independtly.  
+### Will require to add it to ArrayLib during LibLoader action. 
 ### 
 
 
@@ -462,7 +772,8 @@ unset PackageRepositoryFilter  PackageRepositoryMgmt    PackageRepositoryRest
 ### - Teacher just supplied the answer in a case for an examen of 15% of the
 ### sum and give any other information thru course traversal. 
 
-unset BoolVarTestVarCreation ; 
+eval $( GFCFuncName=BoolVarTestVarCreation GlobalFunctionCleaning ) ;
+# unset BoolVarTestVarCreation ; 
 function BoolVarTestVarCreation()
 {
 
@@ -516,8 +827,8 @@ function BoolVarTestVarCreation()
 ### Factory Section 
  unset StrVarBoolTest StrDefaultBoolTest StrNotAsserted StrScopeType StrIfTestType StrIfStringOp IsPreambule StrDefaultEndTest IsTypePreamb StrVTRPrbTpl StrVTRPrbVar StrVTRPrbVTReg StrVTRPrbVTFnct IsTypeAssert StrVTRAsrtTpl StrVTRAsrtVar StrVTRAsrtVTReg StrVTRAsrtVTFnct StrKeyTestType IntDefautlType IsDisplayIfStatement StrIfPattern ArrayIfPattern ArrayAssertion StrTestTemplate IsPreambulePolNtRespt ;
  local __call_locality=( BVTest BoolVarTestVarCreation ) ;
-	local ArrayArg=( $* ) ; 
-	local Arg0=${ArrayArg[0]} ;
+ local ArrayArg=( $* ) ; 
+ local Arg0=${ArrayArg[0]} ;
 ### End of Factory Section.
  local ArrayTypeTest=( False True ) ;
  local ArrayPreambule=( ) ; 
@@ -559,16 +870,16 @@ function BoolVarTestVarCreation()
   __END_TEST__ __END_MARK__""" ;
 
  function Verbosis()
-	{
-		local __call_locality=( Verbosis Verb );
-		local StrMsg=${VerbMsg:=__TEXT__} ; 
-		local StrDevOut=${VerbDev:=/dev/stderr} ; 
+ {
+  local __call_locality=( Verbosis Verb );
+  local StrMsg=${VerbMsg:=__TEXT__} ; 
+  local StrDevOut=${VerbDev:=/dev/stderr} ; 
   local VerboseState=${VerbState:=False} ;
-		local ArrayArg=( $* ) ; 
-		if [ "${VerboseState:=False}" == "True" ] ; then 
-			echo -ne "VERBOSE:[ ${StrMsg} ]\n" > ${StrDevOut} ;
-		fi
-	}
+  local ArrayArg=( $* ) ; 
+  if [ "${VerboseState:=False}" == "True" ] ; then 
+   echo -ne "VERBOSE:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+  fi
+ }
  
  
  local ArrayTestType=( ${StrKeyTestType//,/ } ) ; 
@@ -808,15 +1119,15 @@ function BoolVarTestVarCreation()
  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
   
  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-			GetVarReference ${__call_locality[1]} ; 
-			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-		echo -ne """${ArgGet}\n""" ;
-	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
+   GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ;
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
-		eval $( __GetVarReferenceCompWord ) ;
+  eval $( __GetVarReferenceCompWord ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
  
   local StrMsg="\nFunction ${__call_locality[1]}, Display Result:\n ${StrTestTemplate}\n" ; 
@@ -836,42 +1147,42 @@ function BoolVarTestVarCreation()
 unset PropertyLibName
 function PropertyLibName()
 {
-	local __call_locality=( PLN PropertyLibName ) ;
-	local ArrayArg=( $* ) ; 
-	local Arg0=${ArrayArg[0]};
-	local StrAction=${PLNAction:=Add} ; 
-	local StrLibName=${PLNLib:=NONE} ; 
-	local StrOutArrayRef=${PLNArrayRef:=ArrayLibName} ;
-	local ArrayActionType=( Add Delete Test Show ) ; 
-	
-	local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
-	
+ local __call_locality=( PLN PropertyLibName ) ;
+ local ArrayArg=( $* ) ; 
+ local Arg0=${ArrayArg[0]};
+ local StrAction=${PLNAction:=Add} ; 
+ local StrLibName=${PLNLib:=NONE} ; 
+ local StrOutArrayRef=${PLNArrayRef:=ArrayLibName} ;
+ local ArrayActionType=( Add Delete Test Show ) ; 
+ 
+ local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+ 
  function __main_StartServices()
  {
-		local __call_locality=( Main __main_StartServices ) ;
-		local ArrayArg=( $* ) ; 
-		local Arg0=${ArrayArg[0]};
-					
-	}
-	
-	
-	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-			GetVarReference ${__call_locality[1]} ; 
-			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-		echo -ne """${ArgGet}\n""" ;
+  local __call_locality=( Main __main_StartServices ) ;
+  local ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]};
+     
+ }
+ 
+ 
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ;
  elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
-		eval $( __GetVarReferenceCompWord ) ;
-	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
+  eval $( __GetVarReferenceCompWord ) ;
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
   StrAction=${StrAction}           \ 
   StrLibName=${StrLibName}         \
   StrOutArrayRef=${StrOutArrayRef} \
   __main_StartServices       ${Arg0} ; 
  fi
-	
+ 
 }
 ##################################                 ########################
 ################################## In Prototyping  ########################
@@ -1150,9 +1461,9 @@ echo -ne "###BodyFunc Pattern\n\n###Based on UUID Registered: (${StrUUIDRegister
 
 function WrapPathIntegration()
 {
-	local __call_locality=( WPI WrapPathIntegration ) ;
-	local ArrayArg=( $* ) ; 
-	local Arg0=${ArrayArg[0]} 
+ local __call_locality=( WPI WrapPathIntegration ) ;
+ local ArrayArg=( $* ) ; 
+ local Arg0=${ArrayArg[0]} 
  local StrEntryListPath=${WPIPathList:=''} ;
  local StrListFnct=${WPIListTransformFunc:=ListToArray}
  local StrCommaValue=${WPIListCSV:=','} ;
@@ -1162,23 +1473,23 @@ function WrapPathIntegration()
  local StrFilterRelativePath=${WPIRelativeMatch:='^[\.]+[\/]?[A-Za-z0-9_]+|^\w+[\/]?'}
  local StrSemanticPathTag=${WPISemanticTag:=R,A}
 
-	function Verbosis()
-	{
-		local __call_locality=( Verbosis Verb );
-		local StrMsg=${VerbMsg:=__TEXT__} ; 
-		local StrDevOut=${VerbDev:=/dev/stderr} ; 
+ function Verbosis()
+ {
+  local __call_locality=( Verbosis Verb );
+  local StrMsg=${VerbMsg:=__TEXT__} ; 
+  local StrDevOut=${VerbDev:=/dev/stderr} ; 
   local VerboseState=${VerbState:=False} ;
-		local ArrayArg=( $* ) ; 
-		if [ "${VerbState:=False}" == "True" ] ; then 
-			echo -ne "VERBOSE:[ ${StrMsg} ]\n" > ${StrDevOut} ;
-		fi
-	}
+  local ArrayArg=( $* ) ; 
+  if [ "${VerbState:=False}" == "True" ] ; then 
+   echo -ne "VERBOSE:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+  fi
+ }
   
  function ListToArray()
  {
-		local __call_locality=( LTA ListToArray ) ;
-		local Arg0=${ArrayArg[0]} ;
-		local ArrayArg=( $* ) ;
+  local __call_locality=( LTA ListToArray ) ;
+  local Arg0=${ArrayArg[0]} ;
+  local ArrayArg=( $* ) ;
   local StrCommaConverted=${LTAComma//\'/} ;
   local StrDebugMsg="\tIn Func:${__call_locality[1]}\n\t\tContent of LTAEntry:[${LTAEntry}]\n\t\tContent of LTAComma:[${LTAComma}]\n\t\tContent of StrCommaConverted:[${StrCommaConverted}]\n\t\tContent of IsPathIncludeSemantic:[${IsPathIncludeSemantic}]" ; 
   VerbState=${IsVerbose} VerbMsg=${StrDebugMsg} Verbosis ; 
@@ -1249,8 +1560,8 @@ function WrapPathIntegration()
   ### Section 1
   ###
   local __call_locality=( Main __main_StartServices ) ;
-		local Arg0=${ArrayArg[0]} ;
-		local ArrayArg=( $* ) ;
+  local Arg0=${ArrayArg[0]} ;
+  local ArrayArg=( $* ) ;
   local StrCmd=${StrListArgCall//__CSV__/\'${StrCommaValue}\'} ;
 
   ###
@@ -1282,20 +1593,20 @@ function WrapPathIntegration()
   ###
   ### Section 4
   ###
-	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-			GetVarReference ${__call_locality[1]} ; 
-			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-		echo -ne """${ArgGet}\n""" ;
-	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;	
-	else
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ;
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;	
+ else
   eval $( VTVIsArrayStyleInsert=True \
           VTVIsValueReAssign=True \
           VTVIsValueToConvert=False \
           VTVValueEntry=StrEntryListPath,StrListFnct,StrCommaValue,StrListArgCall,IsVerbose,IsPathIncludeSemantic,StrSemanticPathTag,StrFilterRelativePath ValueToVariable ) __main_StartServices 
-	fi 
+ fi 
  
  
  
@@ -1337,8 +1648,8 @@ function MakeLink()
  
  function __Link()
  {
-		local __call_locality=( _L __Link ) ;
-		local ArrayArg=( $* ) ; 
+  local __call_locality=( _L __Link ) ;
+  local ArrayArg=( $* ) ; 
   local StrVarSrc=${StrRootOrigin}/${StrFile} ;
   local StrEval=${StrLinkFormat} ; 
   
@@ -1366,8 +1677,8 @@ function MakeLink()
  
  function __PostAction()
  {
-		local __call_locality=( __PA __PostAction ) ;
-		local ArrayArg=( $* ) ; 
+  local __call_locality=( __PA __PostAction ) ;
+  local ArrayArg=( $* ) ; 
   
   eval $( BVTVarName=StrRecurrent \
           BVTVarHold='' \
@@ -1381,11 +1692,11 @@ function MakeLink()
  
  function __main_StartServices()
  {
-		local __call_locality=( Main __main_StartServices ) ;
-		local ArrayArg=( $* ) ; 
+  local __call_locality=( Main __main_StartServices ) ;
+  local ArrayArg=( $* ) ; 
   eval alias find='${StrAliasFind}';
   local StrFile=$( find ${StrFileSearch} );
-		local Arg0=${ArrayArg[0]};
+  local Arg0=${ArrayArg[0]};
   if [ "${StrFile:=None}" != "None" ] ; then 
    StrFile=${StrFile//\.\//} ; 
    local ArrayLayerVar=( StrRootOrigin,StrFile,StrLinkApps,StrLinkFormat,StrLinkOpt,StrDebugLink,IsRenameDest,StrMoveSuffix IsMake,StrAction ) ;
@@ -1408,13 +1719,13 @@ function MakeLink()
  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
  
  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-			GetVarReference ${__call_locality[1]} ; 
-			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-		echo -ne """${ArgGet}\n""" ;
-	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
+   GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ;
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
   eval $( VTVIsArrayStyleInsert=True \
   VTVValueEntry=StrRootOrigin,IsMake,StrAction,StrFileSearch,StrAliasFind,StrLinkFormat,StrLinkApps,StrLinkOpt,StrDebugLink,IsRenameDest,StrMoveSuffix \
@@ -1448,9 +1759,9 @@ function FMakeLink()
 unset AutoChown ;
 function AutoChown()    
 { 
-	local __call_locality=( AC AutoChown ) ;
-	local ArrayArg=( $* ) ; 
-	local Arg0=${ArrayArg[0]};
+ local __call_locality=( AC AutoChown ) ;
+ local ArrayArg=( $* ) ; 
+ local Arg0=${ArrayArg[0]};
  local StrUser=${ACUser:=maxiste.maxiste} ; 
  local IntSleep=${ACSleep:=30} ; 
  local IsPathRecurr=${ACRecurrent:=True} ; 
@@ -1461,9 +1772,9 @@ function AutoChown()
  
  function __main_StartServices()
  {
-		local __call_locality=( Main __main_StartServices ) ;
-		local ArrayArg=( $* ) ; 
-		local Arg0=${ArrayArg[0]};
+  local __call_locality=( Main __main_StartServices ) ;
+  local ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]};
   local ArrayPath=( ${StrPathList//:/ } ) ; 
   
   eval $( BVTIdType=0 BVTVarName=StrRecurrent BVTVarHold='-R' BVTBoolVarName=\${IsPathRecurr} BVTBoolCase=False BVTBoolAssertion='' BVTScopeTest=local BoolVarTest ) ; 
@@ -1481,14 +1792,14 @@ function AutoChown()
   
   done
  }
-	if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-			GetVarReference ${__call_locality[1]} ; 
-			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-		echo -ne """${ArgGet}\n""" ;
-	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
+ if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ;
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
   StrUser=${StrUser}               \
   IntSleep=${IntSleep}             \
@@ -1614,8 +1925,8 @@ function AutoChown()
  ### 
  
  
-
-unset ZenityShellEval ;
+eval $( GFCFuncName=ZenityShellEval GlobalFunctionCleaning ) ;
+#unset ZenityShellEval ;
 function ZenityShellEval()    
 {
  function Verbosis()
@@ -1769,11 +2080,11 @@ function ZenityShellEval()
  ### End FootPrint
  ###
 
-	function MainEditor()
+ function MainEditor()
  {
-		local -a ArrayArg=( $* ) ;
-		local -a __call_locality=( ME MainEditor ${StrParentApps} ) ;
-		local Arg0=${ArrayArg[0]} ;
+  local -a ArrayArg=( $* ) ;
+  local -a __call_locality=( ME MainEditor ${StrParentApps} ) ;
+  local Arg0=${ArrayArg[0]} ;
   local StrMsg=""
   VerbMsg="Entry in function" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
     
@@ -1931,7 +2242,7 @@ function ZenityShellEval()
  
  function MainCheckSum()
  {
-		local __call_locality=( MCS MainCheckSum ) ;
+  local __call_locality=( MCS MainCheckSum ) ;
   local ArrayArg=( $* ) ;
   local Arg0=${ArrayArg[0]} ;
   VerbMsg="Entry in function" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
@@ -1970,9 +2281,9 @@ function ZenityShellEval()
 
  function __main_StartServices()
  {
-		local __call_locality=( Main __main_StartServices ) ;
-		local Arg0=${ArrayArg[0]} ;
-		local ArrayArg=( $* ) ; 
+  local __call_locality=( Main __main_StartServices ) ;
+  local Arg0=${ArrayArg[0]} ;
+  local ArrayArg=( $* ) ; 
   VerbMsg="Entry in function" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
   
   ### Note: f1161962-0ad8-11e3-b166-001b3875b29c 
@@ -2061,15 +2372,15 @@ function ZenityShellEval()
  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
 
  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-			GetVarReference ${__call_locality[1]} ; 
-			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-		echo -ne """${ArgGet}\n""" ;
-	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
+   GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ;
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
-		eval $( __GetVarReferenceCompWord ) ;
+  eval $( __GetVarReferenceCompWord ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
   local TmpUUIDEdit=$( GetUIDRegister=True GetUAppsRegisterName=${__call_locality[1]} GetUUID )
   StrMsg="Application:${__call_locality[1]} , version:( versionCA:__VER_CA__, versionBVT:__VER_BVT__)" ; 
@@ -2110,50 +2421,50 @@ function ZenityShellEval()
 unset StartCoproc
 function StartCoproc()
 { 
-	local ArrayArg=( $* ) ; 
-	local __call_locality=( StartCoproc ) ; 
+ local ArrayArg=( $* ) ; 
+ local __call_locality=( StartCoproc ) ; 
  local Arg0=${ArrayArg[0]} ; 
  ### Prototype model, 
  ### - Require . /etc/init.d/Fnct.d/_sub_Git to work. 
-	### coproc git_fnct_debian { while [ ${res:=0} -ne 1  ] ; do res=$( GitHubCommitFilePath=/etc/init.d/Fnct.d  GitHubCommit fnct_debian_lib ) ; sleep 5 ; done ; }
-	local StrValueParserInfo="""
-	VPCallLocalityName=${__call_locality[0]} 
-	VPVarArgList=Str:ProcName,
-	             Str:InWhile,
-	             Str:WhCond,
-	             Str:WhRetStat,
-	             Str:AppsName,
-	             Str:AppsPrVar,
-	             Str:AppsOpt
-	VPScopeList=ProcName:local,
-	             InWhile:local,
-	             WhCond:local,
-	             WhRetStat:local,
-	             AppsName:local,
-	             AppsPrVar:local,
-	             AppsOpt:local,
-	VPValueList=DefaultCoprocName:True:__VAR__ -ne 1:__VAR__=\$( __CMD__ ):GitHubCommit:GitHubCommitFilePath=${FNCTDLIBPATH}:fnct_debian_lib
-	""" ;
-	
-	eval $( eval "${StrValueParserInfo} ValueParser " ) ;
-	local EvalCoprocCmd=( ${StrAppsPrVar} ${StrAppsName} ${StrAppsOpt} ) ; 
-	#local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
-	local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+ ### coproc git_fnct_debian { while [ ${res:=0} -ne 1  ] ; do res=$( GitHubCommitFilePath=/etc/init.d/Fnct.d  GitHubCommit fnct_debian_lib ) ; sleep 5 ; done ; }
+ local StrValueParserInfo="""
+ VPCallLocalityName=${__call_locality[0]} 
+ VPVarArgList=Str:ProcName,
+              Str:InWhile,
+              Str:WhCond,
+              Str:WhRetStat,
+              Str:AppsName,
+              Str:AppsPrVar,
+              Str:AppsOpt
+ VPScopeList=ProcName:local,
+              InWhile:local,
+              WhCond:local,
+              WhRetStat:local,
+              AppsName:local,
+              AppsPrVar:local,
+              AppsOpt:local,
+ VPValueList=DefaultCoprocName:True:__VAR__ -ne 1:__VAR__=\$( __CMD__ ):GitHubCommit:GitHubCommitFilePath=${FNCTDLIBPATH}:fnct_debian_lib
+ """ ;
+ 
+ eval $( eval "${StrValueParserInfo} ValueParser " ) ;
+ local EvalCoprocCmd=( ${StrAppsPrVar} ${StrAppsName} ${StrAppsOpt} ) ; 
+ #local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
+ local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
  if [ "${Arg0:=--startservices}" == "--help" ] ; then 
-		GetVarReference StartCoproc ; 
-		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-		eval ${StrValueParserInfo} ValueParser --varhelper
-		echo -ne "--asarray\tStart The application and output the content into an Array, see varriable                               PkgConfigAllArrayName to change the name. This command need an eval braced                              to get the array being initialized.\n\n"
-	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-		echo -ne """${ArgGet}\n""" ; 			
-	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
-	elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
-		echo ""
-		### Prog To create a coprocess 
-		#if [ ${StrInWhile} ]
-	fi
+  GetVarReference StartCoproc ; 
+  echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  eval ${StrValueParserInfo} ValueParser --varhelper
+  echo -ne "--asarray\tStart The application and output the content into an Array, see varriable                               PkgConfigAllArrayName to change the name. This command need an eval braced                              to get the array being initialized.\n\n"
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ; 			
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
+ elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  echo ""
+  ### Prog To create a coprocess 
+  #if [ ${StrInWhile} ]
+ fi
 }
 
 
@@ -2183,68 +2494,68 @@ function StartCoproc()
 
 function PkgConfigQuery()
 { 
-	local ArrayArg=( $* );
-	local __call_locality=( PkgQuery ) ;
-	local Arg0=${ArrayArg[0]:=--start} ; 
-	local ArrayArgFlag=( ${ArrayArg[@]:1} ) ; 
-	local IntArgLen=${#ArrayArgFlag[@]} ;
-	local StrValueParserInfo="VPCallLocalityName=${__call_locality[0]} VPVarArgList=Str:AppsName,Str:AppsOpt,Str:FlagList,Str:PackageList VPScopeList=AppsName:local,AppsOpt:local,FlagList:local,PackageList:local VPValueList=/usr/bin/pkg-config:--list-all:--libs,--static,--short-errors,--libs-only-l,--libs-only-other,--libs-only-L,--cflags,--cflags-only-I,--cflags-only-other:flac" ;
-	
-	### Replaced by ValueParser
-	#local StrPkgConfigApps=${PkgConfigQueryAppsName:=/usr/bin/pkg-config};
-	#local StrPkgConfigAppsOpt=${PkgConfigQueryAppsOption:=--list-all};
-	eval $( eval "${StrValueParserInfo} ValueParser " ) ;
-	
-	#echo -ne "StrAppsName : ${StrAppsName}\n" > /dev/stderr ;
-	#echo -ne "StrAppsOpt  : ${StrAppsOpt}\n" > /dev/stderr ;
-	#echo -ne "StrFlagList  : ${StrFlagList}\n" > /dev/stderr ;
-	#echo -ne "StrPackageList  : ${StrPackageList}\n" > /dev/stderr ;
-	
-	#local StrPackageList=${PkgConfigQueryGetPackage:=flac} ;
-	#local StrFlagList=${PkgConfigQueryFlagList:=--libs,--static,--short-errors,--libs-only-l,--libs-only-other,--libs-only-L,--cflags,--cflags-only-I,--cflags-only-other} ;
-	local ArrayFlagTest=( ) ;
-	function FilterPackageList()
-	{
-		local ArrayArg=( $* );
-		local __call_locality=( FilterPackageList ) ;
-		local StrGrepFilter=${FilterPackageListGrepFilter:=${CurrentPackage}}
-		cut -d " " -f 1 | egrep -i "${StrGrepFilter}" | tr '[:cntrl:]' ' ' 
-	}
-
-		#local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
+ local ArrayArg=( $* );
+ local __call_locality=( PkgQuery ) ;
+ local Arg0=${ArrayArg[0]:=--start} ; 
+ local ArrayArgFlag=( ${ArrayArg[@]:1} ) ; 
+ local IntArgLen=${#ArrayArgFlag[@]} ;
+ local StrValueParserInfo="VPCallLocalityName=${__call_locality[0]} VPVarArgList=Str:AppsName,Str:AppsOpt,Str:FlagList,Str:PackageList VPScopeList=AppsName:local,AppsOpt:local,FlagList:local,PackageList:local VPValueList=/usr/bin/pkg-config:--list-all:--libs,--static,--short-errors,--libs-only-l,--libs-only-other,--libs-only-L,--cflags,--cflags-only-I,--cflags-only-other:flac" ;
  
- 	if [ "${Arg0:=--start}" == "--help" ] ; then 
-			GetVarReference PkgConfigQuery ; 
-			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-			eval ${StrValueParserInfo} ValueParser --varhelper ;
-	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-		echo -ne """${ArgGet}\n""" ; 			
-	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
-	else
-		if [ ${IntArgLen:=0} -eq 0 ] ; then 
-			ArrayFlagTest=( ${StrFlagList//,/ } ) ; 
-		else
-			ArrayFlagTest=( ${ArrayArgFlag[@]} ) ; 
-		fi 		
-		local ArrayPackageListVar=( ${StrPackageList//,/ } ) ;
-		for (( intAx=0 ; intAx <= ${#ArrayPackageListVar[@]}-1 ; intAx++ )) ; do 
-			local CurrentPackage="${ArrayPackageListVar[${intAx}]}" ; 
-		  local _A=( $( ${StrAppsName} ${StrAppsOpt} | FilterPackageListGrepFilter=${CurrentPackage} FilterPackageList ) );
-		  local IntNbPackage=${#_A[@]} ;
-		  if [ ${IntNbPackage:=0} -gt 0 ]; then
-		      for ((x=0 ; x <= ${#_A[@]}-1 ; x++ )) ; do
-		          for (( cx=0 ; cx <= ${#ArrayFlagTest[@]}-1 ; cx++ )) ; do
-		              res=$( ${StrAppsName} ${_A[${x}]} ${ArrayFlagTest[${cx}]} );
-		              echo -ne "${_A[${x}]}:${ArrayFlagTest[${cx}]}:${res}\n";
-		          done;
-		      done;
-		  else
-		      echo -ne "\n\n\tPackage Not Found\n" > /dev/stderr;
-		  fi
-		done 
-	fi 
+ ### Replaced by ValueParser
+ #local StrPkgConfigApps=${PkgConfigQueryAppsName:=/usr/bin/pkg-config};
+ #local StrPkgConfigAppsOpt=${PkgConfigQueryAppsOption:=--list-all};
+ eval $( eval "${StrValueParserInfo} ValueParser " ) ;
+ 
+ #echo -ne "StrAppsName : ${StrAppsName}\n" > /dev/stderr ;
+ #echo -ne "StrAppsOpt  : ${StrAppsOpt}\n" > /dev/stderr ;
+ #echo -ne "StrFlagList  : ${StrFlagList}\n" > /dev/stderr ;
+ #echo -ne "StrPackageList  : ${StrPackageList}\n" > /dev/stderr ;
+ 
+ #local StrPackageList=${PkgConfigQueryGetPackage:=flac} ;
+ #local StrFlagList=${PkgConfigQueryFlagList:=--libs,--static,--short-errors,--libs-only-l,--libs-only-other,--libs-only-L,--cflags,--cflags-only-I,--cflags-only-other} ;
+ local ArrayFlagTest=( ) ;
+ function FilterPackageList()
+ {
+  local ArrayArg=( $* );
+  local __call_locality=( FilterPackageList ) ;
+  local StrGrepFilter=${FilterPackageListGrepFilter:=${CurrentPackage}}
+  cut -d " " -f 1 | egrep -i "${StrGrepFilter}" | tr '[:cntrl:]' ' ' 
+ }
+
+  #local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n" 
+ 
+  if [ "${Arg0:=--start}" == "--help" ] ; then 
+   GetVarReference PkgConfigQuery ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+   eval ${StrValueParserInfo} ValueParser --varhelper ;
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ; 			
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
+ else
+  if [ ${IntArgLen:=0} -eq 0 ] ; then 
+   ArrayFlagTest=( ${StrFlagList//,/ } ) ; 
+  else
+   ArrayFlagTest=( ${ArrayArgFlag[@]} ) ; 
+  fi 		
+  local ArrayPackageListVar=( ${StrPackageList//,/ } ) ;
+  for (( intAx=0 ; intAx <= ${#ArrayPackageListVar[@]}-1 ; intAx++ )) ; do 
+   local CurrentPackage="${ArrayPackageListVar[${intAx}]}" ; 
+    local _A=( $( ${StrAppsName} ${StrAppsOpt} | FilterPackageListGrepFilter=${CurrentPackage} FilterPackageList ) );
+    local IntNbPackage=${#_A[@]} ;
+    if [ ${IntNbPackage:=0} -gt 0 ]; then
+        for ((x=0 ; x <= ${#_A[@]}-1 ; x++ )) ; do
+            for (( cx=0 ; cx <= ${#ArrayFlagTest[@]}-1 ; cx++ )) ; do
+                res=$( ${StrAppsName} ${_A[${x}]} ${ArrayFlagTest[${cx}]} );
+                echo -ne "${_A[${x}]}:${ArrayFlagTest[${cx}]}:${res}\n";
+            done;
+        done;
+    else
+        echo -ne "\n\n\tPackage Not Found\n" > /dev/stderr;
+    fi
+  done 
+ fi 
 }
 
 ### Warning : 
@@ -2259,43 +2570,43 @@ function PkgConfigQuery()
 
 function pkg-config-all()
 {
-	local __call_locality=( PkgConfigAll ) ; 
-	local ArrayArg=( $* ) ; 
-	local Arg0=${ArrayArg[0]} ;
-	local StrValueParserInfo="VPCallLocalityName=${__call_locality[0]} VPVarArgList=Str:ArrayName,Int:Scoping,Str:CutAlias,Str:AppsName,Str:AppsOpt VPScopeList=ArrayName:local,Scoping:local,CutAlias:local,AppsName:local,AppsOpt:local VPValueList=ArrayPackageName:1:cut:/usr/bin/pkg-config:--list-all ValueParser" ;
-	
-	eval $( eval "${StrValueParserInfo} ValueParser " ) ;
-	### ValueParser replace following value.
-	#local StrpackageName=${PkgConfigAllArrayName:=ArrayPackageName}	;
-	#local IntScoping=${PkgConfigAllScoping:=1}	;
-	#local StrCutAlias=${PkgConfigAllCutAlias:=cut}	;
-	#local StrPkgConfig=${PkgConfigAllApps:=/usr/bin/pkg-config} ; 
-	echo -ne "Var StrAppsName: ${StrAppsName}\nVar StrAppsOpt: ${StrAppsOpt}\n" > /dev/stderr ;
-	function Main()
-	{
-		local ArrayScopingType=( "local" "declare -a");
-		if [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
-			eval "${StrAppsName} --list-all | ${StrCutAlias} -f 1" ; 
-		elif [ "${Arg0:=--startservices}" == "--asarray" ] ; then 
-				local StrPackageList=$( ${StrAppsName} ${StrAppsOpt} | eval "${StrCutAlias} -f 1" | tr '[:cntrl:]' ' ' ) ; 
-				echo -ne "${ArrayScopingType[${IntScoping}]} ${StrArrayName}=( ${StrPackageList} )\n" ;
-		fi
-	}
-	#local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
+ local __call_locality=( PkgConfigAll ) ; 
+ local ArrayArg=( $* ) ; 
+ local Arg0=${ArrayArg[0]} ;
+ local StrValueParserInfo="VPCallLocalityName=${__call_locality[0]} VPVarArgList=Str:ArrayName,Int:Scoping,Str:CutAlias,Str:AppsName,Str:AppsOpt VPScopeList=ArrayName:local,Scoping:local,CutAlias:local,AppsName:local,AppsOpt:local VPValueList=ArrayPackageName:1:cut:/usr/bin/pkg-config:--list-all ValueParser" ;
+ 
+ eval $( eval "${StrValueParserInfo} ValueParser " ) ;
+ ### ValueParser replace following value.
+ #local StrpackageName=${PkgConfigAllArrayName:=ArrayPackageName}	;
+ #local IntScoping=${PkgConfigAllScoping:=1}	;
+ #local StrCutAlias=${PkgConfigAllCutAlias:=cut}	;
+ #local StrPkgConfig=${PkgConfigAllApps:=/usr/bin/pkg-config} ; 
+ echo -ne "Var StrAppsName: ${StrAppsName}\nVar StrAppsOpt: ${StrAppsOpt}\n" > /dev/stderr ;
+ function Main()
+ {
+  local ArrayScopingType=( "local" "declare -a");
+  if [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+   eval "${StrAppsName} --list-all | ${StrCutAlias} -f 1" ; 
+  elif [ "${Arg0:=--startservices}" == "--asarray" ] ; then 
+    local StrPackageList=$( ${StrAppsName} ${StrAppsOpt} | eval "${StrCutAlias} -f 1" | tr '[:cntrl:]' ' ' ) ; 
+    echo -ne "${ArrayScopingType[${IntScoping}]} ${StrArrayName}=( ${StrPackageList} )\n" ;
+  fi
+ }
+ #local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
- 	if [ "${Arg0:=--startservices}" == "--help" ] ; then 
-		GetVarReference pkg-config-all ; 
-		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-		eval ${StrValueParserInfo} --varhelper
-		echo -ne "Following switch are available:\n\n\t--startservices\tStart the application normally and output the package list\n\t--asarray\tStart The application and output the content into an Array, see varriable                               PkgConfigAllArrayName to change the name. This command need an eval braced                              to get the array being initialized.\n\n"
-	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-		echo -ne """${ArgGet}\n""" ; 			
-	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
-	else
-		Arg0=${Arg0} StrAppsName=${StrAppsName} StrCutAlias=${StrCutAlias} StrAppsOpt=${StrAppsOpt} IntScoping=${IntScoping} StrArrayName=${StrArrayName} Main
-	fi
+  if [ "${Arg0:=--startservices}" == "--help" ] ; then 
+  GetVarReference pkg-config-all ; 
+  echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  eval ${StrValueParserInfo} --varhelper
+  echo -ne "Following switch are available:\n\n\t--startservices\tStart the application normally and output the package list\n\t--asarray\tStart The application and output the content into an Array, see varriable                               PkgConfigAllArrayName to change the name. This command need an eval braced                              to get the array being initialized.\n\n"
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ; 			
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
+ else
+  Arg0=${Arg0} StrAppsName=${StrAppsName} StrCutAlias=${StrCutAlias} StrAppsOpt=${StrAppsOpt} IntScoping=${IntScoping} StrArrayName=${StrArrayName} Main
+ fi
 }
 
 
@@ -2305,76 +2616,76 @@ function ObjFindFunction()
  local __call_locality=( ObjFindFunction ) ; 
  local Arg0=( ${ArrayArg[0]} ) ; 
  
-	local StrDllFunctionFind=${ObjFindFunctionDllList:=iolog_unlink,GetUserDetailsType,GetCommandDetailsType}  ; 
-	local dllFunction=( ${StrDllFunctionFind//,/ } ) ; 
-	local StrObjDumpFlagsSet=${ObjFindFunctionFlagSet:=--dynamic-syms;--syms}
-	local StrObjDumpApps=${ObjFindFunctionObjApps:=objdump} ;
-	
-	local ArrayInspecType=( ${StrObjDumpFlagsSet//;/ } ) ; 
-	local StrPathStartFind=${ObjFindFunctionPath:=./} ;
-	local StrDllSuffix=${ObjFindFunctionDllSearch:=*.so} ;
-	local StrUniqueIDType=${ObjFindFunctionUUIDType:=--time} ;
-	local StrUniqueIDTypeApps=${ObjFindFunctionUUIDType:=uuidgen} ;
-	local StrPrintfFormat=${ObjFindFunctionPrintfFormat:="%h/%f"} ;
-	
-	function GetUniqueUUID()
-	{
-		local ArrayArg=( $* ) ; 
-		local __call_locality=( GetUniqueUUID ) ; 
-		local StrUUIDFlags=${GetUniqueUUIDFlags:=--time} ; 
-		local StrUUIDApps=${GetUniqueUUIDApps:=uuidgen} ; 
-		
-		eval """ local StrUUID=$( ${StrUUIDApps} ${StrUUIDFlags}  ) """ ;
-		echo -ne "${StrUUID}" ; 
-	} ; 
-	function GetFindList()
-	{
-		local ArrayArg=( $* ) ; 
-		local __call_locality=( GetFindList ) ; 
-		local StrStartPath=${GetFindListStartPath:=./} ; 
-		local StrInameSuffix=${GetFindListNamePatter:=*.so} ; 
-		local StrPrintfFormat=${GetFindListPrintfFormat:="%h/%f"} ; 
-		
-		find ${StrPathStartFind} -type f -iname "${StrInameSuffix}" -printf "${StrPrintfFormat}" ; 
-	}
-	function DllSearch()
-	{
-		local ArrayArg=( $* ) ; 
-		local __call_locality=( DllSearch ) ; 
-		StrDllInspectApps=${DllSearchApps:=objdump} ; 
-		StrDllInspectFlagsInArg=${DllSearchFlags:=--dynamic-syms} ; 
-		StrDllInspectFlags=${StrDllInspectFlagsInArg//,/ } ;
-		StrFileSearch=${DllSearchFileName:=None} ; 
-		StrDllFunctionName=${DllSearchFunctionName:=none} ; 
-		eval """ ${StrDllInspectApps} ${StrDllInspectFlags} ${StrFileSearch} | egrep -ic "${StrDllFunctionName}" """ ; 
-		
-	}
-	#local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
+ local StrDllFunctionFind=${ObjFindFunctionDllList:=iolog_unlink,GetUserDetailsType,GetCommandDetailsType}  ; 
+ local dllFunction=( ${StrDllFunctionFind//,/ } ) ; 
+ local StrObjDumpFlagsSet=${ObjFindFunctionFlagSet:=--dynamic-syms;--syms}
+ local StrObjDumpApps=${ObjFindFunctionObjApps:=objdump} ;
+ 
+ local ArrayInspecType=( ${StrObjDumpFlagsSet//;/ } ) ; 
+ local StrPathStartFind=${ObjFindFunctionPath:=./} ;
+ local StrDllSuffix=${ObjFindFunctionDllSearch:=*.so} ;
+ local StrUniqueIDType=${ObjFindFunctionUUIDType:=--time} ;
+ local StrUniqueIDTypeApps=${ObjFindFunctionUUIDType:=uuidgen} ;
+ local StrPrintfFormat=${ObjFindFunctionPrintfFormat:="%h/%f"} ;
+ 
+ function GetUniqueUUID()
+ {
+  local ArrayArg=( $* ) ; 
+  local __call_locality=( GetUniqueUUID ) ; 
+  local StrUUIDFlags=${GetUniqueUUIDFlags:=--time} ; 
+  local StrUUIDApps=${GetUniqueUUIDApps:=uuidgen} ; 
+  
+  eval """ local StrUUID=$( ${StrUUIDApps} ${StrUUIDFlags}  ) """ ;
+  echo -ne "${StrUUID}" ; 
+ } ; 
+ function GetFindList()
+ {
+  local ArrayArg=( $* ) ; 
+  local __call_locality=( GetFindList ) ; 
+  local StrStartPath=${GetFindListStartPath:=./} ; 
+  local StrInameSuffix=${GetFindListNamePatter:=*.so} ; 
+  local StrPrintfFormat=${GetFindListPrintfFormat:="%h/%f"} ; 
+  
+  find ${StrPathStartFind} -type f -iname "${StrInameSuffix}" -printf "${StrPrintfFormat}" ; 
+ }
+ function DllSearch()
+ {
+  local ArrayArg=( $* ) ; 
+  local __call_locality=( DllSearch ) ; 
+  StrDllInspectApps=${DllSearchApps:=objdump} ; 
+  StrDllInspectFlagsInArg=${DllSearchFlags:=--dynamic-syms} ; 
+  StrDllInspectFlags=${StrDllInspectFlagsInArg//,/ } ;
+  StrFileSearch=${DllSearchFileName:=None} ; 
+  StrDllFunctionName=${DllSearchFunctionName:=none} ; 
+  eval """ ${StrDllInspectApps} ${StrDllInspectFlags} ${StrFileSearch} | egrep -ic "${StrDllFunctionName}" """ ; 
+  
+ }
+ #local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
-	
-	if [ "${Arg0:=--startservices}" == "--help" ] ; then 
-	 GetVarReference ${__call_locality[0]} ; 
-		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-		echo -ne """${ArgGet}\n""" ; 			
-	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
-	else
-		local ArrayDll=( $( GetFindListStartPath=${StrPathStartFind} GetFindListNamePatter=${StrDllSuffix} GetFindListPrintfFormat=${StrPrintfFormat} ) ) ; 
-		for StrdllFunction in ${dllFunction[@]}; do 
-			for (( intx=0 ; intx <= ${#ArrayDll[@]}-1 ; intx++ )) ; do 
-				item="${ArrayDll[${intx}]}" ; 
-				for DllTypeInspect in ${ArrayInspecType[@]} ; do 
-					local UUID_T=$( GetUniqueUUIDApps=${StrUniqueIDTypeApps} GetUniqueUUIDFlags=${StrUniqueIDType} GetUniqueUUID ) ;  
-					isDllfunction=$( DllSearchApps=${StrObjDumpApps} DllSearchFlags=${DllTypeInspect} DllSearchFileName=${item} DllSearchFunctionName=${StrdllFunction} DllSearch ) ; 
-					dllState=${isDllfunction:=0} ; 
-					echo -ne "PKID:${UUID_T}:found:${dllState}:DllInpectMeth:${DllTypeInspect}:Function:${StrdllFunction}:dllName:${item}\n" ; 
-				done ; 
-			done ; 
-		done
-	fi
-	
+ 
+ if [ "${Arg0:=--startservices}" == "--help" ] ; then 
+  GetVarReference ${__call_locality[0]} ; 
+  echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ; 			
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
+ else
+  local ArrayDll=( $( GetFindListStartPath=${StrPathStartFind} GetFindListNamePatter=${StrDllSuffix} GetFindListPrintfFormat=${StrPrintfFormat} ) ) ; 
+  for StrdllFunction in ${dllFunction[@]}; do 
+   for (( intx=0 ; intx <= ${#ArrayDll[@]}-1 ; intx++ )) ; do 
+    item="${ArrayDll[${intx}]}" ; 
+    for DllTypeInspect in ${ArrayInspecType[@]} ; do 
+     local UUID_T=$( GetUniqueUUIDApps=${StrUniqueIDTypeApps} GetUniqueUUIDFlags=${StrUniqueIDType} GetUniqueUUID ) ;  
+     isDllfunction=$( DllSearchApps=${StrObjDumpApps} DllSearchFlags=${DllTypeInspect} DllSearchFileName=${item} DllSearchFunctionName=${StrdllFunction} DllSearch ) ; 
+     dllState=${isDllfunction:=0} ; 
+     echo -ne "PKID:${UUID_T}:found:${dllState}:DllInpectMeth:${DllTypeInspect}:Function:${StrdllFunction}:dllName:${item}\n" ; 
+    done ; 
+   done ; 
+  done
+ fi
+ 
  
 }
 
@@ -2563,25 +2874,25 @@ function ZenityPrefixedVarSelection()
  
  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
   GVRIsName=True GVRIsSynopsis=True GVRIsSummary=True GVRIsDesc=True GetVarReference ${__call_locality[1]} ; 
-		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-		echo -ne """${ArgGet}\n""" ;
-	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;	
-	elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
+  echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ;
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;	
+ elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
   eval $( VTVValueEntry=${StrVarList} \ 
           VTVIsArrayStyleInsert=True   \
           VTVIsValueReAssign=True      \
           VTVIsValueToConvert=False    \
           ValueToVariable  ) __main_StopServices ; 
-	elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+ elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
   eval $( VTVValueEntry=${StrVarList}  \ 
           VTVIsArrayStyleInsert=True    \
           VTVIsValueReAssign=True       \
           VTVIsValueToConvert=False     \
           ValueToVariable  ) ${StrFunctionMain} ; 
-	fi  
+ fi  
  
 } ; 
 
@@ -2659,17 +2970,17 @@ function ZenityBuildForm()
  
  function SimpleQueryGenerator()
  {
-		local __call_locality=( SQG SimpleQueryGenerator ${StrParentApps} ) ; 
-		local Arg0=${ArrayArg[0]} ; 
-		local ArrayArg=( $* ) ; 
+  local __call_locality=( SQG SimpleQueryGenerator ${StrParentApps} ) ; 
+  local Arg0=${ArrayArg[0]} ; 
+  local ArrayArg=( $* ) ; 
   zenity --entry --title="ZenityBuildForm Function Template Model" --text="Builder Prefixed Variable and Function Return Statement" --entry-text="${StrValueReturn}" ;  
  } 
  
  function UUIDQueryGenerator()
  {
-		local __call_locality=( UQG UUIDQueryGenerator ${StrParentApps} ) ; 
-		local Arg0=${ArrayArg[0]} ; 
-		local ArrayArg=( $* ) ; 
+  local __call_locality=( UQG UUIDQueryGenerator ${StrParentApps} ) ; 
+  local Arg0=${ArrayArg[0]} ; 
+  local ArrayArg=( $* ) ; 
   local StrContentCert="${StrValueReturn}\n#UUID:${StrUUIDSession}\n";
   local StrShaSum=$( echo -ne "${StrContentCert}" | sha1sum  | cut -d ' ' -f 1 ) ; 
   echo -ne "#${StrShaSum}\n" > ${StrStorageID} ;
@@ -2679,9 +2990,9 @@ function ZenityBuildForm()
  }
  function FunctionGenerator()
  {
-		local __call_locality=( FG FunctionGenerator ${StrParentApps} ) ; 
-		local Arg0=${ArrayArg[0]} ; 
-		local ArrayArg=( $* ) ;  ### Because StrSep is uniform it's clumsy to exchange 
+  local __call_locality=( FG FunctionGenerator ${StrParentApps} ) ; 
+  local Arg0=${ArrayArg[0]} ; 
+  local ArrayArg=( $* ) ;  ### Because StrSep is uniform it's clumsy to exchange 
   ### space for a space .
   local -a ArrayValue ;
   if [ "${StrSep}" != ' ' ] ; then 
@@ -2704,9 +3015,9 @@ function ZenityBuildForm()
  }
  function RepositoryCreation()
  {
-		local __call_locality=( RC RepositoryCreation ${StrParentApps} ) ; 
-		local Arg0=${ArrayArg[0]} ; 
-		local ArrayArg=( $* ) ;
+  local __call_locality=( RC RepositoryCreation ${StrParentApps} ) ; 
+  local Arg0=${ArrayArg[0]} ; 
+  local ArrayArg=( $* ) ;
   local StrAction ; 
   StrMsg="Prefixed Variable: __VAR__=__VALUE__\nThis is an assistan creating the Repository (location: __PATH__)\n.This is reserved to store your Query for future uses. Prepare to enter into\nCredential action to create the Repository. In case your haven't chooses Variable\n\tZBFRepoUser ZBFRepoPerm\nto set your user(s)/Group accessing the repository or Permission to read and write,\nyou can stop the application and start over. If you haven't choose a Function Name\nfor this step it will pop-you a warning and stop the application." ;
   StrMsg=${StrMsg//__VALUE__/${BoolCreateRepository}} ; 
@@ -2756,9 +3067,9 @@ function ZenityBuildForm()
  } 
  function FunctionQuery( )
  {
-		local __call_locality=( FQ FunctionQuery ${StrParentApps} ) ; 
-		local Arg0=${ArrayArg[0]} ; 
-		local ArrayArg=( $* ) ;
+  local __call_locality=( FQ FunctionQuery ${StrParentApps} ) ; 
+  local Arg0=${ArrayArg[0]} ; 
+  local ArrayArg=( $* ) ;
   local StrQueryGenerator ; 
   #for VarName in $( ${StrFuncName} --list ) ; do 
   local ArrayPreFixV=( $( ZPVSFunctionName=${StrFuncName} ZenityPrefixedVarSelection ) ) ; 
@@ -2820,9 +3131,9 @@ function ZenityBuildForm()
  
  function __main_StartServices()
  {
-		local __call_locality=( Main __main_StartServices ${StrParentApps} ) ; 
-		local Arg0=${ArrayArg[0]} ; 
-		local ArrayArg=( $* ) ;
+  local __call_locality=( Main __main_StartServices ${StrParentApps} ) ; 
+  local Arg0=${ArrayArg[0]} ; 
+  local ArrayArg=( $* ) ;
   StrMsg="Function To Select Variable:__FUNC__" ; 
   VerbMsg="${StrMsg//__FUNC__/${StrFuncName}}" VerbHeader="${__call_locality[1]}-DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} StrDevOut=/dev/stderr  Verbosis ; 
   
@@ -2857,13 +3168,13 @@ function ZenityBuildForm()
  
  
  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-			GVRIsName=True GVRIsSynopsis=True GVRIsSummary=True GVRIsDesc=True GetVarReference ${__call_locality[1]} ; 
-			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-		echo -ne """${ArgGet}\n""" ;
-	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
+   GVRIsName=True GVRIsSynopsis=True GVRIsSummary=True GVRIsDesc=True GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ;
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
   eval $( VTVIsArrayStyleInsert=True \
        VTVValueEntry=${StrVarList}   \
@@ -2872,8 +3183,8 @@ function ZenityBuildForm()
        VTVIsArrayStyleInsert=True    \
        ValueToVariable ) ${StrStartMain}
  elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
-		eval $( __GetVarReferenceCompWord ) ;
-	fi 
+  eval $( __GetVarReferenceCompWord ) ;
+ fi 
  
  }  ; 
 
@@ -2894,70 +3205,70 @@ function UUIDBuildForm()
 unset DefaultConfigure ;
 function DefaultConfigure()
 { 
-	local ArrayArg=( $* ) ; 
-	local __call_locality=( DefConfigure ) ; 
-	local StrDefaultAction=${DefConfigureAction:=--start-services} ;
-	local Arg0=${ArrayArg[0]:=${StrDefaultAction}}; 
-	local StrLD='${DefConfigureLD:=${LD} -laudiofile}' ; 
-	local StrLDFLAGS='${DefConfigureLDFLAGS:=${LDFLAGS}}' ; 
-	local StrCXX=${DefConfigureCXX:=\${CXX}} ; 
-	local StrCC=${DefConfigureCC:=\${CC}} ; 
-	local StrCPP=${DefConfigureCPP:=\${CPP}} ; 
-	local StrCFLAGS=${DefConfigureCFLAGS:=\${CFLAGS}} ;
-	local StrCPPFLAGS=${DefConfigureCPPFLAGS:=\${CPPFLAGS}} ; 
-	local StrCXXFLAGS=${DefConfigureCXXFLAGS:=\${CXXFLAGS}} ; 
-	local StrNewConfigureOptFile=${DefConfigureOptFile:=${HOME}/.DefConfigureOption} ; 
-	local StrNameConfigure=${DefConfigureName:=default} ;
-	
-	local CmdEval=( ./configure  ) ;
-	
-	function GetNameConfigureOption()
-	{
-			local ArrayArg=( $* ) ; 
-			local __call_locality=( GetConfOpt ) ; 
-			local Arg0=${ArrayArg[0]}; 
-			local StrNameOption=${GetConfOptName:=default} ;
-			local StrOptionFile=${GetConfOptFile:=${HOME}/.DefConfigureOption} ;
-			local StrGrepSep=${GetConfOptSep:=:} ;
-			local StrGrepPattern=${GetConfOptGrepPattern:=__PATTERN____SEP__} ;
-			local StrGrepForm="${StrGrepPattern//__PATTERN__/${StrNameOption}}";
-			StrGrepForm=${StrGrepForm//__SEP__/${StrGrepSep}} ; 
-			local StrContent=$( cat ${StrOptionFile} | egrep -i ${StrGrepForm} | head -n 1 | cut -d ':' -f 2- ) ; 
-			echo -ne "${StrContent}" ; 
-	}
-	local StrConfigureContentTest="" ;
-	test -e ${StrOptionFile} && local StrConfigureContentTest=$( GetConfOptName=${StrNameConfigure} GetConfOptFile=${StrNewConfigureOptFile} GetNameConfigureOption ) ; 
-	local StrConfigureContent=${StrConfigureContentTest:=--help} ; 
-	#local StrConfigContent=$( test -e ${StrNewConfigureOptFile} && local CmdEval=( ./configure  ) ) ; 
-	#local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
-	local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+ local ArrayArg=( $* ) ; 
+ local __call_locality=( DefConfigure ) ; 
+ local StrDefaultAction=${DefConfigureAction:=--start-services} ;
+ local Arg0=${ArrayArg[0]:=${StrDefaultAction}}; 
+ local StrLD='${DefConfigureLD:=${LD} -laudiofile}' ; 
+ local StrLDFLAGS='${DefConfigureLDFLAGS:=${LDFLAGS}}' ; 
+ local StrCXX=${DefConfigureCXX:=\${CXX}} ; 
+ local StrCC=${DefConfigureCC:=\${CC}} ; 
+ local StrCPP=${DefConfigureCPP:=\${CPP}} ; 
+ local StrCFLAGS=${DefConfigureCFLAGS:=\${CFLAGS}} ;
+ local StrCPPFLAGS=${DefConfigureCPPFLAGS:=\${CPPFLAGS}} ; 
+ local StrCXXFLAGS=${DefConfigureCXXFLAGS:=\${CXXFLAGS}} ; 
+ local StrNewConfigureOptFile=${DefConfigureOptFile:=${HOME}/.DefConfigureOption} ; 
+ local StrNameConfigure=${DefConfigureName:=default} ;
+ 
+ local CmdEval=( ./configure  ) ;
+ 
+ function GetNameConfigureOption()
+ {
+   local ArrayArg=( $* ) ; 
+   local __call_locality=( GetConfOpt ) ; 
+   local Arg0=${ArrayArg[0]}; 
+   local StrNameOption=${GetConfOptName:=default} ;
+   local StrOptionFile=${GetConfOptFile:=${HOME}/.DefConfigureOption} ;
+   local StrGrepSep=${GetConfOptSep:=:} ;
+   local StrGrepPattern=${GetConfOptGrepPattern:=__PATTERN____SEP__} ;
+   local StrGrepForm="${StrGrepPattern//__PATTERN__/${StrNameOption}}";
+   StrGrepForm=${StrGrepForm//__SEP__/${StrGrepSep}} ; 
+   local StrContent=$( cat ${StrOptionFile} | egrep -i ${StrGrepForm} | head -n 1 | cut -d ':' -f 2- ) ; 
+   echo -ne "${StrContent}" ; 
+ }
+ local StrConfigureContentTest="" ;
+ test -e ${StrOptionFile} && local StrConfigureContentTest=$( GetConfOptName=${StrNameConfigure} GetConfOptFile=${StrNewConfigureOptFile} GetNameConfigureOption ) ; 
+ local StrConfigureContent=${StrConfigureContentTest:=--help} ; 
+ #local StrConfigContent=$( test -e ${StrNewConfigureOptFile} && local CmdEval=( ./configure  ) ) ; 
+ #local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
+ local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
  if [ "${ArrayArg[0]}" = "--help" ] ; then 
-		GetVarReference DefaultConfigure ; 
-		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-		echo -ne """${ArgGet}\n""" ; 			
-	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
-	elif [ "${ArrayArg[0]}" == "${StrDefaultAction}" ] ; then 
-		CmdEval=( ${CmdEval[@]} ${StrConfigureContent} ) ; 
-		echo -ne "Configure option extracted: \n\t${CmdEval[@]}\n\n" > /dev/stderr ; 
-		#eval """${CmdEval[@]}""" ; 
-	elif [ "${ArrayArg[0]}" == "--add" ] ; then 
-		echo -ne """Adding Configure Option Name:${StrNameOption}:\n\t\t\t${ArrayArg[@]:1:}\n""" > /dev/stderr ; 
-		local StrExportSream="""${StrNameConfigure}:__configure__ ${ArrayArg[@]:1:} LD=\"${StrLD}\" LDFLAGS=\"${StrLDFLAGS}\" CXX=\"${StrCXX}\" CC=\"${StrCC}\" CPP=\"${StrCPP}\" CFLAGS=\"${StrCFLAGS}\" CPPFLAGS=\"${StrCPPFLAGS}\" CXXFLAGS=\"${StrCXXFLAGS}\" ${ArrayArg[@]:1:}""" ; 
-		StrExportSream=${StrExportSream//__configure__/${StrNameOption}} ;
-		echo -ne "Configure Command:\n\t${StrExportSream}\n" > /dev/stderr ; 
-		#echo -ne "${StrExportSream//__configure__/${StrNameOption}}\n" >> ${StrNewConfigureOptFile} ; 
-	elif [ "${ArrayArg[0]}" == "--update" ] ; then 
-		echo -ne """Updating Configure Option:\n\t\t${ArrayArg[@]:1:}\n""" > /dev/stderr ; 
-	elif [ "${ArrayArg[0]}" == "--remove" ] ; then 
-		echo -ne """Removing Configure Option:\n\t\t${ArrayArg[@]:1:}\n""" > /dev/stderr ; 
-	else
-		echo -ne """Arg0 No option specified\n""" > /dev/stderr ; 
-	fi
+  GetVarReference DefaultConfigure ; 
+  echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ; 			
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
+ elif [ "${ArrayArg[0]}" == "${StrDefaultAction}" ] ; then 
+  CmdEval=( ${CmdEval[@]} ${StrConfigureContent} ) ; 
+  echo -ne "Configure option extracted: \n\t${CmdEval[@]}\n\n" > /dev/stderr ; 
+  #eval """${CmdEval[@]}""" ; 
+ elif [ "${ArrayArg[0]}" == "--add" ] ; then 
+  echo -ne """Adding Configure Option Name:${StrNameOption}:\n\t\t\t${ArrayArg[@]:1:}\n""" > /dev/stderr ; 
+  local StrExportSream="""${StrNameConfigure}:__configure__ ${ArrayArg[@]:1:} LD=\"${StrLD}\" LDFLAGS=\"${StrLDFLAGS}\" CXX=\"${StrCXX}\" CC=\"${StrCC}\" CPP=\"${StrCPP}\" CFLAGS=\"${StrCFLAGS}\" CPPFLAGS=\"${StrCPPFLAGS}\" CXXFLAGS=\"${StrCXXFLAGS}\" ${ArrayArg[@]:1:}""" ; 
+  StrExportSream=${StrExportSream//__configure__/${StrNameOption}} ;
+  echo -ne "Configure Command:\n\t${StrExportSream}\n" > /dev/stderr ; 
+  #echo -ne "${StrExportSream//__configure__/${StrNameOption}}\n" >> ${StrNewConfigureOptFile} ; 
+ elif [ "${ArrayArg[0]}" == "--update" ] ; then 
+  echo -ne """Updating Configure Option:\n\t\t${ArrayArg[@]:1:}\n""" > /dev/stderr ; 
+ elif [ "${ArrayArg[0]}" == "--remove" ] ; then 
+  echo -ne """Removing Configure Option:\n\t\t${ArrayArg[@]:1:}\n""" > /dev/stderr ; 
+ else
+  echo -ne """Arg0 No option specified\n""" > /dev/stderr ; 
+ fi
 
-	
+ 
 }
 
  ### IsPathName :
@@ -2993,45 +3304,45 @@ function DefaultConfigure()
 unset IsPathName 
 function IsPathName()
 {
-		local __call_locality=( IsPathName );
-		local ArrayArg=( $* ) ;
-		local Arg0=${ArrayArg[0]}; 
-		local ArgActionList=${IsPathNameActLst:=CurrentPath,IsRootPath}
-		local RegActionList=${IsPathNameReglst:="^\.+\/"__SEP__"^\/"} ; 
-		local StrAction=${IsPathNameAction:=CurrentPath} ; 
-		local IntReturnValue=0 ; 
-		local IntReturnState=0 ; 
-		
-		local ArrayActionList=( ${ArgActionList//,/ } ) ; 
-		local ArrayRegExp=( ${RegActionList//__SEP__/ } ) ; 
-		
-		#local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
+  local __call_locality=( IsPathName );
+  local ArrayArg=( $* ) ;
+  local Arg0=${ArrayArg[0]}; 
+  local ArgActionList=${IsPathNameActLst:=CurrentPath,IsRootPath}
+  local RegActionList=${IsPathNameReglst:="^\.+\/"__SEP__"^\/"} ; 
+  local StrAction=${IsPathNameAction:=CurrentPath} ; 
+  local IntReturnValue=0 ; 
+  local IntReturnState=0 ; 
+  
+  local ArrayActionList=( ${ArgActionList//,/ } ) ; 
+  local ArrayRegExp=( ${RegActionList//__SEP__/ } ) ; 
+  
+  #local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
   local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
-		if [ "${ArrayArg[0]}" = "--help" ] ; then 
-			IntReturnState=0 ;
-			GetVarReference ${__call_locality[0]} ; 
-			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-		elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-			echo -ne """${ArgGet}\n""" ; 			
-		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
-		else
-			for(( intx=0 ; intx <= ${#ArrayActionList[@]]}-1 ; intx++ )) ; do 
-			 local StrReg="${ArrayRegExp[${intx}]}" ;
-			 local StrMainAction=${ArrayActionList[${intx}]} ; 
-			 if [ "${StrAction}" == "${StrMainAction}" ] ; then 
-					IntReturnValue=$( echo "${Arg0}" | egrep -ice "${StrReg}"	 2&>1 /dev/null ) ; 
-			 fi 
-			done 
-		 if [ ${IntReturnValue:=0} -gt 0 ] ; then 
-				IntReturnState=0 ;
-			else
-				IntReturnState=1 ;
-			fi 
-			
-		fi 
-		return ${IntReturnState} ;  
+  if [ "${ArrayArg[0]}" = "--help" ] ; then 
+   IntReturnState=0 ;
+   GetVarReference ${__call_locality[0]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ; 			
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
+  else
+   for(( intx=0 ; intx <= ${#ArrayActionList[@]]}-1 ; intx++ )) ; do 
+    local StrReg="${ArrayRegExp[${intx}]}" ;
+    local StrMainAction=${ArrayActionList[${intx}]} ; 
+    if [ "${StrAction}" == "${StrMainAction}" ] ; then 
+     IntReturnValue=$( echo "${Arg0}" | egrep -ice "${StrReg}"	 2&>1 /dev/null ) ; 
+    fi 
+   done 
+   if [ ${IntReturnValue:=0} -gt 0 ] ; then 
+    IntReturnState=0 ;
+   else
+    IntReturnState=1 ;
+   fi 
+   
+  fi 
+  return ${IntReturnState} ;  
 }
 
 
@@ -3039,31 +3350,31 @@ function IsPathName()
 unset kill_cmd ; 
 function kill_cmd()    
 { 
-	local ArrayArg=( $* ) ; 
-	local __call_locality=( kill_cmd ) ;  
-	local IntDefaultKillSig=${kill_cmdDefaultSigInt:=-9} ;
-	local StrColDisplayInSearch=${kill_cmdPsColList:=pid,command}
-	local IntNbCol=$(( $( echo "${StrColDisplayInSearch}" | wc -m ) - $( echo "${StrColDisplayInSearch//,/}" | wc -m ) ))
-	local IntIdPassToKiller=${kill_cmdColIdToKill:=${IntNbCol}} ; 
-	#local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
+ local ArrayArg=( $* ) ; 
+ local __call_locality=( kill_cmd ) ;  
+ local IntDefaultKillSig=${kill_cmdDefaultSigInt:=-9} ;
+ local StrColDisplayInSearch=${kill_cmdPsColList:=pid,command}
+ local IntNbCol=$(( $( echo "${StrColDisplayInSearch}" | wc -m ) - $( echo "${StrColDisplayInSearch//,/}" | wc -m ) ))
+ local IntIdPassToKiller=${kill_cmdColIdToKill:=${IntNbCol}} ; 
+ #local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
-	if [ "${ArrayArg[0]}" = "--help" ] ; then 
-		GetVarReference ${__call_locality[0]} ; 
-		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-		echo -ne """${ArgGet}\n""" ; 			
-	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
-	else
-		for (( x=0 ; x <= ${#ArrayArg[@]}-1 ; x++ )) ; do 
-			local cmd=${ArrayArg[${x}]} ; 
-			local PsResult=$( ps -eo ${StrColDisplayInSearch} | egrep -i "${cmd}" | grep -v grep | cut -d ' ' -f ${IntIdPassToKiller} | tr '[:cntrl:]' ' ' )
-			CmdEval=( kill ${IntDefaultKillSig} ${PsResult} ); 
-			echo -ne "PsResult:\n\n${PsResult}\n\n" > /dev/stderr ;
-			echo -ne "Command Eval:[ ${CmdEval} ]\n" > /dev/stderr ; 
-		done 
-	fi 
+ if [ "${ArrayArg[0]}" = "--help" ] ; then 
+  GetVarReference ${__call_locality[0]} ; 
+  echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ; 			
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
+ else
+  for (( x=0 ; x <= ${#ArrayArg[@]}-1 ; x++ )) ; do 
+   local cmd=${ArrayArg[${x}]} ; 
+   local PsResult=$( ps -eo ${StrColDisplayInSearch} | egrep -i "${cmd}" | grep -v grep | cut -d ' ' -f ${IntIdPassToKiller} | tr '[:cntrl:]' ' ' )
+   CmdEval=( kill ${IntDefaultKillSig} ${PsResult} ); 
+   echo -ne "PsResult:\n\n${PsResult}\n\n" > /dev/stderr ;
+   echo -ne "Command Eval:[ ${CmdEval} ]\n" > /dev/stderr ; 
+  done 
+ fi 
 }
 
 
@@ -3074,33 +3385,33 @@ function StartApps()
 { 
  local ArrayArg=( $* ) ; 
  local __call_locality=( StartApps ) ; 
-	#local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
+ #local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
  if [ "${ArrayArg[0]}" = "--help" ] ; then 
-		GetVarReference ${__call_locality[0]} ; 
-		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-		echo -ne """${ArgGet}\n""" ; 			
-	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
+  GetVarReference ${__call_locality[0]} ; 
+  echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ; 			
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
  else	 
-	 local AppsRefresh=${StartAppsRefresh:=4} ; 
-	 local Apps=${StartAppsCmd:=rezound --audio-method=jack} ; 
-	 local ScanApps=${StartAppsScan:=rezound} ; 
-		local StrAppsStopSig=/home/${USER}/stop_${ScanApps}
-	 local IsStopSig
-		IsStopSig=$( test -e ${StrAppsStopSig} && echo 1 );
-	 while [ ${IsStopSig:=0} -eq 0 ] ; do 
-		local isApps=$( ps -eo pid,command | grep -v egrep | egrep -ic "${ScanApps}" ) ; 
-		if [ ${isApp:=0} -eq 0 ] ; then 
-		 eval ${Apps} ; 
-		fi ; 
-		sleep ${AppsRefres} ; 
-			IsStopSig=$( test -e ${StrAppsStopSig} && echo 1 ) ;
-	 done ; 
-		rm -f ${StrAppsStopSig} ;
-		echo -ne "Exiting signal catch for Application ${Apps} to cancel respawing.\n" > /dev/stderr 
+  local AppsRefresh=${StartAppsRefresh:=4} ; 
+  local Apps=${StartAppsCmd:=rezound --audio-method=jack} ; 
+  local ScanApps=${StartAppsScan:=rezound} ; 
+  local StrAppsStopSig=/home/${USER}/stop_${ScanApps}
+  local IsStopSig
+  IsStopSig=$( test -e ${StrAppsStopSig} && echo 1 );
+  while [ ${IsStopSig:=0} -eq 0 ] ; do 
+  local isApps=$( ps -eo pid,command | grep -v egrep | egrep -ic "${ScanApps}" ) ; 
+  if [ ${isApp:=0} -eq 0 ] ; then 
+   eval ${Apps} ; 
+  fi ; 
+  sleep ${AppsRefres} ; 
+   IsStopSig=$( test -e ${StrAppsStopSig} && echo 1 ) ;
+  done ; 
+  rm -f ${StrAppsStopSig} ;
+  echo -ne "Exiting signal catch for Application ${Apps} to cancel respawing.\n" > /dev/stderr 
  fi
 }
 
@@ -3116,26 +3427,26 @@ function Survey_kill_apps()
     }
     local __call_locality=( SurveyApps ) ; 
     local ArrayArg=( $* ) ; 
-		#local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
+  #local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
   local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
-		if [ "${ArrayArg[0]}" = "--help" ] ; then 
-		 GetVarReference Survey_kill_apps ; 
-			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-		elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-			echo -ne """${ArgGet}\n""" ; 			
-		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
-		else	 
-		  local StrApps=${SurveyApps:=rezound} ; 
-		  local IntDelay=${SurveyAppsRefresh:=4} ; 
-		  while [ 1 ] ; do 
-		      test -e /home/maxiste/kill_${StrApps} && \
-		          rm -f /home/maxiste/kill_${StrApps} && \
-		          KillApps ${StrApps} 
-		      sleep ${IntDelay} ; 
-		  done ; 
-		fi
+  if [ "${ArrayArg[0]}" = "--help" ] ; then 
+   GetVarReference Survey_kill_apps ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ; 			
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
+  else	 
+    local StrApps=${SurveyApps:=rezound} ; 
+    local IntDelay=${SurveyAppsRefresh:=4} ; 
+    while [ 1 ] ; do 
+        test -e /home/maxiste/kill_${StrApps} && \
+            rm -f /home/maxiste/kill_${StrApps} && \
+            KillApps ${StrApps} 
+        sleep ${IntDelay} ; 
+    done ; 
+  fi
 }
 
 
@@ -3154,20 +3465,20 @@ function DpkgGetInlineBuildFlags()
 {
   local __call_locality=( DpkgGetInlineBuildFlags ) ;
   local ArrayArg=( $* ) ;
-		#local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
+  #local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
   local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
- 	if [ "${ArrayArg[0]}" = "--help" ] ; then 
-			GetVarReference ${__call_locality[0]} ; 
-			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-		elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-			echo -ne """${ArgGet}\n""" ; 			
-		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
- 	else	 
-  	local CmdEval=( "cat" "${DpkgGetInlineBuildFlagsPath:=/etc/dpkg/}"${DpkgGetInlineBuildFlagsFile:=buildflags.conf} "|" """sed -e 's/^\(SET\ \)\([a-zA-Z]*FLAGS\)\([\t\ ]*\)/\2=/g'""" "|" tr """'[:cntrl:]\' ' '""" ) ;
-  	eval "${CmdEval[@]}" ;
-	fi 
+  if [ "${ArrayArg[0]}" = "--help" ] ; then 
+   GetVarReference ${__call_locality[0]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ; 			
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
+  else	 
+   local CmdEval=( "cat" "${DpkgGetInlineBuildFlagsPath:=/etc/dpkg/}"${DpkgGetInlineBuildFlagsFile:=buildflags.conf} "|" """sed -e 's/^\(SET\ \)\([a-zA-Z]*FLAGS\)\([\t\ ]*\)/\2=/g'""" "|" tr """'[:cntrl:]\' ' '""" ) ;
+   eval "${CmdEval[@]}" ;
+ fi 
 
 }
 
@@ -3175,20 +3486,20 @@ function DpkgGetInlineBuildFlags()
 unset fast_dpkg_build ; 
 function fast_dpkg_build()    
 { 
-	local ArrayArg=( $* ) ; 
-	local __call_locality=( FDB ) ; 
-	local StrOptionDpkgBuild=${FDBDpkgBuildOpt:=} ;
-	local StrOptionDpkgInst=${FDBDpkgInstOpt:=} ;
-	for (( intx=0 ; intx <= ${#ArrayArg[@]}-1 ; intx++ )) ; do 
-		local StrPackage=${ArrayArg[${intx}]} ; 
-		cd /usr/local/src/apt/ ; 
-		md_cd $(pwd)/${StrPackage} ; 
-		cd ${StrPackage} ; 
-		local IntBuild=0 ; 
-		apt-src install ${StrOptionDpkgInst} -p ${StrPackage} && apt-src ${StrOptionDpkgBuild} -p build ${StrPackage} && IntBuild=1 ; 
-		echo -ne "\n\n\tBuild Status\n\t\titem : ${StrPackage}\n\t\tStatus: ${IntBuild}\n\n" ; 
-		dpkg --install $( find ./ -type f -iname "*.deb" -printf "%p " ) ; 
-	done ; 
+ local ArrayArg=( $* ) ; 
+ local __call_locality=( FDB ) ; 
+ local StrOptionDpkgBuild=${FDBDpkgBuildOpt:=} ;
+ local StrOptionDpkgInst=${FDBDpkgInstOpt:=} ;
+ for (( intx=0 ; intx <= ${#ArrayArg[@]}-1 ; intx++ )) ; do 
+  local StrPackage=${ArrayArg[${intx}]} ; 
+  cd /usr/local/src/apt/ ; 
+  md_cd $(pwd)/${StrPackage} ; 
+  cd ${StrPackage} ; 
+  local IntBuild=0 ; 
+  apt-src install ${StrOptionDpkgInst} -p ${StrPackage} && apt-src ${StrOptionDpkgBuild} -p build ${StrPackage} && IntBuild=1 ; 
+  echo -ne "\n\n\tBuild Status\n\t\titem : ${StrPackage}\n\t\tStatus: ${IntBuild}\n\n" ; 
+  dpkg --install $( find ./ -type f -iname "*.deb" -printf "%p " ) ; 
+ done ; 
 }
 
 
@@ -3196,17 +3507,17 @@ function fast_dpkg_build()
 unset DebianAptSrcCompiler ; 
 function DebianAptSrcCompiler()
 {
-	local __call_locality=( DebianAptSrcCompiler ) ; 
-	local ArrayArg=$( $* ) ; 
+ local __call_locality=( DebianAptSrcCompiler ) ; 
+ local ArrayArg=$( $* ) ; 
  local ArrayPackageName=( ${DebianAptSrcCompilerPackage//;/ } ) ;
-	local CompilerVersion=${DebianAptSrcCompilerVersion:=4.4} ; 
-	local StrAptProc=${DebianAptSrcCompilerPackageAptProc:=clean;install;build}
-	local AddPatch=${DebianAptSrcCompilerPatch:=True} ;
-	local ArrayAptSrcProc=( ${StrAptProc//;/ }  ) ; 
-	local StrPatchOpt="" ; 
-	local res_exec=0 ; 
-	local StrPath=${DebianAptSrcCompilerPath:=/usr/local/src/apt} ;
-	#local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
+ local CompilerVersion=${DebianAptSrcCompilerVersion:=4.4} ; 
+ local StrAptProc=${DebianAptSrcCompilerPackageAptProc:=clean;install;build}
+ local AddPatch=${DebianAptSrcCompilerPatch:=True} ;
+ local ArrayAptSrcProc=( ${StrAptProc//;/ }  ) ; 
+ local StrPatchOpt="" ; 
+ local res_exec=0 ; 
+ local StrPath=${DebianAptSrcCompilerPath:=/usr/local/src/apt} ;
+ #local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
  if [ "${ArrayArg[0]}" = "--help" ] ; then 
   GetVarReference ${__call_locality[0]} ; 
@@ -3386,17 +3697,17 @@ function AptSrcChange()
  local StrTagAdd=${AptSrcChangeTagChange:=deb-src} ;
  local StrDefaultArch=${AptSrcChangeArch:=amd64} ;
  local StrDefaultURI=${AptSrcChangeURIType:=http}
-	#local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
+ #local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
  if [ "${Arg0}" = "--help" ] ; then 
   GetVarReference ${__call_locality[0]} ; 
-		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-		echo -ne """${ArgGet}\n""" ; 			
-		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
-		else	
+  echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ; 			
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
+  else	
   cp ${StrAptSourceList} ${StrAptSourceSave} ; 
   cat ${StrAptSourceList} | sed 's/^${StrTagSearch} ${StrDefaultURI}/${StrTagAdd} [ arch=${StrDefaultArch} ] ${StrDefaultURI}/g' > ${StrUUID} ; 
   cp ${StrUUID} ${StrAptSourceList} ; 
@@ -3413,88 +3724,88 @@ function AptSrcChange()
 unset AptRebuild ; 
 function AptRebuild()    
 { 
-	local __call_locality=( AptRebuild ) ; 
-	local ArrayArg=( $* ) ; 
-	local Arg0=${ArrayArg[0]} ;
-	local StrCSVSep=${AptRebuildCSV:=,} ; 
-	local StrAppsName=${AptRebuildApps:=apt-src} ; 
-	local StrAppsOptExtr=${AptRebuildAppsOption:=-p} ; 
-	local StrCmdLine=${AptRebuildExec:=__APPS__,__OPTION__,__APPSOPT__,__PACKAGE__} ; 
-	local StrCmdTag=${AptRebuildTag:=__OPTION__,__PACKAGE__,__APPS__,__APPSOPT__}
-	local StrCmdTagVar=${AptRebuildTagVar:=Option,Package,StrAppsName,StrAppsOptExtr}
-	local IsShowDebug=${AptRebuildShowDebug:=False} ;
-	local IsCmdExec=${AptRebuildCmdExec:=True} ;
-	local StrCmdOption=${AptRebuildCommand:=clean,build} ; 
-	cmdline=( ${StrCmdLine//${StrCSVSep}/ } ) ; 
-	
-	local ArrayTag=( ${StrCmdTag//${StrCSVSep}/ } ) ; 
-	local ArrayOption=( ${StrCmdOption//${StrCSVSep}/ } ) ; 
-	local ArrayOptionVar=( ${StrCmdTagVar//${StrCSVSep}/ } )
-	
-	
-	#local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
+ local __call_locality=( AptRebuild ) ; 
+ local ArrayArg=( $* ) ; 
+ local Arg0=${ArrayArg[0]} ;
+ local StrCSVSep=${AptRebuildCSV:=,} ; 
+ local StrAppsName=${AptRebuildApps:=apt-src} ; 
+ local StrAppsOptExtr=${AptRebuildAppsOption:=-p} ; 
+ local StrCmdLine=${AptRebuildExec:=__APPS__,__OPTION__,__APPSOPT__,__PACKAGE__} ; 
+ local StrCmdTag=${AptRebuildTag:=__OPTION__,__PACKAGE__,__APPS__,__APPSOPT__}
+ local StrCmdTagVar=${AptRebuildTagVar:=Option,Package,StrAppsName,StrAppsOptExtr}
+ local IsShowDebug=${AptRebuildShowDebug:=False} ;
+ local IsCmdExec=${AptRebuildCmdExec:=True} ;
+ local StrCmdOption=${AptRebuildCommand:=clean,build} ; 
+ cmdline=( ${StrCmdLine//${StrCSVSep}/ } ) ; 
+ 
+ local ArrayTag=( ${StrCmdTag//${StrCSVSep}/ } ) ; 
+ local ArrayOption=( ${StrCmdOption//${StrCSVSep}/ } ) ; 
+ local ArrayOptionVar=( ${StrCmdTagVar//${StrCSVSep}/ } )
+ 
+ 
+ #local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
-	if [ "${Arg0}" = "--help" ] ; then 
-		GetVarReference ${__call_locality[0]} ; 
-		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-		echo -ne """${ArgGet}\n""" ; 			
-	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
-	else	 
-		for (( intx=0 ; intx <= ${#ArrayArg[@]}-1 ; intx++ )) ; do 
-			Package=${ArrayArg[${intx}]} ; 
-			for (( intAx=0 ; intAx <= ${#ArrayOption[@]}-1 ; intAx++ )) ; do
-				local Option=${ArrayOption[${intAx}]} ;
-				echo -ne "\tProcessing ${Option}\n" > /dev/stderr
-				local CmdExec=( ${cmdline[@]} ) ; 
-				
-				for (( intCx=0 ; intCx <= ${#ArrayOptionVar[@]}-1 ; intCx++ )) ; do 
-					local tagName=${ArrayTag[intCx]} ; 
-					local varName=${ArrayOptionVar[intCx]} ; 
-					eval """local NewVarValue=\${${varName}}""" ; 
-					if [ "${IsShowDebug}" == "True" ] ; then 
-						echo -ne "\t\ttagName: ${tagName}\n\t\tvarName: ${varName}\n\t\tValue: ${NewVarValue}\n" > /dev/stderr ; 
-					fi
-					eval """CmdExec=( ${CmdExec[@]//${tagName}/${NewVarValue}} )""" ; 
-				done 
-				echo -ne "\nCommandLine:[ ${CmdExec[@]} ]\n" > /dev/stderr ; 
-				if [ ${IsCmdExec:=True} == "True" ] ; then 
-					eval ${CmdExec[@]} ; 
-			  fi
-			done
-		done
-	fi 
+ if [ "${Arg0}" = "--help" ] ; then 
+  GetVarReference ${__call_locality[0]} ; 
+  echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ; 			
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
+ else	 
+  for (( intx=0 ; intx <= ${#ArrayArg[@]}-1 ; intx++ )) ; do 
+   Package=${ArrayArg[${intx}]} ; 
+   for (( intAx=0 ; intAx <= ${#ArrayOption[@]}-1 ; intAx++ )) ; do
+    local Option=${ArrayOption[${intAx}]} ;
+    echo -ne "\tProcessing ${Option}\n" > /dev/stderr
+    local CmdExec=( ${cmdline[@]} ) ; 
+    
+    for (( intCx=0 ; intCx <= ${#ArrayOptionVar[@]}-1 ; intCx++ )) ; do 
+     local tagName=${ArrayTag[intCx]} ; 
+     local varName=${ArrayOptionVar[intCx]} ; 
+     eval """local NewVarValue=\${${varName}}""" ; 
+     if [ "${IsShowDebug}" == "True" ] ; then 
+      echo -ne "\t\ttagName: ${tagName}\n\t\tvarName: ${varName}\n\t\tValue: ${NewVarValue}\n" > /dev/stderr ; 
+     fi
+     eval """CmdExec=( ${CmdExec[@]//${tagName}/${NewVarValue}} )""" ; 
+    done 
+    echo -ne "\nCommandLine:[ ${CmdExec[@]} ]\n" > /dev/stderr ; 
+    if [ ${IsCmdExec:=True} == "True" ] ; then 
+     eval ${CmdExec[@]} ; 
+     fi
+   done
+  done
+ fi 
 }
 
 
 
 function find_edit_file()
 { 
-	local ArrayArg=( $* ) ; 
-	local __call_locality=( FEF find_edit_file ) ; 
-	local StrPath=${FEFDefaultPath:=./} ;
-	local StrAppsFind=${FEFAppsFind:=/usr/bin/find} ;
-	local StrEditor=${FEFEditorApps:=/usr/bin/gedit} ;
-	local StrFindFilterOpt=${FEFFindFilter:=-iname \"__FILE__\"} ;
+ local ArrayArg=( $* ) ; 
+ local __call_locality=( FEF find_edit_file ) ; 
+ local StrPath=${FEFDefaultPath:=./} ;
+ local StrAppsFind=${FEFAppsFind:=/usr/bin/find} ;
+ local StrEditor=${FEFEditorApps:=/usr/bin/gedit} ;
+ local StrFindFilterOpt=${FEFFindFilter:=-iname \"__FILE__\"} ;
 
-		#local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
+  #local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
   local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
- 	if [ "${ArrayArg[0]}" = "--help" ] ; then 
-			GetVarReference find_edit_file ; 
-			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-		elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-			echo -ne """${ArgGet}\n""" ; 			
-		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
- 	else	
-		for file in ${ArrayArg[@]} ; do 
-			local StrFilterInFind=${StrFindFilterOpt//__FILE__/${file}}
-			eval "${StrAppsFind} ${StrPath} -type f ${StrFilterInFind} -exec ${StrEditor} {} \;" & 
-		done ; 
-	fi
+  if [ "${ArrayArg[0]}" = "--help" ] ; then 
+   GetVarReference find_edit_file ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ; 			
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
+  else	
+  for file in ${ArrayArg[@]} ; do 
+   local StrFilterInFind=${StrFindFilterOpt//__FILE__/${file}}
+   eval "${StrAppsFind} ${StrPath} -type f ${StrFilterInFind} -exec ${StrEditor} {} \;" & 
+  done ; 
+ fi
 }
 
 ### Usefult having clause with many compiler available and having h2xml or ctag path filtering to apply,
@@ -3532,116 +3843,116 @@ function find_edit_file()
 unset FindFilterPathExclusion
 function FindFilterPathExclusion()    
 { 
-	local ArrayArg=( $* ) ; 
-	local __call_locality=( FindFilterPathExclusion ) ; 
-	#local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
+ local ArrayArg=( $* ) ; 
+ local __call_locality=( FindFilterPathExclusion ) ; 
+ #local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
- 	if [ "${ArrayArg[0]}" = "--help" ] ; then 
-			GetVarReference ${__call_locality[0]} ; 
-			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-		elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-			echo -ne """${ArgGet}\n""" ; 			
-		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
- 	else	 
+  if [ "${ArrayArg[0]}" = "--help" ] ; then 
+   GetVarReference ${__call_locality[0]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ; 			
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
+  else	 
 
-		### 
-		### The chainning mechanism , if there is already used filter, passing thru this 
-		### variable will add-it to current filter output. 
-		local CurrentExlusion=${FindFilterPathKnowExclusion:=""} ; 
-	
-		###
-		###
-		###
-		local SelectedPackagePath=${FindFilterPathName:="c++"} ; 
+  ### 
+  ### The chainning mechanism , if there is already used filter, passing thru this 
+  ### variable will add-it to current filter output. 
+  local CurrentExlusion=${FindFilterPathKnowExclusion:=""} ; 
+ 
+  ###
+  ###
+  ###
+  local SelectedPackagePath=${FindFilterPathName:="c++"} ; 
 
-		### - Will tell to filter function if this segment should be considered as
-		### first statement and in-middle statement... 
-		### example, using FindFilterWithStartCond=True, for a clause for find to start adding -a ! -name "..." 
-		### in first statement of if will give command like 
-		### find -type d [ -a ! -name "c++/4.4" ] <--- current filter . 
-		### will simply be rejected or some warning may issued from . 
+  ### - Will tell to filter function if this segment should be considered as
+  ### first statement and in-middle statement... 
+  ### example, using FindFilterWithStartCond=True, for a clause for find to start adding -a ! -name "..." 
+  ### in first statement of if will give command like 
+  ### find -type d [ -a ! -name "c++/4.4" ] <--- current filter . 
+  ### will simply be rejected or some warning may issued from . 
 
-		local StartFilterWithCondition=${FindFilterWithStartCond:=False};
-		local StrFilterPattern="${FindFilterPattern:=NAME/VER}";
-		### 	The FindFilterClause should be written like from Removing To adding
-		###   ex: with find, having removing or excluding pattern start like -a ! -name or -o ! -iname ...
-		###       and adding or positive filter will include -a name, -o name ... 
-		###   and FindFilterClause should be written as : FindFilterClause="-a ! -name,-a name"
-		local StrConditionPattern=${FindFilterClause:=! -name, -name}
+  local StartFilterWithCondition=${FindFilterWithStartCond:=False};
+  local StrFilterPattern="${FindFilterPattern:=NAME/VER}";
+  ### 	The FindFilterClause should be written like from Removing To adding
+  ###   ex: with find, having removing or excluding pattern start like -a ! -name or -o ! -iname ...
+  ###       and adding or positive filter will include -a name, -o name ... 
+  ###   and FindFilterClause should be written as : FindFilterClause="-a ! -name,-a name"
+  local StrConditionPattern=${FindFilterClause:=! -name, -name}
 
-		local StrTypeOfLogicForAnd=${FindFilterClauseAnd:=-a};
-		local StrTypeOfLogicForOr=${FindFilterClauseAnd:=-o};
-		local StrLogic=""
-		### FindFilterLogicSetTo default choice : ( And / Or )
-		### 
-		###
+  local StrTypeOfLogicForAnd=${FindFilterClauseAnd:=-a};
+  local StrTypeOfLogicForOr=${FindFilterClauseAnd:=-o};
+  local StrLogic=""
+  ### FindFilterLogicSetTo default choice : ( And / Or )
+  ### 
+  ###
 
-		local DefaultLogic=${FindFilterLogicSetTo:=And}; 
-		if [ "${DefaultLogic}" == "And" ] ; then
-			StrLogic="${StrTypeOfLogicForAnd}" ;
-		else
-			StrLogic="${StrTypeOfLogicForOr}" ;
-		fi 
+  local DefaultLogic=${FindFilterLogicSetTo:=And}; 
+  if [ "${DefaultLogic}" == "And" ] ; then
+   StrLogic="${StrTypeOfLogicForAnd}" ;
+  else
+   StrLogic="${StrTypeOfLogicForOr}" ;
+  fi 
 
-		local ArrayClauseFilter ;
-		for(( intx=1 ; intx <= 2 ; intx++ )) ; do 
-			ArrayClauseFilter[${#ArrayClauseFilter[@]}]=$( echo "${StrConditionPattern}" | cut -d "," -f ${intx} ) ;
-		done 
-	
+  local ArrayClauseFilter ;
+  for(( intx=1 ; intx <= 2 ; intx++ )) ; do 
+   ArrayClauseFilter[${#ArrayClauseFilter[@]}]=$( echo "${StrConditionPattern}" | cut -d "," -f ${intx} ) ;
+  done 
+ 
 
-		local SelectedMajor=${FindFilterMajorVer:=4} ; 
-		local SelectedMinor=${FindFilterMinorVer:=4} ; 
-		local TypeClauseFilter=0 ;
-		for (( intx=${FindFilterMinMajorVer:=0} ; intx <= ${FindFilterMaxMajorVer:=9} ; intx++ )) ; do 
-			local StrCriteronFilter=${StrFilterPattern};
-			local StrCriteronFilterPrefix="";
-				StrCriteronFilter=${StrCriteronFilter/NAME/${SelectedPackagePath}} ;
-				StrCriteronFilter=${StrCriteronFilter/VER/${SelectedMajor}.${intx}} ;
+  local SelectedMajor=${FindFilterMajorVer:=4} ; 
+  local SelectedMinor=${FindFilterMinorVer:=4} ; 
+  local TypeClauseFilter=0 ;
+  for (( intx=${FindFilterMinMajorVer:=0} ; intx <= ${FindFilterMaxMajorVer:=9} ; intx++ )) ; do 
+   local StrCriteronFilter=${StrFilterPattern};
+   local StrCriteronFilterPrefix="";
+    StrCriteronFilter=${StrCriteronFilter/NAME/${SelectedPackagePath}} ;
+    StrCriteronFilter=${StrCriteronFilter/VER/${SelectedMajor}.${intx}} ;
 
-			if [ ${intx} -ne ${SelectedMinor:=0}  ] ; then 
-				TypeClauseFilter=0 ;
-				if [ "${StartFilterWithCondition}" == "True" ] ; then 
-					StrCriteronFilterPrefix="${StrLogic} 1${ArrayClauseFilter[${TypeClauseFilter}]} \"${StrCriteronFilter}\"" ;
-				else
-					StrCriteronFilterPrefix="2${ArrayClauseFilter[${TypeClauseFilter}]} \"${StrCriteronFilter}\"" ;
-				fi ;
-			fi		
+   if [ ${intx} -ne ${SelectedMinor:=0}  ] ; then 
+    TypeClauseFilter=0 ;
+    if [ "${StartFilterWithCondition}" == "True" ] ; then 
+     StrCriteronFilterPrefix="${StrLogic} 1${ArrayClauseFilter[${TypeClauseFilter}]} \"${StrCriteronFilter}\"" ;
+    else
+     StrCriteronFilterPrefix="2${ArrayClauseFilter[${TypeClauseFilter}]} \"${StrCriteronFilter}\"" ;
+    fi ;
+   fi		
 
-			if [ ${intx} -eq ${FindFilterMinMajorVer:=0} ] ; then 
-				TypeClauseFilter=${TypeClauseFilter} ;
-				if [ "${StartFilterWithCondition}" == "True" ] ; then 
-					StrCriteronFilterPrefix="${StrLogic} ${ArrayClauseFilter[${TypeClauseFilter}]} \"${StrCriteronFilter}\"" ;
-				else
-					StrCriteronFilterPrefix="${ArrayClauseFilter[${TypeClauseFilter}]} \"${StrCriteronFilter}\"" ;
-				fi ;
-			else
-				if [ "${StartFilterWithCondition}" == "False" ] ; then 
-					StrCriteronFilterPrefix="${StrLogic} ${ArrayClauseFilter[${TypeClauseFilter}]} \"${StrCriteronFilter}\"" ;
-				else
-					StrCriteronFilterPrefix="${StrLogic} ${ArrayClauseFilter[${TypeClauseFilter}]} \"${StrCriteronFilter}\"" ;
-				fi ;
-			
-			fi
+   if [ ${intx} -eq ${FindFilterMinMajorVer:=0} ] ; then 
+    TypeClauseFilter=${TypeClauseFilter} ;
+    if [ "${StartFilterWithCondition}" == "True" ] ; then 
+     StrCriteronFilterPrefix="${StrLogic} ${ArrayClauseFilter[${TypeClauseFilter}]} \"${StrCriteronFilter}\"" ;
+    else
+     StrCriteronFilterPrefix="${ArrayClauseFilter[${TypeClauseFilter}]} \"${StrCriteronFilter}\"" ;
+    fi ;
+   else
+    if [ "${StartFilterWithCondition}" == "False" ] ; then 
+     StrCriteronFilterPrefix="${StrLogic} ${ArrayClauseFilter[${TypeClauseFilter}]} \"${StrCriteronFilter}\"" ;
+    else
+     StrCriteronFilterPrefix="${StrLogic} ${ArrayClauseFilter[${TypeClauseFilter}]} \"${StrCriteronFilter}\"" ;
+    fi ;
+   
+   fi
 
 
-			if [ ${intx} -eq ${SelectedMinor:=0} ] ; then 
-				TypeClauseFilter=1 ;
-				if [ "${StartFilterWithCondition}" == "True" ] ; then 
-					StrCriteronFilterPrefix="${StrLogic} ${ArrayClauseFilter[${TypeClauseFilter}]} ${StrCriteronFilter}" ;
-				else
-					if [ ${intx} -eq ${FindFilterMinMajorVer:=0} ] ; then 
-						StrCriteronFilterPrefix="${ArrayClauseFilter[${TypeClauseFilter}]} \"${StrCriteronFilter}\"" ;
-					else
-						StrCriteronFilterPrefix="${StrLogic} ${ArrayClauseFilter[1	]} \"${StrCriteronFilter}\"" ;				
-					fi
-				fi ;
-			fi
-			CurrentExlusion="${CurrentExlusion} ${StrCriteronFilterPrefix}" ;
-		done
-		echo -ne "${CurrentExlusion}" ; 
-	fi 
+   if [ ${intx} -eq ${SelectedMinor:=0} ] ; then 
+    TypeClauseFilter=1 ;
+    if [ "${StartFilterWithCondition}" == "True" ] ; then 
+     StrCriteronFilterPrefix="${StrLogic} ${ArrayClauseFilter[${TypeClauseFilter}]} ${StrCriteronFilter}" ;
+    else
+     if [ ${intx} -eq ${FindFilterMinMajorVer:=0} ] ; then 
+      StrCriteronFilterPrefix="${ArrayClauseFilter[${TypeClauseFilter}]} \"${StrCriteronFilter}\"" ;
+     else
+      StrCriteronFilterPrefix="${StrLogic} ${ArrayClauseFilter[1	]} \"${StrCriteronFilter}\"" ;				
+     fi
+    fi ;
+   fi
+   CurrentExlusion="${CurrentExlusion} ${StrCriteronFilterPrefix}" ;
+  done
+  echo -ne "${CurrentExlusion}" ; 
+ fi 
 }
 
 
@@ -3676,17 +3987,17 @@ function acquire_lan_ifconfig()
   local StrReturn=$( IfconfigGetterApps=${StrAppsIfconfig} IfconfigGetterAddr=${StrAddr} IfconfigGetter awk -vTagName="${StrTagCleanFilter}"  -f StrAwkFilter ) ; 
   
  }
-	#local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
+ #local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
-	if [ "${Arg0:=--start-services}" = "--help" ] ; then 
-		GetVarReference acquire_lan_ifconfig ; 
-		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-		echo -ne """${ArgGet}\n""" ; 			
-	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
-	elif [ "${Arg0:=--start-services}" == "--start-services" ] ; then 
+ if [ "${Arg0:=--start-services}" = "--help" ] ; then 
+  GetVarReference acquire_lan_ifconfig ; 
+  echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ; 			
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
+ elif [ "${Arg0:=--start-services}" == "--start-services" ] ; then 
   GetIpaddrTagList=${StrTagNameList} \
   GetIpaddrAppsIfconfig=${StrAppsNetConf} \
   GetIpaddrAddr=${StrDefaultCard} \
@@ -3698,33 +4009,33 @@ function acquire_lan_ifconfig()
 unset GetBuildFlagsList
 function GetBuildFlagsList( )
 {
-		local ArrayArg=( $* ) ; 
-		local __call_locality=( ZPI ) ;  
-		dpkg-buildflags --list | tr '[:cntrl:]' ' ' 
+  local ArrayArg=( $* ) ; 
+  local __call_locality=( ZPI ) ;  
+  dpkg-buildflags --list | tr '[:cntrl:]' ' ' 
 } 
 
 
 unset GetZenityText ; 
 function GetZenityText()
 {
-	local ArrayArg=( $* ) ; 
-	local __call_locality=( GZT GetZenityText ) ;  
-	local Arg0=${ArrayArg[0]} ;
-	local StrTypeUI=${GZTUiType:=--entry}
-	local StrApps=${GZTUiApps:=/usr/bin/zenity} ;
-	#local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
+ local ArrayArg=( $* ) ; 
+ local __call_locality=( GZT GetZenityText ) ;  
+ local Arg0=${ArrayArg[0]} ;
+ local StrTypeUI=${GZTUiType:=--entry}
+ local StrApps=${GZTUiApps:=/usr/bin/zenity} ;
+ #local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
-	if [ "${Arg0:=--startservices}" == "--help" ] ; then 
-		GetVarReference ${__call_locality[1]} ; 
-		echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-		echo -ne """${ArgGet}\n""" ; 			
-	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
-	else
-		eval ${StrApps} ${StrTypeUI} ${ArrayArg[@]} ;
-	fi 
+ if [ "${Arg0:=--startservices}" == "--help" ] ; then 
+  GetVarReference ${__call_locality[1]} ; 
+  echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ; 			
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
+ else
+  eval ${StrApps} ${StrTypeUI} ${ArrayArg[@]} ;
+ fi 
 }
 
 
@@ -3732,30 +4043,30 @@ function GetZenityText()
 unset GetZenityTextEntry ; 
 function GetZenityTextEntry()
 {
-	local ArrayArg=( $* ) ; 
-	local __call_locality=( GZTE GetZenityTextEntry ) ;  
-	local Arg0=${ArrayArg[0]} ;
-	local IntWidth=${GZTEWidth:=640}
-	local IntHeight=${GZTEHeight:=275}
-	local StrTitle="""${GZTETitle:="Pip installation Try-up"}""" ; 
-	local StrQuestion="""${GZTETextQuestion:="Installation Package to install (test)"}""" ; 
-	local StrReturn ;
-	#local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
+ local ArrayArg=( $* ) ; 
+ local __call_locality=( GZTE GetZenityTextEntry ) ;  
+ local Arg0=${ArrayArg[0]} ;
+ local IntWidth=${GZTEWidth:=640}
+ local IntHeight=${GZTEHeight:=275}
+ local StrTitle="""${GZTETitle:="Pip installation Try-up"}""" ; 
+ local StrQuestion="""${GZTETextQuestion:="Installation Package to install (test)"}""" ; 
+ local StrReturn ;
+ #local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
-		if [ "${Arg0:=--startservices}" == "--help" ] ; then 
-			GetVarReference ${__call_locality[1]} ; 
-			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-		elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-			echo -ne """${ArgGet}\n""" ; 			
-		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
-		else
-			local CmdEval=( """local StrReturn=\$( GetZenityText --width=${IntWidth}  --height=${IntHeight} --title="${StrTitle}" --text="${StrQuestion}" ) """ ); 
-			echo -ne "\n\nCmdEval : ${CmdEval[@]}\n\n" > /dev/stderr ; 
-		fi 
-		echo -ne "StrReturn return: ${StrReturn}\n" > /dev/stderr ; 
-		echo -ne "${StrReturn}" ; 
+  if [ "${Arg0:=--startservices}" == "--help" ] ; then 
+   GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ; 			
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
+  else
+   local CmdEval=( """local StrReturn=\$( GetZenityText --width=${IntWidth}  --height=${IntHeight} --title="${StrTitle}" --text="${StrQuestion}" ) """ ); 
+   echo -ne "\n\nCmdEval : ${CmdEval[@]}\n\n" > /dev/stderr ; 
+  fi 
+  echo -ne "StrReturn return: ${StrReturn}\n" > /dev/stderr ; 
+  echo -ne "${StrReturn}" ; 
 }
 
 
@@ -3793,7 +4104,9 @@ function zenity_pip_installer()
 		done ; 
 }
 
-unset ZenityContentListing ; 
+eval $( GFCFuncName=ZenityContentListing GlobalFunctionCleaning ) ; 
+#unset ZenityContentListing ; 
+
 function ZenityContentListing( )
 {
 	local -a ArrayArg=( $* ) ; 
@@ -3957,10 +4270,13 @@ function ZenityContentListing( )
  }
  
  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
- local StrNameHelper="ZenityContentListing\tThe Fnct.D Mechanism To list-down information from file and report it inside a Standardized Zenity-List container.";
- local StrSynopsis="\tHelper involved inside GksuZenityLoader to load application like Firefox, Idlex and many more application configured internaly, ";
- local StrSummary="First it's an helper reserved to choose a user to load the application under a specific name. Used in PackageRepositoryMgmt to select or visualize the UNIQUE-ID snapshoot of maintained archives linked to a backup place to reduce size of /var this application is quite useful if you know how to specify and pass a regular-expression to internal function to ZenityFilter." ; 
- local StrDescription="\nVariable helper:\n\nZCLIsCheckList\t\tSet True/False, To use a checkboxlist rather than move the radio-buton to your item inside the list. \nZCLIsCheckListMulti\tSet True/False, To activate Multiple selection and Checkboxlist altogether.\n\n\t\tOnly one of the two is affecting the Zenity List interface at the time. Changing the selection to check-list and choosing none of them is retoring the interface to a radio-button action.\n\n\tInterface Field and File-reader options:\n\nZCLFilePasswd\tFILENAME, File choosed to read out, Belong to GksuZenityLoader reference to use the sudo belong to user to load the application it read user list from /etc/passwd, from PackageRepositoryMgmt it read the latest file (named latest after doing package transfert)\nZCLRegSearch\tSTRING The Regular Expression to search by column lines. In /etc/passwd it's all user having /bin/bash like shell, but a line start with anything can be [A-Za-z0-9]* Some case require good quoting or error will happen...\nZCLColExtr\tINT 0 .. NF Tel to ZenityContentListing which column to display or to read from your CSV match\nZCLCSV\t\tCHAR, Variable used as CHAR identifier in Comma Separated Value and usually choosed ':' or ','. We strongly suggest to wrap your CSV choice with single quote/guillemets mandatory for semi-colon : ';' \n\n\tInterface options:\n\nZCLTitle\tTo Define a Title (suggested to use simple or triple quotes ) ; ZCLTitle have property to hold a Tag named __APPS__ and will hold the application name, adding this tag to the property of ZCLTitle will parse-it.\nZCLCol0\t\tFirst Column a.k.a selection column it take the name of the action when the second one is a file-list as example (ZCLCol0=\"file deletion\")\nZCLCol1\t\tSecond Column name always represent the listing desired, in case of filtering file /etc/passwd it take the user result in CSV=1, at CSV=7 it take the shell per-user.\nZCLWidth\tWidth Size or X-axis of the List-Box. \nZCLHeight\tHeight or Y-axis of the List-Box.\n\n\tGkSuZenityLoader options:\n\nZCLSUS\t\tOption to Set True/False to change the output to Desired GkSuZenityLoader requirement to format the output to form a sentences from selection and should be inserted inside a Text-dialog." ;
+ local StrNameHelper="ZenityContentListing\n\tThe Fnct.D Mechanism To list-down information from file and report it\n\tinside a Standardized Zenity-List container.";
+ local StrSynopsis="\n\tHelper involved inside GksuZenityLoader to load application like\n\tFirefox, Idlex and many more application configured internaly, ";
+ local StrSummary="\n\tFirst it's an helper reserved to choose a user to load the application\n\tunder a specific name. Used in PackageRepositoryMgmt to select or\n\tvisualize the UNIQUE-ID snapshoot of maintained archives linked to a\n\tbackup place to reduce size of /var this application is quite useful if\n\tyou know how to specify and pass a regular-expression to\n\tinternal function to ZenityFilter." ; 
+ local StrDescription="\nVariable helper:\n\nZCLIsCheckList   Set True/False, To use a checkboxlist rather than \n\t\tmove the radio-buton to your item inside the list.\nZCLIsCheckListMulti\n\t\tSet True/False, To activate Multiple selection and \n\t\tCheckboxlist altogether.\n\n\tOnly one of the two is affecting the Zenity List interface at the time. \nChanging the selection to check-list and choosing none of them is restoring the\ninterface to a radio-button action.\n\nInterface Field and File-reader options:\n\nZCLFilePasswd\tFILENAME, File choosed to  read out, Belong to GksuZenityLoader\n\t\treference to use the sudo belong to user to load the application\n\t\tit read  user list from /etc/passwd,  from  PackageRepositoryMgmt \n\t\tit  read the latest file ( named  latest after doing  package \n\t\ttransfert ) .\nZCLRegSearch\tSTRING The Regular Expression to  search by  column  lines.  In\n\t\t/etc/passwd  it's all user  having /bin/bash like shell, but a\n\t\tline  start with  anything can  be  \[A-Za-z0-9\]*  Some  case\n\t\trequire  good quoting or  error will happen ...\nZCLColExtr\tINT 0 .. NF  Awk-based  Field location.  Tel  to \n\t\tZenityContentListing which  column to display  or to read from \n\t\tyour CSV  match\nZCLCSV\t\tCHAR, Variable used as CHAR identifier in Comma Separated Value\n\t\tand usually  choosed ':' or ','. We  strongly suggest to wrap\n\t\tyour CSV choice with single quote / guillemets is mandatory for\n\t\tsemi-colon : ';'\n\nInterface options:\n\nZCLTitle\tString To Define a Title ( suggested to use simple or triple\n\t\t quotes ). ZCLTitle  have  property to hold a  Tag named __APPS__\n\t\tand will hold the  application name,  adding this  tag to the \n\t\tproperty of ZCLTitle will  parse-it.\nZCLCol0\t\tFirst Column a.k.a  selection column  it take the  name of the\n\t\taction when  the second one  is a file-list  as example :\n\t\t(ZCLCol0=\"file deletion\")\nZCLCol1\t\tSecond Column name  always represent  the listing desired,  in\n\t\tcase of  filtering file /etc/passwd  it take the user result in\n\t\tCSV=1, at CSV=7 it take the shell per-user.\n\nZCLWidth\tWidth Size or X-axis of the List-Box. \nZCLHeight\tHeight or Y-axis of the List-Box.\n\nGkSuZenityLoader options:\n\nZCLSUS\t\tSet True/False to change the output to Desired GkSuZenityLoader\n\t\trequirement  to format  the output to  form a  sentences  from\n\t\tselection and should  be  inserted inside  a  Text-dialog.\n" ; 
+ ### \nVariable helper:\n\nZCLIsCheckList\t\tSet True/False, To use a checkboxlist rather than move the radio-buton to your item inside the list. \nZCLIsCheckListMulti\tSet True/False, To activate Multiple selection and Checkboxlist altogether.\n\n\t\tOnly one of the two is affecting the Zenity List interface at the time. Changing the selection to check-list and choosing none of them is retoring the interface to a radio-button action.\n\n\tInterface Field and File-reader options:\n\nZCLFilePasswd\tFILENAME, File choosed to read out, Belong to GksuZenityLoader reference to use the sudo belong to user to load the application it read user list from /etc/passwd, from PackageRepositoryMgmt it read the latest file (named latest after doing package transfert)\nZCLRegSearch\tSTRING The Regular Expression to search by column lines. In /etc/passwd it's all user having /bin/bash like shell, but a line start with anything can be \[A-Za-z0-9\]* Some case require good quoting or error will happen...\nZCLColExtr\tINT 0 .. NF Tel to ZenityContentListing which column to display or to read from your CSV match\nZCLCSV\t\tCHAR, Variable used as CHAR identifier in Comma Separated Value and usually choosed ':' or ','. We strongly suggest to wrap your CSV choice with single quote/guillemets mandatory for semi-colon : ';' \n\n\tInterface options:\n\nZCLTitle\tTo Define a Title (suggested to use simple or triple quotes ) ; ZCLTitle have property to hold a Tag named __APPS__ and will hold the application name, adding this tag to the property of ZCLTitle will parse-it.\nZCLCol0\t\tFirst Column a.k.a selection column it take the name of the action when the second one is a file-list as example (ZCLCol0=\"file deletion\")\nZCLCol1\t\tSecond Column name always represent the listing desired, in case of filtering file /etc/passwd it take the user result in CSV=1, at CSV=7 it take the shell per-user.\nZCLWidth\tWidth Size or X-axis of the List-Box. \nZCLHeight\tHeight or Y-axis of the List-Box.\n\n\tGkSuZenityLoader options:\n\nZCLSUS\t\tOption to Set True/False to change the output to Desired GkSuZenityLoader requirement to format the output to form a sentences from selection and should be inserted inside a Text-dialog. ;
+
+
  
  ### This is the end-block-if for switches
   
@@ -3985,8 +4301,9 @@ function ZenityContentListing( )
  
 }
 
+eval $( GFCFuncName=GkSuZenityLoader GlobalFunctionCleaning ) ; 
 
-unset GkSuZenityLoader ; 
+#unset GkSuZenityLoader ; 
 function GkSuZenityLoader()
 {
   function Verbosis()
@@ -4170,13 +4487,18 @@ function GkSuZenityLoader()
  }
  
  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
- local StrNameHelper="GkSuZenityLoader\tA General-Purpose Zenity Userlist calling gksudo and the application ; The Fnct.D Mechanism to load the application by user right. This is done with gksudo application made it easy to handle. ";
- local StrSummary="While script aren't easy adding exrta-command line for security question, handling GkSuZenityLoader only one Prefixed-Variable GSZLApps allow you to simply choose the user with Zenity List and to confirm password and the application is ready to open with appropriate user restriction . " ; 
- local StrSynopsis="Since it's becoming more and more easy to make script and development library with Bash, Execution Right and Userr Access are sometime neglected. Using such script may help managing user need and dedicated acount.";
- local StrDescription="Most simplest way to call-it\n\n\tUsing Firefox as example:\n\n\tGSZLApps=/usr/bin/firefox GkSuZenityLoader\n\n\tHaving Some library update to do before, adding GSZLUpdadeLdconfig=True to command will enhance this task.\n\n\tGSZLUpdadeLdconfig=True GSZLApps=/usr/bin/firefox GkSuZenityLoader" ;
+ local StrNameHelper="\tA General-Purpose Zenity Userlist calling gksudo and the application ;\n \tThe Fnct.D Mechanism to load the application by user right. This is \n\tdone with gksudo application made it easy to handle. \n\n";
+ local StrSynopsis="\n\tSince it's becoming more and more easy to make script and development\n\tlibrary  with  Bash,  Execution  Right and User Access are  sometimes\n\tneglected. Using such script may help managing user need and dedicated\n\tacount.\n";
+ local StrSummary="\n\tWhile  script aren't  easy  adding extra-command line  for security\n\tquestion,  handling  GkSuZenityLoader  only  one  Prefixed-Variable\n\tGSZLApps  allow you to  simply choose the user with Zenity List and\n\tto  confirm  password and the  application is  ready to  open  with\n\tappropriate  user restriction . \n" ; 
+ local StrDescription="GSZLSUS\t[True/False], Show User Selection.\nGSZLUpdadeLdconfig\n\t\t[True/False], Ask to Application to add a ldconfig pass before\n\t\trunning the application.\nGSZLUser\t[String], apply a default selection inside the Windows listed.\nGSZLApps\t[String], The application to  run with the correct user right.\nGSZLAppsOpt\t[String], Extra  parameter to pass to  the  application, like\n\t\tverbose more option. They are appended  after the  GSZLApps in\n\t\tform : [GSZLApps] [GSZLAppsOpt]\nGSZLTitle\tString, Default  title to Zenity  Window  content-list.\nGSZLFile\t[FILE], Default  file to  search for option to search to build\n  \t\tthe Zenity  Content-list  field.  '/etc/shadow'  is good  but\n\t\trequire administrative  right to read  it.\nGSZLUserListApps\n\t\t[String], Function-Interface to use to  display the  Zenity\n\t\tContent Listing information. Can be  another function  but\n\t\trequire to pass the extra Prefixed-variable from command-line.\n\t\tOther application will require pass diretly the option to the \n\t\tGSZLUserListApps will requiert to quote the Prefixed-variable.\n\t\tExample like Zenity Content-list from GitChckBranchEngine, may\n\t\twork if  it  can disable the  checkout action  after and will \n\t\trequire to use  the FuncStart  Prefixed-variable  from \n\t\tGitChckBranchEngine ex:\n\t\tGSZLUserListApps=\"GCBEFuncStart='ZenityWindowHandler' \n\t\tGitChckBranchEngine\" . And Other variable like GCBETitle,\n\t\tGCBEText,GCBEFontSize,GCBEFontFamily,GCBEWinHeight,\n\t\tGCBEWinWidth Will require to be specified from command-line.\nGSZLCol0\t[String], Default definition for the First column, called \n\t\t'selection' it's also where the Checkbox or radio-button is \n\t\taligned-in.\nGSZLCol1\t[String], Default definition of the selected rank, in this \n\t\tcase it refer to user to load the application under NAME.\nGSZLRegSearch\t[String], The based shell to search for accessible user. They\n\t\tare using other shell like '/bin/sh' specify a shell with this\n\t\tvariable. A shell should be listed inside /etc/shells or sudo\n\t\twon't allow you to run the application. As same for user with\n\t\t/usr/sbin/nologin,  and  /bin/false can be selected.\nGSZLCSV\t[Char-quoted], Default CSV to  counts  column in  a CSV file.\n\t\t'/etc/passwd' require  double-dot CSV ':'.\nGSZLColExtr\t[Int], Default to  '1',  it's the Column from GSZLRegSearch is\n\t\trequired to display on the Zenity  Content List. Other number\n\t\twill display other lines of  GSZLFile if it's '/etc/passwd' it\n\t\tmay show you, shell-used, comment to  user, encrypted-password.\nGSZLLdconfigUser\n\t\t[String], Under which  user the ldconfig action (if choosen) will\n\t\tstart the update.  Default to root, but  somes  system  may \n\t\t'require/accept' other users.\nGSZLFunctStart\t[String], By default,  it's '__main_StartServices' and it's the\n\t\tboot-strap  function to application startup. Suggest to not \n\t\ttouch it  unless you  do  have coded  your own  \n\t\t'Main start services' .\nGSZLLdconfigGreeting\n\t\t[String], If  it's accessible,  display a  message  before\n\t\tstarting  ldconfig  update and thus may take  extra time and\n\t\tshow  behaviour  it's extra  time it's  based on  ldconfig\n\t\taction  and  not frozen  or slow  application.\n";
+ #"\n\tMost simplest way to call-it\n\n\tUsing Firefox as example:\n\n\tGSZLApps=/usr/bin/firefox GkSuZenityLoader\n\n\tHaving Some library update to do before, adding GSZLUpdadeLdconfig=True\n\tto command will enhance this task.\n\n\tGSZLUpdadeLdconfig=True GSZLApps=/usr/bin/firefox GkSuZenityLoader" ;
  
  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-			GVRIsName=True GVRIsSynopsis=True GVRIsSummary=True GVRIsDesc=True  GetVarReference ${__call_locality[1]} ; 
+			GVRIsName=True     \
+   GVRIsSynopsis=True \
+   GVRIsSummary=True  \
+   GVRIsDesc=True     \
+   GetVarReference ${__call_locality[1]} ; 
 			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
