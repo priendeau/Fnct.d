@@ -3,14 +3,13 @@
 ### FootPrint Added, see Prefixed-Var ZSEAddFootPrint from ZenityShellEval
 ###
 
-###File:/var/cache/Fnct.D/ZenityShellEval/6403c722-28a6-11e3-98a2-001b3875b29c
-###UUID-TIME-MARKER:ff6cc962-9a3f-11e6-8b1d-001e4c8856d6
-###Date: 20161024-19:17:14,1477351034
-###Sha1Sum: b03953379e8c856fd9eedd89412d0d6b5fdbf5b6
-###Size:5602
-###NbLine: 131
-###NbWord: 569
-
+###File:./6403c722-28a6-11e3-98a2-001b3875b29c
+###UUID-TIME-MARKER:874d3f9e-e43f-11e6-8b1d-001e4c8856d6
+###Date: 20170126-22:20:22,1485487222
+###Sha1Sum: d3a6a2ec00c72c72aa50ad86c365e56cc5a9e2df
+###Size:6493
+###NbLine: 143
+###NbWord: 696
 
 unset GetVarReference;
 function GetVarReference( )
@@ -101,7 +100,20 @@ function GetVarReference( )
  }
  
  local StrInternalFunction=$( FLFunctionName="${ArrayArg[0]}" FunctionList ) ; 
- StrInternalFunction=${StrInternalFunction:0:$(( ${#StrInternalFunction}-1 ))}; 
+ local IntSizeInternalFunc=${#StrInternalFunction} ; 
+ if [ ${IntSizeInternalFunc:=0} -gt 0 ] ; then 
+  StrInternalFunction="${StrInternalFunction:0:$(( ${IntSizeInternalFunc}-1 ))}";  
+ fi
+ ### Note: 2017-01-26. 
+ ### Compilation by shc, Bring a error during execution of BoolVarTest transformed into
+ ### compiled and crypted script. Was asking for GetVarReference as file and not as Funtion.
+ ### Upon this test, GetVarReference was complainning about a Fact, Function with Empty
+ ### or absent String-Helper does not love them by not yielding this type of error, while 
+ ### variable checker of a compiler does report this:
+ ### ./GetVarReference.bash.x: line 80: $(( ${#StrInternalFunction}-1 )): substring expression < 0
+ ###a problem to interpret a variable String get pos-by-pos if it's end-position is negative can 
+ ###probably trigger error after this first not noticed by execution the function. 
+ ###More on SHC (Shell Script Compiler) : http://bit.ly/2ja9pYn
  if [ "${BoolDisplayCA:=False}" == "True" ] ; then 
   echo -ne "\nFunctionList Inspected:${StrInternalFunction}\n" > /dev/stderr ; 
  fi 

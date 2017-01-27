@@ -183,64 +183,76 @@
  ### a Variable transfert blindly. 
 
  
-unset ValueParser ;
+#unset ValueParser ;
+eval $( GFCFuncName=ValueParser GlobalFunctionCleaning ) ;
 function ValueParser()
 {
-		local __call_locality=( VP ValueParser );
-		local ArrayArg=( $* ) ; 
-		local Arg0=${ArrayArg[0]} ;
-		
+  if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( VP ValueParser ) ;
+   local Arg0="${ArrayArg[0]}";  
+   local StrStartMain=${VPFuncStart:=__main_StartServices} ; 
+   local StrParentApps=${__call_locality[1]} ; 
+  elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
+   eval $( eval CAFunctName=ValueParser CAIsAddParent=False __Call_Argument ) ; 
+  elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
+   eval $( eval CAFunctName=ValueParser CAIsAddParent=False CallArgument ) ; 
+  fi
+  
   local StrVarArgList=${VPVarArgList:=Str:AppsName,Str:AppsOpt} ; 
-		local StrValueList=${VPValueList:=echo,__VALUE__} ; 
-		local StrLocality=${VPCallLocalityName:=Default} ; 
-		local StrScope=${VPScopeList:=AppsName:local,AppsOpt:local} ; 
-		local StrDefaultScope=${VPScopeDefault:=local} ;
-		local ArrayScope=( ${StrScope//,/ } ) ; 
-		local ArrayVar=( ${StrVarArgList//,/ } ) ; 
-		local ArrayValue=( ${StrValueList//:/ } ) ;
-		local StrValueReturn="" ;
-		local StrDebug=${VPDebug:=False}
-		local ArrayScopeIndex=( "local" "declare -a" ) ;
+  local StrValueList=${VPValueList:=echo,__VALUE__} ; 
+  local StrLocality=${VPCallLocalityName:=Default} ; 
+  local StrScope=${VPScopeList:=AppsName:local,AppsOpt:local} ; 
+  local StrDefaultScope=${VPScopeDefault:=local} ;
+  local StrValueReturn="" ;
+  local StrDebug=${VPDebug:=False}
+  local ArrayScopeIndex=( "local" "declare -a" ) ;
 
-		function GetScope()
-		{
-				local __call_locality=( GS GetScope );
-				local ArrayArg=( $* ) ; 
-				local Arg0=${ArrayArg[0]} ;
-				local StrDebug=${GetScopeDebug:=False}
-    eval $( BVTIdType=0 BVTVarName=StrReturn BVTVarHold="0" BVTBoolVarName=\${Arg0:=local} BVTBoolCase="global" BVTBoolAssertion="1" BoolVarTest ) ;
-				echo -ne "${StrReturn}" ; 
+  function GetScope()
+  {
+    local __call_locality=( GS GetScope );
+    local ArrayArg=( $* ) ; 
+    local Arg0=${ArrayArg[0]} ;
+    local StrDebug=${GetScopeDebug:=False}
+    eval $( BVTIdType=0           \
+            BVTVarName=StrReturn  \
+            BVTVarHold="0"        \
+            BVTBoolVarName=\${Arg0:=local} \
+            BVTBoolCase="global"  \
+            BVTBoolAssertion="1"  \
+            BoolVarTest ) ;
+    echo -ne "${StrReturn}" ; 
 
-		}
-		function VarInScopeList()
-		{
-			local __call_locality=( VISL VarInScopeList );
-			local ArrayArg=( $* ) ; 
-			local Arg0=${ArrayArg[0]} ;
-			local StrDebug=${VISLDebug:=False} ;
-			local StrValue=${VISLValue:=AppsName} ;
-			local StrIsScoped=False ;
-			local StrValueReturn="False" ;
-			
+  }
+  function VarInScopeList()
+  {
+   local __call_locality=( VISL VarInScopeList );
+   local ArrayArg=( $* ) ; 
+   local Arg0=${ArrayArg[0]} ;
+   local StrDebug=${VISLDebug:=False} ;
+   local StrValue=${VISLValue:=AppsName} ;
+   local StrIsScoped=False ;
+   local StrValueReturn="False" ;
+   
    for (( intx=0 ; intx <= ${#ArrayArg[@]}-1 ; intx++ )) ; do 
-				local ArrayValue=( ${ArrayArg[${intx}]//:/ } ) ;
-				local StrSuffix=${ArrayValue[0]} ; 
-				if [ "${StrSuffix}" == "${StrValue}" ] ; then 
-					local StrScope=$( GetScope ${ArrayValue[1]} ) ; 
-					StrIsScoped=True
-					StrValueReturn="${StrIsScoped} ${StrScope} ${StrValue}" 
-				fi 
-			done 
-			echo -ne "${StrValueReturn}" ; 
-		}
+    local ArrayValue=( ${ArrayArg[${intx}]//:/ } ) ;
+    local StrSuffix=${ArrayValue[0]} ; 
+    if [ "${StrSuffix}" == "${StrValue}" ] ; then 
+     local StrScope=$( GetScope ${ArrayValue[1]} ) ; 
+     StrIsScoped=True
+     StrValueReturn="${StrIsScoped} ${StrScope} ${StrValue}" 
+    fi 
+   done 
+   echo -ne "${StrValueReturn}" ; 
+  }
  
  function VarReplace()
  {
-		local __call_locality=( VR VarReplace ) ;
-		local ArrayArg=( $* ) ; 
-		local Arg0=${ArrayArg[0]};
+  local __call_locality=( VR VarReplace ) ;
+  local ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]};
   local ArrayScoceA=(  __suffix__:${StrVarSuffix} __value__:${AValue} __prefix__:${StrVarSuffixType} __locality__:${StrLocality} ) ; 
-		local StrScoreResultParse ; 
+  local StrScoreResultParse ; 
   if [ "${AscopeType}" == "True" ] ; then 
    StrScoreResultParse= ${ArrayScopeIndex[${ArrayScopeTest[1]}]}
   else
@@ -250,27 +262,27 @@ function ValueParser()
    local ArrayIScope=( ${ArrayScoceA[${intx}]//:/ } ) 
    StrVarName=${StrVarName//${ArrayIScope[0]}/${ArrayIScope[1]}} ; 
   done 
-		StrVarName=${StrVarName//__scope__/${StrScoreResultParse}} ;
+  StrVarName=${StrVarName//__scope__/${StrScoreResultParse}} ;
   
  }
  
  function VarHelper()
  {
-		local __call_locality=( VH VarHelper ) ;
-		local ArrayArg=( $* ) ; 
-		local Arg0=${ArrayArg[0]};
+  local __call_locality=( VH VarHelper ) ;
+  local ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]};
   local ArrayScope=( ${ArrayScope[@]//,/ } ) ; 
   local StrDebug=${MainDebug:=False} ;
   for (( intx=0 ; intx <= ${#ArrayArg[@]}-1 ; intx++ )) ; do 
-		  local VarSeg=( ${ArrayArg[${intx}]//:/ } ) ; 
-				local StrVarSuffixType="${VarSeg[0]}" ;
-				local StrVarSuffix="${VarSeg[1]}" ;
-				local StrVarName="Variable __locality____suffix__,\n\tDefault Value __value__\n\tInternal variable: __prefix____suffix__\n" ;
-				
-				local ArrayScopeTest=( $( Value=${StrVarSuffix} \
+    local VarSeg=( ${ArrayArg[${intx}]//:/ } ) ; 
+    local StrVarSuffixType="${VarSeg[0]}" ;
+    local StrVarSuffix="${VarSeg[1]}" ;
+    local StrVarName="Variable __locality____suffix__,\n\tDefault Value __value__\n\tInternal variable: __prefix____suffix__\n" ;
+    
+    local ArrayScopeTest=( $( Value=${StrVarSuffix} \
                               VarInScopeList        \
                               ${ArrayScope[@]}    ) ) ; 
-				### __scope__ Tag is eclued, because it's the only one does not respect the
+    ### __scope__ Tag is eclued, because it's the only one does not respect the
     ### the looping sequence, explicitly needs a of Scope test to dismiss between
     ### local scoping and global scoping. 
     
@@ -280,68 +292,102 @@ function ValueParser()
     StrLocality=${StrLocality}            \
     AscopeType=${ArrayScopeTest[0]}       \
     VarReplace                            ;
-				StrValueReturn="${StrValueReturn} ${StrVarName}" ;
-			done 
-			echo -ne "${StrValueReturn}" ;
-			
-		}		
-		function __main_StartServices()
-		{
-   local __call_locality=( Main __main_StartServices ) ;
-   local ArrayArg=( $* ) ;
-   local Arg0=${ArrayArg[0]};
-			local ArrayScope=( ${ArrayScope[@]//,/ } ) ; 
-			local StrDebug=${MainDebug:=False} ;
-			for (( intx=0 ; intx <= ${#ArrayArg[@]}-1 ; intx++ )) ; do 
-				local VarSeg=( ${ArrayArg[${intx}]//:/ } ) ; 
-				local StrVarSuffixType="${VarSeg[0]}" ;
-				local StrVarSuffix="${VarSeg[1]}" ;
-				local StrVarName="__scope__ __prefix____suffix__=\${__locality____suffix__:=\${__locality____suffix__:=__value__}}" ;
-				
-				local ArrayScopeTest=( $( Value=${StrVarSuffix} \
+    StrValueReturn="${StrValueReturn} ${StrVarName}" ;
+   done 
+   echo -ne "${StrValueReturn}" ;
+   
+  }		
+  function __main_StartServices()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}";  
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ; 
+   fi    
+   local StrDebug=${MainDebug:=False} ;
+   
+   local ArrayScope=( ${StrScope//,/ } ) ; 
+   local ArrayVar=( ${StrVarArgList//,/ } ) ; 
+   local ArrayValue=( ${StrValueList//:/ } ) ;
+
+
+   for (( intx=0 ; intx <= ${#ArrayArg[@]}-1 ; intx++ )) ; do 
+    local VarSeg=( ${ArrayArg[${intx}]//:/ } ) ; 
+    local StrVarSuffixType="${VarSeg[0]}" ;
+    local StrVarSuffix="${VarSeg[1]}" ;
+    local StrVarName="__scope__ __prefix____suffix__=\${__locality____suffix__:=\${__locality____suffix__:=__value__}}" ;
+    
+    local ArrayScopeTest=( $( Value=${StrVarSuffix} \
                               VarInScopeList        \
                               ${ArrayScope[@]}    ) ) ; 
-				
-				StrVarSuffix=${StrVarSuffix}          \
+    
+    StrVarSuffix=${StrVarSuffix}          \
     AValue=${ArrayValue[${intx}]}         \
     StrVarSuffixType=${StrVarSuffixType}  \
     StrLocality=${StrLocality}            \
     AscopeType=${ArrayScopeTest[0]}       \
     VarReplace                            ;
-				StrValueReturn="${StrValueReturn} ${StrVarName} ; " ;
-			done 
-			echo -ne "${StrValueReturn}" ;
-			
-		}
+    StrValueReturn="${StrValueReturn} ${StrVarName} ; " ;
+   done 
+   echo -ne "${StrValueReturn}" ;
+   
+  }
   ### ${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n
-		local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}${StrGetMsgSwitches}\n${StrListMsgSwitches}\n--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--query\t\tQuery for a Prefixed variable name.\n${StrCompWordMsgSwitches}\n" ;
-		if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-			GetVarReference ${__call_locality[1]} ; 
-			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-		elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-			eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-			echo -ne """${ArgGet}\n""" ; 			
-		elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-			eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
-		elif [ "${Arg0:=--startservices}" == "--varhelper"	] ; then 
-			ArrayScope=${ArrayScope[@]// /,}      \
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n\t--set\t\tStore value in an instance.\n\t\t\t( Overwrite value if exist\n\t\t\tstore value in a instance ).\n\t\t\tAlso wrong-stored value might affect\n\t\t\tthe application.\n\t--query\t\tQuery in instance for a variable.\n${StrCompWordMsgSwitches}\n" ;
+  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ; 			
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
+  elif [ "${Arg0:=--startservices}" == "--varhelper"	] ; then 
+   ArrayScope=${ArrayScope[@]// /,}      \
    StrVarSuffix=${StrVarSuffix}          \
    StrValueReturn=${StrValueReturn}      \
    StrDefaultScope=${StrDefaultScope}    \
    StrLocality=${StrLocality}            \
    VarHelper   ${ArrayVar[@]} ;
   elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
-		 eval $( __GetVarReferenceCompWord ) ;
-		elif [ "${Arg0:=--startservices}" == "--startservices"	] ; then 
-			ArrayScope=${ArrayScope[@]// /,} \
+   eval $( __GetVarReferenceCompWord ) ;
+  elif [ "${Arg0:=--startservices}" == "--startservices"	] ; then 
+   ArrayScope=${ArrayScope[@]// /,} \
    StrVarSuffix=${StrVarSuffix} \
    StrValueReturn=${StrValueReturn} \
    StrDefaultScope=${StrDefaultScope} \
    StrLocality=${StrLocality}  Main ${ArrayVar[@]} ; 
-		fi 
-	
+  fi 
+ 
 }
 
+eval $( GFCFuncName=CompiledBashCode GlobalFunctionCleaning ) ;
+
+function CompiledBashCode () 
+{ 
+  local __call_locality=( CBC CompiledBashCode ) ;
+  local ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]};
+  local StrPathRefCompil=${CBCCacheCompile:=/var/cache/Fnct.D/CompiledBashCode};
+  local StrPathLinking=${CBCPathLink:=/usr/local/bin} ; 
+  local StrShcCompiler=${CBCShellCompiler:=/usr/local/bin/shc} ;
+  local StrBashTemplate=${CBCFuncShellTemplate:=/etc/init.d/Fnct.D/examples/template_funct.bash} ;
+  if [ ! -d /var/cache/Fnct.D/${__call_locality[1]} ] ; then 
+   mkdir /var/cache/Fnct.D/${__call_locality[1]} ; 
+  fi   
+  StrFuncCode=$( declare -f ${Arg0} );
+  StrTemplateFile=$( cat ${StrBashTemplate} );
+  StrTemplateFile=${StrTemplateFile//__FUNCT__/${StrFuncCode}};
+  StrTemplateFile=${StrTemplateFile//__NAME__/${Arg0}};
+  echo "${StrTemplateFile}" > /${Arg0}.bash;
+  ${StrShcCompiler} -f ${Arg0}.bash;
+  ln -sf ${StrPathRefCompil}/${Arg0}.bash.x ${StrPathLinking}/${Arg0};
+  $( eval $( eval GFCFuncName=${Arg0} GlobalFunctionCleaning ) )
+}
 
 
 eval $( GFCFuncName=DefaultTest GlobalFunctionCleaning ) ;
@@ -419,13 +465,18 @@ function DefaultTest()
   elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
    eval $( eval CAFunctName=DefaultTest CAIsAddParent=False __Call_Argument ) ; 
   elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
-   eval $( eval CAFunctName=DefaultTest CAIsAddParent=False CallArgument ) ; 
+   eval $( eval \
+     CAIsAddDebug=True \
+     CAProvideDebug=DisplayDebug,DisplayEntry,DisplayCmd,DisplayParser \
+     CAFunctName=DefaultTest \
+     CAIsAddParent=False \
+     CallArgument ) ; 
   fi
   
-  local BoolDisplayDebug=${DTDisplayDebug:=False} ; 
-  local BoolDisplayEntry=${DTDisplayEntry:=False} ; 
-  local BoolDisplayCmd=${DTDisplayCmd:=False} ; 
-  local BoolDisplayParser=${DTDisplayParserNotice:=False} ; 
+  #local BoolDisplayDebug=${DTDisplayDebug:=False} ; 
+  #local BoolDisplayEntry=${DTDisplayEntry:=False} ; 
+  #local BoolDisplayCmd=${DTDisplayCmd:=False} ; 
+  #local BoolDisplayParser=${DTDisplayParserNotice:=False} ; 
   local BoolBodyIsEval=${DTBodyEvalCmd:=False} ; 
   local StrBodyTag=${DTBodyTagTpl:='__BODY__'} ; 
   local StrExecEvalStart=${DTStartExec:='\$('} ;

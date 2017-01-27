@@ -81,20 +81,73 @@ fi
 
 if [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
  #unset CallArgument ; 
- eval $( GFCFuncName=CallArgument GlobalFunctionCleaning ) ; 
+ $( eval $( GFCFuncName=CallArgument GlobalFunctionCleaning ) ) ; 
  function CallArgument()
  {
+   ### section : Function Signature
    local -a ArrayArg=( $* ) ;
    local -a __call_locality=( CA CallArgument ) ;
    local Arg0="${ArrayArg[0]}";
+   local StrStartMain=${CAFuncStart:=__main_StartServices} ; 
    
+   ### section : Variable uses
    local StrFuncName=${CAFunctName:=None} ; 
    local StrScope=${CACodeScope:=local} ;
    local BoolUsingSed=${CAUsingSedTrim:=True} ; 
    local BoolAddParent=${CAIsAddParent:=False} ; 
    local BoolChildBoot=${CAIsChildBoot:=False} ; 
-   local StrStartMain=${CAFuncStart:=__main_StartServices} ; 
-   local StrVarList="StrVarList,StrFuncName,StrScope,StrStartMain,BoolChildBoot,BoolAddParent,BoolUsingSed" ; 
+   local BoolAddDebug=${CAIsAddDebug:=False} ; 
+   local BoolAddInt=${CAIsAddInt:=False} ; 
+   local BoolAddStr=${CAIsAddStr:=False} ; 
+   local StrDebugList=${CAProvideDebug:=DisplayDebug,DisplayEntry,DisplayCmd,DisplayParserNotice}
+   local StrIntList=${CAProvideInt:=VarA,VarA,VarA,VarA,Width,Height} ;
+   local StrStrList=${CAProvideStr:=Title,Text,Span,Col1,Col2} ;
+   local StrVarTpl="__SCOPE__ __0____VAR__=\${__SHORTNAME____1____VAR__:=__TYPE_BASED__}" ; 
+   local StrBoolSet=${CABoolSetName:=Bool,Is} ;
+   local StrIntSet=${CAIntSetName:="Int,''"} ;
+   local StrStrSet=${CAStrSetName:="Str,''"} ;
+   local StrVarList="StrVarList,StrFuncName,StrScope,StrStartMain,BoolChildBoot,BoolAddParent,BoolUsingSed,StrDebugList,StrIntList,StrStrList,StrVarTpl,BoolAddDebug,BoolAddInt,BoolAddStr,StrBoolSet,StrIntSet,StrStrSet" ; 
+
+
+    
+   function VarGenerator()
+   {
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( VG VarGenerator ) ;
+    local Arg0="${ArrayArg[0]}";
+    
+    local StrDebugList=${VGVarList:=Var1,Var2,Var3} ; 
+    local StrVarSetDef=${VGVarSet:=Bool,Is} ; 
+    local StrDefaulVarTpl=${VGVarTpl:="__0____VAR__=__SHORTNAME____1____VAR__"} ;  
+    local StrDefaultValue=${VGVarValue:=None} ; 
+    
+    #echo -ne "\nDefault Value:[${StrDefaultValue}]\n" > /dev/stderr ; 
+    #echo -ne "\nArrayVarExpression:[${StrVarSetDef}]\n" > /dev/stderr ; 
+    local ArrayVarExpression=( ${StrVarSetDef//,/ } ) ;
+    local ArrayDebugList=( ${StrDebugList//,/ } ) ;
+    local StrAddCode ;
+    local StrNewVarName ;
+    local StrDbgVarParse ; 
+    for (( intx=0 ; intx <= ${#ArrayDebugList[@]}-1 ; intx++ )) ; do
+     StrNewVarName=${ArrayDebugList[${intx}]} ; 
+     StrDbgVarParse=${StrDefaulVarTpl//__VAR__/${StrNewVarName}}
+     StrAddCode="${StrAddCode} ; ${StrDbgVarParse}" ; 
+     #if [ ${intx} -lt $(( ${#ArrayDebugList[@]}-1 )) ] ; then 
+     # StrAddCode="${StrAddCode}" ; 
+     #fi 
+    done
+    ### Affecting default Value.
+    StrAddCode=${StrAddCode//__TYPE_BASED__/${StrDefaultValue}} ; 
+    for(( intx=0; intx <= ${#ArrayVarExpression[@]} ; intx++ )) ; do 
+     StrValueExpr=${ArrayVarExpression[${intx}]} ;
+     if [ "${StrValueExpr:=None}" == "None" ] ; then 
+      StrAddCode=${StrAddCode//__${intx}__/} ; 
+     else
+      StrAddCode=${StrAddCode//__${intx}__/${ArrayVarExpression[${intx}]}} ; 
+     fi
+    done 
+    echo "${StrAddCode}" ;  
+   }
    
    function __main_StartServices()
    {
@@ -109,8 +162,45 @@ if [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then
     else
      StrShortName=$( GetStdPrefixName ${StrFuncName} ) ;
     fi 
-    local StrBootStrap="__SCOPE__ StrStartMain=\${__SHORTNAME__FuncStart:=__main_StartServices} ;" ; 
-    local StrArgumentCode="""__SCOPE__ ArrayArg=( \$* ); __SCOPE__ __call_locality=( __SHORTNAME__ __LONGNAME__ __PARENT_NAME__ ); __SCOPE__ Arg0=\${ArrayArg[0]}; __SCOPE__ StrParentApps=\${__call_locality[1]}; __BOOT_STRAP__""" ; 
+    local StrBootStrap="__SCOPE__ StrStartMain=\${__SHORTNAME__FuncStart:=__main_StartServices} " ; 
+    local StrArgumentCode="""__SCOPE__ ArrayArg=( \$* ) ; __SCOPE__  __call_locality=( __SHORTNAME__ __LONGNAME__ __PARENT_NAME__ ) ; __SCOPE__ Arg0=\${ArrayArg[0]} ; __SCOPE__ StrParentApps=\${__call_locality[1]} ; __BOOT_STRAP__ __DEBUG__ __ADD_INT__ __ADD_STR__""" ; 
+    
+    ### 
+    ### Section Adding Debug Variable after specifying 
+    ### CAIsDebugVar=True 
+    ### CAProvideDebug=DisplayDebug,DisplayEntry,DisplayCmd ... 
+    ### 
+
+    local ArrayTagAdd=( BoolAddDebug,StrDebugList,StrBoolSet,__DEBUG__,False BoolAddInt,StrIntList,StrIntSet,__ADD_INT__,0 BoolAddStr,StrStrList,StrStrSet,__ADD_STR__,None ) ;
+    local StrDebugTpl ; 
+    local ArrayCurrGrp ; 
+    local StrDebugStatement ; 
+    local BoolCurrCond ; 
+    local StrCurrLst ;
+    local StrCurrSetVar ; 
+    local StrTypeBasedValue ;
+    for (( intGrpVarTag=0 ; intGrpVarTag <= ${#ArrayTagAdd[@]}-1  ; intGrpVarTag++ )); do 
+     ArrayCurrGrp=( ${ArrayTagAdd[${intGrpVarTag}]//,/ } )
+     eval BoolCurrCond="\${${ArrayCurrGrp[0]}}" ;
+     eval StrCurrLst="\${${ArrayCurrGrp[1]}}" ; 
+     eval StrCurrSetVar="\${${ArrayCurrGrp[2]}}" ;
+     StrDebugTpl="${ArrayCurrGrp[3]}" ; 
+     StrTypeBasedValue="${ArrayCurrGrp[4]}" ; 
+     StrDebugStatement=${StrDebugTpl//;/} ; 
+      
+     if [ "${BoolCurrCond:=False}" == "False" ] ; then 
+      StrArgumentCode=${StrArgumentCode//${StrDebugTpl}/} ; 
+     else
+      local StrDebugAddVar=$( VGVarTpl=${StrVarTpl}        \
+                              VGVarList=${StrCurrLst}      \
+                              VGVarSet="${StrCurrSetVar}"  \
+                              VGVarValue="${StrTypeBasedValue}" \
+                              VarGenerator ); 
+      StrArgumentCode="${StrArgumentCode//${StrDebugStatement}/${StrDebugAddVar}}" ; 
+     fi
+    done 
+
+
     if [ "${BoolAddParent:=False}" == "True" ] ; then 
      StrArgumentCode=${StrArgumentCode//__PARENT_NAME__/\$\{StrParentApps\}} ; 
      if [ "${BoolChildBoot:=False}" == "False" ] ; then 
@@ -134,14 +224,23 @@ if [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then
     
    }
 
+   ### section : helper
    local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
-   local StrNameHelper="__Call_Argument\tStand for Meta-Function of Fnct.D";
-   local StrSummary="This Meta-Function __Call_Argument is a mechanism describe in README.rst to inform function from it's name, it's Short-name and presence of parent or in which function the sub-function is part of. This Meta-Function generate important code and replace state-of-the-art declaration of __call_locality, StrParentApps, and also define the BootStrap name in top-function. Bootstrap is a procedure handled by --start-services allow to start the Main function or other subfunction if they are equiped of Second-Role-Function. Second-Role-Function are some functionality embedded inside a function called by the bootstrap process to give a second action call from your top-function. " ; 
-   local StrSynopsis="__Call_Argument in replacement of some step to code appropriate Fnct.D compliant function to talk and communicate with other entity is a Procedure-ready to apply to a top-function and Prefixed-Variable can only add Layer of information to help the function to grow in diversity of Fnct.D method helping to develop with less code.";
+   local StrNameHelper="\n\t\tStand for Meta-Function of Fnct.D";
+   local StrSynopsis="${__call_locality[1]} in replacement of some step to code appropriate\n\t« Fnct.D » compliant function to talk and communicate  with other entity\n\tis a 'Procedure-ready'  to apply to a top-function and Prefixed-Variable \n\tcan  only add  Layer of information to help the function to grow in\n\tdiversity  of Fnct.D  method helping to  develop with less  code.\n";
+   local StrSummary="This Meta-Function CallArgument is a mechanism describe\n\tin README.rst to inform function from it's name, it's Short-name and\n\tpresence of parent or in which function the sub-function is part of.\n\tThis Meta-Function generate important code and replace state-of-the-art\n\tdeclaration of __call_locality, StrParentApps, and also define the\n\tBootStrap name in top-function. Allowing to Create your Variable name\n\tauto-transited  to  Prefixed-Name,  make  it easy  ( after version\n\t0.0.2 ), since  uses of  Prefixed-variable  ( CAIsAddDebug, CAIsAddInt,\n\tCAIsAddStr ), and it's variable partner ( CAProvideDebug, CAProvideInt,\n\tCAProvideStr )  receiving in  CSV format  your  Variable and will be\n\tparsed to  Fnct.D  variable creation  algorithm.  Using it's definition\n\ttransition [CA{Bool,Int,Str}SetName] let  you change the Fnct.D Based\n\tPolished notation  and afford you a free hand in this design.  Back to\n\tBootstrap is a procedure handled by --start-services allow to start the\n\tMain function or  other subfunction if they are equiped of\n\tSecond-Role-Function.  Second-Role-Function  are  some functionality\n\tembedded inside a function called by the bootstrap process to give a\n\tsecond action call  from your  top-function.  Finally, MRU will be\n\timplemented from  here CallArgument,  where it's the function entry,\n\tand it's excellent location to start-reading from your command line\n\toption and Prefixed-Variable fixed to your Environment and make a entry\n\tto scan for your last command call from this function and will find-out\n\tlast similar componnent. Where MRU stand for « Most Recent Unit », it\n\tmade possible for function that do generate a constant output from\n\tbased command will always returning the same result.\n" ;
+   #local StrSummary="This Meta-Function CallArgument" ; 
    local StrDescription="This section contain Detailed information for __FUNCT__" ;
+
+
    
+   ### section : block if-switches
    if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-    GVRIsName=True GVRIsSynopsis=True GVRIsSummary=True GVRIsDesc=False GetVarReference ${__call_locality[1]} ; 
+    GVRIsName=True \
+    GVRIsSynopsis=True \
+    GVRIsSummary=True \
+    GVRIsDesc=True \
+    GetVarReference ${__call_locality[1]} ; 
     echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
    elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
     eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
@@ -228,9 +327,9 @@ if [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then
    }
 
    local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
-   local StrNameHelper="__Call_Argument\tStand for Meta-Function of Fnct.D";
+   local StrNameHelper="Stand for Meta-Function of Fnct.D";
+   local StrSynopsis="${__call_locality[1]} in replacement of some step to code appropriate Fnct.D compliant function to talk and communicate with other entity is a Procedure-ready to apply to a top-function and Prefixed-Variable can only add Layer of information to help the function to grow in diversity of Fnct.D method helping to develop with less code.";
    local StrSummary="This Meta-Function __Call_Argument is a mechanism describe in README.rst to inform function from it's name, it's Short-name and presence of parent or in which function the sub-function is part of. This Meta-Function generate important code and replace state-of-the-art declaration of __call_locality, StrParentApps, and also define the BootStrap name in top-function. Bootstrap is a procedure handled by --start-services allow to start the Main function or other subfunction if they are equiped of Second-Role-Function. Second-Role-Function are some functionality embedded inside a function called by the bootstrap process to give a second action call from your top-function. " ; 
-   local StrSynopsis="__Call_Argument in replacement of some step to code appropriate Fnct.D compliant function to talk and communicate with other entity is a Procedure-ready to apply to a top-function and Prefixed-Variable can only add Layer of information to help the function to grow in diversity of Fnct.D method helping to develop with less code.";
    local StrDescription="This section contain Detailed information for __FUNCT__" ;
    
    if [ "${Arg0:=--startservices}" == "--help"	] ; then 

@@ -1,5 +1,21 @@
 #!/bin/bash
 
+### Important notice on uses of bash with String 'Pattern substitution' and uses 
+### of 'Pattern Matching' from bash Manual:
+###
+### The sorting order of characters in range expressions is determined by the 
+### current  locale  and  the  values of the  LC_COLLATE  or  LC_ALL  shell  
+### variables, if set.  To obtain the traditional interpretation of range  
+### expressions, where [a-d] is equivalent to [abcd], set value of the LC_ALL 
+### shell variable to  C,  or  enable  the  globasciiranges  shell  option.
+###
+### So This project use it in many way and use the followed form for LC_ALL
+### LC_ALL=C
+### Managed by LibLoader. 
+### 
+### 
+
+
 ##. /etc/init.d/fnct.d/fnct_lib
 
 declare -a ArrayMetaList=( Install Archives ) ; 
@@ -60,20 +76,20 @@ function PatchUpdater()
  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
  
  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-			GetVarReference ${__call_locality[1]} ; 
-			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-		echo -ne """${ArgGet}\n""" ;
-	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( __GetVarReferenceList ) ;	
-	elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+   GetVarReference ${__call_locality[1]} ; 
+   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ;
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( __GetVarReferenceList ) ;	
+ elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
   eval $( VTVValueEntry=${StrVarList}, \ 
           VTVIsArrayStyleInsert=True \
           VTVIsValueReAssign=True \
           VTVIsValueToConvert=False \
           ValueToVariable  ) __main_StartServices ; 
-	fi  
+ fi  
 }
 ### Warning, PatchUpdater work only with LibLoader and presence of fnct_debian_lib loaded.
 ### Let LibLoader call PatchUpdater or wait on your command shell to call PatchUpdater. 
@@ -140,14 +156,20 @@ function LibLoader()
  
  local ArrayLibStatus=( "Testing Lib Fnct.D\n" "Registering Lib Fnct.D\n" )
  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-			echo -ne "Function ${__call_locality[1]}\n" ; 
+   echo -ne "Function ${__call_locality[1]}\n" ; 
    echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-		echo -ne """${ArgGet}\n""" ;
-	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( __GetVarReferenceList ) ;	
-	elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
+ elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+  echo -ne """${ArgGet}\n""" ;
+ elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+  eval $( __GetVarReferenceList ) ;	
+ elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
+ ### Add LC_ALL check .
+ ### it should remove it and turn back LC_ALL to ''.
+ if [ "${LC_ALL:=C}" == "C" ] ; then 
+  export LC_ALL= ; 
+ fi 
+
  if [ "${BoolDisplayProg:=True}" == "True" ] ; then
    echo -ne "${ArrayLibStatus[${IntStatusLib}]}" > /dev/stderr ; 
  fi ;  
@@ -166,23 +188,27 @@ function LibLoader()
    fi
   done 
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+ ### Add LC_ALL check .
+ if [ "${LC_ALL:=None}" == "None" ] ; then 
+  export LC_ALL=C ; 
+ fi 
  if [ "${BoolDisplayProg:=True}" == "True" ] ; then
    echo -ne "${ArrayLibStatus[${IntStatusLib}]}" > /dev/stderr ; 
  fi ;  
-	for (( intx=0 ; intx <= ${#ArrayLib[@]}-1 ; intx++ )) ; do 
-	 _LibName=( ${ArrayLib[${intx}]//\// } ) ; 
-	 LibName=${_LibName[$((${#_LibName[@]}-1))]} ; 
-	 LibFile=${FNCTDLIBPATH}/${ArrayLib[${intx}]} ;
-	 if [ "${BoolDisplayProg:=True}" == "True" ] ; then
+ for (( intx=0 ; intx <= ${#ArrayLib[@]}-1 ; intx++ )) ; do 
+  _LibName=( ${ArrayLib[${intx}]//\// } ) ; 
+  LibName=${_LibName[$((${#_LibName[@]}-1))]} ; 
+  LibFile=${FNCTDLIBPATH}/${ArrayLib[${intx}]} ;
+  if [ "${BoolDisplayProg:=True}" == "True" ] ; then
     test -e ${LibFile} && echo -ne "Loading...\t\t[ \033[01;33m${LibName}\033[00m ]\n" > /dev/stderr ;
   fi 
-	 test -e ${LibFile} && . ${LibFile} ; 
-	 if [ "${LibName:=fnct_lib}" == "fnct_debian_lib" ] ; then 
+  test -e ${LibFile} && . ${LibFile} ; 
+  if [ "${LibName:=fnct_lib}" == "fnct_debian_lib" ] ; then 
    Sertvices="Not ready"
   ### Services Ready for fnct_debian_lib, update can be inserted 
   fi 
  done 
-	
+ 
  fi 
 
 }

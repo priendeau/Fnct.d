@@ -1266,24 +1266,12 @@ function __old_vlc_rate()
   ### (IntSocketTimeExpr) + IntSleep to not represent the real interleave... 
   IntTimeInterleave=$(( ( ${SECONDS} + ${IntSleep} ) - ${IntTTimer} )) ; 
   
+  ### Sleeper-section of __old_vlc_rate
   while [ ${IntTimeInterleave} -ge ${SECONDS} ] ; do 
-   intCountTic=0;
-   for ((intCT=0 ; intCT <= ${IntTimeCLick} ; intCT++ )) ; do 
-    let intCountTic=intCountTic+1 ; 
-    #intCountTic=$(( ${intCountTic} + 1 )) ;
-    ### It supressing the /bin/sleep call which is at least
-    ### less external call. Dealing with Tinyer interleave like 
-    ### having milliseconds acces require a quantumic variable
-    ### operate by bash to update like ${MILLISEC} which is not 
-    ### existing actually, having application that master this 
-    ### can be kernel module creating device to read from /dev/...
-    ### So calibrating the  IntTimeCLick from VLCTIMECLICK and
-    ### boosting value from VLCRATEDURATION can be possible. 
-    ### Question mind me: Does a simple for command to increase
-    ### a counter will turn slower in a higher load-average from  
-    ### many call made early by application that voluntary slow
-    ### slow your system ?
-   done 
+   ### 2017-01-26
+   ### Does re-accept to handle sleep with such fraction value
+   ### since it have always support it... Really ! 
+   sleep 0.05 ;
   done 
   
   ### Note: 
