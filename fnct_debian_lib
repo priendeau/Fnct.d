@@ -2040,7 +2040,8 @@ function ZenityShellEval()
  
 
  local IntSleep=${ZSESleepInterval:=5}  ;
- local IntFontSize=${ZSEFontSize:=12}   ; 
+ local IntFontSize=${ZSEFontSize:=12}   ;
+ local StrFontFamily=${ZSEFontFamily:=Monospace} ;  
  local IsEditField=${ZSEEditable:=True} ; 
  local IsAddFootPrint=${ZSEAddFootPrint:=True} ; 
  local StrTitle=${ZSEZenityTitle:='Shell Evaluation command'} ;
@@ -2209,7 +2210,7 @@ function ZenityShellEval()
   while [ ${IntRes} -eq 1 -a ${IntShellQuit} -eq 0 ] ; do 
    local CmdEval=$( zenity \
               --text-info ${StrEditableAttr} \
-              --font=${IntFontSize} \
+              --font="${StrFontFamily} ${IntFontSize}" \
               --filename=${HOME}/${TmpUUIDEdit} \
               --title="${StrTitle}" \
               --width=${IntWidth} \
