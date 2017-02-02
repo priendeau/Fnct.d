@@ -427,8 +427,7 @@ DocHelper            - Generate the Appropriate String required to create you He
                        - Name helper
                        - Synopsis to talk about your function.
                        - Summary  to introduce about uses of your function.
-                       - Description Explict description of your function and will
-                        to add all Prefixed-Variable description. 
+                       - Description Explict description of your function and will to add all Prefixed-Variable description. 
 
 build_form           - From 'Paper Draft informations', section ZenityBuildForm is a
                      compromising tool to read function definition allowing you to 
