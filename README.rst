@@ -437,6 +437,26 @@ build_form           - From 'Paper Draft informations', section ZenityBuildForm 
                      And Another windows following this will give you the space to
                      entre variable to fill and finally paste-it to your code location. 
 
+funct_Verbosis       - Create a sub-function called Verbosis. Used in debug and general
+                     echoing the information, this piece of code does prepare information
+                     to be formater, tagged during a debug observation or simply echoed 
+                     for future evaluation. This snippets is particular and uses Base64
+                     Codec from a Shell script caller Base64Codec (available in 
+                     MakeFileInstaller) to depack tge function and leave as-is this 
+                     function without impacting on code pasting. Some may understand, 
+                     pasting part of code to appear formated inside Geany require insert
+                     extra Tab symbold '\n' and already existing tab inside the code 
+                     require a double or tripple back-slash to appear as valid. Depacting
+                     information from BAse64 fix this problem and may snippets FnctDSnippets
+                     releave us for all pain from parsing.
+                     
+FnctDSnippets        - Futhermore FnctDSnippets is the name of the future Fnct.D 
+                     Snippets-handler from Geany. It rather use the Zenity list handler
+                     to provide a list of new features from Possible development. It will
+                     include list of possible action and possibility to call a composed 
+                     code stored by an UUID format where your query in a search will 
+                     return it as code ready to paste it. Example of 
+
 ... And many more example are comming to enhance developping rapidly with Fnct.D .
 
 Geany was choosed to be present in Ubuntu, many Debian distribution and being light
