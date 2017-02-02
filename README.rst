@@ -418,7 +418,9 @@ Making different it install various script, awk-script, shell script, source exa
 Example like :
 
 main_start_services  - Generate the sub-function __main_StartServices inside a function you want to developt.
+
 block_switches       - Generate All the Switches based on call of --startservices, --stopservices, --get, --list.
+
 SwitchMessages       - Add the default Switches message to your function, when --help is called
 
 DocHelper            - Generate the Appropriate String required to create you Helper Message including
