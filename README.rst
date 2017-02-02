@@ -466,123 +466,123 @@ Don't hesitate to use GitChckBranchEngine, to select a Branch and regulary
 updating your MakeFileInstaller branch if have at least installed it.
 
  
-..code:: shell
-
+.. code:: shell
+	
   make helper 
-  
-  
-  make:
 
-  Fnct.D Makefile to Developpers.
-  Barely a method to easy-install the Fnct.D library and start making template 
-  out of your code before making official sources...
 
-  Intended for  Network Administrator  for fast  development or  compilation of
-  widget. Network Administrator may use it for as an Easy way to determine role 
-  and strength of environment configuration.
+   make:
 
-  Easy to use it use some function from Fnct.D and may install it upon your 
-  decision.
+   Fnct.D Makefile to Developpers.
+   Barely a method to easy-install the Fnct.D library and start making template 
+   out of your code before making official sources...
 
-  Intended fot Developpers for studying mechanisms of many ABI at once, it uses
-  Fnct.D to  elaborate  observations of Linux platforms. Having Developped this 
-  top Makefile to  allows  compilation of  widget  for simple  uses  it  barely 
-  cumulates  Assembly / Assembler effort  to compare C  code to  Assembly  and 
-  'vice versa'. It's  role to take a  decompiled Executable to an  assembly is 
-  possible with GCC compiler, Gnu AS (Assembler) and Gnu objdump (Object dumper) 
-  and Gnu gdb as well. 
+   Intended for  Network Administrator  for fast  development or  compilation of
+   widget. Network Administrator may use it for as an Easy way to determine role 
+   and strength of environment configuration.
 
-  This is also another copyleft license for software and other kinds of works. 
+   Easy to use it use some function from Fnct.D and may install it upon your 
+   decision.
 
-  Delivered  examples from  this makefile are simply work-around and not deserved 
-  to produce hacking, hack or Denial of Services.  Theses code  are all available
-  in Canadian library.  Theses example are  showed and  demonstrated by former in
-  educational in computer  science and do  deserve the logic you should have left
-  schools with before starting  here... Why are we getting this once, as topology
-  to your knowledge...
+   Intended fot Developpers for studying mechanisms of many ABI at once, it uses
+   Fnct.D to  elaborate  observations of Linux platforms. Having Developped this 
+   top Makefile to  allows  compilation of  widget  for simple  uses  it  barely 
+   cumulates  Assembly / Assembler effort  to compare C  code to  Assembly  and 
+   'vice versa'. It's  role to take a  decompiled Executable to an  assembly is 
+   possible with GCC compiler, Gnu AS (Assembler) and Gnu objdump (Object dumper) 
+   and Gnu gdb as well. 
 
-  Suggestion:
-   This Makefile being universel for Fnct.D project, linking it to another source
-   path will require to link (signed_file.mk Fnct_D.mk) to be linked too. In 
-   advantage to linking this Makefile you may conserve Library from pkg-config
-   query unless you are not calling the clobber . (*4)
+   This is also another copyleft license for software and other kinds of works. 
 
-  Target:
+   Delivered  examples from  this makefile are simply work-around and not deserved 
+   to produce hacking, hack or Denial of Services.  Theses code  are all available
+   in Canadian library.  Theses example are  showed and  demonstrated by former in
+   educational in computer  science and do  deserve the logic you should have left
+   schools with before starting  here... Why are we getting this once, as topology
+   to your knowledge...
 
-   install / uninstall : Allow installing Fnct.D / un-installing Library.
+   Suggestion:
+    This Makefile being universel for Fnct.D project, linking it to another source
+    path will require to link (signed_file.mk Fnct_D.mk) to be linked too. In 
+    advantage to linking this Makefile you may conserve Library from pkg-config
+    query unless you are not calling the clobber . (*4)
 
-   clean               : Clean several object and binary from thi project.
-   
-   pkg-config-browser  : a plugin to browse application pkg-config and 
-               retain library from this application.
-    check_signature     : 
-  Prefixed Variable:
-    DISPLAY_GOAL=1      : Display the goal used during make pass. 
-    KEEP_BIN=1          : During a clean passes, don't erase binary in 'bin' path
-   C/C++/Asm related options         
-    ABI32=1             : Allow passing to LD/GCC/AS/CPP 32-bit ABI.Default is 
-                          64-bit ABI, linux-gnu x86_64
-   Assembly related options
-    ASM_ENTRY_FUNC=1    : ASM/S Source global function using generally '_start'  
-                          mainly. Some using ASM file from gcc may have    
-                          'main' instead (easier uses of unistd call)
-                          This change it for 'main' and impact
-                          GDB_GET_FUNCT_FROM_SOURCE.
-    DECOMPILATION=1     : (*)Have notice Experimental switch,decompile
-                          executable from object and uses objdump 
-                          with mixed code.
-  Package Config Variable:
-   PKG_CONFIG_QUERY    : Used as Text Query to fill. Should include name
-                          or part of the name of the package. 
-                          This target should support many package being
-                          passed with space or comma separated value. It
-                          will return all the value. 
-    PKG_CONFIG_LIB=1    : Will add your query to common CFLAGS/AS_FLAGS
-                          and any compilation will Link against declared
-                          library. Require to make clobber to clean the 
-                          library handler. 
-  Debugging purposes    :
-    RUN_WITH_DEBUGGER=1 : Instead of running the application it load the GDB.
-                          - This mean having all debugging symbols require. 
-                          ASSEMBLY_GSTAB definition .
-    ASSEMBLY_GSTAB=1    : (***) Have notice This is the default Symbol set 
-                          offered to debug with.
-                         
-    GDB_GET_FUNCT_FROM_SOURCE=1 (**)Have notice
-                        : Allow makefile searching function name
-                          for Assembly file only.
-    WITH_ARG=1          : Pass all argument to GDB ()
+   Target:
+
+    install / uninstall : Allow installing Fnct.D / un-installing Library.
+
+    clean               : Clean several object and binary from thi project.
     
-  Passing Argument to make toward GDB.
-    - Are comma separated value ',' (CSV).
-    - Use StrArg, and overall variable should be quoted.   
-    ex:
-      StrArg="Arg1,Arg2" ASSEMBLY_GSTAB=1 RUN_WITH_DEBUGGER=1 make
-                         
-  *Notice DECOMPILATION: Also require to append to your executable
-   name 'decompile', as example : 
-    DECOMPILATION=1 ABI32=1 make cpuid32.decompil
-   (*end of notice)
-  **Notice GDB_GET_FUNCT_FROM_SOURCE: Does produce a .gdb target file
-    ex: RUN_WITH_DEBUGGER=1 make envvars ; will produce envvars.gdb  
-    Discovered Assembly with AS support function starting with '.'
-    which is not compatible with gdb., regexp in makefile 
-    REGEXP_FIND_FUNC_NAME is adapted to work detecting '.function'
-   Code generation, is twice simple, as example from C source uuid.c
-   (*end of notice)
-  ***Notice ASSEMBLY_GSTAB: This options added all alone will add gstab
-    to produce assembly Code:
-   make uuid.S           
-    In case of source compilation with option '-gstab' it's reported by 
-    gcc documentation to may not work or being compatible, but effort 
-    is present for this makefile.
-   (*end of notice)
-  (*4)Notice Clobering services and PKG_CONFIG_QUERY services is partially
-    implanted and (SHOULD NOT) give exactly what it should until this 
-    notice is not retreived.
-    To make a specific available target, use make compiled to show 
-    available target       
-   (*end of notice)
+    pkg-config-browser  : a plugin to browse application pkg-config and 
+                retain library from this application.
+     check_signature     : 
+   Prefixed Variable:
+     DISPLAY_GOAL=1      : Display the goal used during make pass. 
+     KEEP_BIN=1          : During a clean passes, don't erase binary in 'bin' path
+    C/C++/Asm related options         
+     ABI32=1             : Allow passing to LD/GCC/AS/CPP 32-bit ABI.Default is 
+                           64-bit ABI, linux-gnu x86_64
+    Assembly related options
+     ASM_ENTRY_FUNC=1    : ASM/S Source global function using generally '_start'  
+                           mainly. Some using ASM file from gcc may have    
+                           'main' instead (easier uses of unistd call)
+                           This change it for 'main' and impact
+                           GDB_GET_FUNCT_FROM_SOURCE.
+     DECOMPILATION=1     : (*)Have notice Experimental switch,decompile
+                           executable from object and uses objdump 
+                           with mixed code.
+   Package Config Variable:
+    PKG_CONFIG_QUERY    : Used as Text Query to fill. Should include name
+                           or part of the name of the package. 
+                           This target should support many package being
+                           passed with space or comma separated value. It
+                           will return all the value. 
+     PKG_CONFIG_LIB=1    : Will add your query to common CFLAGS/AS_FLAGS
+                           and any compilation will Link against declared
+                           library. Require to make clobber to clean the 
+                           library handler. 
+   Debugging purposes    :
+     RUN_WITH_DEBUGGER=1 : Instead of running the application it load the GDB.
+                           - This mean having all debugging symbols require. 
+                           ASSEMBLY_GSTAB definition .
+     ASSEMBLY_GSTAB=1    : (***) Have notice This is the default Symbol set 
+                           offered to debug with.
+                          
+     GDB_GET_FUNCT_FROM_SOURCE=1 (**)Have notice
+                         : Allow makefile searching function name
+                           for Assembly file only.
+     WITH_ARG=1          : Pass all argument to GDB ()
+     
+   Passing Argument to make toward GDB.
+     - Are comma separated value ',' (CSV).
+     - Use StrArg, and overall variable should be quoted.   
+     ex:
+       StrArg="Arg1,Arg2" ASSEMBLY_GSTAB=1 RUN_WITH_DEBUGGER=1 make
+                          
+   *Notice DECOMPILATION: Also require to append to your executable
+    name 'decompile', as example : 
+     DECOMPILATION=1 ABI32=1 make cpuid32.decompil
+    (*end of notice)
+   **Notice GDB_GET_FUNCT_FROM_SOURCE: Does produce a .gdb target file
+     ex: RUN_WITH_DEBUGGER=1 make envvars ; will produce envvars.gdb  
+     Discovered Assembly with AS support function starting with '.'
+     which is not compatible with gdb., regexp in makefile 
+     REGEXP_FIND_FUNC_NAME is adapted to work detecting '.function'
+    Code generation, is twice simple, as example from C source uuid.c
+    (*end of notice)
+   ***Notice ASSEMBLY_GSTAB: This options added all alone will add gstab
+     to produce assembly Code:
+    make uuid.S           
+     In case of source compilation with option '-gstab' it's reported by 
+     gcc documentation to may not work or being compatible, but effort 
+     is present for this makefile.
+    (*end of notice)
+   (*4)Notice Clobering services and PKG_CONFIG_QUERY services is partially
+     implanted and (SHOULD NOT) give exactly what it should until this 
+     notice is not retreived.
+     To make a specific available target, use make compiled to show 
+     available target       
+    (*end of notice)
 
 
 Description
