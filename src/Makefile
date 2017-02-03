@@ -42,9 +42,10 @@ SHA1SUM 								:=/usr/bin/sha1sum
 DIFF										:=/usr/bin/diff
 PATCH										:=/usr/bin/patch
 CUT											:=/usr/bin/cut
+ZENITY									:=/usr/bin/zenity
 PKG_CFG_BROWSER					:=/usr/bin/pkg-config --list-all | cut -d ' ' -f1
 PKG_CFG_BROWSER_LIB			:=/usr/bin/pkg-config __PACKAGE__ --libs
-DISPLAY_FILE						:=/bin/cat __FILE__ | /bin/more
+SCROLL_FILE							:=__INPUT__ | /bin/more -f 
 BASE64_ENCODER					:=base64 --wrap=0 __SRC__ > __FILE__
 BASE64_DECODER					:=base64 -d __FILE__
 MKDIR 									:=${FNCTDLIBPATH}/md_cd
@@ -248,6 +249,42 @@ ifdef WITH_ARG
 	GDB_CURRENT_FLAGS			+=--arg $(subst $(EXTERN_CSV),' ',$$StrArg) --exec=
 endif
 
+### 
+### User Interaction level. 
+### Can inform the user of it's presence to answer to some 
+### question toward installation and some exception it may
+### occurs. 
+### 
+ifdef USEInteraction
+	ISINTERACTION							:=True
+else
+	ISINTERACTION							:=False
+endif
+
+
+### 
+### Zenity Section. 
+### This makefile can provide UI for USer assistance or user 
+### specification. 
+### 
+ifdef USEZenity
+	ISZENITY							:=True
+else
+	ISZENITY							:=False
+endif
+
+### 
+### Some Extra definition for Zenity .
+### 
+ZenityWarning						:=I Do have read and agree this is a development tool not hacking and exploit stuff.
+
+define ZenityTextInfo
+$(ZENITY) --height=600 --width=800 --text-info --filename=$(1) --font="Monospace 10" --checkbox="$(ZenityWarning)"  2> /dev/null 
+endef
+
+define ZenityFileReader
+	@if [ "$(ISZENITY)" == "True" ] ; then $(call ZenityTextInfo,$(1)) ; $(RM) $(1) ; fi
+endef 
 
 ### Definition of overall AS flag, LD Flags and decompilation flags.
 ### This is also to allow ABI32 to not link an x86-64 code or error 
@@ -455,11 +492,31 @@ helper.encode:
 	@$(subst __FILE__,$@,$(subst __SRC__,$(subst .encode,.txt,$@),$(BASE64_ENCODER)))
 
 helper.decode: helper.encode
-	@$(subst __FILE__,$<,$(BASE64_DECODER))
+	@if [ "$(ISZENITY)" == "True" ] ; then \
+	  $(subst __FILE__,$<,$(BASE64_DECODER) > $@ ) ; \
+	else \
+	  $(subst __FILE__,$<,$(subst __INPUT__,$(BASE64_DECODER), $(SCROLL_FILE))) ; \
+	fi 
 
 helper:	helper.decode
-	@$(subst __FILE__,$@.decode,$(DISPLAY_FILE))
+	@$(call ZenityFileReader,$<) 
 
+
+### A method to produce a easy-driven license. Based on same as developping 
+### easy-driven helper. 
+
+license.encode: 
+	@$(subst __FILE__,$@,$(subst __SRC__,$(subst .encode,.txt,$@),$(BASE64_ENCODER)))
+
+license.decode: license.encode
+	@if [ "$(ISZENITY)" == "True" ] ; then \
+	  $(subst __FILE__,$<,$(BASE64_DECODER) > $@ ) ; \
+	else \
+	  $(subst __FILE__,$<,$(subst __INPUT__,$(BASE64_DECODER), $(SCROLL_FILE))) ; \
+	fi 
+
+license:	license.decode
+	@$(call ZenityFileReader,$<) 
 
 ### This Test should only remove error while processing 
 ### pkg-config commands. Some package should be missing 

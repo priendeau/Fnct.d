@@ -1,4 +1,11 @@
 
+
+GEANY_INSTALL						:="More to come, installation of geany package from APT or GDEBI"
+SNIPPETS_INSTALL				:=More to come, patch-file geany-snippets.patch.bz2 can already be patched from user snippets.conf or new snippets from /usr/share/geany/snippets.conf deployed in user HOME/.config/geany/snippets.conf
+SNIPPETS_UNINSTALL			:=More to come, patch-file geany-snippets.patch.bz2 can be removed if there is no hand addition. Our project is willing to modify ar least your design and will provide a Unique Interface to select from Fnct.D snippets menu.
+
+
+
 PATH_INSTALL_LIB				:=/etc/init.d/Fnct.D
 STARTUP_FNCTLIB					:=_sub_Structure fnct_debian_lib
 UPDATE_INIT_BASH				:=bashrc_update
@@ -48,3 +55,13 @@ path-install:
 
 fnct.d:	path-install
 	$(call StartLink,$(bash_lib))
+
+geany:
+	@$(subst __FMT__,"\\n%s\\n",$(subst __TAG__,$(GEANY_INSTALL),$(PRINTF)))
+
+snippets-install:
+	@$(subst __FMT__,"\\n%s\\n",$(subst __TAG__,$(SNIPPETS_INSTALL),$(PRINTF)))
+
+snippets-uninstall:
+	@$(subst __FMT__,"\\n%s\\n",$(subst __TAG__,$(SNIPPETS_UNINSTALL),$(PRINTF)))
+
