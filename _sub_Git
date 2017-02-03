@@ -4,6 +4,205 @@
 # Package _sub_Git
 
 
+if [ "${versionGCFS:=0.0.1}" == "0.0.1" ] ; then 
+ eval $( GFCFuncName=GitCommitFormServices GlobalFunctionCleaning ) ;
+ function GitCommitFormServices()
+ {
+   function Verbosis()
+   {
+    local -a ArrayArg=( $* ) ; 
+    local -a __call_locality=( Verb Verbosis )
+    local StrMsg=${VerbMsg:=__TEXT__} ; 
+    local StrDevOut=${VerbDev:=/dev/stderr} ; 
+    local IsVerboseState=${VerbState:=False} ;
+    local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+    local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+    local IsDisplayFormatted=${VerbFormated:=True} ;
+    local IsAppendMode=${VerbAppendDev:=False} ; 
+    if [ "${IsVerboseState:=False}" == "True" ] ; then 
+     if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+      if [ "${IsAppendMode:=False}" == "True" ] ; then 
+        echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
+      else  
+        echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+      fi
+     else
+      if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+         echo "${StrMsg}" ;  
+      else
+       if [ "${IsAppendMode:=False}" == "True" ] ; then 
+        echo "${StrMsg}" >> ${StrDevOut} ;
+       else
+        echo "${StrMsg}" > ${StrDevOut} ;
+       fi
+      fi 
+     fi 
+    fi
+   } 
+   ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
+   
+   if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( GCFS GitCommitFormServices ) ;
+    local Arg0="${ArrayArg[0]}";  
+    local StrStartMain=${GCFSFuncStart:=__main_StartServices} ; 
+    local StrParentApps=${__call_locality[1]} ; 
+   elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=GitCommitFormServices CAIsAddParent=False __Call_Argument ) ; 
+   elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
+    eval $( eval CAIsAddInt=True CAIsAddStr=True CAFunctName=GitCommitFormServices \
+            CAProvideInt=Height,Width,FontSize  \
+            CAProvideStr=VTVRegistry,DefaultZenityCSV,FontFamily,TextForm,ListEntry,ProjectPath,ListTitle,CalendarTitle,CalendarFmt,ZenityApps,ParserReg  \
+            CAIsAddParent=False CallArgument ) ; 
+   fi
+   
+   local StrVarList="IntHeight,IntWidth,IntFontSize,StrVTVRegistry,StrDefaultZenityCSV,StrFontFamily,StrTextForm,StrListEntry,StrProjectPath,StrListTitle,StrCalendarTitle,StrCalendarFmt,StrZenityApps,StrZenityWindow,StrParserReg" ; 
+   
+   
+   function __main_StartServices()
+   {
+    if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+     local -a ArrayArg=( $* ) ;
+     local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+     local Arg0="${ArrayArg[0]}";  
+    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
+    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True \
+     CAIsAddInt=True \
+     CAIsAddStr=True \
+     CAProvideInt=CsvCount,X \
+     CAProvideStr=ZenityOpt \
+     CallArgument ) ; 
+    fi 
+    
+    local StrFileList=$( find {${StrProjectPath}} -maxdepth 1 -type f -printf "%h/%f|" | sed -r 's/\.\///g ' ) ; 
+    
+    ### Turn StrListEntry Into Mechanical-CSV-Line
+    StrListEntry="${StrListEntry}," ;
+    
+    IntCsvCount=$( cstr=${StrCommitStream//,/} ; echo $(( ${#StrCommitStream} - ${#cstr} )) ) ;
+    local StrAddEntry;
+    local StrNewAddEntry="" ;
+    for (( IntX=0 ; IntX <= ${IntCsvCount}-1 ; IntX++ )) ; do
+      StrNewAddEntry=${StrListEntry%*${StrListEntry#*,}} ;
+      StrListEntry=${StrListEntry:${#StrNewAddEntry}:$(( ${#StrListEntry} - ${#StrNewAddEntry}))} ;
+      StrAddEntry="--add-entry=\"${StrAddEntry}\" " ; 
+    done
+    
+    local StrParserDef="StrZenityApps:__APPS__,StrZenityOpt:__OPT__,StrZenityWindow:__WINFORM__,IntWidth:__WIDTH__,IntHeight:__HEIGHT__,StrTextForm:__TEXT__,StrFontFamily:__FONT_NAME__,IntFontSize:__FONT_SIZE__" ; 
+    local StrAppsTpl="__APPS__ __OPT__" ; 
+    local StrAppsOptTpl="""\
+    --width=__WIDTH__ \
+    --height=__HEIGHT__ \
+    __WINFORM__ \
+    --show-header \
+    --text=\"__TEXT__\" \
+    __ADD_ENTRY__\
+    --add-calendar=__CALENDAR__\
+    --forms-date-format=\"__DATEFMT__\"\
+    --add-list=\"__LIST_TITLE__\" \
+    --list-values=\"__LIST_VALUE__\" \
+    --column-values=\"__COLUMN_VALUE__\" """
+    
+    #local StrCommitStream=$( zenity \
+    #--width=640 \
+    #--height=600 \
+    #--forms  \
+    #--show-header \
+    #--text="""<span font_family=\'__FONT_NAME__\' size=\'__FONT_SIZE__\'>${StrTextForm}</span>""" \
+    #${StrAddEntry} \
+    #--add-calendar="${StrCalendarTitle}" \
+    #--forms-date-format="%Y%m%d" \
+    #--add-list="${StrListTitle}" \
+    #--list-values="${StrFileList}" \
+    #--column-values="File Selection"  ) ; 
+   
+   
+   ### Turn Commit message into Mechanical-CSV-Line
+   StrCommitStream="${StrCommitStream}|"
+   IntCsvCount=$( cstr=${StrCommitStream//,/} ; echo $(( ${#StrCommitStream} - ${#cstr} )) ) ;
+   local StrColumn="" ;
+   local -a ArrayCommitMsg ; 
+   for (( IntX=0 ; IntX <= ${IntCsvCount}-1 ; IntX++ )) ; do
+     StrColumn=${StrCommitStream%*${StrCommitStream#*,}} ;
+     StrCommitStream=${StrCommitStream:${#StrColumn}:$(( ${#StrCommitStream} - ${#StrColumn}))} ;
+     ArrayCommitMsg[${#ArrayCommitMsg[@]}]="${StrColumn}" ; 
+   done 
+   
+   
+   }
+   local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+   local StrNameHelper="${__call_locality[1]}\n\tCommit Interface for creating Standard commit message";
+   local StrSynopsis="\n\tCalling ${__call_locality[1]}";
+   local StrSummary="\n\tThis application help creating commit message" ; 
+   local StrDescription="\n\tThis Application is a services, where all default variable value where initialized by CallArgument and use GitCommitForm to properly launch the By-Default Services." ;
+
+  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+    GVRIsName=True     \
+    GVRIsSynopsis=True \
+    GVRIsSummary=True  \
+    GVRIsDesc=True     \
+    GVRIOldPrefix=False  GetVarReference ${__call_locality[1]} ;
+    echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+   elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+    eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+    echo -ne """${ArgGet}\n""" ;
+   elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+    eval $( __GetVarReferenceList ) ;	
+   elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
+    eval $( eval VTVIsArrayStyleInsert=True  \
+              VTVValueEntry=${StrVarList} \
+              ${StrVTVRegistry}   \
+              ValueToVariable ) __main_StopServices ;
+   elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+    eval $( eval VTVValueEntry=${StrVarList} \
+                 ${StrVTVRegistry} \
+                 ValueToVariable ) ${StrStartMain} ; 
+   fi
+
+
+ }
+fi # end of versionGCFS==0.0.1
+
+if [ "${versionGCF:=0.0.1}" == "0.0.1" ] ; then 
+
+ unset GitCommitForm
+ function GitCommitForm()
+ {
+   
+   if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( GCF GitCommitForm ) ;
+    local Arg0="${ArrayArg[0]}";  
+    local StrStartMain=${GCFFuncStart:=__main_StartServices} ; 
+    local StrParentApps=${__call_locality[1]} ; 
+   elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=GitCommitForm CAIsAddParent=False __Call_Argument ) ; 
+   elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=GitCommitForm CAIsAddParent=False CallArgument ) ; 
+   fi
+   GCFDefaultZenityCSV='|' \
+   GCFFontFamily='Monospace' 
+   GCFFontSize=10 \
+   GCFHeight=600 \
+   GCFWidth=640 \
+   GCFTextForm="Daily commit Message Box" \ 
+   GCFListEntry="Branch Name,function,section,Commit Message" \
+   GCFProjectPath="./,src,awk-script,examples,images,update,python" \
+   GCFListTitle="File Selected for Commit Message" \
+   GCFCalendarTitle="Commit Date" \
+   GCFCalendarFmt="%Y%m%d" \
+   GCFZenityApps="/usr/bin/zenity" \
+   GCFZenityWindow="--forms" \
+   GCFParserReg=':__[A-Za-z0-9\_]*__' \
+   GCFVTVRegistry="VTVIsArrayStyleInsert=True VTVIsQuotedValue=True VTVIsValueReAssign=True VTVIsValueToConvert=False" \
+   GitCommitFormServices ; 
+  
+ }
+
+fi # end of versionGCF==0.0.1
+
 if [ "${versionGCBE:=0.0.1}" == "0.0.0" ] ; then 
  eval $( GFCFuncName=GitChckBranchEngine GlobalFunctionCleaning ) ;
  function GitChckBranchEngine()
@@ -456,8 +655,8 @@ if [ ${versionGCT:=0.0.1} == "0.0.1" ] ; then
 ### sometimes font can change size erraticaly from instance 
 ### to another one . 
 
- eval $( GFCFuncName=GetFileBuffered GlobalFunctionCleaning ) ;
- #unset GetFileBuffered ; 
+ #eval $( GFCFuncName=GetFileBuffered GlobalFunctionCleaning ) ;
+ unset GetFileBuffered ; 
  function GetFileBuffered()     
  {
   local StrQuestion="""Keep File selection\n\n__filelist__""" ;
@@ -468,8 +667,8 @@ if [ ${versionGCT:=0.0.1} == "0.0.1" ] ; then
   return ${IOStatus} ;
  } ;
 
- eval $( GFCFuncName=GetCommandQuit GlobalFunctionCleaning ) ;
- #unset GetCommandQuit ; 
+ #eval $( GFCFuncName=GetCommandQuit GlobalFunctionCleaning ) ;
+ unset GetCommandQuit ; 
  function GetCommandQuit()    
  {
   local StrQuestion="""Quit Git Commit transaction ?""" ;
@@ -479,8 +678,8 @@ if [ ${versionGCT:=0.0.1} == "0.0.1" ] ; then
   return ${IOStatus} ;
  } ;
 
- eval $( GFCFuncName=GetCommitMsg GlobalFunctionCleaning ) ;
- #unset GetCommitMsg ; 
+ #eval $( GFCFuncName=GetCommitMsg GlobalFunctionCleaning ) ;
+ unset GetCommitMsg ; 
  function GetCommitMsg()    
  {
   #echo > .commit-msg ;
@@ -495,8 +694,8 @@ if [ ${versionGCT:=0.0.1} == "0.0.1" ] ; then
   return ${IOStatus} ;
  } ;
 
- eval $( GFCFuncName=git_update GlobalFunctionCleaning ) ;
- #unset git_update ;
+ #eval $( GFCFuncName=git_update GlobalFunctionCleaning ) ;
+ unset git_update ;
  function git_update ()    
  { 
      #sudo /etc/init.d/iptables-persistent restart ;
@@ -511,8 +710,8 @@ if [ ${versionGCT:=0.0.1} == "0.0.1" ] ; then
      fi 
  } ; 
 
- eval $( GFCFuncName=ZenityFileSelection GlobalFunctionCleaning ) ;
- #unset ZenityFileSelection ; 
+ #eval $( GFCFuncName=ZenityFileSelection GlobalFunctionCleaning ) ;
+ unset ZenityFileSelection ; 
  function ZenityFileSelection()
  {
   local IOStatus=0;
@@ -526,8 +725,8 @@ if [ ${versionGCT:=0.0.1} == "0.0.1" ] ; then
  }
 
 
- eval $( GFCFuncName=GetFileInPath GlobalFunctionCleaning ) ;
- #unset GetFileInPath ; 
+ #eval $( GFCFuncName=GetFileInPath GlobalFunctionCleaning ) ;
+ unset GetFileInPath ; 
  function GetFileInPath()    
  {
    local IOStatus=0 ; 
@@ -554,8 +753,8 @@ if [ ${versionGCT:=0.0.1} == "0.0.1" ] ; then
   return ${IOStatus} ;   
  } ;
 
- eval $( GFCFuncName=CommitLevel GlobalFunctionCleaning ) ;
- #unset CommitLevel ; 
+ #eval $( GFCFuncName=CommitLevel GlobalFunctionCleaning ) ;
+ unset CommitLevel ; 
  function CommitLevel()
  {
   StrMsg=$( cat .commit-msg ) ;
@@ -567,8 +766,8 @@ if [ ${versionGCT:=0.0.1} == "0.0.1" ] ; then
   git_update ;
  }
 
- eval $( GFCFuncName=GitCommitTransaction GlobalFunctionCleaning ) ;
- #unset GitCommitTransaction ; 
+ #eval $( GFCFuncName=GitCommitTransaction GlobalFunctionCleaning ) ;
+ unset GitCommitTransaction ; 
  function GitCommitTransaction()    
  {
    local IntQuit=1 ; 

@@ -365,20 +365,61 @@ function ValueParser()
  
 }
 
-eval $( GFCFuncName=CompiledBashCode GlobalFunctionCleaning ) ;
+unset CompiledBashCode
+### eval $( GFCFuncName=CompiledBashCode GlobalFunctionCleaning ) ;
 
 function CompiledBashCode () 
 { 
-  local __call_locality=( CBC CompiledBashCode ) ;
-  local ArrayArg=( $* ) ; 
-  local Arg0=${ArrayArg[0]};
+  local -a __call_locality=( CBC CompiledBashCode ) ;
+  local -a ArrayArg=( $* ) ; 
+  local -a Arg0=${ArrayArg[0]};
   local StrPathRefCompil=${CBCCacheCompile:=/var/cache/Fnct.D/CompiledBashCode};
   local StrPathLinking=${CBCPathLink:=/usr/local/bin} ; 
+  local BoolDisplayDebug=${CBCDisplayDebug:=False} ; 
+  local BoolDisplayPN=${CBCDisplayPN:=False}
+  local StrTPRightRegexp=${CBCTPRReg:=':__[A-Za-z0-9\_]*__'} ;
   local StrShcCompiler=${CBCShellCompiler:=/usr/local/bin/shc} ;
+  local StrShcCompilerOpt=${CBCShellCompilerOpt:=-f} ; 
+  local StrShcTpl=${CBCShellCompilerTpl:=__APPS__ __OPT__};
+  local StrSudoTpl=${CBCSudoTpl:=__SUDO__ __SUDO_OPT__} ;
+  local StrLinkApps=${CBCLinkApps:=/usr/bin/link};
+  local StrLinkApps=${CBCLinkAppsOpt:=-sf};
+  local StrLinkTpl=${CBCLinkTpl:=__LINK__ __OPT__ __ORIG__ __DEST__} ; 
+  local StrSudoApps=${CBCSudoApps:=/usr/bin/sudo};
+  local StrSudoOpt=${CBCSudoOpt:=-s} ; 
+  local StrAppsTpl=${CBCAppsTpl:= __SUDOER__ __COMPILER__} ;
+  local StrLinkerTpl=${CBCLinkTpl:=__SUDOER__ __LINKER__}
+  local StrCompilerDef=${CBCParserCompilerDef:=}
+  local StrLinkerDef=${CBCParserCompilerDef:=}
   local StrBashTemplate=${CBCFuncShellTemplate:=/etc/init.d/Fnct.D/examples/template_funct.bash} ;
+  local -a ArrayCmdDef=( StrAppsTpl:StrCompilerDef: StrLinkerTpl:StrLinkerDef: )
+  local -a ArrayCmdParsed ; 
+  local StrParserTpl="""\$( \
+        TPListTag=__1__                    \
+        TPVarNameParsed=__2__               \
+        TPRightStrPtrn=\${StrTPRightRegexp} \
+        TPArrayName="Array\${__call_locality[0]}Tag" \
+        TPDisplayDebug=\${BoolDisplayDebug}          \
+        TPDisplayParserNotice=\${BoolDisplayPN}      \
+        TagParser  )"""
+  local IntCsvCount=0 ; 
+  local StrTplCopy ; 
+  local StrCSV=':'
+  for(( intx=0;intx<= ${#ArrayCmdDef[@]}-1 ; intx++ )) ; do 
+   StrTplCopy=${StrParserTpl} ;
+   StrPairVar=${ArrayCmdDef[${intx}]} ; 
+   IntCsvCount=$( cstr=${StrPairVar//${StrCSV}/} ; echo $(( ${#StrPairVar} - ${#cstr} )) ) ;
+   for (( inty=1; inty <= ${#IntCsvCount} ; inty++ )) ; do 
+     StrFirstElement=${StrPairVar%*${StrPairVar#*${StrCSV}}} ;
+     StrPairVar=${StrPairVar:${#StrFirstElement}:$(( ${#StrPairVar} - ${#StrFirstElement}))} ;
+     StrParserTpl=${StrParserTpl//__${inty}__/${StrFirstElement}} ;
+   done 
+  done
+       
   if [ ! -d /var/cache/Fnct.D/${__call_locality[1]} ] ; then 
    mkdir /var/cache/Fnct.D/${__call_locality[1]} ; 
   fi   
+  
   StrFuncCode=$( declare -f ${Arg0} );
   StrTemplateFile=$( cat ${StrBashTemplate} );
   StrTemplateFile=${StrTemplateFile//__FUNCT__/${StrFuncCode}};
@@ -386,7 +427,7 @@ function CompiledBashCode ()
   echo "${StrTemplateFile}" > /${Arg0}.bash;
   ${StrShcCompiler} -f ${Arg0}.bash;
   ln -sf ${StrPathRefCompil}/${Arg0}.bash.x ${StrPathLinking}/${Arg0};
-  $( eval $( eval GFCFuncName=${Arg0} GlobalFunctionCleaning ) )
+  eval $( GFCFuncName=${Arg0} GlobalFunctionCleaning ) 
 }
 
 
@@ -754,12 +795,12 @@ eval $( GFCFuncName=ZenityPrefixedVarBuilder GlobalFunctionCleaning ) ;
 
 ### ZenityPythonInstaller 
 #unset ZenityPythonInstaller ; 
-eval $( GFCFuncName= GlobalFunctionCleaning ) ;
+eval $( GFCFuncName=ZenityPythonInstaller GlobalFunctionCleaning ) ;
 . ${FNCTDLIBPATH}/950966fa-0e67-11e3-98a2-001b3875b29c
 
 ### FileNameConversion
-unset FileNameConversion ; 
-eval $( GFCFuncName= GlobalFunctionCleaning ) ;
+#unset FileNameConversion ; 
+eval $( GFCFuncName=FileNameConversion GlobalFunctionCleaning ) ;
 . ${FNCTDLIBPATH}/877d7e9a-1001-11e3-98a2-001b3875b29c
 
 ### MdCd GetDateReportCreation
@@ -4070,8 +4111,8 @@ function GetBuildFlagsList( )
 unset GetZenityText ; 
 function GetZenityText()
 {
- local ArrayArg=( $* ) ; 
- local __call_locality=( GZT GetZenityText ) ;  
+ local -a ArrayArg=( $* ) ; 
+ local -a __call_locality=( GZT GetZenityText ) ;  
  local Arg0=${ArrayArg[0]} ;
  local StrTypeUI=${GZTUiType:=--entry}
  local StrApps=${GZTUiApps:=/usr/bin/zenity} ;
@@ -4090,35 +4131,148 @@ function GetZenityText()
  fi 
 }
 
+#unset GetZenityTextEntry ; 
+eval $( GFCFuncName=GetZenityTextEntry GlobalFunctionCleaning ) ;
 
-
-unset GetZenityTextEntry ; 
 function GetZenityTextEntry()
 {
- local ArrayArg=( $* ) ; 
- local __call_locality=( GZTE GetZenityTextEntry ) ;  
- local Arg0=${ArrayArg[0]} ;
- local IntWidth=${GZTEWidth:=640}
- local IntHeight=${GZTEHeight:=275}
- local StrTitle="""${GZTETitle:="Pip installation Try-up"}""" ; 
- local StrQuestion="""${GZTETextQuestion:="Installation Package to install (test)"}""" ; 
- local StrReturn ;
- #local StrSwitchMessages="Following switch(es) are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--set\t\tStore new value for prefixed-var \n\t\t\t( only if ValueParser is used and it store value in a user profile ).\n\t\t\tAlso wrong-stored value might affect the application.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\t--query\t\tQuery for a Prefixed variable name.\n" ;
- local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+ ### Geany, Snipet-name: funct_Verbosis
+ function Verbosis() 
+ { 
+  local -a ArrayArg=($*);
+  local -a __call_locality=(Verb Verbosis);
+  local StrMsg=${VerbMsg:=__TEXT__};
+  local StrDevOut=${VerbDev:=/dev/stderr};
+  local IsVerboseState=${VerbState:=False};
+  local StrVerboseHeader=${VerbHeader:=VERBOSE};
+  local IsEvalRequiredForm=${VerbEvalForm:=False};
+  local IsDisplayFormatted=${VerbFormated:=True};
+  local IsAppendMode=${VerbAppendDev:=False};
+  if [ "${IsVerboseState:=False}" == "True" ]; then
+      if [ "${IsDisplayFormatted:=True}" == "True" ]; then
+          if [ "${IsAppendMode:=False}" == "True" ]; then
+              echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut};
+          else
+              echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut};
+          fi;
+      else
+          if [ "${IsEvalRequiredForm:=False}" == "True" ]; then
+              echo "${StrMsg}";
+          else
+              if [ "${IsAppendMode:=False}" == "True" ]; then
+                  echo "${StrMsg}" >> ${StrDevOut};
+              else
+                  echo "${StrMsg}" > ${StrDevOut};
+              fi;
+          fi;
+      fi;
+  fi
+ } 
+ ### Geany, Snippet-name: block_CallArgument 
+ if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( GZTE GetZenityTextEntry ) ; 
+    local Arg0="${ArrayArg[0]}"; 
+    local StrStartMain=${GZTEFuncStart:=__main_StartServices} ; 
+    local StrParentApps=${__call_locality[1]} ; 
+ elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
+    ### Geany, Snipet-name: resume_short_name, special value: resume_short_name_cmd
+    ### Used in __Call_Argument, % resume_short_name_cmd % to provide
+    ### latest result from block_CallArgument
+    eval $( eval CAFunctName=GetZenityTextEntry CAIsAddParent=False __Call_Argument ) ; 
+ elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=GetZenityTextEntry CAIsAddParent=False CallArgument ) ; 
+ fi 
+   
+
+ local IntWidth=${GZTEWidth:=320}
+ local IntHeight=${GZTEHeight:=175}
+ local StrTitle=${GZTETitle:="""Pip installation Try-up"""} ; 
+ local StrQuestion=${GZTETextQuestion:="""Installation Package to install (test)"""} ; 
+
+ local BoolDisplayDebug=${GZTEDisplayDebug:=False} ; 
+ local BoolDisplayPN=${GZTEDisplayPN:=False} ;
+ local StrApps=${GZTEApps:=/usr/bin/zenity} ; 
+ local StrAppsOpt=${GZTEAppsOpt:=--entry} ; 
+ local StrDefaultValue=${GZTEDefaultEntry:=None} ; 
+ local StrTPRightRegexp=${GZTETPRReg:=':__[A-Za-z0-9\_]*__'} ; 
+ local StrVTVRegistry=${GZTEVTVRegistry:=VTVIsArrayStyleInsert=True VTVIsQuotedValue=True VTVIsValueReAssign=True VTVIsValueToConvert=False} ;
+ local StrCmdTpl=${GZTECmdTpl:="""__APPS__ __TYPE__ __OPT__"""} ; 
+ local StrCmdOpt=${GZTECmdOpt:="""--height=__HEIGHT__ --width=__WIDTH__ --text=\"__TEXT__\" --title=\"__TITLE__\" --entry-text=\"__VALUE__\""""}
+ local StrParserAppsDef=${GZTEParserAppsDef:=StrApps:__APPS__,StrCmdOpt:__OPT__,StrAppsOpt:__TYPE__,IntWidth:__WIDTH__,IntHeight:__HEIGHT__,StrQuestion:__TEXT__,StrTitle:__TITLE__,StrDefaultValue:__VALUE__} ; 
+ 
+ local StrVarList="IntWidth,IntHeight,StrTitle,StrQuestion,StrApps,StrAppsOpt,StrDefaultValue,StrCmdTpl,StrParserAppsDef,BoolDisplayDebug,BoolDisplayPN,StrTPRightRegexp,StrVTVRegistry,StrAppsOpt" ; 
+ 
+  ### Geany, Snippet-name: main_start_services 
+  function __main_StartServices()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}"; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+   fi 
+
+  eval $( eval \
+   TPListTag="${StrParserAppsDef}"              \
+   TPVarNameParsed=StrCmdTpl                    \
+   TPRightStrPtrn="${StrTPRightRegexp}"        \
+   TPArrayName="Array\${__call_locality[0]}Tag" \
+   TPDisplayDebug=${BoolDisplayDebug}          \
+   TPDisplayParserNotice=${BoolDisplayPN}      \
+   TagParser  ) ; 
+       
+   ### Geany Snippet-name: build_form
+   ### Canned ZenityBuildForm command TagParser from Fnct.D
+   ###TPListTag=${StrParserAppsDef} TPArrayName="Array\${__call_locality[0]}Tag" TPRightStrPtrn=\${StrTPRightRegexp} TPVarNameParsed=StrCmdTpl TPDisplayDebug=\${BoolDisplayDebug} TPDisplayParserNotice=\${BoolDisplayPN} TagParser
+   
+   echo -ne "\n\nCmdEval : ${StrCmdTpl}\n\n" > /dev/stderr ; 
+   local StrReturn=$( ${StrCmdTpl} ) ; 
+   echo -ne "StrReturn return: ${StrReturn}\n" > /dev/stderr ; 
+   echo "${StrReturn}" ; 
+  } 
+
+
+  ### Geany, Snippet-name: SwitchMessages 
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+  
+  ### Geany, Snipet-name: DocHelper 
+  local StrNameHelper="${__call_locality[1]}\n\t";
+  local StrSynopsis="\n\tCalling ${__call_locality[1]}";
+  local StrSummary="\n\tThis application will..." ; 
+  local StrDescription="\n\tThis Application is a services, where ..." ;
+  
+  
+  ### Geany, Snippet-name: block_switches 
   if [ "${Arg0:=--startservices}" == "--help" ] ; then 
-   GetVarReference ${__call_locality[1]} ; 
-   echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+     GVRIsName=True     \
+     GVRIsSynopsis=True \
+     GVRIsSummary=True  \
+     GVRIsDesc=True     \
+     GVRIOldPrefix=True  GetVarReference ${__call_locality[1]} ;
+     echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
   elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-   echo -ne """${ArgGet}\n""" ; 			
+     eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+     echo -ne """${ArgGet}\n""" ;
   elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-   eval $( BuildForm=${BuildForm:=False} __GetVarReferenceList ) ;
-  else
-   local CmdEval=( """local StrReturn=\$( GetZenityText --width=${IntWidth}  --height=${IntHeight} --title="${StrTitle}" --text="${StrQuestion}" ) """ ); 
-   echo -ne "\n\nCmdEval : ${CmdEval[@]}\n\n" > /dev/stderr ; 
-  fi 
-  echo -ne "StrReturn return: ${StrReturn}\n" > /dev/stderr ; 
-  echo -ne "${StrReturn}" ; 
+     eval $( __GetVarReferenceList ) ;
+  elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
+     eval $( eval \
+       VTVValueEntry=${StrVarList} \
+       ${StrVTVRegistry}\
+       ValueToVariable ) __main_StopServices ;
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+     eval $( eval \
+       VTVValueEntry=${StrVarList} \
+       ${StrVTVRegistry} \
+       ValueToVariable ) ${StrStartMain} ; 
+  fi
+  
+  
+  
 }
 
 

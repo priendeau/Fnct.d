@@ -29,6 +29,7 @@ fi
 
 if [ "${versionGFL:=0.0.1}" == "0.0.1" ] ; then 
  eval $( GFCFuncName=GetFibLevel GlobalFunctionCleaning ) ; 
+ #unset GetFibLevel ; 
  function GetFibLevel()
  {
   function Verbosis()
@@ -173,8 +174,8 @@ fi
 
 if [ "${versionGHFH:=0.0.0}" == "0.0.0" ] ; then 
  
- eval $( GFCFuncName=GetHighestFibHarmonic GlobalFunctionCleaning ) ; 
- 
+ #eval $( GFCFuncName=GetHighestFibHarmonic GlobalFunctionCleaning ) ; 
+ unset GetHighestFibHarmonic ; 
  function GetHighestFibHarmonic()    
  { 
   function Verbosis()
@@ -315,7 +316,7 @@ fi
 if [ "${versionGHFH:=0.0.0}" == "0.0.1" ] ; then 
  
  eval $( GFCFuncName=GetHighestFibHarmonic GlobalFunctionCleaning ) ; 
- 
+ #unset GetHighestFibHarmonic ; 
  function GetHighestFibHarmonic()    
  { 
   function Verbosis()
@@ -496,8 +497,8 @@ fi
 
 if [ "${versionGVSFH:=0.0.0}" == "0.0.0" ] ; then 
  
- eval $( GFCFuncName=GetValueScaledFibHarmonic GlobalFunctionCleaning ) ; 
- 
+ #eval $( GFCFuncName=GetValueScaledFibHarmonic GlobalFunctionCleaning ) ; 
+ unset GetValueScaledFibHarmonic ;
  function GetValueScaledFibHarmonic()
  {
   local -a ArrayArg=( $* ) ;
@@ -690,7 +691,9 @@ if [ "${versionGVSFH:=0.0.0}" == "0.0.1" ] ; then
 fi
 
 if [ "${versionFBLR:=0.0.0}" == "0.0.0" ] ; then 
- eval $( GFCFuncName=FibBinaryLevelRepr GlobalFunctionCleaning ) ; 
+ 
+ unset FibBinaryLevelRepr ; 
+ #eval $( GFCFuncName=FibBinaryLevelRepr GlobalFunctionCleaning ) ; 
 
  function FibBinaryLevelRepr()
  {
