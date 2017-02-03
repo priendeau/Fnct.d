@@ -1,0 +1,45 @@
+#!/bin/bash
+
+declare StrHelp="\nCodec Base64\nEncode Text to Base64 with no wrapped line or fixed to 48 to 64 chars long\nBase64 format. Also Decode Base64 from same format. \n\nUsage:\n\n Base64Codec --[encode|decode|ask|help] Text-Stream. \n\n   --encode    Encode to Base64 no wrapped lines, from stdin.\n   --decode    Decode to Text Base64 with no wrapped lines format, \n               should use second argument for Base64 Stream.\n   --ask       Show information on this help.\n   --help      Same as ask. \n\n\n"
+
+function EncodeBase64()
+{
+ local -a ArrayArg=( $* ) ;
+ local -a __call_locality=( EB64 EncodeBase64 ) ; 
+ local Arg0="${ArrayArg[0]}"; 
+ /usr/bin/base64 --wrap=0 
+}
+
+function DecodeBase64()
+{
+ local -a ArrayArg=( $* ) ;
+ local -a __call_locality=( DB64 DecodeBase64 ) ; 
+ local Arg0="${ArrayArg[0]}"; 
+ echo "${Arg0}" | /usr/bin/base64 -d ; 
+}
+
+declare -a ArrayArg=( $* ) ;
+declare Arg0="${ArrayArg[0]}"; 
+declare StrFeed=${ArrayArg[1]} ;
+declare StrApps="EncodeBase64"
+declare StrCmdTpl="""__APPS__""" ; 
+declare StrParse ;
+
+if [ "${Arg0:=--ask}" == "--encode" ] ; then 
+ StrApps="EncodeBase64" ;
+elif [ "${Arg0:=--ask}" == "--decode" ] ; then
+ StrApps="DecodeBase64" ;
+ StrCmdTpl="__APPS__ __FEED__"
+elif [ "${Arg0:=--ask}" == "--ask" ] ; then 
+  echo -ne "${StrHelp}" ;
+elif [ "${Arg0:=--ask}" == "--help" ] ; then 
+  echo -ne "${StrHelp}" ;
+fi 
+StrParse=${StrCmdTpl} ; 
+StrParse=${StrParse//__APPS__/${StrApps}} 
+StrParse=${StrParse//__FEED__/${StrFeed}}
+
+eval "${StrParse}" ; 
+
+
+unset StrHelp ArrayArg Arg0 StrFeed StrApps StrCmdTpl StrParse

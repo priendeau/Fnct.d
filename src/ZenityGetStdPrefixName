@@ -1,0 +1,40 @@
+#!/bin/bash
+
+declare -a ArrayLib=( _sub_Structure fnct_debian_lib ) ; 
+versionGCT=0.0.1  \
+versionGSPN=0.0.2 \
+versionB2DT=0.0.2 \
+versionMC=0.0.2   \
+versionTP=0.0.2   \
+versionGPI=0.0.2  \
+versionCA=0.0.2   \
+versionNM=0.0.2   \
+versionLSS=0.0.1  \
+versionGOD=0.0.2  \
+LLDisplayProg=False . /etc/init.d/Fnct.D/fnct_lib ;
+
+declare StrCallBackPrefixName=${HOME}/.ZenityGetStdPrefixName ; 
+declare StrZenityTextInput;
+declare StrShortName ; 
+
+if [ -f ${StrCallBackPrefixName} ] ; then 
+ rm -f ${StrCallBackPrefixName} ; 
+fi 
+if [ "${ZGSPNUseZenity:=True}" == "True" ] ; then 
+ StrZenityTextInput=$( zenity --width=300 --entry --text="GetStdPrefixName Zenity" --entry="Enter New Function Name:" 2> /dev/null )
+ StrShortName=$( GetStdPrefixName ${StrZenityTextInput} ) ; 
+fi 
+### Add the Prefixed-Function Name inside a file to let
+### some Geany snippets like resume_short_name_cmd to recuper 
+### information for the rest of the CallArgument Example. 
+echo "${StrShortName}" > ${StrCallBackPrefixName} ; 
+
+if [ "${ZGSPNCreateCallLocality:=False}" == "True" ] ; then 
+  echo "local -a __call_locality=( ${StrShortName} ${StrZenityTextInput} ) ;"
+ else
+  echo "${StrShortName}" > ${StrCallBackPrefixName} ; 
+ fi 
+fi 
+
+unset StrCallBackPrefixName StrZenityTextInput StrShortName ;
+

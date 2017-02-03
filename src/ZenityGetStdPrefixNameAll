@@ -1,0 +1,7 @@
+#!/bin/bash 
+
+### It's a short-cut call to add prefixed-variable with appropriate action.
+### Geany snippets {command:...} doest not support uses of variable introduction
+### by passing a command. It's does have a parameter to enable uses of indented 
+### command inside Geany, but does not allows using variable. 
+ZGSPNUseZenity=True ZGSPNCreateCallLocality=True /usr/local/bin/ZenityGetStdPrefixName

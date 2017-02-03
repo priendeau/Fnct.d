@@ -1,0 +1,43 @@
+#!/bin/bash
+
+### Script File Prefixed-Variable:
+### ZenityAssistantBuildForm , aka: ZABF
+### The Geany-snippet script to load BuildForm
+### Helping Generating a Function call from 
+### selected function Prefixed Variable. 
+
+declare -a ArrayLib=( _sub_Structure fnct_debian_lib ) ; 
+versionGCT=0.0.1  \
+versionGSPN=0.0.2 \
+versionB2DT=0.0.2 \
+versionMC=0.0.2   \
+versionTP=0.0.2   \
+versionGPI=0.0.2  \
+versionCA=0.0.2   \
+versionNM=0.0.2   \
+versionLSS=0.0.1  \
+versionGOD=0.0.2  \
+LLDisplayProg=False . /etc/init.d/Fnct.D/fnct_lib ;
+
+declare StrCallBackPrefixName=${HOME}/.ZenityAssistantBuildForm ; 
+declare StrZenityTextInput;
+declare StrShortName ; 
+
+if [ -f ${StrCallBackPrefixName} ] ; then 
+ rm -f ${StrCallBackPrefixName} ; 
+fi 
+if [ "${ZGSPNUseZenity:=True}" == "True" ] ; then 
+ StrZenityTextInput=$( zenity --width=300 --entry --title="Zenity Assistant BuildForm" --text="Enter a known function from Fnct.D\n( TagParser, BoolVarTest, GnrlPrsrInfctr...)" 2> /dev/null )
+ 
+fi 
+### Add the Prefixed-Function Name inside a file to let
+### some Geany snippets like resume_short_name_cmd to recuper 
+### information for the rest of the CallArgument Example. 
+echo "${StrZenityTextInput}" > ${StrCallBackPrefixName} ; 
+
+if [ "${ZABFLoad:=True}" == "True" ] ; then 
+  ZBFFunctionName="${StrZenityTextInput}" ZBFTitle="Zenity FormBuilder for Fnct.D, as Geany-snippets" ZBFUUIDQuery=False ZBFQueryRepository=/var/cache/Fnct.D/BuildForm ZBFRepositoryCreation=True  ZenityBuildForm
+fi 
+
+unset StrCallBackPrefixName StrZenityTextInput StrShortName ;
+
