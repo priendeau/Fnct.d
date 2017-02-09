@@ -103,12 +103,12 @@ eval declare -a UUID=( $( eval GetUIDRegister=True GetUAppsRegisterName=MdCd Get
 
 evalName="IsLockArrayMdCd${UUID[0]}" ;
 eval "declare -i ${evalName}=0" ; 
-echo -ne "\n" > /dev/stderr ; 
+echo -ne "LockFile Verification.\n" > /dev/stderr ; 
 while [ $( eval "echo \${${evalName}:=0}" ) -ne 1  ] ; do 
 	value=$( cat ${StrFileStoreLock} ) ; 
 	if [ ${value:=0} -eq 1 ] ; then 
 		echo -ne "." > /dev/stderr ; 
-		sleep 1 ; 
+		/bin/sleep 0.5 ; 
 	else 
 			echo -ne "\n" > /dev/stderr ; 
 			eval "${evalName}=1"
@@ -117,7 +117,7 @@ while [ $( eval "echo \${${evalName}:=0}" ) -ne 1  ] ; do
 			test $? != 0 && sudo eval "echo \${${evalName}} > ${StrFileStoreLock} 2> /dev/null ";
 			echo -ne "loading $0\n" > /dev/stderr ;
    declare -a ArrayInPath=( $* ) ;
-			eval $( MCDevOut=${MCDevOut} MCListFile=${ArrayInPath[@]// /,} MdCd --startservices ) ; 
+			eval """MCDevOut=${MCDevOut} MCListFile=${ArrayInPath[@]// /,} MdCd --startservices"""  ; 
 			echo -ne "Removing lock.\n" > /dev/stderr  ; 
 			echo 0 > ${StrFileStoreLock} 2> /dev/null ; 
 			valueRet=$? ; 

@@ -219,22 +219,27 @@ function GlobalFunctionCleaning()
  local ArrayArg=( $* ) ; 
  local Arg0=${ArrayArg[0]} ;
  local StrFuncName=${GFCFuncName:=${Arg0}} ; 
+ local StrScript=${GFCScript:=${FNCTDLIBPATH}/awk-script/FunctInspecter.awk} ; 
  local StrGrepTriggerF=${GFCGrepTrigger:='Function Member:'}
- local StrSedFilter=${GFCSedFilter:='s/,/ /g;s/[\t\ ]+/ /g'}; 
- local StrCleanFuncCmd="""
- IntIsFunc=__TES__ declare -F | egrep -c \"__FUNCT__\" __TEE__ ; 
- if [ \${IntIsFunc:=0} -gt 0 ] ; then 
-  unset __TES__ __FUNCT__ --list  __TEE__ ; 
-  unset __TES__ GetVarReference __FUNCT__ __PIPE__ egrep -i \"__GREP_TRIGGER__\" -A1 __PIPE__ tail -n1 __PIPE__ sed -r '__SED__FILTER__' __TEE__ ; 
- fi ;
- unset IntIsFunc ; 
- """ ;
+ local StrSedFilter=${GFCSedFilter:='s/,/ /g;s/[\t\ ]+/ /g'};
+ local StrAppsFilter=${GFCAppsFilter:=/usr/bin/gawk} ;  
+ local StrFuncBody=$( declare -f GetOtherDate )
+ ### Section Elements-finder
+ local StrFunctionMember=$( echo | FuncBody="${StrFuncBody}" ${StrAppsFilter} --assign=TypeInspect=Function --assign=StrName=${StrFuncName} -F ' '  -f ${StrScript}  ) ;
+ local StrFunctionVar=$( echo | FuncBody="${StrFuncBody}" ${StrAppsFilter} --assign=TypeInspect=Var --assign=StrName=${StrFuncName} -F ' '  -f ${StrScript} ) ;
+ ### end of Elements-finder . 
+ ### unset1: __TES__ __FUNCT__ --list  __TEE__
+ ### unset2: __TES__ GetVarReference __FUNCT__ __PIPE__ egrep -i \"__GREP_TRIGGER__\" -A1 __PIPE__ tail -n1 __PIPE__ sed -r '__SED__FILTER__' __TEE__
+ local StrCleanFuncCmd="""IntIsFunc=__TES__ declare -F __PIPE__ egrep -c \"__FUNCT__\" __TEE__ ; if [ \${IntIsFunc:=0} -gt 0 ] ; then unset __FNCT_MEMBER__ ; unset __FNCT_VAR__ ; fi ; unset IntIsFunc ;""" ;
  StrCleanFuncCmd="${StrCleanFuncCmd//__TES__/\$(}" ; 
  StrCleanFuncCmd="${StrCleanFuncCmd//__TEE__/)}" ; 
  StrCleanFuncCmd="${StrCleanFuncCmd//__PIPE__/\|}" ; 
  StrCleanFuncCmd="${StrCleanFuncCmd//__FUNCT__/${StrFuncName}}" ; 
- StrCleanFuncCmd="${StrCleanFuncCmd//__GREP_TRIGGER__/${StrGrepTriggerF}}" ; 
- StrCleanFuncCmd="${StrCleanFuncCmd//__SED__FILTER__/${StrSedFilter}}" ; 
+ StrCleanFuncCmd="${StrCleanFuncCmd//__FNCT_MEMBER__/${StrFunctionMember}}" ; 
+ StrCleanFuncCmd="${StrCleanFuncCmd//__FNCT_VAR__/${StrFunctionVar}}" ; 
+ 
+ #StrCleanFuncCmd="${StrCleanFuncCmd//__GREP_TRIGGER__/${StrGrepTriggerF}}" ; 
+ #StrCleanFuncCmd="${StrCleanFuncCmd//__SED__FILTER__/${StrSedFilter}}" ; 
  
  echo -ne "${StrCleanFuncCmd}" ;
   

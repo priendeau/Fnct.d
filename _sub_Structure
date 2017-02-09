@@ -3,6 +3,40 @@
 ### Package : _sub_Structure
 
 
+function Verbosis()
+{
+ local -a ArrayArg=( $* ) ; 
+ local -a __call_locality=( Verb Verbosis )
+ local StrMsg=${VerbMsg:=__TEXT__} ; 
+ local StrDevOut=${VerbDev:=/dev/stderr} ; 
+ local IsVerboseState=${VerbState:=False} ;
+ local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+ local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+ local IsDisplayFormatted=${VerbFormated:=True} ;
+ local IsAppendMode=${VerbAppendDev:=False} ; 
+ if [ "${IsVerboseState:=False}" == "True" ] ; then 
+  if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+   if [ "${IsAppendMode:=False}" == "True" ] ; then 
+     echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
+   else  
+     echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+   fi
+  else
+   if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+      echo "${StrMsg}" ;  
+   else
+    if [ "${IsAppendMode:=False}" == "True" ] ; then 
+     echo "${StrMsg}" >> ${StrDevOut} ;
+    else
+     echo "${StrMsg}" > ${StrDevOut} ;
+    fi
+   fi 
+  fi 
+ fi
+} 
+### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
+
+
 ### ValueToVariable
 ### Was moved into chunk to control version, another version without uses 
 ### of sed and less as possible of BoolVarTest and/or BoolVarTestVarCreation. 

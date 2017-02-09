@@ -3,14 +3,13 @@
 ### FootPrint Added, see Prefixed-Var ZSEAddFootPrint from ZenityShellEval
 ###
 
-###File:/var/cache/Fnct.D/ZenityShellEval/0f86b448-72f4-11e6-8b1d-001e4c8856d6
-###UUID-TIME-MARKER:41785b0c-9b10-11e6-8b1d-001e4c8856d6
-###Date: 20161025-20:08:00,1477440480
-###Sha1Sum: 0fa8312c4a11971a0319d6d79712dc82e9829b1e
-###Size:11672
-###NbLine: 284
-###NbWord: 1126
-
+###File:/home/maxiste/github/Fnct.D/0f86b448-72f4-11e6-8b1d-001e4c8856d6
+###UUID-TIME-MARKER:017a0c56-ee41-11e6-8b1d-001e4c8856d6
+###Date: 20170208-15:56:10,1486587370
+###Sha1Sum: e7efbcc99f3e7dabe515d5b49b69b3bab373d349
+###Size:13233
+###NbLine: 336
+###NbWord: 1245
 
 unset GetDateReportCreation; 
 function GetDateReportCreation()
@@ -56,9 +55,63 @@ function GetDateReportCreation()
 ### #                                  MdCd
 ### ##########################################################################
 
-unset MdCd ;
+unset GetMemContent GetMemHeader ShaSum1 GetCol1 MdCd ;
+unset Verbosis ; 
 function MdCd()
 { 
+ function Verbosis()
+ {
+  local -a ArrayArg=( $* ) ; 
+  local -a __call_locality=( Verbosis Verb );
+  local StrMsg=${VerbMsg:=__TEXT__} ; 
+  local StrDevOut=${VerbDev:=/dev/stderr} ; 
+  local IsVerboseState=${VerbState:=False} ;
+  local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+  local IsDisplayFormatted=${VerbFormated:=True} ;
+  if [ "${IsVerboseState:=False}" == "True" ] ; then 
+   if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+     echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+   else
+     echo -ne "${StrMsg}\n" > ${StrDevOut} ;
+   fi 
+  fi
+ } 
+ ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis
+ function GetCol1()
+ {
+  local -a __call_locality=( GC1 GetCol1 ) ;
+  local -a ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]} ;
+  local StrApps=${GC1Apps:=/usr/bin/cut} ;
+  local StrAppsOpt=${GC1AppsOpt:="-d \' \' -f 1"} ;
+  ${StrApps} ${StrAppsOpt} ;
+ }
+	
+ function ShaSum1()
+ {
+  local -a __call_locality=( SS1 ShaSum1 ) ;
+  local -a ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]} ;
+  local StrApps=${SS1Apps:=/usr/bin/sha1sum} ;
+  ${StrApps} ; 
+ }	
+	
+ function GetMemHeader()
+ {
+  local -a __call_locality=( GMH GetMemHeader ) ;
+  local -a ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]} ;
+  echo "${ArrayMdCd[@]}" | ShaSum1 | GetCol1
+ }
+	
+ function GetMemContent()
+ {
+  local -a __call_locality=( GMC GetMemContent )
+  local -a ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]} ; 
+  echo "${ArrayMdCd[@]}" ; 
+ }
+
  local -a ArrayArg=( $* ) ;
  local -a __call_locality=( MC MdCd ) ;
  local Arg0="${ArrayArg[0]}" ; 
@@ -79,79 +132,62 @@ function MdCd()
  local StrDevOut=${MCDevOut:=/dev/stderr} ;
  local StrStoreTpl="__DATE__:__PATH__:__UTLM__:__RES__" ;
  local BoolDisplayDebug=${MCDisplayDebug:=False} ; 
- local StrVarListTransfert="BoolDisplayDebug,StrStoreTpl,StrFileList,StrAppsCall,StrMkDirApps,StrTagCmdParser,GCID,GHID,IntFile,StrFileStoreInfo,StrDate,StrPathLoc,UserTypeLocationModel,GetHeaderId,IntGetContentId,StrAppsExpandModel,StrAppsExpandOpt,StrFileModel" ;
+ local StrVTVRegistry=${MCVTVReg:='VTVIsQuotedValue=True VTVIsValueReAssign=True VTVIsValueToConvert=False VTVIsArrayStyleInsert=True VTVIsWhiteList=True VTVIsArrayStyleInsert=True'} ; 
+ local StrVarListTransfert="BoolDisplayDebug,StrStoreTpl,StrFileList,StrAppsCall,StrMkDirApps,StrTagCmdParser,GCID,GHID,IntFile,StrFileStoreInfo,StrDate,StrPathLoc,UserTypeLocationModel,GetHeaderId,IntGetContentId,StrAppsExpandModel,StrAppsExpandOpt,StrFileModel,StrVTVRegistry" ;
  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
  local ArrayMsg=( ) ;
  ArrayMsg[0]="CMD: __CMD__, PATH: __PATH__  " ;
- ArrayMsg[1]="" ; 
- ArrayMsg[2]="" ; 
- 
- function Verbosis()
- {
-  local -a ArrayArg=( $* ) ; 
-  local -a __call_locality=( Verbosis Verb );
-  local StrMsg=${VerbMsg:=__TEXT__} ; 
-  local StrDevOut=${VerbDev:=/dev/stderr} ; 
-  local IsVerboseState=${VerbState:=False} ;
-  local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
-  local IsDisplayFormatted=${VerbFormated:=True} ;
-  if [ "${IsVerboseState:=False}" == "True" ] ; then 
-   if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
-     echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
-   else
-     echo -ne "${StrMsg}\n" > ${StrDevOut} ;
-   fi 
-  fi
- } 
- ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis
-
- function GetCol1()
- {
-  local __call_locality=( GC1 GetCol1 ) ;
-  local ArrayArg=( $* ) ; 
-  local Arg0=${ArrayArg[0]} ;
-  /usr/bin/cut -d ' ' -f 1 
- }
-	
- function ShaSum1()
- {
-  local __call_locality=( SS1 ShaSum1 ) ;
-  local ArrayArg=( $* ) ; 
-  local Arg0=${ArrayArg[0]} ;
-  /usr/bin/sha1sum ;
- }	
-	
- function GetMemHeader()
- {
-  local __call_locality=( GMH GetMemHeader ) ;
-  local ArrayArg=( $* ) ; 
-  local Arg0=${ArrayArg[0]} ;
-  echo "${ArrayMdCd[@]}" | ShaSum1 | GetCol1
- }
-	
- function GetMemContent()
- {
-  local __call_locality=( GMC GetMemContent )
-  local ArrayArg=( $* ) ; 
-  local Arg0=${ArrayArg[0]} ; 
-  echo "${ArrayMdCd[@]}" ; 
- }
+ ArrayMsg[1]="StrFileStoreInfo : __FSI__" ; 
+ ArrayMsg[2]="StrFileStoreLock : __FSL__" ; 
+ ArrayMsg[3]="UserTypeLocationModel : __UTLM__" ; 
+ ArrayMsg[4]="Processing Creation of __PATH__" ; 
 
  function __main_StartServices()
  {
-  local __call_locality=( Main __main_StartServices ) ;
-  local ArrayArg=( $* ) ;
+  local -a __call_locality=( Main __main_StartServices ) ;
+  local -a ArrayArg=( $* ) ;
   local Arg0=${ArrayArg[0]} ;  
+  local -a ArrayDebugTag ;
+  local -a ArrayMdCd ; 
+  local StrMsg ;
+  local StrPathLoc="" ; 
 
+  ArrayDebugTag[0]="${__call_locality[1]}-DEBUG" ; 
+  ArrayDebugTag[1]="${__call_locality[1]}-PATH" ; 
+  ArrayDebugTag[2]="${__call_locality[1]}-CMDLINE" ; 
+  ArrayDebugTag[3]="${__call_locality[1]}-TAGPARSER" ; 
 
-  echo -ne "StrFileStoreInfo : ${StrFileStoreInfo}\n" > ${MCDevOut} ; 
-  echo -ne "StrFileStoreLock : ${StrFileStoreLock}\n" > ${MCDevOut} ; 
+  ### Verbose Block
+  StrMsg=$( MdCd --get ArrayMsg[1] ) ; 
+  StrMsg=${StrMsg//__FSI__/${StrFileStoreInfo}}
+  VerbMsg="${StrMsg}"              \
+  VerbHeader="${ArrayDebugTag[0]}" \
+  VerbState=${BoolDisplayDebug}    \
+  VerbFormated=True                \
+  VerbDev=${MCDevOut} Verbosis ;
+  
+  ### Verbose Block
+  StrMsg=$( MdCd --get ArrayMsg[2] ) ; 
+  StrMsg=${StrMsg//__FSL__/${StrFileStoreLock}}
+  VerbMsg="${StrMsg}"              \
+  VerbHeader="${ArrayDebugTag[0]}" \
+  VerbState=${BoolDisplayDebug}    \
+  VerbFormated=True                \
+  VerbDev=${MCDevOut} Verbosis ;
 
   local UserTypeLocationModel="${StrLocationTemplate}/${StrPathModelTemplate}" ;
-  echo -ne "UserTypeLocationModel : ${UserTypeLocationModel}\n" > ${MCDevOut} ; 
+  
+  ### Verbose Block
+  StrMsg=$( MdCd --get ArrayMsg[3] ) ; 
+  StrMsg=${StrMsg//__UTLM__/${UserTypeLocationModel}}
+  VerbMsg="${StrMsg}"              \
+  VerbHeader="${ArrayDebugTag[0]}" \
+  VerbState=${BoolDisplayDebug}    \
+  VerbFormated=True                \
+  VerbDev=${MCDevOut} Verbosis ;
+   
     
   local currentSHA=$( GBLDAction=GetHeader GBLDFileStoreInfo=${StrFileStoreInfo} IntGHId=1 GetterByLineData ) ;
-  local ArrayMdCd=( ) ; 
   local StrContent=$( GBLDAction=GetContent GBLDFileStoreInfo=${StrFileStoreInfo} IntGCId=2 GetterByLineData ) ; 
   local ErrContent=$? ; 
   if [ ${ErrContent:=-1} -eq 0 ] ; then 
@@ -162,8 +198,6 @@ function MdCd()
    ArrayMdCd=( ${ArrayMdCd[@]} );
   fi 
   
-  local StrPathLoc=""
-  local StrMsg="" ; 
 
   ### The Index of number of intem inside the array are initialized inside the Top
   ### Function MdCd under name IntFile and travel thru ValueToVAriable here.  
@@ -172,20 +206,30 @@ function MdCd()
   local StrDate=$( GetDateReportCreation ) ;
   local ArrayMdCdTag="" ;
   local CmdLine="" ; 
+  local StrPathTpl=$( MdCd --get ArrayMsg[4] ) ;
   for (( intx=0 ; intx <= ${IntFile} ; intx++ )) ; do 
    StrPathLoc=$( MdCd --get ArrayFile[${intx}] ) ; 
-   StrMsg="Processing Creation of __PATH__" ; 
-   VerbMsg="${StrMsg//__PATH__/${StrPathLoc}}" \
-   VerbHeader="${__call_locality[1]}-PATH" \
-   VerbFormated=True \
-   VerbState=${BoolDisplayDebug} \
-   VerbDev=/dev/stderr  Verbosis ;
+   StrMsg=${StrPathTpl} ; 
+
+   ### Verbose Block
+   StrMsg=${StrMsg//__PATH__/${StrPathLoc}} ;
+   VerbMsg="${StrMsg}"             \
+   VerbHeader="${ArrayDebugTag[1]}" \
+   VerbFormated=True               \
+   VerbState=${BoolDisplayDebug}   \
+   VerbDev=${MCDevOut}  Verbosis ;
    
    ### PathFromGetter=$( MCCurGetPath="${StrPathLoc}" MdCd --get MCCurGetPath ) ; 
    if [ ! -d "${StrPathLoc}"  ] ; then 
     StrCmdLine="""${StrMkDirApps} -p ${StrPathLoc}""" ; 
-    VerbMsg="${StrCmdLine}" VerbHeader="${__call_locality[1]}-CmdLine" VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ;
-    $( eval ${StrCmdLine} ) ;
+    
+    ### Verbose Block
+    VerbMsg="${StrCmdLine}"          \
+    VerbHeader="${ArrayDebugTag[2]}" \
+    VerbState=${BoolDisplayDebug}    \
+    VerbFormated=True                \
+    VerbDev=${MCDevOut} Verbosis ;
+    $( eval "${StrCmdLine}" ) ;
    fi 
    ### Notice : 917a3c2a-e331-11e5-98a2-001e4c8856d6 
    ### Note : Problems in tar command fixed. Tar command works in different way
@@ -199,26 +243,30 @@ function MdCd()
    #local ArrayMdCdTag=( ${StrTagCmdParser//,/ } ) ; 
    local StrCmdLineTar="${StrAppsCall}" ;  
 
-   eval StrTagCmd=$( eval \
-     TPDisplayParserNotice=${BoolDisplayDebug}  \
-     TPDisplayDebug=${BoolDisplayDebug}         \
-     TPArrayName=ArrayMdCdTag                   \
-     TPVarNameParsed="StrCmdLineTar"            \
-     TPListTag="${StrTagCmdParser}"             \
+   StrTagCmd=$( eval \
+     TPDisplayParserNotice=${BoolDisplayDebug} \
+     TPDisplayDebug=${BoolDisplayDebug}        \
+     TPArrayName=ArrayMdCdTag                  \
+     TPVarNameParsed=StrCmdLineTar             \
+     TPListTag="${StrTagCmdParser}"            \
      TagParser  ) ; 
-   VerbMsg="${StrTagCmd}" \
-   VerbHeader="${__call_locality[1]}-TagParser-Code" \
-   VerbFormated=True \
-   VerbState=${BoolDisplayDebug} \
-   VerbDev=/dev/stderr  Verbosis ; 
+
+   ### Verbose Block
+   VerbMsg="${StrTagCmd}"           \
+   VerbHeader="${ArrayDebugTag[2]}" \
+   VerbFormated=True                \
+   VerbState=${BoolDisplayDebug}    \
+   VerbDev=${MCDevOut}  Verbosis ; 
    
-   eval $( eval """${StrTagCmd}""" ) ; 
+   $( eval """${StrTagCmd}""" ) ; 
    
-   VerbMsg="${StrCmdLineTar}" \
-   VerbHeader="${__call_locality[1]}-TagParser-CmdLine" \
-   VerbFormated=True \
-   VerbState=${BoolDisplayDebug} \
-   VerbDev=/dev/stderr  Verbosis ; 
+   ### Verbose Block
+   VerbMsg="${StrCmdLineTar}"       \
+   VerbHeader="${ArrayDebugTag[3]}" \
+   VerbFormated=True                \
+   VerbState=${BoolDisplayDebug}    \
+   VerbDev=${MCDevOut}  Verbosis ; 
+   
    #for StrPairTagVal in ${ArrayMdCdTag[@]} ; do
     ### In String ${.../%Pattern} will remove only the end
     ### In String ${.../#Pattern} will remove only the beginning
@@ -240,11 +288,20 @@ function MdCd()
     ### path when it's the time to ask about it. 
 
    #done
-   VerbMsg="${StrCmdLineTar}" VerbHeader="${__call_locality[1]}-CmdLine" VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis ;
+   ### Verbose Block
+   VerbMsg="${StrCmdLineTar}"       \
+   VerbHeader="${ArrayDebugTag[2]}" \
+   VerbFormated=True                \
+   VerbState=${BoolDisplayDebug}    \
+   VerbDev=${MCDevOut}  Verbosis ;
+
    StrMsg=$( MdCd --get ArrayMsg[0] ) ; 
-   StrMsg=${StrMsg//__CMD__/} ; 
-   StrMsg=${StrMsg//__PATH__/} ; 
-   VerbMsg=${StrMsg} VerbHeader="${__call_locality[1]}-DEBUG"  VerbDev=/dev/stderr VerbState=${BoolDisplayDebug} Verbosis ; 
+   StrMsg="${StrMsg//__CMD__/}" ; 
+   StrMsg="${StrMsg//__PATH__/}" ; 
+   VerbMsg="${StrMsg}"              \
+   VerbHeader="${ArrayDebugTag[0]}" \
+   VerbDev=${MCDevOut}              \
+   VerbState=${BoolDisplayDebug} Verbosis ; 
    #echo -ne "Cmd:[ tar xvjfC ${UserTypeLocationModel} ${StrPathLoc} ]\n" > ${MCDevOut} ; 
    #StrAppsExpandModel,
    #StrAppsExpandOpt
@@ -253,14 +310,14 @@ function MdCd()
     resultTar=$? ; 
    fi 
    local StrResult="No" ; 
-   local StrStoreStream=${StrStoreTpl} ; 
+   local StrStoreStream="${StrStoreTpl}" ; 
    if [ ${resultTar:=1} -eq 0 ] ; then 
     StrResult="Yes" ; 
    fi
-   StrStoreStream=${StrStoreStream//__DATE__/${StrDate}} ; 
-   StrStoreStream=${StrStoreStream//__PATH__/${StrPathLoc}} ; 
-   StrStoreStream=${StrStoreStream//__UTLM__/${UserTypeLocationModel}} ; 
-   StrStoreStream=${StrStoreStream//__RES__/${StrResult}} ; 
+   StrStoreStream="${StrStoreStream//__DATE__/${StrDate}}" ; 
+   StrStoreStream="${StrStoreStream//__PATH__/${StrPathLoc}}" ; 
+   StrStoreStream="${StrStoreStream//__UTLM__/${UserTypeLocationModel}}" ; 
+   StrStoreStream="${StrStoreStream//__RES__/${StrResult}}" ; 
 
    ArrayMdCd[${#ArrayMdCd[@]}]="${StrStoreStream}" ;  
    #echo "cd ${StrPathLoc} ;" ;
@@ -282,14 +339,9 @@ function MdCd()
  elif [ "${Arg0:=--startservices}" == "--compword" ] ; then 
   eval $( __GetVarReferenceCompWord ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
-  eval $( eval VTVIsArrayStyleInsert=True      \
-          VTVValueEntry=${StrVarListTransfert}  \
-          VTVIsQuotedValue=True          \
-          VTVIsValueReAssign=True       \
-          VTVIsValueToConvert=False   \
-          VTVIsArrayStyleInsert=True  \
-          VTVIsWhiteList=True                 \
-          VTVWhiteListTransfert=GCID,GHID      \
-          ValueToVariable ) __main_StartServices ; 
+  $( eval ${StrVTVRegistry}                \
+     VTVValueEntry=${StrVarListTransfert}  \
+     VTVWhiteListTransfert=GCID,GHID       \
+     ValueToVariable ) __main_StartServices ; 
  fi
 }
