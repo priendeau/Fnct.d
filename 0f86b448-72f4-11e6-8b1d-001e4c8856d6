@@ -4,12 +4,13 @@
 ###
 
 ###File:/home/maxiste/github/Fnct.D/0f86b448-72f4-11e6-8b1d-001e4c8856d6
-###UUID-TIME-MARKER:017a0c56-ee41-11e6-8b1d-001e4c8856d6
-###Date: 20170208-15:56:10,1486587370
-###Sha1Sum: e7efbcc99f3e7dabe515d5b49b69b3bab373d349
-###Size:13233
-###NbLine: 336
-###NbWord: 1245
+###UUID-TIME-MARKER:24a64a42-ee90-11e6-8b1d-001e4c8856d6
+###Date: 20170209-01:22:39,1486621359
+###Sha1Sum: 2c4f86e335a630bcc4e260a2b251a0525801b3d5
+###Size:13270
+###NbLine: 337
+###NbWord: 1249
+
 
 unset GetDateReportCreation; 
 function GetDateReportCreation()
@@ -24,7 +25,7 @@ function GetDateReportCreation()
  
  function __main_StartServices()
  {
-  GODFormat=${StrDateFormat} ${StrDateApps} ; 
+  GODShowVersion=False GODFormat=${StrDateFormat} ${StrDateApps} ; 
  }
  
  
@@ -83,8 +84,8 @@ function MdCd()
   local -a ArrayArg=( $* ) ; 
   local Arg0=${ArrayArg[0]} ;
   local StrApps=${GC1Apps:=/usr/bin/cut} ;
-  local StrAppsOpt=${GC1AppsOpt:="-d \' \' -f 1"} ;
-  ${StrApps} ${StrAppsOpt} ;
+  local StrAppsOpt=${GC1AppsOpt:="-d ' ' -f 1"} ;
+  eval "${StrApps} ${StrAppsOpt}" ;
  }
 	
  function ShaSum1()
@@ -243,7 +244,7 @@ function MdCd()
    #local ArrayMdCdTag=( ${StrTagCmdParser//,/ } ) ; 
    local StrCmdLineTar="${StrAppsCall}" ;  
 
-   StrTagCmd=$( eval \
+   eval StrTagCmd=$( eval \
      TPDisplayParserNotice=${BoolDisplayDebug} \
      TPDisplayDebug=${BoolDisplayDebug}        \
      TPArrayName=ArrayMdCdTag                  \
@@ -258,7 +259,7 @@ function MdCd()
    VerbState=${BoolDisplayDebug}    \
    VerbDev=${MCDevOut}  Verbosis ; 
    
-   $( eval """${StrTagCmd}""" ) ; 
+   eval $( eval """${StrTagCmd}""" ) ; 
    
    ### Verbose Block
    VerbMsg="${StrCmdLineTar}"       \
