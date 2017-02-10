@@ -45,6 +45,7 @@ VarOldsubGit="${VarOldsubGit:=False}";
 SubOldSetupExtraPy="${SubOldSetupExtraPy:=False}";
 SubOldPythonBoost="${SubOldPythonBoost:=False}";
 SubSEPDownloadMgmt="${SubSEPDownloadMgmt:=True}";
+SubStructureExtVerb="${SubStructureExtVerb:=False}";
 ### note GitHubCommitAlpha, since somes functions depends of __fnctCreateLocalityFuncParam,FParamDefaultValue and become too heavy and had problems paring information it was stop and requiert to isolated the code until a good hand can draw a clever Management tools.
 GitHubCommitAlpha="${GitHubCommitAlpha:=False}";
 IsApplianceNotReady="${IsApplianceNotReady:=True}" ; 
@@ -223,10 +224,12 @@ function GlobalFunctionCleaning()
  local StrGrepTriggerF=${GFCGrepTrigger:='Function Member:'}
  local StrSedFilter=${GFCSedFilter:='s/,/ /g;s/[\t\ ]+/ /g'};
  local StrAppsFilter=${GFCAppsFilter:=/usr/bin/gawk} ;  
- local StrFuncBody=$( declare -f GetOtherDate )
+ local StrAwkVarInspection=${GFCExportVarName:=FuncBody} ;
+ local StrAwkDebug=${GFCAwkDebug:=False} ; 
+ local StrFuncBody=$( declare -f ${StrFuncName} ) ; 
  ### Section Elements-finder
- local StrFunctionMember=$( echo | FuncBody="${StrFuncBody}" ${StrAppsFilter} --assign=TypeInspect=Function --assign=StrName=${StrFuncName} -F ' '  -f ${StrScript}  ) ;
- local StrFunctionVar=$( echo | FuncBody="${StrFuncBody}" ${StrAppsFilter} --assign=TypeInspect=Var --assign=StrName=${StrFuncName} -F ' '  -f ${StrScript} ) ;
+ local StrFunctionMember=$( FuncBody=${StrFuncBody} ${StrAppsFilter} --assign=TypeInspect=Function --assign=StrName=${StrFuncName}  --assign=ExportNameBody=${StrAwkVarInspection} --assign=BoolDisplayDebug=${StrAwkDebug} -F ' '  -f ${StrScript}  ) ;
+ local StrFunctionVar=$( FuncBody=${StrFuncBody} ${StrAppsFilter} --assign=TypeInspect=Var --assign=StrName=${StrFuncName} --assign=ExportNameBody=${StrAwkVarInspection} --assign=BoolDisplayDebug=${StrAwkDebug} -F ' '  -f ${StrScript} ) ;
  ### end of Elements-finder . 
  ### unset1: __TES__ __FUNCT__ --list  __TEE__
  ### unset2: __TES__ GetVarReference __FUNCT__ __PIPE__ egrep -i \"__GREP_TRIGGER__\" -A1 __PIPE__ tail -n1 __PIPE__ sed -r '__SED__FILTER__' __TEE__
@@ -241,7 +244,7 @@ function GlobalFunctionCleaning()
  #StrCleanFuncCmd="${StrCleanFuncCmd//__GREP_TRIGGER__/${StrGrepTriggerF}}" ; 
  #StrCleanFuncCmd="${StrCleanFuncCmd//__SED__FILTER__/${StrSedFilter}}" ; 
  
- echo -ne "${StrCleanFuncCmd}" ;
+ echo "${StrCleanFuncCmd}" ;
   
 }
 
