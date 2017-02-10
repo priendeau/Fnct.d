@@ -238,7 +238,7 @@ function GlobalFunctionCleaning()
  StrCleanFuncCmd="${StrCleanFuncCmd//__TEE__/)}" ; 
  StrCleanFuncCmd="${StrCleanFuncCmd//__PIPE__/\|}" ; 
  StrCleanFuncCmd="${StrCleanFuncCmd//__FUNCT__/${StrFuncName}}" ; 
- StrCleanFuncCmd="${StrCleanFuncCmd//__FNCT_MEMBER__/${StrFunctionMember}}" ; 
+ StrCleanFuncCmd="${StrCleanFuncCmd//__FNCT_MEMBER__/${StrFuncName} ${StrFunctionMember}}" ; 
  StrCleanFuncCmd="${StrCleanFuncCmd//__FNCT_VAR__/${StrFunctionVar}}" ; 
  
  #StrCleanFuncCmd="${StrCleanFuncCmd//__GREP_TRIGGER__/${StrGrepTriggerF}}" ; 
