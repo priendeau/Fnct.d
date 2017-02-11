@@ -5,25 +5,62 @@
 
 
 if [ "${versionGFL:=0.0.1}" == "0.0.0" ] ; then 
- eval $( GFCFuncName=GetFibLevel GlobalFunctionCleaning ) ; 
+ ### GlobalFunctionCleaning not compatible for version versionGFL==0.0.0
+ ###eval $( GFCFuncName=GetFibLevel GlobalFunctionCleaning ) ; 
+ unset GetFibLevel ; 
  function GetFibLevel()
  {
   local -a ArrayArg=( $* ) ;
   local -a __call_locality=( GFL GetFibLevel ) ;
   local Arg0=${ArrayArg[0]} ;   
-  local StrApps=${GFApps:=/home/maxiste/bin/src/bin/fib} ; 
+  local StrApps=${GFApps:=/usr/local/bin/fib} ; 
   local StrAppsOpt=${GFLAppsOpt:='fReadOnlyNumber=True'} ; 
-  local StrFilterApps=${GFFilterApps:=/usr/bin/gawk} ;
+  local BoolUsingAwkApps=${GFLUsingAwkApps:=True} ; 
+  local StrFilterApps=${GFLFilterApps:=/usr/bin/gawk} ;
+  local StrAwkScript=${GFLAwkScript:=/etc/init.d/Fnct.D/awk-script/Fibonacci.awk} ; 
+  local StrASFibMeth=${GFLAwkFibEngine:=LT} ; 
   local BoolDisplayCmd=${GFLDisplayCmd:=False} ; 
+  local IntFibLevel=${GFLIntLevel:=1} ;
+  local StrCSVSep=${GFLIntLevelSep:=','} ;
+  local IntFibSubStr ;
+  local IntNbFib ; 
   
-  if [ "${StrAppsOpt}" == "" ] ; then 
-    StrCmd="""${StrApps} ${IntFibLevel} | ${StrFilterApps} -F ' ' 'BEGIN{}{printf(\"%s\n\",\$(NF))}END{}'""" ; 
+  if [ "${BoolUsingAwkApps:=True}" == "True" ] ; then 
+    StrCmd="""echo ${IntFibLevel} | ${StrFilterApps} -vOutputFibOnly=True -vFuncType=${StrASFibMeth} -F '${StrCSVSep}' -f ${StrAwkScript}""" ; 
   else
-    StrCmd="""${StrAppsOpt} ${StrApps} ${IntFibLevel} """;
+    IntFibLevel="${IntFibLevel}${StrCSVSep}" ; 
+    IntFibSubStr=${IntFibLevel//${StrCSVSep}/} ; 
+    IntNbFib=$(( ${#IntFibLevel} - ${#IntFibSubStr} ))
+    StrCmd="""${StrAppsOpt} ${StrApps} __INT__ """;
   fi
+  
   if [ "${BoolDisplayCmd:=False}" == "True" ] ; then 
    echo -ne "${StrCmd}\n" > /dev/stderr ; 
   fi
+  
+  local StrNbParser=${IntFibLevel} ; 
+  local StrItemLevel ; 
+  local -a ArrayResult ;
+  if [ "${BoolUsingAwkApps:=True}" == "True" ] ; then 
+   ### In case Awk-script is used and more than one number is specified inside 
+   ### the IntFibLevel. Awk-script can handle it
+   eval "${StrCmd}" ; 
+  else 
+   ###  In case Application fib is use, it does not support more than one 
+   ###  number from to compute by launch. It require to loop the application
+   ###  and extract the value . 
+   for(( intx=0 ; intx <= ${IntNbFib}-1 ; intx++)) ; do 
+    StrItemLevel=${StrNbParser%*${StrNbParser#*${StrCSVSep}}} ;
+    StrNbParser=${StrNbParser:${#StrItemLevel}:$(( ${#StrNbParser} - ${#StrItemLevel}))} ;
+    if [ "${BoolDisplayCmd:=False}" == "True" ] ; then 
+     echo -ne "CMD:${StrCmd//__INT__/${StrItemLevel//${StrCSVSep}/}}\n" > /dev/stderr ; 
+    fi
+    ArrayResult[${#ArrayResult[@]}]=$( eval "${StrCmd//__INT__/${StrItemLevel//${StrCSVSep}/}}" ); 
+   done 
+   echo "${ArrayResult[@]}" ; 
+  fi 
+  
+  
  }
 fi 
 
