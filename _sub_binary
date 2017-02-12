@@ -13,7 +13,7 @@ if [ "${versionGFL:=0.0.1}" == "0.0.0" ] ; then
   local -a ArrayArg=( $* ) ;
   local -a __call_locality=( GFL GetFibLevel ) ;
   local Arg0=${ArrayArg[0]} ;   
-  local StrApps=${GFApps:=/usr/local/bin/fib} ; 
+  local StrApps=${GFLApps:=/usr/local/bin/fib} ; 
   local StrAppsOpt=${GFLAppsOpt:='fReadOnlyNumber=True'} ; 
   local BoolUsingAwkApps=${GFLUsingAwkApps:=True} ; 
   local StrFilterApps=${GFLFilterApps:=/usr/bin/gawk} ;
@@ -128,16 +128,22 @@ if [ "${versionGFL:=0.0.1}" == "0.0.1" ] ; then
    eval $( eval CAFunctName=GetFibLevel CAIsAddParent=False CallArgument ) ;
   fi  
   
-  local IntFibLevel=${GFLIntLevel:=1} ;
   local StrApps=${GFLApps:=/usr/local/bin/fib} ; 
   local StrAppsOpt=${GFLAppsOpt:='fReadOnlyNumber=True'} ; 
-  
+  local BoolUsingAwkApps=${GFLUsingAwkApps:=True} ; 
   local StrFilterApps=${GFLFilterApps:=/usr/bin/gawk} ;
-  local BoolDisplayEntry=${GFLDisplayEntry:=False} ; 
+  local StrAwkScript=${GFLAwkScript:=/etc/init.d/Fnct.D/awk-script/Fibonacci.awk} ; 
+  local StrASFibMeth=${GFLAwkFibEngine:=LT} ; 
   local BoolDisplayCmd=${GFLDisplayCmd:=False} ; 
+  local BoolDisplayEntry=${GFLDisplayEntry:=False} ; 
+  local IntFibLevel=${GFLIntLevel:=1} ;
+  local StrCSVSep=${GFLIntLevelSep:=','} ;
+
   
-  local StrVarList="IntFibLevel,StrApps,StrFilterApps,BoolDisplayEntry,BoolDisplayCmd" ; 
+  local StrVarList="StrApps,StrAppsOpt,BoolUsingAwkApps,StrFilterApps,StrFilterApps,StrAwkScript,StrASFibMeth,BoolDisplayCmd,IntFibLevel,StrCSVSep,BoolDisplayEntry" ; 
+  
   local -a ArrayMsg=() ;
+  ArrayMsg[0]="Entry in function, __VAR__:__VER__" ; 
   
   function __main_StartServices()
   {
@@ -150,35 +156,68 @@ if [ "${versionGFL:=0.0.1}" == "0.0.1" ] ; then
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
    fi 
-   ArrayMsg[0]="Entry in function, __VAR__:__VER__" ; 
    
-   StrMsg=${ArrayMsg[0]} ; 
+   StrMsg=$( GetFibLevel --get ArrayMsg[0] ) ; 
    StrMsg=${StrMsg//__VAR__/versionGFL} ; 
    StrMsg=${StrMsg//__VER__/${versionGFL}} ; 
    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
-   local StrCmd ; 
    
-   if [ "${StrAppsOpt:=''}" != '' ] ; then 
-    StrCmd="""${StrApps} ${IntFibLevel} | ${StrFilterApps} -F ' ' 'BEGIN{}{printf(\"%s\n\",\$(NF))}END{}'""" ; 
-   else
-    StrCmd="""${StrAppsOpt} ${StrApps} ${IntFibLevel} """;
-   fi
-   VerbMsg="${StrCmd}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayCmd} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
-   ${StrCmd} ; 
+   local StrCmd ; 
+   local IntFibSubStr ;
+   local IntNbFib ; 
+  
+  if [ "${BoolUsingAwkApps:=True}" == "True" ] ; then 
+    StrCmd="""echo ${IntFibLevel} | ${StrFilterApps} -vOutputFibOnly=True -vFuncType=${StrASFibMeth} -F '${StrCSVSep}' -f ${StrAwkScript}""" ; 
+  else
+    IntFibLevel="${IntFibLevel}${StrCSVSep}" ; 
+    IntFibSubStr=${IntFibLevel//${StrCSVSep}/} ; 
+    IntNbFib=$(( ${#IntFibLevel} - ${#IntFibSubStr} ))
+    StrCmd="""${StrAppsOpt} ${StrApps} __INT__ """;
+  fi
+  
+  VerbMsg="${StrCmd}" VerbHeader="${__call_locality[1]}-CMD" VerbState=${BoolDisplayCmd} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+  
+  local StrNbParser=${IntFibLevel} ; 
+  local StrItemLevel ; 
+  local -a ArrayResult ;
+  if [ "${BoolUsingAwkApps:=True}" == "True" ] ; then 
+   ### In case Awk-script is used and more than one number is specified inside 
+   ### the IntFibLevel. Awk-script can handle it
+   eval "${StrCmd}" ; 
+  else 
+   ###  In case Application fib is use, it does not support more than one 
+   ###  number from to compute by launch. It require to loop the application
+   ###  and extract the value . 
+   for(( intx=0 ; intx <= ${IntNbFib}-1 ; intx++)) ; do 
+    StrItemLevel=${StrNbParser%*${StrNbParser#*${StrCSVSep}}} ;
+    StrNbParser=${StrNbParser:${#StrItemLevel}:$(( ${#StrNbParser} - ${#StrItemLevel}))} ;
+    
+    StrParsedCmd="${StrCmd//__INT__/${StrItemLevel//${StrCSVSep}/}}" ;
+    VerbMsg="${StrParsedCmd}" VerbHeader="${__call_locality[1]}-CMD" VerbState=${BoolDisplayCmd} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    
+    ArrayResult[${#ArrayResult[@]}]=$( eval "${StrParsedCmd}" ); 
+   done 
+   
+   VerbMsg="${ArrayResult[@]}" VerbHeader="${__call_locality[1]}-CMD" VerbState=True VerbEvalForm=False VerbFormated=False Verbosis ;
+
+  fi 
+
+    
   
   }  
   local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
-  local StrNameHelper="${__call_locality[1]}\tCompiled Fibonnacci Number generation by Level.";
-  local StrSummary="Does produce only Fibonnacci by calling compiled fib from repository." ; 
-  local StrSynopsis="";
-  local StrDescription="" ;
-  
+  local StrNameHelper="${__call_locality[1]}\n\t[ Compiled / Scripted ] Fibonnacci Number generation by Level.";
+  local StrSummary="\n\tSimplest use is to call it with One parameter. This application support \n\talso many Integer as parameter. \n\n\tGFLIntLevel=70 GetFibLevel \n\n\tor multiple interger at once :\n\n\tGFLIntLevel=\"1,2,3,4,5,6,7,8,9,10\" GFLIntLevelSep=',' GetFibLevel \n\t  This one require uses of CSV to separate and was specified in\n\t  GFLIntLevelSep=','\n\n\t  Or it require you do pas the interger in '\"' quoted if you want to \n\t  use space :\n\tGFLIntLevel=\"1 2 3 4 5 6 7 8 9 10\" GetFibLevel \n\n\tRequire to witch to application fib from compiled version available in\n\tbranch MakeFileInstaller. \n\n\tSuggestion time it with time from bash:\n\n\ttime GFLUsingAwkApps=False GFLIntLevel=0 GetFibLevel \n\n\tHaving fib application compiled somewhere else :\n\n\tGFLApps=/path/to/fib GFLUsingAwkApps=False GFLIntLevel=0 GetFibLevel  \n\n" ;
+  local StrSynopsis="This application rely on fib application compiled by branch \n\tMakeFileInstaller from Fnct.D and does use the awk-script Fibonacci.awk\n\tfrom Fnct.D repository. The awk-script seems suitable to perform on higher\n \tlevel since Level 70 can compute the number 190392490709135 in less than\n \t0.007 seconds on Dual X2 @ 1900 Mhz processor, it's accurate to perform\n \tcalculation to level 1476. or it indicate 'inf'. Further treatment can be\n \tpossible to extend the script but basically it's quite enought to report\n \tdesired information.\n" ; 
+  local StrDescription="Function Prefixed-Variable Helper:\n\n  Main Prefixed-Variable:\nGFLIntLevel\t\t[Integer / CSV List] May accept one value or a List separeted by\n \t\t\tCommas Separated value. If 'Space' is used, double or single quote should\n\t\t\tWrap your information.\nGFLIntLevelSep\t\t[Char] Accept value by preference in single quoted value like \n\t\t\t' ', for space, ',' for Virgule, ':' Double-dot.\n  Related to Fibonacci application compiled :\nGFLFilterApps\t\t[String] the Awk interpreter to use.\nGFLAwkScript\t\t[String] Default Fibonacciscript or your-improved version\nGFLAwkFibEngine\t[String] Choice between LT or NB for Loop-Technique or\n\t\t\tNaive Binary Recursion. \n  Related to Fibonacci application compiled :\nGFLUsingAwkApps\tSet [True/False] Is required to et to True to enable the \n\t\t\tapplication layer to take over the awk-script. \nGFLApps\t\t[String] Quoted is mandatory and is used to specifiy some parameter\n\t\t\tto the application. Default parameter is 'fReadOnlyNumber=True' and it's\n\t\t\tinternal variable GFLAppsOpt\t\n\n\nRelated to Debugging purposes :\nGFLDisplayCmd\tSet [True/False] Display the command on every call. Uses of \n\t\t\tapplication will launch as many time held Interger inside GFLIntLevel\nGFLDisplayEntry\t Set [True/False]  Will display function entry.\n\n\nNotice to Debugging Prefixed-variable, it does output all the information inside\n/dev/stderr and will not interfer with variable assignation. \n" ; 
+        
+        
    
   if [ "${Arg0:=--startservices}" == "--help"	] ; then 
    GVRIsName=True     \
    GVRIsSummary=True  \
-   GVRIsSynopsis=False \
-   GVRIsDesc=False     \
+   GVRIsSynopsis=True \
+   GVRIsDesc=True     \
    GetVarReference ${__call_locality[1]} ; 
    echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
   elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
