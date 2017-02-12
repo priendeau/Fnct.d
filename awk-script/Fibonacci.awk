@@ -49,16 +49,6 @@ function fibonacci_LT( IntLevel )
  }
  return(IntA)
 }
-
-### Based on effort of Cubbi(  Morgan Stanley )
-### Naive binary recursion. 
-### - For Positive only Fibonacci level expression.
-### 
-function fibonacci_NBR( n )
-{ 
- return( l_func_fibonacci_NBR( 1, 1, n ) ) ; 
-}
-
 ### Second function used inside NBR engine. It does call back the 
 ### same function l_func_fibonacci_NBR with a test of having a level
 ### computed lower than 2 or equal to n1. and does call itself
@@ -67,7 +57,16 @@ function fibonacci_NBR( n )
 ### 
 function l_func_fibonacci_NBR( n1, n2, n )
 { 
- return( n<2 ? n1 : l_func_fibonacci_NBR( n1 + n2 ,n1, n-1) ) ; 
+ return( n<=2 ? n1 : l_func_fibonacci_NBR( n1 + n2 ,n1, n-1) ) ; 
+}
+
+### Based on effort of Cubbi(  Morgan Stanley )
+### Naive binary recursion. 
+### - For Positive only Fibonacci level expression.
+### 
+function fibonacci_NBR( n )
+{ 
+ return( l_func_fibonacci_NBR( 1, 1, n ) ) ; 
 }
 
 ### 
