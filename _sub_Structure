@@ -611,20 +611,20 @@ if [ "${versionGOD:=0.0.1}" == "0.0.2" ] ; then
       fi
      else
       if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
-       if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+       if [ "${IsExtendedOutput:=False}" == "True" ] ; then 
          echo -ne "${StrMsg}" ;  
        else
          echo "${StrMsg}" ;  
        fi
       else
        if [ "${IsAppendMode:=False}" == "True" ] ; then 
-        if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+        if [ "${IsExtendedOutput:=False}" == "True" ] ; then 
           echo -ne "${StrMsg}" >> ${StrDevOut} ;
         else
           echo "${StrMsg}" >> ${StrDevOut} ;
         fi
        else
-        if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+        if [ "${IsExtendedOutput:=False}" == "True" ] ; then 
          echo -ne "${StrMsg}" > ${StrDevOut} ;
         else
          echo "${StrMsg}" > ${StrDevOut} ;
@@ -2331,20 +2331,20 @@ if [ "${versionTP:=0.0.2}" == "0.0.2" ] ; then
       fi
      else
       if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
-       if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+       if [ "${IsExtendedOutput:=False}" == "True" ] ; then 
          echo -ne "${StrMsg}" ;  
        else
          echo "${StrMsg}" ;  
        fi
       else
        if [ "${IsAppendMode:=False}" == "True" ] ; then 
-        if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+        if [ "${IsExtendedOutput:=False}" == "True" ] ; then 
           echo -ne "${StrMsg}" >> ${StrDevOut} ;
         else
           echo "${StrMsg}" >> ${StrDevOut} ;
         fi
        else
-        if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+        if [ "${IsExtendedOutput:=False}" == "True" ] ; then 
          echo -ne "${StrMsg}" > ${StrDevOut} ;
         else
          echo "${StrMsg}" > ${StrDevOut} ;
@@ -3343,20 +3343,20 @@ if [ "${versionSCH}" == "0.0.1" ] ; then
       fi
      else
       if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
-       if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+       if [ "${IsExtendedOutput:=False}" == "True" ] ; then 
          echo -ne "${StrMsg}" ;  
        else
          echo "${StrMsg}" ;  
        fi
       else
        if [ "${IsAppendMode:=False}" == "True" ] ; then 
-        if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+        if [ "${IsExtendedOutput:=False}" == "True" ] ; then 
           echo -ne "${StrMsg}" >> ${StrDevOut} ;
         else
           echo "${StrMsg}" >> ${StrDevOut} ;
         fi
        else
-        if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+        if [ "${IsExtendedOutput:=False}" == "True" ] ; then 
          echo -ne "${StrMsg}" > ${StrDevOut} ;
         else
          echo "${StrMsg}" > ${StrDevOut} ;

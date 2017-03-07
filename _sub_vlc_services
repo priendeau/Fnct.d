@@ -390,28 +390,6 @@ function __vlc_rate()
 unset OldVLCServer ;
 function OldVLCServer()
 {
- local __call_locality=( OVLCS OldVLCServer ) ;
-	local ArrayArg=( $* ) ; 
-	local Arg0=${ArrayArg[0]} ;
- local StrSwitchMessages="Following switch are available:\n\n\t--startservices\tStart the application normally.\n\t--get\t\tReturn value of Internal Variable.\n\t--list\t\tList all Internal Pre-fixed Variable available to query or get.\n\n" ;
- ### vlc-terminal.sh is simply a vlc loading sheet and other meter, replacing 
- ### OVLCSAppsLunch={/usr/bin/vlc OR /usr/local/bin/vlc} can just let use
- ### it for test purposes.
-  
- local StrVLCApps=${OVLCSAppsLunch:="""${HOME}/bin/vlc-terminal.sh"""}
- local StrVLCAppsPlaylist=${OVLCSAppsPlaylist:="""${HOME}/Music/playlist_20160606.m3u"""} ; 
- ### It uses /bin/nc inside socket management to receive incoming vlc-cli command and 
- ### /bin/nc is a bind to /bin/nc.openbsd in Linux-Mint Distribution, depend what other 
- ### own ...
- local StrSocketApps=${OVLCSAppsSock:=/bin/nc};
- local StrSocketOption=${OVLCSAppsSockOpt:=-4 -n -k -i 3};
- local StrSocketBufferOption=${OVLCSAppsSockBuffer:=2097152};
- local StrAppsBufferOption=${OVLCSAppsBuffer:=-I};
- local StrAppsListenOption=${OVLCSAppsLiten:=-l}
- local StrSocketAddr=${OVLCSSockAddr:=127.0.1.1};
- local StrSocketPort=${OVLCSSockPort:=5080};
- local BoolDisplayCmdLine=${OVLCDisplayCmd:=False};
- 
  function Verbosis()
 	{
 		local __call_locality=( Verbosis Verb );
@@ -431,6 +409,34 @@ function OldVLCServer()
 	} 
  ### Model : VerbMsg= VerbDev=/dev/stderr VerbState=True VerbFormated=True VerbHeader=${__call_locality[1]} Verbosis
  
+ local __call_locality=( OVLCS OldVLCServer ) ;
+	local ArrayArg=( $* ) ; 
+	local Arg0=${ArrayArg[0]} ;
+
+ ### vlc-terminal.sh is simply a vlc loading sheet and other meter, replacing 
+ ### OVLCSAppsLunch={/usr/bin/vlc OR /usr/local/bin/vlc} can just let use
+ ### it for test purposes.
+  
+ local StrVLCApps=${OVLCSAppsLunch:="""${HOME}/bin/vlc-terminal.sh"""}
+ local StrVLCAppsPlaylist=${OVLCSAppsPlaylist:="""${HOME}/Music/playlist_20160606.m3u"""} ; 
+ ### It uses /bin/nc inside socket management to receive incoming vlc-cli command and 
+ ### /bin/nc is a bind to /bin/nc.openbsd in Linux-Mint Distribution, depend what other 
+ ### own ...
+ local StrSocketApps=${OVLCSAppsSock:=/bin/nc};
+ local StrSocketOption=${OVLCSAppsSockOpt:=-4 -n -k -i 3} ;
+ local BoolUsingNiceNC=${OVLCSAppsSockUsingNice:=False} ; 
+ local StrAppsNice=${OVLCNiceApp:=/usr/bin/nice} ; 
+ local IntNicePrio=${OVLCSAppsSockNice:=-3} ; 
+ local StrSocketBufferOption=${OVLCSAppsSockBuffer:=2097152};
+ local StrAppsBufferOption=${OVLCSAppsBuffer:=-I};
+ local StrAppsListenOption=${OVLCSAppsLiten:=-l}
+ local StrSocketAddr=${OVLCSSockAddr:=127.0.1.1};
+ local StrSocketPort=${OVLCSSockPort:=5080};
+ local BoolDisplayCmdLine=${OVLCDisplayCmd:=False};
+ local StrVTVReg=${OVLCVTVRegistry:=}
+ 
+ local StrVarList="StrAppsNice,BoolUsingNiceNC,IntNicePrio,StrVLCApps,StrVLCAppsPlaylist,StrSocketApps,StrSocketOption,StrAppsBufferOption,StrSocketBufferOption,StrAppsListenOption,StrSocketAddr,StrVarList" ; 
+
  function __main_StartServices()
  {
 		local __call_locality=( Main __main_StartServices ) ;
@@ -442,11 +448,23 @@ function OldVLCServer()
   
   local StrCmd="""cat ${HOME}/.vlc-server | \
   ${StrVLCApps} ${StrVLCAppsPlaylist} | \
-  ${StrSocketApps} ${StrSocketOption} \
+  __NICE__ ${StrSocketApps} ${StrSocketOption} \
   ${StrAppsBufferOption} ${StrSocketBufferOption} \
   ${StrAppsListenOption} ${StrSocketAddr} ${StrSocketPort} > ${HOME}/.vlc-server """ ; 
   
-  VerbMsg=${StrCmd} VerbDev=/dev/stderr VerbState=${BoolDisplayCmdLine} VerbFormated=True VerbHeader="CMDLINE" Verbosis  
+  if [ "${BoolUsingNiceNC:=False}" == "True" ] ; then  
+   StrCmd=${StrCmd//__NICE__/${StrAppsNice} ${IntNicePrio}} ; 
+  else
+   StrCmd=${StrCmd//__NICE__/} ; 
+  fi 
+  
+  VerbMsg=${StrCmd}    \
+  VerbHeader="CMDLINE" \
+  VerbState=${BoolDisplayCmdLine} \
+  VerbFormated=True    \
+  VerbDev=/dev/stderr  \
+  Verbosis ;
+  
   $( eval "${StrCmd}" ) ; 
   
  }
@@ -456,27 +474,76 @@ function OldVLCServer()
 		local __call_locality=( Main __main_StartServices ) ;
 		local Arg0=${ArrayArg[0]} ;
 		local ArrayArg=( $* ) ; 
-  echo -ne "\n\n\tLike you see there is an application to destroy and socket to stop.\nStay tuned to see how we can manage it with CtrlHandler methodology.\n\n" ; 
+  ### echo -ne "\n\n\tLike you see there is an application to destroy and 
+  ### socket to stop.\nStay tuned to see how we can manage it with CtrlHandler 
+  ### methodology.\n\n" Actual method is to terminate the Vlc-service first by 
+  ### sending a 'shutdown' messages. Default information here stipulate 
+  ### having correct port and addresses, but they may change and 
+  ### afformentionned CtrlHandler should carry this information inside an 
+  ### instance. Actually it require to shutdown the services with calling 
+  ### prefixed-variable  :
+  ###
+  ### OVLCSSockAddr=... OVLCSSockPort=... OldVLCServer --stopservices 
+  ### Which stop services like a request, not a services. 
+  local IntSessionSearch=$( /bin/netstat --tcp -na | egrep "^tcp*" | gawk 'BEGIN{}{printf("%s\n",$4)}END{}' | /bin/egrep -c "${OVLCSSockAddr}:${OVLCSSockPort}" )
+  local StrMsg="" ; 
+  if [ ${IntSessionSearch:=0} -eq 1 ]; then 
+   StrMsg="Shutting down instance found on address: ${OVLCSSockAddr}:${OVLCSSockPort}" ; 
+   VerbMsg=${StrMsg} \
+   VerbHeader="${__call_locality[1]}-INFO" \
+   VerbState=True \
+   VerbEvalForm=False\
+   VerbFormated=True \
+   VerbDev=/dev/stderr  Verbosis ;
+   
+   VSCCmd="shutdown"         \
+   VSCAddr=${OVLCSSockAddr}  \
+   VSCPort=${OVLCSSockPort}  \
+   VlcSendCmd 1>&2 > /dev/null & 1>&2 > /dev/null ; 
+  else
+   StrMsg="Wrong information provided to shutdown OldVLCServer instance, review OVLCSSockAddr,OVLCSSockAddr\nServices not found on address: ${OVLCSSockAddr}:${OVLCSSockPort}" ; 
+   VerbMsg=${StrMsg} \
+   VerbHeader="${__call_locality[1]}-INFO" \
+   VerbState=True \
+   VerbEvalForm=False\
+   VerbFormated=True \
+   VerbDev=/dev/stderr  Verbosis ;
+  fi 
+  
+ 
  }
+
+
+  
+ local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+ local StrNameHelper="${__call_locality[1]}\n\tApplication Create independent Network-layer to maintain the\n\tconsole out of human-hand interaction.";
+ local StrSynopsis="\n\tThis application is also used to test both __old_vlc_rate, and it's \n\tnewest improvement, and uses of StartSlewAnalysis, also support VlcSendCmd\n\tand internal command FilterVlcSendCmd from StartSlewAnalysis called\n\twith :\n\n\tSSAFuncStart=FilterVlcSendCmd StartSlewAnalysis\n";
+ local StrSummary="" ; 
+ local StrDescription="" ;
+
  
  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-			GetVarReference ${__call_locality[1]} ; 
-			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  GVRIsName=True     \
+  GVRIsSummary=False \
+  GVRIsSynopsis=True \
+  GVRIsDesc=False    \
+  GetVarReference ${__call_locality[1]} ;
+  echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
 	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
 		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
 		echo -ne """${ArgGet}\n""" ;
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
 		eval $( __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
-  eval $( VTVIsArrayStyleInsert=True \
-  VTVValueEntry=BoolDisplayCmdLine,StrVLCApps,StrVLCAppsPlaylist,StrSocketApps,StrSocketOption,StrAppsBufferOption,StrSocketBufferOption,StrAppsListenOption,StrSocketAddr \
+  eval $( VTVValueEntry=${StrVarList} \
+  VTVIsArrayStyleInsert=True \
   VTVIsValueReAssign=True  \
   VTVIsValueToConvert=False \
   VTVIsArrayStyleInsert=True \
   ValueToVariable ) __main_StartServices
  elif [ "${Arg0:=--stopservices}" == "--stopservices" ] ; then 
-  eval $( VTVIsArrayStyleInsert=True \
-  VTVValueEntry=StrVLCApps,StrVLCAppsPlaylist,StrSocketApps,StrSocketOption,StrAppsBufferOption,StrSocketBufferOption,StrAppsListenOption,StrSocketAddr \
+  eval $( VTVValueEntry=${StrVarList} \
+  VTVIsArrayStyleInsert=True \
   VTVIsValueReAssign=True  \
   VTVIsValueToConvert=False \
   VTVIsArrayStyleInsert=True \
@@ -815,20 +882,20 @@ if [ "${versionSSA:=0.0.0}" == "0.0.2" ] ; then
      fi
     else
      if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
-      if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+      if [ "${IsExtendedOutput:=False}" == "True" ] ; then 
         echo -ne "${StrMsg}" ;  
       else
         echo "${StrMsg}" ;  
       fi
      else
       if [ "${IsAppendMode:=False}" == "True" ] ; then 
-       if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+       if [ "${IsExtendedOutput:=False}" == "True" ] ; then 
          echo -ne "${StrMsg}" >> ${StrDevOut} ;
        else
          echo "${StrMsg}" >> ${StrDevOut} ;
        fi
       else
-       if [ "${IsExtendedOutput:False}" == "True" ] ; then 
+       if [ "${IsExtendedOutput:=False}" == "True" ] ; then 
         echo -ne "${StrMsg}" > ${StrDevOut} ;
        else
         echo "${StrMsg}" > ${StrDevOut} ;
@@ -857,20 +924,21 @@ if [ "${versionSSA:=0.0.0}" == "0.0.2" ] ; then
   local BoolDisplayDebug=${SSADisplayDebug:=False} ; 
   local BoolShowInstance=${SSAShowInstance:=True} ; 
   local BoolShowVersion=${SSAShowVersion:=True} ; 
+  local IntSleepPeriod=${SSAPeriodAnalysis:=2} ; 
+  local StrVTVRegistry=${SSAVTVReg:=VTVIsArrayStyleInsert=True,VTVIsValueReAssign=True,VTVIsValueToConvert=False,VTVIsArrayStyleInsert=True,VTVIsQuotedValue=True} ;
   local StrAddr=${SSAServerAddr:=127.0.0.1} ; 
   local StrPort=${SSAServerPort:=5083} ; 
+  local StrVarList="StrPathLoopState,BoolShowVersion,BoolShowEntry,BoolDisplayDebug,BoolShowInstance,StrAddr,StrPort,StrParentApps,IntSleepPeriod,StrVTVRegistry,StrVTVRegistry" ;
   
   local -a ArrayMsg ;
   ArrayMsg[0]="Entry in function" ;  
   ArrayMsg[1]="Shutdown Instance ID:__UUID__, file: __FILE__" ;
   ArrayMsg[2]="Instance ID:__UUID__" ;
-  ArrayMsg[3]="date:__DATE__\nSong of __DUR__ sec(s)\n" ; 
-  ArrayMsg[4]="Application latency of __TIMER__ sec(s), compensing sleep of __SLEEP__ sec(s) \n" 
-  ArrayMsg[5]="TimeDuration : __SLEEP__ sec(s)\nRewind at Position : __RWD__ sec(s)\nApps Latency : __LATENCY__ sec(s)\nRandom Rate causing a Decalibation of the end by __SLEW_SEC__ sec(s) early, for song of __DUR__ sec(s)\n" ; 
-  
-  local StrVarList="StrPathLoopState,BoolShowVersion,BoolShowEntry,BoolDisplayDebug,BoolShowInstance,StrAddr,StrPort,StrParentApps" ;
- 
-  
+  ArrayMsg[3]="date:__DATE__\nSong of __DUR__ sec(s)\n\tNumber of period for latency estimation: __PERDIOD__\n\tNb seconds first period: __PER_SLEEP__ sec(s).\n" ; 
+  ArrayMsg[4]="Application latency of __TIMER__ sec(s), compensing sleep of ( __SLEEP_PERIOD__ times __PERIOD_SLEEP__ sec(s) for total of __SLEEP_CALC__ ) sec(s) \n" 
+  ArrayMsg[5]="TimeDuration : __SLEEP__ sec(s)\nRewind at Position 0 after real sleep of : __RWD__ sec(s)\nApps Latency : __LATENCY__ sec(s)\nRandom Rate causing a Decalibation of the end by __SLEW_SEC__ sec(s) early/lately, for song of __DUR__ sec(s)\n" ; 
+  ArrayMsg[6]="Received a services interruption, stopservices switches was impled or use ServiceControllerHandler was performed." ; 
+
   function VersionApps()
   {
    if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
@@ -944,7 +1012,14 @@ if [ "${versionSSA:=0.0.0}" == "0.0.2" ] ; then
     eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True CallArgument ) ;
    fi 
    StrMsg=$( StartSlewAnalysis --get ArrayMsg[0] )
-   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolShowEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   
+   VerbMsg="${StrMsg}"        \
+   VerbHeader="${__call_locality[1]}-ENTRY" \
+   VerbState=${BoolShowEntry} \
+   VerbEvalForm=False         \
+   VerbFormated=True          \
+   VerbDev=/dev/stderr        \
+   Verbosis ;
    
    ### Stop services, based on creation of a file named in '${StrPathLoopState}'  and
    ### resposible to loop inside __main_StartServices unless the file exist. 
@@ -957,12 +1032,32 @@ if [ "${versionSSA:=0.0.0}" == "0.0.2" ] ; then
    local StrUUID=${UUID} ;
    if [ "${StrUUID:=None}" == "None" ] ; then 
     StrUUID=${StrUUIDInstance} ; 
-   fi 
+   fi # End-IF ("${StrUUID:=None}" == "None")
    local StrPathLoopState=${StrPathLoopState//__UUID__/${StrUUID}} ; 
-   VerbMsg="Shutdown Instance ID:${StrUUID}, file: ${StrPathLoopState}" VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ;
+   
+   StrMsg=$( StartSlewAnalysis --get ArrayMsg[1] ) ;
+   StrMsg=${StrMsg//__UUID__/${StrUUID}} ; 
+   StrMsg=${StrMsg//__FILE__/${StrPathLoopState}} ; 
+   
+   VerbMsg=${StrMsg}   \
+   VerbHeader=DEBUG    \
+   VerbState=True      \
+   VerbEvalForm=False  \
+   VerbFormated=True   \
+   VerbDev=/dev/stderr \
+   Verbosis ;
+   
    if [ -f ${StrPathLoopState} ] ; then 
     rm -f ${StrPathLoopState} ; 
-   fi 
+    StrMsg=$( StartSlewAnalysis --get ArrayMsg[6] ) ;
+    VerbMsg="${StrMsg}"    \
+    VerbHeader=SESSION-END \
+    VerbState=True         \
+    VerbEvalForm=False     \
+    VerbFormated=True      \
+    VerbDev=/dev/stderr  Verbosis ;
+    
+   fi ; # End-IF ( -f ${StrPathLoopState} )
       
   }
 
@@ -977,34 +1072,88 @@ if [ "${versionSSA:=0.0.0}" == "0.0.2" ] ; then
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
    fi 
-   StrMsg=$( StartSlewAnalysis --get ArrayMsg[0] ) ;
-   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolShowEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   local StrMsg=$( StartSlewAnalysis --get ArrayMsg[0] ) ;
+   local -A ADbgHdr ; 
+   ADbgHdr["ENTRY"]="${__call_locality[1]}-ENTRY" ;
+   ADbgHdr["DEBUG"]="${__call_locality[1]}-DEBUG";
+   ADbgHdr["INFO"]="${__call_locality[1]}-INFO" ;
+   
+   local IntAvgTTimer=0 ; 
+   local IntSumTTimer=0 ; 
+   local IntCountAppsTimed=0 ; 
+   local IntTTimer=0 ; 
+   local IntStartTimer=0 ;
+   local IntStopTimer=0 ;
+   local IntSongJitter=0 
+   local StrDate; 
+   local IntSleepCalc ; 
+   local StrMsg ;
+   local IntPeriodSleep ; 
+   local IntTimeRemain ; 
+   local IntPeriodSum ;
+   local IntSongTime ; 
+   local IntSongLoc ; 
+   local IntSongDiff ;
+   local IntStartCmd ; 
+   local IntStopCmd ; 
+   local IntSongToPos ; 
+   
+   VerbMsg="${StrMsg}"    \
+   VerbHeader=${ADbgHdr["ENTRY"]} \
+   VerbState=${BoolShowEntry} \
+   VerbEvalForm=False     \
+   VerbFormated=True      \
+   VerbDev=/dev/stderr    \
+   Verbosis ;
 
    ### Loop Registration:
    ### Create a UUID Instance and store-it with a touch command . 
    ### - This is controlled with the while and will end if the 
    ### file is erased by calling __main_StopServices with the UUID Instance. 
-   local StrUUID=$( GetUAppsRegisterName=${StrParentApps} GetUTimeBased=True GetULoop=False GetUUID ) ; 
+   local StrUUID=$( GetUAppsRegisterName=${StrParentApps} \
+                    GetUTimeBased=True \
+                    GetULoop=False \
+                    GetUUID ) ; 
+   local BoolStopProcess=False ; 
+   
    StrPathLoopState=${StrPathLoopState//__UUID__/${StrUUID}}
    StrMsg=$( StartSlewAnalysis --get ArrayMsg[2] ) ;
    StrMsg=${StrMsg//__UUID__/${StrUUID}} ; 
-   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolShowInstance} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   
+   VerbMsg="${StrMsg}"  \
+   VerbHeader=${ADbgHdr["DEBUG"]}  \
+   VerbState=${BoolShowInstance} \
+   VerbEvalForm=False   \
+   VerbFormated=True    \
+   VerbDev=/dev/stderr  \
+   Verbosis ;
+   
    /bin/touch ${StrPathLoopState} ; 
+
+   if [ ! -f ${StrPathLoopState} ] ; then 
+     BoolStopProcess=True ;
+   else
+    ### Timer for Application    
+    IntStartTimer=${SECONDS} ; 
+    ###
+    ### Query the length of the song.
+    ###
+    local IntSleep=$( \
+     FVSCTypeFilter=Int   \
+     FVSCCmd="get_length" \
+     FVSCAddr=${StrAddr}  \
+     FVSCPort=${StrPort}  \
+     FilterVlcSendCmd     ) ; 
+     ### Timer for Application    
+     IntStopTimer=${SECONDS};
+     IntTTimer=$(( ${IntStopTimer} - ${IntStartTimer} )) ;
+     IntSumTTimer=$(( ${IntSumTTimer} + ${IntTTime} )) ; 
+     ### Updating Average latency by application by increasing by one IntCountAppsTimed 
+     ### (one more apps calculed ), updating the IntAvgTTimer. 
+     IntCountAppsTimed=$(( ${IntCountAppsTimed} + 1 )) ; 
+     IntAvgTTimer=$(( ${IntSumTTimer} / ${IntCountAppsTimed} )) ; 
+   fi 
   
-   local IntSleep=$( \
-    FVSCTypeFilter=Int   \
-    FVSCCmd="get_length" \
-    FVSCAddr=${StrAddr}  \
-    FVSCPort=${StrPort}  \
-    FilterVlcSendCmd     ) ; 
-   local StrDate; 
-   local IntStartTimer;
-   local IntStopTimer;
-   local IntTTimer ; 
-   local IntSleepCalc ; 
-   local StrMsg ;
-   
-   
    local -a ArrayMsgTpl  ;
    ### This tiny array avoid re-calling the StartSlewAnalysis many time
    ### inside the main loop and slowing the application . 
@@ -1012,57 +1161,241 @@ if [ "${versionSSA:=0.0.0}" == "0.0.2" ] ; then
    ArrayMsgTpl[1]=$( StartSlewAnalysis --get ArrayMsg[4] ) ; 
    ArrayMsgTpl[2]=$( StartSlewAnalysis --get ArrayMsg[5] ) ; 
    
+   ### 
+   VerbMsg="BoolStopProcess status: ${BoolStopProcess}" \
+   VerbHeader=${ADbgHdr["DEBUG"]}  \
+   VerbState=${BoolDisplayDebug} \
+   VerbEvalForm=False  \
+   VerbFormated=True   \
+   VerbDev=/dev/stderr \
+   Verbosis ;
+   while [ "${BoolStopProcess:=False}" != "True"  ] ; do 
    
-   while [ -f ${StrPathLoopState} ] ; do 
-    ### GODFormat="%Y%m%d %H:%M:%S" GODShowEvalCmd=False GODShowParsing=False GODShowVersion=False GODVerbose=False GetOtherDate
-    IntStartTimer=${SECONDS} ; 
-    StrDate=$( /bin/date +"%Y%m%d %H:%M:%S" ) ; 
-    StrMsg=${ArrayMsgTpl[0]} ; 
-    StrMsg=${StrMsg//__DATE__/${StrDate}} ; 
-    StrMsg=${StrMsg//__DUR__/${IntSleep}} ; 
-   
-    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-INFO" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ;
+    ### Reset some indicator.
+    ### IntSumTTimer is not resetted because it's a continuous 
+    ### application latency time-compensation that is combined with 
+    ### a Speed-adjustment of a current song that to change it's end
+    ### position. Having a more precise information for application
+    ### latency reduce imprecision for variable-speed adjustement. 
+    IntSlewRateSec=0 ; 
     
-    ###Don't really need to replace this command by FilterVlcSendCmd, it
-    ### gather the content in the /dev/null, so no filtering required. 
-    VSCCmd="seek 0" VSCAddr=127.0.0.1 VSCPort=5083 VlcSendCmd 2>&1> /dev/null  ; 
-    IntStopTimer=${SECONDS};
-    IntTTimer=$(( ${IntStopTimer} - ${IntStartTimer} )) ;
-    IntSleepCalc=$(( ${IntSleep}-${IntTTimer} )) ; 
+    IntAvgTTimer=$(( ${IntSumTTimer} / ${IntCountAppsTimed} )) ; 
+    IntSleepCalc=$(( ${IntSleep} )) ; 
+
+    ### 
+    ### PeriodSleep    
+    ### Must represent 
+    ### the total elapsed time including Sleep period and application latency to 
+    ### represent the closest as possible the length of the song. 
+    IntPeriodSleep=$(( ( ${IntSleep} / ${IntSleepPeriod} ) - ( ${IntAvgTTimer} * ( ${IntSleepPeriod} - 1 ) ) )) ; 
+   
+    if [ ! -f ${StrPathLoopState} ] ; then 
+     BoolStopProcess=True ;
+    else
+     ### Timer for Application    
+     IntStartTimer=${SECONDS} ; 
+     VerbMsg="Action: Seek Information\n\tBoolStopProcess status: ${BoolStopProcess}" \
+     VerbHeader=${ADbgHdr["DEBUG"]} \
+     VerbState=${BoolDisplayDebug}            \
+     VerbEvalForm=False  \
+     VerbFormated=True   \
+     VerbDev=/dev/stderr \
+     Verbosis ;
+     StrDate=$( /bin/date +"%Y%m%d %H:%M:%S" ) ; 
+     StrMsg=${ArrayMsgTpl[0]} ; 
+     StrMsg=${StrMsg//__DATE__/${StrDate}} ; 
+     StrMsg=${StrMsg//__DUR__/${IntSleep}} ; 
+     StrMsg=${StrMsg//__PERDIOD__/${IntSleepPeriod}} ; 
+     StrMsg=${StrMsg//__PER_SLEEP__/${IntPeriodSleep}} ; 
+     
+     VerbMsg="${StrMsg}"  \
+     VerbHeader=${ADbgHdr["DEBUG"]} \
+     VerbState=${BoolDisplayDebug}  \
+     VerbEvalForm=False   \
+     VerbFormated=True    \
+     VerbDev=/dev/stderr 
+     Verbosis ;
+     
+     ###Don't really need to replace this command by FilterVlcSendCmd, it
+     ### gather the content in the /dev/null, so no filtering required. 
+     VSCCmd="seek 0" VSCAddr=127.0.0.1 VSCPort=5083 VlcSendCmd 2>&1> /dev/null  ; 
+     ### Application Latency
+     ### Timer for Application    
+     IntStopTimer=${SECONDS};
+     IntTTimer=$(( ${IntStopTimer} - ${IntStartTimer} )) ;
+     IntSumTTimer=$(( ${IntSumTTimer} + ${IntTTime} )) ; 
+     ### Updating Average latency by application by increasing by one IntCountAppsTimed 
+     ### (one more apps calculed ), updating the IntAvgTTimer. 
+     IntCountAppsTimed=$(( ${IntCountAppsTimed} + 1 )) ; 
+     IntAvgTTimer=$(( ${IntSumTTimer} / ${IntCountAppsTimed} )) ; 
+
+   fi # End-IF (! -f ${StrPathLoopState})
     
     StrMsg=${ArrayMsgTpl[1]} ; 
     StrMsg=${StrMsg//__TIMER__/${IntTTimer}} ; 
-    StrMsg=${StrMsg//__SLEEP__/${IntSleepCalc}} ; 
-    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-INFO" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ;
-    /bin/sleep ${IntSleepCalc} ;
+    StrMsg=${StrMsg//__SLEEP_PERIOD__/${IntSleepPeriod}} ;
+    StrMsg=${StrMsg//__PERIOD_SLEEP__/${IntPeriodSleep} } ;
+    StrMsg=${StrMsg//__SLEEP_CALC__/${IntSleepCalc}} ;
     
-    local IntStartCmd=${SECONDS} ; 
-    local IntCurrent=$( FVSCTypeFilter=Int FVSCCmd="get_time" FVSCAddr=${StrAddr} FVSCPort=${StrPort}  FilterVlcSendCmd ) ;
+    ### Message information for application latency and sleep information
+    VerbMsg="${StrMsg}"            \
+    VerbHeader=${ADbgHdr["DEBUG"]} \
+    VerbState=${BoolDisplayDebug}  \
+    VerbEvalForm=False   \
+    VerbFormated=True    \
+    VerbDev=/dev/stderr  \
+    Verbosis ;
+    
+    IntSeekEnd=${IntSleep} ; 
+    ### Sleep time will depend of this IntTimeRemain to compute the 
+    ### period expressed in 1-real first-interleave, 2,recurrent-adapted period to sleep. 
+    IntTimeRemain=${IntPeriodSleep} ; 
+    IntCumulSongTime=0 ; 
+    IntPeriodSum=0 ;
+    
+    for (( intSleepSeq=0 ; intSleepSeq <= ${IntSleepPeriod}-1 ; intSleepSeq++ )) ; do 
+     ### IntSongTime should predict in ${SECONDS} + PERIOD-SLEEP - AverageAppsLatency
+     ### where it should end sleeping. 
+     if [ ${IntSongJitter} -gt 0 ] ; then 
+      IntSongTime=$(( ${SECONDS} + ( ${IntPeriodSleep} - ${IntAvgTTimer} ) + ${IntSongJitter} ))
+     elif [ ${IntSongJitter} -lt 0 ] ; then 
+      IntSongTime=$(( ${SECONDS} + ( ${IntPeriodSleep} - ${IntAvgTTimer} ) - ${IntSongJitter} ))
+     else
+      IntSongTime=$(( ${SECONDS} + ( ${IntPeriodSleep} - ${IntAvgTTimer} ) ))
+     fi 
+     
+     ### Cumulate Sleep by loop and report the overall Sleep duration. 
+     IntPeriodSum=$(( ${IntPeriodSum} + ${IntPeriodSleep}  )) ; 
+     
+     if [ ! -f ${StrPathLoopState} ] ; then 
+       BoolStopProcess=True ;
+     else
+      VerbMsg="Action: Sleep Period Estimated ${IntTimeRemain} sec(s).\n\tBoolStopProcess status: ${BoolStopProcess}" \
+      VerbHeader=${ADbgHdr["DEBUG"]} \
+      VerbState=${BoolDisplayDebug}  \
+      VerbEvalForm=False  \
+      VerbFormated=True   \
+      VerbDev=/dev/stderr \
+      Verbosis ;
+      if [ ${IntTimeRemain} -gt 0 ] ; then  
+       /bin/sleep ${IntTimeRemain} ;
+      fi ; # End-IF (${IntTimeRemain} -gt 0)
+      ### New location of song .
+      ### After next command to query the song
+      ### time-left we should fall on ${SECONDS}+${IntAvgTTimer} . 
+      IntSongLoc=${SECONDS}; 
+      
+      IntCumulSongTime=$(( ${IntCumulSongTime} + ${IntTimeRemain} )) ; 
+     fi ; # End-IF (! -f ${StrPathLoopState})  
+     
+     if [ ! -f ${StrPathLoopState} ] ; then 
+      BoolStopProcess=True ;
+     else
+### Timer for Application    
+      VerbMsg="Action: Updating Timer\n\tBoolStopProcess status: ${BoolStopProcess}" \
+      VerbHeader=${ADbgHdr["DEBUG"]} \
+      VerbState=${BoolDisplayDebug} \
+      VerbEvalForm=False \
+      VerbFormated=True \
+      VerbDev=/dev/stderr \
+      Verbosis ;
+      IntStartCmd=${SECONDS} ; 
+      IntCurrent=$( \
+          FVSCTypeFilter=Int   \
+          FVSCCmd="get_time"   \
+          FVSCAddr=${StrAddr}  \
+          FVSCPort=${StrPort}  \
+          FilterVlcSendCmd     ) ; 
+### Timer for Application    
+      IntStopTimer=${SECONDS};
+      IntTTimer=$(( ${IntStopTimer} - ${IntStartTimer} )) ;
+      
+      ### Getting Time from moment it start the read:
 
-    local IntStopCmd=${SECONDS} ; 
-    local IntTTime=$(( ${IntStopCmd}-${IntStartCmd} )) ;
+      IntSumTTimer=$(( ${IntSumTTimer} + ${IntTTime} )) ; 
+### Updating Average latency by application by increasing by one IntCountAppsTimed 
+      ### (one more apps calculed ), updating the IntAvgTTimer. 
+      IntCountAppsTimed=$(( ${IntCountAppsTimed} + 1 )) ; 
+      IntAvgTTimer=$(( ${IntSumTTimer} / ${IntCountAppsTimed} )) ; 
+      
+      ### Now Estimating the decay 
+      ### By comparing the Estimated IntSongTime end reported
+      ### in Bash-Seconds since the terminal is open to real 
+      ### IntCurrent from IntSongLoc Where both where calibrated
+      ### to almost-instant moment where a get_time occurs and 
+      ### it's last sleep time. 
+      IntSongToPos=${IntCurrent}; 
+      
+      IntSongJitter=$(( ( ${IntSongLoc} - ${IntSongTime} ) )) ;
+      
+      IntSlewRateSec=$(( ${IntSlewRateSec} + ${IntSongJitter} )) ;
+      if (( ${intSleepSeq} <= ${IntSleepPeriod}-2 )) ; then 
+       StrMsg="\nCumuled Sleep Period: __INT_PSUM__ sec(s)\nCurrent Delay of __INT_PSLEEP__ sec(s).\nSong position at __INT_STP__ sec(s)\nJitter by __INT_JITTER__ sec(s) from estimated End-point.\nSlew from Jitterisation:__INT_SRS__ sec(s)." ; 
+       StrMsg=${StrMsg//__INT_PSUM__/${IntPeriodSum}} ; 
+       StrMsg=${StrMsg//__INT_PSLEEP__/${IntPeriodSleep}} ; 
+       StrMsg=${StrMsg//__INT_STP__/${IntSongToPos}} ; 
+       StrMsg=${StrMsg//__INT_JITTER__/${IntSongJitter}} ; 
+       StrMsg=${StrMsg//__INT_SRS__/${IntSlewRateSec}} ; 
+       
+       VerbMsg=${StrMsg} \
+       VerbHeader=${ADbgHdr["INFO"]} \
+       VerbState=${BoolDisplayDebug} \
+       VerbEvalForm=False  \
+       VerbFormated=True   \
+       VerbDev=/dev/stderr \
+       Verbosis ;
+      fi ; # End-IF ( ${intSleepSeq} <= ${IntSleepPeriod}-2  )
+      IntSeekEnd=$(( ${IntSeekEnd} - ${IntAvgTTimer} )) ; 
+      #IntPeriodSleep=$(( ( ${IntSleep} / ${IntSleepPeriod} ) - ${IntAvgTTimer}  )) ; 
+
+      
+      if (( ${intSleepSeq} ==  ${IntSleepPeriod}-2 )) ; then 
+       ### Adjusting last timer only. 
+       if [ ${IntSlewRateSec} -gt 0 ] ; then 
+        IntTimeRemain=$(( ${IntPeriodSleep} - ${IntSlewRateSec} )) ;        
+       else 
+        IntTimeRemain=$(( ${IntPeriodSleep} + ${IntSlewRateSec} )) ;        
+       fi ; # End-IF ( ${IntSlewRateSec} -gt 0 )
+      fi ; # End-IF ( ${intSleepSeq} ==  ${IntSleepPeriod}-2 )
+      
+     fi ; # End-IF ( ! -f ${StrPathLoopState} ) 
+
     
-    local IntSeekEnd=$(( ${IntCurrent} - ${IntTTime} )) ; 
-    local IntSlewRateSec=$(( ${IntSleep} - ${IntSeekEnd} )) ; 
+    done 
     
-    StrMsg=${ArrayMsgTpl[2]} ;
-    StrMsg=${StrMsg//__SLEEP__/${IntSleep}} ;  
-    StrMsg=${StrMsg//__RWD__/${IntSeekEnd}} ;  
-    StrMsg=${StrMsg//__LATENCY__/${IntTTime}} ;  
-    StrMsg=${StrMsg//__SLEW_SEC__/${IntSlewRateSec}} ;  
-    StrMsg=${StrMsg//__DUR__/${IntSleep}} ;  
-  
-    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-INFO" VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ;
+    if [ ! -f ${StrPathLoopState} ] ; then 
+     BoolStopProcess=True ;
+    else
+     IntAvgTTimer=$(( ${IntSumTTimer} / ${IntCountAppsTimed} )) ; 
+     IntSongDiff=$(( ${IntSongTime} - ( ${SECONDS} - ( ${IntTTime} + ${IntTimeRemain} ) ) )) ; 
+     IntSlewRateSec=$(( ${IntSlewRateSec} + ${IntSongDiff} )) ;
+     
+     StrMsg=${ArrayMsgTpl[2]} ;
+     StrMsg=${StrMsg//__SLEEP__/${IntSleep}} ;  
+     StrMsg=${StrMsg//__RWD__/${IntSeekEnd}} ;  
+     StrMsg=${StrMsg//__LATENCY__/${IntAvgTTimer}} ;  
+     StrMsg=${StrMsg//__SLEW_SEC__/${IntSlewRateSec}} ;  
+     StrMsg=${StrMsg//__DUR__/${IntSleep}} ;  
+     
+     VerbMsg="${StrMsg}"                     \
+     VerbHeader=${ADbgHdr["INFO"]} \
+     VerbState=${BoolDisplayDebug}           \
+     VerbEvalForm=False  \
+     VerbFormated=True   \
+     VerbDev=/dev/stderr \
+     Verbosis ;
+    fi ; # End-IF ( ! -f ${StrPathLoopState} ) 
    done   
+  
   }  
    
    local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
-   local StrNameHelper="StartSlewAnalysis\t\tApplication to verify and use Network services of VLCServer/OldVLCServer.";
+   local StrNameHelper="${__call_locality[1]}\t\tApplication to verify and use Network services of VLCServer/OldVLCServer.";
    local StrSummary="" ; 
    local StrSynopsis="";
    local StrDescription="" ;
    
-   
+   ### Section : Switches-Statememt 
    if [ "${Arg0:=--startservices}" == "--help"	] ; then 
     ### GVRIsName set to True is the Variable handled StrNameHelper by GetVarReference and 
     ### provide a Name-Helper inside the live-documentation if we call StartSlewAnalysis --help.
@@ -1073,21 +1406,23 @@ if [ "${versionSSA:=0.0.0}" == "0.0.2" ] ; then
     GVRIsSynopsis=False \
     GVRIsDesc=False     \
     GetVarReference ${__call_locality[1]} ; 
-    echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+    VerbMsg="${StrSwitchMessages}" \
+    VerbState=True       \
+    VerbEvalForm=False   \
+    VerbFormated=False   \
+    VerbExtendedOut=True \
+    VerbDev=/dev/stderr  \
+    Verbosis ;
    elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
     eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
     echo -ne """${ArgGet}\n""" ;
    elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
     eval $( __GetVarReferenceList ) ;	
    elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
-    eval $( eval \
-      VTVIsArrayStyleInsert=True  \
-      VTVValueEntry=${StrVarList} \
-      VTVIsValueReAssign=True     \
-      VTVIsValueToConvert=False   \
-      VTVIsWhiteList=True         \
-      VTVWhiteListTransfert=UUID  \
-      ValueToVariable ) __main_StopServices ; 
+    eval $( eval ${StrVTVRegistry//,/ } \
+            VTVValueEntry=${StrVarList} \
+            VTVWhiteListTransfert=UUID  \
+            ValueToVariable ) __main_StopServices ; 
    elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
     if [ "${BoolShowVersion:=False}" == "True" ] ; then 
      eval $( eval VersionApps ) ; 
@@ -1097,16 +1432,14 @@ if [ "${versionSSA:=0.0.0}" == "0.0.2" ] ; then
     ### This is the main-boot strap and should load __main_StartServices unless 
     ### It receive from prompt a Prefixed-Variable SSAFuncStart=Function. Every
     ### application made from CallArgument does have it's entry in form [SHORT-NAME]Func=${StrStartMain} ;
-    eval $( eval \
-      VTVIsArrayStyleInsert=True  \
-      VTVValueEntry=${StrVarList} \
-      VTVIsValueReAssign=True     \
-      VTVIsValueToConvert=False   \
-      ValueToVariable ) ${StrStartMain} 
+    eval $( eval ${StrVTVRegistry//,/ } \
+            VTVValueEntry=${StrVarList} \
+            ValueToVariable ) ${StrStartMain} 
    fi 
+   ### End-Section : Switches-Statememt 
  }
 
-fi 
+fi ; # End-IF ("${versionSSA:=0.0.0}" == "0.0.2")
 
 ### This is also a not Friendly version of VLC-RATE example use to compare
 ### simple but not easy to handle version. 
@@ -1124,7 +1457,16 @@ function __old_vlc_rate()
  ### instantly the couple note inside a music... Even by singing in a karaoke
  ### we should ear more the person rather than the voice of the singer.
  
- local IntRandRange=$(( ( ${RANDOM} % ${VLCCHUNKRATE:=30} ) + 1  )) ; 
+ local BoolFixedCR=${VLCFIXEDCHUNKRATE:=False} ; 
+ 
+ local IntRandRange ; 
+ 
+ if [ "${BoolFixedCR:=False}" == "True" ] ; then 
+  IntRandRange=${VLCCHUNKRATE:=30} ; 
+ else
+  IntRandRange=$(( ( ${RANDOM} % ${VLCCHUNKRATE:=30} ) + 1  )) ; 
+ fi 
+ 
  local IntRateInsert=0 ; 
  local IntRateGet=0 ;
  local StrRandomFormat="" ; 
@@ -1138,11 +1480,12 @@ function __old_vlc_rate()
  local IntSleep=${VLCSleepTime:=5} ; 
  local BoolVerb=${Verbose:=True} ;
  local IntSocketTimeExpr=${VLCSOCKETCLOSESEC:=3} ; 
- local IntTimeCLick=${VLCTIMECLICK:=10000} ; 
+ local IntMicroTimer=${VLCPRECISETIME:=0.1} ; 
  local BoolNCinSubProcess=${VLCNCINSUBPROCESS:=False} ; 
+ local IntDefaulNice=${VLCNICENC:=0} ; 
  local StrParserCalcCmd ; 
  local IntRateInsert ; 
- local ArrayMsg=( )
+ local -a ArrayMsg=( )
  local StrDisplayHeader="DEBUG" ; 
  ArrayMsg[0]="Nb Item: __ITEM__ , List or range [ __ARRAY__ ] " ;
  ArrayMsg[1]="Rate Fixed to __RATE__, for __SEC__ seconds" ;
@@ -1152,6 +1495,13 @@ function __old_vlc_rate()
  ArrayMsg[5]="Period Duration Max :[ __INT__ ]"
  ArrayMsg[6]="Building  __ITEM__ random item(s) " ;
  ArrayMsg[7]="Waiting for __INT__ sec(s)."
+ ArrayMsg[8]="START NEW SETTING" ; 
+ ArrayMsg[9]="SLEEP PERIOD: __PERIOD__ sec(s).\n\tEntry at __ENTRY__ sec(s)\n\tTo end at __EXIT__ sec(s)\n\tApplication Calibration require __INT_AVG__ sec(s)." ;
+ ArrayMsg[10]="Jitter factor: __INT_JITTER__ sec(s).\n\tLast application cost __INT_LATENCY__ sec(s)\n\tSleep delayed by __INT_AVG__ sec(s).\n" ; 
+ ArrayMsg[11]="Lately setting, Late by __INT_JITTER__ sec(s)." 
+ ArrayMsg[12]="Early setting In Advance of __INT_JITTER__ sec(s)."
+ ArrayMsg[13]="Query Size of Array ArrayRateLevel, get __ITEM__" ; 
+ ArrayMsg[14]="Query Random number inside Arrayfr from IntModulo, Item number __MODULO__ will be choosed " ; 
  
  function Verbosis()
 	{
@@ -1167,20 +1517,20 @@ function __old_vlc_rate()
 	}
  
  StrMsg=${ArrayMsg[3]//__INT__/${IntHighestRate}} ;
- VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=True VerbDev=/dev/stderr Verbosis
+ VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=${BoolVerb} VerbDev=/dev/stderr Verbosis
  
  StrMsg=${ArrayMsg[4]//__INT__/${IntLowestRate}} ; 
- VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=True VerbDev=/dev/stderr Verbosis
+ VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=${BoolVerb} VerbDev=/dev/stderr Verbosis
  
  StrMsg=${ArrayMsg[5]//__INT__/${VLCRATEDURATION}} ; 
- VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=True VerbDev=/dev/stderr Verbosis
+ VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=${BoolVerb} VerbDev=/dev/stderr Verbosis
 
  StrMsg=${ArrayMsg[6]//__ITEM__/${IntRandRange}} ; 
- VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=True VerbDev=/dev/stderr Verbosis
+ VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=${BoolVerb} VerbDev=/dev/stderr Verbosis
  
  StrMsg=${ArrayMsg[7]//__INT__/${IntSleep}} ; 
- VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=True VerbDev=/dev/stderr Verbosis
- sleep ${IntSleep} ; 
+ VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=${BoolVerb} VerbDev=/dev/stderr Verbosis
+ /bin/sleep ${IntSleep} ; 
  
  ### Create the random-field olding N-range of Possible Rate.  
  local IntX=0;
@@ -1205,7 +1555,7 @@ function __old_vlc_rate()
  StrMsg=${ArrayMsg[0]//__ARRAY__/${ArrayRateLevel[@]}}
  StrMsg=${StrMsg//__ITEM__/${#ArrayRateLevel[@]}}
  ### Forced Message
- VerbHeader=${StrDisplayHeader} VerbMsg=${StrMsg} VerbState=True VerbDev=/dev/stderr Verbosis
+ VerbHeader=${StrDisplayHeader} VerbMsg=${StrMsg} VerbState=${BoolVerb} VerbDev=/dev/stderr Verbosis
  
  #echo "List or range [ ${ArrayRateLevel[@]} ] " > /dev/stderr ; 
  local IntTimeInterleave ; 
@@ -1214,20 +1564,40 @@ function __old_vlc_rate()
  local IntStartTimer ; 
  local IntStopTimer ; 
  local IntTTimer=0 ;
+ local IntSumTTimer ;
+ local IntCountTimedCall=0 ; 
+ local IntAvgTTimer=0 ;
+ local IntOldAvg=0 ;  
+ local IntSecJitter=0 ; 
+ local IntEntrySec ; 
+ local BoolWarnSleepMsg ; 
  ### Uses of bash ${SECONDS} is shortest device to represent a delay 
  ### since it's produce the number of seconds since the /bin/bash is 
  ### running it's something close to quantum-moment and fastest way 
  ### to rely on time.  
  while [ 1 ] ; do 
 
+### Timer for Application
+  IntStartTimer=${SECONDS} ; 
   IntModulo=$(( ${RANDOM} % ${#ArrayRateLevel[@]}  ))
-  StrMsg="Query Size of Array ArrayRateLevel, get ${#ArrayRateLevel[@]}" ;
+  StrMsg=${ArrayMsg[13]} ; 
+  StrMsg=${StrMsg//__ITEM__/${#ArrayRateLevel[@]}}
   VerbMsg=${StrMsg} VerbState=${BoolVerb} VerbDev=/dev/stderr Verbosis
   
-  StrMsg="Query Random number inside Arrayfr from IntModulo, Item number ${IntModulo} will be choosed " ;
+  StrMsg=${ArrayMsg[14]} ; 
+  StrMsg=${StrMsg//__MODULO__/${IntModulo}} ; 
+  
   VerbMsg=${StrMsg} VerbState=${BoolVerb} VerbDev=/dev/stderr Verbosis
   StrRateGet=${ArrayRateLevel[${IntModulo}]}; 
+### Timer for Application
+  IntStopTimer=${SECONDS} ; 
+  IntTTimer=$(( ${IntStopTimer} - ${IntStartTimer} )) ; 
+  IntSumTTimer=$(( ${IntSumTTimer} + ${IntTTimer} )) ; 
+  IntCountTimedCall=$(( ${IntCountTimedCall} + 1 ))  ; 
   
+  
+### Timer for Application
+  IntStartTimer=${SECONDS} ; 
   
   #if [ ${IntRateGet:=100} -ge 100 ] ; then 
   ###StrRandomFormat=$( echo "scale=2 ;${IntRateGet} / 100" | bc ) ;
@@ -1239,16 +1609,19 @@ function __old_vlc_rate()
   #fi 
   IntSleep=$(( ( ${RANDOM} % ${VLCRATEDURATION:=10} ) + 1 )) ; 
   #echo "Rate Fixed to ${StrRandomFormat}, for ${IntSleep} seconds " > /dev/stderr ;  
+  StrMsg=${ArrayMsg[8]} ; 
+  VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=${BoolVerb} VerbDev=/dev/stderr Verbosis
+  
   StrMsg=${ArrayMsg[1]//__RATE__/${StrRandomFormat}}
   StrMsg=${StrMsg//__SEC__/${IntSleep}}
   ### Forced Message
-  VerbHeader=${StrDisplayHeader} VerbMsg=${StrMsg} VerbState=True VerbDev=/dev/stderr Verbosis
+  VerbHeader=${StrDisplayHeader} VerbMsg=${StrMsg} VerbState=${BoolVerb} VerbDev=/dev/stderr Verbosis
   
   StrSentCmd=${StrVLCCmd//__RATE__/${StrRandomFormat}} ; 
   
   StrMsg=${ArrayMsg[2]//__CMD__/${StrSentCmd}}
   ### Forced Message
-  VerbHeader=${StrDisplayHeader} VerbMsg=${StrMsg} VerbState=True VerbDev=/dev/stderr Verbosis
+  VerbHeader=${StrDisplayHeader} VerbMsg=${StrMsg} VerbState=${BoolVerb} VerbDev=/dev/stderr Verbosis
   #echo "Pushing VLC-Cli comand:[ ${StrSentCmd} ]" > /dev/stderr ; 
   ### Forced Message
   
@@ -1264,14 +1637,58 @@ function __old_vlc_rate()
   ### SECONDS + IntSleep will correctly wait. So it supress the sleep having no
   ### chance to caliber from Closing Socket time variable 
   ### (IntSocketTimeExpr) + IntSleep to not represent the real interleave... 
-  IntTimeInterleave=$(( ( ${SECONDS} + ${IntSleep} ) - ${IntTTimer} )) ; 
   
-  ### Sleeper-section of __old_vlc_rate
+  ### 
+  ### If The IntAvgTTimer is not initalized, it use IntTTimer as indice over
+  ### delay, if not it does uses overall-delay of application latency to 
+  ### calibrate the delay. 
+  ### 
+  if [ ${IntAvgTTimer:=0} -eq 0 ] ; then 
+    IntTimeInterleave=$(( ( ${SECONDS} + ${IntSleep} )  )) ; 
+  elif [ ${IntAvgTTimer} -gt 0 ] ; then 
+    IntTimeInterleave=$(( ( ${SECONDS} + ${IntSleep} ) )) ; 
+  elif [ ${IntAvgTTimer} -lt 0 ] ; then 
+    IntTimeInterleave=$(( ( ${SECONDS} + ${IntSleep} ) - ${IntAvgTTimer//-/} )) ; 
+  fi
+### Timer for Application
+  IntStopTimer=${SECONDS} ; 
+  IntTTimer=$(( ${IntStopTimer} - ${IntStartTimer} )) ; 
+  IntSumTTimer=$(( ${IntSumTTimer} + ${IntTTimer} )) ; 
+  IntCountTimedCall=$(( ${IntCountTimedCall} + 1 ))  ; 
+  
+    
+  ### Ultimately, if the application take more time than Application latency it
+  ### does create this phenomenom to reduce from ${SECONDS} the excess of time
+  ### to inquiry a Prior than now to wait and does come the while with already
+  ### dead interleave and should pass through... 
+  
+  ### Sleeper-section of __old_vlc_rate 
+  ### based on : Is IntTimeInterleave had issues with a lowest
+  ### value, if not it sleep. 
+  ### as example if on assignation of IntTimeInterleave ${SECONDS}
+  ### was 9999 sec. and Request of IntSleep was for 6 seconds, and
+  ### IntAvgTTimer for application latency was of 12 sec it does 
+  ### give IntTimeInterleave a value of 9993 seconds and 
+  ### pass this while loop it directly go over, because here ${SECONDS}
+  ### are all over 9999 sec., 10000 sec. ... 
+  BoolWarnSleepMsg=False ;
+  IntEntrySec=${SECONDS} 
+  StrMsg=${ArrayMsg[9]} ;
   while [ ${IntTimeInterleave} -ge ${SECONDS} ] ; do 
+   StrMsg=${StrMsg//__PERIOD__/$(( ${IntTimeInterleave} - ${IntEntrySec} ))} ; 
+   StrMsg=${StrMsg//__ENTRY__/${IntEntrySec}} ; 
+   StrMsg=${StrMsg//__EXIT__/${IntTimeInterleave}} ;
+   StrMsg=${StrMsg//__INT_AVG__/${IntAvgTTimer}} ;
+    
+   if [ "${BoolWarnSleepMsg:=False}" == "False" ] ; then 
+    VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=${BoolVerb} VerbDev=/dev/stderr Verbosis ; 
+    BoolWarnSleepMsg=True ; 
+   fi 
+   
    ### 2017-01-26
    ### Does re-accept to handle sleep with such fraction value
    ### since it have always support it... Really ! 
-   sleep 0.05 ;
+   /bin/sleep ${IntMicroTimer} ;
   done 
   
   ### Note: 
@@ -1339,15 +1756,50 @@ function __old_vlc_rate()
   ### where is accelerate some application like TagParse to look inside a Hash-field for identical call )
   ### So at this point most of the application is sleep by counting should sonly ensure it sleep for 
   ### it's required time. 
+  
   IntStartTimer=${SECONDS} ; 
   if [ "${BoolNCinSubProcess:=False}" == "True" ] ; then 
-    echo "${StrSentCmd}" | nc -i ${IntSocketTimeExpr} -4 -n ${VLCSERVER:=192.168.0.72} ${VLCSRVPORT:=5080}  2>&1> /dev/null & 
+    echo "${StrSentCmd}" | /usr/bin/nice ${IntDefaulNice} nc -i ${IntSocketTimeExpr} -4 -n ${VLCSERVER:=192.168.0.72} ${VLCSRVPORT:=5080}  2>&1> /dev/null & 
   else  
-    echo "${StrSentCmd}" | nc -i ${IntSocketTimeExpr} -4 -n ${VLCSERVER:=192.168.0.72} ${VLCSRVPORT:=5080}  2>&1> /dev/null ; 
+    echo "${StrSentCmd}" | /usr/bin/nice ${IntDefaulNice} nc -i ${IntSocketTimeExpr} -4 -n ${VLCSERVER:=192.168.0.72} ${VLCSRVPORT:=5080}  2>&1> /dev/null ; 
   fi 
-  IntStoptTimer=${SECONDS} ; 
-  IntTTimer=$(( ${IntStoptTimer} - ${IntStartTimer} )) ; 
-  #sleep ${IntSleep} ; 
+  IntStopTimer=${SECONDS} ; 
+  IntTTimer=$(( ${IntStopTimer} - ${IntStartTimer} )) ; 
+  IntSumTTimer=$(( ${IntSumTTimer} + ${IntTTimer} )) ; 
+  IntCountTimedCall=$(( ${IntCountTimedCall} + 1 ))  ; 
+  
+  ### Lately test, come to late so far it does not respect the delay.
+  ### By adding the latency to ${IntStopTimer}, and comparing with IntTimeInterleave
+  ### it should be lower if this call will be handled lately by having fews seconds
+  ### late or it will not complain because we are under or at-least on time. 
+  ### IntAvgTTimer to change the speed-variation of a song 
+  IntSecJitter=$(( ${IntStopTimer} - ${IntTimeInterleave} )) ;
+  if [ ${IntSecJitter} -gt 0 ] ; then 
+   StrMsg=${ArrayMsg[11]} ; 
+   StrMsg=${StrMsg//__INT_JITTER__/${IntSecJitter}} ; 
+  elif [ ${IntSecJitter} -le 0 ] ; then 
+   StrMsg=${ArrayMsg[12]} ; 
+   StrMsg=${StrMsg//__INT_JITTER__/${IntSecJitter}} ; 
+  fi 
+  VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=${BoolVerb} VerbDev=/dev/stderr Verbosis ; 
+
+  ### Generally, average is a division of iteration-lenght over frequency. 
+  IntOldAvg=${IntAvgTTimer} ; 
+  IntAvgTTimer=$(( ${IntSumTTimer} / ${IntCountTimedCall} )) ; 
+  ### considering old information and Jitter. 
+  if [ ${IntAvgTTimer} -gt 0 ] ; then 
+   IntAvgTTimer=$(( ${IntAvgTTimer} - ${IntSecJitter//-/} )) ; 
+  elif [ ${IntAvgTTimer} -le 0 ] ; then 
+   IntAvgTTimer=$(( ${IntAvgTTimer} + ${IntSecJitter//-/} )) ; 
+  fi 
+  
+  StrMsg=${ArrayMsg[10]} ; 
+  StrMsg=${StrMsg//__INT_LATENCY__/${IntTTimer}} ;
+  StrMsg=${StrMsg//__INT_JITTER__/${IntSecJitter}} ;
+  StrMsg=${StrMsg//__INT_AVG__/${IntAvgTTimer}} ;
+  
+  VerbMsg=${StrMsg} VerbState=${BoolVerb} VerbHeader=${StrDisplayHeader} VerbDev=/dev/stderr Verbosis
+
  done ; 
   
 }
