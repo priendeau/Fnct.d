@@ -1137,7 +1137,17 @@ if [ "${versionSSA:=0.0.0}" == "0.0.2" ] ; then
    VerbFormated=True    \
    VerbDev=/dev/stderr  \
    Verbosis ;
+   local -a ArrayMsgTpl  ;
    
+   ### This tiny array avoid re-calling the StartSlewAnalysis many time
+   ### inside the main loop and slowing the application . 
+   ArrayMsgTpl[0]=$( StartSlewAnalysis --get ArrayMsg[3] ) ; 
+   ArrayMsgTpl[1]=$( StartSlewAnalysis --get ArrayMsg[4] ) ; 
+   ArrayMsgTpl[2]=$( StartSlewAnalysis --get ArrayMsg[5] ) ; 
+   ArrayMsgTpl[3]=$( StartSlewAnalysis --get ArrayMsg[7] ) ; 
+   ArrayMsgTpl[4]=$( StartSlewAnalysis --get ArrayMsg[8] ) ;
+   ArrayMsgTpl[5]=$( StartSlewAnalysis --get ArrayMsg[9] ) ;
+  
    /bin/touch ${StrPathLoopState} ; 
 
    if [ ! -f ${StrPathLoopState} ] ; then 
@@ -1164,15 +1174,6 @@ if [ "${versionSSA:=0.0.0}" == "0.0.2" ] ; then
      IntAvgTTimer=$(( ${IntSumTTimer} / ${IntCountAppsTimed} )) ; 
    fi 
   
-   local -a ArrayMsgTpl  ;
-   ### This tiny array avoid re-calling the StartSlewAnalysis many time
-   ### inside the main loop and slowing the application . 
-   ArrayMsgTpl[0]=$( StartSlewAnalysis --get ArrayMsg[3] ) ; 
-   ArrayMsgTpl[1]=$( StartSlewAnalysis --get ArrayMsg[4] ) ; 
-   ArrayMsgTpl[2]=$( StartSlewAnalysis --get ArrayMsg[5] ) ; 
-   ArrayMsgTpl[3]=$( StartSlewAnalysis --get ArrayMsg[7] ) ; 
-   ArrayMsgTpl[4]=$( StartSlewAnalysis --get ArrayMsg[8] ) ;
-   ArrayMsgTpl[5]=$( StartSlewAnalysis --get ArrayMsg[9] ) ;
    
    ### 
    VerbMsg="BoolStopProcess status: ${BoolStopProcess}" \
@@ -1334,13 +1335,14 @@ if [ "${versionSSA:=0.0.0}" == "0.0.2" ] ; then
       ### Getting Time from moment it start the read:
 
       IntSumTTimer=$(( ${IntSumTTimer} + ${IntTTime} )) ; 
+      
       ### Updating Average latency by application by increasing by one IntCountAppsTimed 
       ### (one more apps calculed ), updating the IntAvgTTimer. 
       IntCountAppsTimed=$(( ${IntCountAppsTimed} + 1 )) ; 
       IntAvgTTimer=$(( ${IntSumTTimer} / ${IntCountAppsTimed} )) ; 
       IntAppsSleepTimerRes=$(( ${IntSongTime} - ${IntAppsSleepTimerRef} )) ; 
       
-      StrMsg="Timer updated\nSleep and application cost: __INT_COST__ sec(s), predicate should en at __INT_SONG_TIME__ sec(s)." ; 
+      StrMsg=${ArrayMsgTpl[5]} ; 
       StrMsg=${StrMsg//__INT_COST__/${IntTimeCost}} ; 
       StrMsg=${StrMsg//__INT_SONG_TIME__/${IntAppsSleepTimerRes}} ; 
       
