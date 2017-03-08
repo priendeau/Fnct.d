@@ -935,9 +935,10 @@ if [ "${versionSSA:=0.0.0}" == "0.0.2" ] ; then
   ArrayMsg[1]="Shutdown Instance ID:__UUID__, file: __FILE__" ;
   ArrayMsg[2]="Instance ID:__UUID__" ;
   ArrayMsg[3]="date:__DATE__\nSong of __DUR__ sec(s)\n\tNumber of period for latency estimation: __PERDIOD__\n\tNb seconds first period: __PER_SLEEP__ sec(s).\n" ; 
-  ArrayMsg[4]="Application latency of __TIMER__ sec(s), compensing sleep of ( __SLEEP_PERIOD__ times __PERIOD_SLEEP__ sec(s) for total of __SLEEP_CALC__ ) sec(s) \n" 
-  ArrayMsg[5]="TimeDuration : __SLEEP__ sec(s)\nRewind at Position 0 after real sleep of : __RWD__ sec(s)\nApps Latency : __LATENCY__ sec(s)\nRandom Rate causing a Decalibation of the end by __SLEW_SEC__ sec(s) early/lately, for song of __DUR__ sec(s)\n" ; 
+  ArrayMsg[4]="Application latency of __TIMER__ sec(s). Should compensate sleep of ( __SLEEP_PERIOD__ period of average of __PERIOD_SLEEP__ sec(s) ) and having a total of __SLEEP_CALC__ sec(s) \n" 
+  ArrayMsg[5]="TimeDuration : __DUR__ sec(s)\nTotal Application Sleep: __SLEEP__sec(s)\nApplication Latency : __LATENCY__ sec(s)\nRandom Rate causing a Decalibation of the end by __SLEW_SEC__ sec(s) early/lately.\nSong effectively last: __SONG_LENGTH__ sec(s).\n" ; 
   ArrayMsg[6]="Received a services interruption, stopservices switches was impled or use ServiceControllerHandler was performed." ; 
+  ArrayMsg[7]="\nSleep Report : __INT_PSUM__ sec(s).\nPeriod Changed to __INT_PSLEEP__ sec(s).\nSong position at __INT_STP__ sec(s)\nSleep Period Desynchronised by: __INT_DESYNC__ sec(s).\nJitter by __INT_JITTER__ sec(s) from estimated End-point.\nSlew from Jitterisation a song of __INT_SRS__ sec(s) long instead.\nRunning Free __INT__RUN__ sec(s).\nApplication Average Latency: __INT_LATENCY__ sec(s)\nMoment to rewind the song at: __INT_REWND__ sec(s)\n" ; 
 
   function VersionApps()
   {
@@ -1078,25 +1079,31 @@ if [ "${versionSSA:=0.0.0}" == "0.0.2" ] ; then
    ADbgHdr["DEBUG"]="${__call_locality[1]}-DEBUG";
    ADbgHdr["INFO"]="${__call_locality[1]}-INFO" ;
    
+   local IntSongLength ; 
    local IntAvgTTimer=0 ; 
    local IntSumTTimer=0 ; 
    local IntCountAppsTimed=0 ; 
    local IntTTimer=0 ; 
    local IntStartTimer=0 ;
    local IntStopTimer=0 ;
-   local IntSongJitter=0 
+   local IntSongJitter=0 ;
+   local IntSongMiss=0 ; 
    local StrDate; 
    local IntSleepCalc ; 
    local StrMsg ;
    local IntPeriodSleep ; 
-   local IntTimeRemain ; 
+   local IntOverflowPeriod ;
+   local IntPredictSleep ;  
+   local IntAppsSleepTimerRef ;
+   local IntAppsSleepTimerRes ;
+   local IntTimeCost ; 
    local IntPeriodSum ;
    local IntSongTime ; 
    local IntSongLoc ; 
    local IntSongDiff ;
    local IntStartCmd ; 
    local IntStopCmd ; 
-   local IntSongToPos ; 
+   local IntRunLengthCorr ; 
    
    VerbMsg="${StrMsg}"    \
    VerbHeader=${ADbgHdr["ENTRY"]} \
@@ -1160,6 +1167,7 @@ if [ "${versionSSA:=0.0.0}" == "0.0.2" ] ; then
    ArrayMsgTpl[0]=$( StartSlewAnalysis --get ArrayMsg[3] ) ; 
    ArrayMsgTpl[1]=$( StartSlewAnalysis --get ArrayMsg[4] ) ; 
    ArrayMsgTpl[2]=$( StartSlewAnalysis --get ArrayMsg[5] ) ; 
+   ArrayMsgTpl[3]=$( StartSlewAnalysis --get ArrayMsg[7] ) ; 
    
    ### 
    VerbMsg="BoolStopProcess status: ${BoolStopProcess}" \
@@ -1188,20 +1196,24 @@ if [ "${versionSSA:=0.0.0}" == "0.0.2" ] ; then
     ### the total elapsed time including Sleep period and application latency to 
     ### represent the closest as possible the length of the song. 
     IntPeriodSleep=$(( ( ${IntSleep} / ${IntSleepPeriod} ) - ( ${IntAvgTTimer} * ( ${IntSleepPeriod} - 1 ) ) )) ; 
+    IntOverflowPeriod=$(( ${IntPeriodSleep} + ( ${IntPeriodSleep} / 2 ) )) ; 
    
     if [ ! -f ${StrPathLoopState} ] ; then 
      BoolStopProcess=True ;
     else
      ### Timer for Application    
      IntStartTimer=${SECONDS} ; 
-     VerbMsg="Action: Seek Information\n\tBoolStopProcess status: ${BoolStopProcess}" \
+     StrMsg="Action: Seek Information\n\tBoolStopProcess status: __BOOL__" ; 
+     StrMsg=${StrMsg//__BOOL__/${BoolStopProcess}} ; 
+     
+     VerbMsg=${StrMsg}   \
      VerbHeader=${ADbgHdr["DEBUG"]} \
-     VerbState=${BoolDisplayDebug}            \
+     VerbState=${BoolDisplayDebug}  \
      VerbEvalForm=False  \
      VerbFormated=True   \
      VerbDev=/dev/stderr \
      Verbosis ;
-     StrDate=$( /bin/date +"%Y%m%d %H:%M:%S" ) ; 
+     StrDate=$( /bin/date +"%Y%m%d %H:%M:%S,\nSHELL-SECONDS REF:${SECONDS} sec(s),\nUNIX TimeStamp:%s" ) ; 
      StrMsg=${ArrayMsgTpl[0]} ; 
      StrMsg=${StrMsg//__DATE__/${StrDate}} ; 
      StrMsg=${StrMsg//__DUR__/${IntSleep}} ; 
@@ -1247,52 +1259,57 @@ if [ "${versionSSA:=0.0.0}" == "0.0.2" ] ; then
     Verbosis ;
     
     IntSeekEnd=${IntSleep} ; 
-    ### Sleep time will depend of this IntTimeRemain to compute the 
+    ### Sleep time will depend of this IntTimeCost to compute the 
     ### period expressed in 1-real first-interleave, 2,recurrent-adapted period to sleep. 
-    IntTimeRemain=${IntPeriodSleep} ; 
+    IntTimeCost=${IntPeriodSleep} ; 
     IntCumulSongTime=0 ; 
     IntPeriodSum=0 ;
     
     for (( intSleepSeq=0 ; intSleepSeq <= ${IntSleepPeriod}-1 ; intSleepSeq++ )) ; do 
-     ### IntSongTime should predict in ${SECONDS} + PERIOD-SLEEP - AverageAppsLatency
-     ### where it should end sleeping. 
-     if [ ${IntSongJitter} -gt 0 ] ; then 
-      IntSongTime=$(( ${SECONDS} + ( ${IntPeriodSleep} - ${IntAvgTTimer} ) + ${IntSongJitter} ))
-     elif [ ${IntSongJitter} -lt 0 ] ; then 
-      IntSongTime=$(( ${SECONDS} + ( ${IntPeriodSleep} - ${IntAvgTTimer} ) - ${IntSongJitter} ))
-     else
-      IntSongTime=$(( ${SECONDS} + ( ${IntPeriodSleep} - ${IntAvgTTimer} ) ))
-     fi 
+    
+     ### IntSongTime should predict in ${SECONDS} + PERIOD-SLEEP - 
+     ### AverageAppsLatency where it should end sleeping. IntTimeCost does 
+     ### substract AverageAppsLatency, so it should be added ; Since It 
+     ### schedule to sleep and perform a get_time on the song and do have to 
+     ### last as it was specified inside TimeCost calculation. 
+     
+     IntSongTime=$(( ${SECONDS} + ${IntTimeCost}  )) ; 
      
      ### Cumulate Sleep by loop and report the overall Sleep duration. 
-     IntPeriodSum=$(( ${IntPeriodSum} + ${IntPeriodSleep}  )) ; 
+     IntPeriodSum=$(( ${IntPeriodSum} + ${IntTimeCost} + ${IntAvgTTimer} )) ; 
      
+     IntAppsSleepTimerRef=${SECONDS} ; 
      if [ ! -f ${StrPathLoopState} ] ; then 
        BoolStopProcess=True ;
      else
-      VerbMsg="Action: Sleep Period Estimated ${IntTimeRemain} sec(s).\n\tBoolStopProcess status: ${BoolStopProcess}" \
+      StrMsg="cycle __INT_CURR__ of __INT_TOTAL__\nAction: Sleep Period __INT_COST__ sec(s)." ; 
+      StrMsg=${StrMsg//__INT_CURR__/${intSleepSeq}} ; 
+      StrMsg=${StrMsg//__INT_TOTAL__/$(( ${IntSleepPeriod}-1 ))} ; 
+      StrMsg=${StrMsg//__INT_COST__/${IntTimeCost}} ; 
+
+      VerbMsg=${StrMsg} \
       VerbHeader=${ADbgHdr["DEBUG"]} \
       VerbState=${BoolDisplayDebug}  \
       VerbEvalForm=False  \
       VerbFormated=True   \
       VerbDev=/dev/stderr \
       Verbosis ;
-      if [ ${IntTimeRemain} -gt 0 ] ; then  
-       /bin/sleep ${IntTimeRemain} ;
-      fi ; # End-IF (${IntTimeRemain} -gt 0)
+      if [ ${IntTimeCost} -gt 0 ] ; then  
+       /bin/sleep ${IntTimeCost} ;
+      fi ; # End-IF (${IntTimeCost} -gt 0)
       ### New location of song .
       ### After next command to query the song
       ### time-left we should fall on ${SECONDS}+${IntAvgTTimer} . 
       IntSongLoc=${SECONDS}; 
       
-      IntCumulSongTime=$(( ${IntCumulSongTime} + ${IntTimeRemain} )) ; 
+      #IntCumulSongTime=$(( ${IntCumulSongTime} + ${IntTimeCost} )) ; 
      fi ; # End-IF (! -f ${StrPathLoopState})  
      
      if [ ! -f ${StrPathLoopState} ] ; then 
       BoolStopProcess=True ;
      else
-### Timer for Application    
-      VerbMsg="Action: Updating Timer\n\tBoolStopProcess status: ${BoolStopProcess}" \
+      ### Timer for Application    
+      VerbMsg="Sleep end after shell-second ${IntSongLoc}\nAction: Updating Timer" \
       VerbHeader=${ADbgHdr["DEBUG"]} \
       VerbState=${BoolDisplayDebug} \
       VerbEvalForm=False \
@@ -1300,43 +1317,93 @@ if [ "${versionSSA:=0.0.0}" == "0.0.2" ] ; then
       VerbDev=/dev/stderr \
       Verbosis ;
       IntStartCmd=${SECONDS} ; 
-      IntCurrent=$( \
+      IntSongLength=$( \
           FVSCTypeFilter=Int   \
           FVSCCmd="get_time"   \
           FVSCAddr=${StrAddr}  \
           FVSCPort=${StrPort}  \
           FilterVlcSendCmd     ) ; 
-### Timer for Application    
+      ### Timer for Application    
       IntStopTimer=${SECONDS};
       IntTTimer=$(( ${IntStopTimer} - ${IntStartTimer} )) ;
-      
       ### Getting Time from moment it start the read:
 
       IntSumTTimer=$(( ${IntSumTTimer} + ${IntTTime} )) ; 
-### Updating Average latency by application by increasing by one IntCountAppsTimed 
+      ### Updating Average latency by application by increasing by one IntCountAppsTimed 
       ### (one more apps calculed ), updating the IntAvgTTimer. 
       IntCountAppsTimed=$(( ${IntCountAppsTimed} + 1 )) ; 
       IntAvgTTimer=$(( ${IntSumTTimer} / ${IntCountAppsTimed} )) ; 
+      IntAppsSleepTimerRes=$(( ${IntSongTime} - ${IntAppsSleepTimerRef} )) ; 
+      
+      StrMsg="Timer updated\nSleep and application cost: __INT_COST__ sec(s), predicate should en at __INT_SONG_TIME__ sec(s)." ; 
+      StrMsg=${StrMsg//__INT_COST__/${IntTimeCost}} ; 
+      StrMsg=${StrMsg//__INT_SONG_TIME__/${IntAppsSleepTimerRes}} ; 
+      
+      VerbMsg=${StrMsg} \
+      VerbHeader=${ADbgHdr["INFO"]} \
+      VerbState=${BoolDisplayDebug}  \
+      VerbEvalForm=False  \
+      VerbFormated=True   \
+      VerbDev=/dev/stderr \
+      Verbosis ;
+      
+      ### Definition of where the application should be launched if
+      ### it have to rewind the song to pos-0 including the 
+      ### application latency to not excess the song-duration or it
+      ### if your song is inside a playlist you can jump to next
+      ### song and starts statistic over something else. 
+      IntSeekEnd=$(( ${IntSleep} - ${IntAvgTTimer} )) ; 
       
       ### Now Estimating the decay 
       ### By comparing the Estimated IntSongTime end reported
       ### in Bash-Seconds since the terminal is open to real 
-      ### IntCurrent from IntSongLoc Where both where calibrated
+      ### IntSongLength from IntSongLoc Where both where calibrated
       ### to almost-instant moment where a get_time occurs and 
       ### it's last sleep time. 
-      IntSongToPos=${IntCurrent}; 
-      
-      IntSongJitter=$(( ( ${IntSongLoc} - ${IntSongTime} ) )) ;
-      
-      IntSlewRateSec=$(( ${IntSlewRateSec} + ${IntSongJitter} )) ;
-      if (( ${intSleepSeq} <= ${IntSleepPeriod}-2 )) ; then 
-       StrMsg="\nCumuled Sleep Period: __INT_PSUM__ sec(s)\nCurrent Delay of __INT_PSLEEP__ sec(s).\nSong position at __INT_STP__ sec(s)\nJitter by __INT_JITTER__ sec(s) from estimated End-point.\nSlew from Jitterisation:__INT_SRS__ sec(s)." ; 
-       StrMsg=${StrMsg//__INT_PSUM__/${IntPeriodSum}} ; 
-       StrMsg=${StrMsg//__INT_PSLEEP__/${IntPeriodSleep}} ; 
-       StrMsg=${StrMsg//__INT_STP__/${IntSongToPos}} ; 
-       StrMsg=${StrMsg//__INT_JITTER__/${IntSongJitter}} ; 
-       StrMsg=${StrMsg//__INT_SRS__/${IntSlewRateSec}} ; 
        
+      IntSongMiss=$(( ( ${IntSongLength} - ${IntPeriodSum} ) )) ; 
+      IntSongJitter=$(( ( ${IntSongLoc} - ${IntSongTime} ) + ${IntSongMiss} )) ;
+      IntSlewRateSec=$(( ${IntSlewRateSec} + ${IntSongJitter} )) ;
+      
+      ### IntRunLengthCorr
+      ### - What remain free to schedule sleep or launching something else. 
+      ### Assumming this process is inside a constant loop, constant 
+      ### application launched will cost IntSleepPeriod-1 times the timer-update
+      ### to compare with running instance of this song. And do depend of 
+      ### IntSeekEnd that do have reserved few seconds to rewind the song.
+      ### Called RunningLength Correction, it's the period that require to 
+      ### test against bigger sleep changes from IntTimeCost. 
+      
+      IntRunLengthCorr=$(( ( ${IntSeekEnd} - ${IntSongLength} ) - ( ( ( ${IntSleepPeriod}-1 ) - (${intSleepSeq}+1) ) * ${IntAvgTTimer} ) - ${IntSlewRateSec} )) ; 
+      
+      if [ ${IntSongJitter} -gt 0 ] ; then 
+       IntTimeCost=$(( ${IntPeriodSleep} - ${IntAvgTTimer} + ( ${IntSlewRateSec} / ${IntSleepPeriod} )  )) ;        
+      elif [ ${IntSongJitter} -lt 0 ] ; then 
+       IntTimeCost=$(( ( ${IntPeriodSleep} - ${IntAvgTTimer} - ${IntSongJitter//-/} )  )) ;        
+      else
+       IntTimeCost=$(( ${IntPeriodSleep} - ${IntAvgTTimer} )) ;        
+      fi 
+      
+      IntPredictSleep=$(( ${IntPeriodSum} + ${IntTimeCost} )) ; 
+
+      if [ ${IntTimeCost} -gt ${IntOverflowPeriod} ] ; then 
+       if [ ${IntPredictSleep} -gt ${IntRunLengthCorr} ] ; then 
+        IntTimeCost=$(( ( ${IntPeriodSum} - ${IntRunLengthCorr}  ) - ${IntAvgTTimer} )) ;
+       fi 
+      fi 
+
+      if [ ${intSleepSeq} -lt $(( ${IntSleepPeriod}-1 )) ] ; then 
+       StrMsg=${ArrayMsgTpl[3]} ; 
+       StrMsg=${StrMsg//__INT_PSUM__/${IntPeriodSum}} ; 
+       StrMsg=${StrMsg//__INT_PSLEEP__/${IntTimeCost}} ; 
+       StrMsg=${StrMsg//__INT_STP__/${IntSongLength}} ; 
+       StrMsg=${StrMsg//__INT_JITTER__/${IntSlewRateSec}} ; 
+       StrMsg=${StrMsg//__INT_DESYNC__/${IntSongMiss}} ; 
+       StrMsg=${StrMsg//__INT_SRS__/$(( ${IntSleep} - ${IntSlewRateSec} )) } ; 
+       StrMsg=${StrMsg//__INT__RUN__/${IntRunLengthCorr}} ; 
+       StrMsg=${StrMsg//__INT_LATENCY__/${IntAvgTTimer}} ; 
+       StrMsg=${StrMsg//__INT_REWND__/${IntSeekEnd}} ; 
+
        VerbMsg=${StrMsg} \
        VerbHeader=${ADbgHdr["INFO"]} \
        VerbState=${BoolDisplayDebug} \
@@ -1344,47 +1411,33 @@ if [ "${versionSSA:=0.0.0}" == "0.0.2" ] ; then
        VerbFormated=True   \
        VerbDev=/dev/stderr \
        Verbosis ;
-      fi ; # End-IF ( ${intSleepSeq} <= ${IntSleepPeriod}-2  )
-      IntSeekEnd=$(( ${IntSeekEnd} - ${IntAvgTTimer} )) ; 
-      #IntPeriodSleep=$(( ( ${IntSleep} / ${IntSleepPeriod} ) - ${IntAvgTTimer}  )) ; 
-
-      
-      if (( ${intSleepSeq} ==  ${IntSleepPeriod}-2 )) ; then 
-       ### Adjusting last timer only. 
-       if [ ${IntSlewRateSec} -gt 0 ] ; then 
-        IntTimeRemain=$(( ${IntPeriodSleep} - ${IntSlewRateSec} )) ;        
-       else 
-        IntTimeRemain=$(( ${IntPeriodSleep} + ${IntSlewRateSec} )) ;        
-       fi ; # End-IF ( ${IntSlewRateSec} -gt 0 )
-      fi ; # End-IF ( ${intSleepSeq} ==  ${IntSleepPeriod}-2 )
+      fi ; # End-IF ( ${intSleepSeq} -gt $(( ${IntSleepPeriod}-1 )) )
       
      fi ; # End-IF ( ! -f ${StrPathLoopState} ) 
-
-    
     done 
     
+    ### Cumulate Sleep by loop and report the overall Sleep duration. 
+    #IntPeriodSum=$(( ${IntPeriodSum} + ${IntTimeCost} + ${IntAvgTTimer} )) ; 
+
     if [ ! -f ${StrPathLoopState} ] ; then 
      BoolStopProcess=True ;
     else
-     IntAvgTTimer=$(( ${IntSumTTimer} / ${IntCountAppsTimed} )) ; 
-     IntSongDiff=$(( ${IntSongTime} - ( ${SECONDS} - ( ${IntTTime} + ${IntTimeRemain} ) ) )) ; 
-     IntSlewRateSec=$(( ${IntSlewRateSec} + ${IntSongDiff} )) ;
-     
      StrMsg=${ArrayMsgTpl[2]} ;
-     StrMsg=${StrMsg//__SLEEP__/${IntSleep}} ;  
-     StrMsg=${StrMsg//__RWD__/${IntSeekEnd}} ;  
+     StrMsg=${StrMsg//__DUR__/${IntSleep}} ;  
+     StrMsg=${StrMsg//__SLEEP__/${IntPeriodSum}} ;  
      StrMsg=${StrMsg//__LATENCY__/${IntAvgTTimer}} ;  
      StrMsg=${StrMsg//__SLEW_SEC__/${IntSlewRateSec}} ;  
-     StrMsg=${StrMsg//__DUR__/${IntSleep}} ;  
+     StrMsg=${StrMsg//__SONG_LENGTH__/$(( ( ${IntSleep} - ${IntSlewRateSec} ) ))} ;  
      
-     VerbMsg="${StrMsg}"                     \
+     VerbMsg="${StrMsg}"           \
      VerbHeader=${ADbgHdr["INFO"]} \
-     VerbState=${BoolDisplayDebug}           \
+     VerbState=${BoolDisplayDebug} \
      VerbEvalForm=False  \
      VerbFormated=True   \
      VerbDev=/dev/stderr \
      Verbosis ;
     fi ; # End-IF ( ! -f ${StrPathLoopState} ) 
+   
    done   
   
   }  
