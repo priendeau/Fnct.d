@@ -1090,12 +1090,14 @@ if [ "${versionSSA:=0.0.0}" == "0.0.2" ] ; then
    local IntStartTimer=0 ;
    local IntStopTimer=0 ;
    local IntSongJitter=0 ;
+   local IntLastJitter=0 ; 
    local IntSongMiss=0 ; 
    local StrDate; 
    local IntSleepCalc ; 
    local StrMsg ;
    local IntPeriodSleep ; 
    local IntOverflowPeriod ;
+   local IntUnderflowPeriod ; 
    local IntPredictSleep ;  
    local IntAppsSleepTimerRef ;
    local IntAppsSleepTimerRes ;
@@ -1201,8 +1203,13 @@ if [ "${versionSSA:=0.0.0}" == "0.0.2" ] ; then
     ### Must represent 
     ### the total elapsed time including Sleep period and application latency to 
     ### represent the closest as possible the length of the song. 
-    IntPeriodSleep=$(( ( ${IntSleep} / ${IntSleepPeriod} ) - ( ${IntAvgTTimer} * ( ${IntSleepPeriod} - 1 ) ) )) ; 
-    IntOverflowPeriod=$(( ${IntPeriodSleep} + ( ${IntPeriodSleep} / 2 ) )) ; 
+    #IntPeriodSleep=$(( ( ${IntSleep} / ${IntSleepPeriod} ) - ( ${IntAvgTTimer} * ( ${IntSleepPeriod} - 1 ) ) )) ; 
+    IntPeriodSleep=$(( ( ${IntSleep} - ( ${IntAvgTTimer} * ( ${IntSleepPeriod} - 1 ) ) ) / ${IntSleepPeriod} )) ; 
+    IntOverflowPeriod=$(( ${IntPeriodSleep} + ( ${IntPeriodSleep} / ${IntSleepPeriod} ) )) ; 
+    IntUnderflowPeriod=$(( ${IntPeriodSleep} - ( ${IntPeriodSleep} / ${IntSleepPeriod} ) )) ; 
+    
+
+
    
     if [ ! -f ${StrPathLoopState} ] ; then 
      BoolStopProcess=True ;
@@ -1322,7 +1329,7 @@ if [ "${versionSSA:=0.0.0}" == "0.0.2" ] ; then
       VerbFormated=True \
       VerbDev=/dev/stderr \
       Verbosis ;
-      IntStartCmd=${SECONDS} ; 
+      IntStartTimer=${SECONDS} ; 
       IntSongLength=$( \
           FVSCTypeFilter=Int   \
           FVSCCmd="get_time"   \
@@ -1333,7 +1340,6 @@ if [ "${versionSSA:=0.0.0}" == "0.0.2" ] ; then
       IntStopTimer=${SECONDS};
       IntTTimer=$(( ${IntStopTimer} - ${IntStartTimer} )) ;
       ### Getting Time from moment it start the read:
-
       IntSumTTimer=$(( ${IntSumTTimer} + ${IntTTime} )) ; 
       
       ### Updating Average latency by application by increasing by one IntCountAppsTimed 
@@ -1341,6 +1347,16 @@ if [ "${versionSSA:=0.0.0}" == "0.0.2" ] ; then
       IntCountAppsTimed=$(( ${IntCountAppsTimed} + 1 )) ; 
       IntAvgTTimer=$(( ${IntSumTTimer} / ${IntCountAppsTimed} )) ; 
       IntAppsSleepTimerRes=$(( ${IntSongTime} - ${IntAppsSleepTimerRef} )) ; 
+
+      VerbMsg="Last timer take ${IntTTimer} sec(s) to query get_time information." \
+      VerbHeader=${ADbgHdr["DEBUG"]} \
+      VerbState=${BoolDisplayDebug}  \
+      VerbEvalForm=False  \
+      VerbFormated=True   \
+      VerbDev=/dev/stderr \
+      Verbosis ;
+      IntSongLength=$(( ${IntSongLength} + ${IntAvgTTimer} )) ; 
+
       
       StrMsg=${ArrayMsgTpl[5]} ; 
       StrMsg=${StrMsg//__INT_COST__/${IntTimeCost}} ; 
@@ -1369,9 +1385,25 @@ if [ "${versionSSA:=0.0.0}" == "0.0.2" ] ; then
       ### it's last sleep time. 
        
       IntSongMiss=$(( ( ${IntSongLength} - ${IntPeriodSum} ) )) ; 
+      IntLastJitter=${IntSongJitter} ; 
       IntSongJitter=$(( ( ${IntSongLoc} - ${IntSongTime} ) + ${IntSongMiss} )) ;
-      IntSlewRateSec=$(( ${IntSlewRateSec} + ${IntSongJitter} )) ;
       
+      if [ ${IntLastJitter:=0} -gt 0 ] ; then 
+       if [ ${IntSongJitter} -gt  ${IntLastJitter} ] ; then 
+        IntSlewRateSec=$(( ( ${IntSlewRateSec} + ( ( ${IntSongJitter} - ${IntLastJitter} ) + ${IntSlewRateSec} ) ) / 2  )) ;
+       fi 
+      fi
+      
+      ### END-OF-Analysis part:
+      
+      ### Require to re-apply some important verification after having 
+      ### IntAvgTTimer being changed to re-estimate PeriodSleep, 
+      ### temporary OverflowPeriod and UnderflowPeriod limits.
+      
+      IntPeriodSleep=$(( ( ${IntSleep} - ( ${IntAvgTTimer} * ( ${IntSleepPeriod} - 1 ) ) ) / ${IntSleepPeriod} )) ; 
+      IntOverflowPeriod=$(( ${IntPeriodSleep} + ( ${IntPeriodSleep} / ${IntSleepPeriod} ) )) ; 
+      IntUnderflowPeriod=$(( ${IntPeriodSleep} - ( ${IntPeriodSleep} / ${IntSleepPeriod} ) )) ; 
+
       ### IntRunLengthCorr
       ### - What remain free to schedule sleep or launching something else. 
       ### Assumming this process is inside a constant loop, constant 
@@ -1381,24 +1413,43 @@ if [ "${versionSSA:=0.0.0}" == "0.0.2" ] ; then
       ### Called RunningLength Correction, it's the period that require to 
       ### test against bigger sleep changes from IntTimeCost. 
       
-      IntRunLengthCorr=$(( ( ${IntSeekEnd} - ${IntSongLength} ) - ( ( ( ${IntSleepPeriod}-1 ) - (${intSleepSeq}+1) ) * ${IntAvgTTimer} ) - ${IntSlewRateSec} )) ; 
+      IntRunLengthCorr=$(( ( ${IntSleep} - ${IntSongLength} ) - ( ( ( ${IntSleepPeriod}-1 ) - (${intSleepSeq}+1) ) * ${IntAvgTTimer} ) )) ; 
       
       if [ ${IntSongJitter} -gt 0 ] ; then 
-       IntTimeCost=$(( ${IntPeriodSleep} - ${IntAvgTTimer} + ( ${IntSlewRateSec} / ${IntSleepPeriod} )  )) ;        
+       VerbMsg="IntTimeCost based on Jitter higher than 0 to ${IntSongJitter} sec(s)" VerbHeader=${ADbgHdr["DEBUG"]} VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
+       IntTimeCost=$(( ( ${IntPeriodSleep} - ${IntAvgTTimer} ) + ( ${IntSlewRateSec} / ${IntSleepPeriod} )  )) ;        
       elif [ ${IntSongJitter} -lt 0 ] ; then 
-       IntTimeCost=$(( ( ${IntPeriodSleep} - ${IntAvgTTimer} - ${IntSongJitter//-/} )  )) ;        
+       VerbMsg="IntTimeCost based on Jitter lower than 0 to ${IntSongJitter} sec(s)" VerbHeader=${ADbgHdr["DEBUG"]} VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
+       IntTimeCost=$(( $( ${IntPeriodSleep} - ${IntAvgTTimer} ) - ( ${IntSlewRateSec} / ${IntSleepPeriod} ) )) ;        
       else
+       VerbMsg="IntTimeCost based on Jitter relatively null." VerbHeader=${ADbgHdr["DEBUG"]} VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
        IntTimeCost=$(( ${IntPeriodSleep} - ${IntAvgTTimer} )) ;        
       fi 
       
-      IntPredictSleep=$(( ${IntPeriodSum} + ${IntTimeCost} )) ; 
+      IntPredictSleep=$(( ${IntPeriodSum} + ${IntTimeCost} + ${IntAvgTTimer}  )) ; 
 
-      if [ ${IntTimeCost} -gt ${IntOverflowPeriod} ] ; then 
-       if [ ${IntPredictSleep} -gt ${IntRunLengthCorr} ] ; then 
-        IntTimeCost=$(( ( ${IntPeriodSum} - ${IntRunLengthCorr}  ) - ${IntAvgTTimer} )) ;
+       #if [ ${IntTimeCost} -gt ${IntOverflowPeriod} ] ; then 
+       
+       #fi 
+      if [ ${intSleepSeq} -lt $(( ${IntSleepPeriod}-1 )) ] ; then 
+       if [ ${IntTimeCost} -gt ${IntOverflowPeriod} ] ; then 
+        VerbMsg="IntTimeCost is being Overestimated inside a normal condition, take default setting to ${IntOverflowPeriod}." VerbHeader=${ADbgHdr["DEBUG"]} VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
+        IntTimeCost=${IntOverflowPeriod} ;
+       elif [ ${IntTimeCost} -lt ${IntUnderflowPeriod} ] ; then 
+        VerbMsg="IntTimeCost is being Underestimated inside a normal condition, take default setting to ${IntUnderflowPeriod}." VerbHeader=${ADbgHdr["DEBUG"]} VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
+        IntTimeCost=${IntUnderflowPeriod} ;
+       fi
+      elif [ ${intSleepSeq} -eq $(( ${IntSleepPeriod}-1 )) ] ; then
+       if [ ${IntPredictSleep} -gt ${IntRunLengthCorr}  ] ; then 
+        VerbMsg="Predicate Sleep (total of ${IntPredictSleep} sec(s)) is higher than Running free song." VerbHeader=${ADbgHdr["DEBUG"]} VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
+        IntTimeCost=$(( ${IntRunLengthCorr} - ${IntAvgTTimer} )) ;
+       fi 
+       if [ ${IntTimeCost} -gt ${IntRunLengthCorr} ] ; then 
+        VerbMsg="IntTimeCost ( next sleep + apps latency : ${IntTimeCost} sec(s)) is higher than Running free song." VerbHeader=${ADbgHdr["DEBUG"]} VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
+        IntTimeCost=$(( ${IntRunLengthCorr} - ${IntAvgTTimer} )) ;
        fi 
       fi 
-
+      
       if [ ${intSleepSeq} -lt $(( ${IntSleepPeriod}-1 )) ] ; then 
        StrMsg=${ArrayMsgTpl[3]} ; 
        StrMsg=${StrMsg//__INT_PSUM__/${IntPeriodSum}} ; 

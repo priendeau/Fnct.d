@@ -1738,8 +1738,40 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
      eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True CallArgument ) ;
     fi 
-    StrMsg="Entry in function" ; 
+    local StrMsg="Entry in function" ; 
     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    
+    local StrCachePath=$( ServiceControllerHandler --get SCHSInstancePath ) ; 
+    local StrCacheAction=$( ServiceControllerHandler --get SCHAction ) ; 
+    local IntPathLength=${#StrPathLoopState} ; 
+    local StrCacheFromSCH=${StrPathLoopState//${StrCachePath}/} ; 
+    local BoolCacheFromSCH="False" ; 
+    
+    ### After creation of variable StrCacheFromSCH that do reduce 
+    ### the StrPathLoopState by reducing what we found inside 
+    ### 'ServiceControllerHandler --get SCHSInstancePath' ( usually
+    ### /var/cache/Fnct.D, will be involved in BoolCacheFromSCH 
+    ### to be set to true for following meanning ; Application is
+    ### keeping UUID instance inside /var/cache/Fnct.D   
+    if [ ${#StrCacheFromSCH} -lt ${IntPathLength} ] ; then 
+     BoolCacheFromSCH="True" ;
+    fi  
+    
+    ### Does apply couple of transformation to String StrPathLoopState
+    ### due to compliance of ServiceControllerHandler and require 
+    ### and Action, with Tag __ACTION__, and Path with tag __PATH__
+    ### to be feeded/replaced to get all the UUID instance file. 
+    ### By default Action from SCH 'ServiceControllerHandler --get SCHAction'
+    ### is Loop, but some other information like Setting, Storage, Buffer, 
+    ### and other semantic-file can be used since ServiceControllerHandler 
+    ### is having more and more member to handler life-cycle of some UUID-
+    ### instance, it may have future property like altering information, not 
+    ### only deleting them.  
+    
+    if [ ${BoolCacheFromSCH:=False} == "True" ]  ; then 
+     StrPathLoopState=${StrPathLoopState//__PATH__/${StrCachePath}} ; 
+     StrPathLoopState=${StrPathLoopState//__ACTION__/${StrCacheAction}} ; 
+    fi 
 
     local StrUUID=${UUID};
     if [ "${StrUUID:=None}" == "None" ] ; then 
@@ -1750,6 +1782,8 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     
     StrPathLoopState=${StrPathLoopState//__SHORTFUNC__/${StrFSH}} ; 
     StrPathLoopState=${StrPathLoopState//__UUID__/${StrUUID}} ; 
+    
+    
     VerbMsg="Shutdown Instance ID:${StrUUID}, file: ${StrPathLoopState}" VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ;
     if [ -f ${StrPathLoopState} ] ; then 
      rm -f ${StrPathLoopState} ; 
