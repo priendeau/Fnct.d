@@ -986,12 +986,12 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
   
    local StrStartFile=${LSSFileName:=start-configure.sh} ; 
    local StrStoreResult=${LSSFileStorage:=.LoopShellScript} ; 
+   local StrCertFileApps=${LSSFileCert:=/usr/bin/sha1sum} ; 
    local StrLockFileId=${LSSFileStorageLock:=/var/cache/Fnct.D/Lock-LSS} ;
    local StrDateFormat=${LSSDateFormat:='%Y%m%d-%H:%M:%S'} ; 
    local StrDefaultShortName=${LSSShortNameFunc:=LSS} ; 
    local StrPathLoopState=${LSSLoopFile:=/var/cache/Fnct.D/Loop-__SHORTFUNC__-__UUID__} ; 
    local StrUUIDInstance=${LSSUUIDInstance:=Last-instance-UUID};
-   local StrShaSumExtract=${LSSSHAIndexExtract:=None} ; 
    local StrDefaultFileFormat=${LSSFileFormat:=BZIP2+BASE64} ;
    local BoolIsScriptRun=${LSSIsScriptFile:=True} ; 
    local StrFileAlterateVrf=${LSSNonScriptValidator:=/usr/bin/file} ;
@@ -1004,7 +1004,9 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
    local BoolSearchId=${LSSIsSearchID:=False} ;  
    local BoolSearchDate=${LSSIsSearchDate:=False} ; 
    local BoolSearchFile=${LSSIsSearchFile:=False} ; 
+   local BoolSortByDate=${LSSIsSortByDate:=False} ; 
    local StrSearchQuery=${LSSSearchQuery:=None} ;  
+   local StrShaSumExtract=${LSSSHAIndexExtract:=None} ; 
    local BoolImportStoreResult=${LSSIsImportStoreResult:=False} ; 
    local BoolHideAppsDebug=${LSSIsHideScriptOutput:=False} ; 
    local BoolDisplayDebug=${LSSIsDisplayDebug:=False} ; 
@@ -1020,12 +1022,21 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
    local StrTagParser=${LSSTagParserDef:=StrPipeCmd:__PIPE__,StrFilterDeCmprOpt:__FILTER_DECR_OPT__,StrApps:__APPS__,StrAppsCmprOpt:__APPS_CMPR_OPT__,StrAppsDeCmprOpt:__APPS_DECR_OPT__,StrFilter:__FILTER__,StrFilterCmprOpt:__FILTER_CMPR_OPT__} ; 
    local StrCompressionTpl=${LSSCmprTag:=__APPS__ __APPS_CMPR_OPT__ __PIPE__ __FILTER__ __FILTER_CMPR_OPT__} ;
    local StrDeCompressionTpl=${LSSDeCmprTag:=__FILTER__ __FILTER_DECR_OPT__ __PIPE__ __APPS__ __APPS_DECR_OPT__} ;
-  
+
+   ### Common to DataExtractionTool function
+   local StrDetApps=${LSSDETApps:=/bin/egrep} ;
+   local StrDetAppsOpt=${LSSDETFAppsOpt:=-i __FILE__ __QUERY__} ;
+   local StrDetFilter=${LSSDETFilter:=/usr/bin/cut} ;
+   local StrDetFilterOpt=${LSSDETFilterOpt:=-d \' \' -f __RANK__} ;
+   local StrDetSort=${LSSDETSort:=/bin/sort} ;
+   local StrDetSortOpt=${LSSDETSortOpt:=-k1} ;
+   local StrDetRankDisplay=${LSSDETColDisplay:=1,2,3} ; 
+      
    ### A short-cut to call uniformely an UUID used by this Application. 
    local UUID=${UUID:=${StrUUIDInstance}} ; 
    local StrTemplateShaStorage="__DATE__ __SHA__ __FILENAME__ __FORMAT__ __FILECONTENT__" ;
    
-   local StrVarList="BoolImportStoreResult,BoolLoopScriptOnState,IntDefaultErrorStateLoop,IntMaxLoopOnError,BoolIsScriptRun,StrFileAlterateVrf,BoolIsLockFile,StrLockFileId,BoolDisplayIf,BoolSearchId,BoolSearchDate,StrSearchQuery,BoolSearchFile,BoolListFile,BoolHideAppsDebug,StrVarList,StrStartFile,StrStoreResult,StrDateFormat,StrPathLoopState,StrUUIDInstance,StrTemplateShaStorage,StrDefaultFileFormat,StrShaSumExtract,BoolIsExtraction,StrApps,StrAppsCmprOpt,StrAppsDeCmprOpt,StrFilter,StrFilterCmprOpt,StrFilterDeCmprOpt,StrTagParser,StrCompressionTpl,StrDeCompressionTpl,StrDefaultShortName"
+   local StrVarList="BoolSortByDate,BoolImportStoreResult,BoolLoopScriptOnState,IntDefaultErrorStateLoop,IntMaxLoopOnError,BoolIsScriptRun,StrFileAlterateVrf,BoolIsLockFile,StrLockFileId,BoolDisplayIf,BoolSearchId,BoolSearchDate,StrSearchQuery,BoolSearchFile,BoolListFile,BoolHideAppsDebug,StrVarList,StrStartFile,StrStoreResult,StrDateFormat,StrPathLoopState,StrUUIDInstance,StrTemplateShaStorage,StrDefaultFileFormat,StrShaSumExtract,BoolIsExtraction,StrApps,StrAppsCmprOpt,StrAppsDeCmprOpt,StrFilter,StrFilterCmprOpt,StrFilterDeCmprOpt,StrTagParser,StrCompressionTpl,StrDeCompressionTpl,StrDefaultShortName,StrDetApps,StrDetAppsOpt,StrDetFilter,StrDetFilterOpt,StrDetSort,StrDetSortOpt,StrDetRankDisplay,StrCertFileApps"
 
    local -a ArrayMsg=() ;
    ArrayMsg[0]="Entry in function" ; 
@@ -1033,7 +1044,7 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
    ArrayMsg[2]="Complete If Statement from __FUNCT__:__VAR__" ; 
    ArrayMsg[3]="De-Compression Codec: __CODEC__\nCommand : __CMD__\nSearching for SHA1SUM ID:__SHASUMID__ in file __FILE__" ; 
    ArrayMsg[4]="Add command-directive, SHA1SUM:__CURRSHA__, status: __STOREDSHA__" ; 
-   ArrayMsg[5]="Shell-Script SHA1SUM:__CURRSHA__, __STOREDSHA__" ; 
+   ArrayMsg[5]="Shell-Script Item information:__CURRSHA__, __STOREDSHA__" ; 
    ArrayMsg[6]="Shell-Script returned state: __RET__" ; 
    ArrayMsg[7]="Shell-Script classified:__CURRSHA__,\n\tdon't required to start over." ; 
    ArrayMsg[8]="\nDate:__DATE__\nUUID-Instance:__UUID__\n" ; 
@@ -1043,10 +1054,10 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
    ArrayMsg[12]="Stream Information: __TYPEACTION__" ; 
    ArrayMsg[13]="Template used: __TPL__" ; 
    ArrayMsg[14]="Value StrTagParser: __VAR__" ; 
-   ArrayMsg[15]="Listing   By FileName   \nSHA1SUM\t\t\t\t\tFileName\n" ; 
-   ArrayMsg[16]="Searching By Date       \nDate\t\t\tSHA1SUM\t\t\t\t\tFileName\n" ; 
-   ArrayMsg[17]="Searching By ID         \n\nSHA1SUM\t\t\t\t\tFileName\n" ; 
-   ArrayMsg[18]="Listing ID and FileName \nSHA1SUM\t\t\t\t\tFileName\n" ; 
+   ArrayMsg[15]="Listing by FileName\nDate:\t\tSHA1SUM\t\t\t\t\tFileName\n" ; 
+   ArrayMsg[16]="Searching by Date\nDate\t\t\tSHA1SUM\t\t\t\t\tFileName\n" ; 
+   ArrayMsg[17]="Searching by ID\nDate:\t\tSHA1SUM\t\t\t\t\tFileName\n" ; 
+   ArrayMsg[18]="Listing ID and FileName\nDate:\t\tSHA1SUM\t\t\t\t\tFileName\n\n" ; 
    ArrayMsg[19]="Compression Header:__VAR__" ; 
    ArrayMsg[20]="Compression :( cat __FILE__ | __STREAMCMD__ )" ; 
    ArrayMsg[21]="Execute Script Step __STEP__ of __STEPMAX__" ;
@@ -1055,7 +1066,7 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
    
    function GetSha1Sum()
    {
-    sha1sum ${GSSFileName} | cut -d ' ' -f 1 ; 
+    ${GS1SApps} ${GS1SFile} | /usr/bin/cut -d ' ' -f 1 ; 
    } 
 
    function GetFileFormatCmd( )
@@ -1282,10 +1293,30 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     StrMsg=$( LoopShellScript --get ArrayMsg[0] ) ; 
     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
       
+    local StrCmdTpl="__APPS__ __APPS_OPT__ \"__QUERY__\" __FILE__ | __FILTER__ __FILTER_OPT__ " ; 
+    
+    if [ "${BoolSortByDate:=False}" == "True" ] ; then  
+     StrCmdTpl="${StrCmdTpl} | __SORT__ __SORT_OPT__" ; 
+    fi 
+    StrCmdTpl=${StrCmdTpl//__APPS__/${StrDetApps}} ; 
+    StrCmdTpl=${StrCmdTpl//__APPS_OPT__/${StrDetAppsOpt}} ; 
+    StrCmdTpl=${StrCmdTpl//__QUERY__/${StrSearchQuery}} ; 
+    StrCmdTpl=${StrCmdTpl//__FILE__/${StrStoreResult}} ; 
+    StrCmdTpl=${StrCmdTpl//__FILTER__/${StrDetFilter}} ; 
+    StrCmdTpl=${StrCmdTpl//__FILTER_OPT__/${StrDetFilterOpt}} ;
+    StrCmdTpl=${StrCmdTpl//__RANK__/${StrDetRankDisplay}} ;
+    StrCmdTpl=${StrCmdTpl//__SORT__/${StrDetSort}} ;
+    StrCmdTpl=${StrCmdTpl//__SORT__OPT__/${StrDetSortOpt}} ;
+     
+    StrMsg=$( LoopShellScript --get ArrayMsg[23] ) ;
+    StrMsg=${StrMsg//__CMD__/${StrCmdTpl}} ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    
     StrMsg=$( LoopShellScript --get ArrayMsg[15] ) ; 
-    #StrMsg="Listing By FileName \nSHA1SUM\t\t\t\t\tFileName\n" ; 
     VerbMsg="${StrMsg}" VerbState=True VerbExtendedOut=True VerbEvalForm=False VerbFormated=False VerbDev=/dev/stderr  Verbosis ;
-    cat ${StrStoreResult} | egrep -i "${StrSearchQuery}" | cut -d ' ' -f 2,3 ; 
+
+    eval ${StrCmdTpl} ; 
+    ### egrep  "${StrSearchQuery}" ${StrStoreResult} | /usr/bin/cut -d ' ' -f 1,2,3 | /usr/bin/sort -k1 ; 
     
    } 
 
@@ -1304,10 +1335,29 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     StrMsg=$( LoopShellScript --get ArrayMsg[0] ) ; 
     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
     
+    local StrCmdTpl="__APPS__ __APPS_OPT__ \"__QUERY__\" __FILE__ | __FILTER__ __FILTER_OPT__ " ; 
+    
+    if [ "${BoolSortByDate:=False}" == "True" ] ; then  
+     StrCmdTpl="${StrCmdTpl} | __SORT__ __SORT_OPT__" ; 
+    fi 
+    StrCmdTpl=${StrCmdTpl//__APPS__/${StrDetApps}} ; 
+    StrCmdTpl=${StrCmdTpl//__APPS_OPT__/${StrDetAppsOpt}} ; 
+    StrCmdTpl=${StrCmdTpl//__QUERY__/${StrSearchQuery}} ; 
+    StrCmdTpl=${StrCmdTpl//__FILE__/${StrStoreResult}} ; 
+    StrCmdTpl=${StrCmdTpl//__FILTER__/${StrDetFilter}} ; 
+    StrCmdTpl=${StrCmdTpl//__FILTER_OPT__/${StrDetFilterOpt}} ;
+    StrCmdTpl=${StrCmdTpl//__RANK__/${StrDetRankDisplay}} ;
+    StrCmdTpl=${StrCmdTpl//__SORT__/${StrDetSort}} ;
+    StrCmdTpl=${StrCmdTpl//__SORT__OPT__/${StrDetSortOpt}} ;
+    
+    StrMsg=$( LoopShellScript --get ArrayMsg[23] ) ;
+    StrMsg=${StrMsg//__CMD__/${StrCmdTpl}} ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+
     StrMsg=$( LoopShellScript --get ArrayMsg[16] ) ; 
-    #StrMsg="Searching By Date\nDate\t\t\tSHA1SUM\t\t\t\t\tFileName\n" ; 
     VerbMsg="${StrMsg}" VerbState=True VerbExtendedOut=True VerbEvalForm=False VerbFormated=False VerbDev=/dev/stderr  Verbosis ;
-    cat ${StrStoreResult} | egrep -i "${StrSearchQuery}" | cut -d ' ' -f 1,2,3 ; 
+
+    eval ${StrCmdTpl} ; 
     
    }
 
@@ -1326,11 +1376,29 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     StrMsg=$( LoopShellScript --get ArrayMsg[0] ) ; 
     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
     
-    StrMsg=$( LoopShellScript --get ArrayMsg[17] ) ;
-    #StrMsg="Searching By ID\n\nSHA1SUM\t\t\t\t\tFileName\n" ; 
-    VerbMsg="${StrMsg}" VerbState=True VerbExtendedOut=True VerbEvalForm=False VerbFormated=False VerbDev=/dev/stderr  Verbosis ;
-    cat ${StrStoreResult} | egrep -i "${StrSearchQuery}" | cut -d ' ' -f 2,3 ; 
+    local StrCmdTpl="__APPS__ __APPS_OPT__ \"__QUERY__\" __FILE__ | __FILTER__ __FILTER_OPT__ " ; 
     
+    if [ "${BoolSortByDate:=False}" == "True" ] ; then  
+     StrCmdTpl="${StrCmdTpl} | __SORT__ __SORT_OPT__" ; 
+    fi 
+    StrCmdTpl=${StrCmdTpl//__APPS__/${StrDetApps}} ; 
+    StrCmdTpl=${StrCmdTpl//__APPS_OPT__/${StrDetAppsOpt}} ; 
+    StrCmdTpl=${StrCmdTpl//__QUERY__/${StrSearchQuery}} ; 
+    StrCmdTpl=${StrCmdTpl//__FILE__/${StrStoreResult}} ; 
+    StrCmdTpl=${StrCmdTpl//__FILTER__/${StrDetFilter}} ; 
+    StrCmdTpl=${StrCmdTpl//__FILTER_OPT__/${StrDetFilterOpt}} ;
+    StrCmdTpl=${StrCmdTpl//__RANK__/${StrDetRankDisplay}} ;
+    StrCmdTpl=${StrCmdTpl//__SORT__/${StrDetSort}} ;
+    StrCmdTpl=${StrCmdTpl//__SORT__OPT__/${StrDetSortOpt}} ;
+    
+    StrMsg=$( LoopShellScript --get ArrayMsg[23] ) ;
+    StrMsg=${StrMsg//__CMD__/${StrCmdTpl}} ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    
+    StrMsg=$( LoopShellScript --get ArrayMsg[17] ) ;
+    VerbMsg="${StrMsg}" VerbState=True VerbExtendedOut=True VerbEvalForm=False VerbFormated=False VerbDev=/dev/stderr  Verbosis ;
+    
+    eval ${StrCmdTpl} ; 
    }
      
    function ListFile()
@@ -1347,11 +1415,26 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     StrMsg=$( LoopShellScript --get ArrayMsg[0] ) ; 
     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
     
-    StrMsg=$( LoopShellScript --get ArrayMsg[18] ) ; 
-    ###StrMsg="Listing ID and FileName\nSHA1SUM\t\t\t\t\tFileName\n" ; 
-    VerbMsg="${StrMsg}" VerbState=True VerbExtendedOut=True VerbEvalForm=False VerbFormated=False VerbDev=/dev/stderr  Verbosis ;
-    cat ${StrStoreResult} | cut -d ' ' -f 2,3 ; 
+    local StrCmdTpl="__FILTER__ __FILTER_OPT__ < __FILE__ " ; 
+    if [ "${BoolSortByDate:=False}" == "True" ] ; then  
+     StrCmdTpl="${StrCmdTpl} | __SORT__ __SORT_OPT__" ; 
+    fi 
+
+    StrCmdTpl=${StrCmdTpl//__FILE__/${StrStoreResult}} ; 
+    StrCmdTpl=${StrCmdTpl//__FILTER__/${StrDetFilter}} ; 
+    StrCmdTpl=${StrCmdTpl//__FILTER_OPT__/${StrDetFilterOpt}} ;
+    StrCmdTpl=${StrCmdTpl//__SORT__/${StrDetSort}} ;
+    StrCmdTpl=${StrCmdTpl//__SORT__OPT__/${StrDetSortOpt}} ;
+    StrCmdTpl=${StrCmdTpl//__RANK__/${StrDetRankDisplay}} ;
     
+    StrMsg=$( LoopShellScript --get ArrayMsg[23] ) ;
+    StrMsg=${StrMsg//__CMD__/${StrCmdTpl}} ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    
+    StrMsg=$( LoopShellScript --get ArrayMsg[18] ) ; 
+    VerbMsg="${StrMsg}" VerbState=True VerbExtendedOut=True VerbEvalForm=False VerbFormated=False VerbDev=/dev/stderr  Verbosis ;
+ 
+    eval ${StrCmdTpl} ; 
    }
 
    function FileWriterSupport()
@@ -1477,7 +1560,8 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     StrMsg=${StrMsg//__CMD__/${StrEvalCmd}} ;
     VerbMsg=${StrMsg} VerbHeader="${__call_locality[1]}-EVALCMD" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
     
-    echo -ne  "${StrEvalCmd}" ; 
+    VerbMsg=${StrEvalCmd} VerbState=True VerbEvalForm=True VerbFormated=False Verbosis ;
+    #echo -ne  "${StrEvalCmd}" ; 
      
    }
    function ShellControlServices()
@@ -1536,7 +1620,7 @@ if [ ${versionLSS:=0.0.1} == "0.0.1" ] ; then
     ArrayMsg[10]=$( LoopShellScript --get ArrayMsg[22] ) ;  
     
     while [ -f ${StrPathLoopState} ] ; do 
-     StrCurrentSha=$( GSSFileName=${StrStartFile} GetSha1Sum ) ; 
+     StrCurrentSha=$( GS1SApps=${StrCertFileApps} GS1SFile=${StrStartFile} GetSha1Sum ) ; 
 
      IntFindCompiler=0 ; 
      for Iter in ${!ArrayCompiler[@]} ; do 
