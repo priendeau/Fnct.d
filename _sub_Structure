@@ -3310,6 +3310,268 @@ case ${versionMC:=0.0.0} in
 esac ### End-of case-versionMC == 0.0.X .
 
 
+if [ "${versionSIC}" == "0.0.0" ] ; then 
+
+  unset ScriptImageConversion ; 
+  function ScriptImageConversion()
+  {
+    local StrImgCp=$( base64 --wrap=0 ${SICFileName:=None} ) ;
+    local IntSegment=${SICSegmentLength:=48} ; 
+    local IntImgCp=${#StrImgCp} ; 
+    local StrScriptVarbuil="" ;
+    while [ ${IntImgCp:=0} -gt 0 ] ; do 
+      StrScriptVarbuil="${StrScriptVarbuil}\"${StrImgCp:0:${IntSegment}}\"__ADD__" ; 
+      StrImgCp=${StrImgCp:${IntSegment}:$(( ${#StrImgCp}-${IntSegment} ))} ; 
+      IntImgCp=${#StrImgCp} ; 
+      if [ ${IntImgCp:=0} -ge ${IntSegment} ] ; then 
+       StrScriptVarbuil=${StrScriptVarbuil//__ADD__/+} ; 
+      else
+       StrScriptVarbuil=${StrScriptVarbuil//__ADD__/} ; 
+      fi 
+    done 
+  }
+
+fi #EndIf "${versionSIC}" == "0.0.0" 
+
+if [ "${versionSIC}" == "0.0.1" ] ; then 
+  
+  eval $( GFCFuncName=ScriptImageConversion GlobalFunctionCleaning ) ; 
+
+  function ScriptImageConversion()
+  {
+   function Verbosis()
+   {
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Verb Verbosis ) ; 
+    local Arg0=${ArrayArg[0]} ; 
+    local StrMsg=${VerbMsg:=__TEXT__} ; 
+    local StrDevOut=${VerbDev:=/dev/stderr} ; 
+    local IsVerboseState=${VerbState:=False} ;
+    local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+    local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+    local IsDisplayFormatted=${VerbFormated:=True} ;
+    local IsAppendMode=${VerbAppendDev:=False} ; 
+    local IsExtendedOutput=${VerbExtendedOut:=False} ; 
+    local ArrayArg=( $* ) ; 
+    if [ "${IsVerboseState:=False}" == "True" ] ; then 
+     if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+      if [ "${IsAppendMode:=False}" == "True" ] ; then 
+        echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
+      else  
+        echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+      fi
+     else
+      if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+       if [ "${IsExtendedOutput:=False}" == "True" ] ; then 
+         echo -ne "${StrMsg}" ;  
+       else
+         echo "${StrMsg}" ;  
+       fi
+      else
+       if [ "${IsAppendMode:=False}" == "True" ] ; then 
+        if [ "${IsExtendedOutput:=False}" == "True" ] ; then 
+          echo -ne "${StrMsg}" >> ${StrDevOut} ;
+        else
+          echo "${StrMsg}" >> ${StrDevOut} ;
+        fi
+       else
+        if [ "${IsExtendedOutput:=False}" == "True" ] ; then 
+         echo -ne "${StrMsg}" > ${StrDevOut} ;
+        else
+         echo "${StrMsg}" > ${StrDevOut} ;
+        fi 
+       fi
+      fi 
+     fi 
+    fi
+   } 
+   ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( SIC ScriptImageConversion ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+    local StrParentApps=${__call_locality[1]} ;
+    local StrStartMain=${SCHFuncStart:=__main_StartServices} ; 
+    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+     eval $( eval CAFunctName=ScriptImageConversion CAIsAddParent=False __Call_Argument ) ; 
+    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+     eval $( eval CAFunctName=ScriptImageConversion CAIsAddParent=False CallArgument ) ;
+   fi #EndIf ${versionCA:=0.0.0} == "0.0.0" 
+   
+   local StrScript=${SICScriptType:=javascript} ; 
+   local IntSegLength=${SICSegmentLength:=48} ;
+   local StrFileName=${SICFilename:=file.png} ;
+   local BoolAddHeader=${SICAddHeader:=True} ;
+   local StrVarName=${SICVariableName:=None} ;
+   local StrHeaderTpl=${SICHeaderTpl:=data:image/__MIMETYPE__;base64} ;
+   local StrVarForm=${SICVarCreation:='javascript:var__SPACE____VAR____SPACE__=__SPACE__:+:;,python:__VAR____SPACE__=__SPACE__:.:__NONE__,java:__VAR____SPACE__=__SPACE__:+:;',jython:__VAR____SPACE__=__SPACE__:.:;} ; 
+   local StrVTVRegistry=${SICVTVReg:=VTVIsQuotedValue=True,VTVIsArrayStyleInsert=True,VTVIsValueReAssign=True,VTVIsValueToConvert=False} ; 
+   local BoolDisplayDebug=${SICDisplayDebug:=False} ; 
+   local StrVarList="StrScript,IntSegLength,StrFileName,BoolAddHeader,StrVarName,StrVTVRegistry,StrHeaderTpl,StrEvalConcat,StrVarForm,BoolDisplayDebug" ;
+   
+   local -a ArrayMsg ;
+   ArrayMsg[0]="Entry in function" ;   
+   ArrayMsg[1]="\nLanguage Script:__SCRIPT__\nTemplate for variable uses:'__TEMPLATE__'\nConcatenation Operator: '__OPERTATOR__'\nLine terminator: '__TERMINATOR__'" ; 
+   ArrayMsg[2]="Base64 file size:__INT__ byte(s)" ; 
+   ArrayMsg[4]="Base64 Stream splited into __INT__ chunk." ; 
+   
+   function FileFormatDetection()
+   {
+    if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+     local -a ArrayArg=( $* ) ;
+     local -a __call_locality=( FFD FileFormatDetection ${StrParentApps} ) ;
+     local Arg0="${ArrayArg[0]}" ; 
+    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+     eval $( eval CAFunctName=FileFormatDetection CAIsAddParent=True __Call_Argument ) ;
+    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+     eval $( eval CAFunctName=FileFormatDetection CAIsAddParent=True CallArgument ) ;
+    fi 
+    local StrFileName=${FFDFile:=None} ; 
+    local StrApp=${FFDApps:=/usr/bin/file} ; 
+    ${StrApp} ${StrFileName} | /usr/bin/cut -d ':' -f 2 | /usr/bin/cut -d ' ' -f 2 | tr '[:upper:]' '[:lower:]' ; 
+ 
+   }
+   
+   function __main_StartServices()
+   {
+    if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+     local -a ArrayArg=( $* ) ;
+     local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+     local Arg0="${ArrayArg[0]}" ; 
+    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
+    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+    fi 
+    StrMsg=$( ScriptImageConversion --get ArrayMsg[0] ) ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+
+    StrScript=$( echo ${StrScript} | tr '[:upper:]' '[:lower:]'  ) ; 
+    
+    local StrImgCp ; 
+    local StrMimeType ;
+    local StrFileHeader ; 
+    local StrScriptVarbuild="" ;
+    local IntImgCp ; 
+    local StrMsg ; 
+    local IntChunkCount=0 ; 
+    
+    local -A ArrayConfig ; 
+    local -a ArrayVarCreation=( ${StrVarForm//,/ } ) ; 
+    local StrASeg ;
+    StrMsg=$( ScriptImageConversion --get ArrayMsg[1]  ) ; 
+    for (( intI=0 ; intI <= ${#ArrayVarCreation[@]}-1 ; intI++ )) ; do 
+     StrASeg=${ArrayVarCreation[${intI}]} ; 
+     ArrayConfig["script"]="${StrASeg/%:[a-zA-Z_+;]*}" ; 
+     if [ "${StrScript:=javascript}" == "${ArrayConfig[script]}" ] ; then 
+      StrASeg="${StrASeg/#${ArrayConfig[script]}:}" ; 
+      ArrayConfig["template"]="${StrASeg/%:[a-zA-Z_+;]*}" ; 
+      StrASeg="${StrASeg/#${ArrayConfig[template]}:}" ; 
+      ArrayConfig["operator"]="${StrASeg/%:[a-zA-Z_+;]*}" ; 
+      StrASeg="${StrASeg/#${ArrayConfig[operator]}:}" ; 
+      ArrayConfig["terminator"]="${StrASeg/%:[a-zA-Z_+;]*}" ; 
+      StrMsg=${StrMsg//__SCRIPT__/${ArrayConfig["script"]}} ; 
+      StrMsg=${StrMsg//__TEMPLATE__/${ArrayConfig["template"]}} ; 
+      StrMsg=${StrMsg//__OPERTATOR__/${ArrayConfig["operator"]}} ; 
+      StrMsg=${StrMsg//__TERMINATOR__/${ArrayConfig["terminator"]}} ; 
+     fi 
+    done 
+    VerbMsg=${StrMsg} VerbState=${BoolDisplayDebug} VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True  VerbDev=/dev/stderr  Verbosis ; 
+    if [ "${StrVarName:=None}" != "None" ] ; then 
+      StrScriptVarbuild="${StrScriptVarbuild}${ArrayConfig[template]}" ; 
+      StrScriptVarbuild="${StrScriptVarbuild//__SPACE__/ }" ; 
+      StrScriptVarbuild="${StrScriptVarbuild//__VAR__/${StrVarName}}" ; 
+    fi 
+    
+    if [ "${BoolAddHeader:=False}" == "True" ] ; then 
+     StrMimeType=$( FFDFile=${StrFileName} FileFormatDetection )
+     StrFileHeader=${StrHeaderTpl//__MIMETYPE__/${StrMimeType}}
+     StrScriptVarbuild="${StrScriptVarbuild}\"${StrFileHeader}\"${ArrayConfig[operator]}\n" ; 
+    fi 
+    
+    StrImgCp=$( /usr/bin/base64 --wrap=0 ${StrFileName} ) ;
+    IntImgCp=${#StrImgCp} ; 
+    StrMsg=$( ScriptImageConversion --get ArrayMsg[2]  ) ; 
+    StrMsg=${StrMsg//__INT__/${IntImgCp}} ; 
+    VerbMsg=${StrMsg} VerbState=${BoolDisplayDebug} VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True  VerbDev=/dev/stderr  Verbosis ;  
+    
+    while [ ${IntImgCp:=0} -gt 0 ] ; do 
+     StrScriptVarbuild="${StrScriptVarbuild}\"${StrImgCp:0:${IntSegLength}}\"__ADD__\n" ; 
+     StrImgCp=${StrImgCp:${IntSegLength}:$(( ${#StrImgCp}-${IntSegLength} ))} ; 
+     IntImgCp=${#StrImgCp} ; 
+     if [ ${IntImgCp:=0} -ge ${IntSegLength} ] ; then 
+      StrScriptVarbuild="${StrScriptVarbuild//__ADD__/${ArrayConfig[operator]}}" ; 
+     else
+      StrScriptVarbuild="${StrScriptVarbuild//__ADD__/${ArrayConfig[terminator]}}" ; 
+     fi 
+     IntChunkCount=$(( ${IntChunkCount} + 1 )) ; 
+    done
+    StrScriptVarbuild=${StrScriptVarbuild//__NONE__/} ; 
+    
+    StrMsg=$( ScriptImageConversion --get ArrayMsg[4]  ) ; 
+    StrMsg=${StrMsg//__INT__/${IntChunkCount}} ; 
+    VerbMsg=${StrMsg} VerbState=${BoolDisplayDebug} VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True  VerbDev=/dev/stderr  Verbosis ;  
+    
+    echo -ne "${StrScriptVarbuild}" ; 
+    ### VerbMsg=${StrScriptVarbuild} VerbState=True VerbEvalForm=False VerbFormated=False  Verbosis ; 
+       
+   }
+   function __main_StopServices()
+   {
+    if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+     local -a ArrayArg=( $* ) ;
+     local -a __call_locality=( Main __main_StopServices ${StrParentApps} ) ;
+     local Arg0="${ArrayArg[0]}" ; 
+    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+     eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True __Call_Argument ) ;
+    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+     eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True CallArgument ) ;
+    fi 
+    StrMsg="Entry in function" ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   }
+   
+   local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+   local StrNameHelper="${__call_locality[1]}\tSimple Image converter to provide Base64 and Script\n\t\t\tuses of encoded Stream.\n";
+   local StrSummary="\n\tIntended for Javascript, it ouput in base64 with Stream of String with \n\tconcatenated result for reducing printing problem of long-lines of base64\n \tinside Javascript. As example providing embedded images in base64 inside \n\tHTML Image tag accept a base64 inside src attribute with \n\tproper Header.\n" ; 
+   local StrSynopsis="\n\tAfter providing Image File name, Type of Script and length of the segment \n\tit will generate a pure base64 Stream from many lines separed with a \n\tconcatenate operator\n\n\tsimple use:\n\t SICFilename=file.png SICSegmentLength=48 SICScriptType=javascript \n\t ScriptImageConversion\n\n\tWill ouput:\n\t\"/9j/4AAQSkZJRgABAQEAYABgAAD/4QAWRXhpZgAASUkqAAgA\"+\n\t\"AAAAAAAAAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkS\"+\n\t\"Ew8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgy\"+\n\t\"PC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIy\"+\n\t\"MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIy\"+\n\t...\n";
+   local StrDescription="\n\tOther example like adding the Base64 header for image identification by \n\tthe browser. It require at least the file should be know of file \n\t(/usr/bin/file). in case it does not recognize it, follow manpage of \n\t/usr/bin/file (man 1 file) while you may have to add Header of the \n\tunidentified file inside the magic file.\n\n \tIn case it require to add the header because your browser support the Image \n\tsrc attribute to handle base64 :\n\n\tSICFilename=file.png SICAddHeader=True SICSegmentLength=48 \n\tSICScriptType=javascript\n\tWill ouput:\n\t\"data:image/png;base64\"+\n\t\"/9j/4AAQSkZJRgABAQEAYABgAAD/4QAWRXhpZgAASUkqAAgA\"+\n\t\"AAAAAAAAAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkS\"+\n\t\"Ew8UHRofHh0aHBwgJC4nICIsIxwcKDcpLDAxNDQ0Hyc5PTgy\"+\n\t\"PC4zNDL/2wBDAQkJCQwLDBgNDRgyIRwhMjIyMjIyMjIyMjIy\"+\n\t\"MjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIy\"+\n\t...\n" ;
+  
+   if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+    GVRIsName=True     \
+    GVRIsSummary=True  \
+    GVRIsSynopsis=True \
+    GVRIsDesc=True     \
+    GetVarReference ${__call_locality[1]} ; 
+    echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+   elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+    eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+    echo -ne """${ArgGet}\n""" ;
+   elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+    eval $( __GetVarReferenceList ) ;	
+   elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
+    eval $( eval \
+      ${StrVTVRegistry//,/ }  \
+      VTVValueEntry=${StrVarList} \
+      VTVIsWhiteList=True         \
+      VTVWhiteListTransfert=UUID  \
+      ValueToVariable ) __main_StopServices ; 
+   elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+    # eval $( eval VersionApps ) ; 
+    StrMsg=$( ScriptImageConversion --get ArrayMsg[0] ) ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    eval $( eval \
+      ${StrVTVRegistry//,/ }  \
+      VTVValueEntry=${StrVarList} \
+      ValueToVariable ) ${StrStartMain}
+   fi   
+
+ 
+  }
+
+fi #End-if "${versionSIC}" == "0.0.1"
+
+
 ###
 ### Versioning and Variable Block , 
 ### « 'Versioning' From french, 'de versions des' »
@@ -3405,7 +3667,7 @@ if [ "${versionSCH}" == "0.0.1" ] ; then
     elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
      eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
     fi 
-    StrMsg=$( LoopShellScript --get ArrayMsg[0] ) ; 
+    StrMsg=$( ServiceControllerHandler --get ArrayMsg[0] ) ; 
     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
     
     ### Difference with LSSServices , having a function-name filter to issues 
@@ -3508,7 +3770,7 @@ if [ "${versionSCH}" == "0.0.1" ] ; then
       ValueToVariable ) __main_StopServices ; 
    elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
     # eval $( eval VersionApps ) ; 
-    StrMsg=$( LoopShellScript --get ArrayMsg[0] ) ; 
+    StrMsg=$( ServiceControllerHandler --get ArrayMsg[0] ) ; 
     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
     eval $( eval \
       VTVIsArrayStyleInsert=True  \
