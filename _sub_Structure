@@ -3403,7 +3403,7 @@ if [ "${versionSIC}" == "0.0.1" ] ; then
    local StrFileName=${SICFilename:=file.png} ;
    local BoolAddHeader=${SICAddHeader:=True} ;
    local StrVarName=${SICVariableName:=None} ;
-   local StrHeaderTpl=${SICHeaderTpl:=data:image/__MIMETYPE__;base64} ;
+   local StrHeaderTpl=${SICHeaderTpl:=data:image/__MIMETYPE__;base64,} ;
    local StrVarForm=${SICVarCreation:='javascript:var__SPACE____VAR____SPACE__=__SPACE__:+:;,python:__VAR____SPACE__=__SPACE__:.:__NONE__,java:__VAR____SPACE__=__SPACE__:+:;',jython:__VAR____SPACE__=__SPACE__:.:;} ; 
    local StrVTVRegistry=${SICVTVReg:=VTVIsQuotedValue=True,VTVIsArrayStyleInsert=True,VTVIsValueReAssign=True,VTVIsValueToConvert=False} ; 
    local BoolDisplayDebug=${SICDisplayDebug:=False} ; 
@@ -3452,6 +3452,7 @@ if [ "${versionSIC}" == "0.0.1" ] ; then
     local StrMimeType ;
     local StrFileHeader ; 
     local StrScriptVarbuild="" ;
+    local StrSegmentCreation ; 
     local IntImgCp ; 
     local StrMsg ; 
     local IntChunkCount=0 ; 
@@ -3496,14 +3497,18 @@ if [ "${versionSIC}" == "0.0.1" ] ; then
     VerbMsg=${StrMsg} VerbState=${BoolDisplayDebug} VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True  VerbDev=/dev/stderr  Verbosis ;  
     
     while [ ${IntImgCp:=0} -gt 0 ] ; do 
-     StrScriptVarbuild="${StrScriptVarbuild}\"${StrImgCp:0:${IntSegLength}}\"__ADD__\n" ; 
+     StrSegmentCreation="\"${StrImgCp:0:${IntSegLength}}\"__ADD__\n"  ;
+     IntSegSize=${#StrSegmentCreation} ; 
      StrImgCp=${StrImgCp:${IntSegLength}:$(( ${#StrImgCp}-${IntSegLength} ))} ; 
      IntImgCp=${#StrImgCp} ; 
-     if [ ${IntImgCp:=0} -ge ${IntSegLength} ] ; then 
-      StrScriptVarbuild="${StrScriptVarbuild//__ADD__/${ArrayConfig[operator]}}" ; 
+     if [ ${IntSegSize:=0} -gt $(( ${IntSegLength} - 1 )) ] ; then 
+      StrSegmentCreation="${StrSegmentCreation//__ADD__/${ArrayConfig[operator]}}" ; 
      else
-      StrScriptVarbuild="${StrScriptVarbuild//__ADD__/${ArrayConfig[terminator]}}" ; 
+      StrSegmentCreation="${StrSegmentCreation//__ADD__/${ArrayConfig[terminator]}}";
      fi 
+     
+     StrScriptVarbuild="${StrScriptVarbuild}${StrSegmentCreation}" ; 
+  
      IntChunkCount=$(( ${IntChunkCount} + 1 )) ; 
     done
     StrScriptVarbuild=${StrScriptVarbuild//__NONE__/} ; 
