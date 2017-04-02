@@ -4612,10 +4612,10 @@ function GkSuZenityLoader()
           BVTVarName=StrAppsLd      \ 
           BVTDisplayIf=${BoolDisplayDebug}        \
           BVTDisplayShowDebug=${BoolDisplayDebug} \
-          BVTVarHold='StrLdconfigGreeting='${StrLdconfigGreeting}' ScreenDisplayLdconfigHint' \
+          BVTVarHold="StrLdconfigGreeting='${StrLdconfigGreeting}' ScreenDisplayLdconfigHint" \
           BVTBoolVarName=\${BoolUpdateLdconfig}   \
           BVTBoolCase=True           \
-          BVTBoolAssertion='LdconfigNotification' \
+          BVTBoolAssertion="LdconfigNotification" \
           BVTScopeTest=local         \
           BoolVarTest ) ; 
   eval $( eval BVTIdType=0           \
@@ -4624,7 +4624,7 @@ function GkSuZenityLoader()
           BVTVarName=StrLdConfigLoad \
           BVTVarHold='$( eval ${StrAppsLd} )'     \
           BVTBoolVarName=\${BoolUpdateLdconfig}   \
-          BVTBoolCase=True BVTBoolAssertion='$( eval ${StrAppsLd} )' \
+          BVTBoolCase=True BVTBoolAssertion="$( eval ${StrAppsLd} )" \
           BVTScopeTest=local         \
           BoolVarTest ) ; 
 		gksu --user ${StrUser} ${StrApps} ${StrAppsOpt} 
