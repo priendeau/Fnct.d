@@ -417,12 +417,15 @@ function OldVLCServer()
  ### OVLCSAppsLunch={/usr/bin/vlc OR /usr/local/bin/vlc} can just let use
  ### it for test purposes.
   
+ ### Section variable declaration
  local StrVLCApps=${OVLCSAppsLunch:="""${HOME}/bin/vlc-terminal.sh"""}
  local StrVLCAppsPlaylist=${OVLCSAppsPlaylist:="""${HOME}/Music/playlist_20160606.m3u"""} ; 
+ local BoolUsePlaylist=${OVLCStartPlaylist:=True} ; 
  ### It uses /bin/nc inside socket management to receive incoming vlc-cli command and 
  ### /bin/nc is a bind to /bin/nc.openbsd in Linux-Mint Distribution, depend what other 
  ### own ...
  local StrSocketApps=${OVLCSAppsSock:=/bin/nc};
+ local StrVlcServerName=${OVLCServerName:=.vlc-server} ; 
  local StrSocketOption=${OVLCSAppsSockOpt:=-4 -n -k -i 3} ;
  local BoolUsingNiceNC=${OVLCSAppsSockUsingNice:=False} ; 
  local StrAppsNice=${OVLCNiceApp:=/usr/bin/nice} ; 
@@ -433,9 +436,9 @@ function OldVLCServer()
  local StrSocketAddr=${OVLCSSockAddr:=127.0.1.1};
  local StrSocketPort=${OVLCSSockPort:=5080};
  local BoolDisplayCmdLine=${OVLCDisplayCmd:=False};
- local StrVTVReg=${OVLCVTVRegistry:=}
+ local StrVTVReg=${OVLCVTVRegistry:=VTVIsArrayStyleInsert=True,VTVIsValueReAssign=True,VTVIsValueToConvert=False,VTVIsArrayStyleInsert=True,VTVIsQuotedValue=True}
  
- local StrVarList="StrAppsNice,BoolUsingNiceNC,IntNicePrio,StrVLCApps,StrVLCAppsPlaylist,StrSocketApps,StrSocketOption,StrAppsBufferOption,StrSocketBufferOption,StrAppsListenOption,StrSocketAddr,StrVarList" ; 
+ local StrVarList="StrAppsNice,BoolUsingNiceNC,IntNicePrio,StrVLCApps,StrVLCAppsPlaylist,StrSocketApps,StrSocketOption,StrAppsBufferOption,StrSocketBufferOption,StrAppsListenOption,StrSocketAddr,StrVTVReg,BoolUsePlaylist,StrVlcServerName,StrVarList" ; 
 
  function __main_StartServices()
  {
@@ -443,14 +446,27 @@ function OldVLCServer()
 		local Arg0=${ArrayArg[0]} ;
 		local ArrayArg=( $* ) ; 
   ### StrVLCApps,StrVLCAppsPlaylist,StrSocketApps,StrSocketOption,StrAppsBufferOption,StrSocketBufferOption,StrAppsListenOption,StrSocketAddr
-  test -f ${HOME}/.vlc-server && rm -f ${HOME}/.vlc-server  ; 
-  test ! -f ${HOME}/.vlc-server && mkfifo ${HOME}/.vlc-server ; 
+  if [ -p ${HOME}/${StrVlcServerName} ] ; then 
+   rm -f ${HOME}/${StrVlcServerName}  ;  
+  else
+   mkfifo ${HOME}/${StrVlcServerName} ;  
+  fi 
   
-  local StrCmd="""cat ${HOME}/.vlc-server | \
-  ${StrVLCApps} ${StrVLCAppsPlaylist} | \
+  
+  
+  local StrCmd="""cat ${HOME}/__SOCKET_NAME__ | \
+  ${StrVLCApps} __PLAYLIST__ | \
   __NICE__ ${StrSocketApps} ${StrSocketOption} \
   ${StrAppsBufferOption} ${StrSocketBufferOption} \
-  ${StrAppsListenOption} ${StrSocketAddr} ${StrSocketPort} > ${HOME}/.vlc-server """ ; 
+  ${StrAppsListenOption} ${StrSocketAddr} ${StrSocketPort} > ${HOME}/__SOCKET_NAME__ """ ; 
+  
+  StrCmd=${StrCmd//__SOCKET_NAME__/${StrVlcServerName}} ;
+  
+  if [ ${BoolUsePlaylist:=True} == "False" ]  ; then 
+   StrCmd=${StrCmd//__PLAYLIST__/} ;
+  else
+   StrCmd=${StrCmd//__PLAYLIST__/${StrVLCAppsPlaylist}} ;
+  fi 
   
   if [ "${BoolUsingNiceNC:=False}" == "True" ] ; then  
    StrCmd=${StrCmd//__NICE__/${StrAppsNice} ${IntNicePrio}} ; 
@@ -535,18 +551,12 @@ function OldVLCServer()
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
 		eval $( __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
-  eval $( VTVValueEntry=${StrVarList} \
-  VTVIsArrayStyleInsert=True \
-  VTVIsValueReAssign=True  \
-  VTVIsValueToConvert=False \
-  VTVIsArrayStyleInsert=True \
+  eval $( ${StrVTVReg//,/ } \
+  VTVValueEntry=${StrVarList} \
   ValueToVariable ) __main_StartServices
  elif [ "${Arg0:=--stopservices}" == "--stopservices" ] ; then 
-  eval $( VTVValueEntry=${StrVarList} \
-  VTVIsArrayStyleInsert=True \
-  VTVIsValueReAssign=True  \
-  VTVIsValueToConvert=False \
-  VTVIsArrayStyleInsert=True \
+  eval $( ${StrVTVReg//,/ }\
+  VTVValueEntry=${StrVarList} \
   ValueToVariable ) __main_StopServices
  fi
 
