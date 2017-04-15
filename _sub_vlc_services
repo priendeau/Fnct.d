@@ -1923,3 +1923,155 @@ function __old_vlc_rate()
  done ; 
   
 }
+
+###
+### Video Section of _sub_vlc_services
+###
+
+
+
+###
+### Theses, are the function used to curse inside a DVD. You insert your 
+### DVD inside the DVD-bay and you start vlc with command OldVLCServer 
+### 'parameter not invoked'. Once the server is started, you may use 
+### the last command  getSnapshootByGroup, and will optimally detect 
+### changes in Video-image decoded and push N-amount of frame until 
+### the stats of video instance tell having decoded one more frame
+### and will get a snapshoot. Listening Aghost in the Shell of 1995
+### version do not she do not jump at this 106 seconds, by my blog do 
+### expose this images transformed into vector which only formed by 
+### the brain region of layer and path structure to form what we call
+### ambigous images of the main actress. 
+### 
+### command : SBGSeq=5 SBGFrameChunk=5 SBGStartTime=106  getSnapshootByGroup 
+###
+### or leave SBGFrameChunk by default to 0 and it will do the analyse to 
+### clarify the number of frame to add through a command called with VlcSendCmd
+### to process to next frame. This command as invoked will start at seconds 106,
+### take about 5 images. 
+###
+
+unset addSnapshoot
+function addSnapshoot()
+{
+ local -a ArrayArg=( $* ) ; 
+ local Arg0=${ArrayArg[0]} ;
+ echo -ne "Add snapshoot\n" > /dev/stderr ;  
+ VSCCmd="snapshot" \
+ VSCAddr=127.0.0.1 \
+ VSCPort=5083  \
+ VlcSendCmd | 1>&2 > /dev/null  ; 
+}
+
+unset getVideoStats ; 
+function getVideoStats()
+{ 
+ local -a ArrayArg=( $* ) ; 
+ local Arg0=${ArrayArg[0]} ; 
+ VSCCmd="stats" \
+ VSCAddr=127.0.0.1 \
+ VSCPort=5083  \
+ VlcSendCmd | egrep -i "video decoded" | cut -d ':' -f 2 | sed 's/[\ \t]//g;s/[^0-9]//g' ; 
+}
+
+unset pushVideoFrame ; 
+
+function pushVideoFrame()
+{
+ local -a ArrayArg=( $* ) ; 
+ local Arg0=${ArrayArg[0]} ; 
+ VSCCmd="frame" \
+ VSCAddr=127.0.0.1 \
+ VSCPort=5083  \
+ VlcSendCmd 1>&2 > /dev/null 
+}
+
+unset setVideoTime ; 
+
+function setVideoTime()
+{
+ local -a ArrayArg=( $* ) ; 
+ local Arg0=${ArrayArg[0]} ; 
+ local IntTime=${VTTime:=0}
+ local StrCmd=${VTCmd="seek __TIME__"} ; 
+ local IntTimeSet=0 ; 
+ if [ "${Arg0:=None}" != "None" ] ; then 
+  IntTimeSet=${Arg0} ;
+ elif [ ${IntTime:=0} -ne 0 ] ; then 
+  IntTimeSet=${IntTime} ;
+ fi 
+ echo -ne "set Video Time to ${IntTimeSet} second(s)\n" ; 
+ VSCCmd="${StrCmd//__TIME__/${IntTimeSet}}" \
+ VSCAddr=127.0.0.1 \
+ VSCPort=5083  \
+ VlcSendCmd 1>&2 > /dev/null 
+
+}
+
+unset getFrameCount ;
+
+function GetFrameCount()
+{
+ local IntStartVFC=$( getVideoStats ) ;
+ echo -ne "Video Decoded start at: ${IntStartVFC}\n" > /dev/stderr ; 
+ local IntCheckVFC="${IntStartVFC}"; 
+ local IntCount=0 ;
+ while [ ${IntCheckVFC} -eq ${IntStartVFC} ] ; do 
+  echo -ne "Pushing Frame\n" ;
+  pushVideoFrame ; 
+  IntCheckVFC=$( getVideoStats ); 
+  echo -ne "Video Decoded now at: ${IntCheckVFC}\n" > /dev/stderr  ; 
+  let IntCount=${IntCount}+1 ; 
+ done 
+ echo -ne "Counting ${IntCount} Frame before increasing video-decoded frame.\n" > /dev/stderr  ; 
+}
+
+function setVideoTimeByFrame()
+{
+ local -a ArrayArg=( $* ) ; 
+ local Arg0=${ArrayArg[0]} ; 
+ local IntFrame=${VTBFChunk:=0}
+ local StrCmd=${VTCmd="frame"} ; 
+ local IntFrameSet=0 ; 
+ if [ "${Arg0:=None}" != "None" ] ; then 
+  IntFrameSet=${Arg0} ;
+ elif [ ${IntFrame:=0} -ne 0 ] ; then 
+  IntFrameSet=${IntFrame} ;
+ fi 
+ echo -ne "Push ${IntFrameSet} at time to switch from video-decoded frame.\n" ; 
+ for (( intx=0; intx<= ${IntFrameSet}-1; intx++ )) ; do 
+  pushVideoFrame ; 
+ done 
+
+}
+
+unset getSnapshootByGroup ; 
+function getSnapshootByGroup()
+{
+ local -a ArrayArg=( $* ) ; 
+ local Arg0=${ArrayArg[0]} ;  
+ local IntTimeSequence=${SBGSeq=1} ; 
+ local IntSetTime=${SBGStartTime:=0} ; 
+ local IntFrameGroup=${SBGFrameChunk:=0} ; 
+ ## Allow skipping test by Adding prefixed variable SBGFrameChunk
+ ## to known value. of course it require to re-set to starting time 
+ ## after the test done by GetFrameCount . 
+ if [ ${IntFrameGroup:=0} -eq 0 ] ; then 
+  IntFrameChunk=$( GetFrameCount ) ; 
+  VTTime=${IntSetTime} setVideoTime ; 
+ else 
+  echo -ne "SBGFrameChunk Set to ${IntFrameGroup} frame by chunk\nSkipping tests.\n"
+  IntFrameChunk=${IntFrameGroup} ; 
+ fi 
+ 
+ VTTime=${IntSetTime} setVideoTime ; 
+ 
+ echo -ne "Doing Sequence of ${IntTimeSequence} shoot, start video at ${IntSetTime} sec.\n, will skip ${IntFrameChunk} frame(s) at the time per snapshoot\n" ; 
+ for (( intc=0; intc <= ${IntTimeSequence} ; intc++ )) ; do 
+  VTBFChunk=${IntFrameChunk} setVideoTimeByFrame  ; 
+  getVideoStats ; 
+  addSnapshoot ; 
+ done ; 
+}
+
+
