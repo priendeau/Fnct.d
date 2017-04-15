@@ -436,7 +436,7 @@ function OldVLCServer()
  local StrSocketAddr=${OVLCSSockAddr:=127.0.1.1};
  local StrSocketPort=${OVLCSSockPort:=5080};
  local BoolDisplayCmdLine=${OVLCDisplayCmd:=False};
- local StrVTVReg=${OVLCVTVRegistry:=VTVIsArrayStyleInsert=True,VTVIsValueReAssign=True,VTVIsValueToConvert=False,VTVIsArrayStyleInsert=True,VTVIsQuotedValue=True}
+ local StrVTVReg=${OVLCVTVRegistry:='VTVIsArrayStyleInsert=True,VTVIsValueReAssign=True,VTVIsValueToConvert=False,VTVIsArrayStyleInsert=True,VTVIsQuotedValue=True'} ;
  
  local StrVarList="StrAppsNice,BoolUsingNiceNC,IntNicePrio,StrVLCApps,StrVLCAppsPlaylist,StrSocketApps,StrSocketOption,StrAppsBufferOption,StrSocketBufferOption,StrAppsListenOption,StrSocketAddr,StrVTVReg,BoolUsePlaylist,StrVlcServerName,StrVarList" ; 
 
@@ -462,7 +462,7 @@ function OldVLCServer()
   
   StrCmd=${StrCmd//__SOCKET_NAME__/${StrVlcServerName}} ;
   
-  if [ ${BoolUsePlaylist:=True} == "False" ]  ; then 
+  if [ "${BoolUsePlaylist:=True}" == "False" ]  ; then 
    StrCmd=${StrCmd//__PLAYLIST__/} ;
   else
    StrCmd=${StrCmd//__PLAYLIST__/${StrVLCAppsPlaylist}} ;
@@ -537,7 +537,8 @@ function OldVLCServer()
  local StrSummary="" ; 
  local StrDescription="" ;
 
- 
+ ### Main If-statement section .
+ StrVTVReg=${StrVTVReg//,/ } ; 
  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
   GVRIsName=True     \
   GVRIsSummary=False \
@@ -551,13 +552,11 @@ function OldVLCServer()
 	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
 		eval $( __GetVarReferenceList ) ;
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
-  eval $( ${StrVTVReg//,/ } \
-  VTVValueEntry=${StrVarList} \
-  ValueToVariable ) __main_StartServices
+  eval $( eval VTVValueEntry="${StrVarList}" "${StrVTVReg}" \
+  ValueToVariable ) __main_StartServices ; 
  elif [ "${Arg0:=--stopservices}" == "--stopservices" ] ; then 
-  eval $( ${StrVTVReg//,/ }\
-  VTVValueEntry=${StrVarList} \
-  ValueToVariable ) __main_StopServices
+  eval $( eval VTVValueEntry="${StrVarList}" "${StrVTVReg}" \
+  ValueToVariable ) __main_StopServices ; 
  fi
 
 }
