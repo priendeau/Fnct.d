@@ -2418,7 +2418,9 @@ if [ "${versionTP:=0.0.2}" == "0.0.2" ] ; then
      ### PairRight. 
      StrPairEvalOrder="""\$( eval ${StrVarAssign}=\\\${\\${StrVarAssign}//${StrPairLeft}/\\\${\${StrPairRight}}} )""";
     fi
-    ### Notice: While StrMsg is often used with Verbosis in many function 
+    
+    ### Notice: 804885f8-2537-11e7-8b1d-001e4c8856d6
+    ### While StrMsg is often used with Verbosis in many function 
     ### TagParser generating it's own code inside your function by calling 
     ### TagParser over the evaluation execution brace, using StrMsg despite 
     ### having other clue to parse a long-messages with lot's of TAG, will 
