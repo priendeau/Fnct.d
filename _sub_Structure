@@ -2397,7 +2397,7 @@ if [ "${versionTP:=0.0.2}" == "0.0.2" ] ; then
     local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
     local Arg0="${ArrayArg[0]}" ;
     local -a ArrayTagParser=( ${StrTagList//,/ } ) ; 
-   
+      
     ### 
     ### This is the injected code wil be outputed and 
     ### require evaluation and execution brace :
@@ -2418,6 +2418,28 @@ if [ "${versionTP:=0.0.2}" == "0.0.2" ] ; then
      ### PairRight. 
      StrPairEvalOrder="""\$( eval ${StrVarAssign}=\\\${\\${StrVarAssign}//${StrPairLeft}/\\\${\${StrPairRight}}} )""";
     fi
+    ### Notice: While StrMsg is often used with Verbosis in many function 
+    ### TagParser generating it's own code inside your function by calling 
+    ### TagParser over the evaluation execution brace, using StrMsg despite 
+    ### having other clue to parse a long-messages with lot's of TAG, will 
+    ### be overwritten by the evaluation of StrInitCmd which re-use StrMsg.
+    ### So TagParser will try to parse the Internal message against your 
+    ### variable to parse. Following algorithm verify if StrMsg is used in 
+    ### declaration of StrVarAssign used from Pre-fixed Variable 
+    ### TPVarNameParsed . 
+    local StrInternalMsg="StrMsg" ; 
+    if [ "${StrVarAssign:=StrVarEntry}" == "StrMsg" ] ; then 
+     ### Changing the Definition of StrInternalMsg to something 
+     ### else .
+     local StrValueVarGen="0" ;
+     local StrRndVarSuf ; 
+     while [ ${StrValueVarGen:=None} != "None" ] ; do 
+      StrRndVarSuf=$( /usr/bin/pwgen -c01 4 ) ; 
+      eval "local Str${StrRndVarSuf}" ; 
+      eval "StrValueVarGen=\${Str${StrRndVarSuf}}" ; 
+     done 
+     StrInternalMsg="Str${StrRndVarSuf}" ;  
+    fi 
      
     ### Notice: to find out Left Section in RtoL ( extracting Variable name) we 
     ### must erase the __TAG__ Name leaving only the Variable name:
@@ -2428,10 +2450,12 @@ if [ "${versionTP:=0.0.2}" == "0.0.2" ] ; then
     ### one step imply to detect the partial-to-erase and result is what is
     ### remaining in the String .... 
     # for __ITER__ in \${__ARRAY_NAME__[@]}  ; do 
+    
+    ### Section Internal Code generating Parsing Action.
     local StrInitCmd="""${StrScopeVar} intx=0 ; ${StrScopeVar} StrPairLeft ; 
     ${StrScopeVar} StrPairRight ; 
     ${StrScopeVar} -a __ARRAY_NAME__=( ${StrTagList//,/ } ) ; 
-    ${StrScopeVar} StrMsg=\"PairLeft( __LEFT__ ), PairRight( __RIGHT__ ), Query( __QUERY__)\" ; 
+    ${StrScopeVar} __VAR_MSG__=\"PairLeft( __LEFT__ ), PairRight( __RIGHT__ ), Query( __QUERY__)\" ; 
     for (( intx=0 ; intx <= \${#__ARRAY_NAME__[@]}-1 ; intx++ )) ; do 
       __ITER__=\${__ARRAY_NAME__[\${intx}]} ; 
       AStrMsg=\"\${StrMsg}\" ;
@@ -2443,7 +2467,7 @@ if [ "${versionTP:=0.0.2}" == "0.0.2" ] ; then
       VerbMsg=\${AStrMsg} VerbHeader=TAGPARSER VerbState=${BoolDisplayParserAction} VerbFormated=True VerbDev=/dev/stderr Verbosis ; 
       __PAIR_EXCHANGE_ORDER__ ; 
     done ; 
-    unset intx StrPairRight StrPairLeft __ARRAY_NAME__ ;""" ; 
+    unset intx StrPairRight StrPairLeft __ARRAY_NAME__ __VAR_MSG__ ;""" ; 
     ### Added 20161004 - Filtering excess of control caracter . 
     ### Sed does filtering the excessive \n \r into \\n and \\r 
     ### and /usr/bin/tr does remote it, it change the form of the query but does not 
@@ -2454,6 +2478,8 @@ if [ "${versionTP:=0.0.2}" == "0.0.2" ] ; then
      StrCmd=$( echo "${StrInitCmd}" | /bin/sed 's/\n/\\n/g;s/\r/\\r/g' ) ; 
     fi 
     
+    
+    StrCmd=${StrCmd//__VAR_MSG__/${StrInternalMsg}} ; 
     StrCmd=${StrCmd//__ITER__/${StrIterName}} ; 
     StrCmd=${StrCmd//__LEFT_PATTERN__/${StrLeftPattern}} ; 
     StrCmd=${StrCmd//__RIGHT_PATTERN__/${StrRightPattern}} ; 
