@@ -3020,20 +3020,23 @@ based on a video-server running on local address 127.0.0.1 using port 5083.
 Our 'Paper Draft informations' showing uses of port 5084. It will be demonstrated 
 here own we can profit from VlcServicesLayer and let them work.
 
+
 Here the list of video-widget :
 
 
-  =================   ===========================================================
+===================   ===========================================================
   Video Widget                      Detail and Description 
-  =================   ===========================================================
-  addSnapshoot        Send a Snapshoot command to store the current images.
-  getVideoStats       Get the current number of decoded frame.
-  pushVideoFrame      Used internally by setVideoTimeByFrame, getSnapshootByGroup
-  setVideoTime        Change view to a specific time. Reference in seconds only.
-  getFrameCount       Collect number of frame between images changes. 
-  setVideoTimeByFrame Start from a specific Seconds-Start, it move to frame n.
-  getSnapshootByGroup start the engine to grab a specific amount of images.
-  =================   ===========================================================
+===================   ===========================================================
+addSnapshoot          Send a Snapshoot command to store the current images.
+getVideoStats         Get the current number of decoded frame.
+pushVideoFrame        Used internally by setVideoTimeByFrame, getSnapshootByGroup
+setVideoTime          Change view to a specific time. Reference in seconds only.
+getFrameCount         Collect number of frame between images changes. 
+setVideoTimeByFrame   Start from a specific Seconds-Start, it move to frame n.
+getSnapshootByGroup   start the engine to grab a specific amount of images.
+===================   ===========================================================
+
+
  
 
 VlcSendCmd
