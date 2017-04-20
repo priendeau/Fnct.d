@@ -2263,7 +2263,90 @@ The Next Function will be delivered soon and is an helper feeding informations t
   ### Output Generated Skipped. 
   ###
 
+GetterByLineData
+~~~~~~~~~~~~~~~~
 
+The certification over file-persistent information management. Act like a 
+certificate tool, it compatibility works over 2 firsts lines of informations on
+certified file. Rest of a certified file act like a comment and does not enter 
+in Action from this application. 
+
+Comming from chunk development idea to propagate a SHA1SUM over content of a 
+file, remain the main key of GetterByLineData. A steady application with lock 
+ability, store it's information and do require GetterByLineData to work. MdCd, 
+a Path creation tool to install inside a new directory a template of file. This 
+set's of file depend of uses, but help managing content of path by providing 
+template README, template httpaccess and configurable template used by MdCd. This 
+application store it's path creation in a 'Certified' file where first line hold 
+the SHA1SUM of the content and second line is non-ending live of block of information
+on date of creation, name of the directory created... But GetterByLineData Owning 
+severals action it uses prefixed-variable GBLDAction 
+
+
+This chart explain Basic Action GetterByLineData may perform . 
+
+ =================    =======================================================
+ GBLDAction Value                       Detail and Description 
+ =================    =======================================================
+ GetFile              Provifr the whole file . 
+ GetHeader            Provide the SHA1SUM from extracted certified file.
+ GetContent           Provide the content extracted from certified file.
+ FileSplitAction      Used inside MdCd
+ ShaSum1Content       Provide the SHA1SUM action on demand
+ =================    =======================================================
+
+All the action are performed on prefixed-variable GBLDFileStoreInfo value. It 
+hold infortmation like .ArrayMdCd file location, VlcServicesLayer Registration
+file and BuildForm secured command generation. 
+
+Here the helper to provide information about this application .
+
+.. code: shell
+
+  Help:
+
+  Function GetterByLineData
+
+  Function Member:
+   Verbosis ,GetFile ,GetHeader ,GetContent ,FileSplitAction ,ShaSum1Content ,__main_StartServices 
+
+  Default Variable Value:
+  Variable GBLDTailApps ,
+   Default Value:/usr/bin/tail
+  Variable GBLDHeadApps ,
+   Default Value:/usr/bin/head
+  Variable GBLDFileStats ,
+   Default Value:/usr/bin/wc
+  Variable GBLDFileStatsOpt ,
+   Default Value:__APPS__ -c __FILE__
+  Variable GBLDTailCmd ,
+   Default Value:__APPS__ -n 1
+  Variable GBLDHeadCmd ,
+   Default Value:__APPS__ -n __INTLINE__
+  Variable GBLDFileStoreInfo ,
+   Default Value:None
+  Variable GBLDLineID ,
+   Default Value:1
+  Variable GBLDVerbose ,
+   Default Value:False
+  Variable GBLDIsShaRemoveComment ,
+   Default Value:True
+  Variable GBLDAction ,
+   Default Value:FileSplitAction
+  Variable GBLDActionReturnError ,
+   Default Value:False
+  Following switch are available:
+
+   --startservices	Start the application normally.
+   --get		Return value of Internal Variable.
+   --list		List all Internal Pre-fixed Variable
+     available to query or get.
+   --compword	Word Completion Provide a services
+     to Extract on Demand all Pre-fixed
+     Variable String inside this function.
+
+GnrlPrsrInfctr
+~~~~~~~~~~~~~~
 
 :Note: a887bb9e-9188-11e6-8b1d-001e4c8856d6
 :Title: First Type Function for Helper and Storage of multiple-state and form of result. 
@@ -2272,8 +2355,6 @@ The Next Function will be delivered soon and is an helper feeding informations t
 :Reference: Implementation. 
 :Reference: Development
 
-GnrlPrsrInfctr
-~~~~~~~~~~~~~~
 
 This function will appear in late version 0.0.1 effort of Fnct.D  and version 0.0.2 of Fnct.D after 
 validating all test inside error-fix.txt in many state this function may offert. State of result are 
@@ -2798,7 +2879,263 @@ Information from command-shell Helper :
 
 *** More documentation to come and example with LoopShellScript ***
 
+OldVLCServer
+~~~~~~~~~~~~
 
+It's simply first example of software interaction wished in wide opeartion for
+few or no knowledge require to treat and interact with the VLC media application.
+it require loading _sub_vlc_services function from Fnct.D and let start your 
+music playlist . It can also manage your Video instance from various DVD and 
+video, for various uses. Current uses are especially frame-position of scene if
+you are « amateur », or « novice » in uses of drawing application and do require
+to trace, make transformation of scene from video "including adding censoring", 
+starting a vlc-video-server with OldVLCServer is not exshautive as knowledge 
+investment and let you benefit from VlcSendCmd, and newest member 
+VlcServicesLayer, let your registrate infomation for each query of VlcSendCmd. 
+Really usefull if you are running 2 and more instance of OldVLCServer, one for
+your playlist and one for your Video server. 
+
+
+.. code:: shell
+
+ Help:
+
+ Function OldVLCServer
+ Name
+ OldVLCServer
+  Application Create independent Network-layer to maintain the
+  console out of human-hand interaction.
+
+
+ Synopsis
+   
+  This application is also used to test both __old_vlc_rate, and it's 
+  newest improvement, and uses of StartSlewAnalysis, also support VlcSendCmd
+  and internal command FilterVlcSendCmd from StartSlewAnalysis called
+  with :
+
+  SSAFuncStart=FilterVlcSendCmd StartSlewAnalysis
+
+
+
+ Function Member:
+  Verbosis ,__main_StartServices ,__main_StopServices 
+
+ Default Variable Value:
+ Variable OVLCSAppsLunch ,
+  Default Value:"""HOME/bin/vlc-terminal.sh"""
+ Variable OVLCSAppsPlaylist ,
+  Default Value:"""HOME/Music/playlist_20160606.m3u"""
+ Variable OVLCStartPlaylist ,
+  Default Value:True
+ Variable OVLCSAppsSock ,
+  Default Value:/bin/nc
+ Variable OVLCServerName ,
+  Default Value:.vlc-server
+ Variable OVLCSAppsSockOpt ,
+  Default Value:-4 -n -k -i 3
+ Variable OVLCSAppsSockUsingNice ,
+  Default Value:False
+ Variable OVLCSAppsSockNice ,
+  Default Value:-3
+ Variable OVLCSAppsSockBuffer ,
+  Default Value:2097152
+ Variable OVLCSAppsBuffer ,
+  Default Value:-I
+ Variable OVLCSAppsLiten ,
+  Default Value:-l
+ Variable OVLCSSockAddr ,
+  Default Value:127.0.1.1
+ Variable OVLCSSockPort ,
+  Default Value:5080
+ Following switch are available:
+
+  --startservices	Start the application normally.
+  --stopservices	Stop the application normally.
+  --get		Return value of Internal Variable.
+  --list		List all Internal Pre-fixed Variable
+    available to query or get.
+  --compword	Word Completion Provide a services
+    to Extract on Demand all Pre-fixed
+    Variable String inside this function.
+ 
+
+
+The next 2 commands inside 'Paper Draft informations' will rely on this example
+of working with 2 servers instance at time:
+
+.. code: shell
+
+  ### Imperative to your 2 server instance.
+  declare -A VLC_SERVER ; 
+  VLC_SERVER[sound]=".vlc-server" ;
+  VLC_SERVER[video]=".vlc-video-server" ;
+  
+  ###
+  ### Starting a Playlist while you are working .
+  ###
+  OVLCSAppsSockUsingNice=True \
+  OVLCServerName=${VLC_SERVER[sound]} \
+  OVLCDisplayCmd=True     \
+  OVLCSAppsSockNice=-5    \
+  OVLCDisplayCmd=True     \
+  OVLCSAppsSockBuffer=128 \
+  OVLCSAppsLunch=vlc      \
+  OVLCSSockAddr=127.0.0.1 \
+  OVLCSSockPort=5083      \
+  OVLCSAppsPlaylist=${HOME}/Music/playlist_20170326.m3u
+
+  ### 
+  ### Your hobby, to do task like making vector drawing from a 
+  ### favorite scene in a video an/or DVD.
+  ### 
+  OVLCServerName=${VLC_SERVER[video]} \
+  OVLCStartPlaylist=False \
+  OVLCSAppsSockUsingNice=True \
+  OVLCDisplayCmd=True \
+  OVLCSAppsSockNice=-5 \
+  OVLCDisplayCmd=True \
+  OVLCSAppsSockBuffer=128 \
+  OVLCSAppsLunch=vlc \
+  OVLCSSockAddr=127.0.0.1 \
+  OVLCSSockPort=5084
+
+Video Suite
+~~~~~~~~~~~
+
+From _sub_vlc_services it come with couple of widget automating video 
+snapshooting. Especially good for making animated gifs for avatar of your 
+favorite, scene. It can deduce the image sequence-rate and get appropriated 
+image with internal command of VLC, called snapshoot, it grab the picture make 
+it ready to be parsed into ScriptImageConversion from _sub_Structure function 
+from Fnct.D or simple be openned with Gimp to be saved into png-animated or gifs
+animated. Here draft information on first generation of widget for video 
+positionnement, and querying information.
+
+All vide-widget inside _sub_vlc_services before 26 April 2017 are beta and are 
+simply raw-action of VlcSendCmd, and are demonstrated here to some improvement 
+make them affordable to use as long you do configuring your VlcServicesLayer 
+Registration of your video-server. All the example before 26 April 2017 are 
+based on a video-server running on local address 127.0.0.1 using port 5083. 
+Our 'Paper Draft informations' showing uses of port 5084. It will be demonstrated 
+here own we can profit from VlcServicesLayer and let them work.
+
+Here the list os video-widget :
+
+ =================    =======================================================
+ Video Widget                       Detail and Description 
+ =================    =======================================================
+ addSnapshoot         Send a Snapshoot command to store the current images.
+ getVideoStats        Get the current number of decoded frame.
+ pushVideoFrame       Used internally by setVideoTimeByFrame, getSnapshootByGroup
+ setVideoTime         Change view to a specific time. Reference in seconds only.
+ getFrameCount        Collect number of frame between images changes. 
+ setVideoTimeByFrame  Start from a specific Seconds-Start, it move to frame n.
+ getSnapshootByGroup  start the engine to grab a specific amount of images.
+ =================    =======================================================
+ 
+
+VlcSendCmd
+~~~~~~~~~~
+
+VlcSendCmd is an affordable efficient but not fast query command. This comming 
+from a tools offert by Unix, called NC, NetCat a handy tool is our starting tools
+to communicate with a layer developped to buffer our services from OldVLCServer.
+Futur improvement may suggest replacement of this application ( nc ), to a 
+compiled application offert soon or simply an alternative which can be installed 
+with appropriate super-user priviledge. This is why under the roof, VlcSendCmd
+is split into part called NetSocketServices managing the default application and 
+surrounded by all the facility to acces to your services to talk to it. 
+
+As evolutive member, function like GetPasswd from Fnct.D own  extra internal 
+function to profit from crutial tools and allow you to install the missing 
+application. 
+
+As VlcSendCmd, is kept momently at version 0.0.0 from requirement to add inside 
+your .bashrc starting script 
+
+.. code: shell
+
+  export versionVCS=0.0.0
+  LibLoader --startservices
+  
+Thoses using the makefile project from Fnct.D ( branch MakeFileInstaller ), have
+theirs .bashrc filled with version through ArrayFnctDVersion  and FnctDVersion 
+script that read this Array definition and update theirs module version
+
+.. code: shell
+
+  ### Inside .bashrc
+  ArrayFnctDVersion["versionVSC"]=${ORIGINVERSION} 
+  ### or 
+  ArrayFnctDVersion["versionVSC"]=0.0.0 
+
+After April 26, 2017 all of them can pass to version 0.0.1 from VlcSendCmd, 
+adding a registration explained here as Paper Draft informations to profit from
+UUID ( Unique ID ) registration element, allowing application like this one to 
+work by simply calling as alias 
+
+.. code: shell
+
+  ### Using VlcServicesLayer, and give us this 
+  ### UUID:2442e074-25fe-11e7-8b1d-001e4c8856d6
+  ### when it was registered to talk to address "127.0.0.1" port "5083" sending command
+  ### "volume" to know if the volume is adequate. 
+  
+  alias WhatVolumeMyPlaylist='UUID=2442e074-25fe-11e7-8b1d-001e4c8856d6 VlcSendCmd' 
+
+  ### Using VlcServicesLayer, and give us this 
+  ### UUID:4a9f43d2-260a-11e7-8b1d-001e4c8856d6
+  ### when it was registered to talk to address "127.0.0.1" port "5084", talking
+  ### to my video-server for a old DVD Damaged of A Ghost of the Shell, 1995 
+  ### version to set the Video at second 106. Having a scrath on it, the intro 
+  ### still suffering from video-problem at this position it start the problems 
+  ### so I'm starting here to possibly grab images that are well and patch by 
+  ### hand with a Image editor to put them into Avidemux application... 
+    
+  alias StartVideo='UUID=4a9f43d2-260a-11e7-8b1d-001e4c8856d6 VlcSendCmd' 
+
+  ### Using VlcServicesLayer, and give us this 
+  ### UUID:23835b46-260d-11e7-8b1d-001e4c8856d6
+  ### Require to shutdown my playlist before putting everything in hibernate,
+  ### I was usually doing it by hand or copy pasting :
+  ### VSCCmd="shutdown" VSCAddr=127.0.0.1 VSCPort=5083  VlcSendCmd
+  ### now I can use it with Unique ID:
+  ### UUID=23835b46-260d-11e7-8b1d-001e4c8856d6  VlcSendCmd 
+  ### and will do the same ...
+  
+  alias ShutdownMyPlaylist='UUID=23835b46-260d-11e7-8b1d-001e4c8856d6  VlcSendCmd '
+  
+Here an example of VlcSendCmd with Registered information of VlcServicesLayer.
+
+The example is showing a query to extract the volume value from an instance from 
+Address 127.0.0.1 and port 5083 
+
+.. image:: https://github.com/priendeau/ElectronicSheet/raw/master/images/VlcSendCmd.png
+		:target: https://github.com/priendeau/Fnct.D#VlcSendCmd
+
+
+VlcServicesLayer
+~~~~~~~~~~~~~~~~
+
+Imaginary concept of having huge parameter to add to the command prompt and 
+easy-way to provide Unique-ID for unique services you do configure once and 
+run, and stop and run and stop and ... VlcServicesLayer Is unique and first
+member that voluntary produce cached information for intended uses and re-uses.
+While ZenityBuildForm only build the function call and 'DOES' have the ability
+to store it in a safe method to get read by GetterByLineData it have no affinity
+to get supported by being evaluated. VlcServicesLayer Does store Registered 
+information in file-persistent method. 
+
+look to the example : 
+
+-The image show a registration of the Server Address 127.0.0.1, Server Port 
+5083 and canned command called "volume" this application once launched 
+generated a UUID: 2442e074-25fe-11e7-8b1d-001e4c8856d6, and by using it like 
+previous chapter does mention, it call automatically "volume" from VlcSendCmd.
+
+.. image:: https://github.com/priendeau/ElectronicSheet/raw/master/images/VlcServicesLayer.png
+		:target: https://github.com/priendeau/Fnct.D#VlcServicesLayer
 
 
 
