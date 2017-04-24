@@ -1114,81 +1114,379 @@ if [ "${versionVSC:=0.0.0}" == "0.0.0" ] ; then
     local StrSig; 
     local StrSha1Sum ;
     local BoolRejectSigErr=False ;
+    local BoolProcessErr=False ; 
     local IntCountCall=0 ;
+    local -a ArrayErrMsg ; 
+    local -a ArrayErrProcMsg ; 
+    local -a ArrayOutMsg ; 
     if [ "${UUID:=None}" != "None" ] ; then 
      StrCacheReference=${StrCacheRefTpl/__UUID__/${UUID}} ;
-     echo -ne "UUID Instance discovered:\n\tUUID: ${UUID}\n\tfile ${StrCacheReference} will be used as instance-registration.\n" ; 
+     ArrayOutMsg[${#ArrayOutMsg[@]}]="UUID Instance discovered:\n\tUUID: ${UUID}\n\tfile ${StrCacheReference} will be used as instance-registration.\n" ; 
      StrContent=$( eval GBLDFileStoreInfo=${StrCacheReference} GBLDAction=GetContent GetterByLineData ) ;  
      StrSig=$( eval GBLDFileStoreInfo=${StrCacheReference} GBLDAction=GetHeader GetterByLineData ) ;  
      StrSha1Sum=$( eval GBLDFileStoreInfo=${StrCacheReference} GBLDAction=ShaSum1Content GetterByLineData  ) 
      
-     ### Counting Number of CSV by reducing the String from them and calculating 
-     ### the final-length after reduction. 
-     local StrContentStrip=${StrContent//,/} ; 
-     local IntContentStrip=$(( ${#StrContent} - ${#StrContentStrip} )) ; 
+     if [ -f ${StrCacheReference} ] ; then 
      
-     if [ "${StrSig}" != "${StrSha1Sum}" ] ; then 
-      BoolRejectSigErr=True ; 
+      ### Counting Number of CSV by reducing the String from them and calculating 
+      ### the final-length after reduction. 
+      local StrContentStrip=${StrContent//,/} ; 
+      local IntContentStrip=$(( ${#StrContent} - ${#StrContentStrip} )) ; 
+      
+      if [ "${StrSig}" == "${StrSha1Sum}" ] ; then 
+       StrASeg=$( echo ${StrContent} | sed 's/$/,/g ; s/[,]\{1,\}$/,/g' ; ) ;
+       for(( IntA=0 ; IntA <= ${IntContentStrip}-1 ; IntA++ )) ; do 
+        IntCountCall=$((${IntCountCall}+1)) ; 
+        StrBSeg=${StrASeg/%,[^,]*} ; 
+        ArrayOutMsg[${#ArrayOutMsg[@]}]="Status StrASeg: [${StrASeg}]\nPart Extracted:\n\tStrBSeg: [${StrBSeg}]\n" ;
+        StrASeg=${StrASeg/#${StrBSeg},} ; 
+        ArrayOutMsg[${#ArrayOutMsg[@]}]="Status StrASeg:\n\tAfter cleaning, [${StrASeg}]\n" ;
+        
+        local -a ArrayVarCreation ;
+        ### Format of each Serialized chunk is made from :
+        ### 0 addr : Variable name 
+        ### 1 addr : codec type (base64/text) 
+        ### 2 addr : Value. 
+        ### And should clean odd-csv
+        StrCSeg=$( echo ${StrBSeg} | sed 's/,\{1,\}$//g' )  ; 
+        #StrCSeg=${StrBSeg} ; 
+        ### Ensure the algorithm of match-substitution by alterning prefix/suffix
+        ### have a separator at the end. 
+        StrCSeg=$( echo ${StrCSeg} | sed 's/$/:/g ; s/[:]\{1,\}$/:/g' ) ;
+        for(( IntB=0 ; IntB <= 2 ; IntB++ )) ; do 
+         StrDSeg=${StrCSeg/%:[^:]*} ;
+         ArrayVarCreation[${IntB}]=$( echo ${StrDSeg} | sed 's/[:]\{1,\}$//g' ) ; 
+         StrCSeg=${StrCSeg/#${StrDSeg}:} ; 
+        done 
+        ### Variable Creation from De-Serialization . 
+        ArrayOutMsg[${#ArrayOutMsg[@]}]="\t\tExtracting variable:${ArrayVarCreation[0]}\n"  ; 
+        ArrayOutMsg[${#ArrayOutMsg[@]}]="\t\tVariable Codec:${ArrayVarCreation[1]}\n" ;
+        if [ "${ArrayVarCreation[1]}" == "base64" ] ; then 
+         StrValue=$( echo ${ArrayVarCreation[2]} | base64 -d ) ; 
+         ArrayOutMsg[${#ArrayOutMsg[@]}]="\tBase64 Conversion, Value: [${ArrayVarCreation[2]}] converted in [${StrValue}]\n" ;
+         eval "${ArrayVarCreation[0]}=${StrValue}" ;
+        elif [ "${ArrayVarCreation[1]}" == "text" ] ; then 
+         ### Require to remove current value of variable:
+         unset ${ArrayVarCreation[0]} ; 
+         eval "${ArrayVarCreation[0]}=${ArrayVarCreation[2]}" ;
+        fi 
+        eval "StrEval=\"[ ${ArrayVarCreation[0]} ; \${${ArrayVarCreation[0]}} ]\"" ; 
+        ArrayOutMsg[${#ArrayOutMsg[@]}]="Variable created:[${StrEval}]\n" ;
+        if [ ${IntCountCall} -gt $((${IntContentStrip}+1)) ] ; then 
+         ArrayErrProcMsg[${#ArrayErrProcMsg[@]}]="Breaking Code for abnormal looping\n\tExcess number of parameter to filter set to ${IntContentStrip}, it already excess the limit.\n" ; 
+         BoolProcessErr=True ; 
+         break ; 
+        fi 
+       done ; 
+    
+      else
+      ArrayErrMsg[${#ArrayErrMsg[@]}]="Rejected UUID References, SHA1SUM does not match with Registration.\nFill out another VlcServicesLayer with news parameter and start this application with UUID instance id.\n"
+      ArrayErrProcMsg[${#ArrayErrProcMsg[@]}]="Signature rejection.\n" ; 
+      BoolRejectSigErr=True ;
+      BoolProcessErr=True ;
+      fi 
      else
-      StrASeg=$( echo ${StrContent} | sed 's/$/,/g ; s/[,]\{1,\}$/,/g' ; ) ;
-      for(( IntA=0 ; IntA <= ${IntContentStrip}-1 ; IntA++ )) ; do 
-       IntCountCall=$((${IntCountCall}+1)) ; 
-       StrBSeg=${StrASeg/%,[^,]*} ; 
-       echo -ne "Status StrASeg: [${StrASeg}]\nPart Extracted:\n\tStrBSeg: [${StrBSeg}]\n" ; 
-       StrASeg=${StrASeg/#${StrBSeg},} ; 
-       echo -ne "Status StrASeg:\n\tAfter cleaning, [${StrASeg}]\n" ; 
-       
-       local -a ArrayVarCreation ;
-       ### Format of each Serialized chunk is made from :
-       ### 0 addr : Variable name 
-       ### 1 addr : codec type (base64/text) 
-       ### 2 addr : Value. 
-       ### And should clean odd-csv
-       StrCSeg=$( echo ${StrBSeg} | sed 's/$,\{1,\}//g' )  ; 
-       #StrCSeg=${StrBSeg} ; 
-       ### Ensure the algorithm of match-substitution by alterning prefix/suffix
-       ### have a separator at the end. 
-       StrCSeg=$( echo ${StrCSeg} | sed 's/$/:/g ; s/[:]\{1,\}$/:/g' ) ;
-       for(( IntB=0 ; IntB <= 2 ; IntB++ )) ; do 
-        StrDSeg=${StrCSeg/%:[^:]*} ;
-        ArrayVarCreation[${IntB}]=$( echo ${StrDSeg} | sed 's/[:]\{1,\}$//g' ) ; 
-        StrCSeg=${StrCSeg/#${StrDSeg}:} ; 
-       done 
-       ### Variable Creation from De-Serialization . 
-       echo -ne "\t\tExtracting variable:${ArrayVarCreation[0]}\n"  ; 
-       echo -ne "\t\tVariable Codec:${ArrayVarCreation[1]}\n" ; 
-       if [ "${ArrayVarCreation[1]}" == "base64" ] ; then 
-        StrValue=$( echo ${ArrayVarCreation[2]} | base64 -d ) ; 
-        echo -ne "\tBase64 Conversion, Value: [${ArrayVarCreation[2]}] converted in [${StrValue}]\n" ; 
-        eval "${ArrayVarCreation[0]}=${StrValue}" ;
-       elif [ "${ArrayVarCreation[1]}" == "text" ] ; then 
-        ### Require to remove current value of variable:
-        unset ${ArrayVarCreation[0]} ; 
-        eval "${ArrayVarCreation[0]}=${ArrayVarCreation[2]}" ;
-       fi 
-       eval "StrEval=\"[ ${ArrayVarCreation[0]} ; \${${ArrayVarCreation[0]}} ]\"" ; 
-       echo -ne "Variable created:[${StrEval}]\n" ; 
-       if [ ${IntCountCall} -gt $((${IntContentStrip}+1)) ] ; then 
-        echo -ne "Breaking Code for abnormal looping\n\tExcess number of parameter to filter set to ${IntContentStrip}, it already excess the limit.\n"
-        break ; 
-       fi 
-      done ; 
-   
+      ArrayErrMsg[${#ArrayErrMsg[@]}]="Warning UUID value: ${UUID} is not existing inside Fnct.D cache.\n\tPlease, register one properly with VlCServicesLayer\n\tand use it's UUID instance as UUID value.\n" ; 
+      ArrayErrProcMsg[${#ArrayErrProcMsg[@]}]="File missing or read-access problems.\n" ; 
+      BoolRejectSigErr=True ; 
+      BoolProcessErr=True ;
      fi 
     fi 
     
     if [ ${BoolRejectSigErr:=False} == "True" ] ; then 
-     echo -ne "Rejected UUID References, SHA1SUM does not match with Registration.\nFill out another VlcServicesLayer with news parameter and start this application with UUID instance id.\n" ; 
+     ### Display All the error messages, encountered. 
+     for (( intMsg=0; intMsg<=${#ArrayErrMsg[@]}-1 ; intMsg++ )) ; do 
+      echo -ne "${ArrayErrMsg[${intMsg}]}" > /dev/stderr  ; 
+     done 
+      
     else
      echo "${StrQueueCmd}" | NSSAddresses=${StrAddr} NSSPort=${StrPort} NetSocketServices  ; 
+    fi 
+    
+    if [ "${BoolProcessErr:=False}" == "True" ] ; then 
+     ### Process come in error, throwing error . 
+     echo -ne "Error occur during processing the request.\n" > /dev/stderr ; 
+     for (( intMsg=0; intMsg<=${#ArrayErrProcMsg[@]}-1 ; intMsg++ )) ; do 
+      echo -ne "${ArrayErrProcMsg[${intMsg}]}" > /dev/stderr  ; 
+     done 
+    else
+     # Everything went OK, display all the verbose. 
+     for (( intMsg=0; intMsg<=${#ArrayOutMsg[@]}-1 ; intMsg++ )) ; do 
+      echo -ne "${ArrayOutMsg[${intMsg}]}" > /dev/stderr  ; 
+     done 
     fi 
 
  }
 fi 
 if [ "${versionVSC:=0.0.0}" == "0.0.1" ] ; then 
+ 
  eval $( GFCFuncName=VlcSendCmd GlobalFunctionCleaning ) ; 
 
- ### Future version of VlcSendCmd. 
+ function VlcSendCmd()
+ {
+  function Verbosis()
+  {
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( Verb Verbosis ) ; 
+   local Arg0=${ArrayArg[0]} ; 
+   local StrMsg=${VerbMsg:=__TEXT__} ; 
+   local StrDevOut=${VerbDev:=/dev/stderr} ; 
+   local IsVerboseState=${VerbState:=False} ;
+   local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+   local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+   local IsDisplayFormatted=${VerbFormated:=True} ;
+   local IsAppendMode=${VerbAppendDev:=False} ; 
+   local IsExtendedOutput=${VerbExtendedOut:=False} ; 
+   local ArrayArg=( $* ) ; 
+   if [ "${IsVerboseState:=False}" == "True" ] ; then 
+    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+     if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
+     else  
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+     fi
+    else
+     if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+      if [ "${IsExtendedOutput:=False}" == "True" ] ; then 
+        echo -ne "${StrMsg}" ;  
+      else
+        echo "${StrMsg}" ;  
+      fi
+     else
+      if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       if [ "${IsExtendedOutput:=False}" == "True" ] ; then 
+         echo -ne "${StrMsg}" >> ${StrDevOut} ;
+       else
+         echo "${StrMsg}" >> ${StrDevOut} ;
+       fi
+      else
+       if [ "${IsExtendedOutput:=False}" == "True" ] ; then 
+        echo -ne "${StrMsg}" > ${StrDevOut} ;
+       else
+        echo "${StrMsg}" > ${StrDevOut} ;
+       fi 
+      fi
+     fi 
+    fi 
+   fi
+  } 
+  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
+  
+  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( VCS VlcSendCmd ) ;
+   local Arg0="${ArrayArg[0]}" ; 
+   local StrParentApps=${__call_locality[1]} ;
+   local StrStartMain=${SSAFuncStart:=__main_StartServices} ; 
+  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+   eval $( eval CAFunctName=VlcSendCmd CAIsAddParent=False __Call_Argument ) ; 
+  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+   eval $( eval CAFunctName=VlcSendCmd CAIsAddParent=False CallArgument ) ;
+  fi 
+ 
+  local StrAddr=${VSCAddr:=none} ; 
+  local StrPort=${VSCPort:=none} ; 
+  local StrQueueCmd=${VSCCmd:='help'} ;
+  local BoolShowUUID=${VCSShowUUID:=True} ;
+  local BoolShowEntry=${VCSShowEntry:=True} ;
+  local BoolDisplayDebug=${VCSDisplayDebug:=True} ;
+  local BoolShowInstance=${VCSShowInstance:=True} ;
+  local StrCacheRefTpl=${VCSCacheRefTpl:=/var/cache/Fnct.D/Register-VSL-__UUID__};
+  local StrVTVRegistry=${VCSVTVReg:=VTVIsArrayStyleInsert=True,VTVIsValueReAssign=True,VTVIsValueToConvert=False,VTVIsArrayStyleInsert=True,VTVIsQuotedValue=True} ;
+  local StrVarList="VSCAddr,VSCPort,VSCCmd,BoolShowUUID,BoolShowEntry,BoolDisplayDebug,BoolShowInstance,StrVTVRegistry,StrCacheRefTpl" ;
+  
+  local -a ArrayMsg ;
+  ArrayMsg[0]="Entry in function" ;  
+  ArrayMsg[1]="Instance ID:__UUID__" ;
+  ArrayMsg[2]="UUID Instance discovered:\n\tUUID: __UUID__\n\tfile __CACHE__ will be used as instance-registration.\n" ;
+  ArrayMsg[3]="" ; 
+  ArrayMsg[4]="" ;
+  ArrayMsg[5]="" ; 
+  ArrayMsg[6]="" ; 
+  ArrayMsg[7]="Variable created:[__EVAL__]\n" ; 
+  ArrayMsg[8]="Rejected UUID References, SHA1SUM does not match with Registration.\nFill out another VlcServicesLayer with news parameter and start this application with UUID instance id.\n"  ;
+  ArrayMsg[9]="" ; 
+
+
+  function __main_StopServices()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Main __main_StopServices ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True __Call_Argument ) ;
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True CallArgument ) ;
+   fi 
+   StrMsg=$( VlcSendCmd --get ArrayMsg[0] ) ;
+   
+   VerbMsg="${StrMsg}"        \
+   VerbHeader="${__call_locality[1]}-ENTRY" \
+   VerbState=${BoolShowEntry} \
+   VerbEvalForm=False         \
+   VerbFormated=True          \
+   VerbDev=/dev/stderr        \
+   Verbosis ;
+   
+  
+  }
+
+  function __main_StartServices()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+   fi 
+   local StrMsg=$( VlcSendCmd --get ArrayMsg[0] ) ;
+   local -A ADbgHdr ; 
+   ADbgHdr["ENTRY"]="${__call_locality[1]}-ENTRY" ;
+   ADbgHdr["DEBUG"]="${__call_locality[1]}-DEBUG";
+   ADbgHdr["INFO"]="${__call_locality[1]}-INFO" ;
+   
+   
+   VerbMsg="${StrMsg}"    \
+   VerbHeader=${ADbgHdr["ENTRY"]} \
+   VerbState=${BoolShowEntry} \
+   VerbEvalForm=False     \
+   VerbFormated=True      \
+   VerbDev=/dev/stderr    \
+   Verbosis ;
+   
+   local StrCacheReference ; 
+   local StrContent;
+   local StrSig; 
+   local StrSha1Sum ;
+   local BoolRejectSigErr=False ;
+   local IntCountCall=0 ;
+   if [ "${UUID:=None}" != "None" ] ; then 
+    StrCacheReference=${StrCacheRefTpl/__UUID__/${UUID}} ;
+    ArrayMsg[2] 
+    __UUID__${UUID} 
+    __CACHE__ ${StrCacheReference}
+    
+    
+    StrContent=$( eval GBLDFileStoreInfo=${StrCacheReference} GBLDAction=GetContent GetterByLineData ) ;  
+    StrSig=$( eval GBLDFileStoreInfo=${StrCacheReference} GBLDAction=GetHeader GetterByLineData ) ;  
+    StrSha1Sum=$( eval GBLDFileStoreInfo=${StrCacheReference} GBLDAction=ShaSum1Content GetterByLineData  ) 
+    
+    ### Counting Number of CSV by reducing the String from them and calculating 
+    ### the final-length after reduction. 
+    local StrContentStrip=${StrContent//,/} ; 
+    local IntContentStrip=$(( ${#StrContent} - ${#StrContentStrip} )) ; 
+    
+    if [ "${StrSig}" != "${StrSha1Sum}" ] ; then 
+     BoolRejectSigErr=True ; 
+    else
+     StrASeg=$( echo ${StrContent} | sed 's/$/,/g ; s/[,]\{1,\}$/,/g' ; ) ;
+     for(( IntA=0 ; IntA <= ${IntContentStrip}-1 ; IntA++ )) ; do 
+      IntCountCall=$((${IntCountCall}+1)) ; 
+      StrBSeg=${StrASeg/%,[^,]*} ; 
+      ArrayMsg[3]
+      echo -ne "Status StrASeg: [${StrASeg}]\nPart Extracted:\n\tStrBSeg: [${StrBSeg}]\n" ; 
+      StrASeg=${StrASeg/#${StrBSeg},} ; 
+      ArrayMsg[4]
+      echo -ne "Status StrASeg:\n\tAfter cleaning, [${StrASeg}]\n" ; 
+      
+      local -a ArrayVarCreation ;
+      ### Format of each Serialized chunk is made from :
+      ### 0 addr : Variable name 
+      ### 1 addr : codec type (base64/text) 
+      ### 2 addr : Value. 
+      ### And should clean odd-csv
+      StrCSeg=$( echo ${StrBSeg} | sed 's/$,\{1,\}//g' )  ; 
+      #StrCSeg=${StrBSeg} ; 
+      ### Ensure the algorithm of match-substitution by alterning prefix/suffix
+      ### have a separator at the end. 
+      StrCSeg=$( echo ${StrCSeg} | sed 's/$/:/g ; s/[:]\{1,\}$/:/g' ) ;
+      for(( IntB=0 ; IntB <= 2 ; IntB++ )) ; do 
+       StrDSeg=${StrCSeg/%:[^:]*} ;
+       ArrayVarCreation[${IntB}]=$( echo ${StrDSeg} | sed 's/[:]\{1,\}$//g' ) ; 
+       StrCSeg=${StrCSeg/#${StrDSeg}:} ; 
+      done 
+      ### Variable Creation from De-Serialization . 
+      ArrayMsg[5]
+      echo -ne "\t\tExtracting variable:${ArrayVarCreation[0]}\n"  ; 
+      echo -ne "\t\tVariable Codec:${ArrayVarCreation[1]}\n" ; 
+      if [ "${ArrayVarCreation[1]}" == "base64" ] ; then 
+       StrValue=$( echo ${ArrayVarCreation[2]} | base64 -d ) ; 
+       ArrayMsg[6]
+       echo -ne "\tBase64 Conversion, Value: [${ArrayVarCreation[2]}] converted in [${StrValue}]\n" ; 
+       eval "${ArrayVarCreation[0]}=${StrValue}" ;
+      elif [ "${ArrayVarCreation[1]}" == "text" ] ; then 
+       ### Require to remove current value of variable:
+       unset ${ArrayVarCreation[0]} ; 
+       eval "${ArrayVarCreation[0]}=${ArrayVarCreation[2]}" ;
+      fi 
+      eval "StrEval=\"[ ${ArrayVarCreation[0]} ; \${${ArrayVarCreation[0]}} ]\"" ; 
+      ArrayMsg[7]
+      __EVAL__ ${StrEval}
+      
+     done ; 
+  
+    fi 
+   fi 
+   
+   if [ ${BoolRejectSigErr:=False} == "True" ] ; then 
+   
+    StrMsg=$( VlcSendCmd --get ArrayMsg[8] ) ;
+    VerbMsg="${StrMsg}" VerbHeader=${ADbgHdr["DEBUG"]} VerbState=${BoolDisplayDebug} VerbEvalForm=False  VerbFormated=True VerbDev=/dev/stderr Verbosis
+   else
+    echo "${StrQueueCmd}" | NSSAddresses=${StrAddr} NSSPort=${StrPort} NetSocketServices  ; 
+   fi 
+
+  }  
+   
+   local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+   local StrNameHelper="${__call_locality[1]}\n\tApplication to send command to a running instance of OldVlcServer\n\tVlcServer and/or SocketServer instance.";
+   local StrSummary="\n\tThis application is the main method to send an arbritrary command to a \n\trunning instance of a Fnct.D Socket familly server. It consist of a Unix \n\tapplication wrapped with Registration factory and Prefixed-variable command\n\tto make the life easier to talk to a common instance of VLC-cli interface \n\twrapped in a Unix-named-pipe designed by Fnct.D Socket familly server, and \n\tto answer to it's request.\n" ; 
+   local StrSynopsis="\n\tUsed by application like StartSlewAnalysis, VLCSetVolume, __old_vlc_rate,\n \tthis application can act on a playlist of VLC-Media and Video instance of\n\tVLC, as long it was properly configured with one of the Fnct.D Socket \n\tfamilly server. \n\n\tVlcSendCmd work in 2 differents mode:\n\t- stand-alone request with all the parameter :\n\tex: \n\t VSCAddr=127.0.0.1 VSCPort=5083 VSCCmd=\"get_time\" VlcSendCmd ;\n\t - Will query the actual media/song and report the current song.\n\n\t- With UUID registration. \n\t(warning following UUID example is not valid )\n\tex:\n\t UUID=23835b46-260d-11e7-8b1d-001e4c8856d6  VlcSendCmd ;\n\t - This was designed with VlcServicesLayer to send a command to\n\t shutdown the vlc on address 127.0.0.1 port 5083, command is 'shutdown'\n\t and equivalent to :\n\t VSCAddr=127.0.0.1 VSCPort=5083 VSCCmd=\"shutdown\" VlcSendCmd ;\n\n";
+   local StrDescription="" ;
+
+   
+   ### Section : Switches-Statememt 
+   if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+    ### GVRIsName set to True is the Variable handled StrNameHelper by GetVarReference and 
+    ### provide a Name-Helper inside the live-documentation if we call StartSlewAnalysis --help.
+    ### Extending the help by turning other variable to True will increae help. Variable are
+    ### declared previously. 
+    GVRIsName=True     \
+    GVRIsSummary=True  \
+    GVRIsSynopsis=True \
+    GVRIsDesc=False     \
+    GetVarReference ${__call_locality[1]} ; 
+    VerbMsg="${StrSwitchMessages}" \
+    VerbState=True       \
+    VerbEvalForm=False   \
+    VerbFormated=False   \
+    VerbExtendedOut=True \
+    VerbDev=/dev/stderr  \
+    Verbosis ;
+   elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+    eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+    echo -ne """${ArgGet}\n""" ;
+   elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+    eval $( __GetVarReferenceList ) ;	
+   elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
+    eval $( eval ${StrVTVRegistry//,/ } \
+            VTVValueEntry=${StrVarList} \
+            VTVWhiteListTransfert=UUID  \
+            ValueToVariable ) __main_StopServices ; 
+   elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+    StrMsg=$( VlcSendCmd --get ArrayMsg[0] ) ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    eval $( eval ${StrVTVRegistry//,/ } \
+            VTVWhiteListTransfert=UUID  \
+            VTVValueEntry=${StrVarList} \
+            ValueToVariable ) ${StrStartMain} 
+   fi 
+   ### End-Section : Switches-Statememt 
+ }
 
 fi #End-if versionVSC==0.0.1
 
@@ -2398,14 +2696,14 @@ if [ "${versionVF:=0.0.0}" == "0.0.0" ] ; then
 
  function getFrameCount()
  {
-  local IntStartVFC=$( getVideoStats ) ;
+  local IntStartVFC=$( UUID=${UUID:=3b5aea3c-260c-11e7-8b1d-001e4c8856d6} getVideoStats ) ;
   echo -ne "Video Decoded start at: ${IntStartVFC}\n" > /dev/stderr ; 
   local IntCheckVFC="${IntStartVFC}"; 
   local IntCount=0 ;
   while [ ${IntCheckVFC} -eq ${IntStartVFC} ] ; do 
    echo -ne "Pushing Frame\n" ;
-   pushVideoFrame ; 
-   IntCheckVFC=$( getVideoStats ); 
+   UUID=${UUID:=3b5aea3c-260c-11e7-8b1d-001e4c8856d6} pushVideoFrame ; 
+   IntCheckVFC=$( UUID=${UUID:=3b5aea3c-260c-11e7-8b1d-001e4c8856d6} getVideoStats ); 
    echo -ne "Video Decoded now at: ${IntCheckVFC}\n" > /dev/stderr  ; 
    let IntCount=${IntCount}+1 ; 
   done 
