@@ -2650,15 +2650,69 @@ if [ "${versionVF:=0.0.0}" == "0.0.0" ] ; then
   VlcSendCmd | 1>&2 > /dev/null  ; 
  }
 
- unset getVideoStats ; 
- function getVideoStats()
+ unset getStatQuery ; 
+ function getStatQuery()
+ { 
+  local -a ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]} ; 
+  local StrQueryFilter=${SQFilter:="video decoded"} ; 
+  UUID=${UUID:=3b5aea3c-260c-11e7-8b1d-001e4c8856d6} \
+  VSCCmd="stats" \
+  VlcSendCmd | egrep -i "${StrQueryFilter}" | cut -d ':' -f 2 | sed 's/[\ \t]//g;s/[^0-9]//g' ; 
+ }
+ 
+ unset getVideoDecoded ; 
+ function getVideoDecoded()
  { 
   local -a ArrayArg=( $* ) ; 
   local Arg0=${ArrayArg[0]} ; 
   UUID=${UUID:=3b5aea3c-260c-11e7-8b1d-001e4c8856d6} \
-  VSCCmd="stats" \
-  VlcSendCmd | egrep -i "video decoded" | cut -d ':' -f 2 | sed 's/[\ \t]//g;s/[^0-9]//g' ; 
+  SQFilter="video decoded" \
+  getStatQuery ; 
  }
+ 
+ unset getVideoDemuxRead ;
+ function getVideoDemuxRead()
+ { 
+  local -a ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]} ; 
+  UUID=${UUID:=3b5aea3c-260c-11e7-8b1d-001e4c8856d6} \
+  SQFilter="demux bytes read" \
+  getStatQuery ; 
+ }
+
+ unset getVideoInputRead ;
+ function getVideoInputRead()
+ { 
+  local -a ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]} ; 
+  UUID=${UUID:=3b5aea3c-260c-11e7-8b1d-001e4c8856d6} \
+  SQFilter="input bytes read" \
+  getStatQuery ; 
+ }
+
+ unset getVideoInputBitrate ;
+ function getVideoInputBitrate()
+ { 
+  local -a ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]} ; 
+  UUID=${UUID:=3b5aea3c-260c-11e7-8b1d-001e4c8856d6} \
+  SQFilter="input bitrate" \
+  getStatQuery ; 
+ }
+
+ unset getAudioDecoded ;
+ function getAudioDecoded()
+ { 
+  local -a ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]} ; 
+  UUID=${UUID:=3b5aea3c-260c-11e7-8b1d-001e4c8856d6} \
+  SQFilter="audio decoded" \
+  getStatQuery ; 
+ }
+
+
+
 
  unset pushVideoFrame ; 
 
@@ -2696,14 +2750,14 @@ if [ "${versionVF:=0.0.0}" == "0.0.0" ] ; then
 
  function getFrameCount()
  {
-  local IntStartVFC=$( UUID=${UUID:=3b5aea3c-260c-11e7-8b1d-001e4c8856d6} getVideoStats ) ;
+  local IntStartVFC=$( UUID=${UUID:=3b5aea3c-260c-11e7-8b1d-001e4c8856d6} getVideoDecoded ) ;
   echo -ne "Video Decoded start at: ${IntStartVFC}\n" > /dev/stderr ; 
   local IntCheckVFC="${IntStartVFC}"; 
   local IntCount=0 ;
   while [ ${IntCheckVFC} -eq ${IntStartVFC} ] ; do 
    echo -ne "Pushing Frame\n" ;
    UUID=${UUID:=3b5aea3c-260c-11e7-8b1d-001e4c8856d6} pushVideoFrame ; 
-   IntCheckVFC=$( UUID=${UUID:=3b5aea3c-260c-11e7-8b1d-001e4c8856d6} getVideoStats ); 
+   IntCheckVFC=$( UUID=${UUID:=3b5aea3c-260c-11e7-8b1d-001e4c8856d6} getVideoDecoded ); 
    echo -ne "Video Decoded now at: ${IntCheckVFC}\n" > /dev/stderr  ; 
    let IntCount=${IntCount}+1 ; 
   done 
@@ -2754,7 +2808,7 @@ if [ "${versionVF:=0.0.0}" == "0.0.0" ] ; then
    ### Start with a snapshoot. 
    addSnapshoot ; 
    VTBFChunk=${IntFrameChunk} setVideoTimeByFrame  ; 
-   getVideoStats ; 
+   getVideoDecoded ; 
   done ; 
  }
 
