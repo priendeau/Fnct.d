@@ -209,10 +209,12 @@ if [ "${versionGFL:=0.0.1}" == "0.0.1" ] ; then
   local StrNameHelper="${__call_locality[1]}\n\t[ Compiled / Scripted ] Fibonnacci Number generation by Level.";
   local StrSummary="\n\tSimplest use is to call it with One parameter. This application support \n\talso many Integer as parameter. \n\n\tGFLIntLevel=70 GetFibLevel \n\n\tor multiple interger at once :\n\n\tGFLIntLevel=\"1,2,3,4,5,6,7,8,9,10\" GFLIntLevelSep=',' GetFibLevel \n\t  This one require uses of CSV to separate and was specified in\n\t  GFLIntLevelSep=','\n\n\t  Or it require you do pas the interger in '\"' quoted if you want to \n\t  use space :\n\tGFLIntLevel=\"1 2 3 4 5 6 7 8 9 10\" GetFibLevel \n\n\tRequire to witch to application fib from compiled version available in\n\tbranch MakeFileInstaller. \n\n\tSuggestion time it with time from bash:\n\n\ttime GFLUsingAwkApps=False GFLIntLevel=0 GetFibLevel \n\n\tHaving fib application compiled somewhere else :\n\n\tGFLApps=/path/to/fib GFLUsingAwkApps=False GFLIntLevel=0 GetFibLevel  \n\n" ;
   local StrSynopsis="This application rely on fib application compiled by branch \n\tMakeFileInstaller from Fnct.D and does use the awk-script Fibonacci.awk\n\tfrom Fnct.D repository. The awk-script seems suitable to perform on higher\n \tlevel since Level 70 can compute the number 190392490709135 in less than\n \t0.007 seconds on Dual X2 @ 1900 Mhz processor, it's accurate to perform\n \tcalculation to level 1476. or it indicate 'inf'. Further treatment can be\n \tpossible to extend the script but basically it's quite enought to report\n \tdesired information.\n" ; 
-  local StrDescription="Function Prefixed-Variable Helper:\n\n  Main Prefixed-Variable:\nGFLIntLevel\t\t[Integer / CSV List] May accept one value or a List separeted by\n \t\t\tCommas Separated value. If 'Space' is used, double or single quote should\n\t\t\tWrap your information.\nGFLIntLevelSep\t\t[Char] Accept value by preference in single quoted value like \n\t\t\t' ', for space, ',' for Virgule, ':' Double-dot.\n  Related to Fibonacci application compiled :\nGFLFilterApps\t\t[String] the Awk interpreter to use.\nGFLAwkScript\t\t[String] Default Fibonacciscript or your-improved version\nGFLAwkFibEngine\t[String] Choice between LT or NB for Loop-Technique or\n\t\t\tNaive Binary Recursion. \n  Related to Fibonacci application compiled :\nGFLUsingAwkApps\tSet [True/False] Is required to et to True to enable the \n\t\t\tapplication layer to take over the awk-script. \nGFLApps\t\t[String] Quoted is mandatory and is used to specifiy some parameter\n\t\t\tto the application. Default parameter is 'fReadOnlyNumber=True' and it's\n\t\t\tinternal variable GFLAppsOpt\t\n\n\nRelated to Debugging purposes :\nGFLDisplayCmd\tSet [True/False] Display the command on every call. Uses of \n\t\t\tapplication will launch as many time held Interger inside GFLIntLevel\nGFLDisplayEntry\t Set [True/False]  Will display function entry.\n\n\nNotice to Debugging Prefixed-variable, it does output all the information inside\n/dev/stderr and will not interfer with variable assignation. \n" ; 
-        
-        
-   
+  local StrDescription="Function Prefixed-Variable Helper:\n\n Main Prefixed-Variable:\n\n GFLIntLevel\t [Integer / CSV List] May accept one value or a List separeted\n\t\t by Commas Separated value. If 'Space' is used, double or single\n\t\t quote should Wrap your information.\n GFLIntLevelSep\t [Char] Accept value by preference in single quoted value\n\t\t like ' ', for space, ',' for Virgule, ':' Double-dot.\n\nRelated to Fibonacci Awk-script embedded Fibonacci.awk:\n\n GFLFilterApps\t [String] the Awk interpreter to use.\n GFLAwkScript\t [String] Default Fibonacci script or your-improved version\n GFLAwkFibEngine [String] Choice between LT or NB for Loop-Technique or\n\t\t Naive Binary Recursion.\n\nRelated to Fibonacci application compiled :\n\n GFLUsingAwkApps Set [True/False] Is required to set to False to disable\n\t\t the script ant let the application to take over.\n GFLApps\t [String] Quoted is mandatory and is used to specifiy some\n\t\t parameter to the application. Default parameter is \n\t\t 'fReadOnlyNumber=True' and it's internal variable GFLAppsOpt\n\nRelated to Debugging purposes :\n GFLDisplayCmd\t Set [True/False] Display the command on every call. Uses of\n\t\t application will launch as many time held Interger inside\n\t\t GFLIntLevel\n GFLDisplayEntry Set [True/False] Will display function entry.\n\nNotice to Debugging Prefixed-variable, it does output all the information\ninside /dev/stderr and will not interfer with variable assignation.\n" ; 
+
+  ### "Function Prefixed-Variable Helper:\n\n  Main Prefixed-Variable:\nGFLIntLevel\t\t[Integer / CSV List] May accept one value or a List separeted by\n \t\t\tCommas Separated value. If 'Space' is used, double or single quote should\n\t\t\tWrap your information.\nGFLIntLevelSep\t\t[Char] Accept value by preference in single quoted value like \n\t\t\t' ', for space, ',' for Virgule, ':' Double-dot.\n  Related to Fibonacci application compiled :\nGFLFilterApps\t\t[String] the Awk interpreter to use.\nGFLAwkScript\t\t[String] Default Fibonacciscript or your-improved version\nGFLAwkFibEngine\t[String] Choice between LT or NB for Loop-Technique or\n\t\t\tNaive Binary Recursion. \n  Related to Fibonacci application compiled :\nGFLUsingAwkApps\tSet [True/False] Is required to set to True to enable the \n\t\t\tapplication layer to take over the awk-script. \nGFLApps\t\t[String] Quoted is mandatory and is used to specifiy some parameter\n\t\t\tto the application. Default parameter is 'fReadOnlyNumber=True' and it's\n\t\t\tinternal variable GFLAppsOpt\t\n\n\nRelated to Debugging purposes :\nGFLDisplayCmd\tSet [True/False] Display the command on every call. Uses of \n\t\t\tapplication will launch as many time held Interger inside GFLIntLevel\nGFLDisplayEntry\t Set [True/False]  Will display function entry.\n\n\nNotice to Debugging Prefixed-variable, it does output all the information inside\n/dev/stderr and will not interfer with variable assignation. \n"
+    
+    
+
   if [ "${Arg0:=--startservices}" == "--help"	] ; then 
    GVRIsName=True     \
    GVRIsSummary=True  \
@@ -299,7 +301,32 @@ if [ "${versionGHFH:=0.0.0}" == "0.0.0" ] ; then
      fi 
     fi 
    fi
-  } 
+  }
+  function GetStringIntSeq()
+  {
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( GSIS GetStringIntSeq ) ; 
+   local Arg0=${ArrayArg[0]} ; 
+   local IntStart=${GSISStart:=0} ; 
+   local IntStop=${GSISStop:=1} ; 
+   local StrCSV=${GSISCsv:=','} ; 
+   local StrTpl="__INT____CSV__" ; 
+   local StrBuffer="" ; 
+   local StrReturn="" ;
+   for (( intC=${IntStart} ; intC <= ${IntStop} ; intC++ )) ; do
+    StrBuffer=${StrTpl} ; 
+    
+    StrBuffer=${StrBuffer//__INT__/${intC}} ; 
+    if [ ${intC:=0} -eq ${IntStop} ] ; then
+     StrBuffer=${StrBuffer//__CSV__/} ;  
+    else
+     StrBuffer=${StrBuffer//__CSV__/${StrCSV}} ;  
+    fi
+    StrReturn="${StrReturn}${StrBuffer}"  ;
+    
+   done 
+   echo "${StrReturn}" ; 
+  }
   ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
   local -a ArrayArg=( $* ) ;
   local -a __call_locality=( GHFH GetHighestFibHarmonic ) ;
@@ -309,24 +336,32 @@ if [ "${versionGHFH:=0.0.0}" == "0.0.0" ] ; then
   local BoolDisplayDebug=${GHFHIsDisplayDebug:=False} ; 
   local BoolDisplayEntry=${GHFHIsDisplayEntry:=False} ; 
   local BoolDisplayCmd=${GHFHIsDisplayCmd:=False} ; 
+  local IntBufferFib=${GHFHFibBufferSearch:=32} ; 
   
   local -a ArrayMsg ;
   
   ArrayMsg[0]="Entry in function, __VAR__:__VER__" ;
-  ArrayMsg[1]="Level fib:__INT__, Fibonacci:__FIB__, targeted modulo:__MOD__, previous remain:__PREMAIN__ remain:__REMAIN__" ;
-  ArrayMsg[2]="Modulus __MOD__\n\thaving lowest Fibonacci level __LEVEL__\n\tnumber __INT__\n\tremain __REMAIN__\n" ;
+  ArrayMsg[1]="Level fib:__INT__, Fibonacci:__FIB__, targeted modulo:__MOD__, remain:__REMAIN__" ;
+  ArrayMsg[2]="Modulus __MOD__\n\thaving lowest Fibonacci level __LEVEL__\n\tnumber __INT__\n\tremain __REMAIN__" ;
   ArrayMsg[3]="__INTA__,__INTB__" ; 
-  ArrayMsg[4]="Status of \n\tBoolDisplayDebug: __DisplayDebug__\n\tBoolDisplayEntry: __DisplayEntry__\n\tBoolDisplayCmd: __DisplayCmd__\n" ; 
+  ArrayMsg[4]="Status of \n\tBoolDisplayDebug: __DisplayDebug__\n\tBoolDisplayEntry: __DisplayEntry__\n\tBoolDisplayCmd: __DisplayCmd__" ; 
+  ArrayMsg[5]="Generating Buffer of __NB__ Fibonacci to filter __INT__ to it's closest level.\n\tLevel: [ __FBL__ to __FBH__ ]" ; 
+  ArrayMsg[6]="Sequence queried: __STR__" ; 
+  ArrayMsg[7]="Evaluating value: __INT__" ; 
+  ArrayMsg[8]="Found at Index : __INDEX__, real level: __LVLINDX__" ; 
 
   StrMsg=${ArrayMsg[4]} ; 
   StrMsg=${StrMsg//__DisplayDebug__/${BoolDisplayDebug}} ; 
   StrMsg=${StrMsg//__DisplayEntry__/${BoolDisplayEntry}} ; 
   StrMsg=${StrMsg//__DisplayCmd__/${BoolDisplayCmd}} ; 
-  VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+  VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
   
   #local IntModSeek=${Arg0} ; 
+  local -a ArrayIntResFib ; 
+  local IntStartBufLevel=0 ; 
   local IntResFib=0 ; 
   local IntX=1 ;
+  local IntFibBuffer=${IntX} ; 
   local IntRemain=-1 ;  
   local IntOldRemain=0 ; 
   local IntOldLevel=0
@@ -340,54 +375,89 @@ if [ "${versionGHFH:=0.0.0}" == "0.0.0" ] ; then
   StrMsg=${StrMsg//__VER__/${versionGHFH}} ; 
   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
   #echo -ne "${StrMsg}\n" > /dev/stderr ; 
-  while [ "${BoolEndTest}" == "False" ] ; do  
-   IntResFib=$( GFLDisplayCmd=${BoolDisplayCmd} GFLDisplayEntry=${BoolDisplayEntry} GFLIntLevel=${IntX} GetFibLevel ) ; 
-   IntRemain=$(( ${IntResFib} - ${IntModSeek} )); 
-   StrMsg=${ArrayMsg[1]} ; 
-   StrMsg=${StrMsg//__INT__/${IntX}} ; 
-   StrMsg=${StrMsg//__FIB__/${IntResFib}} ; 
-   StrMsg=${StrMsg//__MOD__/${IntModSeek}} ; 
-   StrMsg=${StrMsg//__PREMAIN__/${IntOldRemain}} ; 
-   StrMsg=${StrMsg//__REMAIN__/${IntRemain}} ; 
-   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
-   #echo -ne "${StrMsg}\n" > /dev/stderr ; 
+  while [ "${BoolEndTest}" == "False" ] ; do 
+   #IntFibBuffer=${IntBufferFib};
+   
+   StrMsg=${ArrayMsg[5]} ;
+   StrMsg=${StrMsg//__NB__/${IntBufferFib}} ; 
+   StrMsg=${StrMsg//__INT__/${IntModSeek}} ; 
+   StrMsg=${StrMsg//__FBL__/${IntFibBuffer}} ; 
+   StrMsg=${StrMsg//__FBH__/$(( ${IntFibBuffer} + ${IntBufferFib} ))} ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;   
 
-   if [ ${IntRemain} -eq 0 ] ; then 
-    BoolEndTest=True ;
-    IntDisplayLevel=${IntX};
-    IntDisplayRemain=${IntRemain} ; 
-   fi 
-   if [ ${IntRemain} -lt 0 ] ; then 
-    IntOldRemain=${IntRemain} ;
-    IntOldLevel=${IntX} ;
-    IntRestFibOld=${IntResFib} ; 
-    let IntX=IntX+1 ; 
-   fi
-   if [ ${IntOldRemain} -lt 0 -a ${IntRemain} -gt 0 ] ; then 
-    BoolEndTest=True ;
-    IntDisplayLevel=${IntOldLevel};
-    IntDisplayRemain=${IntOldRemain} ; 
+   StrSeq=$( eval GSISStart=${IntFibBuffer} GSISStop=$(( ${IntFibBuffer} + ${IntBufferFib} )) GetStringIntSeq )
+   
+   StrMsg=${ArrayMsg[6]} ; 
+   StrMsg=${StrMsg//__STR__/${StrSeq}} ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;      
+   
+   ArrayIntResFib=( $( eval GFLDisplayCmd=${BoolDisplayCmd} GFLDisplayEntry=${BoolDisplayEntry} GFLUsingAwkApps=True GFLAwkFibEngine=NB GFLIntLevel=${StrSeq} GetFibLevel ) ) ;  
+   StrMsg=${ArrayMsg[6]} ; 
+   StrMsg=${StrMsg//__STR__/${ArrayIntResFib[@]}} ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;      
+
+   BoolFoundBase=False ; 
+   IntTestFib=0;
+   
+   if [ $(( ${IntModSeek} / 2 )) -lt ${ArrayIntResFib[$((${#ArrayIntResFib[@]}-1))]} ] ; then 
+    for (( IntGF=$(( ${#ArrayIntResFib[@]}-1 )) ; IntGF >= 0 ; IntGF-- )) ; do 
+     IntTestFib=${ArrayIntResFib[${IntGF}]}  ;
+     if [ ${BoolFoundBase:=False} != "True" ] ; then 
+      StrMsg=${ArrayMsg[7]} ; 
+      StrMsg=${StrMsg//__INT__/${IntTestFib}} ; 
+      VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;      
+      
+      if [ ${IntTestFib:=0} -le ${IntModSeek} ] ; then 
+       BoolFoundBase=True ;
+       IntResFib=${IntTestFib} ;  
+       IntX=$(( ${IntGF} + ${IntFibBuffer} )); 
+       
+       StrMsg=${ArrayMsg[8]} ;
+       StrMsg=${StrMsg//__LVLINDX__/${IntX}} ; 
+       StrMsg=${StrMsg//__INDEX__/${IntGF}} ; 
+       VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ; 
+       
+      fi 
+     fi 
+    done
    fi 
    
+   if [ "${BoolFoundBase:=False}" == "True" ] ; then 
+    IntRemain=$(( ${IntModSeek} - ${IntResFib} )); 
+    StrMsg=${ArrayMsg[1]} ; 
+    StrMsg=${StrMsg//__INT__/${IntX}} ; 
+    StrMsg=${StrMsg//__FIB__/${IntResFib}} ; 
+    StrMsg=${StrMsg//__MOD__/${IntModSeek}} ; 
+    StrMsg=${StrMsg//__REMAIN__/${IntRemain}} ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    BoolEndTest=True ; 
+    IntDisplayLevel=${IntX}; 
+   
+   else 
+    ### Increase next search buffer if current value in ArrayIntResFib
+    ### are not covering actual Integer to reduce to Fibonacci level . 
+    IntFibBuffer=$(( ${IntFibBuffer} + ${IntBufferFib} ))
+   
+   fi 
   done  ; 
       
   StrMsg=${ArrayMsg[2]} ; 
   StrMsg=${StrMsg//__MOD__/${IntModSeek}} ; 
   StrMsg=${StrMsg//__LEVEL__/${IntOldLevel}} ; 
   StrMsg=${StrMsg//__INT__/${IntRestFibOld}} ; 
-  StrMsg=${StrMsg//__REMAIN__/${IntOldRemain}} ; 
+  StrMsg=${StrMsg//__REMAIN__/${IntRemain}} ; 
   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
   #echo -ne "${StrMsg}\n" > /dev/stderr ; 
   
   StrMsg=${ArrayMsg[3]} ; 
   StrMsg=${StrMsg//__INTA__/${IntDisplayLevel}} ; 
-  StrMsg=${StrMsg//__INTB__/${IntDisplayRemain//-/}} ; 
+  StrMsg=${StrMsg//__INTB__/${IntRemain//-/}} ; 
   VerbMsg="${StrMsg}" VerbState=True VerbEvalForm=False VerbFormated=False VerbDev=/dev/stdout  Verbosis ;
   #echo -ne "${StrMsg}\n" > /dev/stderr ; 
 
  }
 
-fi
+fi #End-if versionGHFH==0.0.0 
 
 if [ "${versionGHFH:=0.0.0}" == "0.0.1" ] ; then 
  
