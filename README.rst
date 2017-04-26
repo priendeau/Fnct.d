@@ -299,204 +299,204 @@ that confirm where it start, but as excercices is not bad to think about.
   import exceptions
 
   class Memoize( object ):
-    fn = None
-    memo = {}
-    
-    def __init__(self, fn):
-      print "Starting a {} instance".format( self.__class__.__name__ )
-      self.fn = fn
-      self.memo = {}
+	fn = None
+	memo = {}
+	
+	def __init__(self, fn):
+	  print "Starting a {} instance".format( self.__class__.__name__ )
+	  self.fn = fn
+	  self.memo = {}
 
-    @staticmethod
-    def UseMemoize( ):
-      def decorator( func ):
-        def inner( *args ):
-          if func.func_name not in Memoize.memo.keys():
-            print "\nAdding Function Registration [{}] to Memoize\n".format( func.func_name )
-            Memoize.memo[ func.func_name ]={}
-          else:
-            CurrentMem = Memoize.memo[ func.func_name ]
-            BoolNoIndexKey=True
-            
-            CurrListKey=Memoize.memo[ func.func_name ].keys()
-            
-            if len( CurrListKey ) > 0 :
-              CurrListKey.sort()
-              IntNextItem = len( CurrListKey )
-            else:
-              Memoize.memo[ func.func_name ]={ 0:[] }
-              IntNextItem=1
-            
-            IntIndexfFind=None 
-            if len( CurrListKey ) > 0:
-              for IntKey in CurrListKey:
-                if len( CurrentMem[IntKey] ) > 0 :
-                  if args in CurrentMem[IntKey][0] :
-                    BoolNoIndexKey=False
-                    IntIndexfFind=IntKey
-            if BoolNoIndexKey == True :
-              Memoize.memo[ func.func_name ][IntNextItem]=[ args ,func( *args ) ]
-            else:
-              AstrRet=str( Memoize.memo[ func.func_name ][IntIndexfFind][1] )
-              if len( AstrRet ) > 5 :
-                AstrRet=AstrRet[0:5]
-              print "\nArgument requested, already have result, arg:{}, return:{}...\n".format( arg, AstrRet ) 
-              return Memoize.memo[ func.func_name ][IntIndexfFind][1]
-        return inner
-      return decorator
+	@staticmethod
+	def UseMemoize( ):
+	  def decorator( func ):
+		def inner( *args ):
+		  if func.func_name not in Memoize.memo.keys():
+			print "\nAdding Function Registration [{}] to Memoize\n".format( func.func_name )
+			Memoize.memo[ func.func_name ]={}
+		  else:
+			CurrentMem = Memoize.memo[ func.func_name ]
+			BoolNoIndexKey=True
+			
+			CurrListKey=Memoize.memo[ func.func_name ].keys()
+			
+			if len( CurrListKey ) > 0 :
+			  CurrListKey.sort()
+			  IntNextItem = len( CurrListKey )
+			else:
+			  Memoize.memo[ func.func_name ]={ 0:[] }
+			  IntNextItem=1
+			
+			IntIndexfFind=None 
+			if len( CurrListKey ) > 0:
+			  for IntKey in CurrListKey:
+				if len( CurrentMem[IntKey] ) > 0 :
+				  if args in CurrentMem[IntKey][0] :
+					BoolNoIndexKey=False
+					IntIndexfFind=IntKey
+			if BoolNoIndexKey == True :
+			  Memoize.memo[ func.func_name ][IntNextItem]=[ args ,func( *args ) ]
+			else:
+			  AstrRet=str( Memoize.memo[ func.func_name ][IntIndexfFind][1] )
+			  if len( AstrRet ) > 5 :
+				AstrRet=AstrRet[0:5]
+			  print "\nArgument requested, already have result, arg:{}, return:{}...\n".format( arg, AstrRet ) 
+			  return Memoize.memo[ func.func_name ][IntIndexfFind][1]
+		return inner
+	  return decorator
 
-    @staticmethod
-    def __call__( arg ):
-      print "type of Memoize.memo : {}".format( type( Memoize.memo ) ) 
-      if arg not in Memoize.memo:
-        AstrRet=str( Memoize.memo[arg] )
-        if len( AstrRet ) > 5 :
-          AstrRet=AstrRet[0:5]
-        print "Argument requested, already available, level:{}, return:{}...".format( arg, AstrRet )
-        Memoize.memo[arg] = Memoize.fn(arg)
-        return Memoize.memo[arg]
+	@staticmethod
+	def __call__( arg ):
+	  print "type of Memoize.memo : {}".format( type( Memoize.memo ) ) 
+	  if arg not in Memoize.memo:
+		AstrRet=str( Memoize.memo[arg] )
+		if len( AstrRet ) > 5 :
+		  AstrRet=AstrRet[0:5]
+		print "Argument requested, already available, level:{}, return:{}...".format( arg, AstrRet )
+		Memoize.memo[arg] = Memoize.fn(arg)
+		return Memoize.memo[arg]
 
 
   class FibonacciRun( Memoize ):
 
-    ComputedLevel = 1
-    FunctionM = None 
-    FibSwap = lambda A,a,b :(lambda f=A.__setitem__:(f( a , (A[a],A[b])),
-                                                     f( b , A[a][0] + A[a][1] ),
-                                                     f( a , A[a][1])))()
-    ResSwap = lambda A,a,b :(lambda f=A.__setitem__:(f( a , (A[a],A[b])),
-                                                     f( b , A[a][0]),
-                                                     f( a , A[a][1])))()
+	ComputedLevel = 1
+	FunctionM = None 
+	FibSwap = lambda A,a,b :(lambda f=A.__setitem__:(f( a , (A[a],A[b])),
+													 f( b , A[a][0] + A[a][1] ),
+													 f( a , A[a][1])))()
+	ResSwap = lambda A,a,b :(lambda f=A.__setitem__:(f( a , (A[a],A[b])),
+													 f( b , A[a][0]),
+													 f( a , A[a][1])))()
 
-    FibonacciLmbd = lambda (n):( 1 if (n == 1 or n==2) else FibonacciLmbd(n-1)+FibonacciLmbd(n-2))
+	FibonacciLmbd = lambda (n):( 1 if (n == 1 or n==2) else FibonacciLmbd(n-1)+FibonacciLmbd(n-2))
 
-    def __init__( self , FunctionM ):
-      self.FunctionM=FunctionM
-      print "Instantiating Object:{}".format( self.__class__.__name__ )
-      print "Current Function allocated inside Memoize: {}".format( self.FunctionM )
-      super( Memoize, self ).__init__(  )
-      super( FibonacciRun, self ).__init__( FunctionM )
+	def __init__( self , FunctionM ):
+	  self.FunctionM=FunctionM
+	  print "Instantiating Object:{}".format( self.__class__.__name__ )
+	  print "Current Function allocated inside Memoize: {}".format( self.FunctionM )
+	  super( Memoize, self ).__init__(  )
+	  super( FibonacciRun, self ).__init__( FunctionM )
 
-    @Memoize.UseMemoize()
-    def Fibonacci_LTMe(self, n):
-      a,b = 1,1
-      for i in range(n-1):
-        a,b = b,a+b
-      return a
+	@Memoize.UseMemoize()
+	def Fibonacci_LTMe(self, n):
+	  a,b = 1,1
+	  for i in range(n-1):
+		a,b = b,a+b
+	  return a
 
-    ### Self Memoize, imply registering the function
-    ### 
-    def Fibonacci_Me(self, fn, arg):
-      memo = {}
-      if arg not in memo:
-        memo[arg] = fn(arg)
-        return memo[arg]
+	### Self Memoize, imply registering the function
+	### 
+	def Fibonacci_Me(self, fn, arg):
+	  memo = {}
+	  if arg not in memo:
+		memo[arg] = fn(arg)
+		return memo[arg]
 
-    def Fibonacci_R(self,n):
-      if n==1 or n==2:
-        return 1
-      return self.Fibonacci_R(n-1)+self.Fibonacci_R(n-2)
+	def Fibonacci_R(self,n):
+	  if n==1 or n==2:
+		return 1
+	  return self.Fibonacci_R(n-1)+self.Fibonacci_R(n-2)
 
-    def Fibonacci_LT(self,n):
-      a=1
-      b=1
-      for i in range(n-1):
-        c=a
-        a=b
-        b=c+b
-        #a,b = b,a+b
-      return a
+	def Fibonacci_LT(self,n):
+	  a=1
+	  b=1
+	  for i in range(n-1):
+		c=a
+		a=b
+		b=c+b
+		#a,b = b,a+b
+	  return a
 
-    def rootiply(self,a1,b1,a2,b2,c):
-      ''' multipy a1+b1*sqrt(c) and a2+b2*sqrt(c)... return a,b'''
-      return a1*a2 + b1*b2*c, a1*b2 + a2*b1
+	def rootiply(self,a1,b1,a2,b2,c):
+	  ''' multipy a1+b1*sqrt(c) and a2+b2*sqrt(c)... return a,b'''
+	  return a1*a2 + b1*b2*c, a1*b2 + a2*b1
 
-    def rootipower(self,a,b,c,n):
-      ''' raise a + b * sqrt(c) to the nth power... returns the new a,b and c of the result in the same format'''
-      ar,br = 1,0
-      while n != 0:
-        if n%2:
-          ar,br = self.rootiply(ar,br,a,b,c)
-        a,b = self.rootiply(a,b,a,b,c)
-        n /= 2
-      return ar,br
-
-
-    @Memoize.UseMemoize()
-    def rootipowermod(self,a,b,c,k,n):
-      ''' compute root powers, but modding as we go'''
-      ar,br = 1,0
-      while k != 0:
-        if k%2:
-          ar,br = self.rootiply(ar,br,a,b,c) 
-          ar,br = ar%n,br%n
-        a,b = self.rootiply(a,b,a,b,c)
-        a,b = a%n, b%n
-        k /= 2
-      return ar,br
-
-    @Memoize.UseMemoize()
-    def RootPowerFibonacci(self,k):
-      ''' the kth fibonacci number'''
-      a1,b1 = self.rootipower(1,1,5,k)
-      a2,b2 = self.rootipower(1,-1,5,k)
-      a = a1-a2
-      b = b1-b2
-      a,b = self.rootiply(0,1,a,b,5)
-      # b should be 0!
-      assert b == 0
-      return a/2**k/5
-
-    def powermod(a,k,n):
-      ''' raise a**k, modding as we go by n'''
-      r = 1
-      while k!=0:
-        if k%2:
-            r = (a*r)%n
-        a = (a**2)%n
-        k/=2
-      return r
-
-    def mod_inv(self,a,n):
-      ''' compute the multiplicative inverse of a, mod n'''
-      t,newt,r,newr = 0,1,n,a
-      while newr != 0:
-        quotient = r / newr
-        t, newt = newt, t - quotient * newt
-        r, newr = newr, r - quotient * newr
-      if r > 1: return "a is not invertible"
-      if t < 0: t = t + n
-      return t
-
-    def RootPowerFibonacciMod(self,k,n):
-      ''' compute the kth fibonacci number mod n, modding as we go for efficiency'''
-      a1,b1 = self.rootipowermod(1,1,5,k,n)
-      a2,b2 = self.rootipowermod(1,-1,5,k,n)
-      a = a1-a2
-      b = b1-b2
-      a,b = self.rootiply(0,1,a,b,5)
-      a,b = a%n,b%n
-      assert b == 0
-      return (a*self.mod_inv(5,n)*self.mod_inv(self.powermod(2,k,n),n))%n
+	def rootipower(self,a,b,c,n):
+	  ''' raise a + b * sqrt(c) to the nth power... returns the new a,b and c of the result in the same format'''
+	  ar,br = 1,0
+	  while n != 0:
+		if n%2:
+		  ar,br = self.rootiply(ar,br,a,b,c)
+		a,b = self.rootiply(a,b,a,b,c)
+		n /= 2
+	  return ar,br
 
 
-    def ComputeFib( self, StartLevel=None):
-      
-      BoolRun=True
-      print "Computing fibonacci level:"
-      if StartLevel != None:
-        x = StartLevel
-      else:
-        x = self.ComputedLevel
-      try:
-        while BoolRun :
-          sys.stdout.write("{} ".format(x) )
-          v=getattr( self , self.FunctionM)( x )
-          x=x+1 
-      except exceptions.KeyboardInterrupt:
-        BoolRun = False
-        self.ComputedLevel = x 
-        print "User Ask for cancellation, requested at Level:{}".format( x )
+	@Memoize.UseMemoize()
+	def rootipowermod(self,a,b,c,k,n):
+	  ''' compute root powers, but modding as we go'''
+	  ar,br = 1,0
+	  while k != 0:
+		if k%2:
+		  ar,br = self.rootiply(ar,br,a,b,c) 
+		  ar,br = ar%n,br%n
+		a,b = self.rootiply(a,b,a,b,c)
+		a,b = a%n, b%n
+		k /= 2
+	  return ar,br
+
+	@Memoize.UseMemoize()
+	def RootPowerFibonacci(self,k):
+	  ''' the kth fibonacci number'''
+	  a1,b1 = self.rootipower(1,1,5,k)
+	  a2,b2 = self.rootipower(1,-1,5,k)
+	  a = a1-a2
+	  b = b1-b2
+	  a,b = self.rootiply(0,1,a,b,5)
+	  # b should be 0!
+	  assert b == 0
+	  return a/2**k/5
+
+	def powermod(a,k,n):
+	  ''' raise a**k, modding as we go by n'''
+	  r = 1
+	  while k!=0:
+		if k%2:
+			r = (a*r)%n
+		a = (a**2)%n
+		k/=2
+	  return r
+
+	def mod_inv(self,a,n):
+	  ''' compute the multiplicative inverse of a, mod n'''
+	  t,newt,r,newr = 0,1,n,a
+	  while newr != 0:
+		quotient = r / newr
+		t, newt = newt, t - quotient * newt
+		r, newr = newr, r - quotient * newr
+	  if r > 1: return "a is not invertible"
+	  if t < 0: t = t + n
+	  return t
+
+	def RootPowerFibonacciMod(self,k,n):
+	  ''' compute the kth fibonacci number mod n, modding as we go for efficiency'''
+	  a1,b1 = self.rootipowermod(1,1,5,k,n)
+	  a2,b2 = self.rootipowermod(1,-1,5,k,n)
+	  a = a1-a2
+	  b = b1-b2
+	  a,b = self.rootiply(0,1,a,b,5)
+	  a,b = a%n,b%n
+	  assert b == 0
+	  return (a*self.mod_inv(5,n)*self.mod_inv(self.powermod(2,k,n),n))%n
+
+
+	def ComputeFib( self, StartLevel=None):
+	  
+	  BoolRun=True
+	  print "Computing fibonacci level:"
+	  if StartLevel != None:
+		x = StartLevel
+	  else:
+		x = self.ComputedLevel
+	  try:
+		while BoolRun :
+		  sys.stdout.write("{} ".format(x) )
+		  v=getattr( self , self.FunctionM)( x )
+		  x=x+1 
+	  except exceptions.KeyboardInterrupt:
+		BoolRun = False
+		self.ComputedLevel = x 
+		print "User Ask for cancellation, requested at Level:{}".format( x )
 
 Other example of limitation, Number operation in Bash. While creator agree the 
 Bash can afford (2^64)-1, the shell still have to intensify it's limitation 
