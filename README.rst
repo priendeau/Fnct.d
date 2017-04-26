@@ -293,7 +293,7 @@ that confirm where it start, but as excercices is not bad to think about.
 
 *** Warning this python code is indented in 2-spaces tab. ***
 
-.. code: python
+.. code:: python
 
   import sys, os 
   import exceptions
@@ -498,13 +498,15 @@ that confirm where it start, but as excercices is not bad to think about.
 		self.ComputedLevel = x 
 		print "User Ask for cancellation, requested at Level:{}".format( x )
 
+
+
 Other example of limitation, Number operation in Bash. While creator agree the 
 Bash can afford (2^64)-1, the shell still have to intensify it's limitation 
 itself  to a wide 2^32 numbers with all the extra... As example, using 
 GetHighestFibHarmonic will support number to 2^44 and GetValueScaledFibHarmonic
 too : 
 
-.. shell: code
+.. code: shell
 
   ### GetHighestFibHarmonic
   Fnct.D $ GHFHIntNumber=$(( 2 ** 44 )) GetHighestFibHarmonic
@@ -558,7 +560,7 @@ string
  Here an example of a script that do start at 2^32 and increase the exponnent 
  every turn:
  
-.. code: shell
+.. code:: shell
 
   declare -a ArrayRes ; 
   for (( x=32 ; x <= 64; x++ )) ; do 
