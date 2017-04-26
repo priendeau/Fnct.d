@@ -291,7 +291,7 @@ location it stop. Unless you want strict operation it lack the verification step
 that confirm where it start, but as excercices is not bad to think about. 
  
 
-*** Warning this python code is indented in 2-spaces tab. ***
+*** Warning this python code is indented in tab=4 spaces . ***
 
 .. code:: python
 
