@@ -644,7 +644,7 @@ fi
 if [ "${versionGVSFH:=0.0.0}" == "0.0.0" ] ; then 
  
  #eval $( GFCFuncName=GetValueScaledFibHarmonic GlobalFunctionCleaning ) ; 
- unset GetValueScaledFibHarmonic ;
+ unset GetValueScaledFibHarmonic GVSFHIntValue GVSFHDisplayDebug GVSFHDisplayEntry GVSFHDisplayProof ;
  function GetValueScaledFibHarmonic()
  {
   local -a ArrayArg=( $* ) ;
@@ -673,23 +673,13 @@ if [ "${versionGVSFH:=0.0.0}" == "0.0.0" ] ; then
   fi
   
   if [ "${BoolDisplayProof:=True}" == "True"  ] ; then 
-   local StrTplNumber="\$( GFLIntLevel=__X__  GFLDisplayEntry=${BoolDisplayEntry} GetFibLevel)"; 
-   local StrParseTpl="" ; 
-   local StrAddNumber="" ;
+   StrOperEval=$( GFLIntLevel="${ArrayScaledHarmonic[@]}" GFLIntLevelSep=' ' GetFibLevel ) ; 
    
-   for (( intx=${#ArrayScaledHarmonic[@]}-1 ; intx >= 0 ; intx-- )) ; do 
-    IntHarmonic=${ArrayScaledHarmonic[${intx}]} ; 
-    StrParseTpl="${StrTplNumber//__X__/${IntHarmonic}}" ; 
-    eval "IntEvalRes=${StrParseTpl}" ;
-    StrAddNumber="${IntEvalRes} + ${StrAddNumber}" ; 
-    if [ ${intx} -eq 0 ] ; then 
-     StrAddNumber=${StrAddNumber:0:$((${#StrAddNumber}-2))}
-    fi 
-    
-   done 
-   IntFibSum=$(( ${StrAddNumber} )) ; 
-   if [ ${BoolDisplayDebug:=False} == "True" ] ; then 
-    echo -ne "Proof:${StrAddNumber} = ${IntFibSum}\n" > /dev/stderr ; 
+   StrEvalProof=$( echo "${StrOperEval}" | sed 's/\([0-9]\)\(\ \)\([0-9]\)/\1+\3/g ; s/ /+/g ; s/+$//g; s/+/ + /g' ) ;  
+   
+   eval StrOperProof=$(( ${StrEvalProof} )) ;
+   if [ ${BoolDisplayProof:=False} == "True" ] ; then 
+    echo -ne "Proof:${StrEvalProof} = ${StrOperProof}\n" > /dev/stderr ; 
    fi 
   fi 
   echo -ne "${ArrayScaledHarmonic[@]}\n" > /dev/stdout ; 
@@ -838,7 +828,7 @@ fi
 
 if [ "${versionFBLR:=0.0.0}" == "0.0.0" ] ; then 
  
- unset FibBinaryLevelRepr ; 
+ unset FibBinaryLevelRepr FBLRDisplayDebug FBLRDisplayEntry FBLRDisplayProof Arg0 ; 
  #eval $( GFCFuncName=FibBinaryLevelRepr GlobalFunctionCleaning ) ; 
 
  function FibBinaryLevelRepr()
@@ -847,25 +837,56 @@ if [ "${versionFBLR:=0.0.0}" == "0.0.0" ] ; then
   local -a __call_locality=( FBLR FibBinaryLevelRepr ) ;
   local Arg0=${ArrayArg[0]} ;   
   
+  local BoolDisplayDebug=${FBLRDisplayDebug:=False} ; 
+  local BoolDisplayEntry=${FBLRDisplayEntry:=False} ; 
+  local BoolDisplayProof=${FBLRDisplayProof:=False} ; 
+  
+  local -a ArrayMsg ; 
+  ArrayMsg[0]="Representation over __NUMBER__ binary-position, of number __INT__\n" ; 
+  ArrayMsg[1]="Number: __NUMBER__\nFib Harmonic: [__INT__]\nBinary Level Repr:[__REPR__]\n" ; 
+
+  
   local StrReprFibLevel ;
   local IntOldLevel=0 ;
-  local -a ArrayFibHarmonic=( $( GVSFHDisplayDebug=False GetValueScaledFibHarmonic ${Arg0} ) ) ; 
+  local StrResultScaled=$( eval \
+           GVSFHDisplayDebug=False \
+           GVSFHDisplayEntry=False \
+           GVSFHDisplayProof=False \
+           GVSFHIntValue=${Arg0} \
+           GetValueScaledFibHarmonic  ) ; 
+  local -a ArrayFibHarmonic=( ${StrResultScaled} ) ; 
   
   IntLevelNb=$(( ${#ArrayFibHarmonic[@]} )) ;  
   IntLevel=$(( ${IntLevelNb} - 1 )) ;
-  echo -ne "Representation over ${ArrayFibHarmonic[0]} binary-position, of number ${Arg0}\n" > /dev/stderr ;
+    
+  StrMsg=${ArrayMsg[0]} ;
+  StrMsg=${StrMsg//__NUMBER__/${ArrayFibHarmonic[0]}}
+  StrMsg=${StrMsg//__INT__/${Arg0}} 
+  if [ "${BoolDisplayDebug:=False}" == "True" ] ; then 
+    echo -ne "${StrMsg}" > /dev/stderr ;
+  fi 
+  
   for (( intx=1 ; intx <= ${ArrayFibHarmonic[0]} ; intx++ )) ; do 
    IntLimitFix=${ArrayFibHarmonic[${IntLevel}]} ;
-   #echo -ne "Actual Limit:${IntLimitFix}, cursor at ${intx}\n" ; 
    if [ ${intx} -eq ${IntLimitFix} ] ; then 
-    #echo -ne "Adding to parity for representing value ${intx}\n" ;
     StrReprFibLevel="1${StrReprFibLevel}" ; 
     IntLevel=$(( ${IntLevel} - 1 )) ; 
    else
     StrReprFibLevel="0${StrReprFibLevel}" ;
    fi 
   done 
-  echo -ne "Number: ${Arg0}\nFib Harmonic: [${ArrayFibHarmonic[@]}]\nBinary Level Repr:[${StrReprFibLevel}]\n" ; 
+  
+  StrMsg=${ArrayMsg[1]} ;
+  StrMsg=${StrMsg//__NUMBER__/${Arg0}} ; 
+  StrMsg=${StrMsg//__INT__/${ArrayFibHarmonic[@]}} ; 
+  StrMsg=${StrMsg//__REPR__/${StrReprFibLevel}} ;  
+  
+  if [ "${BoolDisplayDebug:=False}" == "True" ] ; then 
+   echo -ne "${StrMsg}" > /dev/stderr ;
+  fi 
+  echo "${StrReprFibLevel}" ; 
+  
+  
  }
 fi
 

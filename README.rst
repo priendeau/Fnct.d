@@ -1723,6 +1723,42 @@ produce by copying the content and leaving the UUID-date like this they will
 always bring the user to this time of creation... A good way to prevent monkey-
 coder to re-introduce a project of a living person ... 
 
+Library _sub_binary
+-------------------
+
+Not so understood, Binary representation are driven blindly accross Math univers
+and computation. Existing Binary representation of number in base 2, in common
+computation it exist huffman dictionnary, and similar table to represent unique
+identity accross finite stream of information. Like draft version 0.0.0 of 
+FibBinaryLevelRepr, does serve representing in it's small way to repsensent a 
+number from All computable and possible in actual computation, it represent from
+1 and 0, if a Fibonacci based was used, as example : 2^32 give a value of 
+4294967296, it's highest Fibonacci number without being greater than is Level 46,
+and remain higher value to compute "1323752223" in several chains of Fibonacci
+Level, where a final list give eleventh number 
+[ 46 42 38 33 29 26 20 17 15  8  3]. From this list a Binary plain representation
+of  2^32 will stand over 46 state of Level of Fibonacci being 
+represented or not:
+
+1000100010000100010010000010010100000010000100
+
+Here the script to compute maximal value and does end in a limitation of 
+computing  at maximum 2^44 value in pure bash way. This example is only using 
+version 0.0.0 of FibBinaryLevelRepr which is purely demonstrative.
+
+.. code: shell
+
+  declare -a ArrayRes ; 
+  for (( x=32 ; x <= 44; x++ )) ; do 
+    echo -ne "Generating Repr, Fibonacci in binary notation, value : 2^${x}\n" ; 
+    ArrayTes[${x}]=$( eval FBLRDisplayDebug=False FibBinaryLevelRepr $(( 2 ** ${x} )) ) ; 
+    echo -ne "\tReturn ${ArrayTes[${x}]}\n"; 
+  done
+
+Also a demonstration. Show the Generated Binary stream of value 2^32 to 2^44 . 
+
+.. image:: https://github.com/priendeau/ElectronicSheet/raw/master/images/FibBinaryLevelRepr.png
+		:target: https://github.com/priendeau/Fnct.D#Library _sub_binary
 
 ------------------------
 Paper Draft informations
