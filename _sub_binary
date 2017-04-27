@@ -1291,3 +1291,58 @@ function MakeHuffmanPair()
 	fi 
  
 }
+
+unset ReadHuffmanPair RHPFile RHPArrayName RHPPerMemberCsv RHPInGroupCsv ; 
+
+function ReadHuffmanPair()
+{
+ local __call_locality=( RHP ReadHuffmanPair ) ;
+ local ArrayArg=( $* ) ; 
+ local Arg0=${ArrayArg[0]} ; 
+ local StrFile=${RHPFile:=./examples/file-binary-500pair.txt} ; 
+ local StrArrayName=${RHPArrayName:=ArrayRHP} ;
+ local StrIteratorCsv=${RHPPerMemberCsv:=';'} ;
+ local StrGroupCsv=${RHPInGroupCsv:=','} ;  
+ local IntCountSeg=0 ; 
+ local StrEvalStream="" ; 
+ local -a ArrayRead ; 
+ local -a ArrayBuffer ; 
+ 
+ local StrTplSedImport="s/\([\>0-9]\)\( \)\([\<0-9]\)/\1\__CSV_GROUP__\3/g" ; 
+ local StrTplSedCleanGroup="s/$/__CSV_GROUP__/g ; s/[__CVS_ITER__]\{1,\}$/__CVS_ITER__/g" ; 
+ local StrTplSedCleanIter="s/__CVS_ITER__\{1,\}$//g"
+ local StrTplSedPadIter="s/$/__CSV_GROUP__/g ; s/[__CSV_GROUP__]\{1,\}$/__CSV_GROUP__/g" ;  
+ StrTplSedImport=${StrTplSedImport//__CSV_GROUP__/${StrGroupCsv}} ; 
+ StrTplSedCleanGroup=${StrTplSedCleanGroup//__CSV_GROUP__/${StrGroupCsv}} ; 
+ StrTplSedCleanGroup=${StrTplSedCleanGroup//__CVS_ITER__/${StrIteratorCsv}} ; 
+ StrTplSedCleanIter=${StrTplSedCleanIter//__CVS_ITER__/${StrIteratorCsv}} ;  
+ StrTplSedPadIter=${StrTplSedPadIter//__CSV_GROUP__/${StrGroupCsv}} ; 
+ StrTplSedPadIter=${StrTplSedPadIter//__CVS_ITER__/${StrIteratorCsv}} ; 
+ 
+ StrDataImport=$( cat ${StrFile} | tr '[:cntrl:]' ${StrIteratorCsv} | eval "sed '${StrTplSedImport}'" ) ; 
+ ### Variable to count number of Iterator within group . 
+ echo -ne "Data Imported:[${StrDataImport}]\n" > /dev/stderr ; 
+ StrEvalStream=${StrDataImport//${StrIteratorCsv}/} 
+ IntCountSeg=$(( ${#StrDataImport} - ${#StrEvalStream} )) ; 
+ echo -ne "There is ${IntCountSeg} member to extract\n" > /dev/stderr ; 
+ StrASeg=$( echo ${StrDataImport} | eval "sed '${StrTplSedCleanGroup}'" ) ;
+ #echo -ne "StrASeg: ${StrASeg}\n " > /dev/stderr ; 
+
+ for (( intC=0 ; intC <= ${IntCountSeg} ; intC++ )) ; do 
+  StrBSeg=${StrASeg/%${StrIteratorCsv}[^${StrIteratorCsv}]*} ;  
+  StrASeg=${StrASeg/#${StrBSeg}${StrIteratorCsv}} ;
+  echo -ne "\tStrBSeg: ${StrBSeg}\n " > /dev/stderr ; 
+  StrCSeg=$( echo ${StrBSeg} | eval "sed '${StrTplSedCleanIter}'" )  ;  
+  StrCSeg=$( echo ${StrCSeg} | eval "sed '${StrTplSedPadIter}'" ) ;
+  echo -ne "StrCSeg: ${StrCSeg}\n " > /dev/stderr ; 
+  for(( intD=0 ; intD <=1 ; intD++ )) ; do 
+   StrDSeg=${StrCSeg/%${StrGroupCsv}[^${StrGroupCsv}]*} ;
+   echo -ne "\t\tStrDSeg: ${StrDSeg}\n" > /dev/stderr ; 
+   ArrayBuffer[${intD}]=${StrDSeg} ;
+   StrCSeg=${StrCSeg/#${StrDSeg}${StrGroupCsv}} ; 
+  done 
+  IntArrayIndice=$( printf "%.0f" ${ArrayBuffer[0]} ) ;  
+  ArrayRead[${IntArrayIndice}]=${ArrayBuffer[1]//${StrGroupCsv}/} ; 
+ done 
+ echo -ne "Array ArrayRead, hold ${#ArrayRead[@]} item\n" > /dev/stderr ; 
+}
