@@ -1746,14 +1746,15 @@ Here the script to compute maximal value and does end in a limitation of
 computing  at maximum 2^44 value in pure bash way. This example is only using 
 version 0.0.0 of FibBinaryLevelRepr which is purely demonstrative.
 
-.. code: shell
+.. code:: shell
 
-  declare -a ArrayRes ; 
-  for (( x=32 ; x <= 44; x++ )) ; do 
-    echo -ne "Generating Repr, Fibonacci in binary notation, value : 2^${x}\n" ; 
-    ArrayTes[${x}]=$( eval FBLRDisplayDebug=False FibBinaryLevelRepr $(( 2 ** ${x} )) ) ; 
-    echo -ne "\tReturn ${ArrayTes[${x}]}\n"; 
-  done
+
+   declare -a ArrayRes ; 
+   for (( x=32 ; x <= 44; x++ )) ; do 
+     echo -ne "Generating Repr, Fibonacci in binary notation, value : 2^${x}\n" ; 
+     ArrayTes[${x}]=$( eval FBLRDisplayDebug=False FibBinaryLevelRepr $(( 2 ** ${x} )) ) ; 
+     echo -ne "\tReturn ${ArrayTes[${x}]}\n"; 
+   done
 
 Also a demonstration. Show the Generated Binary stream of value 2^32 to 2^44 . 
 
