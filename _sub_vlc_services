@@ -1116,7 +1116,8 @@ if [ "${versionVSC:=0.0.0}" == "0.0.0" ] ; then
     local Arg0=${ArrayArg[0]} ; 
     local StrAddr=${VSCAddr:=none} ; 
     local StrPort=${VSCPort:=none} ; 
-    local StrQueueCmd=${VSCCmd:='help'} ; 
+    local StrQueueCmd=${VSCCmd:='help'} ;
+    local BoolDisplayDebug=${VSCVerbose:='False'} ;  
     local StrCacheRefTpl="/var/cache/Fnct.D/Register-VSL-__UUID__" ; 
     local StrCacheReference ; 
     local StrContent;
@@ -1204,25 +1205,30 @@ if [ "${versionVSC:=0.0.0}" == "0.0.0" ] ; then
     
     if [ ${BoolRejectSigErr:=False} == "True" ] ; then 
      ### Display All the error messages, encountered. 
-     for (( intMsg=0; intMsg<=${#ArrayErrMsg[@]}-1 ; intMsg++ )) ; do 
-      echo -ne "${ArrayErrMsg[${intMsg}]}" > /dev/stderr  ; 
-     done 
-      
+     if [ ${BoolDisplayDebug:=False} == "True" ] ; then 
+      for (( intMsg=0; intMsg<=${#ArrayErrMsg[@]}-1 ; intMsg++ )) ; do 
+       echo -ne "${ArrayErrMsg[${intMsg}]}" > /dev/stderr  ; 
+      done 
+     fi
     else
      echo "${StrQueueCmd}" | NSSAddresses=${StrAddr} NSSPort=${StrPort} NetSocketServices  ; 
     fi 
     
     if [ "${BoolProcessErr:=False}" == "True" ] ; then 
      ### Process come in error, throwing error . 
-     echo -ne "Error occur during processing the request.\n" > /dev/stderr ; 
-     for (( intMsg=0; intMsg<=${#ArrayErrProcMsg[@]}-1 ; intMsg++ )) ; do 
-      echo -ne "${ArrayErrProcMsg[${intMsg}]}" > /dev/stderr  ; 
-     done 
+     if [ ${BoolDisplayDebug:=False} == "True" ] ; then 
+      echo -ne "Error occur during processing the request.\n" > /dev/stderr ; 
+      for (( intMsg=0; intMsg<=${#ArrayErrProcMsg[@]}-1 ; intMsg++ )) ; do 
+       echo -ne "${ArrayErrProcMsg[${intMsg}]}" > /dev/stderr  ; 
+      done 
+     fi
     else
      # Everything went OK, display all the verbose. 
-     for (( intMsg=0; intMsg<=${#ArrayOutMsg[@]}-1 ; intMsg++ )) ; do 
-      echo -ne "${ArrayOutMsg[${intMsg}]}" > /dev/stderr  ; 
-     done 
+     if [ ${BoolDisplayDebug:=False} == "True" ] ; then 
+      for (( intMsg=0; intMsg<=${#ArrayOutMsg[@]}-1 ; intMsg++ )) ; do 
+       echo -ne "${ArrayOutMsg[${intMsg}]}" > /dev/stderr  ; 
+      done 
+     fi
     fi 
 
  }
