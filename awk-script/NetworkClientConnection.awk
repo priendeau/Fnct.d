@@ -33,6 +33,17 @@
 ### example of command that not waiting a receipt:
 ### gawk -vNCCCmd="volume" -vNCCIsReturn=true -vNSSAddresses=127.0.0.1 -f NetworkClientConnection.awk
 
+function RandomLocalPort( localport, randomRange )
+{
+ srand(systime()) ;
+ IntReturn=int( randomRange * rand() )+localport ;
+ if( NCCVerbose == "true" )
+ {
+  printf("Local Port used:%i\n",IntReturn) > StdErr;
+ }
+ 
+ return IntReturn
+}
 function Connection( protocol, localport, addr, destport, fileDecl )
 {
  ### default example connection String:
@@ -40,29 +51,51 @@ function Connection( protocol, localport, addr, destport, fileDecl )
  Service=sprintf(fileDecl ,protocol, localport, addr, destport ) ; 
  return Service ;
 }
-function CommandSend( srvConnection, strCmd , returnElement )
+function TimeOutService( Service , defaultTimeOut )
+{
+  PROCINFO[Service, "READ_TIMEOUT"] = defaultTimeOut
+}
+function CommandSend( srvConnection, strCmd , returnElement, OutPutDev )
 {
  StrReturn="" ;
+ 
+ printf("%s\n",strCmd) |& srvConnection ;
  if( returnElement == "true" )
  {
-  printf("Sending command(return receipt):%s\n",strCmd) ; 
+  
+  if( NCCVerbose == "true" )
+  {
+   printf("Sending command(return receipt):%s\n",strCmd) > OutPutDev ; 
+  }
   #print VSCCmd |& srvConnection ;
-  printf("%s\n",strCmd) |& srvConnection ;
+  
   srvConnection |& getline ;
   StrReturn=$0 ; 
   printf("%s\n",StrReturn);
  }
  else
  {
-  printf("Sending command(not waiting receipt):%s\n",strCmd) ;  
-  #print strCmd |& srvConnection ;
-  printf("%s\n",strCmd) |& srvConnection ;
+  if( NCCVerbose == "true" )
+  {
+   printf("Sending command(not waiting receipt):%s\n",strCmd) > OutPutDev;  
+  }
  }
  return StrReturn ; 
 }
 BEGIN{ 
  tcp="tcp"; 
  udp="udp";
+ StdErr="/dev/stderr" ; 
+
+ if( NCCVerbose == "" )
+ {
+  NCCVerbose="false" ; 
+ }
+ else if( NCCVerbose == "true" )
+ {
+  printf("Warning Verbose configured.\n") > StdErr; 
+ }
+ 
  if ( NCCCmd == "" )
  {
   NCCCmd="get_length" ; 
@@ -77,7 +110,21 @@ BEGIN{
  }
  else
  {
-   printf("Addresse specified from cmdline:(%s)\n",NSSAddresses) ;
+   if( NCCVerbose == "true" )
+   {
+    printf("Addresse specified from cmdline:(%s)\n",NSSAddresses) > StdErr ;
+   } 
+ }
+ if( NSSTimeOut == "" )
+ {
+   NSSTimeOut=100 ; 
+ }
+ else
+ {
+   if( NCCVerbose == "true" )
+   {
+     printf("Connection configured with timeout of %i ms\n",NSSTimeOut) > StdErr ; 
+   } 
  }
  if( NSSPort == "" )
  {
@@ -93,8 +140,12 @@ BEGIN{
  }
  #"/inet4/tcp/45000/127.0.0.1/5083"; 
  #Service=Connection( tcp, 45000, "127.0.0.1", 5083 );
- CommandSend( Connection( tcp, 45000, NSSAddresses, NSSPort , NCCFileDecl ), NCCCmd, NCCIsReturn ) ;
+ IntRandomPort=RandomLocalPort( 45000, 1024 )
+ Service=Connection( tcp, IntRandomPort, NSSAddresses, NSSPort , NCCFileDecl ) ;
+ TimeOutService(Service,NSSTimeOut) ;
+ CommandSend( Service , NCCCmd, NCCIsReturn, StdErr ) ;
  
  #print VSCCmd |& Service ; Service |& getline ; printf("%s\n",$0); close(Services); 
  close(Service);
+ close(StdErr) ;
 }
