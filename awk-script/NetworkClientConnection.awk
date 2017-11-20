@@ -1,5 +1,5 @@
 #!/usr/bin/gawk 
-
+# -*- file : NetworkClientConnection.awk -*-
 
 ### 
 ### UUID:c3a27994-42ab-11e7-8b1d-001e4c8856d6
@@ -37,7 +37,7 @@ function RandomLocalPort( localport, randomRange )
 {
  srand(systime()) ;
  IntReturn=int( randomRange * rand() )+localport ;
- if( NCCVerbose == "true" )
+ if( tolower(NCCVerbose) == "true" )
  {
   printf("Local Port used:%i\n",IntReturn) > StdErr;
  }
@@ -60,10 +60,10 @@ function CommandSend( srvConnection, strCmd , returnElement, OutPutDev )
  StrReturn="" ;
  
  printf("%s\n",strCmd) |& srvConnection ;
- if( returnElement == "true" )
+ if( tolower(returnElement) == "true" )
  {
   
-  if( NCCVerbose == "true" )
+  if( toLower(NCCVerbose) == "true" )
   {
    printf("Sending command(return receipt):%s\n",strCmd) > OutPutDev ; 
   }
@@ -75,7 +75,7 @@ function CommandSend( srvConnection, strCmd , returnElement, OutPutDev )
  }
  else
  {
-  if( NCCVerbose == "true" )
+  if( tolower(NCCVerbose) == "true" )
   {
    printf("Sending command(not waiting receipt):%s\n",strCmd) > OutPutDev;  
   }
@@ -91,7 +91,7 @@ BEGIN{
  {
   NCCVerbose="false" ; 
  }
- else if( NCCVerbose == "true" )
+ else if( tolower(NCCVerbose) == "true" )
  {
   printf("Warning Verbose configured.\n") > StdErr; 
  }
@@ -102,7 +102,7 @@ BEGIN{
  } 
  if( NCCIsReturn == "" )
  {
-  NCCIsReturn="true"
+  NCCIsReturn="True"
  }
  if( NSSAddresses == "" )
  {
@@ -110,7 +110,7 @@ BEGIN{
  }
  else
  {
-   if( NCCVerbose == "true" )
+   if( tolower(NCCVerbose) == "true" )
    {
     printf("Addresse specified from cmdline:(%s)\n",NSSAddresses) > StdErr ;
    } 
@@ -121,7 +121,7 @@ BEGIN{
  }
  else
  {
-   if( NCCVerbose == "true" )
+   if( tolower(NCCVerbose) == "true" )
    {
      printf("Connection configured with timeout of %i ms\n",NSSTimeOut) > StdErr ; 
    } 
@@ -132,7 +132,7 @@ BEGIN{
  }
  if( NSSUseStdIn == "" )
  {
-  NSSUseStdIn="false" ; 
+  NSSUseStdIn="False" ; 
  }
  if( NCCFileDecl == "" )
  {
