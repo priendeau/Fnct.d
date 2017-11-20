@@ -150,152 +150,294 @@ function ActivateServerBuffer()
  #eval echo """${StrTestCmd} && rm -f ${StrFifoDevice} && ${StrTestApps} ${StrTestSwitche}-f ${StrFifoDevice} && rm -f ${StrFifoDevice} && mkfifo ${StrFifoDevice}""" ;    
 }
 
-unset DoCtrlHandler ;
-function DoCtrlHandler()
-{
-  function Verbosis()
-  {
-   local -a ArrayArg=( $* ) ;
-   local -a __call_locality=( Verb Verbosis ) ; 
-   local Arg0=${ArrayArg[0]} ; 
-   local StrMsg=${VerbMsg:=__TEXT__} ; 
-   local StrDevOut=${VerbDev:=/dev/stderr} ; 
-   local IsVerboseState=${VerbState:=False} ;
-   local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
-   local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
-   local IsDisplayFormatted=${VerbFormated:=True} ;
-   local IsAppendMode=${VerbAppendDev:=False} ; 
-   local IsExtendedOutput=${VerbExtendedOut:=False} ; 
-   local ArrayArg=( $* ) ; 
-   if [ "${IsVerboseState:=False}" == "True" ] ; then 
-    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
-     if [ "${IsAppendMode:=False}" == "True" ] ; then 
-       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
-     else  
-       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
-     fi
-    else
-     if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
-      if [ "${IsExtendedOutput:=False}" == "True" ] ; then 
-        echo -ne "${StrMsg}" ;  
-      else
-        echo "${StrMsg}" ;  
+if [ "${versionDCH:=0.0.0}" == "0.0.0" ] ; then
+
+ unset DoCtrlHandler ;
+ function DoCtrlHandler()
+ {
+   function Verbosis()
+   {
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Verb Verbosis ) ; 
+    local Arg0=${ArrayArg[0]} ; 
+    local StrMsg=${VerbMsg:=__TEXT__} ; 
+    local StrDevOut=${VerbDev:=/dev/stderr} ; 
+    local IsVerboseState=${VerbState:=False} ;
+    local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+    local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+    local IsDisplayFormatted=${VerbFormated:=True} ;
+    local IsAppendMode=${VerbAppendDev:=False} ; 
+    local IsExtendedOutput=${VerbExtendedOut:=False} ; 
+    local ArrayArg=( $* ) ; 
+    if [ "${IsVerboseState:=False}" == "True" ] ; then 
+     if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+      if [ "${IsAppendMode:=False}" == "True" ] ; then 
+        echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
+      else  
+        echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
       fi
      else
-      if [ "${IsAppendMode:=False}" == "True" ] ; then 
+      if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
        if [ "${IsExtendedOutput:=False}" == "True" ] ; then 
-         echo -ne "${StrMsg}" >> ${StrDevOut} ;
+         echo -ne "${StrMsg}" ;  
        else
-         echo "${StrMsg}" >> ${StrDevOut} ;
+         echo "${StrMsg}" ;  
        fi
       else
-       if [ "${IsExtendedOutput:=False}" == "True" ] ; then 
-        echo -ne "${StrMsg}" > ${StrDevOut} ;
+       if [ "${IsAppendMode:=False}" == "True" ] ; then 
+        if [ "${IsExtendedOutput:=False}" == "True" ] ; then 
+          echo -ne "${StrMsg}" >> ${StrDevOut} ;
+        else
+          echo "${StrMsg}" >> ${StrDevOut} ;
+        fi
        else
-        echo "${StrMsg}" > ${StrDevOut} ;
-       fi 
-      fi
+        if [ "${IsExtendedOutput:=False}" == "True" ] ; then 
+         echo -ne "${StrMsg}" > ${StrDevOut} ;
+        else
+         echo "${StrMsg}" > ${StrDevOut} ;
+        fi 
+       fi
+      fi 
      fi 
-    fi 
+    fi
+   } 
+   ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
+  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( DCH DoCtrlHandler ) ;
+   local Arg0="${ArrayArg[0]}" ; 
+   local StrParentApps=${__call_locality[1]} ;
+   local StrStartMain=${DCHFuncStart:=__main_StartServices} ; 
+  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+   eval $( eval CAFunctName=DoCtrlHandler CAIsAddParent=False __Call_Argument ) ; 
+  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+   eval $( eval CAFunctName=DoCtrlHandler UUID=${CAUUID:=None} CAIsAddDebug=True CAProvideDebug=DisplayDebug,DisplayEntry,DisplayCmd CAIsAddParent=False CallArgument ) ;
+  fi  
+
+  local StrVTVRegistry=${VCSVTVReg:=VTVIsDebugDisplay=True,VTVIsSlowDebug=True,VTVIsWhiteList=True,VTVIsArrayStyleInsert=True,VTVIsValueReAssign=True,VTVIsValueToConvert=False,VTVIsArrayStyleInsert=True,VTVIsQuotedValue=True} ;
+  local StrPathActionState=${DCHTplActionFile:=__PATH__/__ACTION__-__SHORTFUNC__-__UUID__} ; 
+  local StrAction=${DCHActionSubscription:=LOOP} ; 
+  local StrUUIDReg=${DCHUUIDRegister:=None} ; 
+  local BoolUnsubscribe=${DCHActionIsUnsubscr:=False} ; 
+  local BoolCreateUUID=${DCHCreateUUID:=False} ; 
+  local StrFunctionReg=${DCHFunctionName:=None} ; 
+  local StrVTVWhiteList=${DCHWhiteList:=UUID,VCSVTVReg,RPCIsDisplayDebug,RPCIsDisplayEntry,RPCIsDisplayCmd,RPCFuncNameRegister,RPCUUID} ; 
+  
+  local StrVarList="StrVTVWhiteList,StrAction,BoolUnsubscribe,BoolCreateUUID,BoolDisplayDebug,BoolDisplayEntry,BoolDisplayCmd,StrVTVRegistry,StrParentApps" ;
+
+
+  local -a ArrayMsg=() ;
+  ArrayMsg[0]="Entry in function" ; 
+  
+  function ReadPersistentCache()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( RPC ReadPersistentCache ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=ReadPersistentCache CAIsAddParent=True __Call_Argument ) ;
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=ReadPersistentCache CAIsAddParent=True CallArgument ) ;
    fi
+   
+   local BoolDisplayDebug=${RPCIsDisplayDebug:=True} ; 
+   local BoolDisplayEntry=${RPCIsDisplayEntry:=False} ;
+   local BoolDisplayCmd=${RPCIsDisplayCmd:=False} ;  
+   local StrFuncNameCaching=${RPCFuncNameRegister:=None} ; 
+   local StrUUIDRegistered=${RPCUUID:=None}
+   local StrCacheRefTpl="/var/cache/Fnct.D/Register-__FNCT__-__UUID__" ; 
+   local StrCacheReference ; 
+   local StrContent;
+   local StrSig; 
+   local StrSha1Sum ;
+   local BoolRejectSigErr=False ;
+   local BoolProcessErr=False ; 
+   local IntCountCall=0 ;
+   local -a ArrayErrMsg ; 
+   local -a ArrayErrProcMsg ; 
+   local -a ArrayOutMsg ;
+   local -a ArrayCache ; 
+   StrVarList="StrFuncNameCaching,StrUUIDRegistered,BoolDisplayEntry,BoolDisplayCmd,BoolDisplayDebug,StrCacheRefTpl,StrCacheReference,StrContent,StrSha1Sum,BoolRejectSigErr,BoolProcessErr,IntCountCall"
+   
+   if [ "${StrUUIDRegistered:=None}" != "None" ] ; then 
+    StrCacheReference=${StrCacheRefTpl/__UUID__/${StrUUIDRegistered}} ;
+    local StrFuncShortName=$( eval """GSPNArg0=${StrFuncNameCaching} GetStdPrefixName""" ); 
+    StrCacheReference=${StrCacheRefTpl/__FNCT__/${StrFuncShortName}} ;
+    StrMsg="Registered Persistent information should be found in file:__FILE__" ;
+    echo -ne "${StrMsg//__FILE__/${StrCacheReference}}\n" > /dev/stderr ; 
+    
+    if [ -f ${StrCacheReference} ] ; then 
+     ArrayOutMsg[${#ArrayOutMsg[@]}]="UUID Instance discovered:\n\tUUID: ${UUID}\n\tfile ${StrCacheReference} will be used as instance-registration.\n" ; 
+     StrContent=$( eval GBLDFileStoreInfo=${StrCacheReference} GBLDAction=GetContent GetterByLineData ) ;  
+     StrSig=$( eval GBLDFileStoreInfo=${StrCacheReference} GBLDAction=GetHeader GetterByLineData ) ;  
+     StrSha1Sum=$( eval GBLDFileStoreInfo=${StrCacheReference} GBLDAction=ShaSum1Content GetterByLineData  ) 
+    
+     ### Counting Number of CSV by reducing the String from them and calculating 
+     ### the final-length after reduction. 
+     local StrContentStrip=${StrContent//,/} ; 
+     local IntContentStrip=$(( ${#StrContent} - ${#StrContentStrip} )) ; 
+     
+     if [ "${StrSig}" == "${StrSha1Sum}" ] ; then 
+      StrASeg=$( echo ${StrContent} | sed 's/$/,/g ; s/[,]\{1,\}$/,/g' ; ) ;
+      for(( IntA=0 ; IntA <= ${IntContentStrip}-1 ; IntA++ )) ; do 
+       IntCountCall=$((${IntCountCall}+1)) ; 
+       StrBSeg=${StrASeg/%,[^,]*} ; 
+       ArrayOutMsg[${#ArrayOutMsg[@]}]="Status StrASeg: [${StrASeg}]\nPart Extracted:\n\tStrBSeg: [${StrBSeg}]\n" ;
+       StrASeg=${StrASeg/#${StrBSeg},} ; 
+       ArrayOutMsg[${#ArrayOutMsg[@]}]="Status StrASeg:\n\tAfter cleaning, [${StrASeg}]\n" ;
+       
+       local -a ArrayVarCreation ;
+       ### Format of each Serialized chunk is made from :
+       ### 0 addr : Variable name 
+       ### 1 addr : codec type (base64/text) 
+       ### 2 addr : Value. 
+       ### And should clean odd-csv
+       StrCSeg=$( echo ${StrBSeg} | sed 's/,\{1,\}$//g' )  ; 
+       #StrCSeg=${StrBSeg} ; 
+       ### Ensure the algorithm of match-substitution by alterning prefix/suffix
+       ### have a separator at the end. 
+       StrCSeg=$( echo ${StrCSeg} | sed 's/$/:/g ; s/[:]\{1,\}$/:/g' ) ;
+       for(( IntB=0 ; IntB <= 2 ; IntB++ )) ; do 
+        StrDSeg=${StrCSeg/%:[^:]*} ;
+        ArrayVarCreation[${IntB}]=$( echo ${StrDSeg} | sed 's/[:]\{1,\}$//g' ) ; 
+        StrCSeg=${StrCSeg/#${StrDSeg}:} ; 
+       done 
+       ### Variable Creation from De-Serialization . 
+       ArrayOutMsg[${#ArrayOutMsg[@]}]="\t\tExtracting variable:${ArrayVarCreation[0]}\n"  ; 
+       ArrayOutMsg[${#ArrayOutMsg[@]}]="\t\tVariable Codec:${ArrayVarCreation[1]}\n" ;
+       if [ "${ArrayVarCreation[1]}" == "base64" ] ; then 
+        StrValue=$( echo ${ArrayVarCreation[2]} | base64 -d ) ; 
+        ArrayOutMsg[${#ArrayOutMsg[@]}]="\tBase64 Conversion, Value: [${ArrayVarCreation[2]}] converted in [${StrValue}]\n" ;
+        eval "${ArrayVarCreation[0]}=${StrValue}" ;
+       elif [ "${ArrayVarCreation[1]}" == "text" ] ; then 
+        ### Require to remove current value of variable:
+        unset ${ArrayVarCreation[0]} ; 
+        #eval "${ArrayVarCreation[0]}=${ArrayVarCreation[2]}" ;
+       fi 
+       ArrayCache[${#ArrayCache[@]}]="${ArrayVarCreation[0]}=${ArrayVarCreation[2]};" ; 
+       eval "StrEval=\"[ ${ArrayVarCreation[0]} ; \${${ArrayVarCreation[0]}} ]\"" ; 
+       ArrayOutMsg[${#ArrayOutMsg[@]}]="Variable created:[${StrEval}]\n" ;
+       if [ ${IntCountCall} -gt $((${IntContentStrip}+1)) ] ; then 
+        ArrayErrProcMsg[${#ArrayErrProcMsg[@]}]="Breaking Code for abnormal looping\n\tExcess number of parameter to filter set to ${IntContentStrip}, it already excess the limit.\n" ; 
+        BoolProcessErr=True ; 
+        break ; 
+       fi 
+      done ; 
+   
+     else
+     ArrayErrMsg[${#ArrayErrMsg[@]}]="Rejected UUID References, SHA1SUM does not match with Registration.\nFill out another VlcServicesLayer with news parameter and start this application with UUID instance id.\n"
+     ArrayErrProcMsg[${#ArrayErrProcMsg[@]}]="Signature rejection.\n" ; 
+     BoolRejectSigErr=True ;
+     BoolProcessErr=True ;
+     fi 
+    else
+     ArrayErrMsg[${#ArrayErrMsg[@]}]="Warning UUID value: ${UUID} is not existing inside Fnct.D cache.\n\tPlease, register one properly with VlCServicesLayer\n\tand use it's UUID instance as UUID value.\n" ; 
+     ArrayErrProcMsg[${#ArrayErrProcMsg[@]}]="File missing or read-access problems.\n" ; 
+     BoolRejectSigErr=True ; 
+     BoolProcessErr=True ;
+    fi 
+   fi 
+   
+   if [ ${BoolDisplayDebug:=False} == "True" ] ; then 
+    for (( intMsg=0; intMsg<=${#ArrayErrMsg[@]}-1 ; intMsg++ )) ; do 
+     echo -ne "${ArrayErrMsg[${intMsg}]}" > /dev/stderr  ; 
+    done 
+   fi
+   
+   if [ "${BoolProcessErr:=False}" == "True" ] ; then 
+    ### Process come in error, throwing error . 
+    if [ ${BoolDisplayDebug:=False} == "True" ] ; then 
+     echo -ne "Error occur during processing the request.\n" > /dev/stderr ; 
+     for (( intMsg=0; intMsg<=${#ArrayErrProcMsg[@]}-1 ; intMsg++ )) ; do 
+      echo -ne "${ArrayErrProcMsg[${intMsg}]}" > /dev/stderr  ; 
+     done 
+    fi
+   else
+    # Everything went OK, display all the verbose. 
+    if [ ${BoolDisplayDebug:=False} == "True" ] ; then 
+     for (( intMsg=0; intMsg<=${#ArrayOutMsg[@]}-1 ; intMsg++ )) ; do 
+      echo -ne "${ArrayOutMsg[${intMsg}]}" > /dev/stderr  ; 
+     done 
+    fi
+    ### Display the result:
+    echo -ne "${ArrayCache[@]}" ; 
+   fi
+
+
+  }
+  
+  function __main_StartServices()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+   fi
+  
+   local StrUUID="None" ; 
+   
+   if [ "${BoolCreateUUID}" == "True" ] ; then 
+    StrUUID=$( GetUAppsRegisterName=${StrParentApps} GetUTimeBased=True GetULoop=False GetUUID ) ; 
+   fi
+  
+  }
+
+  function __main_StopServices()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Main __main_StopServices ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True __Call_Argument ) ;
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True CallArgument ) ;
+   fi 
+   local StrMsg="Entry in function" ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
   } 
-  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
- if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
-  local -a ArrayArg=( $* ) ;
-  local -a __call_locality=( DCH DoCtrlHandler ) ;
-  local Arg0="${ArrayArg[0]}" ; 
-  local StrParentApps=${__call_locality[1]} ;
-  local StrStartMain=${DCHFuncStart:=__main_StartServices} ; 
- elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
-  eval $( eval CAFunctName=DoCtrlHandler CAIsAddParent=False __Call_Argument ) ; 
- elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-  eval $( eval CAFunctName=DoCtrlHandler UUID=${CAUUID:=None} CAIsAddDebug=True CAProvideDebug=DisplayDebug,DisplayEntry,DisplayCmd CAIsAddParent=False CallArgument ) ;
- fi  
 
- local StrVTVRegistry=${VCSVTVReg:=VTVIsArrayStyleInsert=True,VTVIsValueReAssign=True,VTVIsValueToConvert=False,VTVIsArrayStyleInsert=True,VTVIsQuotedValue=True} ;
- local StrPathActionState=${DCHTplActionFile:=__PATH__/__ACTION__-__SHORTFUNC__-__UUID__} ; 
- local StrAction=${DCHActionSubscription:=LOOP} ; 
- local StrUUIDReg=${DCHUUIDRegister:=None} ; 
- local BoolUnsubscribe=${DCHActionIsUnsubscr:=False} ; 
- local BoolCreateUUID=${DCHCreateUUID:=False} ; 
- local StrFunctionReg=${DCHFunctionName:=None} ; 
- 
- local StrVarList="StrAction,BoolUnsubscribe,BoolCreateUUID,BoolDisplayDebug,BoolDisplayEntry,BoolDisplayCmd,StrVTVRegistry,StrParentApps" ;
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+  local StrNameHelper="${__call_locality[1]}\n\tA Service implementation for Loop and persistent cache information registered as UUID.";
+  local StrSynopsis="\n\t";
+  local StrSummary="\n\t" ; 
+  local StrDescription="\n\tUsing DoCtrlHandler as UUID reader or for a finite function already registered :\n\tRPCUUID=UUID DCHFuncStart=ReadPersistentCache DoCtrlHandler " ;
 
-
- local -a ArrayMsg=() ;
- ArrayMsg[0]="Entry in function" ; 
- 
- function __main_StartServices()
- {
-  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
-   local -a ArrayArg=( $* ) ;
-   local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
-   local Arg0="${ArrayArg[0]}" ; 
-  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
-   eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
-  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-   eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
-  fi
- 
-  local StrUUID="None" ; 
-  
-  if [ "${BoolCreateUUID}" == "True" ] ; then 
-   StrUUID=$( GetUAppsRegisterName=${StrParentApps} GetUTimeBased=True GetULoop=False GetUUID ) ; 
-  fi
- 
- }
-
- function __main_StopServices()
- {
-  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
-   local -a ArrayArg=( $* ) ;
-   local -a __call_locality=( Main __main_StopServices ${StrParentApps} ) ;
-   local Arg0="${ArrayArg[0]}" ; 
-  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
-   eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True __Call_Argument ) ;
-  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-   eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True CallArgument ) ;
+  ### Section : Switches-Statememt 
+  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   ### GVRIsName set to True is the Variable handled StrNameHelper by GetVarReference and 
+   ### provide a Name-Helper inside the live-documentation if we call StartSlewAnalysis --help.
+   ### Extending the help by turning other variable to True will increae help. Variable are
+   ### declared previously. 
+   GVRIsName=True     GVRIsSummary=True  GVRIsSynopsis=True GVRIsDesc=True    GetVarReference ${__call_locality[1]} ; 
+   #VerbMsg="${StrSwitchMessages}" VerbState=True       VerbEvalForm=False   VerbFormated=False    VerbExtendedOut=True VerbDev=/dev/stderr  Verbosis ;
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;	
+  elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
+   eval $( eval ${StrVTVRegistry//,/ } \
+           VTVValueEntry=${StrVarList} \
+           VTVWhiteListTransfert=${StrVTVWhiteList}  \
+           ValueToVariable ) __main_StopServices ; 
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+   StrMsg=$( DoCtrlHandler --get ArrayMsg[0] ) ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   eval $( eval ${StrVTVRegistry//,/ } \
+           VTVWhiteListTransfert=${StrVTVWhiteList}  \
+           VTVValueEntry=${StrVarList} \
+           ValueToVariable ) ${StrStartMain} 
   fi 
-  local StrMsg="Entry in function" ; 
-  VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
- } 
 
- local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
- local StrNameHelper="${__call_locality[1]}\n\tApplication to process a loop in a \n\tAudio session with VLC services and a Running \n\tVLCServer, (OldVLCServer). Require \n\tVlcServicesLayer registration.";
- local StrSynopsis="\n\tUsed to loop inside a Music session or long record like\n\trecorded Stream or recorded internet-radio, it \n\tprovide design to start a Track, loop over and\n\tover. It should own a StopServices to stop \n\tlooping.\n\n\tOther property of ${__call_locality[1]} ,\n\tto use a DoCtrlHandler receive Both \n\tServiceControllerHandler request to end and\n\tDoCtrlHandler do altering variable like\n\tIntStart/IntStop, managed by Prefixed-Variable\n\tRIASStart/RIASStop.\n";
- local StrSummary="\n\tThis application is Looping running music and only when\n\tit's playing. Using  'get_time'  from  VLC\n\tservices it will not rewind or start over if\n\tthe  pause  is  activated.\n" ; 
- local StrDescription="\n\tBecause this application require VlcServicesLayer to\n\tmake this application work. You will require to pass\n\tthis UUID to RIASVlcUUID require part of a Socket\n\tconnection, this UUID, as a result to short-cutting\n \tinformation of Socket connection to your Vlc instance,\n \tyour registration will require to fill information\n \tabout hostname, port... Don't forget ,\n\tVlcServicesLayer can register current variable or\n\tspecified in prefixed-variable and require to subscribe\n\tor fill your variable name to VSLStoreVar.\n" ;
-
- ### Section : Switches-Statememt 
- if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-  ### GVRIsName set to True is the Variable handled StrNameHelper by GetVarReference and 
-  ### provide a Name-Helper inside the live-documentation if we call StartSlewAnalysis --help.
-  ### Extending the help by turning other variable to True will increae help. Variable are
-  ### declared previously. 
-  GVRIsName=True     GVRIsSummary=True  GVRIsSynopsis=True GVRIsDesc=True    GetVarReference ${__call_locality[1]} ; 
-  #VerbMsg="${StrSwitchMessages}" VerbState=True       VerbEvalForm=False   VerbFormated=False    VerbExtendedOut=True VerbDev=/dev/stderr  Verbosis ;
- elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-  eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-  echo -ne """${ArgGet}\n""" ;
- elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-  eval $( __GetVarReferenceList ) ;	
- elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
-  eval $( eval ${StrVTVRegistry//,/ } \
-          VTVValueEntry=${StrVarList} \
-          VTVWhiteListTransfert=UUID  \
-          ValueToVariable ) __main_StopServices ; 
- elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
-  StrMsg=$( DoCtrlHandler --get ArrayMsg[0] ) ; 
-  VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
-  eval $( eval ${StrVTVRegistry//,/ } \
-          VTVWhiteListTransfert=UUID  \
-          VTVValueEntry=${StrVarList} \
-          ValueToVariable ) ${StrStartMain} 
- fi 
-
-  
-}
+   
+ }
+fi #End-if ${versionDCH} == 0.0.0
 
 unset VlcServer ;
 
@@ -885,29 +1027,176 @@ function VLCSetVolume()
 }
 
 if [ "${versionNSS:=0.0.0}" == "0.0.0" ] ; then 
+ 
  unset NetSocketServices ; 
  unset NSSSocketApps NSSAddresses NSSPort NSSSocketAppsOpt ; 
+ 
  function NetSocketServices()
  {
-  local -a ArrayArg=( $* ) ;
-  local -a __call_locality=( NSS NetSocketServices ) ;
-  local Arg0=${ArrayArg[0]} ; 
+  function Verbosis()
+  {
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( Verb Verbosis ) ; 
+   local Arg0=${ArrayArg[0]} ; 
+   local StrMsg=${VerbMsg:=__TEXT__} ; 
+   local StrDevOut=${VerbDev:=/dev/stderr} ; 
+   local IsVerboseState=${VerbState:=False} ;
+   local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+   local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+   local IsDisplayFormatted=${VerbFormated:=True} ;
+   local IsAppendMode=${VerbAppendDev:=False} ; 
+   local IsExtendedOutput=${VerbExtendedOut:=False} ; 
+   local ArrayArg=( $* ) ; 
+   if [ "${IsVerboseState:=False}" == "True" ] ; then 
+    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+     if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
+     else  
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+     fi
+    else
+     if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+      if [ "${IsExtendedOutput:=False}" == "True" ] ; then 
+        echo -ne "${StrMsg}" ;  
+      else
+        echo "${StrMsg}" ;  
+      fi
+     else
+      if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       if [ "${IsExtendedOutput:=False}" == "True" ] ; then 
+         echo -ne "${StrMsg}" >> ${StrDevOut} ;
+       else
+         echo "${StrMsg}" >> ${StrDevOut} ;
+       fi
+      else
+       if [ "${IsExtendedOutput:=False}" == "True" ] ; then 
+        echo -ne "${StrMsg}" > ${StrDevOut} ;
+       else
+        echo "${StrMsg}" > ${StrDevOut} ;
+       fi 
+      fi
+     fi 
+    fi 
+   fi
+  } 
+  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
+  ### Shortcut, primitive to make easier uses of 
+  ### NetworkClientConnection.awk as NC replacement.
+  ### 
+  ### Definition : NccRe, stand for 
+  ### Network Client Connection Receipt Required
+  ### 
+  function NccRe()
+  { 
+    gawk -vNCCCmd="${NRCmd:=${*}}"           \
+     -vNCCVerbose=${NRIsDisplayDebug:=false} \
+     -vNSSTimeOut=${NRTimeOut:=2500}         \
+     -vNSSPort=${NRPort:=5083}               \
+     -vNCCIsReturn=true                      \
+     -vNSSAddresses=${NRAddr:=127.0.0.1}     \
+     -f ${NRScript:=/etc/init.d/Fnct.D/awk-script/NetworkClientConnection.awk} ; 
+  }
+
+  ### Shortcut, primitive to make easier uses of 
+  ### NetworkClientConnection.awk as NC replacement.
+  ### 
+  ### Definition : NccNr, stand for 
+  ### Network Client Connection No Receipt Required
+  ### 
+  ### 
+  function NccNr()
+  { 
+    gawk -vNCCCmd="${NNCmd:=${*}}"          \
+    -vNCCVerbose=${NNIsDisplayDebug:=false} \
+    -vNSSTimeOut=${NNTimeOut:=3000}         \
+    -vNSSPort=${NNPort:=5083}               \
+    -vNCCIsReturn=false                     \
+    -vNSSAddresses=${NNAddr:=127.0.0.1}     \
+    -f ${NNScript:=/etc/init.d/Fnct.D/awk-script/NetworkClientConnection.awk} ;
+  }
+  
+  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( NSS NetSocketServices ) ;
+   local Arg0="${ArrayArg[0]}" ; 
+   local StrParentApps=${__call_locality[1]} ;
+   local StrStartMain=${NSSFuncStart:=__main_StartServices} ; 
+  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+   eval $( eval CAFunctName=NetSocketServices CAIsAddParent=False __Call_Argument ) ; 
+  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+   eval $( eval CAFunctName=NetSocketServices CAIsAddParent=False CallArgument ) ;
+  fi
+
   local StrSocketApps=${NSSSocketApps:=/bin/nc} ; 
   local StrSocketAddr=${NSSAddresses:=127.0.0.1} ; 
   local StrSocketPort=${NSSPort:=5083} ; 
   local StrSocketAppsParam=${NSSSocketAppsOpt:=-i 3} ;
   local StrSocketBuffer=${NSSBuffer:=1024} ;
-  local IsVerbose=${NSSIsVerbose:=False} ; 
-  local StrBufferCmd="-O __BUFFER__" ; 
-  StrBufferCmd=${StrBufferCmd//__BUFFER__/${StrSocketBuffer}} ; 
-  local StrCmd="${StrSocketApps} ${StrBufferCmd} ${StrSocketAppsParam} ${StrSocketAddr} ${StrSocketPort}" ; 
-  if [ "${IsVerbose:=False}" == "True" ] ; then
-   echo -ne "Application ${__call_locality[1]} using following parameter:\n\tCMD:[${StrCmd}]\n" > /dev/stderr ; 
-  fi
-  ${StrCmd}
-  #${StrSocketApps} ${StrSocketBuffer} ${StrSocketAppsParam} ${StrSocketAddr} ${StrSocketPort}  ; 
+  local BoolIsVerbose=${NSSIsVerbose:=False} ; 
+  local BoolIsDisplayEntry=${NSSIsDisplayEntry:=False} ; 
+  local StrVTVRegistry=${NSSVTVReg:=VTVIsWhiteList=True,VTVIsArrayStyleInsert=True,VTVIsValueReAssign=True,VTVIsValueToConvert=False,VTVIsArrayStyleInsert=True,VTVIsQuotedValue=True} ;
+  local StrWhiteListVTV=${NSSWhiteList:=UUID,NRUUID,NNUUID,NRScript,NRCmd,NRTimeOut,NRPort,NRAddr,NNScript,NNCmd,NNTimeOut,NNPort,NNAddr} ; 
+  StrVarList="StrWhiteListVTV,StrSocketApps,StrSocketAddr,StrSocketPort,StrSocketAppsParam,StrSocketBuffer,BoolIsVerbose,BoolIsDisplayEntry,StrVTVRegistry" ; 
+  
+  local -a ArrayMsg ;
+  ArrayMsg[0]="Entry in function" ;  
+  
+  function __main_StartServices()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+   fi 
+   
+   local StrBufferCmd="-O __BUFFER__" ; 
+   StrBufferCmd=${StrBufferCmd//__BUFFER__/${StrSocketBuffer}} ; 
+   local StrCmd="${StrSocketApps} ${StrBufferCmd} ${StrSocketAppsParam} ${StrSocketAddr} ${StrSocketPort}" ; 
+   if [ "${BoolIsVerbose:=False}" == "True" ] ; then
+    echo -ne "Application ${__call_locality[1]} using following parameter:\n\tCMD:[${StrCmd}]\n" > /dev/stderr ; 
+   fi
+   ${StrCmd}
+   #${StrSocketApps} ${StrSocketBuffer} ${StrSocketAppsParam} ${StrSocketAddr} ${StrSocketPort}  ; 
+  }
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+  local StrNameHelper="${__call_locality[1]}\t\tA Socket Services ";
+  local StrSummary="" ; 
+  local StrSynopsis="";
+  local StrDescription="" ;
+   
+  ### Section : Switches-Statememt 
+  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   GVRIsName=True GVRIsSummary=False GVRIsSynopsis=False GVRIsDesc=False GetVarReference ${__call_locality[1]} ; 
+   VerbMsg="${StrSwitchMessages}" VerbState=True VerbEvalForm=False VerbFormated=False VerbExtendedOut=True VerbDev=/dev/stderr  Verbosis ;
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;	
+  elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
+   eval $( eval ${StrVTVRegistry//,/ } \
+           VTVValueEntry=${StrVarList} \
+           VTVWhiteListTransfert=${StrWhiteListVTV}  \
+           ValueToVariable ) __main_StopServices ; 
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+   StrMsg=$( NetSocketServices --get ArrayMsg[0] ) ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolIsDisplayEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   ### This is the main-boot strap and should load __main_StartServices unless 
+   ### It receive from prompt a Prefixed-Variable SSAFuncStart=Function. Every
+   ### application made from CallArgument does have it's entry in form [SHORT-NAME]Func=${StrStartMain} ;
+   eval $( eval ${StrVTVRegistry//,/ } \
+           VTVWhiteListTransfert=${StrWhiteListVTV}  \
+           VTVValueEntry=${StrVarList} \
+           ValueToVariable ) ${StrStartMain} 
+  fi 
+  ### End-Section : Switches-Statememt  
+
  }
-fi 
+fi #End-if versionNSS==0.0.1
 
 if [ "${versionVSL:=0.0.0}" == "0.0.1" ] ; then 
 
@@ -981,7 +1270,7 @@ eval $( GFCFuncName=VlcServicesLayer GlobalFunctionCleaning ) ;
   local BoolShowInstance=${VSLShowInstance:=True} ; 
   local BoolUseBase64=${VSLUseBase64:=True} ; 
   local StrCSVVar=${VSLCsvValue=','} ;
-  local StrVTVRegistry=${VSLVTVReg:=VTVIsArrayStyleInsert=True,VTVIsValueReAssign=True,VTVIsValueToConvert=False,VTVIsArrayStyleInsert=True,VTVIsQuotedValue=True} ;
+  local StrVTVRegistry=${VSLVTVReg:=VTVIsWhiteList=True,VTVIsArrayStyleInsert=True,VTVIsValueReAssign=True,VTVIsValueToConvert=False,VTVIsArrayStyleInsert=True,VTVIsQuotedValue=True} ;
   # By default theses variable are not added using hard-coding structure, 
   # but rely on uses of StrVarList method to append list of variable. 
   local StrAddr=${VSLServerAddr:=127.0.0.1} ; 
@@ -1243,6 +1532,9 @@ if [ "${versionVSC:=0.0.0}" == "0.0.0" ] ; then
     local -a ArrayErrMsg ; 
     local -a ArrayErrProcMsg ; 
     local -a ArrayOutMsg ; 
+    
+    StrVarList="BoolDisplayDebug,StrCacheRefTpl,StrCacheReference,StrContent,StrSha1Sum,BoolRejectSigErr,BoolProcessErr,IntCountCall"
+    
     if [ "${UUID:=None}" != "None" ] ; then 
      StrCacheReference=${StrCacheRefTpl/__UUID__/${UUID}} ;
      ArrayOutMsg[${#ArrayOutMsg[@]}]="UUID Instance discovered:\n\tUUID: ${UUID}\n\tfile ${StrCacheReference} will be used as instance-registration.\n" ; 
@@ -1620,6 +1912,361 @@ if [ "${versionVSC:=0.0.0}" == "0.0.1" ] ; then
 fi #End-if versionVSC==0.0.1
 
 
+if [ "${versionRIAS:=0.0.0}" == "0.0.0" ] ; then 
+
+ eval $( GFCFuncName=RepeatInAudioSession GlobalFunctionCleaning ) ; 
+
+ function RepeatInAudioSession()    
+ { 
+  function Verbosis()
+  {
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( Verb Verbosis ) ; 
+   local Arg0=${ArrayArg[0]} ; 
+   local StrMsg=${VerbMsg:=__TEXT__} ; 
+   local StrDevOut=${VerbDev:=/dev/stderr} ; 
+   local IsVerboseState=${VerbState:=False} ;
+   local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+   local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+   local IsDisplayFormatted=${VerbFormated:=True} ;
+   local IsAppendMode=${VerbAppendDev:=False} ; 
+   local IsExtendedOutput=${VerbExtendedOut:=False} ; 
+   local ArrayArg=( $* ) ; 
+   if [ "${IsVerboseState:=False}" == "True" ] ; then 
+    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+     if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
+     else  
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+     fi
+    else
+     if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+      if [ "${IsExtendedOutput:=False}" == "True" ] ; then 
+        echo -ne "${StrMsg}" ;  
+      else
+        echo "${StrMsg}" ;  
+      fi
+     else
+      if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       if [ "${IsExtendedOutput:=False}" == "True" ] ; then 
+         echo -ne "${StrMsg}" >> ${StrDevOut} ;
+       else
+         echo "${StrMsg}" >> ${StrDevOut} ;
+       fi
+      else
+       if [ "${IsExtendedOutput:=False}" == "True" ] ; then 
+        echo -ne "${StrMsg}" > ${StrDevOut} ;
+       else
+        echo "${StrMsg}" > ${StrDevOut} ;
+       fi 
+      fi
+     fi 
+    fi 
+   fi
+  } 
+  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
+  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( RIAS RepeatInAudioSession ) ;
+   local Arg0="${ArrayArg[0]}" ; 
+   local StrParentApps=${__call_locality[1]} ;
+   local StrStartMain=${RIASFuncStart:=__main_StartServices} ; 
+  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+   eval $( eval CAFunctName=RepeatInAudioSession CAIsAddParent=False __Call_Argument ) ; 
+  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+   # CAIsAddDebug=True CAProvideDebug=DisplayDebug,DisplayEntry,DisplayCmd 
+   eval $( eval UUID=\${CAUUID:=None} CAFunctName=RepeatInAudioSession CAIsAddParent=False CallArgument ) ;
+  fi  
+
+  local IntStart=${RIASStart:=0} ; 
+  local IntStop=${RIASStop:=0} ; 
+  local BoolUseVlc=${RIASUseVlc:=True} ; 
+  local BoolRequiredToEnqueue=${RIASVlcJump:=False} ; 
+  local BoolDisplayDebug=${RIASIsDisplayDebug:=False}
+  local BoolDisplayEntry=${RIASIsDisplaysEntry:=False};
+  local BoolDisplayCmd=${RIASIsDisplayCmd:=False};
+  local IntDefaultSleepCmd=${RIASSleepAfterCmd:=5} ; 
+  local StrDefaultVLCUUID=${RIASVlcUUID:=a0753972-260c-11e7-8b1d-001e4c8856d6} ; 
+  local IntTrackJump=${RIASTrackJump:=40} ; 
+  local StrVTVRegistry=${RIASVTVReg:=VTVIsWhiteList=True,VTVIsArrayStyleInsert=True,VTVIsValueReAssign=True,VTVIsValueToConvert=False,VTVIsArrayStyleInsert=True,VTVIsQuotedValue=True} ;
+  local StrVarList="IntStart,IntStop,IntSessionTime,BoolUseVlc,BoolDisplayDebug,BoolDisplayEntry,BoolDisplayCmd,BoolRequiredToEnqueue,IntDefaultSleepCmd,IntDefaultSleepCmd,StrDefaultVLCUUID,IntTrackJump,StrVTVRegistry,StrParentApps,StrStartMain" ;
+
+  local -a ArrayMsg=() ;
+  ArrayMsg[0]="Entry in function __FUNCT__" ; 
+  ArrayMsg[1]="Instance ID:__UUID__" ; 
+  ArrayMsg[2]="__FUNCT__ will use VLC interface from VlcSendCmd\n" ; 
+  ArrayMsg[3]="__FUNCT__ will use VLC interface from NetworkClientConnection.awk\n" ; 
+  ArrayMsg[4]="Jump to Track first activated, track:__TRACKJUMP__\n" ; 
+  ArrayMsg[5]="Audio Session should Point to second: __START__\n\tShould repeat around seconds : __STOP__\n" ; 
+  ArrayMsg[6]="\tAudio Session at location :__SESSIONTIME__\n" ; 
+  ArrayMsg[7]="Verbose Status:\n\tBoolUseVlc       : __USEVLC__\n\tBoolDisplayDebug : __DISPLAYDEBUG__\n\tBoolDisplayEntry : __DISPLAYENTRY__\n\tBoolDisplayCmd   : __DISPLAYCMD__" ; 
+
+  function __main_StartServices()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+   fi
+   local StrMsg=$( RepeatInAudioSession --get ArrayMsg[0] ) ;
+   StrMsg=${StrMsg//__FUNCT__/${__call_locality[1]}} ;
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+
+   StrMsg=$( RepeatInAudioSession --get ArrayMsg[7] ) ; 
+   StrMsg=${StrMsg//__DISPLAYDEBUG__/${BoolDisplayDebug}} ; 
+   StrMsg=${StrMsg//__DISPLAYENTRY__/${BoolDisplayEntry}} ; 
+   StrMsg=${StrMsg//__DISPLAYCMD__/${BoolDisplayCmd}} ; 
+   StrMsg=${StrMsg//__USEVLC__/${BoolUseVlc}} ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   
+   local StrUUID=$( GetUAppsRegisterName=${StrParentApps} GetUTimeBased=True GetULoop=False GetUUID ) ; 
+   
+   StrMsg=$( RepeatInAudioSession --get ArrayMsg[1] ) ;
+   StrMsg=${StrMsg//__UUID__/${StrUUID}} ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+  
+   local IntSessionTime=0 ; 
+   
+   ### Display which interface is used . 
+   StrMsg=$( RepeatInAudioSession --get ArrayMsg[3] ) ;
+   if [ "${BoolUseVlc:=True}" != "False" ] ; then 
+    StrMsg=$( RepeatInAudioSession --get ArrayMsg[2] ) ;
+   fi    
+   StrMsg=${StrMsg//__FUNCT__/${__call_locality[2]}} ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   
+   ### Couple of Command, by default it prepare
+   ### the VlcSendCmd but if BoolUseVlc==False
+   ### the NetSocketServices will be used. 
+   local StrMsgEngine="Seek with VlcSendCmd" ;  
+   local StrCmdSeek="""UUID=${StrDefaultVLCUUID} VSCCmd=\"seek ${IntStart}\" VlcSendCmd 1>&2 > /dev/null """ ; 
+   local StrCmdGetTime="""UUID=${StrDefaultVLCUUID} VSCCmd=\"get_time\" VlcSendCmd | sed -r 's/[^0-9]*//g'""" ; 
+   local StrCmdEnqueue="""UUID=${StrDefaultVLCUUID} VSCCmd=\"gotoitem ${IntTrackJump}\" VlcSendCmd 1>&2 > /dev/null""";
+   
+   if [ "${BoolUseVlc:=True}" == "False" ] ; then 
+    StrCmdSeek="""NSSFuncStart=NccNr NNCmd=\"seek ${IntStart}\" NRPort=5083 NRAddr=127.0.0.1 NetSocketServices """;
+    StrCmdGetTime="""NSSFuncStart=NccRe NRCmd=\"get_time\" NRPort=5083 NRAddr=127.0.0.1 NetSocketServices  | sed -r 's/[^0-9]*//g'""" ;
+    StrMsgEngine="Seek with NetSocketServices( Awk-client )" ; 
+    StrCmdEnqueue="""NSSFuncStart=NccNr NNCmd=\"gotoitem ${IntTrackJump}\" NRPort=5083 NRAddr=127.0.0.1 NetSocketServices """
+   fi 
+   
+   ### Enqueue the song in the playlist if you did not 
+   ### already selected in your playlist. 
+   if [ "${BoolRequiredToEnqueue:=False}" == "True" ] ; then 
+    StrMsg=$( RepeatInAudioSession --get ArrayMsg[4] ) ;
+    StrMsg=${StrMsg//__TRACKJUMP__/${IntTrackJump}} ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    
+    VerbMsg="${StrCmdEnqueue}" VerbHeader="${__call_locality[1]}-CMD" VerbState=${BoolDisplayCmd} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    eval $( eval """${StrCmdEnqueue}""" ); 
+   fi 
+   ###
+   ### Start to shuffle and repeat atfer passed the IntStop value . 
+   ### 
+  
+   while [ 1 ] ; do 
+    StrMsg=$( RepeatInAudioSession --get ArrayMsg[5] ) ;
+    StrMsg=${StrMsg//__START__/${IntStart}} ; 
+    StrMsg=${StrMsg//__STOP__/${IntStop}} ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    
+    VerbMsg="${StrMsgEngine}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    VerbMsg="${StrCmdSeek}" VerbHeader="${__call_locality[1]}-CMD" VerbState=${BoolDisplayCmd} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    eval $( eval """${StrCmdSeek}""" ) ; 
+
+    /bin/sleep ${IntDefaultSleepCmd} ;
+    
+    while [ $(( ${IntSessionTime:=0} + ${IntDefaultSleepCmd} )) -lt ${IntStop} ] ; do 
+     /bin/sleep ${IntDefaultSleepCmd} ; 
+     
+     VerbMsg="${StrCmdGetTime}" VerbHeader="${__call_locality[1]}-CMD" VerbState=${BoolDisplayCmd} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+     eval """IntSessionTime=$( eval ${StrCmdGetTime} )""" ; 
+ 
+     StrMsg=$( RepeatInAudioSession --get ArrayMsg[6] ) ;
+     StrMsg=${StrMsg//__SESSIONTIME__/${IntSessionTime}} ; 
+     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    done ; 
+    IntSessionTime=0 ; 
+   done ;  
+  
+  }
+  
+  function __main_StopServices()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Main __main_StopServices ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True __Call_Argument ) ;
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True CallArgument ) ;
+   fi 
+   local StrMsg=$( RepeatInAudioSession --get ArrayMsg[0] ) ;
+   StrMsg=${StrMsg//__FUNCT__/${__call_locality[1]}} 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   
+   #local StrCachePath=$( RepeatInAudioSession --get SCHSInstancePath ) ; 
+   #local StrCacheAction=$( RepeatInAudioSession --get SCHAction ) ; 
+   local IntPathLength=${#StrPathLoopState} ; 
+   local StrCacheFromSCH=${StrPathLoopState//${StrCachePath}/} ; 
+   local BoolCacheFromSCH="False" ; 
+   
+   ### After creation of variable StrCacheFromSCH that do reduce 
+   ### the StrPathLoopState by reducing what we found inside 
+   ### 'ServiceControllerHandler --get SCHSInstancePath' ( usually
+   ### /var/cache/Fnct.D, will be involved in BoolCacheFromSCH 
+   ### to be set to true for following meanning ; Application is
+   ### keeping UUID instance inside /var/cache/Fnct.D   
+   if [ ${#StrCacheFromSCH} -lt ${IntPathLength} ] ; then 
+    BoolCacheFromSCH="True" ;
+   fi  
+   
+   ### Does apply couple of transformation to String StrPathLoopState
+   ### due to compliance of ServiceControllerHandler and require 
+   ### and Action, with Tag __ACTION__, and Path with tag __PATH__
+   ### to be feeded/replaced to get all the UUID instance file. 
+   ### By default Action from SCH 'ServiceControllerHandler --get SCHAction'
+   ### is Loop, but some other information like Setting, Storage, Buffer, 
+   ### and other semantic-file can be used since ServiceControllerHandler 
+   ### is having more and more member to handler life-cycle of some UUID-
+   ### instance, it may have future property like altering information, not 
+   ### only deleting them.  
+   
+   if [ ${BoolCacheFromSCH:=False} == "True" ]  ; then 
+    StrPathLoopState=${StrPathLoopState//__PATH__/${StrCachePath}} ; 
+    StrPathLoopState=${StrPathLoopState//__ACTION__/${StrCacheAction}} ; 
+   fi 
+
+   local StrUUID=${UUID};
+   if [ "${StrUUID:=None}" == "None" ] ; then 
+    StrUUID=${StrUUIDInstance} ; 
+   fi 
+   
+   local StrFSH=${StrDefaultShortName} ; 
+   
+   StrPathLoopState=${StrPathLoopState//__SHORTFUNC__/${StrFSH}} ; 
+   StrPathLoopState=${StrPathLoopState//__UUID__/${StrUUID}} ; 
+   
+   ### ArrayMsg5
+   VerbMsg="Shutdown Instance ID:${StrUUID}, file: ${StrPathLoopState}" VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis ;
+   if [ -f ${StrPathLoopState} ] ; then 
+    rm -f ${StrPathLoopState} ; 
+   fi 
+  }
+
+   
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+  local StrNameHelper="${__call_locality[1]}\n\tApplication to process a loop in a \n\tAudio session with VLC services and a Running \n\tVLCServer, (OldVLCServer). Require \n\tVlcServicesLayer registration.";
+  local StrSynopsis="\n\tUsed to loop inside a Music session or long record like\n\trecorded Stream or recorded internet-radio, it \n\tprovide design to start a Track, loop over and\n\tover. It should own a StopServices to stop \n\tlooping.\n\n\tOther property of ${__call_locality[1]} ,\n\tto use a DoCtrlHandler receive Both \n\tServiceControllerHandler request to end and\n\tDoCtrlHandler do altering variable like\n\tIntStart/IntStop, managed by Prefixed-Variable\n\tRIASStart/RIASStop.\n";
+  local StrSummary="\n\tThis application is Looping running music and only when\n\tit's playing. Using  'get_time'  from  VLC\n\tservices it will not rewind or start over if\n\tthe  pause  is  activated.\n" ; 
+  local StrDescription="\n\tBecause this application require VlcServicesLayer to\n\tmake this application work. You will require to pass\n\tthis UUID to RIASVlcUUID require part of a Socket\n\tconnection, this UUID, as a result to short-cutting\n \tinformation of Socket connection to your Vlc instance,\n \tyour registration will require to fill information\n \tabout hostname, port... Don't forget ,\n\tVlcServicesLayer can register current variable or\n\tspecified in prefixed-variable and require to subscribe\n\tor fill your variable name to VSLStoreVar.\n" ;
+
+  ### Section : Switches-Statememt 
+  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+   ### GVRIsName set to True is the Variable handled StrNameHelper by GetVarReference and 
+   ### provide a Name-Helper inside the live-documentation if we call StartSlewAnalysis --help.
+   ### Extending the help by turning other variable to True will increae help. Variable are
+   ### declared previously. 
+   GVRIsName=True GVRIsSummary=True GVRIsSynopsis=True GVRIsDesc=True GetVarReference ${__call_locality[1]} ; 
+   #VerbMsg="${StrSwitchMessages}" VerbState=True       VerbEvalForm=False   VerbFormated=False    VerbExtendedOut=True VerbDev=/dev/stderr  Verbosis ;
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;	
+  elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
+   eval $( eval ${StrVTVRegistry//,/ } \
+           VTVValueEntry=${StrVarList} \
+           VTVWhiteListTransfert=UUID  \
+           ValueToVariable ) __main_StopServices ; 
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+   StrMsg=$( RepeatInAudioSession --get ArrayMsg[0] ) ; 
+   StrMsg=${StrMsg//__FUNCT__/${__call_locality[1]}} ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   eval $( eval ${StrVTVRegistry//,/ } \
+           VTVWhiteListTransfert=UUID  \
+           VTVValueEntry=${StrVarList} \
+           ValueToVariable ) ${StrStartMain} 
+  fi 
+ } 
+fi #End-if versionRIAS==0.0.0
+
+### As prototype only, StartAutoRewind does repeat a track, one-and-on. 
+
+if [ "${versionSAR:=0.0.0}" == "0.0.0" ] ; then 
+
+ ### Since the function does not own helper of coherent variable structure
+ ### to interface External Prefixed-variable to internal definition, the
+ ### function GlobalFunctionCleaning is inneffective. 
+ ### Actually, StartAutoRewind come with it's internal NccNr and NccRe
+ ### a handy function-crafted for accessing to NetworkClientConnection.awk
+ ### script like simple-function . 
+ #eval $( GFCFuncName=RepeatInAudioSession GlobalFunctionCleaning ) ; 
+
+ function StartAutoRewind()    
+ {
+  local -a ArrayArg=( $* ) ;
+  local -a __call_locality=( SAR StartAutoRewind ) ;
+  local Arg0="${ArrayArg[0]}" ; 
+  local StrParentApps=${__call_locality[1]} ;
+  local StrStartMain=${SARFuncStart:=__main_StartServices} ; 
+  
+  local IntSleep=${SARSleep:=0} ;
+  local IntSleepStep=${SARInterleave:=5}  ;
+  local IntTrack=${SARTrack:=0} ;  
+  local IntCountSleep=0 ;
+  local IntResultSleep=0 ;
+  local BoolEndSleeping=False ; 
+  local -a ArrayMsg ;
+  local StrDate ; 
+  ArrayMsg[0]="Entry in Function" ; 
+  ArrayMsg[1]="date:__DATE__\nRepeating Track __TRACK__, every __SEC__ second(s).\nUsing Sleep interleave of __INTRELEAVE__ second(s)" ; 
+  ArrayMsg[2]="Step : __STEP__ seconds(s)" ; 
+  ArrayMsg[3]="Interleave changed to : __STEP__ seconds(s)" ;
+  
+  while [ 1 ] ; do 
+  
+   StrMsg=${ArrayMsg[1]} ;
+   StrDate=$( /bin/date +"%Y%m%d-%H:%M:%S" ) ; 
+   StrMsg=${StrMsg//__DATE__/${StrDate}} ; 
+   StrMsg=${StrMsg//__TRACK__/${IntTrack}} ; 
+   StrMsg=${StrMsg//__SEC__/${IntSleep}} ; 
+   StrMsg=${StrMsg//__INTRELEAVE__/${IntSleepStep}} ; 
+   echo -ne "${StrMsg}\n" > /dev/stderr ; 
+   
+   VSCCmd="gotoitem ${IntTrack}" VSCAddr=127.0.0.1 VSCPort=5083 VlcSendCmd 1>&2 > /dev/null ; 
+   IntCountSleep=0 ; 
+   IntSleepStepping=${IntSleepStep};
+   BoolEndSleeping="False" ; 
+   while [ "${BoolEndSleeping:=False}" != "True" ] ; do 
+    if [ ${IntCountSleep:=0} -ge ${IntSleep} ] ; then 
+     BoolEndSleeping="True" ; 
+    else 
+     StrMsg=${ArrayMsg[2]} ; 
+     StrMsg=${StrMsg//__STEP__/${IntCountSleep}} ; 
+     echo -ne "${StrMsg}\n" > /dev/stderr ; 
+     sleep ${IntSleepStepping} ; 
+     IntCountSleep=$(( ${IntCountSleep} + ${IntSleepStepping} )) ;
+    fi 
+    IntResultSleep=$(( ${IntCountSleep} + ${IntSleepStepping} )) ; 
+    if [ ${IntResultSleep} -gt ${IntSleep} ] ; then 
+     IntSleepStepping=$(( ${IntSleep} - ${IntCountSleep} )) ; 
+     StrMsg=${ArrayMsg[3]} ; 
+     StrMsg=${StrMsg//__STEP__/${IntSleepStepping}} ; 
+     echo -ne "${StrMSg}\n" > /dev/stderr ; 
+    fi 
+   done 
+  done 
+ } ; 
+fi #End-if versionSAR==0.0.0
+
+
+
 if [ "${versionSSA:=0.0.0}" == "0.0.1" ] ; then 
  
  eval $( GFCFuncName=StartSlewAnalysis GlobalFunctionCleaning ) ; 
@@ -1751,7 +2398,7 @@ if [ "${versionSSA:=0.0.0}" == "0.0.2" ] ; then
   local BoolShowInstance=${SSAShowInstance:=True} ; 
   local BoolShowVersion=${SSAShowVersion:=True} ; 
   local IntSleepPeriod=${SSAPeriodAnalysis:=2} ; 
-  local StrVTVRegistry=${SSAVTVReg:=VTVIsArrayStyleInsert=True,VTVIsValueReAssign=True,VTVIsValueToConvert=False,VTVIsArrayStyleInsert=True,VTVIsQuotedValue=True} ;
+  local StrVTVRegistry=${SSAVTVReg:=VTVIsWhiteList=True,VTVIsArrayStyleInsert=True,VTVIsValueReAssign=True,VTVIsValueToConvert=False,VTVIsArrayStyleInsert=True,VTVIsQuotedValue=True} ;
   local StrAddr=${SSAServerAddr:=127.0.0.1} ; 
   local StrPort=${SSAServerPort:=5083} ; 
   local StrVarList="StrPathLoopState,BoolShowVersion,BoolShowEntry,BoolDisplayDebug,BoolShowInstance,StrAddr,StrPort,StrParentApps,IntSleepPeriod,StrVTVRegistry,StrVTVRegistry" ;
@@ -2370,6 +3017,7 @@ if [ "${versionSSA:=0.0.0}" == "0.0.2" ] ; then
     ### It receive from prompt a Prefixed-Variable SSAFuncStart=Function. Every
     ### application made from CallArgument does have it's entry in form [SHORT-NAME]Func=${StrStartMain} ;
     eval $( eval ${StrVTVRegistry//,/ } \
+            VTVWhiteListTransfert=UUID  \
             VTVValueEntry=${StrVarList} \
             ValueToVariable ) ${StrStartMain} 
    fi 
@@ -2384,41 +3032,20 @@ fi ; # End-IF ("${versionSSA:=0.0.0}" == "0.0.2")
 unset __old_vlc_rate ; 
 function __old_vlc_rate()    
 {
-  ### Shortcut, primitive to make easier uses of 
-  ### NetworkClientConnection.awk as NC replacement.
-  ### 
-  ### Definition : NccRe, stand for 
-  ### Network Client Connection Receipt Required
-  ### 
-  function NccRe()
-  { 
-    gawk -vNCCCmd="${*}"                 \
-     -vNCCVerbose=false                  \
-     -vNSSTimeOut=${NRTimeOut:=2500}     \
-     -vNSSPort=${NRPort:=5083}           \
-     -vNCCIsReturn=true                  \
-     -vNSSAddresses=${NRAddr:=127.0.0.1} \
-     -f ${NRConnectionScript:=/etc/init.d/Fnct.D/awk-script/NetworkClientConnection.awk} ; 
-  }
+ 
+ function Verbosis()
+	{
+		local __call_locality=( Verbosis Verb );
+		local StrMsg=${VerbMsg:=__TEXT__} ; 
+		local StrDevOut=${VerbDev:=/dev/stderr} ; 
+  local IsVerboseState=${VerbState:=False} ;
+  local StrVerboseHeader=${VerbHeader:=VERBOSE}
+		local ArrayArg=( $* ) ; 
+		if [ "${IsVerboseState:=False}" == "True" ] ; then 
+			echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+		fi
+	}
 
-  ### Shortcut, primitive to make easier uses of 
-  ### NetworkClientConnection.awk as NC replacement.
-  ### 
-  ### Definition : NccNr, stand for 
-  ### Network Client Connection No Receipt Required
-  ### 
-  ### 
-  function NccNr()
-  { 
-    gawk -vNCCCmd="${*}"                 \
-    -vNCCVerbose=false                   \
-    -vNSSTimeOut=${NNTimeOut:=3000}      \
-    -vNSSPort=${NNPort:=5083}            \
-    -vNCCIsReturn=false                  \
-    -vNSSAddresses=${NNAddr:=127.0.0.1}  \
-    -f ${NNConnectionScript:=/etc/init.d/Fnct.D/awk-script/NetworkClientConnection.awk} ; 
-  }  
-  
  local ArrayRateLevel=( ); 
  ### determining the range of random rate. 
  ### VLCCHUNKRATE -> Number of Possible Rate Level inside ArrayRateLevel
@@ -2451,13 +3078,14 @@ function __old_vlc_rate()
  local IntHighestRate=${VLCRATEHIGHESTRATE:=100} ;    
  local IntLowestRate=${VLCRATELOWESTRATE:=70};
  local IntSleep=${VLCSleepTime:=5} ; 
- local BoolVerb=${Verbose:=True} ;
+ local BoolIsVerbose=${VERBOSE:=True} ;
  local IntSocketTimeExpr=${VLCSOCKETCLOSESEC:=3} ; 
  local IntMicroTimer=${VLCPRECISETIME:=0.1} ; 
  local BoolNCinSubProcess=${VLCNCINSUBPROCESS:=False} ; 
  local IntDefaulNice=${VLCNICENC:=0} ; 
  local StrAwkEngine=${VLCAWKENGINECONNECTION:=/etc/init.d/Fnct.D/awk-script/NetworkClientConnection.awk} ; 
  local BoolVlcUseAwk=${VLCENGINEISAWK:=False} ; 
+ local BoolTimeOutCorr=${VLCTIMEOUTCORRECTION:=False} ; 
  local StrParserCalcCmd ; 
  local IntRateInsert ; 
  local -a ArrayMsg=( )
@@ -2480,42 +3108,29 @@ function __old_vlc_rate()
  ArrayMsg[15]="Application using Awk Script NetworkClientConnection.awk as Connection."
  ArrayMsg[16]="Application using VlcSendCmd or NC as Connection Engine."
  ArrayMsg[17]="Awk Script TimeOut adjusted to __INT__ msec." ; 
- 
- function Verbosis()
-	{
-		local __call_locality=( Verbosis Verb );
-		local StrMsg=${VerbMsg:=__TEXT__} ; 
-		local StrDevOut=${VerbDev:=/dev/stderr} ; 
-  local IsVerboseState=${VerbState:=False} ;
-  local StrVerboseHeader=${VerbHeader:=VERBOSE}
-		local ArrayArg=( $* ) ; 
-		if [ "${IsVerboseState:=False}" == "True" ] ; then 
-			echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
-		fi
-	}
- 
+
  IntNccTimeDrift=${IntNccTimeOut} ; 
  
  StrMsg=${ArrayMsg[16]} ;
  if [ "${BoolVlcUseAwk:=False}" == "True" ] ; then 
   StrMsg=${ArrayMsg[15]} ;
  fi 
- VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=${BoolVerb} VerbDev=/dev/stderr Verbosis
+ VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=${BoolIsVerbose} VerbDev=/dev/stderr Verbosis
  
  StrMsg=${ArrayMsg[3]//__INT__/${IntHighestRate}} ;
- VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=${BoolVerb} VerbDev=/dev/stderr Verbosis
+ VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=${BoolIsVerbose} VerbDev=/dev/stderr Verbosis
  
  StrMsg=${ArrayMsg[4]//__INT__/${IntLowestRate}} ; 
- VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=${BoolVerb} VerbDev=/dev/stderr Verbosis
+ VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=${BoolIsVerbose} VerbDev=/dev/stderr Verbosis
  
  StrMsg=${ArrayMsg[5]//__INT__/${VLCRATEDURATION}} ; 
- VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=${BoolVerb} VerbDev=/dev/stderr Verbosis
+ VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=${BoolIsVerbose} VerbDev=/dev/stderr Verbosis
 
  StrMsg=${ArrayMsg[6]//__ITEM__/${IntRandRange}} ; 
- VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=${BoolVerb} VerbDev=/dev/stderr Verbosis
+ VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=${BoolIsVerbose} VerbDev=/dev/stderr Verbosis
  
  StrMsg=${ArrayMsg[7]//__INT__/${IntSleep}} ; 
- VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=${BoolVerb} VerbDev=/dev/stderr Verbosis
+ VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=${BoolIsVerbose} VerbDev=/dev/stderr Verbosis
  /bin/sleep ${IntSleep} ; 
  
  ### Create the random-field olding N-range of Possible Rate.  
@@ -2541,7 +3156,7 @@ function __old_vlc_rate()
  StrMsg=${ArrayMsg[0]//__ARRAY__/${ArrayRateLevel[@]}}
  StrMsg=${StrMsg//__ITEM__/${#ArrayRateLevel[@]}}
  ### Forced Message
- VerbHeader=${StrDisplayHeader} VerbMsg=${StrMsg} VerbState=${BoolVerb} VerbDev=/dev/stderr Verbosis
+ VerbHeader=${StrDisplayHeader} VerbMsg=${StrMsg} VerbState=${BoolIsVerbose} VerbDev=/dev/stderr Verbosis
  
  #echo "List or range [ ${ArrayRateLevel[@]} ] " > /dev/stderr ; 
  local IntTimeInterleave ; 
@@ -2568,12 +3183,12 @@ function __old_vlc_rate()
   IntModulo=$(( ${RANDOM} % ${#ArrayRateLevel[@]}  ))
   StrMsg=${ArrayMsg[13]} ; 
   StrMsg=${StrMsg//__ITEM__/${#ArrayRateLevel[@]}}
-  VerbMsg=${StrMsg} VerbState=${BoolVerb} VerbDev=/dev/stderr Verbosis
+  VerbMsg=${StrMsg} VerbState=${BoolIsVerbose} VerbDev=/dev/stderr Verbosis
   
   StrMsg=${ArrayMsg[14]} ; 
   StrMsg=${StrMsg//__MODULO__/${IntModulo}} ; 
   
-  VerbMsg=${StrMsg} VerbState=${BoolVerb} VerbDev=/dev/stderr Verbosis
+  VerbMsg=${StrMsg} VerbState=${BoolIsVerbose} VerbDev=/dev/stderr Verbosis
   StrRateGet=${ArrayRateLevel[${IntModulo}]}; 
 ### Timer for Application
   IntStopTimer=${SECONDS} ; 
@@ -2596,18 +3211,18 @@ function __old_vlc_rate()
   IntSleep=$(( ( ${RANDOM} % ${VLCRATEDURATION:=10} ) + 1 )) ; 
   #echo "Rate Fixed to ${StrRandomFormat}, for ${IntSleep} seconds " > /dev/stderr ;  
   StrMsg=${ArrayMsg[8]} ; 
-  VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=${BoolVerb} VerbDev=/dev/stderr Verbosis
+  VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=${BoolIsVerbose} VerbDev=/dev/stderr Verbosis
   
   StrMsg=${ArrayMsg[1]//__RATE__/${StrRandomFormat}}
   StrMsg=${StrMsg//__SEC__/${IntSleep}}
   ### Forced Message
-  VerbHeader=${StrDisplayHeader} VerbMsg=${StrMsg} VerbState=${BoolVerb} VerbDev=/dev/stderr Verbosis
+  VerbHeader=${StrDisplayHeader} VerbMsg=${StrMsg} VerbState=${BoolIsVerbose} VerbDev=/dev/stderr Verbosis
   
   StrSentCmd=${StrVLCCmd//__RATE__/${StrRandomFormat}} ; 
   
   StrMsg=${ArrayMsg[2]//__CMD__/${StrSentCmd}}
   ### Forced Message
-  VerbHeader=${StrDisplayHeader} VerbMsg=${StrMsg} VerbState=${BoolVerb} VerbDev=/dev/stderr Verbosis
+  VerbHeader=${StrDisplayHeader} VerbMsg=${StrMsg} VerbState=${BoolIsVerbose} VerbDev=/dev/stderr Verbosis
   #echo "Pushing VLC-Cli comand:[ ${StrSentCmd} ]" > /dev/stderr ; 
   ### Forced Message
   
@@ -2667,7 +3282,7 @@ function __old_vlc_rate()
    StrMsg=${StrMsg//__INT_AVG__/${IntAvgTTimer}} ;
     
    if [ "${BoolWarnSleepMsg:=False}" == "False" ] ; then 
-    VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=${BoolVerb} VerbDev=/dev/stderr Verbosis ; 
+    VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=${BoolIsVerbose} VerbDev=/dev/stderr Verbosis ; 
     BoolWarnSleepMsg=True ; 
    fi 
    
@@ -2744,6 +3359,8 @@ function __old_vlc_rate()
   ### it's required time. 
   
   IntStartTimer=${SECONDS} ; 
+  ### Require VLCTIMEOUTCORRECTION=True in 
+  ### prefixed-variable to test. 
   ### TimeOut configuration based on IntSecJitter
   ### or the famous Jitter factor bringing 
   ### Application Calibration to remain delayed by
@@ -2757,23 +3374,21 @@ function __old_vlc_rate()
   ### added to execution-time . This resolution can
   ### be increased with cumulative delay but does 
   ### reset to default if it goes lower than 0 ; 
-  if [ ${IntSecJitter:=0} -lt 0 ] ; then 
-   IntNccTimeDrift=${IntNccTimeOut} ;
+  if [ ${BoolTimeOutCorr:=False} == "True" ] ; then 
+   if [ ${IntSecJitter:=0} -lt 0 ] ; then 
+    IntNccTimeDrift=${IntNccTimeOut} ;
+   fi
+   if [ ${IntSecJitter:=0} -gt 0 ] ; then 
+     IntNccTimeDrift=$(( ${IntNccTimeOut} + ( ( ${IntSecJitter} * 1000 ) / 2  ) )) ; 
+     StrMsg=${ArrayMsg[17]} ;
+     StrMsg=${StrMsg//__INT__/${IntNccTimeDrift}} ; 
+     VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=${BoolIsVerbose} VerbDev=/dev/stderr Verbosis ; 
+   fi 
   fi
-  if [ ${IntSecJitter:=0} -gt 0 ] ; then 
-    IntNccTimeDrift=$(( ${IntNccTimeOut} + ( ( ${IntSecJitter} * 1000 ) / 2  ) )) ; 
-    StrMsg=${ArrayMsg[17]} ;
-    StrMsg=${StrMsg//__INT__/${IntNccTimeDrift}} ; 
-    VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=${BoolVerb} VerbDev=/dev/stderr Verbosis ; 
-  fi 
-
+  
   if [ "${BoolNCinSubProcess:=False}" == "True" ] ; then 
     if [ "${BoolVlcUseAwk:=False}" == "True" ] ; then 
-      NNTimeOut=${IntNccTimeDrift} \
-      NNConnectionScript=${StrAwkEngine} \
-      NNAddr=${VLCSERVER:=192.168.0.72} \
-      NNPort=${VLCSRVPORT:=5080} \
-      /usr/bin/nice ${IntDefaulNice} NccNr ${StrSentCmd} ; 
+      eval """/usr/bin/nice ${IntDefaulNice} NNCmd=\"${StrSentCmd}\" NNTimeOut=${IntNccTimeDrift} NNConnectionScript=${StrAwkEngine} NNAddr=${VLCSERVER:=192.168.0.72} NNPort=${VLCSRVPORT:=5080} NSSFuncStart=NccNr NetSocketServices"""  ; 
       #nc -i ${IntSocketTimeExpr} -4 -n ${VLCSERVER:=192.168.0.72} ${VLCSRVPORT:=5080}  2>&1> /dev/null & 
     else
      echo "${StrSentCmd}" | /usr/bin/nice ${IntDefaulNice} \
@@ -2783,11 +3398,7 @@ function __old_vlc_rate()
     fi 
   else  
     if [ "${BoolVlcUseAwk:=False}" == "True" ] ; then 
-     NNTimeOut=${IntNccTimeDrift}       \
-     NNConnectionScript=${StrAwkEngine} \
-     NNAddr=${VLCSERVER:=192.168.0.72}  \
-     NNPort=${VLCSRVPORT:=5080}         \
-     NccNr ${StrSentCmd} ; 
+     NNCmd="${StrSentCmd}" NNTimeOut=${IntNccTimeDrift} NNConnectionScript=${StrAwkEngine} NNAddr=${VLCSERVER:=192.168.0.72} NNPort=${VLCSRVPORT:=5080} NSSFuncStart=NccNr NetSocketServices  ; 
     else
      echo "${StrSentCmd}" | /usr/bin/nice ${IntDefaulNice} nc -i ${IntSocketTimeExpr} -4 -n ${VLCSERVER:=192.168.0.72} ${VLCSRVPORT:=5080}  2>&1> /dev/null ; 
     fi
@@ -2810,7 +3421,7 @@ function __old_vlc_rate()
    StrMsg=${ArrayMsg[12]} ; 
    StrMsg=${StrMsg//__INT_JITTER__/${IntSecJitter}} ; 
   fi 
-  VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=${BoolVerb} VerbDev=/dev/stderr Verbosis ; 
+  VerbMsg=${StrMsg} VerbHeader=${StrDisplayHeader} VerbState=${BoolIsVerbose} VerbDev=/dev/stderr Verbosis ; 
 
   ### Generally, average is a division of iteration-lenght over frequency. 
   IntOldAvg=${IntAvgTTimer} ; 
@@ -2827,7 +3438,7 @@ function __old_vlc_rate()
   StrMsg=${StrMsg//__INT_JITTER__/${IntSecJitter}} ;
   StrMsg=${StrMsg//__INT_AVG__/${IntAvgTTimer}} ;
   
-  VerbMsg=${StrMsg} VerbState=${BoolVerb} VerbHeader=${StrDisplayHeader} VerbDev=/dev/stderr Verbosis
+  VerbMsg=${StrMsg} VerbState=${BoolIsVerbose} VerbHeader=${StrDisplayHeader} VerbDev=/dev/stderr Verbosis
 
  done ; 
   
