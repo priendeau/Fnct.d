@@ -63,7 +63,7 @@ function CommandSend( srvConnection, strCmd , returnElement, OutPutDev )
  if( tolower(returnElement) == "true" )
  {
   
-  if( toLower(NCCVerbose) == "true" )
+  if( tolower(NCCVerbose) == "true" )
   {
    printf("Sending command(return receipt):%s\n",strCmd) > OutPutDev ; 
   }
