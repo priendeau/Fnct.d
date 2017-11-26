@@ -211,10 +211,10 @@ if [ "${versionDCH:=0.0.0}" == "0.0.0" ] ; then
   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
    eval $( eval CAFunctName=DoCtrlHandler CAIsAddParent=False __Call_Argument ) ; 
   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-   eval $( eval CAFunctName=DoCtrlHandler UUID=${CAUUID:=None} CAIsAddDebug=True CAProvideDebug=DisplayDebug,DisplayEntry,DisplayCmd CAIsAddParent=False CallArgument ) ;
+   eval $( eval CAFunctName=DoCtrlHandler UUID=${CAUUID:=None} CAIsAddDebug=True CAIsAddParent=False CallArgument ) ;
   fi  
 
-  local StrVTVRegistry=${VCSVTVReg:=VTVIsDebugDisplay=True,VTVIsSlowDebug=True,VTVIsWhiteList=True,VTVIsArrayStyleInsert=True,VTVIsValueReAssign=True,VTVIsValueToConvert=False,VTVIsArrayStyleInsert=True,VTVIsQuotedValue=True} ;
+  local StrVTVRegistry=${DCHVTVReg:=VTVIsDebugDisplay=True,VTVIsSlowDebug=False,VTVIsWhiteList=True,VTVIsArrayStyleInsert=True,VTVIsValueReAssign=True,VTVIsValueToConvert=False,VTVIsArrayStyleInsert=True,VTVIsQuotedValue=True} ;
   local StrPathActionState=${DCHTplActionFile:=__PATH__/__ACTION__-__SHORTFUNC__-__UUID__} ; 
   local StrAction=${DCHActionSubscription:=LOOP} ; 
   local StrUUIDReg=${DCHUUIDRegister:=None} ; 
@@ -223,7 +223,7 @@ if [ "${versionDCH:=0.0.0}" == "0.0.0" ] ; then
   local StrFunctionReg=${DCHFunctionName:=None} ; 
   local StrVTVWhiteList=${DCHWhiteList:=UUID,VCSVTVReg,RPCIsDisplayDebug,RPCIsDisplayEntry,RPCIsDisplayCmd,RPCFuncNameRegister,RPCUUID} ; 
   
-  local StrVarList="StrVTVWhiteList,StrAction,BoolUnsubscribe,BoolCreateUUID,BoolDisplayDebug,BoolDisplayEntry,BoolDisplayCmd,StrVTVRegistry,StrParentApps" ;
+  local StrVarList="StrVTVWhiteList,StrAction,BoolUnsubscribe,BoolCreateUUID,BoolDisplayDebug,BoolDisplayEntry,BoolDisplayCmd,StrVTVRegistry,StrParentApps,BoolLoopOn,BoolServicesStop,BoolServicesChange" ;
 
 
   local -a ArrayMsg=() ;
@@ -702,19 +702,19 @@ function OldVLCServer()
 		local Arg0=${ArrayArg[0]} ;
 		local ArrayArg=( $* ) ; 
   ### StrVLCApps,StrVLCAppsPlaylist,StrSocketApps,StrSocketOption,StrAppsBufferOption,StrSocketBufferOption,StrAppsListenOption,StrSocketAddr
-  if [ -p ${HOME}/${StrVlcServerName} ] ; then 
-   rm -f ${HOME}/${StrVlcServerName}  ;  
+  if [ -p ${StrVlcServerName} ] ; then 
+   rm -f ${StrVlcServerName}  ;  
   else
-   mkfifo ${HOME}/${StrVlcServerName} ;  
+   mkfifo ${StrVlcServerName} ;  
   fi 
   
   
   
-  local StrCmd="""cat ${HOME}/__SOCKET_NAME__ | \
+  local StrCmd="""cat __SOCKET_NAME__ | \
   ${StrVLCApps} __PLAYLIST__ | \
   __NICE__ ${StrSocketApps} ${StrSocketOption} \
   ${StrAppsBufferOption} ${StrSocketBufferOption} \
-  ${StrAppsListenOption} ${StrSocketAddr} ${StrSocketPort} > ${HOME}/__SOCKET_NAME__ """ ; 
+  ${StrAppsListenOption} ${StrSocketAddr} ${StrSocketPort} > __SOCKET_NAME__ """ ; 
   
   StrCmd=${StrCmd//__SOCKET_NAME__/${StrVlcServerName}} ;
   
