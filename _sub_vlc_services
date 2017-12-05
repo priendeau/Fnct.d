@@ -152,7 +152,8 @@ function ActivateServerBuffer()
 
 if [ "${versionDCH:=0.0.0}" == "0.0.0" ] ; then
 
- unset DoCtrlHandler ;
+ eval $( GFCFuncName=DoCtrlHandler GlobalFunctionCleaning ) ; 
+
  function DoCtrlHandler()
  {
    function Verbosis()
@@ -1252,15 +1253,15 @@ eval $( GFCFuncName=VlcServicesLayer GlobalFunctionCleaning ) ;
   } 
   ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
   
-  if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+  if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
    local -a ArrayArg=( $* ) ;
    local -a __call_locality=( VSL VlcServicesLayer ) ;
    local Arg0="${ArrayArg[0]}" ; 
    local StrParentApps=${__call_locality[1]} ;
-   local StrStartMain=${SSAFuncStart:=__main_StartServices} ; 
-  elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+   local StrStartMain=${VSLFuncStart:=__main_StartServices} ; 
+  elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
    eval $( eval CAFunctName=VlcServicesLayer CAIsAddParent=False __Call_Argument ) ; 
-  elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+  elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
    eval $( eval CAFunctName=VlcServicesLayer CAIsAddParent=False CallArgument ) ;
   fi 
  
@@ -1293,13 +1294,13 @@ eval $( GFCFuncName=VlcServicesLayer GlobalFunctionCleaning ) ;
   
   function __main_StartServices()
   {
-   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+   if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
     local -a ArrayArg=( $* ) ;
     local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
     local Arg0="${ArrayArg[0]}" ; 
-   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+   elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
-   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+   elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
    fi 
    
@@ -1353,7 +1354,7 @@ eval $( GFCFuncName=VlcServicesLayer GlobalFunctionCleaning ) ;
    ### Important notice when using match reduction filter in Prefix/suffix
    ### substitution, to have an extra comma separator value at the end.
    StrASeg=$( echo ${StrStorageVar} | sed 's/$/,/g ; s/[,]\{1,\}$/,/g' ; ) ;
-   while [ ${StrASeg:=None} != "None" ] ; do 
+   while [ "${StrASeg:=None}" != "None" ] ; do 
     ### Notice, since some test confirming uses of caracter exclusion work
     ### in shell uses and confirm it does propagating the carret '^' correctly !
     ### Why not using a prefix-matching reduccing method of bash filtering 
