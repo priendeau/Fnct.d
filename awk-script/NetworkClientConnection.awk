@@ -37,9 +37,16 @@ function RandomLocalPort( localport, randomRange )
 {
  srand(systime()) ;
  IntReturn=int( randomRange * rand() )+localport ;
- if( tolower(NCCVerbose) == "true" )
+ if( IntReturn > 65535 )
  {
-  printf("Local Port used:%i\n",IntReturn) > StdErr;
+   printf("Random range starting value exceed MAXIMUM port-value.\n\t, please review variable NccLocalPortRange\n",IntReturn) > StdErr;
+ }
+ else
+ {
+  if( tolower(NCCVerbose) == "true" )
+  {
+   printf("Local Port used:%i\n",IntReturn) > StdErr;
+  }
  }
  
  return IntReturn
@@ -86,6 +93,11 @@ BEGIN{
  tcp="tcp"; 
  udp="udp";
  StdErr="/dev/stderr" ; 
+  
+ if( NccLocalPortRange == "" )
+ {
+  NccLocalPortRange=45000 ; 
+ }
 
  if( NCCVerbose == "" )
  {
@@ -140,7 +152,7 @@ BEGIN{
  }
  #"/inet4/tcp/45000/127.0.0.1/5083"; 
  #Service=Connection( tcp, 45000, "127.0.0.1", 5083 );
- IntRandomPort=RandomLocalPort( 45000, 1024 )
+ IntRandomPort=RandomLocalPort( NccLocalPortRange , 1024 ) ; 
  Service=Connection( tcp, IntRandomPort, NSSAddresses, NSSPort , NCCFileDecl ) ;
  TimeOutService(Service,NSSTimeOut) ;
  CommandSend( Service , NCCCmd, NCCIsReturn, StdErr ) ;
