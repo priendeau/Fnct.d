@@ -156,3 +156,60 @@ function ExpandAppsCall( ArrayCmd , IntIndex , StdErr )
  close( ToStringValue(StrExprCmd) ) ; 
  return VarReturn ;
 }
+
+### 
+###  Function ArrayScanFind
+### 
+###  This function is a method to Traverse an 
+### Array from a 1st level of index to traverse.
+### It also require passing A String to search 
+### and this function will return the index found
+### if this one have found. 
+### 
+### 
+### Warning: Parameter inside ArrayScanFind are
+### 
+### - Array      }
+### - StrSearch  } --- Only theses 2 parameters.
+### 
+### - The parameter result consist in a sharing of
+### result variable as member from another function
+### having it's variable handled in declaration of 
+### this function. 
+### 
+### - This is also why result is a the end and
+### it's writen with a tab.
+### 
+### visit page 204 from online book : 
+### 'GAWK: Effective AWK Programming', 
+### published by 'Free Software Foundation'. 
+### It explain at the end of the page 2 functions 
+### sharing sames variable and it's contents.
+### 
+
+### Function signature sharing 
+### information with variable 'result' 
+### you don't have to call it but it should
+### exist inside the other function .
+#function ArrayScanFind( Array, StrSearch,  result )
+#{
+ #if( result == "" )
+ #{
+  
+ #} ; 
+ 
+ 
+ #if( length( Array ) > 1 )
+ #{
+  #for( idxArray in Array ) 
+  #{
+  
+  #}
+ #}
+ #else
+ #{
+  
+ #}
+ 
+ 
+#}
