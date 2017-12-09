@@ -828,9 +828,9 @@ function VLCSetVolume()
    local -a __call_locality=( Verb Verbosis ) ; 
    local Arg0=${ArrayArg[0]} ; 
   elif [ ${versionGPI:=0.0.0} == "0.0.1" ] ; then 
-   eval $( CAFunctName=Verbosis CAIsAddParent=False __Call_Argument ) ; 
+   eval $( eval CAFunctName=Verbosis CAIsAddParent=False __Call_Argument ) ; 
   elif [ ${versionGPI:=0.0.0} == "0.0.2" ] ; then 
-   eval $( CAFunctName=Verbosis CAIsAddParent=False CallArgument ) ; 
+   eval $( eval CAFunctName=Verbosis CAIsAddParent=False CallArgument ) ; 
   fi 
   local StrMsg=${VerbMsg:=__TEXT__} ; 
   local StrDevOut=${VerbDev:=/dev/stderr} ; 
