@@ -3077,4 +3077,238 @@ if [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then
     fi  
  }
 fi
+
+
+if [ "${versionLSP:=0.0.0}" == "0.0.0" ] ; then 
+ eval $( GFCFuncName=LoopSetupProperty GlobalFunctionCleaning ) ;
+
+ function LoopSetupProperty()
+ {
+  #echo -ne "Entry in Function LoopSetupProperty\n" ; 
+  if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( LSP LoopSetupProperty ) ;
+   local Arg0="${ArrayArg[0]}" ;  
+   local StrParentApps=${__call_locality[1]} ; 
+   local StrStartMain=${LSPFuncStart:=__main_StartServices} ; 
+  elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
+   eval $( eval CAFunctName=LoopSetupProperty CAIsAddParent=False CallArgument ) ;
+  fi 
+  
+  local StrArrayName=${LSPArrayDrive:=None} ; 
+  local StrIndexLoop=${LSPIndexLoop:=loop} ; 
+  local StrIndexImage=${LSPIndexImage:=image} ; 
+  local StrIndexMount=${LSPIndexMount:=mount} ;
+  local StrIndexMntOpt=${LSPIndexMountOpt:=mount-opt} ;
+  local BoolIsVerbose=${LSPIsVerbose:=False} ; 
+  local StrAppsLosetup=${LSPAppsLosetup:=/sbin/losetup} ;
+  local StrAppsMount=${LSPAppsMount:=/bin/mount} ;
+  local BoolIsDryRun=${LSPDryRun:=False} ; 
+  local StrNewLoopSet=${LSPLosetupTpl:=__APPS__ __LOOP__ __IMAGE__} ; 
+  local StrNewMountSet=${LSPMountTpl:=__APPS__ -t __FS__ __LOOP__ __MOUNT__ -o__OPT__}
+  
+  function ArrayGetter( )
+  {
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( AG ArrayGetter ) ;
+   local Arg0="${ArrayArg[0]}" ;  
+   local StrIndexName=${AGIndexName:=None} ; 
+   local StrArrayName=${AGArray:=None} ; 
+   local BoolIsVerbose=${AGIsVerbose:=False} ; 
+   local StrCmd="""local StrReturn=\${${StrArrayName}[${StrIndexName}]}""" ;
+   eval ${StrCmd} ; 
+   if [ ${BoolIsVerbose:=False} == "True" ] ; then 
+    echo -ne "from ${__call_locality[1]}\nCmd:${StrCmd}\nShould return:${StrReturn}\n" > /dev/stderr ; 
+   fi 
+   
+   echo -ne "${StrReturn}" ; 
+  }
+  
+  function ArraySetter( )
+  {
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( AS ArraySetter ) ;
+   local Arg0="${ArrayArg[0]}" ;  
+   local StrIndexName=${ASIndexName:=None} ; 
+   local StrArrayName=${ASArray:=None} ; 
+   local StrValue=${ASValue:=None} ; 
+   local BoolIsVerbose=${ASIsVerbose:=False} ; 
+   local StrCmd="""${StrArrayName}[${StrIndexName}]=${StrValue}""" ;
+   if [ ${BoolIsVerbose:=False} == "True" ] ; then 
+    echo -ne "from ${__call_locality[1]}\n${StrCmd}\n" > /dev/stderr ; 
+   fi
+   eval $( eval  """${StrCmd}""" ) ; 
+  }
+  
+  function GetAllFileSystem()
+  {
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( LSP LoopSetupProperty ) ;
+   local Arg0="${ArrayArg[0]}" ;  
+   /usr/bin/cut -f 2 < /proc/filesystems | tr '[:cntrl:]' ' '
+  }
+  
+  function GetFreeLoop( )
+  {
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( GFL GetFreeLoop ${StrParentApps} ) ;
+   local Arg0="${ArrayArg[0]}" ;
+   local StrOptFree=${GFLAppsLoFree:=-f} ;  
+   echo -ne $( eval ${StrAppsLosetup} ${StrOptFree} ) ; 
+  }
+  
+  function GetFileFsType()
+  {
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( GFFT GetFileFsType ${StrParentApps} ) ;
+   local Arg0="${ArrayArg[0]}" ; 
+   local BoolIsVerbose=${GFFTIsVerbose:=False} ; 
+   local StrFileInfoApps=${GFFTFileInfoApps:=/usr/bin/file} ;
+   local -a ArrayFS=( $( GetAllFileSystem ) ) ; 
+   local StrFileInfo=$( eval ${StrFileInfoApps} \${${StrArrayName}[${StrIndexImage}]} )
+   IntFileInfoLen=${#StrFileInfo} ; 
+   local StrImageFS="None" ; 
+   if [ ${BoolIsVerbose:=False} == "True" ] ; then 
+    echo -ne "Answer from file-information: ${StrFileInfo}\n" > /dev/stderr ; 
+    echo -ne "All filesystem detected: ${ArrayFS[@]}\n" > /dev/stderr ; 
+   fi 
+   for(( intx=0 ; intx <= ${#ArrayFS[@]}-1 ; intx++ )) ; do 
+    StrFSInspect=${ArrayFS[${intx}]} ; 
+    if [ ${BoolIsVerbose:=False} == "True" ] ; then 
+     echo -ne "Parsing FS: ${StrFSInspect}\n" > /dev/stderr ; 
+    fi 
+    StrFilterFileInfo=${StrFileInfo//${StrFSInspect}/} ; 
+    IntFilterLen=${#StrFilterFileInfo} ; 
+    if [ "${StrImageFS:=None}" == "None" ] ; then 
+     if [ ${IntFileInfoLen} -gt ${IntFilterLen:=0} ] ; then 
+      StrImageFS=${StrFSInspect} ;
+     fi 
+    fi 
+   done 
+   echo -ne "${StrImageFS}" ; 
+  }
+  
+  function __main_StartServices()
+  {
+   #echo -ne "Entry in Function __main_StartServices\n" ; 
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+   fi
+   
+   echo -ne "Inspecting Array Name:${StrArrayName}\n" > /dev/stderr ; 
+   
+   local StrFsName=$( eval GFFTIsVerbose=${BoolIsVerbose} StrArrayName=${StrArrayName} StrIndexImage=${StrIndexImage} GetFileFsType )  ; 
+   local StrFreeLoop=$( eval GFLIsVerbose=${BoolIsVerbose} StrAppsLosetup=${StrAppsLosetup} GetFreeLoop )  ; 
+   
+   echo -ne "FsName detected: ${StrFsName}\nNext free loop:${StrFreeLoop}\n" > /dev/stderr ;
+   
+   local -a ArrayCmd ; 
+   
+   local StrImageName=$( eval AGIsVerbose=${BoolIsVerbose} AGIndexName=${StrIndexImage} AGArray=${StrArrayName} ArrayGetter )  ;
+   local StrMountAInfo=$( eval AGIsVerbose=${BoolIsVerbose} AGIndexName=${StrIndexMount} AGArray=${StrArrayName} ArrayGetter )  ;
+   local StrMntOptAInfo=$( eval AGIsVerbose=${BoolIsVerbose} AGIndexName=${StrIndexMntOpt} AGArray=${StrArrayName} ArrayGetter )  ;
+   local StrLoopAInfo=$( eval AGIsVerbose=${BoolIsVerbose} AGIndexName=${StrIndexLoop} AGArray=${StrArrayName} ArrayGetter )  ;
+   
+   local IntIndexCmd ; 
+   local StrCmd=${StrNewLoopSet}
+   
+   StrCmd=${StrCmd//__APPS__/${StrAppsLosetup}} ; 
+   StrCmd=${StrCmd//__LOOP__/${StrFreeLoop}} ; 
+   StrCmd=${StrCmd//__IMAGE__/${StrImageName}} ; 
+     
+   IntIndexCmd=${#ArrayCmd[@]} ; 
+   ArrayCmd[${IntIndexCmd}]=${StrCmd} ; 
+   
+   echo -ne "CMD:${ArrayCmd[0]}\n" > /dev/stderr ; 
+   if [ ${BoolIsDryRun:=False} != "True" ] ; then 
+    eval $( eval ${ArrayCmd[0]} ) ;  
+   fi 
+   
+   if [ ${StrLoopAInfo:=None} == "None" ] ; then 
+    ### In case Array not holding information about
+    ### free-loop device, StrLoopAInfo will get 
+    ### directly from StrFreeLoop . 
+    StrLoopAInfo=${StrFreeLoop} ; 
+   fi 
+   StrCmd=${StrNewMountSet}; 
+   StrCmd=${StrCmd//__APPS__/${StrAppsMount}} ; 
+   StrCmd=${StrCmd//__FS__/${StrFsName}} ; 
+   StrCmd=${StrCmd//__LOOP__/${StrLoopAInfo}} ; 
+   StrCmd=${StrCmd//__MOUNT__/${StrMountAInfo}} ; 
+   StrCmd=${StrCmd//__OPT__/${StrMntOptAInfo}} ; 
+
+   IntIndexCmd=${#ArrayCmd[@]} ; 
+   ArrayCmd[${IntIndexCmd}]=${StrCmd} ; 
+   
+   echo -ne "CMD:${ArrayCmd[${IntIndexCmd}]}\n" > /dev/stderr ; 
+   if [ ${BoolIsDryRun:=False} != "True" ] ; then 
+    eval $( eval ${ArrayCmd[${IntIndexCmd}]} ) ;  
+   fi 
+   
+  
+  }
+
+   local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+   local StrNameHelper="${__call_locality[1]}\n\tA Tool to link several images Files into /dev/loopN \n";
+   local StrSynopsis="\n\tThis application does  work with an Array with textual-index and do\n\trequire to specify the name of the array and all the required index-key\n\tto extract information and Active a loop and a mount of this loop.\n\tSuch Array in bash are Associative array. Basic example are declared\n\twith 'declare -A' in global variable scope, and in local scope will\n\tuse 'local -A'> In Exception to local scope, the function\n\t${__call_locality[1]} should be inside your function or will not acces\n\tto it due to scopability...\n\n\tThe other method, do require Fnct.D having UUID persistent-cache usually\n\tDoCtrlHandler should exist and should work.\n\tIt's possible to use VlcServicesLayer since this application does own\n\tinitial design and do have it's security signature which make it \n\taffordable to use.\n\tA Dry-run action is an application that pretend doing the action. In\n\tthis situation, our application only ouput the command to stdout. So\n\tkeep an eyes on DryRun action .\n\tA single way to call it after configuring your declarative Array, \n\twill look like :\n\n\tLSPIndexLoop=loop LSPIndexImage=image LSPIndexMount=mount \\ \n\tLSPIndexMountOpt=mount-opt LSPDryRun=False \\ \n\tLSPArrayDrive=ArrayDriveChroot \\ \n\tLoopSetupProperty \n\n\tTo simply see the command generated you can change the prefixed-variable\n\tLSPDryRun to True, and will only display the command.\n";
+   local StrSummary="\n\t\tSince it's a problems managing Loop device and do not have priority,\n\tthe day it missing a link in a script mounting, all drive can be drift \n\tto another Loop index where mounting may not work. Coding loop-device \n\tfrom /etc/fstab can be problemati. A Services state to Start Attachment\n\tof loop to file or device may help, and some addition to this services \n\tmay help like adding encryption support. \n" ; 
+   local StrDescription="\n\tThis application is used to attach an image or device to a loop device\n\tand mount-it too. It allow using an array to ready information from\n\tin. The allowed type of array is an associative array. As example It\n\twill be ArrayDriveChroot. This is important to configure your array\n\tto hold severals informations:\n\n\tthis array using following index-key name :\n\tkey loop . . . . . Hold a present loop or even hold \$( losetup -f )\n\t\t\t to make easier to extract a free device.It Can be\n\t\t\t  empty and the application will feed this key to \n\t\t\t  updated value and your application will have to\n\t\t\t  acces to ArrayDriveChroot[loop] to read latest\n\t\t\t  information\n\tkey image     ---> \t  Should hold the information of Formatted image.\n\tkey mount     --->  \t  Will have to hold path-location of the mount.\n\tkey mount-opt --->  Being serious with Mount option, all the \n\t\t\t information goes here and should remain comma\n\t\t\t    ',' seprated format.\n\n\t This application will require to Set Prefixed-variable as:\n\n\tLSPArrayDrive=ArrayDriveChroot \\ \n\tLSPIndexLoop=loop \\ \n\tLSPIndexImage=image \\ \n\tLSPIndexMount=mount \\ \n\tLSPIndexMountOpt=mount-opt \\ \n\tLoopSetupProperty\n\n\tWill attach it to a /dev/loop[N] and \n\tmount-it." ;
+
+   ### Section : Switches-Statememt 
+   
+   #echo -ne "In Function LoopSetupProperty, Switches statement.\n" ; 
+   if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+    ### GVRIsName set to True is the Variable handled StrNameHelper by GetVarReference and 
+    ### provide a Name-Helper inside the live-documentation if we call StartSlewAnalysis --help.
+    ### Extending the help by turning other variable to True will increae help. Variable are
+    ### declared previously. 
+    GVRIsName=True \
+    GVRIsSummary=True \
+    GVRIsSynopsis=True \
+    GVRIsDesc=True \
+    GetVarReference ${__call_locality[1]} ; 
+    #VerbMsg="${StrSwitchMessages}" VerbState=True       VerbEvalForm=False   VerbFormated=False    VerbExtendedOut=True VerbDev=/dev/stderr  Verbosis ;
+   elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+    eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+    echo -ne """${ArgGet}\n""" ;
+   elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+    eval $( __GetVarReferenceList ) ;	
+   elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
+    $( eval StrArrayName="${StrArrayName}"      \
+                 StrIndexLoop="${StrIndexLoop}"      \
+                 StrIndexImage="${StrIndexImage}"    \
+                 StrStartMain="${StrStartMain}"      \
+                 StrIndexMount="${StrIndexMount}"    \
+                 StrIndexMntOpt="${StrIndexMntOpt}"  \
+                 StrAppsLosetup="${StrAppsLosetup}"  \
+                 StrAppsMount="${StrAppsMount}"      \
+                 StrNewLoopSet="${StrNewLoopSet}"    \
+                 BoolIsDryRun="${BoolIsDryRun}"      \
+                 StrNewMountSet="${StrNewMountSet}"  ) __main_StopServices ; 
+   elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+    #StrMsg=$( LoopSetupProperty --get ArrayMsg[0] ) ; 
+    #VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    #echo -ne "In Function LoopSetupProperty, Switches statement, 'startservices' options.\n\tWill process function from StrStartMain:${StrStartMain}\n" ; 
+    eval $( StrArrayName="${StrArrayName}"      \
+            StrIndexLoop="${StrIndexLoop}"      \
+            StrIndexImage="${StrIndexImage}"    \
+            StrIndexMount="${StrIndexMount}"    \
+            StrIndexMntOpt="${StrIndexMntOpt}"  \
+            StrStartMain="${StrStartMain}"      \
+            StrAppsLosetup="${StrAppsLosetup}"  \
+            StrAppsMount="${StrAppsMount}"      \
+            StrNewLoopSet="${StrNewLoopSet}"    \
+            StrNewMountSet="${StrNewMountSet}"  \
+            BoolIsDryRun="${BoolIsDryRun}" ${StrStartMain}  )  ;
+    #echo -ne "In Function LoopSetupProperty, Switches statement, end of 'startservices'\n" ; 
+   fi 
+   
+   
+ }
+fi #End-if versionLSP==0.0.0 
+
 ### End of versionB2DT
