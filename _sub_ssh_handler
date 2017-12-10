@@ -16,214 +16,212 @@ export SSH_ENV="$HOME/.ssh/environment"
 export SSH_ASKPASS="ZenityPassPhrase" 
 
 if [ "${SubSSHAgentLoader:=False}" == "True" ] ; then 
-
-unset StartAgentSSH ; 
-function StartAgentSSH()
-{
-	local __call_locality=( SASSH StartAgentSSH ) ;
-	local ArrayArg=( $* ) ; 
-	local Arg0=${ArrayArg[0]} ; 
- local StrAgentEnvFile=${SASSHEvFile:=environment} ; 
- local IsHomeUser=${SASSHIsUserBasedHome:=True};
- local StrPathBase=${SASSHRootPathNoneUser:=/root} ; 
- local StrAgentPathFile=${SASSHPathStorage:=.ssh};
- local IntDefaultSSHEnvChmod=${SASSHDefaultChmod:=600} ;
- local IsSetSSHENV=${SASSHIsSetSSHENV:=False};
- local IsDeregSSHENV=${SASSHUnregisterSSHENV:=False};
- local StrChmodApps=${SASSHChmodApps:=/bin/chmod}
- local StrSSHAddApps=${SASSHSSHADDApp:=/usr/bin/ssh-add} ; 
- local StrSSHAddAppsOpt=${SASSHSSHADDOpt:=} ; 
- local StrSSHAgentApps=${SASSHSSHAgentApp:=/usr/bin/ssh-agent} ; 
- local StrSSHAgentAppsOpt=${SASSHSSHAgentOpt:=} ; 
- local StrProcMemory=${SASSHProcessLink:=/proc} ;
- local StrStartServicesName=${SASSHStartServices:=__main_StartServices} ;
- local StrStopServicesName=${SASSHStopServices:=__main_StopServices} ;
- local IsVerbosis=${SASSHVerbosis:=False} ;
-
-	function Verbosis()
-	{
-		local __call_locality=( Verbosis Verb );
-		local StrMsg=${VerbMsg:=__TEXT__} ; 
-		local StrDevOut=${VerbDev:=/dev/stderr} ; 
-  local VerboseState=${VerbState:=False} ;
-		local ArrayArg=( $* ) ; 
-		if [ "${VerboseState:=False}" == "True" ] ; then 
-			echo -ne "VERBOSE:[ ${StrMsg} ]\n" > ${StrDevOut} ;
-		fi
-	}
- 
- 
- ### Create StrPathSSH and if IsHomeUser==False, StrPathSSH will own
- ### the StrPathBase value (default set to /root )
- local StrEvalCmdUserHome=$( BVTVarName="StrPathSSH" \
-       BVTDisplayIf=${IsVerbosis} \
-       BVTVarHold=${HOME} \
-       BVTBoolVarName=\${IsHomeUser} \
-       BVTBoolAssertion=\${StrPathBase} \
-       BVTConclude=' ' BoolVarTest ) ; 
- StrDbgMsg="In Funct:${__call_locality[1]}\n\t\tContent of StrEvalCmdUserHome:[${StrEvalCmdUserHome}]" ;
- VerbMsg=${StrDbgMsg} VerbState=${IsVerbosis} Verbosis ; 
- eval ${StrEvalCmdUserHome} ; 
- 
- ### Appending to StrPathSSH , the .ssh path.
- StrPathSSH=${StrPathSSH}/${StrAgentPathFile} 
- 
- function __main_StopServices()
+ unset StartAgentSSH ; 
+ function StartAgentSSH()
  {
-		local __call_locality=( Stop __main_StopServices ) ;
-		local Arg0=${ArrayArg[0]} ;
-		local ArrayArg=( $* ) ;   
-  echo -ne "\n\t\033[01;31mDe-Register SSH agent...\033[00m\n\n" ; 
-  test -f ${StrPathSSH}/${StrAgentEnvFile} && rm -f ${StrPathSSH}/${StrAgentEnvFile} ; 
-  if [ "${IsDeregSSHENV:=False}" == "True" ] ; then 
-   echo -ne "\n\t\033[01;31mDe-Register SSH_ENV...\033[00m\n\n" ; 
-   unset SSH_ENV ; 
-  fi 
-  local IntPidAgent=${SSH_AGENT_PID:=-1}
-  if [ ${IntPidAgent} -ne -1 ] ; then 
-   echo -ne "\n\t\033[01;31mKilling SSH-Agent on PID:${IntPidAgent}\033[00m\n\n" ; 
-   sudo kill -11 ${IntPidAgent} ; 
-   test ! -d ${StrProcMemory}/${IntPidAgent} && unset SSH_AGENT_PID
-  fi 
- }
- 
- function __main_StartServices()
- {
-		local __call_locality=( Main __main_StartServices ) ;
-		local Arg0=${ArrayArg[0]} ;
-		local ArrayArg=( $* ) ; 
- 
-  if [ "${IsSetSSHENV:=False}" == "True" ] ; then 
-   if [ "${IsDeregSSHENV:=False}" == "True" ] ; then 
-    echo -ne "\n\tDe-Register SSH_ENV...\n\n" ; 
-    unset SSH_ENV ; 
-   else
-    echo -ne "\n\tRegistering SSH_ENV to file : ${StrPathSSH}/${StrAgentEnvFile}\n\n" ; 
-    export SSH_ENV=${StrPathSSH}/${StrAgentEnvFile} ; 
-   fi 
-  fi
+  local __call_locality=( SASSH StartAgentSSH ) ;
+  local ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]} ; 
+  local StrAgentEnvFile=${SASSHEvFile:=environment} ; 
+  local IsHomeUser=${SASSHIsUserBasedHome:=True};
+  local StrPathBase=${SASSHRootPathNoneUser:=/root} ; 
+  local StrAgentPathFile=${SASSHPathStorage:=.ssh};
+  local IntDefaultSSHEnvChmod=${SASSHDefaultChmod:=600} ;
+  local IsSetSSHENV=${SASSHIsSetSSHENV:=False};
+  local IsDeregSSHENV=${SASSHUnregisterSSHENV:=False};
+  local StrChmodApps=${SASSHChmodApps:=/bin/chmod}
+  local StrSSHAddApps=${SASSHSSHADDApp:=/usr/bin/ssh-add} ; 
+  local StrSSHAddAppsOpt=${SASSHSSHADDOpt:=} ; 
+  local StrSSHAgentApps=${SASSHSSHAgentApp:=/usr/bin/ssh-agent} ; 
+  local StrSSHAgentAppsOpt=${SASSHSSHAgentOpt:=} ; 
+  local StrProcMemory=${SASSHProcessLink:=/proc} ;
+  local StrStartServicesName=${SASSHStartServices:=__main_StartServices} ;
+  local StrStopServicesName=${SASSHStopServices:=__main_StopServices} ;
+  local IsVerbosis=${SASSHVerbosis:=False} ;
+
+  function Verbosis()
+  {
+   local __call_locality=( Verbosis Verb );
+   local StrMsg=${VerbMsg:=__TEXT__} ; 
+   local StrDevOut=${VerbDev:=/dev/stderr} ; 
+   local VerboseState=${VerbState:=False} ;
+   local ArrayArg=( $* ) ; 
+   if [ "${VerboseState:=False}" == "True" ] ; then 
+    echo -ne "VERBOSE:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+   fi
+  }
   
-  if [ "${IsSetSSHENV:=False}" == "False" ] ; then 
-   echo -ne "\n\t\033[01;33mInitializing new SSH agent...\033[00m\n\n"
-   test -f ${StrPathSSH}/${StrAgentEnvFile} && rm -f ${StrPathSSH}/${StrAgentEnvFile}
-   echo -ne "\n\t\033[01;33mLoading ${StrSSHAgentApps}...\033[00m\n\n"
-   eval ${StrSSHAgentApps} ${StrSSHAgentAppsOpt} | sed 's/^echo/#echo/' > "${SSH_ENV}"
-   echo -ne "SSHAgent\t\t\t\t\033[01;32m[ succeeded ]\033[00m\n" ; 
-   eval ${StrChmodApps} ${IntDefaultSSHEnvChmod} "${SSH_ENV}"
-   . "${SSH_ENV}" > /dev/null
-   echo -ne "\n\t\033[01;33mLoading ${StrSSHAddApps}...\033[00m\n\n"
-   local CmdLine="${StrSSHAddApps}" ; 
-   eval ${CmdLine} ; 
-  fi
- }
- 
- local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
- if [ "${Arg0:=--startservices}" == "--help"	] ; then 
-			GetVarReference ${__call_locality[1]} ; 
-			echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
-	elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
-		eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
-		echo -ne """${ArgGet}\n""" ;
-	elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
-		eval $( __GetVarReferenceList ) ;
- elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
- eval $( VTVIsArrayStyleInsert=True \
-  VTVValueEntry=StrAgentEnvFile,IsHomeUser,StrPathBase,StrAgentPathFile,IsSetSSHENV,IsDeregSSHENV,StrSSHAddApps,StrSSHAddAppsOpt,StrSSHAgentApps,StrSSHAgentAppsOpt \
-  VTVIsValueReAssign=True    \
-  VTVIsValueToConvert=False  \
-  VTVIsArrayStyleInsert=True \
-  ValueToVariable ) ${StrStopServicesName} ; 
- elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+  
+  ### Create StrPathSSH and if IsHomeUser==False, StrPathSSH will own
+  ### the StrPathBase value (default set to /root )
+  local StrEvalCmdUserHome=$( BVTVarName="StrPathSSH" \
+        BVTDisplayIf=${IsVerbosis} \
+        BVTVarHold=${HOME} \
+        BVTBoolVarName=\${IsHomeUser} \
+        BVTBoolAssertion=\${StrPathBase} \
+        BVTConclude=' ' BoolVarTest ) ; 
+  StrDbgMsg="In Funct:${__call_locality[1]}\n\t\tContent of StrEvalCmdUserHome:[${StrEvalCmdUserHome}]" ;
+  VerbMsg=${StrDbgMsg} VerbState=${IsVerbosis} Verbosis ; 
+  eval ${StrEvalCmdUserHome} ; 
+  
+  ### Appending to StrPathSSH , the .ssh path.
+  StrPathSSH=${StrPathSSH}/${StrAgentPathFile} 
+  
+  function __main_StopServices()
+  {
+   local __call_locality=( Stop __main_StopServices ) ;
+   local Arg0=${ArrayArg[0]} ;
+   local ArrayArg=( $* ) ;   
+   echo -ne "\n\t\033[01;31mDe-Register SSH agent...\033[00m\n\n" ; 
+   test -f ${StrPathSSH}/${StrAgentEnvFile} && rm -f ${StrPathSSH}/${StrAgentEnvFile} ; 
+   if [ "${IsDeregSSHENV:=False}" == "True" ] ; then 
+    echo -ne "\n\t\033[01;31mDe-Register SSH_ENV...\033[00m\n\n" ; 
+    unset SSH_ENV ; 
+   fi 
+   local IntPidAgent=${SSH_AGENT_PID:=-1}
+   if [ ${IntPidAgent} -ne -1 ] ; then 
+    echo -ne "\n\t\033[01;31mKilling SSH-Agent on PID:${IntPidAgent}\033[00m\n\n" ; 
+    sudo kill -11 ${IntPidAgent} ; 
+    test ! -d ${StrProcMemory}/${IntPidAgent} && unset SSH_AGENT_PID
+   fi 
+  }
+  
+  function __main_StartServices()
+  {
+   local __call_locality=( Main __main_StartServices ) ;
+   local Arg0=${ArrayArg[0]} ;
+   local ArrayArg=( $* ) ; 
+  
+   if [ "${IsSetSSHENV:=False}" == "True" ] ; then 
+    if [ "${IsDeregSSHENV:=False}" == "True" ] ; then 
+     echo -ne "\n\tDe-Register SSH_ENV...\n\n" ; 
+     unset SSH_ENV ; 
+    else
+     echo -ne "\n\tRegistering SSH_ENV to file : ${StrPathSSH}/${StrAgentEnvFile}\n\n" ; 
+     export SSH_ENV=${StrPathSSH}/${StrAgentEnvFile} ; 
+    fi 
+   fi
+   
+   if [ "${IsSetSSHENV:=False}" == "False" ] ; then 
+    echo -ne "\n\t\033[01;33mInitializing new SSH agent...\033[00m\n\n"
+    test -f ${StrPathSSH}/${StrAgentEnvFile} && rm -f ${StrPathSSH}/${StrAgentEnvFile}
+    echo -ne "\n\t\033[01;33mLoading ${StrSSHAgentApps}...\033[00m\n\n"
+    eval ${StrSSHAgentApps} ${StrSSHAgentAppsOpt} | sed 's/^echo/#echo/' > "${SSH_ENV}"
+    echo -ne "SSHAgent\t\t\t\t\033[01;32m[ succeeded ]\033[00m\n" ; 
+    eval ${StrChmodApps} ${IntDefaultSSHEnvChmod} "${SSH_ENV}"
+    . "${SSH_ENV}" > /dev/null
+    echo -ne "\n\t\033[01;33mLoading ${StrSSHAddApps}...\033[00m\n\n"
+    local CmdLine="${StrSSHAddApps}" ; 
+    eval ${CmdLine} ; 
+   fi
+  }
+  
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n" ;
+  if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+    GetVarReference ${__call_locality[1]} ; 
+    echo -ne "${StrSwitchMessages}" > /dev/stderr ; 
+  elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+   eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+   echo -ne """${ArgGet}\n""" ;
+  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+   eval $( __GetVarReferenceList ) ;
+  elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
   eval $( VTVIsArrayStyleInsert=True \
-  VTVValueEntry=StrAgentEnvFile,IsHomeUser,StrPathBase,StrAgentPathFile,IsSetSSHENV,IsDeregSSHENV,IntDefaultSSHEnvChmod,StrChmodApps,StrSSHAddApps,StrSSHAddAppsOpt,StrSSHAgentApps,StrSSHAgentAppsOpt,StrProcMemory \
-  VTVIsValueReAssign=True    \
-  VTVIsValueToConvert=False  \
-  VTVIsArrayStyleInsert=True \
-  ValueToVariable ) ${StrStartServicesName}
- fi
- unset __main_StopServices __main_StopServices ;
- ### Discover StartAgentSSH function did leave it's sub-function out and living.
- ### While StartAgentSSH did not own Brace after function declaration its better
- ### to unset internal function and/or rewriting 
- ### function StartAgentSSH
- ### into 
- ### function StartAgentSSH() 
- 
-}
+   VTVValueEntry=StrAgentEnvFile,IsHomeUser,StrPathBase,StrAgentPathFile,IsSetSSHENV,IsDeregSSHENV,StrSSHAddApps,StrSSHAddAppsOpt,StrSSHAgentApps,StrSSHAgentAppsOpt \
+   VTVIsValueReAssign=True    \
+   VTVIsValueToConvert=False  \
+   VTVIsArrayStyleInsert=True \
+   ValueToVariable ) ${StrStopServicesName} ; 
+  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+   eval $( VTVIsArrayStyleInsert=True \
+   VTVValueEntry=StrAgentEnvFile,IsHomeUser,StrPathBase,StrAgentPathFile,IsSetSSHENV,IsDeregSSHENV,IntDefaultSSHEnvChmod,StrChmodApps,StrSSHAddApps,StrSSHAddAppsOpt,StrSSHAgentApps,StrSSHAgentAppsOpt,StrProcMemory \
+   VTVIsValueReAssign=True    \
+   VTVIsValueToConvert=False  \
+   VTVIsArrayStyleInsert=True \
+   ValueToVariable ) ${StrStartServicesName}
+  fi
+  unset __main_StopServices __main_StopServices ;
+  ### Discover StartAgentSSH function did leave it's sub-function out and living.
+  ### While StartAgentSSH did not own Brace after function declaration its better
+  ### to unset internal function and/or rewriting 
+  ### function StartAgentSSH
+  ### into 
+  ### function StartAgentSSH() 
+ }
 
-unset StubStartAgent ;
-function StubStartAgent()
-{
-	local __call_locality=( SSA StubStartAgent ) ;
-	local ArrayArg=( $* ) ; 
-	local Arg0=${ArrayArg[0]} ; 
- 
- local ArrayArg=( $* ) ;
- StartAgentSSH;
-}
+ unset StubStartAgent ;
+ function StubStartAgent()
+ {
+  local __call_locality=( SSA StubStartAgent ) ;
+  local ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]} ; 
+  
+  local ArrayArg=( $* ) ;
+  StartAgentSSH;
+ }
 
-unset SSHAgentMemoryInfo ;
-function SSHAgentMemoryInfo()
-{
-	local __call_locality=( SSHAMI SSHAgentMemoryInfo ) ;
-	local ArrayArg=( $* ) ; 
-	local Arg0=${ArrayArg[0]} ; 
- 
- ps -ef | egrep ${SSH_AGENT_PID} | egrep 'ssh-agent$' | egrep -v "<defunct>" > /dev/null ;
-}
+ unset SSHAgentMemoryInfo ;
+ function SSHAgentMemoryInfo()
+ {
+  local __call_locality=( SSHAMI SSHAgentMemoryInfo ) ;
+  local ArrayArg=( $* ) ; 
+  local Arg0=${ArrayArg[0]} ; 
+  
+  ps -ef | egrep ${SSH_AGENT_PID} | egrep 'ssh-agent$' | egrep -v "<defunct>" > /dev/null ;
+ }
 
-### Notice : 208d465e-f6d4-11e5-98a2-001e4c8856d6 
-### Uses of Prefixed-Variable in AgentLoader Might work.
-### 
-### Belong to topology, all prefixed-variable are by default assigned to 
-### a candidate value if there is no representation of it in Higher level 
-### like command line: 
-### 
-### Explicitly mean : following command will output all 
-### virtual test being handled by BoolVarTest if there is not 
-### explicitly assigned value to is original command line, IsDisplayIfStatement
-### is the Verbosis example following the output inside BoolVarTest. 
-### 
-### But subject line fully working in date of 2016-03-30 belong to notice 
-### 208d465e-f6d4-11e5-98a2-001e4c8856d6 and after token notice, example :
-### 
-### BVTDisplayIf=True AgentLoader --stopservices
-### BVTDisplayIf=True AgentLoader --startservices 
-### will display the current BoolVarTest listing of if-fi statement.
-### 
-### reference : 
-### 
-### BVTDisplayIf=True AgentLoader --stopservices 
-### VERBOSE:[ 
-### Function BoolVarTest, Display Result:
-### local StrAppsAction="${StrAppsAction}" ;
-###  if [ "${IsValueSimpleConvert}" == "True" ]  ; then 
-###   StrAppsAction=${StrDefaultSedScript} 
-###   ; fi ;
-###  ]
-### VERBOSE:[ 
-### Function BoolVarTest, Display Result:
-###  local StrAppsAction="${StrAppsAction}" ;
-###  if [ "${IsValueToAssignSame}" == "True" ]  ; then 
-###   StrAppsAction=${StrDefaultAssignScript} 
-###   ; fi ;
-###  ]
-### VERBOSE:[ 
-### Function BoolVarTest, Display Result:
-###  local StrAppsAction="${StrAppsAction}" ;
-###  if [ "${IsValueTransScript}" == "True" ]  ; then 
-###   StrAppsAction=${StrDefaultTransform} 
-###   ; fi ;
-###  ]
-### VERBOSE:[ 
-### Function BoolVarTest, Display Result:
-###  local StrParsedVar="${StrValueParser}" ;
-###  if [ "${IsEntryInComaSep}" == "True" ]  ; then 
-###   StrParsedVar=${StrValueParser//,/ } 
-###   ; fi ;
-###  ]
-### 
-### 
+ ### Notice : 208d465e-f6d4-11e5-98a2-001e4c8856d6 
+ ### Uses of Prefixed-Variable in AgentLoader Might work.
+ ### 
+ ### Belong to topology, all prefixed-variable are by default assigned to 
+ ### a candidate value if there is no representation of it in Higher level 
+ ### like command line: 
+ ### 
+ ### Explicitly mean : following command will output all 
+ ### virtual test being handled by BoolVarTest if there is not 
+ ### explicitly assigned value to is original command line, IsDisplayIfStatement
+ ### is the Verbosis example following the output inside BoolVarTest. 
+ ### 
+ ### But subject line fully working in date of 2016-03-30 belong to notice 
+ ### 208d465e-f6d4-11e5-98a2-001e4c8856d6 and after token notice, example :
+ ### 
+ ### BVTDisplayIf=True AgentLoader --stopservices
+ ### BVTDisplayIf=True AgentLoader --startservices 
+ ### will display the current BoolVarTest listing of if-fi statement.
+ ### 
+ ### reference : 
+ ### 
+ ### BVTDisplayIf=True AgentLoader --stopservices 
+ ### VERBOSE:[ 
+ ### Function BoolVarTest, Display Result:
+ ### local StrAppsAction="${StrAppsAction}" ;
+ ###  if [ "${IsValueSimpleConvert}" == "True" ]  ; then 
+ ###   StrAppsAction=${StrDefaultSedScript} 
+ ###   ; fi ;
+ ###  ]
+ ### VERBOSE:[ 
+ ### Function BoolVarTest, Display Result:
+ ###  local StrAppsAction="${StrAppsAction}" ;
+ ###  if [ "${IsValueToAssignSame}" == "True" ]  ; then 
+ ###   StrAppsAction=${StrDefaultAssignScript} 
+ ###   ; fi ;
+ ###  ]
+ ### VERBOSE:[ 
+ ### Function BoolVarTest, Display Result:
+ ###  local StrAppsAction="${StrAppsAction}" ;
+ ###  if [ "${IsValueTransScript}" == "True" ]  ; then 
+ ###   StrAppsAction=${StrDefaultTransform} 
+ ###   ; fi ;
+ ###  ]
+ ### VERBOSE:[ 
+ ### Function BoolVarTest, Display Result:
+ ###  local StrParsedVar="${StrValueParser}" ;
+ ###  if [ "${IsEntryInComaSep}" == "True" ]  ; then 
+ ###   StrParsedVar=${StrValueParser//,/ } 
+ ###   ; fi ;
+ ###  ]
+ ### 
+ ### 
 
 
  unset AgentLoader;
@@ -299,7 +297,8 @@ function SSHAgentMemoryInfo()
 
   unset __main_StartServices __main_StopServices ; 
  }
-fi 
+
+fi #End-if SubSSHAgentLoader==True 
 
 unset GetGitHubKey ; 
 function GetGitHubKey()
@@ -338,56 +337,349 @@ function GetGitHubKey()
  echo -ne "Key from ${DisplayKeyName}:\n[${KeyOutput}]\n"  > /dev/stderr ; 
 }
 
+
+if [ "${versionXCT:=0.0.0}" == "0.0.0" ] ; then
+ 
+ ### Initial prototype:
+ ###     egrep "PASSPHRASE" FILE | \
+ ###     cut -d \':\' -f 2 | \
+ ###     head -n 1 | sed -r 's/[\ ]+//g'  | xclip -i   
+ 
+ unset XClipTransfert ; 
+ function XClipTransfert()
+ {
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( XCT XClipTransfert ) ; 
+   local Arg0=${ArrayArg[0]} ; 
+   
+   StrCsv=${XCTCHARCSV:=:};
+   /bin/egrep "${XCTCOLUMNIDNAME:=PASSPHRASE}" ${XCTFileName:=password.txt} | \
+       /usr/bin/head -n 1 | \
+       eval /usr/bin/cut """-d '${StrCsv}' -f ${XCTColNumber:=2}""" | 
+       eval /bin/sed """'s/[\t\ ]*//g'""" | \
+       /usr/bin/xclip -i ;
+ }
+
+fi #End-if ${versionXCT} == 0.0.0
+
+
+if [ "${versionXCT:=0.0.0}" == "0.0.1" ] ; then
+ 
+ eval $( GFCFuncName=XClipTransfert GlobalFunctionCleaning ) ; 
+ 
+### 
+### TagParser instruction 
+### 
+### TPVarNameParsed       -> StrCmd
+### TPRightStrPtrn        -> StrRightPattern
+### TPDisplayDebug        -> BoolDisplayDebug ; 
+### TPDisplayParserNotice -> BoolDisplayParserNotice 
+### TPDisplayEvalOnly     -> BoolDisplayCmd
+### TPDisplayParserNotice -> BoolDisplayParserNotice
+### 
+     
+### StrCSV          -> __CSV__
+### StrColIdName    -> __COLUMNIDNAME__
+### StrFileName     -> __FILE__
+### StrAppsGrep     -> __GREP__
+### StrAppsCut      -> __CUT__ 
+### StrAppsCutOpt   -> __CUT_OPT__
+### StrAppsSed      -> __SED__ 
+### StrAppsSedOpt   -> __SED_OPT__ 
+### StrAppsHead     -> __HEAD__
+### StrAppsHeadOpt  -> __HEAD_OPT__
+### StrAppsPaste    -> __PASTER__
+### StrAppsPasteOpt -> __PASTER_OPT__
+### IntColTxtRec    -> __FIELD_NO__ 
+### 
+### StrColIdName:__COLUMNIDNAME__,StrFileName:__FILE__,StrAppsGrep:__GREP__,StrAppsCut:__CUT__,StrAppsCutOpt:__CUT_OPT__,StrAppsSed:__SED__,StrAppsSedOpt:__SED_OPT__,StrAppsHead:__HEAD__,StrAppsHeadOpt:__HEAD_OPT__,StrAppsPaste:__PASTER__,StrAppsPasteOpt:__PASTER_OPT__,StrCSV:__CSV__,IntColTxtRec:__FIELD_NO__
+### 
+### 
+ function XClipTransfert()
+ {
+
+  function Verbosis()
+  {
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( Verb Verbosis ) ; 
+   local Arg0=${ArrayArg[0]} ; 
+   local StrMsg=${VerbMsg:=__TEXT__} ; 
+   local StrDevOut=${VerbDev:=/dev/stderr} ; 
+   local IsVerboseState=${VerbState:=False} ;
+   local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+   local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+   local IsDisplayFormatted=${VerbFormated:=True} ;
+   local IsAppendMode=${VerbAppendDev:=False} ; 
+   local IsExtendedOutput=${VerbExtendedOut:=False} ; 
+   local ArrayArg=( $* ) ; 
+   local StrTypeEcho="echo" ;
+   local StrStdOperRedir=">" ; 
+   
+   ### Pre-attribution 1 of the type of echo, 
+   if [ ${IsExtendedOutput:=False} == "True" ] ; then 
+    StrTypeEcho="echo -ne" ;
+   fi 
+   if [ "${IsAppendMode:=False}" == "True" ] ; then
+    StrStdOperRedir=">>" ; 
+   fi 
+   
+   if [ "${IsVerboseState:=False}" == "True" ] ; then 
+    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+       ${StrTypeEcho} "${StrVerboseHeader}:[ ${StrMsg} ]\n" ${StrStdOperRedir} ${StrDevOut} ;
+    else
+     if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+        ${StrTypeEcho} "${StrMsg}" ;  
+     else
+         ${StrTypeEcho} "${StrMsg}" ${StrStdOperRedir} ${StrDevOut} ;
+     fi #End-if IsEvalRequiredForm
+    fi #End-if IsDisplayFormatted
+   fi #Endif IsVerboseState
+  } ;
+  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
+
+   
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( XCT XClipTransfert ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+    local StrParentApps=${__call_locality[1]} ;
+    local StrStartMain=${XCTFuncStart:=__main_StartServices} ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=XClipTransfert CAIsAddParent=False __Call_Argument ) ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=XClipTransfert UUID=${CAUUID:=None} CAIsAddDebug=True CAIsAddParent=False CallArgument ) ;
+   fi  
+   
+    ### This CallArgument Line should provide following variable :
+    ### 
+    ### StrParentApps           -> Internally created. 
+    ### StrStartMain            -> XCTFuncStart
+    ### BoolDisplayDebug        -> XCTIsDisplayDebug(False)
+    ### BoolDisplayEntry        -> XCTIsDisplayEntry(False)
+    ### BoolDisplayCmd          -> XCTIsDisplayCmd(False)
+    ### BoolDisplayParserNotice -> XCTIsDisplayParserNotice(False)
+    ### - It not usefull to add the prefixed-variable 
+    ### CAProvideDebug=DisplayDebug,DisplayEntry,DisplayCmd
+    ### or it will overwrite the XCTIs... Prefixed to your new 
+    ### value except, there is no default 'customizable' value
+    ### for CAProvideDebug. 
+
+   
+   ### Provided by CallArgument 
+   ### local BoolDisplayDebug=${GGPIsDisplayDebug:=False} ; 
+   local BoolCreateUUID=${XCTCreateInstance:=False} ; 
+   local BoolXmlDelim=${XCTUseXmlForm:=False} ;  
+   local StrAppsGrep=${XCTGrepApp=/bin/egrep} ; 
+   local StrColIdName=${XCTCOLUMNIDNAME:=PASSPHRASE} ;
+   local StrCsvCol=${XCTCHARCSV:=:} ;  
+   local IntColTxtRec=${XCTColNumber:=2} ; 
+   local StrFileName=${XCTFileName:=NONE} ; 
+   local StrAppsHead=${XCTHeadApp:=/usr/bin/head} ; 
+   local StrAppsHeadOpt=${XCTHeadAppOpt:=-n 1} ; 
+   local StrAppsSed=${XCTSedApp:=/bin/sed} ;
+   local StrAppsSedOpt=${XCTSedAppOpt:=-r __GUIL__s/[__CSV__]+//g\__GUIL__} ;
+   local StrAppsPaste=${XCTAppsGui:=/usr/bin/xclip} ; 
+   local StrAppsPasteOpt=${XCTAppsGuiOpt:=-i} ;
+   local StrAppsCut=${XCTAppsCut:=/usr/bin/cut} ;
+   local StrAppsCutOpt=${XCTAppsCutOpt:=-d __GUIL____CSV____GUIL__ -f __FIELD_NO__} ; 
+   ### to replace TPRightStrPtrn in TagParser . 
+   local StrRightPattern=${XCTRightStrPtrn:=:__[A-Za-z0-9\_]*} ;
+   local StrTagParserTpl=${XCTCmdLineTpl:=__GREP__ __GUIL____COLUMNIDNAME____GUIL__ __FILE__ | eval __CUT__ __CUT_OPT__ | __HEAD__ __HEAD_OPT__ | eval __SED__ __SED_OPT__ | __PASTER__ __PASTER_OPT__} ; 
+
+   local StrInternalGuill=$( printf "\042" "%c" ) ; 
+   local StrIntrnSGuill=$( printf "\047" "%c" ) ; 
+   local StrIntrnFSlash=$( printf "\057" "%c" ) ; 
+   local StrIntrnDblDot=$( printf "\072" "%c" ) ; 
+   ### Information for TagParser
+   ### TPListTag Information for TagParser
+   local StrListTag=${XCTTagParserList:=StrInternalGuill:__GUIL__,StrColIdName:__COLUMNIDNAME__,StrFileName:__FILE__,StrAppsGrep:__GREP__,StrAppsCut:__CUT__,StrAppsCutOpt:__CUT_OPT__,StrAppsSed:__SED__,StrAppsSedOpt:__SED_OPT__,StrAppsHead:__HEAD__,StrAppsHeadOpt:__HEAD_OPT__,StrAppsPaste:__PASTER__,StrAppsPasteOpt:__PASTER_OPT__,StrCSV:__CSV__,IntColTxtRec:__FIELD_NO__} ; 
+   
+   ### BoolDisplayParserNotice, handled with CallArgument==0.0.2. 
+   
+   ### TPDisplayParserNotice DebugLevel for TagParser 
+   ### local BoolDisplayParserNotice=${GGPDisplayParserNotice:=False} ; 
+   
+   ### TPVarNameParsed to tell about existence of handled variable name 
+   local StrVarName=${XCTParserVarName:=StrCmdTplEx} ; 
+   local StrVTVRegistry=${XCTVTVReg:=VTVIsDebugDisplay=False,VTVIsSlowDebug=False,VTVIsWhiteList=True,VTVIsArrayStyleInsert=True,VTVIsValueReAssign=True,VTVIsValueToConvert=False,VTVIsQuotedValue=True} ;
+   local StrVTVWhiteList=${XCTWhiteList:=UUID,VCSVTVReg,RPCIsDisplayDebug,RPCIsDisplayEntry,RPCIsDisplayCmd,RPCFuncNameRegister,RPCUUID} ; 
+   
+   local StrVarList="BoolDisplayDebug,BoolDisplayEntry,BoolDisplayCmd,BoolDisplayParserNotice,BoolCreateUUID,BoolXmlDelim,StrColIdName,StrCsvCol,IntColTxtRec,StrFileName,StrAppsHead,StrAppsHeadOpt,StrAppsSed,StrAppsSedOpt,StrAppsPaste,StrAppsPasteOpt,StrAppsCut,StrAppsCutOpt,StrRightPattern,StrListTag,StrVTVRegistry,StrVTVWhiteList,StrTagParserTpl,StrVarName,StrInternalGuill" ;
+   
+   local -a ArrayMsg ;
+   ArrayMsg[0]="Entry in function" ;
+   ArrayMsg[1]="Instance ID:__UUID__" ; 
+   ArrayMsg[2]="__TITLE__: __CMD__" ; 
+   ArrayMsg[3]="Verbose Status:\n\tBoolCreateUUID          : __CREATE_UUID__\n\tBoolXmlDelim            : __USEXML___\n\tBoolDisplayDebug        : __DISPLAYDEBUG__\n\tBoolDisplayEntry        : __DISPLAYENTRY__\n\tBoolDisplayCmd          : __DISPLAYCMD__\n\tBoolDisplayParserNotice : __DISPLAYPARSERNOTICE__" ; 
+
+   local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+   local StrNameHelper="${__call_locality[1]}\n\tApplication to extract your password from an extraction\n\tfunction and put it\'s content inside X Window Manager\n\tClipboard memory. To be used like paste-action inside\n\ta X Windows Passphrase or standard passphrase\n\tapplication.\n";
+   local StrSynopsis="\n\tGGPCOLUMNIDNAME=PASSPHRASE GGPCHARCSV=: GGPFileName=passwd.txt ${__call_locality[1]}\n";
+   local StrSummary="\n\tThis application is using XWindow system manager and \n\tdoes rely on normal control provided by X. Usually the\n\twhole Manager is using 2 buttons of your mouse being\n\tclick in same time to provide a paste action.\n" ; 
+   local StrDescription="\n\tUseful with some Agent, like AgentLoader, you can paste\n\tyour acquired password or called PASSPHRASE create with\n\topenssl to provide your a git acces, or acces to a\n\trepository.\n" ;
+
+   function __main_StartServices()
+   {
+    if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+     local -a ArrayArg=( $* ) ;
+     local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+     local Arg0="${ArrayArg[0]}" ; 
+    elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
+     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
+    elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
+     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+    fi
+    local StrMsg ; 
+    
+    StrMsg=$( XClipTransfert --get ArrayMsg[0] ) ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    
+    StrMsg=$( XClipTransfert --get ArrayMsg[3] ) ; 
+    StrMsg=${StrMsg//__CREATE_UUID__/${BoolCreateUUID}} ; 
+    StrMsg=${StrMsg//__USEXML___/${BoolXmlDelim}} ; 
+    StrMsg=${StrMsg//__DISPLAYDEBUG__/${BoolDisplayDebug}} ;
+    StrMsg=${StrMsg//__DISPLAYENTRY__/${BoolDisplayEntry}} ;
+    StrMsg=${StrMsg//__DISPLAYCMD__/${BoolDisplayEntry}} ; 
+    StrMsg=${StrMsg//__DISPLAYPARSERNOTICE__/${BoolDisplayParserNotice}} ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    
+    
+    local StrUUID="None" ; 
+    local StrCmd="" ; 
+    if [ "${BoolCreateUUID}" == "True" ] ; then 
+     StrMsg=$( XClipTransfert --get ArrayMsg[1] )
+     StrUUID=$( GetUAppsRegisterName=${StrParentApps} GetUTimeBased=True GetULoop=False GetUUID ) ; 
+     StrMsg=${StrMsg//__UUID__/${StrUUID}}
+     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-INSTANCE" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    fi
+    
+    eval """local ${StrVarName}=\"${StrTagParserTpl}\"""" ; 
+    
+    
+    if [ ${MainAction:=None} == "get"  ] ; then 
+     StrVarNameGetter=${MainVar:=None} ; 
+     eval """local ArgGet=\${${StrVarNameGetter}}""" ; 
+     echo -ne """${ArgGet}\n""" ;
+    else
+
+     
+     StrMsg=$( XClipTransfert --get ArrayMsg[2] )
+     StrMsg=${StrMsg//__TITLE__/TagParser Template} ; 
+     StrMsg=${StrMsg//__CMD__/${StrCmdTplEx}} ; 
+     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayCmd} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+     eval $( eval TPListTag="${StrListTag}"                 \
+             TPArrayName="Array${__call_locality[0]}"       \
+             TPVarNameParsed="${StrVarName}"                \
+             TPDisplayParserNotice="${BoolDisplayParserNotice}" \
+             TPDisplayDebug="${BoolDisplayDebug}"               \
+             TPDisplayEvalOnly="False" TagParser )   ;
+     
+     StrMsg=$( XClipTransfert --get ArrayMsg[2] )
+     StrMsgAddTitle="TagParser Parser result" ; 
+     StrMsg=${StrMsg//__TITLE__/${StrMsgAddTitle}} ; 
+     StrMsg=${StrMsg//__CMD__/${StrCmdTplEx}} ; 
+     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayCmd} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    fi #End-If MainAction==get 
+   
+   }
+   
+   function __main_StopServices()
+   {
+    if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+     local -a ArrayArg=( $* ) ;
+     local -a __call_locality=( Main __main_StopServices ${StrParentApps} ) ;
+     local Arg0="${ArrayArg[0]}" ; 
+    elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
+     eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True __Call_Argument ) ;
+    elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
+     eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True CallArgument ) ;
+    fi 
+    local StrMsg=$( XClipTransfert --get ArrayMsg[0] ) ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState="${BoolDisplayEntry}" VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   } ; 
+   
+ 
+   ### Section : Switches-Statememt 
+   if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+    ### GVRIsName set to True is the Variable handled StrNameHelper by GetVarReference and 
+    ### provide a Name-Helper inside the live-documentation if we call StartSlewAnalysis --help.
+    ### Extending the help by turning other variable to True will increae help. Variable are
+    ### declared previously. 
+    GVRIsName=True GVRIsSummary=True GVRIsSynopsis=True GVRIsDesc=True GetVarReference ${__call_locality[1]} ; 
+    #VerbMsg="${StrSwitchMessages}" VerbState=True       VerbEvalForm=False   VerbFormated=False    VerbExtendedOut=True VerbDev=/dev/stderr  Verbosis ;
+   elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+    eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+    echo -ne """${ArgGet}\n""" ;
+   elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+    eval $( __GetVarReferenceList ) ;	
+   elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
+    eval $( eval ${StrVTVRegistry//,/ } \
+            VTVWhiteListTransfert="${StrVTVWhiteList}"  \
+            VTVValueEntry="${StrVarList}" \
+            ValueToVariable ) __main_StopServices ; 
+   elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+    StrMsg=${ArrayMsg[0]} ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
+    eval $( eval ${StrVTVRegistry//,/ } \
+            VTVWhiteListTransfert="${StrVTVWhiteList}"  \
+            VTVValueEntry="${StrVarList}" \
+            ValueToVariable ) ${StrStartMain} ;
+   fi
+ }
+
+ 
+fi #End-if ${versionXCT} == 0.0.1
+
+### _sub_ssh_handler : line: 641
 unset GetKeyChoice ; 
 function GetKeyChoice()
 {
-
-### Pre Variable List 
-### GetKeyChoiceDisplayKey                  -> ( True | False )
-###  - Inhibit custom passphrase beign displayed on screen while 
-###    invoking ssh-add . 
-### GetKeyChoiceEval                        -> ( True | False )
-###  - Creating extra line of shell used to add some update to your current 
-###    shell once the Application end it's task. In this case updating var 
-###    IntDefaultSSHKey to reflect current key selection. 
-###    ( usefull when re-calling GetGitHubKey ) 
-### GetKeyChoiceAppsKeyProvider             -> ( default : GetGitHubKey ) 
-###    Is the application responsible to provide you the passphrase in case
-###    you haven't noticed... Assuming your working on your sysetem and this 
-###    one is not lethal to your life. 
-###    Note : Involving this setting mean you have to call the Function like 
-###    this to let it work : eval $( GetKeyChoiceEval=True GetKeyChoice ) 
-###    next time By calling GetGitHubKey it will give you actual Passphrase. 
-### GetKeyChoicePassphraseHook              -> ( default : IntDefaultSSHKey )
-###    Allow GetGitHubKey to refer to this key to seek for actual Passphrase.
-###
-### !!! Paranoid Level !!!
-###
-### GetKeyChoiceDecoderLevel                -> ( default : base64 --decode)
-###    Allow safer decoding but need your hand and may interfer with stdout and
-###    stderr , using GetKeyChoiceEval may interfer and not working while asking
-###    you to enter another passphrase like using :
-###    openssl enc -d -cast5-cbc -k <PASSWORD> 
-###     - This <PASSWORD> must be somewhere like on stdin ( on screen ) if you forget
-###     option -k in openssl or using file as password holder, but it store the password 
-###    on the .bash_history.... why it's paranoid level. 
-### GetKeyChoiceStorageSuffix               -> ( default : GitHubKey )
-###    Allow to Store Key, name of the key and corresponding key-file from Another
-###    Array usually having ArrayGitHubKey, ArrayGitHubKeyName ArrayGitHubKeyFile
-###    it using suffix GitHubKey see -> 
-###         Array : Array[GitHubKey], Array[GitHubKey]Name Array[GitHubKey]File 
-###     this can serve managing different Array of Key and may store other type of 
-###    key, like passphrase for pem-file in apache like ... 
-###
-### !!! patented - talent !!! 
-### AppsRootName                           -> ( default : GetKeyChoice )
-###     Wrapping this Function another one you can call the application differently
-###     by doing sed and evoluated reg-exp, like using python module and re. 
-###     using declare -f GetKeyChoice give you the full body and may serve as template.
-###     using AppsRootName prevent ovewriting of the new function in memory by avoiding
-###     overwriting all already prefixed variable from this sedding or replacing action. 
-###     It's a patented - talent ... << Sam on radio ; patented - talent ... 
-###     Who know friend... >> ...
+  ### Pre Variable List 
+  ### GetKeyChoiceDisplayKey                  -> ( True | False )
+  ###  - Inhibit custom passphrase beign displayed on screen while 
+  ###    invoking ssh-add . 
+  ### GetKeyChoiceEval                        -> ( True | False )
+  ###  - Creating extra line of shell used to add some update to your current 
+  ###    shell once the Application end it's task. In this case updating var 
+  ###    IntDefaultSSHKey to reflect current key selection. 
+  ###    ( usefull when re-calling GetGitHubKey ) 
+  ### GetKeyChoiceAppsKeyProvider             -> ( default : GetGitHubKey ) 
+  ###    Is the application responsible to provide you the passphrase in case
+  ###    you haven't noticed... Assuming your working on your sysetem and this 
+  ###    one is not lethal to your life. 
+  ###    Note : Involving this setting mean you have to call the Function like 
+  ###    this to let it work : eval $( GetKeyChoiceEval=True GetKeyChoice ) 
+  ###    next time By calling GetGitHubKey it will give you actual Passphrase. 
+  ### GetKeyChoicePassphraseHook              -> ( default : IntDefaultSSHKey )
+  ###    Allow GetGitHubKey to refer to this key to seek for actual Passphrase.
+  ###
+  ### !!! Paranoid Level !!!
+  ###
+  ### GetKeyChoiceDecoderLevel                -> ( default : base64 --decode)
+  ###    Allow safer decoding but need your hand and may interfer with stdout and
+  ###    stderr , using GetKeyChoiceEval may interfer and not working while asking
+  ###    you to enter another passphrase like using :
+  ###    openssl enc -d -cast5-cbc -k <PASSWORD> 
+  ###     - This <PASSWORD> must be somewhere like on stdin ( on screen ) if you forget
+  ###     option -k in openssl or using file as password holder, but it store the password 
+  ###    on the .bash_history.... why it's paranoid level. 
+  ### GetKeyChoiceStorageSuffix               -> ( default : GitHubKey )
+  ###    Allow to Store Key, name of the key and corresponding key-file from Another
+  ###    Array usually having ArrayGitHubKey, ArrayGitHubKeyName ArrayGitHubKeyFile
+  ###    it using suffix GitHubKey see -> 
+  ###         Array : Array[GitHubKey], Array[GitHubKey]Name Array[GitHubKey]File 
+  ###     this can serve managing different Array of Key and may store other type of 
+  ###    key, like passphrase for pem-file in apache like ... 
+  ###
+  ### !!! patented - talent !!! 
+  ### AppsRootName                           -> ( default : GetKeyChoice )
+  ###     Wrapping this Function another one you can call the application differently
+  ###     by doing sed and evoluated reg-exp, like using python module and re. 
+  ###     using declare -f GetKeyChoice give you the full body and may serve as template.
+  ###     using AppsRootName prevent ovewriting of the new function in memory by avoiding
+  ###     overwriting all already prefixed variable from this sedding or replacing action. 
+  ###     It's a patented - talent ... << Sam on radio ; patented - talent ... 
+  ###     Who know friend... >> ...
 
 
     local ArrayArg=( $* ) ;
@@ -396,27 +688,27 @@ function GetKeyChoice()
     local StrDecoder=${GetKeyChoiceDecoderLevel:=base64 --decode}
     local StrStoreSuffix=${GetKeyChoiceStorageSuffix:=GitHubKey} ;
     eval unset ${StrPassphraseHook} ; 
-	function TransformArray()
-	{
-	    local ArrayArg=( $* ) ;
-	    local __call_locality=( TransformArray ) ;
-		local StrScopeType="declare -a" ;
-		if [ "${TransformArrayScope:=local}" == "local" ] ; then 
-			StrScopeType="local" ;
-		fi
-		if [ "${TransformArrayScope:=global}" == "local" ] ; then 
-			StrScopeType="declare -a"
+    function TransformArray()
+    {
+        local ArrayArg=( $* ) ;
+        local __call_locality=( TransformArray ) ;
+     local StrScopeType="declare -a" ;
+     if [ "${TransformArrayScope:=local}" == "local" ] ; then 
+      StrScopeType="local" ;
+     fi
+     if [ "${TransformArrayScope:=global}" == "local" ] ; then 
+      StrScopeType="declare -a"
 
-		fi 
-		local StrSed="""'s/__SCOPE__ //g;s/^[a-zA-Z0-9\-\_]*=/__NEW_ARRAY__=/g'""" ;
-		StrSed=${StrSed//__SCOPE__/${StrScopeType}}
-		StrSed=${StrSed//__NEW_ARRAY__/${ArrayArg[0]}}
-		StrSed=${StrSed//\ /\\\ } ;
-		StrSed=${StrSed//\-/\\\-} ;
-		echo -ne "Sed: sed ${StrSed}\n" > /dev/stderr ;
-		local StrArrayTransform=$( ${StrScopeType} | egrep "${StrScopeType} ${ArrayArg[0]}"  | $( eval sed ${StrSed} )  ) 
-		echo -ne """${TransformArrayDecl:=local} ${StrArrayTransform} ;"""  
-	}
+     fi 
+     local StrSed="""'s/__SCOPE__ //g;s/^[a-zA-Z0-9\-\_]*=/__NEW_ARRAY__=/g'""" ;
+     StrSed=${StrSed//__SCOPE__/${StrScopeType}}
+     StrSed=${StrSed//__NEW_ARRAY__/${ArrayArg[0]}}
+     StrSed=${StrSed//\ /\\\ } ;
+     StrSed=${StrSed//\-/\\\-} ;
+     echo -ne "Sed: sed ${StrSed}\n" > /dev/stderr ;
+     local StrArrayTransform=$( ${StrScopeType} | egrep "${StrScopeType} ${ArrayArg[0]}"  | $( eval sed ${StrSed} )  ) 
+     echo -ne """${TransformArrayDecl:=local} ${StrArrayTransform} ;"""  
+    }
     function ZenityMenuKey()
     {
         ### List of Key:
@@ -435,11 +727,11 @@ function GetKeyChoice()
         ### List of Key:
         local ArrayArg=( $* ) ;
         local __call_locality=( ListKeyName ) ;
-		eval $( TransformArrayDecl=local TransformArrayScope=global TransformArray Array${ListKeyNameStorageSuffix:=GitHubKey}Name _EArrayName ) 
-		#eval "local _EArray=( \${Array${ListKeyNameStorageSuffix:=GitHubKey}Name[@]//\"/\\\"} ) ;" 
-		for (( intx=0 ; intx <= ${#_EArrayName[@]}-1 ; intx++ )) ; do 
-			echo -ne "FALSE\n${_EArray[${intx}]}\n" ; 
-		done 
+        eval $( TransformArrayDecl=local TransformArrayScope=global TransformArray Array${ListKeyNameStorageSuffix:=GitHubKey}Name _EArrayName ) 
+        #eval "local _EArray=( \${Array${ListKeyNameStorageSuffix:=GitHubKey}Name[@]//\"/\\\"} ) ;" 
+        for (( intx=0 ; intx <= ${#_EArrayName[@]}-1 ; intx++ )) ; do 
+          echo -ne "FALSE\n${_EArray[${intx}]}\n" ; 
+        done 
     }
     function ExchangeKeyPair( ) 
     {
@@ -492,18 +784,7 @@ function GetKeyChoice()
         echo -ne "declare -i ${StrPassphraseHook}=\"${KeyId}\"\n" ;
     fi 
 }
-### An example of what to add inside your /root/.bashrc 
-### 
-### declare -a ArrayGitHubKey=( Tm9uZQo= Tm9uZQo= Tm9uZQo= ) ; -> Assuming both 3 passphrase are : "None", "None" and "None".
-### declare -a ArrayGitHubKeyName=( "None" "GitHub Key" "PyPi SSH Key" ) ;
-### declare -a ArrayGitHubKeyFile=( None github-id_rsa pypi-id_rsa ) ;
-### 
-### Using GetKeyChoice will display you all 3 choice and ( cancel button is not yet designe, but None choice work )
-### 
-### 
 
-
-### yet Another Password generator.
 if [ "${SubSSHGetPasswd:=False}" == "True" ] ; then 
 
  unset GetPasswd ;
@@ -730,8 +1011,5 @@ if [ "${SubSSHGetPasswd:=False}" == "True" ] ; then
  }
 fi
 
-###     Not Needed anymore, see GetKeyChoice for a clever choice... Must be with XWindows or any Kde, gtk, gnome, Mate interface. 
-#if [ -e "${HOME}/.ssh/environment" ] ; then 
-# AgentLoader ;
-#fi 
+
 
