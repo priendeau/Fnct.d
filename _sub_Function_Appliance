@@ -3077,7 +3077,7 @@ if [ "${versionB2DT:=0.0.0}" == "0.0.2" ] ; then
     fi  
  }
 fi
-
+### End of versionB2DT
 
 if [ "${versionLSP:=0.0.0}" == "0.0.0" ] ; then 
  eval $( GFCFuncName=LoopSetupProperty GlobalFunctionCleaning ) ;
@@ -3133,11 +3133,11 @@ if [ "${versionLSP:=0.0.0}" == "0.0.0" ] ; then
    local StrArrayName=${ASArray:=None} ; 
    local StrValue=${ASValue:=None} ; 
    local BoolIsVerbose=${ASIsVerbose:=False} ; 
-   local StrCmd="""${StrArrayName}[${StrIndexName}]=${StrValue}""" ;
+   local StrCmd="${StrArrayName}[${StrIndexName}]=${StrValue}" ;
    if [ ${BoolIsVerbose:=False} == "True" ] ; then 
     echo -ne "from ${__call_locality[1]}\n${StrCmd}\n" > /dev/stderr ; 
    fi
-   eval $( eval  """${StrCmd}""" ) ; 
+   eval """${StrCmd}""" ; 
   }
   
   function GetAllFileSystem()
@@ -3207,6 +3207,7 @@ if [ "${versionLSP:=0.0.0}" == "0.0.0" ] ; then
    echo -ne "FsName detected: ${StrFsName}\nNext free loop:${StrFreeLoop}\n" > /dev/stderr ;
    
    local -a ArrayCmd ; 
+   
    
    local StrImageName=$( eval AGIsVerbose=${BoolIsVerbose} AGIndexName=${StrIndexImage} AGArray=${StrArrayName} ArrayGetter )  ;
    local StrMountAInfo=$( eval AGIsVerbose=${BoolIsVerbose} AGIndexName=${StrIndexMount} AGArray=${StrArrayName} ArrayGetter )  ;
@@ -3311,4 +3312,4 @@ if [ "${versionLSP:=0.0.0}" == "0.0.0" ] ; then
  }
 fi #End-if versionLSP==0.0.0 
 
-### End of versionB2DT
+

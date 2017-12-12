@@ -365,6 +365,7 @@ fi #End-if ${versionXCT} == 0.0.0
 
 if [ "${versionXCT:=0.0.0}" == "0.0.1" ] ; then
  
+ unset Verbosis ; 
  eval $( GFCFuncName=XClipTransfert GlobalFunctionCleaning ) ; 
  
 ### 
@@ -436,6 +437,39 @@ if [ "${versionXCT:=0.0.0}" == "0.0.1" ] ; then
    fi #Endif IsVerboseState
   } ;
   ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
+
+  function ZenityNotification()
+  {
+   if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( ZN ZenityNotification ) ;
+    local Arg0="${ArrayArg[0]}" ;  
+    local StrParentApps=${__call_locality[1]} ; 
+    local StrStartMain=${ZNFuncStart:=__main_StartServices} ; 
+   elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=ZenityNotification CABoolSetName="Bool," CAIsAddDebug=True CAProvideDebug=DisplayDebug,DisplayEntry,DisplayCmd CAIsAddParent=True CallArgument ) ;
+   fi 
+   
+   StrMsg=$( XClipTransfert --get ArrayMsg[0] ) ; 
+   VerbExtendedOut=True VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   local StrApps=${ZNApps:=/usr/bin/zenity} ;
+   local StrNotification=${ZNext:=Your XWindow Clipboard buffer hold your request. You can use your mouse to paste.} ; 
+   local StrIconNotf=${ZNIconNotf:=nm-adhoc};
+   local StrZenityMode="--notification" ; 
+   local StrCmd="""__APPS__ __MODE --text=\"__TEXT__\" --window-icon=\"__ICON__\" """ ;
+   StrCmd=${StrCmd//__APPS__/${StrApps}} ; 
+   StrCmd=${StrCmd//__MODE__/${StrZenityMode}} ; 
+   StrCmd=${StrCmd//__TEXT__/${StrNotification}} ; 
+   StrCmd=${StrCmd//__ICON__/${StrIconNotf}} ; 
+
+   StrMsg=$( XClipTransfert --get ArrayMsg[2] ) ; 
+   StrMsg=${StrMsg//__TITLE__/CMD: } ; 
+   StrMsg=${StrMsg//__CMD__/${StrCmd}} ; 
+   VerbExtendedOut=True VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-CMD" VerbState=${BoolDisplayCmd} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+   
+   eval $( eval ${StrCmd} ) 
+  }
+
 
    
    if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
@@ -532,7 +566,7 @@ if [ "${versionXCT:=0.0.0}" == "0.0.1" ] ; then
     local StrMsg ; 
     
     StrMsg=$( XClipTransfert --get ArrayMsg[0] ) ; 
-    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
+    VerbExtendedOut=True VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
     
     StrMsg=$( XClipTransfert --get ArrayMsg[3] ) ; 
     StrMsg=${StrMsg//__CREATE_UUID__/${BoolCreateUUID}} ; 
@@ -567,14 +601,15 @@ if [ "${versionXCT:=0.0.0}" == "0.0.1" ] ; then
      StrMsg=${StrMsg//__TITLE__/TagParser Template} ; 
      StrMsg=${StrMsg//__CMD__/${StrCmdTplEx}} ; 
      VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayCmd} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
-     $( eval $( eval TPListTag="${StrListTag}"                 \
+     eval $( eval TPListTag="${StrListTag}"                 \
              TPArrayName="Array${__call_locality[0]}"       \
              TPVarNameParsed="${StrVarName}"                \
              TPDisplayParserNotice="${BoolDisplayParserNotice}" \
              TPDisplayDebug="${BoolDisplayDebug}"               \
-             TPDisplayEvalOnly="False" TagParser )  )  ;
+             TPDisplayEvalOnly="False" TagParser )  ;
      
      StrMsg=$( XClipTransfert --get ArrayMsg[2] )
+     ${StrVarName}
      StrMsgAddTitle="TagParser Parser result" ; 
      StrMsg=${StrMsg//__TITLE__/${StrMsgAddTitle}} ; 
      StrMsg=${StrMsg//__CMD__/${StrCmdTplEx}} ; 
