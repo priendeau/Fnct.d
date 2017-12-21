@@ -66,7 +66,12 @@ function FilterFunctionMain( intDefautlAction,IsFilterInstall, IndexApps, idxIte
 ###            -vTagRepl=__PACKAGE__ \
 ###            -f ./DpkgFileFilter.awk
 
-
+function AddFromStreamRead( StrStream , Array, ChCSV )
+{
+ IntSplit=split( StrStream , ArrayItem , ChCSV ) ; 
+ IntIndexLoc=length( ArrayCmd ) ;
+ for
+}
 
 BEGIN{
  
@@ -78,6 +83,10 @@ BEGIN{
  ArrayCmd["2"]="#dpkg-reconfigure __PACKAGE__" ; 
  ArrayCmd["2", "redir"]="/dev/stderr" ; 
  ArrayCmd["2", "stream-return"]="" ; 
+ ArrayCmd["3"]="#dpkg --listfiles __PACKAGE__" ; 
+ ArrayCmd["3", "redir"]="/dev/stderr" ; 
+ ArrayCmd["3", "stream-return"]="" ; 
+ 
  
  
  printf("Information in ArrayCmd[1][redir]:%s\n",ArrayCmd["1","redir"]) > localStdErr ; 
