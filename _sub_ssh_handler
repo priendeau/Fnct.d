@@ -426,12 +426,12 @@ if [ "${versionXCT:=0.0.0}" == "0.0.1" ] ; then
    
    if [ "${IsVerboseState:=False}" == "True" ] ; then 
     if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
-       ${StrTypeEcho} "${StrVerboseHeader}:[ ${StrMsg} ]\n" ${StrStdOperRedir} ${StrDevOut} ;
+       eval """${StrTypeEcho} \"${StrVerboseHeader}:[ ${StrMsg} ]\n\" \${StrStdOperRedir} ${StrDevOut} """;
     else
      if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
         ${StrTypeEcho} "${StrMsg}" ;  
      else
-         ${StrTypeEcho} "${StrMsg}" ${StrStdOperRedir} ${StrDevOut} ;
+         eval """${StrTypeEcho} \"${StrMsg}\" \${StrStdOperRedir} ${StrDevOut}""" ;
      fi #End-if IsEvalRequiredForm
     fi #End-if IsDisplayFormatted
    fi #Endif IsVerboseState
@@ -511,7 +511,7 @@ if [ "${versionXCT:=0.0.0}" == "0.0.1" ] ; then
    local StrAppsHead=${XCTHeadApp:=/usr/bin/head} ; 
    local StrAppsHeadOpt=${XCTHeadAppOpt:=-n 1} ; 
    local StrAppsSed=${XCTSedApp:=/bin/sed} ;
-   local StrAppsSedOpt=${XCTSedAppOpt:=-r __SGUIL__s/[__CSV__]+//g\__SGUIL__} ;
+   local StrAppsSedOpt=${XCTSedAppOpt:=-r __SGUIL__s/[__CSV__\\__SPACE__]+//g\__SGUIL__} ;
    local StrAppsPaste=${XCTAppsGui:=/usr/bin/xclip} ; 
    local StrAppsPasteOpt=${XCTAppsGuiOpt:=-i} ;
    local StrAppsCut=${XCTAppsCut:=/usr/bin/cut} ;
@@ -524,9 +524,10 @@ if [ "${versionXCT:=0.0.0}" == "0.0.1" ] ; then
    local StrIntrnSGuill=$( printf "\047" "%c" ) ; 
    local StrIntrnFSlash=$( printf "\057" "%c" ) ; 
    local StrIntrnDblDot=$( printf "\072" "%c" ) ; 
+   local StrIntrnSpace=$( printf "\040" "%c" ) ; 
    ### Information for TagParser
    ### TPListTag Information for TagParser
-   local StrListTag=${XCTTagParserList:=StrColIdName:__COLUMNIDNAME__,StrFileName:__FILE__,StrAppsGrep:__GREP__,StrAppsCut:__CUT__,StrAppsCutOpt:__CUT_OPT__,StrAppsSed:__SED__,StrAppsSedOpt:__SED_OPT__,StrAppsHead:__HEAD__,StrAppsHeadOpt:__HEAD_OPT__,StrAppsPaste:__PASTER__,StrAppsPasteOpt:__PASTER_OPT__,IntColTxtRec:__FIELD_NO__,StrInternalGuill:__GUIL__,StrIntrnSGuill:__SGUIL__,StrIntrnFSlash:__FORSLASH__,StrIntrnDblDot:__DBLDOT__,StrCsvCol:__CSV__} ; 
+   local StrListTag=${XCTTagParserList:=StrColIdName:__COLUMNIDNAME__,StrFileName:__FILE__,StrAppsGrep:__GREP__,StrAppsCut:__CUT__,StrAppsCutOpt:__CUT_OPT__,StrAppsSed:__SED__,StrAppsSedOpt:__SED_OPT__,StrAppsHead:__HEAD__,StrAppsHeadOpt:__HEAD_OPT__,StrAppsPaste:__PASTER__,StrAppsPasteOpt:__PASTER_OPT__,IntColTxtRec:__FIELD_NO__,StrInternalGuill:__GUIL__,StrIntrnSGuill:__SGUIL__,StrIntrnFSlash:__FORSLASH__,StrIntrnDblDot:__DBLDOT__,StrCsvCol:__CSV__,StrIntrnSpace:__SPACE__} ; 
    
    ### BoolDisplayParserNotice, handled with CallArgument==0.0.2. 
    
@@ -590,6 +591,7 @@ if [ "${versionXCT:=0.0.0}" == "0.0.1" ] ; then
     eval """local ${StrVarName}=\"${StrTagParserTpl}\"""" ; 
     
     
+    
     if [ ${MainAction:=None} == "get"  ] ; then 
      StrVarNameGetter=${MainVar:=None} ; 
      eval """local ArgGet=\${${StrVarNameGetter}}""" ; 
@@ -609,7 +611,7 @@ if [ "${versionXCT:=0.0.0}" == "0.0.1" ] ; then
              TPDisplayEvalOnly="False" TagParser )  ;
      
      StrMsg=$( XClipTransfert --get ArrayMsg[2] )
-     ${StrVarName}
+     eval $( eval \${${StrVarName}} ) ; 
      StrMsgAddTitle="TagParser Parser result" ; 
      StrMsg=${StrMsg//__TITLE__/${StrMsgAddTitle}} ; 
      StrMsg=${StrMsg//__CMD__/${StrCmdTplEx}} ; 
