@@ -3226,6 +3226,7 @@ if [ "${versionLSP:=0.0.0}" == "0.0.0" ] ; then
    
    echo -ne "CMD:${ArrayCmd[0]}\n" > /dev/stderr ; 
    if [ ${BoolIsDryRun:=False} != "True" ] ; then 
+    echo -ne "BoolIsDryRun: ${BoolIsDryRun}\n" > /dev/stderr ; 
     eval $( eval ${ArrayCmd[0]} ) ;  
    fi 
    
@@ -3247,7 +3248,9 @@ if [ "${versionLSP:=0.0.0}" == "0.0.0" ] ; then
    
    echo -ne "CMD:${ArrayCmd[${IntIndexCmd}]}\n" > /dev/stderr ; 
    if [ ${BoolIsDryRun:=False} != "True" ] ; then 
+    echo -ne "BoolIsDryRun: ${BoolIsDryRun}\n" > /dev/stderr ; 
     eval $( eval ${ArrayCmd[${IntIndexCmd}]} ) ;  
+    
    fi 
    
   

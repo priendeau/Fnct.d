@@ -2782,6 +2782,74 @@ function ObjFindFunction()
  
 }
 
+if [ "${versionBSE:=0.0.0}" == "0.0.0" ] ; then
+
+ unset BlockScriptEvaluator ; 
+ function BlockScriptEvaluator()
+ {
+  function Verbosis()
+  {
+   #eval $( CAFunctName=Verbosis CAIsAddParent=False __Call_Argument ) ; 
+   local -a ArrayArg=( $* ) ; 
+   local -a __call_locality=( Verb Verbosis )
+   local StrMsg=${VerbMsg:=__TEXT__} ; 
+   local StrDevOut=${VerbDev:=/dev/stderr} ; 
+   local IsVerboseState=${VerbState:=False} ;
+   local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+   local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+   local IsDisplayFormatted=${VerbFormated:=True} ;
+   local IsAppendMode=${VerbAppendDev:=False} ; 
+   if [ "${IsVerboseState:=False}" == "True" ] ; then 
+    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+     if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
+     else  
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+     fi
+    else
+     if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+        echo "${StrMsg}" ;  
+     else
+      if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo "${StrMsg}" >> ${StrDevOut} ;
+      else
+       echo "${StrMsg}" > ${StrDevOut} ;
+      fi
+     fi 
+    fi 
+   fi
+  } 
+  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
+  if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( BSE BlockScriptEvaluator ) ;
+   local Arg0="${ArrayArg[0]}";  
+   local StrStartMain=${BSEFuncStart:=__main_StartServices} ; 
+   local StrParentApps=${__call_locality[1]} ; 
+  elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
+   eval $( eval CAFunctName=BlockScriptEvaluator CAIsAddParent=False __Call_Argument ) ; 
+  elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
+   ### added inside CAIsAddDebug, add following item: DisplayDebug,DisplayEntry,DisplayCmd 
+   eval $( eval CAFunctName=BlockScriptEvaluator CAIsAddDebug=True  CAIsAddParent=False CallArgument ) ; 
+  fi 
+    
+  function __main_StartServices()
+  {
+   #echo -ne "Entry in Function __main_StartServices\n" ; 
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+   fi
+  }
+ 
+ }
+
+fi #End-if versionBSE==0.0.0 
+
+
 ### Default Fast reference Helper. 
 ### Extract current Prefixed variables from your function and show it on stdout( screen output ). 
 ### The prefixed variable are indicated on decalation of __call_locality which usually had same name has 

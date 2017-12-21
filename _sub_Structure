@@ -1817,6 +1817,319 @@ if [ "${versionFOSME:=0.0.1}" == "0.0.1" ] ; then
   
 fi   
 
+if [ "${versionLA:=0.0.0}" == "0.0.0" ] ; then 
+ eval $( GFCFuncName=LoopArray GlobalFunctionCleaning ) ;
+
+ function LoopArray()
+ {
+  function Verbosis()
+  {
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( Verb Verbosis ) ; 
+   local Arg0=${ArrayArg[0]} ; 
+   local StrMsg=${VerbMsg:=__TEXT__} ; 
+   local StrDevOut=${VerbDev:=/dev/stderr} ; 
+   local IsVerboseState=${VerbState:=False} ;
+   local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+   local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+   local IsDisplayFormatted=${VerbFormated:=True} ;
+   local IsAppendMode=${VerbAppendDev:=False} ; 
+   local IsExtendedOutput=${VerbExtendedOut:=False} ; 
+   local ArrayArg=( $* ) ; 
+   if [ "${IsVerboseState:=False}" == "True" ] ; then 
+    if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+     if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
+     else  
+       echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+     fi
+    else
+     if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+      if [ "${IsExtendedOutput:=False}" == "True" ] ; then 
+        echo -ne "${StrMsg}" ;  
+      else
+        echo "${StrMsg}" ;  
+      fi
+     else
+      if [ "${IsAppendMode:=False}" == "True" ] ; then 
+       if [ "${IsExtendedOutput:=False}" == "True" ] ; then 
+         echo -ne "${StrMsg}" >> ${StrDevOut} ;
+       else
+         echo "${StrMsg}" >> ${StrDevOut} ;
+       fi
+      else
+       if [ "${IsExtendedOutput:=False}" == "True" ] ; then 
+        echo -ne "${StrMsg}" > ${StrDevOut} ;
+       else
+        echo "${StrMsg}" > ${StrDevOut} ;
+       fi 
+      fi
+     fi 
+    fi 
+   fi
+  } 
+  ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
+  
+  function GArray()
+  {
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( GA GArray ) ;
+   AGIndexName=${GAIname:=None} AGArray=${GAArray:=None} AGIsVerbose=False LSPFuncStart=ArrayGetter LoopSetupProperty ;
+  }
+  
+  function SArray()
+  {
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( SA SArray ) ;
+   ASValue=${SAValue:=None} ASIndexName=${SAIname:=None} ASArray=${SAArray:=None} AGIsVerbose=False LSPFuncStart=ArraySetter LoopSetupProperty ;
+  }
+   
+  local -a ArrayArg=( $* ) ;
+  local -a __call_locality=( LA LoopArray ) ;
+  if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+    local Arg0="${ArrayArg[0]}" ;  
+    local StrParentApps=${__call_locality[1]} ; 
+    local StrStartMain=${LAFuncStart:=__main_StartServices} ; 
+  elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=LoopArray CAIsAddDebug=True CAIsAddParent=False CallArgument ) ;
+  fi 
+
+  local StrArrayName=${LAArray=ArrayCmd} ;
+  local StrCurrentAction=${LAAction:=loop} ;
+  local StrIndexUpdate=${LAIndexUpdate:=None} ;
+  local StrValueUpdate=${LAValue:=None} ; 
+  local StrFunctionName=${LAFuncName:=GArray} ; 
+  local StrValueEntry=${LAFuncValEntry:=UUID} ; 
+  local StrAppsVarList=${LAFuncVarList:=None} ; 
+  local BoolQuoteOnValue=${LAIsQuotingValue:=False} ;
+  local StrDevErr=${LAOutputRedir:=/dev/stderr} ;  
+  local StrVTVRegistry=${LAFuncVTV:=VTVIsWhiteList=True,VTVIsArrayStyleInsert=True,VTVIsValueReAssign=True,VTVIsValueToConvert=False,VTVIsArrayStyleInsert=True,VTVIsQuotedValue=True} ; 
+  local StrVarList="StrParentApps,StrStartMain,StrArrayName,StrCurrentAction,StrIndexUpdate,StrValueUpdate,StrFunctionName,StrValueEntry,StrAppsVarList,StrVTVRegistry,BoolQuoteOnValue,StrDevErr,${StrAppsVarList}" ;
+  
+  ### 
+  ### Action performed in 'LAAction' :
+  ### loop         : Will perform a simple loop and enumerate both index 
+  ###                and value of this one. 
+  ###
+  ### update       : Will Update the Array in 'LAArray' by specifying
+  ###                following prefixed-variable : 
+  ###                - LAIndexUpdate
+  ###                    - Index name in Associative Array.
+  ###                - LAValue
+  ###                    - The value to add or update inside 
+  ###                      the associative Array. 
+  ###
+  ### function     : Will perform a loop and each element will passed to
+  ###                your function. As long you have filled theses 
+  ###                prefixed-variable:
+  ###                - LAFuncName 
+  ###                  - The Function Name required to loop. 
+  ###                - LAFuncValEntry
+  ###                  - Inside which prefixed variable to transmit your value.
+  ###                  - Telling to LAFuncValEntry=Arg1 will push the value 
+  ###                  inside the Arg[1] of function call. 
+  ###
+  ###
+  ### function_vtv : Will perform a loop and each element will be passed to 
+  ###                your function. As long you have filled prefixed-variable
+  ###                belong to ValueToVariable, including annexing all Variable
+  ###                name to a VarList which transmit value to your function/ 
+  ###                - LAFuncVarList
+  ###                  - The variable used in your main-function or in global
+  ###                  mode. This is to help-you transporting value required in
+  ###                  your function if they already own specific 
+  ###                  variable-assignation type and specific 
+  ###                  assignation-operation.
+  ###                - LAFuncVTV 
+  ###                  - Some are already defined and are  important, you can add
+  ###                  some extra. 
+  ###                - LAFuncValEntry
+  ###                  - Required as Action 'function', Function-name is to be 
+  ###                    supplied. 
+  ###
+  ### help          : Will display the help provided by GetVarReference
+  ###
+  ### get           : Will report variable name value. Suggesting to read for 
+  ###                 Internal variable name, it accept array member in form
+  ###                 ARRAY[INDICE]. You should provide the variable name in 
+  ###                 first argument of a function. 
+  ###
+  ###
+
+  local ArrayLoopCmd ; 
+  local IntIndexCmd=0 ; 
+  ArrayLoopCmd[0]="""__VAL_ENTRY__=__QUOTE____VALUE____QUOTE__ __FUNCT__""" ; 
+  ArrayLoopCmd[1]="""__FUNCT__ __QUOTE____VALUE____QUOTE__""" ; 
+  ArrayLoopCmd[2]="""eval \$( eval __VTV__ \
+                     VTVWhiteListTransfert=UUID  \
+                     VTVValueEntry=__VARLIST__ \
+                     ValueToVariable ) __FUNCT__ """
+  ArrayLoopCmd[3]="""eval \$( eval __VTV__ \
+                     VTVWhiteListTransfert=UUID  \
+                     VTVValueEntry=__VARLIST__ \
+                     ValueToVariable ) __FUNCT__ __QUOTE____VALUE____QUOTE__ """
+
+  local -a ArrayMsg ; 
+  ArrayMsg[0]="Internal Help." ; 
+  ArrayMsg[1]="Action imply a Getter to a variable(__VAR__)" ; 
+  ArrayMsg[2]="\nElement number: __ORDER__\nindex: __INDEX__,\nvalue:[__VALUE__\t]" ; 
+  ArrayMsg[3]="Passing a function in a loop." ; 
+  ArrayMsg[4]="Eval command passing all the value to ValueToVariable." ; 
+  ArrayMsg[5]="Eval command passing values to ValueToVariable, but passing to Arg1 of function." ; 
+  ArrayMsg[6]="Passing a function in a ValueToVariable function.\n\tWith property of __SPEC__" ; 
+  ArrayMsg[7]="__KEY__:[ __VALUE__ ]" ; 
+  ArrayMsg[8]="Simply looping accross index-name of __ARRAY__" ; 
+  ArrayMsg[9]="Entry in function __FUNC__." ; 
+  ArrayMsg[10]="All Index of __ARRAY__:[ __INDEX__ ]" ; 
+
+  local StrMsg=${ArrayMsg[9]} ; 
+  StrMsg=${StrMsg//__FUNCT__/${__call_locality[1]}} ; 
+  VerbMsg=${StrMsg} VerbState=${BoolDisplayEntry} VerbHeader="ENTRY" VerbEvalForm=False VerbFormated=True VerbDev=${StrDevErr} Verbosis ; 
+
+  eval """local AIndex=( \${!${StrArrayName}[@]} ) """ ;
+  StrMsg=${ArrayMsg[10]} ; 
+  StrMsg=${StrMsg//__ARRAY__/${StrArrayName}} ; 
+  StrMsg=${StrMsg//__INDEX__/${AIndex[@]}} ; 
+  VerbMsg=${StrMsg} VerbState=${BoolDisplayDebug} VerbHeader="DEBUG" VerbEvalForm=False VerbFormated=True VerbDev=${StrDevErr} Verbosis ; 
+
+  local StrTpl ;
+  local CharQuote=$( printf "\042" '%c' ) ; 
+
+  ###
+  ###  Section 
+  if [ "${StrCurrentAction:=loop}" == "help" ] ; then 
+   echo -ne "${ArrayMsg[0]}\n" > /dev/stderr ; 
+   GetVarReference ${__call_locality[1]} ; 
+  elif [ "${StrCurrentAction:=loop}" == "get" ] ; then 
+   ###
+   ###  Section Action==get
+    StrMsg=${ArrayMsg[1]} ; 
+    StrMsg=${StrMsg//__VAR__/${ArrayArg[0]}} ; 
+    #echo -ne "${StrMsg}\n" > /dev/stderr ; 
+    VerbMsg=${StrMsg} VerbState=${BoolDisplayDebug} VerbHeader="DEBUG" \
+    VerbEvalForm=False VerbFormated=True VerbDev=${StrDevErr} \
+    Verbosis ; 
+    eval """local ArgGet=\${${ArrayArg[0]}}"""  ;
+    VerbMsg=${ArgGet} VerbState=True VerbEvalForm=True \
+    VerbFormated=False VerbDev=/dev/stdout \
+    Verbosis ; 
+    #echo -ne """${ArgGet}\n"""  ;
+  elif [ "${StrCurrentAction:=loop}" == "loop" ] ; then 
+   ###
+   ###  Section Action==loop
+   StrMsg=${ArrayMsg[8]} ; 
+   StrMsg=${StrMsg//__ARRAY__/${StrArrayName}} ;
+   VerbMsg=${StrMsg} VerbState=${BoolDisplayEntry} VerbHeader="ENTRY" \
+   VerbEvalForm=False VerbFormated=True VerbDev=${StrDevErr} \
+   Verbosis ; 
+   
+   for (( intx=0 ; intx <= $(( ${#AIndex[@]}-1 )) ; intx++ )) ; do 
+    eval """StrArrayValue=\${${StrArrayName}[${AIndex[${intx}]}]}""" ; 
+    StrMsg=${ArrayMsg[2]} ; 
+    StrMsg=${StrMsg//__ORDER__/${intx}} ; 
+    StrMsg=${StrMsg//__INDEX__/${AIndex[${intx}]}} ; 
+    StrMsg=${StrMsg//__VALUE__/${StrArrayValue}} ; 
+    VerbMsg=${StrMsg} VerbState=${BoolDisplayDebug} VerbHeader="DEBUG" \
+    VerbEvalForm=False VerbFormated=True VerbDev=${StrDevErr} \
+    Verbosis ; 
+    #echo -ne "${StrMsg}\n" > /dev/stderr ;  
+   done  
+  elif [ "${StrCurrentAction:=loop}" == "update" ] ; then
+   ###
+   ###  Section Action==update
+   ###
+    eval SAIname="${StrIndexUpdate}" \
+    SAArray="${StrArrayName}" \
+    SAValue="${StrValueUpdate}" \
+    SArray ;
+  elif [ "${StrCurrentAction:=loop}" == "function" ] ; then 
+   ###
+   ###  Section function
+   ###
+   #echo -ne "${ArrayMsg[3]}\n" > /dev/stderr ; 
+   VerbMsg=${ArrayMsg[3]} VerbState=${BoolDisplayEntry} VerbHeader="ENTRY" \
+   VerbEvalForm=False VerbFormated=True VerbDev=${StrDevErr} \
+   Verbosis ; 
+   IntIndexCmd=0 ; 
+   if [ "${StrValueEntry:=UUID}" == "Arg1" ] ; then 
+    IntIndexCmd=1 ; 
+   fi
+
+   StrTpl="${ArrayLoopCmd[${IntIndexCmd}]}" ; 
+   if [ "${BoolQuoteOnValue:=False}" == "True" ] ; then 
+    StrTpl=${StrTpl//__QUOTE__/${CharQuote}} ; 
+   else
+    StrTpl=${StrTpl//__QUOTE__/} ; 
+   fi 
+   
+   for (( intx=0 ; intx <= $(( ${#AIndex[@]}-1 )) ; intx++ )) ; do 
+    eval """StrArrayValue=\${${StrArrayName}[${AIndex[${intx}]}]}""" ; 
+    StrCmd=${StrTpl} ; 
+    StrCmd=${StrCmd//__VAL_ENTRY__/${StrValueEntry}} ; 
+    StrCmd=${StrCmd//__VALUE__/${StrArrayValue}} ; 
+    StrCmd=${StrCmd//__FUNCT__/${StrFunctionName}} ; 
+    
+    VerbMsg=${StrCmd} VerbState=${BoolDisplayCmd} VerbHeader="CMD" \
+    VerbEvalForm=False VerbFormated=True VerbDev=${StrDevErr} \
+    Verbosis ; 
+    eval ${StrCmd} ; 
+    StrMsg=${ArrayMsg[2]} ; 
+    StrMsg=${StrMsg//__ORDER__/${intx}} ; 
+    StrMsg=${StrMsg//__INDEX__/${AIndex[${intx}]}} ; 
+    StrMsg=${StrMsg//__VALUE__/${StrArrayValue}} ; 
+    VerbMsg=${StrMsg} VerbState=${BoolDisplayDebug} VerbHeader="DEBUG" \
+    VerbEvalForm=False VerbFormated=True VerbDev=${StrDevErr} \
+    Verbosis ; 
+   done  
+  elif [ "${StrCurrentAction:=loop}" == "function_vtv" ] ; then 
+   ###
+   ###  Section Action==function_vtv
+   ###
+   IntIndexCmd=2 ;
+   StrAddText="${ArrayMsg[4]}" ; 
+   if [ "${StrValueEntry:=UUID}" == "Arg1" ] ; then 
+    IntIndexCmd=3 ; 
+    StrAddText="${ArrayMsg[5]}" ; 
+   fi
+
+   StrMsg=${ArrayMsg[6]} ; 
+   StrMsg=${StrMsg//__SPEC__/${StrAddText}} ; 
+   VerbMsg=${StrMsg} VerbState=${BoolDisplayEntry} VerbHeader="ENTRY" \
+   VerbEvalForm=False VerbFormated=True VerbDev=${StrDevErr} \
+   Verbosis ; 
+   #echo -ne "${StrMsg}\n" > /dev/stderr ; 
+   #eval """StrArrayValue=\${${StrArrayName}[${AIndex[${intx}]}]}""" ; 
+   StrTempVarList="${StrVarList}" ;
+   
+   StrTpl="${ArrayLoopCmd[${IntIndexCmd}]}" ; 
+   if [ "${BoolQuoteOnValue:=False}" == "True" ] ; then 
+    StrTpl=${StrTpl//__QUOTE__/${CharQuote}} ; 
+   else
+    StrTpl=${StrTpl//__QUOTE__/} ; 
+   fi 
+
+
+   for (( intx=0 ; intx <= $(( ${#AIndex[@]}-1 )) ; intx++ )) ; do 
+    eval """StrArrayValue=\${${StrArrayName}[${AIndex[${intx}]}]}""" ; 
+    StrVarList="${StrVarList},StrArrayValue=${CharQuote}${StrArrayValue}${CharQuote}" ; 
+    StrCmd=${StrTpl} ; 
+    StrCmd=${StrCmd//__VTV__/${StrVTVRegistry//,/ }} ;
+    StrCmd=${StrCmd//__VARLIST__/${StrVarList}} ;
+    StrCmd=${StrCmd//__FUNCT__/${StrFunctionName}} ;
+    StrCmd=${StrCmd//__VALUE__/${StrArrayValue}} ;
+    
+    VerbMsg=${StrCmd} VerbState=${BoolDisplayCmd} VerbHeader="CMD" \
+    VerbEvalForm=False VerbFormated=True VerbDev=${StrDevErr} \
+    Verbosis ; 
+  
+    eval ${StrCmd} ; 
+    StrVarList=${StrTempVarList} ; 
+   done  
+   
+  fi 
+ }
+fi #End-if versionLA==0.0.0
+
  ### ValueToVariable :
  ###
  ###
