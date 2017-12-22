@@ -65,12 +65,31 @@ function FilterFunctionMain( intDefautlAction,IsFilterInstall, IndexApps, idxIte
 ###            -vIdAction=2          \
 ###            -vTagRepl=__PACKAGE__ \
 ###            -f ./DpkgFileFilter.awk
+### 
+### 
+### Another example: 
+### - having problems compiling module lupa from pythonm module, it require some 
+### lua include-files, library and interface to lua, browsing accross all
+### package having 'lua' in the filename and to process to our Third '3' options
+### to process any package by running dpkg --listfiles __PACKAGE__ 
+### 
+### cmd: gawk -vidxItemAction=1      \ 
+###           -vQuery=lua            \
+###           -vProcessAction=True   \ 
+###           -vIdAction=3           \
+###           -vTagRepl=__PACKAGE__  \
+###           -f ${FNCTDLIBPATH}/awk-script/DpkgFileFilter.awk
+### 
+### 
+### 
+### 
+
 
 function AddFromStreamRead( StrStream , Array, ChCSV )
 {
  IntSplit=split( StrStream , ArrayItem , ChCSV ) ; 
  IntIndexLoc=length( ArrayCmd ) ;
- for
+ ### for
 }
 
 BEGIN{
