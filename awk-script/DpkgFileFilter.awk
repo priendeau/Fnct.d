@@ -105,19 +105,50 @@ BEGIN{
  ArrayCmd["3"]="#dpkg --listfiles __PACKAGE__" ; 
  ArrayCmd["3", "redir"]="/dev/stderr" ; 
  ArrayCmd["3", "stream-return"]="" ; 
+ ArrayCmd["4"]="#dpkg-query --search __TEXT__" ; 
+ ArrayCmd["4", "redir"]="/dev/stderr" ; 
+ ArrayCmd["4", "stream-return"]="" ; 
+ ArrayCmd["5"]="#/usr/bin/uuidgen -t" ; 
+ ArrayCmd["5", "redir"]="/dev/stderr" ; 
+ ArrayCmd["5", "stream-return"]="" ; 
+ 
  
  
  
  printf("Information in ArrayCmd[1][redir]:%s\n",ArrayCmd["1","redir"]) > localStdErr ; 
+ 
  ArrayCmd["1", "stream-return"]=ExpandAppsCall( ArrayCmd, idxItemAction, ArrayCmd[idxItemAction,"redir"]) ;  
  
  ArrayCmd["1", "comma-value"]=ReturnByPackageStatus( "install" ,ArrayCmd, idxItemAction) ;  
+ 
  IntSplitPackInst=split( ArrayCmd["1", "comma-value"] , ASimplePackageInst , /,/ ) ; 
- #printf("ReturnInstalledPackage return:\n%s\n",ArrayCmd["1", "comma-value"]) ; 
+ 
  ActionOnQuery( ArrayCmd,Query,ProcessAction,IdAction,TagRepl,ASimplePackageInst ) ; 
- 
- 
- printf("IntSplitPI return:%i\nStatus of Query: %s\n",IntSplitPI,Query) > localStdErr ;
+ for( idxStrReturn in ArrayCmd )
+ {
+  #[ IdAction, "stream-return" ]
+  IntSplit=split( idxStrReturn, ArrayIdx, SUBSEP ) ; 
+  if( IntSplit == 2 )
+  {
+   if( ( IdAction ) in ArrayCmd ) 
+   {
+    if( ArrayIdx[2] ~ /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/ )
+    {
+     printf("Index for IntSplit = %i, index:[ IdAction:%s, UUID:%s ]\nContent:\n%s\n", 
+     IntSplit ,ArrayIdx[1] ,ArrayIdx[2] ,
+     ArrayCmd[ArrayIdx[1], ArrayIdx[2]] ) > localStdErr  ; 
+    }
+   }
+  }
+  #if( IntSplit == 2 )
+  #{
+  # if( ( IdAction ) in ArrayCmd )
+  # {
+  #  printf("Index for IntSplit = %i, index:[ %s, %s ]\n", IntSplit, ArrayIdx[1] ,ArrayIdx[2] ) > localStdErr ; 
+  # }
+ }
+
+ #printf("IntSplitPI return:%i\nSearch Query was: %s\n",IntSplitPI,Query) > localStdErr ;
  
  close(localStdErr) ; 
 
