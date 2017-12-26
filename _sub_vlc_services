@@ -48,7 +48,7 @@ function ActivateServerBuffer()
 		local Arg0=${ArrayArg[0]} ;
 		local ArrayArg=( $* ) ; 
 
-  local GetUTimeBased=${GetUTimeBased:=True} ; 
+  local GetUTi}eBased=${GetUTimeBased:=True} ; 
   local GetUSeq=${GetUSeq:=1}
   local GetULoop=${GetULoop:=False}
   local ArrayMsg=( ); 
@@ -229,6 +229,33 @@ if [ "${versionDCH:=0.0.0}" == "0.0.0" ] ; then
 
   local -a ArrayMsg=() ;
   ArrayMsg[0]="Entry in function" ; 
+  
+  function CreateSocketFile()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( CSF CreateSocketFile ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=ReadPersistentCache CAIsAddParent=True __Call_Argument ) ;
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=ReadPersistentCache CAIsAddParent=True CallArgument ) ;
+   fi    
+   local StrParser ;
+   local StrFileName=${CSFSockName:=None} ; 
+   local StrScriptTpl=${CSFPythonCall:=import socket as s; sock = s.socket(s.AF_UNIX); sock.bind(__SGUIL____FILE____SGUIL__)} ; 
+   local StrApps=${CSFApps:=/usr/bin/python2.7} ; 
+   local StrAppsOpt=${CSFAppsOpt:=-c __SCRIPT__} ; 
+   local StrTplCmd=${CSFTplCmd:=__APPS__ __APPS_OPT__} ; 
+   local StrVarName=${CSFVarNameSocket:=StrSocketName} ;
+   
+   local StrIntrnSGuill=$( printf "\047" "%c" ) ; 
+   StrParser=${StrTplCmd//__APPS__/${StrApps}} ;
+   StrParser=${StrParser//__APPS_OPT__/${StrAppsOpt//__SCRIPT__/${StrScriptTpl//__SGUIL__/${StrIntrnSGuill}}}} ;
+   
+   echo -ne """${StrVarName}=\"${StrParser}\"""" ; 
+  
+  }
   
   function ReadPersistentCache()
   {
