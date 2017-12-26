@@ -2784,7 +2784,8 @@ function ObjFindFunction()
 
 if [ "${versionBSE:=0.0.0}" == "0.0.0" ] ; then
 
- unset BlockScriptEvaluator ; 
+ eval $( GFCFuncName=BlockScriptEvaluator GlobalFunctionCleaning ) ; 
+ 
  function BlockScriptEvaluator()
  {
   function Verbosis()
@@ -2832,10 +2833,30 @@ if [ "${versionBSE:=0.0.0}" == "0.0.0" ] ; then
    ### added inside CAIsAddDebug, add following item: DisplayDebug,DisplayEntry,DisplayCmd 
    eval $( eval CAFunctName=BlockScriptEvaluator CAIsAddDebug=True  CAIsAddParent=False CallArgument ) ; 
   fi 
-    
+  if [ "${Arg0:=--startservices}" != "--get" ] ; then 
+   local StrAction=${BSEAction:=Welcome};
+   local StrActionList=${BSEActionList:=Welcome:ZenityScriptMsg,BodyDef:ZenityGetBodyDef,AwkDef:ZenityGetAwkDef,};
+   local StrExtraVarList=${BSEVarList:=None};
+   local StrVTVRegistry=${BSEVTVReg:=VTVIsDebugDisplay=False,VTVIsSlowDebug=False,VTVIsWhiteList=True,VTVIsArrayStyleInsert=True,VTVIsValueReAssign=True,VTVIsValueToConvert=False,VTVIsQuotedValue=True};
+   local StrVTVWhiteList=${BSEVTVWhiteList:=UUID};
+   local StrAppsZenity=${BSEZenityApps=/usr/bin/zenity} ; 
+
+   local StrVarList="StrVTVRegistry,StrVTVWhiteList,BoolDisplayDebug,BoolDisplayCmd,BoolDisplayEntry,BoolDisplayParserNotice,StrAppsZenity,StrAction,StrActionList,StrExtraVarList,StrStartMain,StrParentApps,StrVarList,${StrExtraVarList}";
+
+   local -a ArrayMsg ;
+   ArrayMsg[0]="Entry in function" ;
+   ArrayMsg[1]="Instance ID:__UUID__" ; 
+   ArrayMsg[2]="__TITLE__: __CMD__" ; 
+   ArrayMsg[3]="Verbose Status:\n\tBoolDisplayDebug        : __DISPLAYDEBUG__\n\tBoolDisplayEntry        : __DISPLAYENTRY__\n\tBoolDisplayCmd          : __DISPLAYCMD__\n\tBoolDisplayParserNotice : __DISPLAYPARSERNOTICE__" ; 
+   local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+   local StrNameHelper="${__call_locality[1]}\n\t";
+   local StrSynopsis="\n\t__TEXT__\n";
+   local StrSummary="\n\t__TEXT__\n" ; 
+   local StrDescription="\n\t__TEXT__\n" ;
+  fi ### End-if Arg0
+  
   function __main_StartServices()
   {
-   #echo -ne "Entry in Function __main_StartServices\n" ; 
    if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
     local -a ArrayArg=( $* ) ;
     local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
@@ -2843,7 +2864,231 @@ if [ "${versionBSE:=0.0.0}" == "0.0.0" ] ; then
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
    fi
+   StrMsg=$( BlockScriptEvaluator --get ArrayMsg[0] ) ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
   }
+  
+  ### 
+  ### This function read association of keyword and function. 
+  ###  calling it will generate the function-name and it's 
+  ### requirement ready to be executed. 
+  ### It should be compatible with VTV because the generated 
+  ### function name will probably exist inside __main_StartServices
+  ### __main_StopServices, where there is no knowledge than what
+  ### it's bringing inside, so adding corresponding VTV apply a 
+  ### variable-layer to benefit from directly export your 
+  ### openned variable elsewhere. 
+  ### 
+  function FilterActionList()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( FAL FilterActionList ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=FilterActionList CAIsAddDebug=True CAIsAddParent=True CallArgument ) ;
+   fi
+   local -A ArrayCharTag ; 
+   ArrayCharTag[COMMA]  ="\073"
+   ArrayCharTag[GUILL]  ="\042" ; 
+   ArrayCharTag[SGUIL]  ="\047" ; 
+   ArrayCharTag[FSLASH] ="\057" ; 
+   ArrayCharTag[DBLDOT] ="\072" ; 
+   ArrayCharTag[UNDERS] ="\137" ; 
+   ArrayCharTag[BSLASH] ="\092" ; 
+   ArrayCharTag[REDIRTO]="\076" ; 
+   ArrayCharTag[REDIRFR]="\074" ; 
+   ArrayCharTag[DOLLAR] ="\044" ; 
+   ArrayCharTag[LPARENT]="\050" ; 
+   ArrayCharTag[RPARENT]="\051" ; 
+   ArrayCharTag[EXCLAM] ="\041" ; 
+   ArrayCharTag[POUND]  ="\043" ; 
+   ArrayCharTag[LBRACK] ="\133" ; 
+   ArrayCharTag[RBRACK] ="\135" ; 
+   ### Extrack a Char ->  $( printf [OCTAL-NUMBER] "%c" )
+   ### the "%c" in printf is important to convert 
+   ### from Unsigned-Int to Unsigned-Char, which is suppose
+   ### to be same size, it transpose value in character. 
+   
+   local StrListVarName=${FALVarListName:=StrActionList} ; 
+   local StrVarQuery=${FALVarNameQuery:=StrAction} ; 
+   local StrGroupSep=${FALGroupSep:=','} ; 
+   local StrPairSep=${FALPairSep:=':'} ;
+   local StrQueryAction=${FALQueryAction:=Welcome}  ;
+   local StrDefVTVReg=${FALVTVRegistry:=StrVTVRegistry} ;
+   local StrDefVTVWhiteL=${FALVTVWhiteList:=StrVTVWhiteList} ; 
+   local StrVTVTpl="""eval __DOLLAR___LPARENT___ eval __DOLLAR__{__VTV_REG__//,/ } \
+            VTVWhiteListTransfert=__GUILL____DOLLAR__{__VTV_WHITE__}__GUILL__  \
+            VTVValueEntry=__GUILL____DOLLAR__{StrVarList},__DOLLAR__{StrFuncVarList}__GUILL__ \
+            ValueToVariable __RPARENT__ __FUNCT__ ;
+   """ ;
+   ### From prompt, pre-fixed variable FALVarList
+   ### is equivalent to main-variable StrVarList and 
+   ### it's purpose is to add any other variable-name
+   ### where should exist a trace inside this function
+   ### instance or even from prompt... 
+   local StrFuncVarList=${FALVarList:=None}; 
+   StrMsg=$( BlockScriptEvaluator --get ArrayMsg[0] ) ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
+
+   local -A ArrayBashTpl ;
+   ArrayBashTpl['A']="""__MASTER__=\${__MASTER__/#\${__SLAVE__}__CSV__}""" ; 
+   ArrayBashTpl['B']="""__SLAVE__=\${__MASTER__/%__CSV__[^__CSV__]*}""" ; 
+   
+   eval local "StrVarListAct=\${${StrListVarName}}" ; 
+   eval local "StrVarQueryAct=\${${StrVarQuery}}" ; 
+   local StrContentStrip=${StrVarListAct//,/} ; 
+   local IntContentStrip=$(( ${#StrVarListAct} - ${#StrContentStrip} )) ; 
+
+   echo -ne "\nReading from Variable:${StrListVarName}\nShould report ${IntContentStrip} action(s) listed.\n\nQuery Variable Name: ${StrVarQuery}\nShould query for action: ${StrVarQueryAct}\n" > /dev/stderr ; 
+   echo -ne "All the content:[${StrVarListAct}]\n" > /dev/stderr ; 
+   #eval StrASeg=$( echo "${StrContent}" | sed 's/$/${StrGroupSep}/g ; s/[${StrGroupSep}]\{1,\}$/${StrGroupSep}/g' ) ;
+   StrASeg=$( echo ${StrVarListAct} |  sed 's/$/,/g ; s/[,]\{1,\}$/,/g' ) ;
+   echo -ne "Group at the entry: ${StrASeg}\n" > /dev/stderr ; 
+   ArrayBashTpl['ASeg']=${ArrayBashTpl['A']//__CSV__/${StrGroupSep}}
+   ArrayBashTpl['BSeg']=${ArrayBashTpl['B']//__CSV__/${StrGroupSep}}
+   ArrayBashTpl['CSeg']=${ArrayBashTpl['B']//__CSV__/${StrPairSep}}
+   
+   
+   for (( IntA=0 ; IntA <= ${IntContentStrip}-1 ; IntA++ )) ; do 
+    IntCountCall=$((${IntCountCall}+1)) ; 
+    ArrayBashTpl['ASeg']=${ArrayBashTpl['ASeg']//__MASTER__/StrASeg} ; 
+    ArrayBashTpl['ASeg']=${ArrayBashTpl['ASeg']//__SLAVE__/StrBSeg} ; 
+    ArrayBashTpl['BSeg']=${ArrayBashTpl['BSeg']//__MASTER__/StrASeg} ; 
+    ArrayBashTpl['BSeg']=${ArrayBashTpl['BSeg']//__SLAVE__/StrBSeg} ; 
+    ArrayBashTpl['CSeg']=${ArrayBashTpl['BSeg']//__MASTER__/StrBSeg} ; 
+    ArrayBashTpl['CSeg']=${ArrayBashTpl['CSeg']//__SLAVE__/StrCSeg} ; 
+    
+    #echo -ne "ASeg: ${ArrayBashTpl['ASeg']}\nBSeg: ${ArrayBashTpl['BSeg']}\n" > /dev/stderr ; 
+    eval ${ArrayBashTpl['ASeg']} ;
+    eval ${ArrayBashTpl['BSeg']} ;
+    eval ${ArrayBashTpl['CSeg']} ;
+    #ArrayBashTpl['CSeg']=${ArrayBashTpl['ASeg']//__MASTER__/StrBSeg} ; 
+    #ArrayBashTpl['CSeg']=${ArrayBashTpl['ASeg']//__SLAVE__/StrASeg} ; 
+
+    #eval StrBSeg=${StrASeg/%,[^,]*} ; 
+    #StrASeg=${StrASeg/#${StrBSeg},} ; 
+    StrCSeg=$( echo "${StrBSeg}" | sed 's/,\{1,\}$//g' );
+    echo -ne "Pair:[${StrCSeg}]\n" > /dev/stderr ; 
+   done 
+   for index in ${!ArrayCharTag[@]} ; do
+     StrVTVTpl=${StrVTVTpl//__${index}__/${ArrayCharTag[${index}]}} ; 
+   done 
+  }
+  
+  function ZenityScriptMsg()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( ZSM ZenityScriptMsg ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=ZenityScriptMsg CAIsAddDebug=True CAIsAddParent=True CallArgument ) ;
+   fi
+   StrMsg=$( BlockScriptEvaluator --get ArrayMsg[0] ) ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
+
+   local StrOkLabel=${ZSMLabelStart:=Script Section} ; 
+   local StrCancelLabel=${ZSMLabelCancel:=Quit} ;
+   local StrTextQuestion=${ZSMQuestion:="<span font_weight=__SGUIL__heavy__SGUIL__ font_stretch=__SGUIL__extraexpanded__SGUIL__ font=__SGUIL__11__SGUIL__ >valuator engine.\nThis will start an instance.</span>\n\n<span font_stretch=__SGUIL__semicondensed__SGUIL__ font_weight=__SGUIL__light__SGUIL__ font=__SGUIL__10__SGUIL__ >So You can creating new script or changing thems.</span>"} ;  
+   local StrVarName=${ZSMVarNameAnswer:=BoolScriptReturn} ;
+   local IsBoolean=${ZSMBooleanReturn:=True} ; 
+   local IntCurrentStatus ;
+   local StrReturn="False" ; 
+   local StrReturnCmd="__VAR__=__DBLGUIL____VALUE____DBLGUIL__" ; 
+   local StrDblGuil=$( printf "\042" "%c" ) ; 
+   local StrSGuil=$( printf "\047" "%c" ) ; 
+   
+   StrTextQuestion=${StrTextQuestion//__SGUIL__/${StrSGuil}} ; 
+   
+   local StrCmd="""__APPS__ --question --ok-label=__DBLGUIL____LABEL_OK____DBLGUIL__ --cancel-label=__DBLGUIL____LABEL_CANCEL____DBLGUIL__ --text=__DBLGUIL____TEXT____DBLGUIL__ 2> /dev/null """ ; 
+   
+   StrCmd=${StrCmd//__LABEL_OK__/${StrOkLabel}} ; 
+   StrCmd=${StrCmd//__LABEL_CANCEL__/${StrCancelLabel}} ; 
+   StrCmd=${StrCmd//__TEXT__/${StrTextQuestion}} ; 
+   StrCmd=${StrCmd//__DBLGUIL__/${StrDblGuil}} ; 
+   StrCmd=${StrCmd//__APPS__/${StrAppsZenity}} ; 
+ 
+ 
+   
+   StrMsg=$( BlockScriptEvaluator --get ArrayMsg[2] ) ;
+   StrMsg=${StrMsg//__TITLE__/} ;  
+   StrMsg=${StrMsg//__CMD__/${StrCmd}} ;  
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-CMD" VerbState=${BoolDisplayCmd} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
+   
+   eval ${StrCmd} ; 
+   IntCurrentStatus=$? ; 
+   
+   StrReturnCmd=${StrReturnCmd//__VAR__/${StrVarName}} ; 
+   
+   if [ "${IsBoolean:=True}" == "True" ] ; then 
+    if [ ${IntCurrentStatus:=0} -eq 0 ] ; then 
+     StrReturn="True" ;
+    fi 
+   else
+    StrReturn=${IntCurrentStatus} ; 
+   fi 
+   StrReturnCmd=${StrReturnCmd//__VALUE__/${StrReturn}} ; 
+   StrReturnCmd=${StrReturnCmd//__DBLGUIL__/${StrDblGuil}} ; 
+   echo -ne "${StrReturnCmd}" ; 
+  }
+  
+  function ZenityGetBodyDef()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( ZGBD ZenityGetBodyDef ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=ZenityGetBodyDef CAIsAddDebug=True CAIsAddParent=True CallArgument ) ;
+   fi
+   StrMsg=$( BlockScriptEvaluator --get ArrayMsg[0] ) ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
+   
+   local StrListTitle=${ZGBDListTitle:=Awk-Script File-Structure}
+   local StrListComponnent=${ZGBDListItem:=Change Include|Change BEGIN state|Change END state|Change Main state} ; 
+   local StrListColName=${ZGBDColName:=Selections} ; 
+   local StrWinTitle=${ZGBDWindowTitle:=Awk-Script BODY definition} ; 
+   local IntWidth=${ZGBDWidth:=500} ; 
+   local IntHeight=${ZGBDHeight:=200} ; 
+   zenity --forms               \
+   --width=${IntWidth}          \
+   --height=${IntHeight}        \
+   --add-list="${StrListTitle}" \
+   --list-values="${StrListComponnent}" \
+   --column-values="${StrListColName}"  \
+   --show-header                \
+   --text="${StrWinTitle}" 2> /dev/null ;  
+  
+  }
+   ### Section : Switches-Statememt 
+   if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+    ### GVRIsName set to True is the Variable handled StrNameHelper by GetVarReference and 
+    ### provide a Name-Helper inside the live-documentation if we call StartSlewAnalysis --help.
+    ### Extending the help by turning other variable to True will increae help. Variable are
+    ### declared previously. 
+    GVRIsName=True GVRIsSummary=True GVRIsSynopsis=True GVRIsDesc=True GetVarReference ${__call_locality[1]} ; 
+    #VerbMsg="${StrSwitchMessages}" VerbState=True       VerbEvalForm=False   VerbFormated=False    VerbExtendedOut=True VerbDev=/dev/stderr  Verbosis ;
+   elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+    StrMsg="${ArrayMsg[0]}, (Temporary instance)." ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-GETTER" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
+    eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+    echo -ne """${ArgGet}\n""" ;
+   elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+    eval $( __GetVarReferenceList ) ;	
+   elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
+    eval $( eval ${StrVTVRegistry//,/ } \
+            VTVWhiteListTransfert="${StrVTVWhiteList}"  \
+            VTVValueEntry="${StrVarList}" \
+            ValueToVariable ) __main_StopServices ; 
+   elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+    StrMsg=${ArrayMsg[0]} ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
+    eval $( eval ${StrVTVRegistry//,/ } \
+            VTVWhiteListTransfert="${StrVTVWhiteList}"  \
+            VTVValueEntry="${StrVarList}" \
+            ValueToVariable ) ${StrStartMain} ;
+   fi
  
  }
 
