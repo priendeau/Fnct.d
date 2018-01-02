@@ -167,7 +167,7 @@ if [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then
     local StrScope=${CACodeScope:=local} ;
     local BoolUsingSed=${CAUsingSedTrim:=True} ; 
     local BoolAddParent=${CAIsAddParent:=False} ; 
-    local BoolChildBoot=${CAIsChildBoot:=False} ; 
+    local BoolChildBoot=${CAIsChildBoot:=True} ; 
     local BoolAddDebug=${CAIsAddDebug:=False} ; 
     local BoolAddInt=${CAIsAddInt:=False} ; 
     local BoolAddStr=${CAIsAddStr:=False} ; 
@@ -235,7 +235,7 @@ if [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then
       StrShortName=$( GetStdPrefixName ${StrFuncName} ) ;
      fi 
      local StrBootStrap="__SCOPE__ StrStartMain=\${__SHORTNAME__FuncStart:=__main_StartServices} " ; 
-     local StrArgumentCode="""__SCOPE__ ArrayArg=( \$* ) ; __SCOPE__  __call_locality=( __SHORTNAME__ __LONGNAME__ __PARENT_NAME__ ) ; __SCOPE__ Arg0=\${ArrayArg[0]} ; __SCOPE__ StrParentApps=\${__call_locality[1]} ; __BOOT_STRAP__ __DEBUG__ __ADD_INT__ __ADD_STR__""" ; 
+     local StrArgumentCode="""__SCOPE__ ArrayArg=( \$* ) ; __SCOPE__  __call_locality=( __SHORTNAME__ __LONGNAME__ __PARENT_NAME__ ) ; __SCOPE__ Arg0=\${ArrayArg[0]} ; __SCOPE__ StrParentApps=\${__call_locality[1]} __BOOT_STRAP__ __DEBUG__ __ADD_INT__ __ADD_STR__""" ; 
      
      ### 
      ### Section Adding Debug Variable after specifying 
@@ -271,17 +271,44 @@ if [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then
        StrArgumentCode="${StrArgumentCode//${StrDebugStatement}/${StrDebugAddVar}}" ; 
       fi
      done 
-
-
-     if [ "${BoolAddParent:=False}" == "True" ] ; then 
-      StrArgumentCode=${StrArgumentCode//__PARENT_NAME__/\$\{StrParentApps\}} ; 
-      if [ "${BoolChildBoot:=False}" == "False" ] ; then 
+    
+     if [ "${BoolChildBoot:=False}" == "False" ] ; then 
+      StrArgumentCode=${StrArgumentCode/__BOOT_STRAP__/} ; 
+     else
+      ### require to re-filter the __BOOT_STRAP__ when BoolAddParent==True
+      ### and should remove the __BOOT_STRAP__
+      if [ "${BoolAddParent:=False}" == "True" ] ; then 
+       echo -ne "Addressed to function/sub-function ${StrFuncName}, Bad Signature.\n\tImpossible to allow implementation of Boot-signature under a sub-function structure.\nPlease review your prefixed-parameter to CAIsChildBoot=False when CAIsAddParent is set to True.\n" > /dev/stderr ; 
        StrArgumentCode=${StrArgumentCode/__BOOT_STRAP__/} ; 
+       ### This situation should also remove about any trace of __PARENT__
+       ### for supplying excessively information which are not working
+       ### all-toghether. 
+       StrArgumentCode=${StrArgumentCode//__PARENT_NAME__/} ;
+      else
+       StrArgumentCode=${StrArgumentCode/__BOOT_STRAP__/;${StrBootStrap}} ; 
       fi 
+      
+     fi 
+     ### Notice on CAIsAddParent=True
+     ### - usually, if it require to add a parent-name inside the the 
+     ### Cal-argument, it mean there is already a top-function which this
+     ### one is accessible and should provide a [SHORT-NAME]FunctStart=...
+     ### and is barely not-accessible to recursively add another boot-access
+     ### from sub-function and SHALL restrict to not provide a boot-acces. 
+     ### And this is why it should remove information about pass-throught
+     ### if we imply addinf a parent information inside the CallArgument. 
+     ### 
+     if [ "${BoolAddParent:=False}" == "True" ] ; then 
+      ### This section should forbid the uses of an
+      ### boot-access due to it's impossibility to access from 
+      ### prompt... And should remove information about 
+      ### __BOOT_STRAP__
+      StrArgumentCode=${StrArgumentCode/__BOOT_STRAP__/} ; 
+      StrArgumentCode=${StrArgumentCode//__PARENT_NAME__/\$\{StrParentApps\}} ; 
      else
       StrArgumentCode=${StrArgumentCode//__PARENT_NAME__/} ;
      fi
-     StrArgumentCode=${StrArgumentCode/__BOOT_STRAP__/${StrBootStrap}} ; 
+
      StrArgumentCode=${StrArgumentCode//__SCOPE__/${StrScope}} ;
      StrArgumentCode=${StrArgumentCode//__PREFIX__/${StrPrefixVar}} ;
      StrArgumentCode=${StrArgumentCode//__SHORTNAME__/${StrShortName}} ;
