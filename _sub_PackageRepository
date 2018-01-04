@@ -111,7 +111,7 @@ function SubPackageRessources()
   elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
   elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
-   eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+   eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CAIsChildBoot=False CallArgument  ) ;
   fi   
   StrMsg=${ArrayMsg[0]} ; 
   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
@@ -231,7 +231,7 @@ function GetDpkgInstalled()
    elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
    elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
-    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CAIsChildBoot=False CallArgument  ) ;
    fi 
    StrMsg="Entry in function" ; 
    VerbMsg=${StrMsg} VerbHeader="DEBUG-${__call_locality[1]}" VerbEvalForm=False VerbFormated=True VerbState=${GDIIsDisplayDebug} VerbDev=/dev/stderr  Verbosis  ; 
@@ -403,7 +403,7 @@ function GetDpkgInstalled()
    elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
    elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
-    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ; 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CAIsChildBoot=False CallArgument  ) ; 
    fi   
    StrTplSnap=${StrTplSnap//__TRANSACTION_START__/${StrTransactionStart}} ; 
    StrTplSnap=${StrTplSnap//__PACKAGE_ID__/${StrPackageID}} ; 
@@ -494,7 +494,7 @@ function GetDpkgInstalled()
    elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
    elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
-    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CAIsChildBoot=False CallArgument  ) ;
    fi
    local StrDefaultVTVOpt="VTVIsArrayStyleInsert=True VTVIsValueReAssign=True VTVIsValueToConvert=False VTVIsArrayStyleInsert=True" ; 
    local StrDefaultGPIOpt="GPIIsUUIDInstance=True GPIIsGenerateCode=True GPIIsExecuteEval=False GPIIsZenityHandlerOut=False GPIIsFileHandlerOut=True GPIFuncStart=__main_StartServices GPIRepoCreatEnabled=True GPIRepositoryCreation=True"
@@ -619,7 +619,7 @@ function GetDpkgInstalled()
    elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
    elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
-    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CAIsChildBoot=False CallArgument  ) ;
    fi  
    local StrId=$( GIDLPackageUUID=${StrPackageID}           \
                   GIDLFileIndex=${StrFileIndex}             \
@@ -776,7 +776,7 @@ function GetDpkgInstalled()
    elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
     eval $( eval CAFunctName=VersionApps CAIsAddParent=True __Call_Argument ) ;
    elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
-    eval $( eval CAFunctName=VersionApps CAIsAddParent=True CallArgument ) ;
+    eval $( eval CAFunctName=VersionApps CAIsAddParent=True CAIsChildBoot=False CallArgument  ) ;
    fi     
    StrEvalCmd="""
    StrMsg=\"Application:__FUNCT__ , version:( versionTP:__VER_TP__ versionVTV:__VER_VTV__, versionCA:__VER_CA__, versionBVT:__VER_BVT__)\" ; 
@@ -799,7 +799,7 @@ function GetDpkgInstalled()
    elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
    elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
-    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CAIsChildBoot=False CallArgument  ) ;
    fi  
    local -a ArrayMsg ; 
    local StrMsg ; 
@@ -1086,7 +1086,7 @@ function PackageRepositoryMngmt()
   elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
    eval $( eval CAFunctName=CheckDrive CAIsAddParent=True __Call_Argument ) :  
   elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
-   eval $( eval CAFunctName=CheckDrive CAIsAddParent=True CallArgument ) :  
+   eval $( eval CAFunctName=CheckDrive CAIsAddParent=True CAIsChildBoot=False CallArgument  ) :  
   fi     
   #local -a __call_locality=( CD CheckDrive ) ;
   #local Arg0=${ArrayArg[0]} ;
@@ -1104,7 +1104,7 @@ function PackageRepositoryMngmt()
   elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
    eval $( eval CAFunctName=AddSnapShoot CAIsAddParent=True __Call_Argument ) ; 
   elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
-   eval $( eval CAFunctName=AddSnapShoot CAIsAddParent=True CallArgument ) ; 
+   eval $( eval CAFunctName=AddSnapShoot CAIsAddParent=True CAIsChildBoot=False CallArgument  ) ; 
   fi     
   #local -a __call_locality=( ASS AddSnapShoot ) ;
   #local Arg0=${ArrayArg[0]} ;
@@ -1127,7 +1127,7 @@ function PackageRepositoryMngmt()
   elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
   elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
-   eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+   eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CAIsChildBoot=False CallArgument  ) ;
   fi     
   echo -ne "Reserved ID for COMMIT:${StrUUID}\nReserved ID for Listing:${StrSnapShotUUID}\n\n" > /dev/stderr ;
   #local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;

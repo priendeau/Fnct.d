@@ -178,9 +178,8 @@ if [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then
     local StrBoolSet=${CABoolSetName:=Bool,Is} ;
     local StrIntSet=${CAIntSetName:="Int,''"} ;
     local StrStrSet=${CAStrSetName:="Str,''"} ;
-    local StrVarList="StrVarList,StrFuncName,StrScope,StrStartMain,BoolChildBoot,BoolAddParent,BoolUsingSed,StrDebugList,StrIntList,StrStrList,StrVarTpl,BoolAddDebug,BoolAddInt,BoolAddStr,StrBoolSet,StrIntSet,StrStrSet" ; 
-
-
+    local StrExtraVar=${CAExtraVarLst:=StrMsg} ; 
+    local StrVarList="StrVarList,StrFuncName,StrScope,StrStartMain,BoolChildBoot,BoolAddParent,BoolUsingSed,StrDebugList,StrIntList,StrStrList,StrVarTpl,BoolAddDebug,BoolAddInt,BoolAddStr,StrBoolSet,StrIntSet,StrStrSet,StrExtraVar,${StrExtraVar}" ; 
      
     function VarGenerator()
     {
@@ -251,6 +250,8 @@ if [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then
      local StrCurrLst ;
      local StrCurrSetVar ; 
      local StrTypeBasedValue ;
+     local StrDebugAddVar ;
+     local StrArgumentCode ; 
      for (( intGrpVarTag=0 ; intGrpVarTag <= ${#ArrayTagAdd[@]}-1  ; intGrpVarTag++ )); do 
       ArrayCurrGrp=( ${ArrayTagAdd[${intGrpVarTag}]//,/ } )
       eval BoolCurrCond="\${${ArrayCurrGrp[0]}}" ;
@@ -263,11 +264,11 @@ if [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then
       if [ "${BoolCurrCond:=False}" == "False" ] ; then 
        StrArgumentCode=${StrArgumentCode//${StrDebugTpl}/} ; 
       else
-       local StrDebugAddVar=$( VGVarTpl=${StrVarTpl}        \
-                               VGVarList=${StrCurrLst}      \
-                               VGVarSet="${StrCurrSetVar}"  \
-                               VGVarValue="${StrTypeBasedValue}" \
-                               VarGenerator ); 
+       StrDebugAddVar=$( VGVarTpl=${StrVarTpl}        \
+                         VGVarList=${StrCurrLst}      \
+                         VGVarSet="${StrCurrSetVar}"  \
+                         VGVarValue="${StrTypeBasedValue}" \
+                         VarGenerator ); 
        StrArgumentCode="${StrArgumentCode//${StrDebugStatement}/${StrDebugAddVar}}" ; 
       fi
      done 
@@ -278,7 +279,7 @@ if [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then
       ### require to re-filter the __BOOT_STRAP__ when BoolAddParent==True
       ### and should remove the __BOOT_STRAP__
       if [ "${BoolAddParent:=False}" == "True" ] ; then 
-       echo -ne "Addressed to function/sub-function ${StrFuncName}, Bad Signature.\n\tImpossible to allow implementation of Boot-signature under a sub-function structure.\nPlease review your prefixed-parameter to CAIsChildBoot=False when CAIsAddParent is set to True.\n" > /dev/stderr ; 
+       echo -ne "\nAddressed to function/sub-function ${StrFuncName}, child from ${StrParentApps}\nBad Signature. Impossible to allow implementation of Boot-signature under a sub-function structure.\nPlease review your prefixed-parameter to CAIsChildBoot=False when CAIsAddParent is set to True.\n\n" > /dev/stderr ; 
        StrArgumentCode=${StrArgumentCode/__BOOT_STRAP__/} ; 
        ### This situation should also remove about any trace of __PARENT__
        ### for supplying excessively information which are not working
@@ -670,7 +671,7 @@ if [ "${versionGOD:=0.0.1}" == "0.0.2" ] ; then
     elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
      eval $( eval CAFunctName=VersionApps CAIsAddParent=True __Call_Argument ) ;
     elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-     eval $( eval CAFunctName=VersionApps CAIsAddParent=True CallArgument ) ;
+     eval $( eval CAFunctName=VersionApps CAIsAddParent=True CAIsChildBoot=False  CallArgument ) ;
     fi     
     local StrEvalCmd="""StrMsg=\"Application:__FUNCT__ , version:( versionTP:__VER_TP__ versionVTV:__VER_VTV__, versionCA:__VER_CA__, versionBVT:__VER_BVT__)\" ; 
     StrMsg=\${StrMsg//__VER_CA__/\${versionCA}} ;
@@ -738,7 +739,7 @@ if [ "${versionGOD:=0.0.1}" == "0.0.2" ] ; then
      elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
       eval $( eval CAFunctName=DateFunc CAIsAddParent=True __Call_Argument ) ;
      elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-      eval $( eval CAFunctName=DateFunc CAIsAddParent=True CallArgument ) ;
+      eval $( eval CAFunctName=DateFunc CAIsAddParent=True CAIsChildBoot=False  CallArgument ) ;
      fi 
      StrMsg=$( GetOtherDate --get ArrayMsg[0] ) ; 
      VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${IsVerbose} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
@@ -825,7 +826,7 @@ if [ "${versionGOD:=0.0.1}" == "0.0.2" ] ; then
      elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
       eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
      elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-      eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+      eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CAIsChildBoot=False  CallArgument ) ;
      fi 
      StrMsg=$( GetOtherDate --get ArrayMsg[0] ) ; 
      VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${IsVerbose} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
@@ -1723,7 +1724,7 @@ if [ "${versionFOSME:=0.0.1}" == "0.0.1" ] ; then
     elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
      eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
     elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ; 
+     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CAIsChildBoot=False  CallArgument ) ; 
     fi   
     
     local StrStreamLine=${StrStreamInformation} ;
@@ -1772,7 +1773,7 @@ if [ "${versionFOSME:=0.0.1}" == "0.0.1" ] ; then
     elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
      eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
     elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ; 
+     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CAIsChildBoot=False  CallArgument ) ; 
     fi   
     
     
@@ -1787,7 +1788,7 @@ if [ "${versionFOSME:=0.0.1}" == "0.0.1" ] ; then
     elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
      eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
     elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ; 
+     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CAIsChildBoot=False  CallArgument ) ; 
     fi   
     StrMsg=$( ${StrParentApps} --get ArrayMsg[1] ) ; 
     StrMsg=${StrMsg//__DisplayDebug__/${BoolDisplayDebug}} ; 
@@ -3792,7 +3793,7 @@ if [ "${versionSIC}" == "0.0.1" ] ; then
     elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
      eval $( eval CAFunctName=FileFormatDetection CAIsAddParent=True __Call_Argument ) ;
     elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-     eval $( eval CAFunctName=FileFormatDetection CAIsAddParent=True CallArgument ) ;
+     eval $( eval CAFunctName=FileFormatDetection CAIsAddParent=True CAIsChildBoot=False  CallArgument ) ;
     fi 
     local StrFileName=${FFDFile:=None} ; 
     local StrApp=${FFDApps:=/usr/bin/file} ; 
@@ -3809,7 +3810,7 @@ if [ "${versionSIC}" == "0.0.1" ] ; then
     elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
      eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
     elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CAIsChildBoot=False  CallArgument ) ;
     fi 
     StrMsg=$( ScriptImageConversion --get ArrayMsg[0] ) ; 
     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
@@ -3898,7 +3899,7 @@ if [ "${versionSIC}" == "0.0.1" ] ; then
     elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
      eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True __Call_Argument ) ;
     elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-     eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True CallArgument ) ;
+     eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True CAIsChildBoot=False  CallArgument ) ;
     fi 
     StrMsg="Entry in function" ; 
     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
@@ -4038,7 +4039,7 @@ if [ "${versionSCH}" == "0.0.1" ] ; then
     elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
      eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
     elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CAIsChildBoot=False  CallArgument ) ;
     fi 
     StrMsg=$( ServiceControllerHandler --get ArrayMsg[0] ) ; 
     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
@@ -4107,7 +4108,7 @@ if [ "${versionSCH}" == "0.0.1" ] ; then
     elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
      eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True __Call_Argument ) ;
     elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-     eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True CallArgument ) ;
+     eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True CAIsChildBoot=False  CallArgument ) ;
     fi 
     StrMsg="Entry in function" ; 
     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;

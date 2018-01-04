@@ -357,7 +357,7 @@ if [ "${versionGCBE:=0.0.1}" == "0.0.1" ] ; then
    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
     eval $( eval CAFunctName=GitCheckoutBranchAction CAIsAddParent=True __Call_Argument ) ; 
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-    eval $( eval CAFunctName=GitCheckoutBranchAction CAIsAddParent=True CallArgument ) ; 
+    eval $( eval CAFunctName=GitCheckoutBranchAction CAIsAddParent=True CAIsChildBoot=False CallArgument  ) ; 
    fi 
    local StrDefaultGitApps=${GCBAGitApps:=/usr/bin/git} ; 
    local StrDefaultForceOpt=${GCBAForceOpt:=--force} ; 
@@ -395,7 +395,7 @@ if [ "${versionGCBE:=0.0.1}" == "0.0.1" ] ; then
    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
     eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True __Call_Argument ) ; 
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-    eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True CallArgument ) ; 
+    eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True CAIsChildBoot=False CallArgument  ) ; 
    fi 
 
   }
@@ -409,7 +409,7 @@ if [ "${versionGCBE:=0.0.1}" == "0.0.1" ] ; then
    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ; 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CAIsChildBoot=False CallArgument  ) ; 
    fi 
    
    local StrFilterApps=${FSFilterApps:=/bin/sed} ; 
@@ -459,7 +459,7 @@ if [ "${versionGCBE:=0.0.1}" == "0.0.1" ] ; then
    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
     eval $( eval CAFunctName=ZenityWindowHandler CAIsAddParent=True __Call_Argument ) ; 
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-    eval $( eval CAFunctName=ZenityWindowHandler CAIsAddParent=True CallArgument ) ; 
+    eval $( eval CAFunctName=ZenityWindowHandler CAIsAddParent=True CAIsChildBoot=False CallArgument  ) ; 
    fi 
    VerbMsg="${StrBranchToZenityField}" \
    VerbHeader="${__call_locality[1]}-ZENITY-FIELD" \
@@ -576,7 +576,7 @@ if [ "${versionGCBE:=0.0.1}" == "0.0.1" ] ; then
    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ; 
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CAIsChildBoot=False CallArgument  ) ; 
    fi 
   
    ### This section is Preparing the If-Else statement where it sould be used right

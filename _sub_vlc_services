@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Package _sub_vlc_services
+# Package _sub_vlc_serviceCAIsAddParent=Trues
 
 unset ActivatSeServerBuffer ; 
 
@@ -239,7 +239,7 @@ if [ "${versionDCH:=0.0.0}" == "0.0.0" ] ; then
    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
     eval $( eval CAFunctName=ReadPersistentCache CAIsAddParent=True __Call_Argument ) ;
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-    eval $( eval CAFunctName=ReadPersistentCache CAIsAddParent=True CallArgument ) ;
+    eval $( eval CAFunctName=ReadPersistentCache CAIsAddParent=True CAIsChildBoot=False  CallArgument ) ;
    fi    
    local StrParser ;
    local StrFileName=${CSFSockName:=None} ; 
@@ -253,6 +253,7 @@ if [ "${versionDCH:=0.0.0}" == "0.0.0" ] ; then
    StrParser=${StrTplCmd//__APPS__/${StrApps}} ;
    StrParser=${StrParser//__APPS_OPT__/${StrAppsOpt//__SCRIPT__/${StrScriptTpl//__SGUIL__/${StrIntrnSGuill}}}} ;
    
+   echo -ne """StrParentApps=${StrParentApps}\n""" > /dev/stderr ; 
    echo -ne """${StrVarName}=\"${StrParser}\"""" ; 
   
   }
@@ -266,7 +267,7 @@ if [ "${versionDCH:=0.0.0}" == "0.0.0" ] ; then
    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
     eval $( eval CAFunctName=ReadPersistentCache CAIsAddParent=True __Call_Argument ) ;
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-    eval $( eval CAFunctName=ReadPersistentCache CAIsAddParent=True CallArgument ) ;
+    eval $( eval CAFunctName=ReadPersistentCache CAIsAddParent=True CAIsChildBoot=False  CallArgument ) ;
    fi
    
    local BoolDisplayDebug=${RPCIsDisplayDebug:=True} ; 
@@ -404,7 +405,7 @@ if [ "${versionDCH:=0.0.0}" == "0.0.0" ] ; then
    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CAIsChildBoot=False  CallArgument ) ;
    fi
   
    local StrUUID="None" ; 
@@ -424,7 +425,7 @@ if [ "${versionDCH:=0.0.0}" == "0.0.0" ] ; then
    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
     eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True __Call_Argument ) ;
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-    eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True CallArgument ) ;
+    eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True CAIsChildBoot=False  CallArgument ) ;
    fi 
    local StrMsg="Entry in function" ; 
    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
@@ -927,7 +928,7 @@ function VLCSetVolume()
   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
    eval $( CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ; 
   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-   eval $( CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ; 
+   eval $( CAFunctName=__main_StartServices CAIsAddParent=True CAIsChildBoot=False  CallArgument ) ; 
   fi  
   
   
@@ -1014,9 +1015,9 @@ function VLCSetVolume()
   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
    eval $( CAFunctName=__main_StopServices CAIsAddParent=True __Call_Argument ) ; 
   elif [ ${versionGPI:=0.0.0} == "0.0.2" ] ; then 
-   eval $( CAFunctName=__main_StopServices CAIsAddParent=True CallArgument ) ; 
+   eval $( CAFunctName=__main_StopServices CAIsAddParent=True CAIsChildBoot=False  CallArgument ) ; 
   fi  
-  #eval $( "CAFunctName=VLCSetVolume CAIsAddParent=True __Call_Argument" ) ; 
+  #eval $( "CAFunctName=VLCSetVolume CAIsAddParent=True CAIsChildBoot=False  __Call_Argument" ) ; 
   
  }
  
@@ -1178,7 +1179,7 @@ if [ "${versionNSS:=0.0.0}" == "0.0.0" ] ; then
    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CAIsChildBoot=False  CallArgument ) ;
    fi 
    
    local StrBufferCmd="-O __BUFFER__" ; 
@@ -1328,7 +1329,7 @@ eval $( GFCFuncName=VlcServicesLayer GlobalFunctionCleaning ) ;
    elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
    elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
-    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CAIsChildBoot=False  CallArgument ) ;
    fi 
    
    local -A ADbgHdr ; 
@@ -1433,7 +1434,7 @@ eval $( GFCFuncName=VlcServicesLayer GlobalFunctionCleaning ) ;
    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
     eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True __Call_Argument ) ;
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-    eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True CallArgument ) ;
+    eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True CAIsChildBoot=False  CallArgument ) ;
    fi 
    StrMsg=$( VlcServicesLayer --get ArrayMsg[0] )
    
@@ -1766,7 +1767,7 @@ if [ "${versionVSC:=0.0.0}" == "0.0.1" ] ; then
    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
     eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True __Call_Argument ) ;
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-    eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True CallArgument ) ;
+    eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True CAIsChildBoot=False  CallArgument ) ;
    fi 
    StrMsg=$( VlcSendCmd --get ArrayMsg[0] ) ;
    
@@ -1790,7 +1791,7 @@ if [ "${versionVSC:=0.0.0}" == "0.0.1" ] ; then
    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CAIsChildBoot=False  CallArgument ) ;
    fi 
    local StrMsg=$( VlcSendCmd --get ArrayMsg[0] ) ;
    local -A ADbgHdr ; 
@@ -2038,7 +2039,7 @@ if [ "${versionRIAS:=0.0.0}" == "0.0.0" ] ; then
    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CAIsChildBoot=False  CallArgument ) ;
    fi
    local StrMsg=$( RepeatInAudioSession --get ArrayMsg[0] ) ;
    StrMsg=${StrMsg//__FUNCT__/${__call_locality[1]}} ;
@@ -2132,7 +2133,7 @@ if [ "${versionRIAS:=0.0.0}" == "0.0.0" ] ; then
    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
     eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True __Call_Argument ) ;
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-    eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True CallArgument ) ;
+    eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True CAIsChildBoot=False  CallArgument ) ;
    fi 
    local StrMsg=$( RepeatInAudioSession --get ArrayMsg[0] ) ;
    StrMsg=${StrMsg//__FUNCT__/${__call_locality[1]}} 
@@ -2453,7 +2454,7 @@ if [ "${versionSSA:=0.0.0}" == "0.0.2" ] ; then
    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
     eval $( eval CAFunctName=VersionApps CAIsAddParent=True __Call_Argument ) ;
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-    eval $( eval CAFunctName=VersionApps CAIsAddParent=True CallArgument ) ;
+    eval $( eval CAFunctName=VersionApps CAIsAddParent=True CAIsChildBoot=False  CallArgument ) ;
    fi     
    StrEvalCmd="""
    StrMsg=\"Application:__FUNCT__ , version:( versionTP:__VER_TP__ versionVTV:__VER_VTV__, versionCA:__VER_CA__, versionBVT:__VER_BVT__)\" ; 
@@ -2476,7 +2477,7 @@ if [ "${versionSSA:=0.0.0}" == "0.0.2" ] ; then
    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
     eval $( eval CAFunctName=FilterVlcSendCmd CAIsAddParent=True __Call_Argument ) ;
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-    eval $( eval CAFunctName=FilterVlcSendCmd CAIsAddParent=True CallArgument ) ;
+    eval $( eval CAFunctName=FilterVlcSendCmd CAIsAddParent=True CAIsChildBoot=False  CallArgument ) ;
     ### CallArgument is important to Generate SSAFuncStart=${StrStartMain} to 
     ### be launched with Bottom-if-statement of --startservices .
    fi 
@@ -2514,7 +2515,7 @@ if [ "${versionSSA:=0.0.0}" == "0.0.2" ] ; then
    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
     eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True __Call_Argument ) ;
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-    eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True CallArgument ) ;
+    eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True CAIsChildBoot=False  CallArgument ) ;
    fi 
    StrMsg=$( StartSlewAnalysis --get ArrayMsg[0] )
    
@@ -2575,7 +2576,7 @@ if [ "${versionSSA:=0.0.0}" == "0.0.2" ] ; then
    elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CAIsChildBoot=False  CallArgument ) ;
    fi 
    local StrMsg=$( StartSlewAnalysis --get ArrayMsg[0] ) ;
    local -A ADbgHdr ; 

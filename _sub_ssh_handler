@@ -447,7 +447,7 @@ if [ "${versionXCT:=0.0.0}" == "0.0.1" ] ; then
     local StrParentApps=${__call_locality[1]} ; 
     local StrStartMain=${ZNFuncStart:=__main_StartServices} ; 
    elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
-    eval $( eval CAFunctName=ZenityNotification CABoolSetName="Bool," CAIsAddDebug=True CAProvideDebug=DisplayDebug,DisplayEntry,DisplayCmd CAIsAddParent=True CallArgument ) ;
+    eval $( eval CAFunctName=ZenityNotification CABoolSetName="Bool," CAIsAddDebug=True CAProvideDebug=DisplayDebug,DisplayEntry,DisplayCmd CAIsAddParent=True CAIsChildBoot=False CallArgument  ) ;
    fi 
    
    StrMsg=$( XClipTransfert --get ArrayMsg[0] ) ; 
@@ -562,7 +562,7 @@ if [ "${versionXCT:=0.0.0}" == "0.0.1" ] ; then
     elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
      eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True __Call_Argument ) ;
     elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
-     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CAIsChildBoot=False CallArgument  ) ;
     fi
     local StrMsg ; 
     
@@ -629,7 +629,7 @@ if [ "${versionXCT:=0.0.0}" == "0.0.1" ] ; then
     elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
      eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True __Call_Argument ) ;
     elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
-     eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True CallArgument ) ;
+     eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True CAIsChildBoot=False CallArgument  ) ;
     fi 
     local StrMsg=$( XClipTransfert --get ArrayMsg[0] ) ; 
     VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState="${BoolDisplayEntry}" VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
