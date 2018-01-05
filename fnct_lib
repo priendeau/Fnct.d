@@ -64,9 +64,29 @@ declare -r StrTestSwitches="\t--testservices\tTest the application, (dry-run)." 
 ### General Array and Helper.
 declare -a ArrayDateFormat=( "%Y%m%d_%H:%M:%S(UNIX(sec,ns):%s.%N)" "%Y%m%d_%H:%M:%S<%s.%N>" "%Y%m%d_%H:%M:%S.%s.%N" "%Y%m%d_%s" "%Y%m%d" "%s.%N" ) ;
 
+### Local and Internal to this Library:
+
+### 
+### Function FnctLibUnset:
+### 
+### Designed to unset only library from fnct_lib, all the other function out of 
+### fnct_lib, like fnct_debian_lib, _sub_structure ... depends of 
+### GlobalFunctionCleaning . 
+### 
+### 
+### 
+unset FnctLibUnset ; 
+function FnctLibUnset()
+{
+ IntCountDecl=$( declare -F | egrep -c "${FLUFnctName:=None}" ) ; 
+ if [ ${IntCountDecl:=0} -gt 0 ] ; then 
+  unset ${FLUFnctName:=None} ; 
+ fi 
+}
+
 ### Loader 
 
-unset PatchUpdater
+FLUFnctName=PatchUpdater FnctLibUnset ;
 function PatchUpdater()
 {
  local __call_locality=( PU PatchUpdater ) ;
@@ -115,6 +135,239 @@ function PatchUpdater()
 ### 
 ### bzip2 -dc patch-netservices-Fncd.D.0.0.2.bz2 | patch --directory=/etc
 
+
+
+### 
+### function CreateSubSet
+### Main Library helper to help developper or expert to generate partial subset
+### of Fnct.D library . 
+### 
+### Synopsis of CreateSubSet
+### 
+### CreateSubSet is designed to renew bash-function out of a change. As example, 
+### adding stuff inside a library like fnct_debian, require to reload the file 
+### to let it work.
+### 
+### As this example is quite simple, adding 'complexity' inside CallArgument will 
+### require to reload the _sub_Structure library, but Whole function will not 
+### require to be reloaded unless 'complexity' does imply adding 
+### CAIsChildBoot=False in any function for all sub-function unles you will get
+### an error message and a forced attempt to not implement what is being the 
+### variable CAIsChildBoot effect. This may require to reload somes of them and 
+### can be long to do so. 
+### 
+### Effortless like CreateSubSet.
+### This function save the original Library list inside OldAlib, it create 
+### [YOUR-SUBSET] inside Array ArrayLib and let you reloading the choosed 
+### library. 
+### 
+### In one word, change accross choosed library will depend of LibLoader Action
+### unless you have choosed to come back to original list. 
+### 
+### Example : 
+### - change to be made iniside fnct_debian_lib will require at least loading 
+### first _sub_Structure, while fnct_lib is mandatory made by default. 
+### 
+### But : using sub-functionality of function inside :
+### _sub_Function_Appliance and _sub_vlc_services are required :
+### 
+### This first attempt will not help you because it will UNLOAD All library 
+### memeber and reloading uniquely the _sub_Structure,fnct_debian_lib
+### 
+### - testing the ZenityScriptMsg from BlockScriptEvaluator and or testing 
+### the ZenityImageDisplay is what is best action :
+### 
+### CSSArrayName=ArrayFnctDVersion  \
+### CSSLibList=_sub_Structure,fnct_debian_lib \
+### CSSIsUnloadBefore=True \
+### CSSIsRevertingLib=False \
+### CSSIsStartWith=False    \
+### CreateSubSet
+### 
+### Testing an application inside _sub_Function_Appliance and _sub_vlc_services
+### like function NetSocketServices / VlcSendCmd to extract information which
+### hold 'image cover' from what user listening and thus require to be present
+### and untouched since the script VlcSendCmd should exist to perform this 
+### action . 
+### 
+### This will imply unloading on wish _sub_Structure,fnct_debian_lib since 
+### ZenityScriptMsg is required to be tuned . 
+### example : 
+### 
+### CSSArrayName=ArrayFnctDVersion  \
+### CSSLibList=_sub_Structure,fnct_debian_lib \
+### CSSIsUnloadBefore=False \
+### CSSIsRevertingLib=False \
+### CSSIsStartWith=False    \
+### CreateSubSet
+### 
+### - Disallowing to apply a 'LibLoader --stopservices' with actual subset of 
+### library. This prevent to unset function outside of _sub_Structure,
+### fnct_debian_lib , and renew only the two library. Calling 
+### LibLoader --stopservices , LibLoader --startservices will after unset and 
+### re-apply all new definition of function inside _sub_Structure,
+### fnct_debian_lib. 
+### 
+### The OldAlib holding only what was specified with CreateSubSet and reverting
+### action is only copying information because OldAlib was present. Using 
+### CSSIsRevertingLib=True with empty OldAlib will not reverting to original,
+### or at least what you may add by hand inside OldAlib will start it, but 
+### having ArrayFnctDVersion it may or may not unset some function from different
+### version-ID. 
+### 
+
+FLUFnctName=CreateSubSet FnctLibUnset ;
+function CreateSubSet()    
+{ 
+ local IntOldList=${#OldAlib[@]} ; 
+ local StrArrayLib ; 
+ local BoolLibraryBoot=${CSSIsStartWith:=True} ;
+ local BoolUnloadLib=${CSSIsUnloadBefore:=True} ; 
+ local StrSubSetCmd="""
+ __OLD_LIB__ ; 
+ __UNLOAD0__ ; 
+ __LIB_SUBSET__ ;
+ __UNLOAD1__ ; 
+ __LOAD__ ;""" ; 
+ 
+ ### 
+ ### BoolLibraryBoot -> CSSIsStartWith 
+ ### 
+ ### This prefixed-variable is used in case you start for the first time the 
+ ### Fnct.D library and you do not have The services Fnct.D setup.
+ ### 
+ ### As this step, you do require to leave it as CSSIsStartWith=True.
+ ### 
+ ### In Case of a services, it should be already a presence of Fnct.D and
+ ### require to use LibLoader. This case you should use CSSIsStartWith=False
+ ###
+ ### This mean it will not call fnct_lib during creation of your subset and 
+ ### will prepare your subset to be readed by LibLoader. 
+ 
+ ### Fnct.D as services ...
+ ### 
+ ### At this stade the Fnct.D is only setuped in per-user an do require adding 
+ ### some information inside an .bashrc or /etc/profile.d script to implement a 
+ ### per-user Fnct.D environment. 
+ ### 
+ ### Later development of Fnct.D, should instanciate only one Fnct.D services 
+ ### inside a run-level and should receive all the request from function query
+ ### from a little-subset of Fnct.D to remain economic as possible. 
+ ### 
+ if [ ${IntOldList:=0} -gt 0 ] ; then 
+  echo -ne "Old List was previously saved, using prefixed-variable CSSIsRevertingLib=True\nwill help you starting the library with previous settings.\n" > /dev/stderr ; 
+  StrSubSetCmd=${StrSubSetCmd//__OLD_LIB__/unset ArrayLib} ;
+ else
+  StrSubSetCmd=${StrSubSetCmd//__OLD_LIB__/declare -a OldAlib=( ${ArrayLib[@]} ) ; __OLD_LIB__} ;
+  StrSubSetCmd=${StrSubSetCmd//__OLD_LIB__/unset ArrayLib} ;
+ fi 
+ if [ "${CSSIsRevertingLib:=False}" == "True" ] ; then 
+  echo -ne "Reverting actual subset ( ${StrArrayLib//,/ } ) to original configuration.\n" > /dev/stderr ; 
+  StrArrayLib=${OldAlib[@]} ; 
+ else
+  StrArrayLib="${CSSLibList:=_sub_Structure,fnct_debian_lib,_sub_Function_Appliance,_sub_jack_script,_sub_Git,_sub_setup_py_extra_cmd,_sub_ssh_handler,_sub_vlc_services,_sub_binary,_sub_PythonBoost}" ;   
+  echo -ne "Submitted Library List: ${StrArrayLib//,/ }\n" > /dev/stderr ; 
+ fi 
+ 
+ #declare -a ArrayLib=( ${StrArrayLib//,/ } ) ; 
+ StrSubSetCmd=${StrSubSetCmd//__LIB_SUBSET__/declare -a ArrayLib=( ${StrArrayLib//,/ } )} ;  
+ echo -ne "SubSet is ready and you can call LibLoader and will diretly use YOUR-SUBSET\n\tFor your specific uses.\nSubset member:[ ${ArrayLib[@]} ]\n" > /dev/stderr ; 
+ ### Part of code outputed to allow re-creating the Library Subset. 
+ #StrSubSetCmd=${StrSubSetCmd///} ;
+ 
+ if [ "${BoolUnloadLib:=True}" == "True" ] ; then 
+  StrSubSetCmd=${StrSubSetCmd//__UNLOAD0__/LibLoader --stopservices} ;
+ else
+  StrSubSetCmd=${StrSubSetCmd//__UNLOAD0__ ;/} ;
+ fi 
+ 
+ StrSubSetCmd=${StrSubSetCmd//__UNLOAD1__/LibLoader --stopservices} ;
+ if [ ${BoolLibraryBoot:=True} == "True" ] ; then 
+  echo $( CSSArrayName=${FDVArrayName:=ArrayFnctDVersion} FnctDVersion ) . ${FNCTDLIBPATH}/fnct_lib ; 
+  StrSubSetCmd=${StrSubSetCmd//__LOAD__/$( eval CSSArrayName=${FDVArrayName:=ArrayFnctDVersion} FnctDVersion ) . ${FNCTDLIBPATH}/fnct_lib} ;
+ else
+  StrSubSetCmd=${StrSubSetCmd//__LOAD__/$( eval CSSArrayName=${FDVArrayName:=ArrayFnctDVersion} FnctDVersion ) LibLoader --startservices} ;
+ fi
+ echo """${StrSubSetCmd}""" ; 
+}
+
+### 
+### function FnctDVersion
+### 
+### A function to rapidly build-up version of function an do generate all the
+### variable prefixed with version[SHORTNAME] . SHORTNAME is the function name 
+### extracted from GetStdPrefixName . All the version are usually stored inside
+### an array and do require to pass Array name to FnctDVersion to let it 
+### generate the list. Usually this function should be called with an evaluation
+### clause 'eval' as :
+### 
+### eval $( FnctDVersion ) 
+### 
+### - As crucial information are keep inside version of function, somes does
+### rely on old __Call_Argument which is versionCA==0.0.0, where versionCA=0.0.1
+### and over are relying on new function CallArgument, which have more control on 
+### function entity and help developper having immutable tools/variable do help
+### debugging function when prefixed-variable like '[SHORTNAME]IsDebug',  
+### [SHORTNAME]IsDisplayParserNotice for TagParser extra information . 
+### 
+
+FLUFnctName=FnctDVersion FnctLibUnset ;
+function FnctDVersion()
+{
+ local StrExportVar="__VAR__" ; 
+ local StrVersion ; 
+ local StrArrayName=${FDVArrayName:=ArrayFnctDVersion} ; 
+ local StrSpacer="\t                                " ;
+ local StrLoopCmd="""
+ IntColLimit=0 ; 
+ for StrNameLen in \${!__ARRAY__[@]} ; do 
+  IntIndexLen=\${#StrNameLen} ;
+  if [ \${IntColLimit:=0} -lt \${IntIndexLen} ] ; then 
+   IntColLimit=\${#StrNameLen} ; 
+  fi  
+ done  ;
+ IntColLimit=\$(( \${IntColLimit} + 1 ))  ;  
+ StrTplA=\"Set __VAR____SPACER__\" ; 
+ StrTplB=\"__TPL__ Version:__VERSION__\\\n\" ; 
+ for VerName in \${!__ARRAY__[@]} ; do 
+  StrVersion=\${__ARRAY__[\${VerName}]} ;
+  IntLenVar=\${#VerName} ;
+  IntNewSpaceStart=0 ; 
+  IntNewSpaceEnd=0 ; 
+  StrParseTplA=\${StrTplA} ; 
+  StrParseTplA=\${StrParseTplA//__VAR__/\${VerName}} ; 
+  IntTplLen=\${#StrParseTplA} ; 
+  if [ \$(( \${IntTplLen} % \${IntColLimit} )) -eq 0 ] ; then 
+   IntCond=1 ; 
+   IntNewSpaceStart=2 
+   IntNewSpaceEnd=\$(( ( \${IntColLimit} - \$(( \${IntTplLen} % \${IntColLimit} )) - ( \${IntColLimit} - 1 ) ) ))
+  else 
+   IntCond=2 ; 
+   IntNewSpaceStart=2 ;
+   IntNewSpaceEnd=\$(( ( \${IntColLimit} - \$(( \${IntTplLen} % \${IntColLimit} )) ) + 1 )) ; 
+  fi 
+  StrParseTplA=\${StrParseTplA//__SPACER__/\${StrSpacer:\${IntNewSpaceStart}:\${IntNewSpaceEnd}}} ; 
+  StrParseTplB=\${StrTplB} ; 
+  StrParseTplB=\${StrParseTplB//__TPL__/\${StrParseTplA}} ; 
+  StrParseTplB=\${StrParseTplB//__VERSION__/\${StrVersion}} ; 
+  echo -ne \"\${StrParseTplB}\" > /dev/stderr ; 
+  StrExportVar=\"\${StrExportVar//__VAR__/\${VerName}=\${StrVersion} __VAR__}\"
+  export \${VerName}=\"\${StrVersion}\" ; 
+ done 
+ """ ;
+ StrLoopCmd=${StrLoopCmd//__ARRAY__/${StrArrayName}} ; 
+ if [ "${FDVIsDisplayCmd:=False}" == "True" ] ; then 
+  echo -ne "Cmd:[${StrLoopCmd}]\n" > /dev/stderr ; 
+ fi 
+ eval """${StrLoopCmd}""" ; 
+ StrExportVar=${StrExportVar//__VAR__/} ;
+ echo ${StrExportVar} ;  
+ if [ ${FDVIsRemoveArray:=False} == "True" ] ; then 
+  eval unset ${FDVArrayName:=ArrayFnctDVersion} ; 
+ fi ; 
+}
+
+
 ### 
 ### function LibLoader
 ### Main BootStrap loading file from /etc/init.d/Fnct.D and registered inside ArrayLib.
@@ -146,6 +399,7 @@ function PatchUpdater()
 ###  
 ###
 
+FLUFnctName=LibLoader FnctLibUnset ;
 function LibLoader()
 {
  local __call_locality=( LL LibLoader ) ;
@@ -214,6 +468,7 @@ function LibLoader()
 
 }
 
+FLUFnctName=GlobalFunctionCleaning FnctLibUnset ;
 function GlobalFunctionCleaning()
 {
  local __call_locality=( GFC GlobalFunctionCleaning ) ;
