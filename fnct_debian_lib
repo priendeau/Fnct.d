@@ -6104,7 +6104,7 @@ if [ ${VarFnctLib:=False} == "True" ] ; then
      eval ${CmdEval[@]} ;
     }
 
-    function dpkg-get-selections()
+    function dpkg_get_selections()
     {
      eval $( __call_localityLocalName=DPKG __call_locality ); 
      eval $( FParamFuncName=${StrFuncName} FParamSuffixName=BranchShow FParamVarName=StrBranchShow FParamDefaultValue=Left __fnctCreateLocalityFuncParam     ) ;
