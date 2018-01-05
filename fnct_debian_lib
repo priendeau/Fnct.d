@@ -1906,6 +1906,156 @@ function AutoChown()
  
  
 }
+
+if [ "${versionZID:=0.0.0}" == "0.0.0" ] ; then
+ function ZenityImageDisplay()    
+ { 
+   local IsContinue="True" ;
+   while [ "${IsContinue}" == "False" ] ; do 
+    StrUrlFile=$( zenity --width=${ZIDIntWidth:=400} --entry --text="${ZIDStrText:=Image Url}" ) ; 
+    ${ZIDStrAppsUrlGet:=/usr/bin/curl} "${StrUrlFile}" | ${ZIDStrAppsImgDisplay:=/usr/bin/display.im6} - ; 
+    eval $( ZSMLabelStart="Continue" ZSMLabelCancel="Quit" ZSMQuestion="Continue to load another image?" ZSMVarNameAnswer=IsContinue BSEFuncStart=ZenityScriptMsg BlockScriptEvaluator  ) ; 
+   done ; 
+ }
+
+elif [ "${versionZID:=0.0.0}" == "0.0.1" ] ; then
+
+ eval $( GFCFuncName=ZenityImageDisplay GlobalFunctionCleaning ) ; 
+ 
+ function ZenityImageDisplay()    
+ { 
+   function Verbosis()
+   {
+    #eval $( CAFunctName=Verbosis CAIsAddParent=False __Call_Argument ) ; 
+    local -a ArrayArg=( $* ) ; 
+    local -a __call_locality=( Verb Verbosis )
+    local StrMsg=${VerbMsg:=__TEXT__} ; 
+    local StrDevOut=${VerbDev:=/dev/stderr} ; 
+    local IsVerboseState=${VerbState:=False} ;
+    local StrVerboseHeader=${VerbHeader:=VERBOSE} ;
+    local IsEvalRequiredForm=${VerbEvalForm:=False} ; 
+    local IsDisplayFormatted=${VerbFormated:=True} ;
+    local IsAppendMode=${VerbAppendDev:=False} ; 
+    if [ "${IsVerboseState:=False}" == "True" ] ; then 
+     if [ "${IsDisplayFormatted:=True}" == "True" ] ; then 
+      if [ "${IsAppendMode:=False}" == "True" ] ; then 
+        echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" >> ${StrDevOut} ;
+      else  
+        echo -ne "${StrVerboseHeader}:[ ${StrMsg} ]\n" > ${StrDevOut} ;
+      fi
+     else
+      if [ "${IsEvalRequiredForm:=False}" == "True" ] ; then 
+         echo "${StrMsg}" ;  
+      else
+       if [ "${IsAppendMode:=False}" == "True" ] ; then 
+        echo "${StrMsg}" >> ${StrDevOut} ;
+       else
+        echo "${StrMsg}" > ${StrDevOut} ;
+       fi
+      fi 
+     fi 
+    fi
+   } 
+   ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
+   if [ "${versionCA:=0.0.0}" == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( ZID ZenityImageDisplay ) ;
+    local Arg0="${ArrayArg[0]}";  
+    local StrStartMain=${BSEFuncStart:=__main_StartServices} ; 
+    local StrParentApps=${__call_locality[1]} ; 
+   elif [ "${versionCA:=0.0.0}" == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=ZenityImageDisplay CAIsAddParent=False __Call_Argument ) ; 
+   elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
+    ### added inside CAIsAddDebug, add following item: DisplayDebug,DisplayEntry,DisplayCmd 
+    eval $( eval CAFunctName=ZenityImageDisplay CAIsAddDebug=True  CAIsAddParent=False CallArgument ) ; 
+   fi 
+   
+   local StrVarList="StrVTVRegistry,StrVTVWhiteList,BoolDisplayDebug,BoolDisplayCmd,BoolDisplayEntry,BoolDisplayParserNotice,StrAppsZenity,StrVarList,${StrExtraVarList}";
+
+   local -a ArrayMsg ;
+   ArrayMsg[0]="Entry in function" ;
+   ArrayMsg[1]="Instance ID:__UUID__" ; 
+   ArrayMsg[2]="__TITLE__: __CMD__" ; 
+   ArrayMsg[3]="Verbose Status:\n\tBoolDisplayDebug        : __DISPLAYDEBUG__\n\tBoolDisplayEntry        : __DISPLAYENTRY__\n\tBoolDisplayCmd          : __DISPLAYCMD__\n\tBoolDisplayParserNotice : __DISPLAYPARSERNOTICE__" ; 
+   
+   local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+   local StrNameHelper="${__call_locality[1]}\n\t";
+   local StrSynopsis="\n\t__TEXT__\n";
+   local StrSummary="\n\t__TEXT__\n" ; 
+   local StrDescription="\n\t__TEXT__\n" ;
+   
+   function __main_StartServices()
+   {
+    if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+     local -a ArrayArg=( $* ) ;
+     local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
+     local Arg0="${ArrayArg[0]}" ; 
+    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+     eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+    fi
+    StrMsg=$( BlockScriptEvaluator --get ArrayMsg[0] ) ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
+    
+    while [ 1 ] ; do 
+      StrUrlFile=$( zenity --width=400 --entry --text="Image Url" ) ; 
+      /usr/bin/curl "${StrUrlFile}" | /usr/bin/display.im6 - ; 
+    done ; 
+   }
+  
+  function __main_StopServices()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( Main __main_StopServices ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}";  
+   elif [ ${versionCA:=0.0.0} == "0.0.1" ] ; then 
+    eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True __Call_Argument ) ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=__main_StopServices CAIsAddParent=True CallArgument ) ; 
+   fi 
+
+  } 
+   ### Section : Switches-Statememt 
+   if [ "${Arg0:=--startservices}" == "--help"	] ; then 
+    ### GVRIsName set to True is the Variable handled StrNameHelper by GetVarReference and 
+    ### provide a Name-Helper inside the live-documentation if we call StartSlewAnalysis --help.
+    ### Extending the help by turning other variable to True will increae help. Variable are
+    ### declared previously. 
+    GVRIsName=True GVRIsSummary=True GVRIsSynopsis=True GVRIsDesc=True GetVarReference ${__call_locality[1]} ; 
+    #VerbMsg="${StrSwitchMessages}" VerbState=True       VerbEvalForm=False   VerbFormated=False    VerbExtendedOut=True VerbDev=/dev/stderr  Verbosis ;
+   elif [ "${Arg0:=--startservices}" == "--get" ] ; then 
+    StrMsg="${ArrayMsg[0]}, (Temporary instance)." ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-GETTER" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
+    eval """local ArgGet=\${${ArrayArg[1]}}""" ; 
+    echo -ne """${ArgGet}\n""" ;
+   elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
+    eval $( __GetVarReferenceList ) ;	
+   elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
+    eval $( eval ${StrVTVRegistry//,/ } \
+            VTVWhiteListTransfert="${StrVTVWhiteList}"  \
+            VTVValueEntry="${StrVarList}" \
+            ValueToVariable ) __main_StopServices ; 
+   elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
+    StrMsg=${ArrayMsg[0]} ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
+    eval $( eval ${StrVTVRegistry//,/ } \
+            VTVWhiteListTransfert="${StrVTVWhiteList}"  \
+            VTVValueEntry="${StrVarList}" \
+            ValueToVariable ) ${StrStartMain} ;
+   fi
+
+
+ }
+
+
+fi
+
+ 
+
+
+
+
+
  ### ZenityShellEval :
  ###
  ###
@@ -2831,7 +2981,7 @@ if [ "${versionBSE:=0.0.0}" == "0.0.0" ] ; then
    eval $( eval CAFunctName=BlockScriptEvaluator CAIsAddParent=False __Call_Argument ) ; 
   elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
    ### added inside CAIsAddDebug, add following item: DisplayDebug,DisplayEntry,DisplayCmd 
-   eval $( eval CAFunctName=BlockScriptEvaluator CAIsAddDebug=True  CAIsAddParent=False CallArgument ) ; 
+   eval $( eval CAFunctName=BlockScriptEvaluator CAIsAddDebug=True CAIsChildBoot=True CAIsAddParent=False CallArgument ) ; 
   fi 
   if [ "${Arg0:=--startservices}" != "--get" ] ; then 
    local StrAction=${BSEAction:=Welcome};
@@ -2862,7 +3012,7 @@ if [ "${versionBSE:=0.0.0}" == "0.0.0" ] ; then
     local -a __call_locality=( Main __main_StartServices ${StrParentApps} ) ;
     local Arg0="${ArrayArg[0]}" ; 
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-    eval $( eval CAFunctName=__main_StartServices CAIsAddParent=True CallArgument ) ;
+    eval $( eval CAFunctName=__main_StartServices CAIsChildBoot=False CAIsAddParent=True CallArgument ) ;
    fi
    StrMsg=$( BlockScriptEvaluator --get ArrayMsg[0] ) ; 
    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
@@ -2886,7 +3036,7 @@ if [ "${versionBSE:=0.0.0}" == "0.0.0" ] ; then
     local -a __call_locality=( FAL FilterActionList ${StrParentApps} ) ;
     local Arg0="${ArrayArg[0]}" ; 
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-    eval $( eval CAFunctName=FilterActionList CAIsAddDebug=True CAIsAddParent=True CallArgument ) ;
+    eval $( eval CAFunctName=FilterActionList CAIsAddDebug=True CAIsChildBoot=False CAIsAddParent=True CallArgument ) ;
    fi
    local -A ArrayCharTag ; 
    ArrayCharTag[COMMA]  ="\073"
@@ -2983,14 +3133,15 @@ if [ "${versionBSE:=0.0.0}" == "0.0.0" ] ; then
     local -a __call_locality=( ZSM ZenityScriptMsg ${StrParentApps} ) ;
     local Arg0="${ArrayArg[0]}" ; 
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
-    eval $( eval CAFunctName=ZenityScriptMsg CAIsAddDebug=True CAIsAddParent=True CallArgument ) ;
+    eval $( eval CAFunctName=ZenityScriptMsg CAIsAddDebug=True CAIsChildBoot=False CAIsAddParent=True CallArgument ) ;
+    echo -ne "Array __call_locality re-assigned:[${__call_locality[@]}]\n" > /dev/stderr ;
    fi
    StrMsg=$( BlockScriptEvaluator --get ArrayMsg[0] ) ; 
    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
 
    local StrOkLabel=${ZSMLabelStart:=Script Section} ; 
    local StrCancelLabel=${ZSMLabelCancel:=Quit} ;
-   local StrTextQuestion=${ZSMQuestion:="<span font_weight=__SGUIL__heavy__SGUIL__ font_stretch=__SGUIL__extraexpanded__SGUIL__ font=__SGUIL__11__SGUIL__ >valuator engine.\nThis will start an instance.</span>\n\n<span font_stretch=__SGUIL__semicondensed__SGUIL__ font_weight=__SGUIL__light__SGUIL__ font=__SGUIL__10__SGUIL__ >So You can creating new script or changing thems.</span>"} ;  
+   local StrTextQuestion=${ZSMQuestion:="<span font_weight=__SGUIL__heavy__SGUIL__ font_stretch=__SGUIL__extraexpanded__SGUIL__ font=__SGUIL__11__SGUIL__ >Evaluator engine.\nThis will start an instance.</span>\n\n<span font_stretch=__SGUIL__semicondensed__SGUIL__ font_weight=__SGUIL__light__SGUIL__ font=__SGUIL__10__SGUIL__ >So You can creating new script or changing thems.</span>"} ;  
    local StrVarName=${ZSMVarNameAnswer:=BoolScriptReturn} ;
    local IsBoolean=${ZSMBooleanReturn:=True} ; 
    local IntCurrentStatus ;
@@ -3008,15 +3159,13 @@ if [ "${versionBSE:=0.0.0}" == "0.0.0" ] ; then
    StrCmd=${StrCmd//__TEXT__/${StrTextQuestion}} ; 
    StrCmd=${StrCmd//__DBLGUIL__/${StrDblGuil}} ; 
    StrCmd=${StrCmd//__APPS__/${StrAppsZenity}} ; 
- 
- 
-   
+
    StrMsg=$( BlockScriptEvaluator --get ArrayMsg[2] ) ;
    StrMsg=${StrMsg//__TITLE__/} ;  
    StrMsg=${StrMsg//__CMD__/${StrCmd}} ;  
    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-CMD" VerbState=${BoolDisplayCmd} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
    
-   eval ${StrCmd} ; 
+   eval """${StrCmd}""" 
    IntCurrentStatus=$? ; 
    
    StrReturnCmd=${StrReturnCmd//__VAR__/${StrVarName}} ; 
@@ -3031,6 +3180,52 @@ if [ "${versionBSE:=0.0.0}" == "0.0.0" ] ; then
    StrReturnCmd=${StrReturnCmd//__VALUE__/${StrReturn}} ; 
    StrReturnCmd=${StrReturnCmd//__DBLGUIL__/${StrDblGuil}} ; 
    echo -ne "${StrReturnCmd}" ; 
+   ### 
+   ### Forcing to unset itself at the end. This will avoid
+   ### the function to exist after quitting BlockScriptEvaluator
+   ### and be unable to re-use the function ZenityScriptMsg .
+   ### The main reason is the method to access to this function 
+   ### is not mandatory by calling it directly from a situation
+   ### out of function BlockScriptEvaluator. As example loading
+   ### library fnct_debian_lib from LibLoader will not make it
+   ### available directly after loading all the function. But
+   ### calling BlockScriptEvaluator will load this function 
+   ### and be accessible after uses of BlockScriptEvaluator.
+   ### 
+   ### Considering as weak-link toward this function access make 
+   ### it untrivial to start function BlockScriptEvaluator only 
+   ### to ensure that function ZenityScriptMsg can be asseccible.
+   ### 
+   ### Instead It was designed to call it from prefixed-variable
+   ### BSEFuncStart=ZenityScriptMsg BlockScriptEvaluator will 
+   ### load it properly, but it's a laxity way to call 
+   ### ZenityScriptMsg without using teh proper caller-method  
+   ### developped to ensure private function does have to be 
+   ### handled like internal stuff and not global structure. 
+   ### 
+   ### A Weak link for ???
+   ### As library development in linux does imply existence of 
+   ### weak-references, duplicated object/function to allow 
+   ### calling multiples version of application without 
+   ### recompiling all the stuff for 'oldies' or odd version of 
+   ### 'stuff' that persist and have to handled as,  this situation
+   ### of leaving a weak reference as is and not moving the 
+   ### function ZenityScriptMsg inside it's own function and not 
+   ### sub-function is a work to elaborate function such 
+   ### GetVarReference that to require the function to be listed 
+   ### in function and not sub-function to read it's details, make 
+   ### it body-less for ZenityScriptMsg which is costing less in 
+   ### evaluation call and amount of 'if' is reduced, so make it 
+   ### more economic. This make this library develop counter-part  
+   ### function like GetVarReference, to access it or simply set
+   ### prefixed-variable to unset or not upon call of 
+   ### GetVarReference, an honest attempt to achieve object-like 
+   ### function to carry permission to acces them on a specific  
+   ### way. 
+   ### 
+   ### 
+   echo -ne "\nUnsetting function ${__call_locality[0]}\n" > /dev/stderr ; 
+   unset ${__call_locality[1]} ; 
   }
   
   function ZenityGetBodyDef()

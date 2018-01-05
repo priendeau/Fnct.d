@@ -773,7 +773,7 @@ function VirtualZope_pip_install()
     eval $( __in_for  ArrayProcList \${ArrayProcList[\${intArrayProcList}]} ) ;
 }
 
-function pip-install()
+function pip_install()
 {
   eval $( __call_localityLocalName=PIPInstall __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
   function __fnct_pip_install()
@@ -786,7 +786,7 @@ function pip-install()
   
   eval $( __in_for ArrayArg __fnct_pip_install ) ;
 }
-function pip-upgrade()
+function pip_upgrade()
 {
   eval $( __call_localityLocalName=PIPInstall __call_localityDisplayFunctionEntry=1 __call_locality ) ; 
   function __fnct_pip_install()
