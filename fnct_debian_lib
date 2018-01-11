@@ -2983,27 +2983,27 @@ if [ "${versionBSE:=0.0.0}" == "0.0.0" ] ; then
    ### added inside CAIsAddDebug, add following item: DisplayDebug,DisplayEntry,DisplayCmd 
    eval $( eval CAFunctName=BlockScriptEvaluator CAIsAddDebug=True CAIsChildBoot=True CAIsAddParent=False CallArgument ) ; 
   fi 
-  if [ "${Arg0:=--startservices}" != "--get" ] ; then 
-   local StrAction=${BSEAction:=Welcome};
-   local StrActionList=${BSEActionList:=Welcome:ZenityScriptMsg,BodyDef:ZenityGetBodyDef,AwkDef:ZenityGetAwkDef,};
-   local StrExtraVarList=${BSEVarList:=None};
-   local StrVTVRegistry=${BSEVTVReg:=VTVIsDebugDisplay=False,VTVIsSlowDebug=False,VTVIsWhiteList=True,VTVIsArrayStyleInsert=True,VTVIsValueReAssign=True,VTVIsValueToConvert=False,VTVIsQuotedValue=True};
-   local StrVTVWhiteList=${BSEVTVWhiteList:=UUID};
-   local StrAppsZenity=${BSEZenityApps=/usr/bin/zenity} ; 
+  local -a ArrayMsg ;
+  
+  ArrayMsg[0]="Entry in function" ;
+  ArrayMsg[1]="Instance ID:__UUID__" ; 
+  ArrayMsg[2]="__TITLE__: __CMD__" ; 
+  ArrayMsg[3]="Verbose Status:\n\tBoolDisplayDebug        : __DISPLAYDEBUG__\n\tBoolDisplayEntry        : __DISPLAYENTRY__\n\tBoolDisplayCmd          : __DISPLAYCMD__\n\tBoolDisplayParserNotice : __DISPLAYPARSERNOTICE__" ; 
+  
+  local StrAction=${BSEAction:=Welcome};
+  local StrActionList=${BSEActionList:=Welcome:ZenityScriptMsg,BodyDef:ZenityGetBodyDef,AwkDef:ZenityGetAwkDef,};
+  local StrExtraVarList=${BSEVarList:=None};
+  local StrVTVRegistry=${BSEVTVReg:=VTVIsDebugDisplay=False,VTVIsSlowDebug=False,VTVIsWhiteList=True,VTVIsArrayStyleInsert=True,VTVIsValueReAssign=True,VTVIsValueToConvert=False,VTVIsQuotedValue=True};
+  local StrVTVWhiteList=${BSEVTVWhiteList:=UUID};
+  local StrAppsZenity=${BSEZenityApps=/usr/bin/zenity} ; 
 
-   local StrVarList="StrVTVRegistry,StrVTVWhiteList,BoolDisplayDebug,BoolDisplayCmd,BoolDisplayEntry,BoolDisplayParserNotice,StrAppsZenity,StrAction,StrActionList,StrExtraVarList,StrStartMain,StrParentApps,StrVarList,${StrExtraVarList}";
+  local StrVarList="StrVTVRegistry,StrVTVWhiteList,BoolDisplayDebug,BoolDisplayCmd,BoolDisplayEntry,BoolDisplayParserNotice,StrAppsZenity,StrAction,StrActionList,StrExtraVarList,StrStartMain,StrParentApps,StrVarList,${StrExtraVarList}";
 
-   local -a ArrayMsg ;
-   ArrayMsg[0]="Entry in function" ;
-   ArrayMsg[1]="Instance ID:__UUID__" ; 
-   ArrayMsg[2]="__TITLE__: __CMD__" ; 
-   ArrayMsg[3]="Verbose Status:\n\tBoolDisplayDebug        : __DISPLAYDEBUG__\n\tBoolDisplayEntry        : __DISPLAYENTRY__\n\tBoolDisplayCmd          : __DISPLAYCMD__\n\tBoolDisplayParserNotice : __DISPLAYPARSERNOTICE__" ; 
-   local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
-   local StrNameHelper="${__call_locality[1]}\n\t";
-   local StrSynopsis="\n\t__TEXT__\n";
-   local StrSummary="\n\t__TEXT__\n" ; 
-   local StrDescription="\n\t__TEXT__\n" ;
-  fi ### End-if Arg0
+  local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
+  local StrNameHelper="${__call_locality[1]}\n\t";
+  local StrSynopsis="\n\t__TEXT__\n";
+  local StrSummary="\n\t__TEXT__\n" ; 
+  local StrDescription="\n\t__TEXT__\n" ;
   
   function __main_StartServices()
   {
@@ -3016,6 +3016,91 @@ if [ "${versionBSE:=0.0.0}" == "0.0.0" ] ; then
    fi
    StrMsg=$( BlockScriptEvaluator --get ArrayMsg[0] ) ; 
    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
+  
+   local StrCmdVTV ;
+   # BodyDef AwkDef 
+   local -a ArrayScript=( Welcome ) ; 
+   StrMsgTpl=$( BlockScriptEvaluator --get ArrayMsg[2] ) ; 
+   StrMsg=${StrMsgTpl}
+   for (( intC=0; intC <= ${#ArrayScript[@]}-1 ; intC++ )) ; do 
+    StrMsg=${StrMsgTpl//__TITLE__/CMD:} ; 
+    StrCmdVTV=$( eval FALVarNameQuery=StrAction FALQueryAction=${ArrayScript[${intC}]} FALVarListName=StrActionList FilterActionList ) ; 
+    StrMsg=${StrMsg//__CMD__/${StrCmdVTV}} ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayCmd} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
+    StrMsg=${StrMsgTpl}
+   done 
+  
+  }
+  
+  function CharTagParser()
+  {
+   if [ ${versionCA:=0.0.0} == "0.0.0" ] ; then 
+    local -a ArrayArg=( $* ) ;
+    local -a __call_locality=( CTP CharTagParser ${StrParentApps} ) ;
+    local Arg0="${ArrayArg[0]}" ; 
+   elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
+    eval $( eval CAFunctName=CharTagParser CAIsAddDebug=True CAIsChildBoot=False CAIsAddParent=True CallArgument ) ;
+   fi
+   StrMsg=$( BlockScriptEvaluator --get ArrayMsg[0] ) ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
+   
+   local StrVarName=${CTPVarName:=StrVTVTpl} ;
+   local StrCharL=${CTPCharTag:=RBRACK:135,LBRACK:133,POUND:043,EXCLAM:041,LPARENT:050,RPARENT:051,DOLLAR:044,REDIRFR:074,REDIRTO:076,UNDERS:137,DBLDOT:072,BSLASH:134,FSLASH:057,SGUIL:047,GUIL:042,COMMA:073,PERCENT:45,AMPRSND:46,STAR:52,PLUS:53,MINUS:55,QMARK:77,PIPE:174,TILDE:176,LACCOL:173,RACCOL:175,EGAL:75,DOT:56,VIRGL:54}
+   local StrExtraCharL=${CTPCharExtra:=None} ;
+   if [ "${StrExtraCharL:=None}" == "None" ] ; then 
+    StrExtraCharL=${StrCharL} ; 
+   else
+    StrExtraCharL="${StrExtraCharL},${StrCharL}" ; 
+   fi 
+   local StrTpl=${CTPTpl:=__VAR__=\${__VAR__//__VAL1__/__VAL2__}} ; 
+   ### First, required to parse tha TAG __VAR__ for internal 
+   ### variable StrValue inside  StrTpl
+   StrTpl=${StrTpl//__VAR__/StrValue} ; 
+   eval """local StrValue=\${${StrVarName}}""" ; 
+   
+   #echo -ne "Parsing value ${StrVarName}\n\tContent:[${StrValue}]\n" > /dev/stderr ;
+   ### Extrack a Char ->  $( printf [OCTAL-NUMBER] "%c" )
+   ### the "%c" in printf is important to convert 
+   ### from Unsigned-Int to Unsigned-Char, which is suppose
+   ### to be same size, it transpose value in character. 
+   local StrSegPair  ; 
+   local StrSegMemberLeft ; 
+   local StrParse="${StrTpl}" ; 
+   while [ "${StrExtraCharL:=None}" != "${StrSegPair}" ] ; do 
+    ### Left Pair Created 
+    StrSegPair=${StrExtraCharL/%,[^,]*}
+    ### Left-Pair Removed from Main String.
+    StrExtraCharL=${StrExtraCharL/#${StrSegPair},} ; 
+    
+    ### From The Left-Pair, extracting left Member.
+    StrSegMemberLeft=${StrSegPair/%:[^:]*}
+    StrParse=${StrParse//__VAL1__/__${StrSegMemberLeft}__}
+    StrMember=${StrSegMemberLeft} ; 
+    
+    ### from The Left-Pair Extracted, removing the 
+    ### last Left-Member. 
+    StrSegMemberLeft=${StrSegPair/#${StrMember}:} ; 
+    StrTplPrintf="\__VAL__" ;
+    StrTplPrintf=${StrTplPrintf//__VAL__/${StrSegMemberLeft}} ;
+    StrOctalValue=$( printf "${StrTplPrintf}" "%c" ) ; 
+    
+    case ${StrMember:=None} in 
+       *UIL | EXCLAM | [BF]SLASH | [LR]BRACK | [LR]ACCOL | [L]PARENT | PIPE | AMPRSND | REDIR*  ) 
+               StrParse="${StrParse//__VAL2__/\\${StrOctalValue}}" ;;
+       * ) 
+               StrParse="${StrParse//__VAL2__/${StrOctalValue}}" ;; 
+    esac ;
+    
+    if [ ${BoolDisplayCmd:=False} == "True" ] ; then 
+     echo -ne "CMD:[ ${StrParse} ]\n" > /dev/stderr ; 
+    fi 
+
+    eval """${StrParse}""" ; 
+    #echo -ne "At member : ${StrMember}\nChar value:[${StrOctalValue}]\nTemplate used:[${StrParse}]\nTemplate value:[${StrValue}]\nRemain StrExtraCharL:[${StrExtraCharL}]\n" > /dev/stderr ; 
+    StrParse=${StrTpl} ; 
+   done
+   
+   echo -ne """${StrVarName}=\"${StrValue}\"""" ;
   }
   
   ### 
@@ -3038,27 +3123,9 @@ if [ "${versionBSE:=0.0.0}" == "0.0.0" ] ; then
    elif [ ${versionCA:=0.0.0} == "0.0.2" ] ; then 
     eval $( eval CAFunctName=FilterActionList CAIsAddDebug=True CAIsChildBoot=False CAIsAddParent=True CallArgument ) ;
    fi
-   local -A ArrayCharTag ; 
-   ArrayCharTag[COMMA]  ="\073"
-   ArrayCharTag[GUILL]  ="\042" ; 
-   ArrayCharTag[SGUIL]  ="\047" ; 
-   ArrayCharTag[FSLASH] ="\057" ; 
-   ArrayCharTag[DBLDOT] ="\072" ; 
-   ArrayCharTag[UNDERS] ="\137" ; 
-   ArrayCharTag[BSLASH] ="\092" ; 
-   ArrayCharTag[REDIRTO]="\076" ; 
-   ArrayCharTag[REDIRFR]="\074" ; 
-   ArrayCharTag[DOLLAR] ="\044" ; 
-   ArrayCharTag[LPARENT]="\050" ; 
-   ArrayCharTag[RPARENT]="\051" ; 
-   ArrayCharTag[EXCLAM] ="\041" ; 
-   ArrayCharTag[POUND]  ="\043" ; 
-   ArrayCharTag[LBRACK] ="\133" ; 
-   ArrayCharTag[RBRACK] ="\135" ; 
-   ### Extrack a Char ->  $( printf [OCTAL-NUMBER] "%c" )
-   ### the "%c" in printf is important to convert 
-   ### from Unsigned-Int to Unsigned-Char, which is suppose
-   ### to be same size, it transpose value in character. 
+   local StrMsg=$( BlockScriptEvaluator --get ArrayMsg[0] ) ; 
+   local StrMsgTpl=$( BlockScriptEvaluator --get ArrayMsg[2] ) ;
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
    
    local StrListVarName=${FALVarListName:=StrActionList} ; 
    local StrVarQuery=${FALVarNameQuery:=StrAction} ; 
@@ -3067,63 +3134,214 @@ if [ "${versionBSE:=0.0.0}" == "0.0.0" ] ; then
    local StrQueryAction=${FALQueryAction:=Welcome}  ;
    local StrDefVTVReg=${FALVTVRegistry:=StrVTVRegistry} ;
    local StrDefVTVWhiteL=${FALVTVWhiteList:=StrVTVWhiteList} ; 
-   local StrVTVTpl="""eval __DOLLAR___LPARENT___ eval __DOLLAR__{__VTV_REG__//,/ } \
-            VTVWhiteListTransfert=__GUILL____DOLLAR__{__VTV_WHITE__}__GUILL__  \
-            VTVValueEntry=__GUILL____DOLLAR__{StrVarList},__DOLLAR__{StrFuncVarList}__GUILL__ \
-            ValueToVariable __RPARENT__ __FUNCT__ ;
-   """ ;
+   local StrVTVTpl="eval __DOLLAR____LPARENT__ eval __DOLLAR____LACCOL____VTV_REGISTRY____FSLASH____FSLASH____VIRGL____FSLASH__ __RACCOL__ VTVWhiteListTransfert=__GUIL____DOLLAR____LACCOL____VTV_WHITE____RACCOL____GUIL__ VTVValueEntry=__GUIL____DOLLAR____LACCOL__StrVarList__RACCOL____VIRGL____DOLLAR____LACCOL__StrFuncVarList__RACCOL____GUIL__ ValueToVariable __RPARENT__ __FUNCT__ " ;
    ### From prompt, pre-fixed variable FALVarList
    ### is equivalent to main-variable StrVarList and 
    ### it's purpose is to add any other variable-name
    ### where should exist a trace inside this function
    ### instance or even from prompt... 
    local StrFuncVarList=${FALVarList:=None}; 
-   StrMsg=$( BlockScriptEvaluator --get ArrayMsg[0] ) ; 
-   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
 
    local -A ArrayBashTpl ;
-   ArrayBashTpl['A']="""__MASTER__=\${__MASTER__/#\${__SLAVE__}__CSV__}""" ; 
-   ArrayBashTpl['B']="""__SLAVE__=\${__MASTER__/%__CSV__[^__CSV__]*}""" ; 
+   local StrAddTemplate ;
+   ###StrAddTemplate="""__MASTER__=__BSLASH____DOLLAR____LACCOL____MASTER__/#__BSLASH____DOLLAR____LACCOL____SLAVE____RACCOL____CSV____RACCOL__""" ; 
+   ### Group Extractor, Extract Member from Group.
+   StrAddTemplate="__MASTER__=__BSLASH____DOLLAR____LACCOL____SLAVE____FSLASH____PERCENT____CSV____LBRACK__^__CSV____RBRACK____STAR____RACCOL__";
+   StrMsg=${StrMsgTpl} 
+   StrMsg=${StrMsg//__TITLE__/Initial A Template}
+   StrMsg=${StrMsg//__CMD__/${StrAddTemplate}}
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
+   
+   eval $( CTPIsDisplayEntry=True CTPIsDisplayCmd=False CTPIsDisplayDebug=True CTPVarName=StrAddTemplate CharTagParser ) ;
+   ArrayBashTpl['A']=${StrAddTemplate} ;
+   StrMsg=${StrMsgTpl} 
+   StrMsg=${StrMsg//__TITLE__/New A Template}
+   StrMsg=${StrMsg//__CMD__/${StrAddTemplate}}
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
+   
+   ### Group Reducer ., Remove a pair of member from Group
+   ###StrAddTemplate="""__SLAVE__=__BSLASH____DOLLAR____LACCOL____MASTER__/%__CSV__[^__CSV__]*__RACCOL__"""
+   StrAddTemplate="__SLAVE__=__BSLASH____DOLLAR____LACCOL____MASTER____FSLASH____POUND____BSLASH____BSLASH____DOLLAR____LACCOL____MASTER____FSLASH____PERCENT____CSV____LBRACK__^__CSV____RBRACK____STAR____RACCOL____CSV____RACCOL__" ; 
+   echo -ne "Initial B Template: ${StrAddTemplate}\n" > /dev/stderr 
+   StrMsg=${StrMsgTpl} 
+   StrMsg=${StrMsg//__TITLE__/Initial B Template}
+   StrMsg=${StrMsg//__CMD__/${StrAddTemplate}}
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
+   
+   eval $( CTPIsDisplayEntry=True CTPIsDisplayCmd=False CTPIsDisplayDebug=True CTPVarName=StrAddTemplate CharTagParser ) ;
+   ArrayBashTpl['B']=${StrAddTemplate} ; 
+   StrMsg=${StrMsgTpl} 
+   StrMsg=${StrMsg//__TITLE__/New B Template}
+   StrMsg=${StrMsg//__CMD__/${StrAddTemplate}}
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
+   
    
    eval local "StrVarListAct=\${${StrListVarName}}" ; 
    eval local "StrVarQueryAct=\${${StrVarQuery}}" ; 
    local StrContentStrip=${StrVarListAct//,/} ; 
    local IntContentStrip=$(( ${#StrVarListAct} - ${#StrContentStrip} )) ; 
 
-   echo -ne "\nReading from Variable:${StrListVarName}\nShould report ${IntContentStrip} action(s) listed.\n\nQuery Variable Name: ${StrVarQuery}\nShould query for action: ${StrVarQueryAct}\n" > /dev/stderr ; 
-   echo -ne "All the content:[${StrVarListAct}]\n" > /dev/stderr ; 
+   StrMsg="\nReading from Variable:${StrListVarName}\nShould report __INT__ action(s) listed.\n\nQuery Variable Name: __QUERY__\nShould query for action: __ACTION__\n" > /dev/stderr ; 
+   StrMsg=${StrMsg//__INT__/${IntContentStrip}} ;
+   StrMsg=${StrMsg//__QUERY__/${StrVarQuery}} ;
+   StrMsg=${StrMsg//__ACTION__/${StrVarQueryAct}} ;
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
+   
+   StrMsg="All the content:[__LIST__]" ; 
+   StrMsg=${StrMsg//__LIST__/${StrVarListAct}} ; 
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
+   #echo -ne "All the content:[${StrVarListAct}]\n" > /dev/stderr ; 
    #eval StrASeg=$( echo "${StrContent}" | sed 's/$/${StrGroupSep}/g ; s/[${StrGroupSep}]\{1,\}$/${StrGroupSep}/g' ) ;
-   StrASeg=$( echo ${StrVarListAct} |  sed 's/$/,/g ; s/[,]\{1,\}$/,/g' ) ;
-   echo -ne "Group at the entry: ${StrASeg}\n" > /dev/stderr ; 
-   ArrayBashTpl['ASeg']=${ArrayBashTpl['A']//__CSV__/${StrGroupSep}}
-   ArrayBashTpl['BSeg']=${ArrayBashTpl['B']//__CSV__/${StrGroupSep}}
-   ArrayBashTpl['CSeg']=${ArrayBashTpl['B']//__CSV__/${StrPairSep}}
+   StrASeg=$( echo "${StrVarListAct}" |  sed 's/$/,/g ; s/[,]\{1,\}$/,/g' ) ;
    
+   StrMsg=${StrMsgTpl} 
+   StrMsg=${StrMsg//__TITLE__/Group at the entry}
+   StrMsg=${StrMsg//__CMD__/${StrASeg}} ;
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
+
+   ArrayBashTpl['ASeg']=${ArrayBashTpl['A']} ; 
+   ArrayBashTpl['BSeg']=${ArrayBashTpl['B']} ; 
+   ArrayBashTpl['CSeg']=${ArrayBashTpl['A']} ; 
+   ArrayBashTpl['DSeg']=${ArrayBashTpl['B']} ; 
    
-   for (( IntA=0 ; IntA <= ${IntContentStrip}-1 ; IntA++ )) ; do 
-    IntCountCall=$((${IntCountCall}+1)) ; 
-    ArrayBashTpl['ASeg']=${ArrayBashTpl['ASeg']//__MASTER__/StrASeg} ; 
-    ArrayBashTpl['ASeg']=${ArrayBashTpl['ASeg']//__SLAVE__/StrBSeg} ; 
+   ArrayBashTpl['ASeg']=${ArrayBashTpl['ASeg']//__CSV__/${StrGroupSep}} ; 
+   ArrayBashTpl['BSeg']=${ArrayBashTpl['BSeg']//__CSV__/${StrGroupSep}} ; 
+   ArrayBashTpl['CSeg']=${ArrayBashTpl['CSeg']//__CSV__/${StrPairSep}} ; 
+   ArrayBashTpl['DSeg']=${ArrayBashTpl['DSeg']//__CSV__/${StrPairSep}} ; 
+   
+   local StrCmdTpl ;
+   local BoolQueryFound=False ; 
+   #for (( IntA=0 ; IntA <= ${IntContentStrip}-1 ; IntA++ )) ; do 
+   #IntCountCall=$(( ${IntCountCall}+1 )) ; 
+   while [ ${BoolQueryFound:=False} != "True" ] ; do 
+
+    ### In case of a ArrayBashTpl['A'] template, The __SLAVE__should 
+    ### be the incoming variable to treat, so __MASTER__ stay a new
+    ### declaration holding the part. 
+    ### So it make this operation creating StrBSeg holding part from
+    ### StrASeg. 
+    ArrayBashTpl['ASeg']=${ArrayBashTpl['ASeg']//__MASTER__/StrBSeg} ; 
+    ArrayBashTpl['ASeg']=${ArrayBashTpl['ASeg']//__SLAVE__/StrASeg} ; 
+    
+    ### In case of a ArrayBashTpl['B'] the order of the command assignation
+    ### work in way : __SLAVE__=__MASTER__ , where there is operation
+    ### on __MASTER__ to have __SLAVE__ own the part. So inside Action
+    ### of Aseg, a cmd will issue the creation of BSeg, or StrBSeg, which 
+    ### hold first pair of KeyAction:function . The action of 
+    ### ArrayBashTpl['BSeg'], will consist to reduce StrASeg to reduce this 
+    ### pair KeyAction:function of it. Since the operation was reducing 
+    ### StrBSeg out of it's operation for reduction: 
+    ### if BSeg == ${ASeg/%,[^,]*} :
+    ###    ${ASeg/#${BSeg},} === ${ASeg/#${ASeg/%,[^,]*},}
+    ### So inside the template ArrayBashTpl['B'] __MASTER__ take the role
+    ### of StrASeg and __SLAVE__ take also StrASeg as the tripple egality
+    ### show the equivalent. 
+    ### 
     ArrayBashTpl['BSeg']=${ArrayBashTpl['BSeg']//__MASTER__/StrASeg} ; 
-    ArrayBashTpl['BSeg']=${ArrayBashTpl['BSeg']//__SLAVE__/StrBSeg} ; 
-    ArrayBashTpl['CSeg']=${ArrayBashTpl['BSeg']//__MASTER__/StrBSeg} ; 
-    ArrayBashTpl['CSeg']=${ArrayBashTpl['CSeg']//__SLAVE__/StrCSeg} ; 
+    ArrayBashTpl['BSeg']=${ArrayBashTpl['BSeg']//__SLAVE__/StrASeg} ; 
+    
+    ### 
+    ### In case of CSeg, it require a ArrayBashTpl['A'] to extract 
+    ### the member, and the function . __MASTER__ will get the 
+    ### creation of StrCSeg and __SLAVE__ will hold StrBSeg for 
+    ### operation over it. 
+    ### 
+    ArrayBashTpl['CSeg']=${ArrayBashTpl['CSeg']//__MASTER__/StrCSeg} ; 
+    ArrayBashTpl['CSeg']=${ArrayBashTpl['CSeg']//__SLAVE__/StrBSeg} ; 
+    
+    ### 
+    ArrayBashTpl['DSeg']=${ArrayBashTpl['DSeg']//__MASTER__/StrBSeg} ; 
+    ArrayBashTpl['DSeg']=${ArrayBashTpl['DSeg']//__SLAVE__/StrDSeg} ; 
     
     #echo -ne "ASeg: ${ArrayBashTpl['ASeg']}\nBSeg: ${ArrayBashTpl['BSeg']}\n" > /dev/stderr ; 
-    eval ${ArrayBashTpl['ASeg']} ;
-    eval ${ArrayBashTpl['BSeg']} ;
-    eval ${ArrayBashTpl['CSeg']} ;
+    StrCmdTpl=${ArrayBashTpl['ASeg']} ; 
+   
+    eval """${ArrayBashTpl['ASeg']}""" ; 
+    eval """${ArrayBashTpl['BSeg']}""" ; 
+    eval """${ArrayBashTpl['CSeg']}""" ; 
+    eval """${ArrayBashTpl['DSeg']}""" ; 
+    
+    if [ "${StrCSeg}" == "${StrQueryAction}" ] ; then 
+     BoolQueryFound="True" ;
+    fi
+    #eval ${ArrayBashTpl['ASeg']} ;
+    #eval ${ArrayBashTpl['BSeg']} ;
+    #eval ${ArrayBashTpl['CSeg']} ;
+    StrMsg=${StrMsgTpl} ;
+    StrMsg=${StrMsg//__TITLE__/ASeg Template} ; 
+    StrMsg="""${StrMsg//__CMD__/${ArrayBashTpl['ASeg']}\\n\\tASeg value:__VALUE__}""" ; 
+    StrMsg=${StrMsg//__VALUE__/${StrASeg}} ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-CMD" VerbState=${BoolDisplayCmd} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
+    
+    StrMsg=${StrMsgTpl} ;
+    StrMsg=${StrMsg//__TITLE__/BSeg Template} ; 
+    StrMsg="""${StrMsg//__CMD__/${ArrayBashTpl['BSeg']}\\n\\tBSeg value:__VALUE__}"""; 
+    StrMsg=${StrMsg//__VALUE__/${StrBSeg}} ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-CMD" VerbState=${BoolDisplayCmd} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
+    
+    StrMsg=${StrMsgTpl} ;
+    StrMsg=${StrMsg//__TITLE__/CSeg Template} ; 
+    StrMsg="""${StrMsg//__CMD__/${ArrayBashTpl['CSeg']}\\n\\tCSeg value:__VALUE__}""" ; 
+    StrMsg=${StrMsg//__VALUE__/${StrCSeg}} ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-CMD" VerbState=${BoolDisplayCmd} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
+    
+    StrMsg=${StrMsgTpl} ;
+    StrMsg=${StrMsg//__TITLE__/DSeg Template} ; 
+    StrMsg="""${StrMsg//__CMD__/${ArrayBashTpl['DSeg']}\\n\\tDSeg value:__VALUE__}""" ; 
+    StrMsg=${StrMsg//__VALUE__/${StrDSeg}} ; 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-CMD" VerbState=${BoolDisplayCmd} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
     #ArrayBashTpl['CSeg']=${ArrayBashTpl['ASeg']//__MASTER__/StrBSeg} ; 
     #ArrayBashTpl['CSeg']=${ArrayBashTpl['ASeg']//__SLAVE__/StrASeg} ; 
 
     #eval StrBSeg=${StrASeg/%,[^,]*} ; 
     #StrASeg=${StrASeg/#${StrBSeg},} ; 
-    StrCSeg=$( echo "${StrBSeg}" | sed 's/,\{1,\}$//g' );
-    echo -ne "Pair:[${StrCSeg}]\n" > /dev/stderr ; 
+    #StrCSeg=$( echo "${StrCSeg}" | sed 's/,\{1,\}$//g' );
+    StrMsg=${StrMsgTpl} ;
+    StrMsg=${StrMsg//__TITLE__/Action:[__ACT__], Function:[__FUNCT__]} ; 
+    StrMsg=${StrMsg//__ACT__//${StrCSeg}} ; 
+    StrMsg=${StrMsg//__FUNCT__//${StrDSeg}} 
+    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-DEBUG" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
    done 
-   for index in ${!ArrayCharTag[@]} ; do
-     StrVTVTpl=${StrVTVTpl//__${index}__/${ArrayCharTag[${index}]}} ; 
-   done 
+   StrVTVTpl=${StrVTVTpl//__FUNCT__/${StrDSeg}} ; 
+   
+   StrMsg="Entry inside CharTagParser" ;
+   VerbMsg=${StrMsg} VerbHeader="${__call_locality[1]}-NOTICE" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
+   
+   ### Adding the White-List of label/variable which expect to 
+   ### be passed or signalized if the VTV declaration did not 
+   ### allow it. Variable StrDefVTVWhiteL, should hold 
+   ### only the variable name. Linked against BlockScriptEvaluator,
+   ### default WhiteList is associated with variable StrVTVWhiteList
+   ### found inside BSEVTVWhiteList. 
+   ### 
+   StrVTVTpl=${StrVTVTpl//__VTV_WHITE__/${StrDefVTVWhiteL}};
+   
+   ### Adding the Registry list cumuled inside top function of 
+   ### definied here. 
+   ### Defined in StrDefVTVReg, or from prefixed-variable 
+   ### BSEVTVReg. This function linked with BlockScriptEvaluator
+   ### it cumuled the information inside variable StrVTVRegistry
+   ### and FALVTVRegistry will change the variable name, but will
+   ### not own VTV registry... 
+   ### 
+   StrVTVTpl=${StrVTVTpl//__VTV_REGISTRY__/${StrDefVTVReg}};
+
+   eval CTPIsDisplayEntry=${CTPIsDisplayEntry:=${BoolDisplayEntry}} \
+        CTPIsDisplayCmd=${CTPIsDisplayCmd:=${BoolDisplayCmd}} \
+        CTPIsDisplayDebug=${CTPIsDisplayDebug:=${BoolDisplayDebug}} \
+        CTPVarName="StrVTVTpl" \
+        CharTagParser ;
+   StrMsg="End-of-CharTagParser"
+   VerbMsg=${StrMsg} VerbHeader="${__call_locality[1]}-NOTICE" VerbState=${BoolDisplayDebug} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
+   
+   StrMsg=${StrMsgTpl} ;
+   StrMsg=${StrMsg//__TITLE__/Template VTV} ; 
+   StrMsg=${StrMsg//__CMD__/${StrVTVTpl} ]} ;  
+   VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-CMD" VerbState=${BoolDisplayCmd} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
+   
+   #for index in ${!ArrayCharTag[@]} ; do
+   #  StrVTVTpl=${StrVTVTpl//__${index}__/${ArrayCharTag[${index}]}} ; 
+   #done 
   }
   
   function ZenityScriptMsg()
