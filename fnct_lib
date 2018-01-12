@@ -223,6 +223,8 @@ function CreateSubSet()
  local StrArrayLib ; 
  local BoolLibraryBoot=${CSSIsStartWith:=True} ;
  local BoolUnloadLib=${CSSIsUnloadBefore:=True} ; 
+ local StrArrayLib=${CSSLibList:=_sub_Structure,fnct_debian_lib,_sub_Function_Appliance,_sub_jack_script,_sub_Git,_sub_setup_py_extra_cmd,_sub_ssh_handler,_sub_vlc_services,_sub_binary,_sub_PythonBoost} ;   
+ local BoolRevertLib=${CSSIsRevertingLib:=False}
  local StrSubSetCmd="""
  __OLD_LIB__ ; 
  __UNLOAD0__ ; 
@@ -261,19 +263,18 @@ function CreateSubSet()
   StrSubSetCmd=${StrSubSetCmd//__OLD_LIB__/declare -a OldAlib=( ${ArrayLib[@]} ) ; __OLD_LIB__} ;
   StrSubSetCmd=${StrSubSetCmd//__OLD_LIB__/unset ArrayLib} ;
  fi 
- if [ "${CSSIsRevertingLib:=False}" == "True" ] ; then 
+ if [ "${BoolRevertLib:=False}" == "True" ] ; then 
   echo -ne "Reverting actual subset ( ${StrArrayLib//,/ } ) to original configuration.\n" > /dev/stderr ; 
   StrArrayLib=${OldAlib[@]} ; 
  else
-  StrArrayLib="${CSSLibList:=_sub_Structure,fnct_debian_lib,_sub_Function_Appliance,_sub_jack_script,_sub_Git,_sub_setup_py_extra_cmd,_sub_ssh_handler,_sub_vlc_services,_sub_binary,_sub_PythonBoost}" ;   
+  StrArrayLib="${StrArrayLib}" ;   
   echo -ne "Submitted Library List: ${StrArrayLib//,/ }\n" > /dev/stderr ; 
  fi 
- 
- #declare -a ArrayLib=( ${StrArrayLib//,/ } ) ; 
+
  StrSubSetCmd=${StrSubSetCmd//__LIB_SUBSET__/declare -a ArrayLib=( ${StrArrayLib//,/ } )} ;  
  echo -ne "SubSet is ready and you can call LibLoader and will diretly use YOUR-SUBSET\n\tFor your specific uses.\nSubset member:[ ${ArrayLib[@]} ]\n" > /dev/stderr ; 
  ### Part of code outputed to allow re-creating the Library Subset. 
- #StrSubSetCmd=${StrSubSetCmd///} ;
+
  
  if [ "${BoolUnloadLib:=True}" == "True" ] ; then 
   StrSubSetCmd=${StrSubSetCmd//__UNLOAD0__/LibLoader --stopservices} ;
