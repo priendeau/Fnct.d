@@ -55,7 +55,7 @@ fi ### End-of if-SubStructureExtVerb == [True/False]
 ###
 if [ "${versionVTV:=0.0.2}" == "0.0.1" ] ; then 
   unset ValueToVariable ; 
-  . /etc/init.d/Fnct.D/482e0e5a-763b-11e6-8b1d-001e4c8856d6
+  . ${FNCTDLIBPATH}/482e0e5a-763b-11e6-8b1d-001e4c8856d6
 fi ### End-of if-versionVTV == 0.0.1 .
 ### 
 

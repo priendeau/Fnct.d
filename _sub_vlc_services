@@ -1109,6 +1109,71 @@ if [ "${versionNSS:=0.0.0}" == "0.0.0" ] ; then
    fi
   } 
   ### Model :VerbMsg=MSG VerbHeader=DEBUG VerbEvalForm=False VerbFormated=True VerbState=True VerbDev=/dev/stderr  Verbosis
+  
+  ### Shortcut, primitive to make easier uses of 
+  ### alternative to NC, Socket , from socket package.
+  ### 
+  ### Definition : SocketRe, stand for 
+  ### Socket Connection with Receipt Required
+  ### 
+  ### 
+  function SocketRe()
+  { 
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( SR SocketRe ) ;
+   local Arg0="${ArrayArg[0]}" ; 
+   local StrParentApps=${__call_locality[1]} ;
+   local StrApps=${SRApps:=/usr/bin/socket} ;
+   local StrAppsOpt=${SRAppsOpt:=-q} ;
+   local StrAddr=${SRAddr:=127.0.0.1} ;
+   local StrPort=${SRPort:=5083} ; 
+   local StrCmd=${SRCmd:=help} ; 
+   local StrCmdTpl=${SRDefaultTpl:="""echo -ne \"__VALUE__\n\" | __APPS__ __OPT__ __ADDR__ __PORT__"""} ; 
+   local StrCmdSend=${StrCmdTpl} ; 
+   if [ "${StrAppsOpt:=None}" == "None" ] ; then 
+    StrAppsOpt = "" ; 
+   fi 
+   StrCmdSend=${StrCmdSend//__VALUE__/${StrCmd}} ; 
+   StrCmdSend=${StrCmdSend//__APPS__/${StrApps}} ; 
+   StrCmdSend=${StrCmdSend//__OPT__/${StrAppsOpt}} ; 
+   StrCmdSend=${StrCmdSend//__ADDR__/${StrAddr}} ; 
+   StrCmdSend=${StrCmdSend//__PORT__/${StrPort}} ; 
+   ${StrCmdSend} ; 
+  }
+  ### 
+  ### 
+  ### 
+  ### 
+  
+  ### Shortcut, primitive to make easier uses of 
+  ### 
+  ### Definition : SocketNr, stand for 
+  ### Socket Connection with No Receipt Required
+  ### 
+  function SocketNr()
+  { 
+   local -a ArrayArg=( $* ) ;
+   local -a __call_locality=( SN SocketNr ) ;
+   local Arg0="${ArrayArg[0]}" ; 
+   local StrApps=${SNApps:=/usr/bin/socket} ;
+   local StrAppsOpt=${SNAppsOpt:=None} ;
+   local StrAddr=${SNAddr:=127.0.0.1} ;
+   local StrPort=${SNPort:=5083} ; 
+   local StrCmd=${SNCmd:=help} ; 
+   local StrCmdTpl=${SNDefaultTpl:="""echo -ne \"__VALUE__\n\" | __APPS__ __OPT__ __ADDR__ __PORT__"""} ; 
+   local StrCmdSend=${StrCmdTpl} ; 
+   if [ "${StrAppsOpt:=None}" == "None" ] ; then 
+    StrAppsOpt = "" ; 
+   fi 
+   StrCmdSend=${StrCmdSend//__VALUE__/${StrCmd}} ; 
+   StrCmdSend=${StrCmdSend//__APPS__/${StrApps}} ; 
+   StrCmdSend=${StrCmdSend//__OPT__/${StrAppsOpt}} ; 
+   StrCmdSend=${StrCmdSend//__ADDR__/${StrAddr}} ; 
+   StrCmdSend=${StrCmdSend//__PORT__/${StrPort}} ; 
+   ${StrCmdSend} ; 
+  }
+  ### 
+
   ### Shortcut, primitive to make easier uses of 
   ### NetworkClientConnection.awk as NC replacement.
   ### 
@@ -1156,7 +1221,15 @@ if [ "${versionNSS:=0.0.0}" == "0.0.0" ] ; then
    eval $( eval CAFunctName=NetSocketServices CAIsAddParent=False CallArgument ) ;
   fi
 
-  local StrSocketApps=${NSSSocketApps:=/bin/nc} ; 
+  local StrSocketSrApps=${NSSSocketReApps:=/bin/nc} ; 
+  local StrSocketSeApps=${NSSSocketSrApps:=/bin/nc} ; 
+  local StrSocketAppsReg=${NSSAppsSocketRegistry:=}
+  ### NSSUseSocket and NSSSocketAutoclose are 
+  ### prefixed variable for using application socket
+  ### from debian package, socket. A network client 
+  ### similar to nc but faster .
+  local BoolUseSocket=${NSSUseSocket:=False} ; 
+  local BoolAutocloseSocket=${NSSSocketAutoclose:=True} ;
   local StrSocketAddr=${NSSAddresses:=127.0.0.1} ; 
   local StrSocketPort=${NSSPort:=5083} ; 
   local StrSocketAppsParam=${NSSSocketAppsOpt:=-i 3} ;
@@ -1184,11 +1257,22 @@ if [ "${versionNSS:=0.0.0}" == "0.0.0" ] ; then
    
    local StrBufferCmd="-O __BUFFER__" ; 
    StrBufferCmd=${StrBufferCmd//__BUFFER__/${StrSocketBuffer}} ; 
-   local StrCmd="${StrSocketApps} ${StrBufferCmd} ${StrSocketAppsParam} ${StrSocketAddr} ${StrSocketPort}" ; 
-   if [ "${BoolIsVerbose:=False}" == "True" ] ; then
-    echo -ne "Application ${__call_locality[1]} using following parameter:\n\tCMD:[${StrCmd}]\n" > /dev/stderr ; 
-   fi
-   ${StrCmd}
+   if [ "${BoolUseSocket:=False}" == "True" ] ; then 
+    local StrCmdTpl="__ADDR__ __PORT__ SocketNr" ; 
+    if [ "${BoolAutocloseSocket:=True}" == "False" ] ; then 
+     StrCmdTpl="__ADDR__ __PORT__ SocketRe" ; 
+    fi
+    local StrCmd=${StrCmdTpl} ; 
+    StrCmd=${StrCmd//__ADDR__/${StrSocketAddr}} ; 
+    StrCmd=${StrCmd//__PORT__/${StrSocketPort}} ; 
+   else
+    local StrCmd="${StrSocketApps} ${StrBufferCmd} ${StrSocketAppsParam} ${StrSocketAddr} ${StrSocketPort}" ; 
+    if [ "${BoolIsVerbose:=False}" == "True" ] ; then
+     echo -ne "Application ${__call_locality[1]} using following parameter:\n\tCMD:[${StrCmd}]\n" > /dev/stderr ; 
+    fi
+    ${StrCmd}
+   fi 
+   
    #${StrSocketApps} ${StrSocketBuffer} ${StrSocketAppsParam} ${StrSocketAddr} ${StrSocketPort}  ; 
   }
   local StrSwitchMessages="${StrSwitchesShow}${StrStartSwitches}\n${StrStopSwitches}\n${StrGetMsgSwitches}\n${StrListMsgSwitches}\n${StrCompWordMsgSwitches}\n" ;
@@ -1567,11 +1651,12 @@ if [ "${versionVSC:=0.0.0}" == "0.0.0" ] ; then
     if [ "${UUID:=None}" != "None" ] ; then 
      StrCacheReference=${StrCacheRefTpl/__UUID__/${UUID}} ;
      ArrayOutMsg[${#ArrayOutMsg[@]}]="UUID Instance discovered:\n\tUUID: ${UUID}\n\tfile ${StrCacheReference} will be used as instance-registration.\n" ; 
-     StrContent=$( eval GBLDFileStoreInfo=${StrCacheReference} GBLDAction=GetContent GetterByLineData ) ;  
-     StrSig=$( eval GBLDFileStoreInfo=${StrCacheReference} GBLDAction=GetHeader GetterByLineData ) ;  
-     StrSha1Sum=$( eval GBLDFileStoreInfo=${StrCacheReference} GBLDAction=ShaSum1Content GetterByLineData  ) 
      
+     ### Moving GetterByLineData to a location where File location is certified. 
      if [ -f ${StrCacheReference} ] ; then 
+      StrContent=$( eval GBLDFileStoreInfo=${StrCacheReference} GBLDAction=GetContent GetterByLineData ) ;  
+      StrSig=$( eval GBLDFileStoreInfo=${StrCacheReference} GBLDAction=GetHeader GetterByLineData ) ;  
+      StrSha1Sum=$( eval GBLDFileStoreInfo=${StrCacheReference} GBLDAction=ShaSum1Content GetterByLineData  ) 
      
       ### Counting Number of CSV by reducing the String from them and calculating 
       ### the final-length after reduction. 
@@ -1617,7 +1702,8 @@ if [ "${versionVSC:=0.0.0}" == "0.0.0" ] ; then
         fi 
         eval "StrEval=\"[ ${ArrayVarCreation[0]} ; \${${ArrayVarCreation[0]}} ]\"" ; 
         ArrayOutMsg[${#ArrayOutMsg[@]}]="Variable created:[${StrEval}]\n" ;
-        if [ ${IntCountCall} -gt $((${IntContentStrip}+1)) ] ; then 
+        local IntTestCS=$(( ${IntContentStrip}+1 )) ;
+        if [ ${IntCountCall} -gt ${IntTestCS:=0} ] ; then 
          ArrayErrProcMsg[${#ArrayErrProcMsg[@]}]="Breaking Code for abnormal looping\n\tExcess number of parameter to filter set to ${IntContentStrip}, it already excess the limit.\n" ; 
          BoolProcessErr=True ; 
          break ; 
@@ -1641,7 +1727,7 @@ if [ "${versionVSC:=0.0.0}" == "0.0.0" ] ; then
     if [ ${BoolRejectSigErr:=False} == "True" ] ; then 
      ### Display All the error messages, encountered. 
      if [ ${BoolDisplayDebug:=False} == "True" ] ; then 
-      for (( intMsg=0; intMsg<=${#ArrayErrMsg[@]}-1 ; intMsg++ )) ; do 
+      for (( intMsg=0; intMsg <= $(( ${#ArrayErrMsg[@]} - 1 )) ; intMsg++ )) ; do 
        echo -ne "${ArrayErrMsg[${intMsg}]}" > /dev/stderr  ; 
       done 
      fi
@@ -1660,7 +1746,7 @@ if [ "${versionVSC:=0.0.0}" == "0.0.0" ] ; then
     else
      # Everything went OK, display all the verbose. 
      if [ ${BoolDisplayDebug:=False} == "True" ] ; then 
-      for (( intMsg=0; intMsg<=${#ArrayOutMsg[@]}-1 ; intMsg++ )) ; do 
+      for (( intMsg=0; intMsg <= $(( ${#ArrayOutMsg[@]} - 1 ))  ; intMsg++ )) ; do 
        echo -ne "${ArrayOutMsg[${intMsg}]}" > /dev/stderr  ; 
       done 
      fi
@@ -1874,8 +1960,8 @@ if [ "${versionVSC:=0.0.0}" == "0.0.1" ] ; then
        eval "${ArrayVarCreation[0]}=${ArrayVarCreation[2]}" ;
       fi 
       eval "StrEval=\"[ ${ArrayVarCreation[0]} ; \${${ArrayVarCreation[0]}} ]\"" ; 
-      ArrayMsg[7]
-      __EVAL__ ${StrEval}
+      #ArrayMsg[7]
+      #__EVAL__ ${StrEval}
       
      done ; 
   

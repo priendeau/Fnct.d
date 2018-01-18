@@ -318,6 +318,10 @@ function FnctDVersion()
  local StrExportVar="__VAR__" ; 
  local StrVersion ; 
  local StrArrayName=${FDVArrayName:=ArrayFnctDVersion} ; 
+ local BoolShowCmd=${FDVIsDisplayCmd:=False} ; 
+ local BoolRemoveArray=${FDVIsRemoveArray:=False} ; 
+ local StrArrayName=${FDVArrayName:=ArrayFnctDVersion} ;
+ local BoolDisplayVer=${FDVIsDisplayVersion:=True} ; 
  local StrSpacer="\t                                " ;
  local StrLoopCmd="""
  IntColLimit=0 ; 
@@ -335,36 +339,38 @@ function FnctDVersion()
   IntLenVar=\${#VerName} ;
   IntNewSpaceStart=0 ; 
   IntNewSpaceEnd=0 ; 
-  StrParseTplA=\${StrTplA} ; 
-  StrParseTplA=\${StrParseTplA//__VAR__/\${VerName}} ; 
-  IntTplLen=\${#StrParseTplA} ; 
-  if [ \$(( \${IntTplLen} % \${IntColLimit} )) -eq 0 ] ; then 
-   IntCond=1 ; 
-   IntNewSpaceStart=2 
-   IntNewSpaceEnd=\$(( ( \${IntColLimit} - \$(( \${IntTplLen} % \${IntColLimit} )) - ( \${IntColLimit} - 1 ) ) ))
-  else 
-   IntCond=2 ; 
-   IntNewSpaceStart=2 ;
-   IntNewSpaceEnd=\$(( ( \${IntColLimit} - \$(( \${IntTplLen} % \${IntColLimit} )) ) + 1 )) ; 
-  fi 
-  StrParseTplA=\${StrParseTplA//__SPACER__/\${StrSpacer:\${IntNewSpaceStart}:\${IntNewSpaceEnd}}} ; 
-  StrParseTplB=\${StrTplB} ; 
-  StrParseTplB=\${StrParseTplB//__TPL__/\${StrParseTplA}} ; 
-  StrParseTplB=\${StrParseTplB//__VERSION__/\${StrVersion}} ; 
-  echo -ne \"\${StrParseTplB}\" > /dev/stderr ; 
+  if [ \"\${BoolDisplayVer:=True}\" == \"True\" ] ; then 
+   StrParseTplA=\${StrTplA} ; 
+   StrParseTplA=\${StrParseTplA//__VAR__/\${VerName}} ; 
+   IntTplLen=\${#StrParseTplA} ; 
+   if [ \$(( \${IntTplLen} % \${IntColLimit} )) -eq 0 ] ; then 
+    IntCond=1 ; 
+    IntNewSpaceStart=2 
+    IntNewSpaceEnd=\$(( ( \${IntColLimit} - \$(( \${IntTplLen} % \${IntColLimit} )) - ( \${IntColLimit} - 1 ) ) ))
+   else 
+    IntCond=2 ; 
+    IntNewSpaceStart=2 ;
+    IntNewSpaceEnd=\$(( ( \${IntColLimit} - \$(( \${IntTplLen} % \${IntColLimit} )) ) + 1 )) ; 
+   fi 
+   StrParseTplA=\${StrParseTplA//__SPACER__/\${StrSpacer:\${IntNewSpaceStart}:\${IntNewSpaceEnd}}} ; 
+   StrParseTplB=\${StrTplB} ; 
+   StrParseTplB=\${StrParseTplB//__TPL__/\${StrParseTplA}} ; 
+   StrParseTplB=\${StrParseTplB//__VERSION__/\${StrVersion}} ; 
+   echo -ne \"\${StrParseTplB}\" > /dev/stderr ; 
+  fi
   StrExportVar=\"\${StrExportVar//__VAR__/\${VerName}=\${StrVersion} __VAR__}\"
   export \${VerName}=\"\${StrVersion}\" ; 
  done 
  """ ;
  StrLoopCmd=${StrLoopCmd//__ARRAY__/${StrArrayName}} ; 
- if [ "${FDVIsDisplayCmd:=False}" == "True" ] ; then 
+ if [ "${BoolShowCmd:=False}" == "True" ] ; then 
   echo -ne "Cmd:[${StrLoopCmd}]\n" > /dev/stderr ; 
  fi 
  eval """${StrLoopCmd}""" ; 
  StrExportVar=${StrExportVar//__VAR__/} ;
  echo ${StrExportVar} ;  
- if [ ${FDVIsRemoveArray:=False} == "True" ] ; then 
-  eval unset ${FDVArrayName:=ArrayFnctDVersion} ; 
+ if [ ${BoolRemoveArray} == "True" ] ; then 
+  eval unset ${StrArrayName} ; 
  fi ; 
 }
 
@@ -408,6 +414,7 @@ function LibLoader()
  local Arg0=${ArrayArg[0]} ;
  local IntStatusLib=${LLStatusDev:=0} ; 
  local BoolDisplayProg=${LLDisplayProg:=True} ;
+ local BoolNoInfoOnSub=${LLNoInfoOnUUID:=False} ; 
  local StrSwitchMessages="${StrSwitchesShow}${StrGetMsgSwitches}\n${StrStartSwitches}\n${StrStopSwitches}\n" ;
  
  local ArrayLibStatus=( "Testing Lib Fnct.D\n" "Registering Lib Fnct.D\n" )
@@ -420,33 +427,66 @@ function LibLoader()
  elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
   eval $( __GetVarReferenceList ) ;	
  elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
- ### Add LC_ALL check .
- ### it should remove it and turn back LC_ALL to ''.
- if [ "${LC_ALL:=C}" == "C" ] ; then 
-  export LC_ALL= ; 
- fi 
+  ### Add LC_ALL check .
+  ### it should remove it and turn back LC_ALL to ''.
+  if [ "${LC_ALL:=None}" != "None" ] 2> /dev/null  ; then 
+   export LC_ALL="" ; 
+  fi 
 
- if [ "${BoolDisplayProg:=True}" == "True" ] ; then
-   echo -ne "${ArrayLibStatus[${IntStatusLib}]}" > /dev/stderr ; 
- fi ;  
+  if [ "${BoolDisplayProg:=True}" == "True" ] ; then
+    echo -ne "${ArrayLibStatus[${IntStatusLib}]}" > /dev/stderr ; 
+  fi ;  
   ### Actually this algo did not unregister Chunk named by a UUID inside fnct_debian_lib... 
-  ArrayListFunc=( )  ; 
+  local -a ArrayListFunc=( )  ; 
+  local StrUUIDList ; 
+  local StrFileListUUID ; 
+  local IntNbMem=0 ; 
   for (( intx=0 ; intx <= ${#ArrayLib[@]}-1 ; intx++ )) ; do 
    _LibName=( ${ArrayLib[${intx}]//\// } ) ; 
    LibName=${_LibName[$((${#_LibName[@]}-1))]} ; 
    LibFile=${FNCTDLIBPATH}/${ArrayLib[${intx}]} ;
-   if [ ${BoolDisplayProg:=True} == "True" ] ; then
-    test -e ${LibFile} && echo -ne "Un-Loading...\t\t[ \033[01;33m${LibName}\033[00m ]\n" > /dev/stderr ;
-   fi 
+   StrFileListUUID="" ; 
    if [ -e ${LibFile} ] ; then 
-    ArrayListFunc=( $( cat ${LibFile} | egrep "^[\ \t]*function" | grep -v "pkg-config-all" | sed 's/[\)\(]//g;s/\(function \)\([A-Za-z0-9\-\_]*\)/\2/g;s/^\ *//g' | tr '[:cntrl:]' ' '  ) ) ; 
-    unset ${ArrayListFunc[@]} ;  
-   fi
+    if [ ${BoolDisplayProg:=True} == "True" ] ; then
+     echo -ne "Un-Loading...\t\t[ \033[01;33m${LibName}\033[00m ]\n" > /dev/stderr ;
+    fi 
+     StrUUIDList=$( egrep "^[\ \t]*function" ${LibFile} | grep -v "pkg-config-all" | sed 's/[\)\(]//g;s/\(function \)\([A-Za-z0-9\-\_]*\)/\2/g;s/^\ *//g' | tr '[:cntrl:]' ' '  ) ; 
+     ArrayListFunc=( ${StrUUIDList} ) ; 
+     unset ${ArrayListFunc[@]} ;  
+     ### Detection of UUID-File:
+     StrFileListUUID=$( egrep "^[\t\ \.]*\\\${FNCTDLIBPATH}/[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}" ${LibFile} | sed 's/\ \.\ / /g' | tr '[:cntrl:]' ' ' ) ; 
+     IntFileListUUID=${#StrFileListUUID}
+     #if [ ${IntFileListUUID:=0} -gt 0 ] ; then 
+      #if [ ${BoolDisplayProg:=True} == "True" ] ; then
+       #echo -ne "\t\t\t\t\033[01;30mDetected script: ${StrFileListUUID}.\033[00m ]\n" > /dev/stderr ;
+      #fi 
+     #fi 
+     local ArrayUUIDFile=( ${StrFileListUUID} ) ; 
+     local IntAUUID=$(( ${#ArrayUUIDFile[@]}-1 )); 
+     if [ ${IntAUUID:=0} -gt 0 ] ; then 
+      for (( intCU=0 ; intCU <= ${IntAUUID} ; intCU++)) ; do
+       eval """StrUUIDFile=${ArrayUUIDFile[${intCU}]}""" ; 
+       if [ -f ${StrUUIDFile} ] 2> /dev/null ; then 
+        ArrayListFunc=( $( egrep "^[\ \t]*function" ${StrUUIDFile} | grep -v "pkg-config-all" | sed 's/[\)\(]//g;s/\(function \)\([A-Za-z0-9\-\_]*\)/\2/g;s/^\ *//g' | tr '[:cntrl:]' ' '  ) ) ;  
+        unset ${ArrayListFunc[@]} ; 
+        IntNbMem=$(( ${#ArrayListFunc[@]}-1 )) ; 
+        if [ "${BoolDisplayProg:=True}" == "True" ] ; then
+         if [ "${BoolNoInfoOnSub:=False}" == "False" ] ; then 
+          StrNameUUID=${StrUUIDFile/${StrUUIDFile%/[^/]*}\//} ; 
+          StrNameUUID="${StrNameUUID:0:8}...${StrNameUUID:20:${#StrNameUUID}}" ; 
+          echo -ne "\t\t\t\033[01;30mIncluding ${StrNameUUID},  ${IntNbMem} member(s).\033[00m\n" > /dev/stderr ;
+         fi
+        fi 
+       fi
+      done 
+     
+     fi 
+   fi #End-If:-e:${LibFile}
   done 
  elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
  ### Add LC_ALL check .
- if [ "${LC_ALL:=None}" == "None" ] ; then 
-  export LC_ALL=C ; 
+ if [ "${LC_ALL:=None}" != "None" ] ; then 
+  export LC_ALL="" ; 
  fi 
  if [ "${BoolDisplayProg:=True}" == "True" ] ; then
    echo -ne "${ArrayLibStatus[${IntStatusLib}]}" > /dev/stderr ; 

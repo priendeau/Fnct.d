@@ -3045,7 +3045,7 @@ if [ "${versionBSE:=0.0.0}" == "0.0.0" ] ; then
    VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=${BoolDisplayEntry} VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr Verbosis ;
    
    local StrVarName=${CTPVarName:=StrVTVTpl} ;
-   local StrCharL=${CTPCharTag:=RBRACK:135,LBRACK:133,POUND:043,EXCLAM:041,LPARENT:050,RPARENT:051,DOLLAR:044,REDIRFR:074,REDIRTO:076,UNDERS:137,DBLDOT:072,BSLASH:134,FSLASH:057,SGUIL:047,GUIL:042,COMMA:073,PERCENT:45,AMPRSND:46,STAR:52,PLUS:53,MINUS:55,QMARK:77,PIPE:174,TILDE:176,LACCOL:173,RACCOL:175,EGAL:75,DOT:56,VIRGL:54}
+   local StrCharL=${CTPCharTag:=RBRACK:135,LBRACK:133,POUND:043,EXCLAM:041,LPARENT:050,RPARENT:051,DOLLAR:044,REDIRFR:074,REDIRTO:076,UNDERS:137,DBLDOT:072,BSLASH:134,FSLASH:057,SGUIL:047,GUIL:042,COMMA:073,PERCENT:45,AMPRSND:46,STAR:52,PLUS:53,MINUS:55,QMARK:77,PIPE:174,TILDE:176,LACCOL:173,RACCOL:175,EGAL:75,EQUAL:75,DOT:56,VIRGL:54,ACCIRC:136,AT:100,GREAT:76,LESS:74,PLUS:53,MINUS:55}
    local StrExtraCharL=${CTPCharExtra:=None} ;
    if [ "${StrExtraCharL:=None}" == "None" ] ; then 
     StrExtraCharL=${StrCharL} ; 
@@ -5291,9 +5291,16 @@ function GkSuZenityLoader()
  local BoolUpdateLdconfig=${GSZLUpdadeLdconfig:=True} ;
  local StrLdConfigUser=${GSZLLdconfigUser:=root} ;
  local StrLdconfigGreeting=${GSZLLdconfigGreeting:="Hint: Loading ldconfig on need if some module require to be loaded from ldconfig ( ex: from pip installation or easy_setup.py ) It can be accessible through Prefixed-var GSZLUpdadeLdconfig=True from GkSuZenityLoader."} ;
-	local BoolShowFGSZ=${GSZShowFuncGSZ:=True} ; 
- local BoolDisplayDebug=${GSZDisplayDebug:=False} ; 
- local StrVarList="BoolDisplayDebug,StrLdConfigUser,StrUser,StrApps,StrAppsOpt,StrTitle,StrFileInfo,StrCol0,StrCol1,StrRegSearch,StrDefaultCSV,IntDefaultColExtr,BoolShowUserSelection,BoolUpdateLdconfig,StrLdconfigGreeting,BoolShowFGSZ,StrVarList";
+	local BoolShowFGSZ=${GSZLShowFuncGSZ:=True} ; 
+ local BoolDisplayDebug=${GSZLDisplayDebug:=False} ; 
+ local StrLdConfOpt=${GSZLLdConfOpt:=--format=new -C __CACHE__};
+ local BoolUseRamDisk=${GSZLIsLdConfUseRam:=False} ; 
+ local StrRamDisk=${GSZLLdConfRamDsk:=/media/__USER__/ramdisk} ; 
+ local StrExtraVar=${GSZLExtraVarList:=None} ; 
+ if [ "${StrExtraVar:=None}" == "None" ] ; then 
+  StrExtraVar="" ; 
+ fi 
+ local StrVarList="BoolDisplayDebug,StrLdConfigUser,StrUser,StrApps,StrAppsOpt,StrTitle,StrFileInfo,StrCol0,StrCol1,StrRegSearch,StrDefaultCSV,IntDefaultColExtr,BoolShowUserSelection,BoolUpdateLdconfig,StrLdconfigGreeting,BoolShowFGSZ,BoolUseRamDisk,StrLdConfOpt,StrRamDisk,StrExtraVar,${StrExtraVar},StrVarList";
    
  function NotificationLdConfig()
  {
@@ -5326,7 +5333,21 @@ function GkSuZenityLoader()
 		local ArrayArg=( $* ) ; 
 		local __call_locality=( LN LdconfigNotification ) ; 
   local Arg0=${ArrayArg[0]} ;
-  NotificationLdConfig ; gksu --user ${StrLdConfigUser} ldconfig
+  StrRamDisk=${StrRamDisk//__USER__/${USER}} ; 
+  local StrApps=${LNApps:=/sbin/ldconfig} ;
+  local StrCacheLd="/__PATH__/ld.so.cache" 
+  if [ ${BoolUseRamDisk:=False} == "True" ] ; then 
+   if [ -d ${StrRamDisk} ] ; then
+    StrCacheLd=${StrCacheLd//__PATH__/${StrRamDisk}}
+   else
+    StrCacheLd=${StrCacheLd//__PATH__/etc} ;
+   fi
+  else
+   StrCacheLd=${StrCacheLd//__PATH__/etc} ; 
+  fi
+  StrLdConfOpt=${StrLdConfOpt//__CACHE__/${StrCacheLd}} ; 
+  NotificationLdConfig ; 
+  gksu --user ${StrLdConfigUser} "${StrApps} ${StrLdConfOpt}" ;
  }
  
 	function Loader()
@@ -5339,9 +5360,11 @@ function GkSuZenityLoader()
           BVTDisplayIf=${BoolDisplayDebug}        \
           BVTDisplayShowDebug=${BoolDisplayDebug} \
           BVTVarHold="StrLdconfigGreeting='${StrLdconfigGreeting}' ScreenDisplayLdconfigHint" \
+          BVTDisplayIf=${BoolDisplayDebug}        \
           BVTBoolVarName=\${BoolUpdateLdconfig}   \
           BVTBoolCase=True           \
           BVTBoolAssertion="LdconfigNotification" \
+          BVTVTVVarA=${StrVarList}   \ 
           BVTScopeTest=local         \
           BoolVarTest ) ; 
   eval $( eval BVTIdType=0           \
@@ -5349,6 +5372,7 @@ function GkSuZenityLoader()
           BVTDisplayShowDebug=${BoolDisplayDebug} \
           BVTVarName=StrLdConfigLoad \
           BVTVarHold='$( eval ${StrAppsLd} )'     \
+          BVTDisplayIf=${BoolDisplayDebug}        \
           BVTBoolVarName=\${BoolUpdateLdconfig}   \
           BVTBoolCase=True BVTBoolAssertion="$( eval ${StrAppsLd} )" \
           BVTScopeTest=local         \
@@ -5389,23 +5413,6 @@ function GkSuZenityLoader()
    StrMsg=${StrMsg//__VAR__/${StrUser}} ; 
    VerbMsg=${StrMsg} VerbHeader="DEBUG" VerbEvalForm=False VerbFormated=True VerbState=${BoolDisplayDebug} VerbDev=/dev/stderr  Verbosis
    
-   ### While this code was also being synthetized up-there 
-   #if [ "${StrUser:=none}" ==  "none" ] ; then 
-   # eval StrUser=$( eval VTVIsArrayStyleInsert=True   \
-   #              VTVValueEntry=${StrVarList} \
-   #              VTVIsValueReAssign=True     \
-   #              VTVIsValueToConvert=False   \
-   #              ValueToVariable ) ZenityContentListing ;
-   ### This code was replaced by the content up-there
-   #StrUser=$( ZCLCSV=${StrDefaultCSV} \
-   #   ZCLColExtr=${IntDefaultColExtr} \
-   #   ZCLFilePasswd=${StrFileInfo} \
-   #   ZCLTitle=${StrTitle} \
-   #   ZCLCol0=${StrCol0} \
-   #   ZCLCol1=${StrCol1} \
-   #   ZCLRegSearch=${StrRegSearch} \
-   #   ZCLSUS=${BoolShowUserSelection} ZenityContentListing ) ; 
-   #fi 
   if [ "${StrUser:=none}" == "none" ] ; then 
    echo -ne "Warning Invalid user: ${StrUser}\n" > /dev/stderr ; 
   else
