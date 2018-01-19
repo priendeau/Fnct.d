@@ -78,10 +78,26 @@ declare -a ArrayDateFormat=( "%Y%m%d_%H:%M:%S(UNIX(sec,ns):%s.%N)" "%Y%m%d_%H:%M
 unset FnctLibUnset ; 
 function FnctLibUnset()
 {
- IntCountDecl=$( declare -F | egrep -c "${FLUFnctName:=None}" ) ; 
- if [ ${IntCountDecl:=0} -gt 0 ] ; then 
-  unset ${FLUFnctName:=None} ; 
+ local __call_locality=( FLU FnctLibUnset ) ;
+ local ArrayArg=( $* ) ; 
+ local Arg0=${ArrayArg[0]} ; 
+ 
+ local StrFuncName=${FLUFnctName:=None} ; 
+ local IntReturn=0; 
+ if [ ${StrFuncName:=None} != "None" ] ; then 
+  IntCountDecl=$( declare -F | egrep -c "${StrFuncName}" ) ; 
+  if [ ${IntCountDecl:=0} -gt 0 ] ; then 
+   unset ${FLUFnctName:=None} ; 
+  else
+   IntReturn=1 ;
+  fi 
+ else
+  IntReturn=1 ; 
  fi 
+ if [ ${IntReturn:=0} -ne 0 ] ; then 
+  echo -ne "Function name: ${StrFuncName} not found.\n" > /dev/stderr ; 
+ fi  
+ return ${IntReturn} ; 
 }
 
 ### Loader 
@@ -219,6 +235,10 @@ function PatchUpdater()
 FLUFnctName=CreateSubSet FnctLibUnset ;
 function CreateSubSet()    
 { 
+ local __call_locality=( CSS CreateSubSet ) ;
+ local ArrayArg=( $* ) ; 
+ local Arg0=${ArrayArg[0]} ;
+ 
  local IntOldList=${#OldAlib[@]} ; 
  local StrArrayLib ; 
  local BoolLibraryBoot=${CSSIsStartWith:=True} ;
@@ -302,7 +322,30 @@ function CreateSubSet()
 ### generate the list. Usually this function should be called with an evaluation
 ### clause 'eval' as :
 ### 
-### eval $( FnctDVersion ) 
+### eval $( FnctDVersion ) __TEMPLATE__
+### 
+### Calling simply :
+### 
+### FnctDVersion
+### 
+### Will look for the Array ArrayFnctDVersion and do perform an export of 
+### version[SHORTNAME] in actual Environment. 
+### 
+### Visual option like 
+### Prefixed-variable FDVIsDisplayCmd:
+### 
+### Set To True, Display the variable of a function-name and it's version.
+### before generating export and or unset .
+### Set To False it will not display this information . 
+### 
+### Copy-Left, Remove-Copy
+### Impact on Array-Name .
+### The prefixed-variable FDVIsRemoveArray work with FDVArrayName. This one 
+### holding your configuration, a copy-left situation like 'Keeping' Array for
+### your internal structure ad let .bashrc to manage it or event let the 
+### user being in touch with this Array, a Remove-Copy option like to 
+### set FDVIsRemoveArray to 'True' will remove the Array and will require
+### something else to create it. 
 ### 
 ### - As crucial information are keep inside version of function, somes does
 ### rely on old __Call_Argument which is versionCA==0.0.0, where versionCA=0.0.1
@@ -311,15 +354,61 @@ function CreateSubSet()
 ### debugging function when prefixed-variable like '[SHORTNAME]IsDebug',  
 ### [SHORTNAME]IsDisplayParserNotice for TagParser extra information . 
 ### 
+### Options of FnctDVersion
+### 
+### Prefixed-variable : FDVIsRemoveVar
+### Set to 'True', it should read the array-name in FDVArrayName, to unset 
+### variable-name made from Associative name found inside the Array. This 
+### allow removing version-variable when it's required. 
+### 
+### synopsis : 
+###    removing all the version[SHORTNAME] from current environment so .
+### 
+### FDVIsRemoveVar=True FDVArrayName=ArrayFnctDVersion FnctDVersion 
+### 
+### Generate the call-command. Using eval will allow generating all unset
+### command and execute them :
+### 
+### eval $( FDVIsRemoveVar=True FDVArrayName=ArrayFnctDVersion FnctDVersion ) __TEMPLATE___
+### 
+### Where:
+### - It's good to promote the variable inline, querying them from an Array It 
+### will not create them and the application should behave having personally 
+### created it's ENV, and at the end if the function life required version-variable
+### will not sue memory for it's action in a command line. 
+### 
+### This is twice good in case of dealing with regressed function throught another 
+### FDVArrayName's Array name. To ensure not having loosed the environment variable
+### supplied during a call. 
+### 
+### Prefixed-variable FDVIsRemoveVar is not eliminating 'the supplied text' used to 
+### pass through the command line . It will unset all the version[SHORTNAME] variable
+### before generating it's 'supplied text' . This compose leaving possibility to 
+### developt many version of a function including what should call in a recurrent call
+### of itself.  
+### 
+### Terms and definitions:
+### 
+### SHORTNAME
+### - Stand for the GetStdPrefixName String value returned by this function. This 
+### String is a Prefix-name generator from it's function name and help resolving
+### Element from a function having it's named being shortened. 
+### 
+### 
 
 FLUFnctName=FnctDVersion FnctLibUnset ;
 function FnctDVersion()
 {
+ local __call_locality=( FDV FnctDVersion ) ;
+ local ArrayArg=( $* ) ; 
+ local Arg0=${ArrayArg[0]} ;
+ 
  local StrExportVar="__VAR__" ; 
  local StrVersion ; 
  local StrArrayName=${FDVArrayName:=ArrayFnctDVersion} ; 
  local BoolShowCmd=${FDVIsDisplayCmd:=False} ; 
  local BoolRemoveArray=${FDVIsRemoveArray:=False} ; 
+ local BoolRemoveVar=${FDVIsRemoveVar:=False} ; 
  local StrArrayName=${FDVArrayName:=ArrayFnctDVersion} ;
  local BoolDisplayVer=${FDVIsDisplayVersion:=True} ; 
  local StrSpacer="\t                                " ;
@@ -332,14 +421,14 @@ function FnctDVersion()
   fi  
  done  ;
  IntColLimit=\$(( \${IntColLimit} + 1 ))  ;  
- StrTplA=\"Set __VAR____SPACER__\" ; 
+ StrTplA=\"__ACTION__ __VAR____SPACER__\" ; 
  StrTplB=\"__TPL__ Version:__VERSION__\\\n\" ; 
  for VerName in \${!__ARRAY__[@]} ; do 
   StrVersion=\${__ARRAY__[\${VerName}]} ;
   IntLenVar=\${#VerName} ;
   IntNewSpaceStart=0 ; 
   IntNewSpaceEnd=0 ; 
-  if [ \"\${BoolDisplayVer:=True}\" == \"True\" ] ; then 
+  if [ \${BoolDisplayVer:=True} == \"True\" ] ; then 
    StrParseTplA=\${StrTplA} ; 
    StrParseTplA=\${StrParseTplA//__VAR__/\${VerName}} ; 
    IntTplLen=\${#StrParseTplA} ; 
@@ -359,10 +448,20 @@ function FnctDVersion()
    echo -ne \"\${StrParseTplB}\" > /dev/stderr ; 
   fi
   StrExportVar=\"\${StrExportVar//__VAR__/\${VerName}=\${StrVersion} __VAR__}\"
-  export \${VerName}=\"\${StrVersion}\" ; 
+  if [ \${BoolRemoveVar:=False} == \"True\" ] ; then 
+   unset \${VerName} ; 
+  else
+   export \${VerName}=\"\${StrVersion}\" ; 
+  fi 
  done 
  """ ;
  StrLoopCmd=${StrLoopCmd//__ARRAY__/${StrArrayName}} ; 
+ if [ "${BoolRemoveVar:=False}" == "True" ] ; then 
+  StrLoopCmd=${StrLoopCmd//__ACTION__/Removing} ; 
+ else 
+  StrLoopCmd=${StrLoopCmd//__ACTION__/Set} ; 
+ fi 
+ 
  if [ "${BoolShowCmd:=False}" == "True" ] ; then 
   echo -ne "Cmd:[${StrLoopCmd}]\n" > /dev/stderr ; 
  fi 
@@ -447,7 +546,7 @@ function LibLoader()
    LibFile=${FNCTDLIBPATH}/${ArrayLib[${intx}]} ;
    StrFileListUUID="" ; 
    if [ -e ${LibFile} ] ; then 
-    if [ ${BoolDisplayProg:=True} == "True" ] ; then
+    if [ "${BoolDisplayProg:=True}" == "True" ] ; then
      echo -ne "Un-Loading...\t\t[ \033[01;33m${LibName}\033[00m ]\n" > /dev/stderr ;
     fi 
      StrUUIDList=$( egrep "^[\ \t]*function" ${LibFile} | grep -v "pkg-config-all" | sed 's/[\)\(]//g;s/\(function \)\([A-Za-z0-9\-\_]*\)/\2/g;s/^\ *//g' | tr '[:cntrl:]' ' '  ) ; 
@@ -473,7 +572,7 @@ function LibLoader()
         if [ "${BoolDisplayProg:=True}" == "True" ] ; then
          if [ "${BoolNoInfoOnSub:=False}" == "False" ] ; then 
           StrNameUUID=${StrUUIDFile/${StrUUIDFile%/[^/]*}\//} ; 
-          StrNameUUID="${StrNameUUID:0:8}...${StrNameUUID:20:${#StrNameUUID}}" ; 
+          StrNameUUID="${StrNameUUID:0:8}...${StrNameUUID:27:${#StrNameUUID}}" ; 
           echo -ne "\t\t\t\033[01;30mIncluding ${StrNameUUID},  ${IntNbMem} member(s).\033[00m\n" > /dev/stderr ;
          fi
         fi 
@@ -500,7 +599,7 @@ function LibLoader()
   fi 
   test -e ${LibFile} && . ${LibFile} ; 
   if [ "${LibName:=fnct_lib}" == "fnct_debian_lib" ] ; then 
-   Sertvices="Not ready"
+   StrServices="Not ready"
   ### Services Ready for fnct_debian_lib, update can be inserted 
   fi 
  done 
