@@ -3092,7 +3092,7 @@ if [ "${versionLSP:=0.0.0}" == "0.0.0" ] ; then
    local StrParentApps=${__call_locality[1]} ; 
    local StrStartMain=${LSPFuncStart:=__main_StartServices} ; 
   elif [ "${versionCA:=0.0.0}" == "0.0.2" ] ; then 
-   eval $( eval CAFunctName=LoopSetupProperty CAIsAddParent=False CallArgument ) ;
+   eval $( eval CAFunctName=LoopSetupProperty CAIsChildBoot=True CAIsAddParent=False CallArgument ) ;
   fi 
   
   local StrArrayName=${LSPArrayDrive:=None} ; 
@@ -3133,7 +3133,7 @@ if [ "${versionLSP:=0.0.0}" == "0.0.0" ] ; then
    local StrArrayName=${ASArray:=None} ; 
    local StrValue=${ASValue:=None} ; 
    local BoolIsVerbose=${ASIsVerbose:=False} ; 
-   local StrCmd="${StrArrayName}[${StrIndexName}]=${StrValue}" ;
+   local StrCmd="""\${StrArrayName}[\${StrIndexName}]=\"${StrValue}\"""" ;
    if [ ${BoolIsVerbose:=False} == "True" ] ; then 
     echo -ne "from ${__call_locality[1]}\n${StrCmd}\n" > /dev/stderr ; 
    fi
@@ -3282,32 +3282,24 @@ if [ "${versionLSP:=0.0.0}" == "0.0.0" ] ; then
    elif [ "${Arg0:=--startservices}" == "--list" ] ; then 
     eval $( __GetVarReferenceList ) ;	
    elif [ "${Arg0:=--startservices}" == "--stopservices" ] ; then 
-    $( eval StrArrayName="${StrArrayName}"      \
-                 StrIndexLoop="${StrIndexLoop}"      \
-                 StrIndexImage="${StrIndexImage}"    \
-                 StrStartMain="${StrStartMain}"      \
-                 StrIndexMount="${StrIndexMount}"    \
-                 StrIndexMntOpt="${StrIndexMntOpt}"  \
-                 StrAppsLosetup="${StrAppsLosetup}"  \
-                 StrAppsMount="${StrAppsMount}"      \
-                 StrNewLoopSet="${StrNewLoopSet}"    \
-                 BoolIsDryRun="${BoolIsDryRun}"      \
-                 StrNewMountSet="${StrNewMountSet}"  ) __main_StopServices ; 
+    eval $( eval \
+       VTVIsQuotedValue=True \
+       VTVIsArrayStyleInsert=True  \
+       VTVValueEntry=${StrVarList} \
+       VTVIsValueReAssign=True     \
+       VTVIsValueToConvert=False   \
+       ValueToVariable )  __main_StopServices ; 
    elif [ "${Arg0:=--startservices}" == "--startservices" ] ; then 
     #StrMsg=$( LoopSetupProperty --get ArrayMsg[0] ) ; 
     #VerbMsg="${StrMsg}" VerbHeader="${__call_locality[1]}-ENTRY" VerbState=True VerbEvalForm=False VerbFormated=True VerbDev=/dev/stderr  Verbosis ;
     #echo -ne "In Function LoopSetupProperty, Switches statement, 'startservices' options.\n\tWill process function from StrStartMain:${StrStartMain}\n" ; 
-    eval $( StrArrayName="${StrArrayName}"      \
-            StrIndexLoop="${StrIndexLoop}"      \
-            StrIndexImage="${StrIndexImage}"    \
-            StrIndexMount="${StrIndexMount}"    \
-            StrIndexMntOpt="${StrIndexMntOpt}"  \
-            StrStartMain="${StrStartMain}"      \
-            StrAppsLosetup="${StrAppsLosetup}"  \
-            StrAppsMount="${StrAppsMount}"      \
-            StrNewLoopSet="${StrNewLoopSet}"    \
-            StrNewMountSet="${StrNewMountSet}"  \
-            BoolIsDryRun="${BoolIsDryRun}" ${StrStartMain}  )  ;
+    eval $( eval \
+       VTVIsQuotedValue=True \
+       VTVIsArrayStyleInsert=True  \
+       VTVValueEntry=${StrVarList} \
+       VTVIsValueReAssign=True     \
+       VTVIsValueToConvert=False   \
+       ValueToVariable ) ${StrStartMain}   ;
     #echo -ne "In Function LoopSetupProperty, Switches statement, end of 'startservices'\n" ; 
    fi 
    

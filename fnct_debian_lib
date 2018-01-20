@@ -3047,6 +3047,7 @@ if [ "${versionBSE:=0.0.0}" == "0.0.0" ] ; then
    local StrVarName=${CTPVarName:=StrVTVTpl} ;
    local StrCharL=${CTPCharTag:=RBRACK:135,LBRACK:133,POUND:043,EXCLAM:041,LPARENT:050,RPARENT:051,DOLLAR:044,REDIRFR:074,REDIRTO:076,UNDERS:137,DBLDOT:072,BSLASH:134,FSLASH:057,SGUIL:047,GUIL:042,COMMA:073,PERCENT:45,AMPRSND:46,STAR:52,PLUS:53,MINUS:55,QMARK:77,PIPE:174,TILDE:176,LACCOL:173,RACCOL:175,EGAL:75,EQUAL:75,DOT:56,VIRGL:54,ACCIRC:136,AT:100,GREAT:76,LESS:74,PLUS:53,MINUS:55}
    local StrExtraCharL=${CTPCharExtra:=None} ;
+   local StrTagBack=${CTPBSlashTagLst:=QMARK};
    if [ "${StrExtraCharL:=None}" == "None" ] ; then 
     StrExtraCharL=${StrCharL} ; 
    else
@@ -3066,6 +3067,16 @@ if [ "${versionBSE:=0.0.0}" == "0.0.0" ] ; then
    local StrSegPair  ; 
    local StrSegMemberLeft ; 
    local StrParse="${StrTpl}" ; 
+   local StrBackQuotedCaseExpr ; 
+   StrDefaultQuoted="*UIL,EXCLAM,[BF]SLASH,[LR]BRACK,[LR]ACCOL,[L]PARENT,PIPE,AMPRSND,REDIR*"
+   StrBackQuotedCaseTpl="""
+   case __VAR0__ in 
+       __DEFAULT__ | __EXECPT__ )
+              __VAR1__=\"${__VAR1__//__VAL2__/\\__OCT__}\" ;; 
+       * ) 
+              __VAR1__=\"${__VAR1__//__VAL2__/__OCT__}\" ;;
+   esac""" ; 
+   
    while [ "${StrExtraCharL:=None}" != "${StrSegPair}" ] ; do 
     ### Left Pair Created 
     StrSegPair=${StrExtraCharL/%,[^,]*}
@@ -3084,12 +3095,17 @@ if [ "${versionBSE:=0.0.0}" == "0.0.0" ] ; then
     StrTplPrintf=${StrTplPrintf//__VAL__/${StrSegMemberLeft}} ;
     StrOctalValue=$( printf "${StrTplPrintf}" "%c" ) ; 
     
-    case ${StrMember:=None} in 
-       *UIL | EXCLAM | [BF]SLASH | [LR]BRACK | [LR]ACCOL | [L]PARENT | PIPE | AMPRSND | REDIR*  ) 
-               StrParse="${StrParse//__VAL2__/\\${StrOctalValue}}" ;;
-       * ) 
-               StrParse="${StrParse//__VAL2__/${StrOctalValue}}" ;; 
-    esac ;
+    StrBackQuotedCaseExpr=${StrBackQuotedCaseTpl}
+    StrBackQuotedCaseExpr=${StrBackQuotedCaseExpr//__DEFAULT__/${StrDefaultQuoted//,/ | }} ; 
+    StrBackQuotedCaseExpr=${StrBackQuotedCaseExpr//__EXECPT__/${StrTagBack//,/ | }} ; 
+    StrBackQuotedCaseExpr=${StrBackQuotedCaseExpr//__OCT__/${StrOctalValue}} ; 
+    StrBackQuotedCaseExpr=${StrBackQuotedCaseExpr//__VAR0__/${StrMember:=None}} ; 
+    StrBackQuotedCaseExpr=${StrBackQuotedCaseExpr//__VAR1__/StrParse} ; 
+    eval ${StrBackQuotedCaseExpr} ;
+    
+    StrDefaultQuoted
+    StrBackQuotedCaseExpr=${StrBackQuotedCaseExpr//}
+    eval ${StrBackQuotedCaseExpr} ; 
     
     if [ ${BoolDisplayCmd:=False} == "True" ] ; then 
      echo -ne "CMD:[ ${StrParse} ]\n" > /dev/stderr ; 
