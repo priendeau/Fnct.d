@@ -3,14 +3,13 @@
 ### FootPrint Added, see Prefixed-Var ZSEAddFootPrint from ZenityShellEval
 ###
 
-###File:/etc/init.d/Fnct.D/7b427f7a-01a3-11e8-8b1d-0c3e6019d35e
-###UUID-TIME-MARKER:a3d41ace-01a4-11e8-8b1d-0c3e6019d35e
-###Date: 20180125-02:52:17,1516866737
-###Sha1Sum: 01ae241b01709637eb8215b3185ebe75099d703b
-###Size:38034
-###NbLine: 569
+###File:.//7b427f7a-01a3-11e8-8b1d-0c3e6019d35e
+###UUID-TIME-MARKER:e3005ac4-0bb2-11e8-8b1d-0c3e6019d35e
+###Date: 20180206-21:59:25,1517972365
+###Sha1Sum: 966e462842bc18ac6e6cb17330df558e349c9e31
+###Size:38028
+###NbLine: 568
 ###NbWord: 3658
-
 
 ### ----                                                                           ----
 ### ---- Because version 0.0.1 did not work, trying to make things clear with this ----
@@ -463,7 +462,7 @@
     VerbMsg="${StrDevOutMsg}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} VerbDev=/dev/stderr  Verbosis ;  
     #VerbMsg="${StrMsg//__VAR__/${StrStreamOut}}" VerbHeader="DEBUG-${__call_locality[1]}" VerbFormated=True VerbState=${IsDisplayDebug} VerbDev=/dev/stderr  Verbosis ; 
     
-    eval """${StrStreamOut}"""   
+    eval ${StrStreamOut}    
 
    }
    
