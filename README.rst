@@ -40,6 +40,38 @@ This is a Library for managing function a permanent subset for a clean
 verbosity and documentation. 
 
 
+There is also postponing situation where this library should report be already in
+use as "voluntary" effort. Somes have already discover this library as "potential"
+artefact helping managing 'crisis situation', situation of 'imaginary backup' plan
+where this library was involved ( and Unix / Linux as well ) as 'GOD' 
+administrative, decisive situation. We all know 'God hand' to give thing 'quasi' 
+instantly. This library help compressing Administrative task . Out of 
+conventionnal wisdom, talking about Administrative involve talking about an 
+economic role, function, it's licensing . This Economic ole like a Boss of a 
+compagny  is more subject to fit in the God pattern, offering a lifetime for a 
+worker spending thousands time it take to delivery what was asking and be 
+delivered years before it's completion. This semantic of 'God Action' 
+procuring way to 'get from future' and 'put from the past' is a realistic 
+action done over the internet because some way to acces to a point in time is a 
+procedural step introducing examples here in this library to show and uses 
+this ability for this library to mention. This start on showing you example on 
+how 'hacking' the PPP protocol driver from kernel to allow chaning the timeframe 
+from passing different time inside a specific field from Packet of PPP . 
+
+This was used, showed, done by hand in Canada, and still 'enrolled' inside this 
+point of view of having an existentialism and authentic view of yourself throught 
+this method of hacking kernel from Unix / Linux / BSD to allow Canadian radically 
+changed it's mind silently since 1979, and still made Canada aware about every 
+disaster.. We were waiting fort St-Helens eruption because we know the time 
+of the explosion... 
+
+But because I'm still in 2018 and still living in a minimalist sustainment mode 
+which not really deserving it's utopic changes, Canada still delay it's way to 
+help me helping survivor of this era. I should ask them to wait or to forward 
+yourself in the future to seek for future update for this period of time unless 
+I do receive some protective help. 
+
+
 Function Management is especially important in this era, having important 
 function or operator being mashed into one Lib ; They defined all appropriate 
 exceptions and allow fews or fewer action if they are not correctly used. 
