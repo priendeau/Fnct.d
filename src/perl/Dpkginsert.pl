@@ -4,10 +4,10 @@
 ### 
 ### Dpkginsert.pl
 ### 
-### 
-### 
-### 
-### 
+### Please, the previous version is not correct, start at this version
+### and you can get access to INSERT. version after will also create a 
+### insert-PackageInformation.sql as example if user don't own a 
+### dpkg application it can follow with insert created.
 ### 
 ### 
 ### 
@@ -31,7 +31,7 @@ my $ExitCode=0 ;
 my $fmt_print = "%s\n" ;
 my $fmt_md5_print = "md5:%s:%s\n" ; 
 my $StrInsertPackage_fmt="INSERT INTO PackageInformation (PackageName, PackageStatus, ProcessorType) VALUES ('%s','%s','%s') ;" ;
-my $strQuickInsertPackage=qw( INSERT INTO PackageInformation \( PackageName, PackageStatus, ProcessorType \) \( ?, ?, ? \) ; ) 
+### my $strQuickInsertPackage=qw( INSERT INTO PackageInformation \( PackageName, PackageStatus, ProcessorType \) \( ?, ?, ? \) ; ) 
 my $StrUpdateTableSequence_fmt="UPDATE sqlite_sequence set seq = 0 where name='%s' ;" ;
 my $StrDeleteTableData_fmt="delete from %s where PkID > 0 ;" ;
 my $StrPackageStatusRep_fmt="SELECT PackageStatus,COUNT(*) FROM PackageInformation GROUP BY PackageStatus ;" ;
@@ -52,7 +52,7 @@ my $Apps="/usr/bin/dpkg" ;
 ###
 ### dpkg-query  --showformat='${Depends}|${Pre-Depends}|${Replaces}|${Breaks}|${Conflicts}\n' -W 
 ###
-### later-use...
+###
 
 ### 
 ### AutoCommit mode for CleanDatabase . 
@@ -87,11 +87,6 @@ sub CleanDatabase
 }
 
 
-
-my $BoolIsMatch="False";
-my @ArrayBindValue ;
-
-
 ### 
 ### AutoCommit mode disabled for this foreach .
 ### This loop will use many insert of $StrInsertPackage_fmt with all 
@@ -112,65 +107,56 @@ my @ArrayBindValue ;
 ###
 ###
 
+my $BoolIsMatch="False";
+my @ArrayBindValue ;
 
+my @ArrayApp ; 
 
 push @ArrayApp, "$Apps --get-selections | grep -v \"deinstall\"" ; 
 push @ArrayApp, "$Apps --get-selections | grep \"deinstall\"" ;
 
-sub OneToOneInsertion
+my $StrQueryBuild = undef; 
+my $StrCurrentQuery = undef ;  
+
+for( my $intx=0 ; $intx <= $#ArrayApp ; $intx++	 )
 {
-	my $StrQueryBuild = undef; 
-	my $StrCurrentQuery = undef ;  
-	my @ArrayApp ; 
-	for( my $intx=0 ; $intx <= $#ArrayApp ; $intx++	 )
+	foreach $_ ( `@ArrayApp[$intx]` )
 	{
-		foreach $_ ( `@ArrayApp[$intx]` )
+		chomp ;
+		### 3 positions match pattern.
+		if( $_ =~ m/(^[a-z0-9]*[\-\_\.a-z0-9]*)(?::)([a-z0-9]{4,}?)(?:\s*)(install|deinstall)$/is )
 		{
-			chomp ;
-			### 3 positions match pattern.
-			if( $_ =~ m/(^[a-z0-9]*[\-\_\.a-z0-9]*)(?::)([a-z0-9]{4,}?)(?:\s*)(install|deinstall)$/is )
-			{
-			 $BoolIsMatch="True";
-			 print sprintf("%s\t[3 value:\tval1:%s val2:%s val3:%s]\n",$_, $1, $2 ,$3 );
-			 $StrCurrentQuery = sprintf( $StrInsertPackage_fmt , $1, $3 ,$2 ) ;
-			 push @ArrayBindValue, $StrCurrentQuery ;
-			}
-			
-			if( $BoolIsMatch =~ /False/ )
-			{		
-				### 2 positions match pattern.
-				if( $_ =~ m/(^[a-z0-9]*[\-\_\.a-z0-9]+)(?:\s*)(install|deinstall)$/is )
-				{	
-				 print sprintf("%s[2 value:\tval1:%s val2:%s]\n" , $_, $1, $2 ) ;
-				 $StrCurrentQuery = sprintf( $StrInsertPackage_fmt , $1, $2 ,'None' ) ;
-				 push @ArrayBindValue, $StrCurrentQuery ;
-				} 
-			}
-
-			$BoolIsMatch="False";
+		 $BoolIsMatch="True";
+		 $StrCurrentQuery = sprintf( $StrInsertPackage_fmt , $1, $3 ,$2 ) ;
+		 print sprintf("%s\n",$StrCurrentQuery );
+		 push @ArrayBindValue, $StrCurrentQuery ;
 		}
+		
+		if( $BoolIsMatch =~ /False/ )
+		{		
+			### 2 positions match pattern.
+			if( $_ =~ m/(^[a-z0-9]*[\-\_\.a-z0-9]+)(?:\s*)(install|deinstall)$/is )
+			{	
+			 print sprintf("%s[2 value:\tval1:%s val2:%s]\n" , $_, $1, $2 ) ;
+			 $StrCurrentQuery = sprintf( $StrInsertPackage_fmt , $1, $2 ,'None' ) ;
+			 print sprintf("%s\n",$StrCurrentQuery );
+			 push @ArrayBindValue, $StrCurrentQuery ;
+			} 
+		}
+
+		$BoolIsMatch="False";
 	}
-
-	my $DbAnswer ; 
-
-	$DbHandler->{ AutoCommit } = 1  ;
-
-	foreach $_ ( @ArrayBindValue ) 
-	{
-		print sprintf( "%s\n" , $_ ) ; 
-		$DbAnswer = $DbHandler->do( $_ ) or die $DBI::errstr ;
-	}
 }
 
-sub _start()
+my $DbAnswer ; 
+
+$DbHandler->{ AutoCommit } = 1  ;
+
+foreach $_ ( @ArrayBindValue ) 
 {
-	CleanDatabase() ; 
-	my $EntryFunction = $ENV{"DIEntryFunction"} ; 
-	eval "$EntryFunction()" ; 
+	print sprintf( "%s\n" , $_ ) ; 
+	$DbAnswer = $DbHandler->do( $_ ) or die $DBI::errstr ;
 }
 
-if( $ExitCode == 0 )
-{
-	_start( ) ; 
-	$DbHandler->disconnect ;
-}
+$DbHandler->disconnect ;
+
