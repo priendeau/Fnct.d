@@ -4,10 +4,10 @@
 ### 
 ### Dpkginsert.pl
 ### 
-### Please, the previous version is not correct, start at this version
-### and you can get access to INSERT. version after will also create a 
-### insert-PackageInformation.sql as example if user don't own a 
-### dpkg application it can follow with insert created.
+### This version does clean the table, add the data and create an
+### insert-statement of all the collected element. So you can add 
+### this insert by reading the file and put all the insert statement.
+### 
 ### 
 ### 
 ### 
@@ -40,6 +40,7 @@ my $StrPackageSumInsert="SELECT count(*), PackageStatus FROM PackageInformation 
 my $ExitCode=0 ; 
 
 ### SQLite
+my $InsertFile = "insert-PackageInformation.sql" ; 
 my $database = "dpkg-database.sqlite";
 my $DbDsn = "DBI:SQLite:dbname=$database";
 my $userid = "";
@@ -152,11 +153,20 @@ my $DbAnswer ;
 
 $DbHandler->{ AutoCommit } = 1  ;
 
+if ( -f $InsertFile )
+{
+	unlink $InsertFile ; 
+}
+
+open INSERT_FH, ">" , $InsertFile ; 
+
 foreach $_ ( @ArrayBindValue ) 
 {
-	print sprintf( "%s\n" , $_ ) ; 
+	print INSERT_FH sprintf( "%s\n" , $_ ) ; 
 	$DbAnswer = $DbHandler->do( $_ ) or die $DBI::errstr ;
 }
+
+close INSERT_FH ; 
 
 $DbHandler->disconnect ;
 
