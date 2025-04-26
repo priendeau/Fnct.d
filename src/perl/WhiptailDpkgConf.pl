@@ -22,8 +22,9 @@ sub printerr
 our $text;
 my $StrAnswer = undef ; 
 
-my $d = new UI::Dialog::Backend::Whiptail( title => "Dpkg Configuration.",
-																					 text => $text, 
+#$text=q{Dpkg helper for perl application.} ;
+#																					 text => $text, 
+my $TUI = new UI::Dialog::Backend::Whiptail( title => "Dpkg Configuration.",
 																					 height => 16, 
 																					 width => 70,
 																					 listheight => 7,
@@ -34,9 +35,9 @@ $text =q{This application shortened the way you will acces to your registered ap
 ### 
 ### First Msgbox 
 ### 
-$d->msgbox( title => 'Welcome', text =>  $text );
+$TUI->msgbox( title => 'Welcome', text =>  $text );
 
-if ($d->state() eq "OK") 
+if ($TUI->state() =~ /OK/ ) 
 {
   printerr("The user pressed OK.");
 } 
@@ -50,7 +51,7 @@ else
 ###
 $text =q{This radio-list menu tell which is the next item to configure.};
 
-my $radioSelect = $d->radiolist( title => 'Configuration interface',
+my $radioSelect = $TUI->radiolist( title => 'Configuration interface',
 																 text => $text,
 																 list =>
 																 [ 'DpkgCreate ' , [ 'Create database' , 0 ],
@@ -62,12 +63,48 @@ my $radioSelect = $d->radiolist( title => 'Configuration interface',
 																 ] );
 
  
-if ( $d->state() eq "OK" ) 
+if ( $TUI->state() =~ /OK/  ) 
 {
-  printerr( "Processing configuration for: '".$radioSelect."'");
+  print sprintf( "Processing configuration for: %s.\n", $radioSelect ) ;
 	$StrAnswer =  $radioSelect;
 } 
 else 
 {
   printerr("The user pressed CTRL+C or ESC instead of OK.");
+}
+
+
+if ( $StrAnswer =~ /DpkgCreate/ )
+{
+	$text = q{This is a menu for configuration of DpkgCreate Where it's claims DefaultCreation it stand into abreviation D.C., ReadSqlFile will be named R.S.F.};
+	
+	my $SubTUI = new UI::Dialog::Backend::Whiptail( title => "Dpkg Configuration.",
+																					 height => 20, 
+																					 width => 65,
+																					 listheight => 10,
+																					 debug => 1,
+																					 test_mode => 0 );
+	my $menuSelect = $SubTUI->menu( title => 'DpkgCreate setting(s) available.',
+															 text => $text,
+															 list => [ 'DebugMode', 'Activate the Debug Mode.',
+																				 'OperationMode' ,  'In statistic or insert mode.' ,
+																				 'database' ,  'Database filename.' ,
+																				 'DBI',  'The database type.' ,
+																				 'DROPT' ,  'Drop statement for D.C., ' ,
+																				 'CREATET' ,  'Create statement for D.C.' ,
+																				 'UPDATET' ,  'Update statement for D.C.' ,
+																				 'FILE' ,  'File to submit with R.S.F.' ,
+																				 'Drop', 'Enforce the drop in insert sql statement.',
+																				 'CreateFunc', 'Change the CreateFunction parameter.',
+																				 'BACK', 'Leave the DpkgCreate go back to main menu.' ] );
+	
+	if ($SubTUI->state() =~ /OK/ ) 
+	{
+		print sprintf( "Menu selection: %s\n", ($menuSelect||'NULL') );
+	} 
+	else 
+	{
+		printerr("The user pressed CTRL+C or ESC instead of OK.");
+	}	
+
 }
